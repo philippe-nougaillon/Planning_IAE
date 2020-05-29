@@ -1,20 +1,19 @@
 <% unless @cours_count.zero? %>
-  <table class="table table-striped table-bordered table-sm">
-      <thead>
-        <tr>
-          <th>Horaires</th>
-          <th>Formation</th>
-          <th>Intervenant</th>
-          <th>Salle</th>
-        </tr>
-      </thead>
-      <tbody>
-        <%= render partial: 'slide', 
-                   collection: @cours, 
-                   as: :cours 
-        %>
-
-      </tbody>
+  <table class="table table-bordered table-sm">
+    <thead>
+      <tr>
+        <th>Horaires</th>
+        <th>Formation</th>
+        <th>Intervenant</th>
+        <th>Salle</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= render partial: 'slide', 
+                  collection: @cours, 
+                  as: :cours 
+      %>
+    </tbody>
   </table>
 
   <span class="navbar-text">

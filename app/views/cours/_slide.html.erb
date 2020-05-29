@@ -1,4 +1,4 @@
-<tr style="height:100px">
+<tr class="shadow p-5 mt-4" style="height:110px">
 
   <td class="align-middle">
     <h3 class="text-dark">
@@ -15,11 +15,9 @@
       <%= cours.try(:formation).try(:nom_promo) %>
     </h3>
     
-    <% if cours.nom_ou_ue %>
-      <h4 class="text-body"><i><%= cours.nom_ou_ue %></i></h4>
-    <% else %>
-      <br>
-    <% end %>
+    <h4 class="text-body" style="height: 30px">
+      <i><%= cours.nom_ou_ue %></i>
+    </h4>
 
     <div class="progress">
       <div class="progress-bar bg-dark" 

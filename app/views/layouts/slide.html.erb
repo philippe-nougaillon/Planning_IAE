@@ -23,20 +23,18 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-expand-sm bg-light fixed-top">
+    <nav class="navbar navbar-expand-sm fixed-top shadow p-4 mb-4 bg-white">
     
-      <a class="navbar-brand" href="/">
-        <%= link_to image_tag('logo_iae@195'), root_url %>
-      </a>
+      <%= link_to image_tag('logo_iae@195'), root_url, class: 'navbar-brand' %>
     
-      <div class="mx-auto">
+      <div class="ml-2">
         <h2>
           Planning du <%= l(@planning_date.to_date, format: :long) %>
         </h2>
       </div>
+
     </nav>
-    <br>
-    <br>
+    <br><br><br>
 
     <div class="container-fluid pt-5">
       <%= yield %>
