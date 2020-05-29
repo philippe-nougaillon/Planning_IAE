@@ -50,91 +50,44 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-<%= request.host == 'iae-test.philnoug.com' ?  'inverse' : 'default' %>" role="navigation">
+    <nav class="navbar navbar-expand-sm bg-light fixed-top">
+      <a class="navbar-brand" href="/">
+        <%= image_tag("logo_iae@195.png", height: 35) %>
+      </a>
+
       <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <span class="navbar-brand">
-              <%= image_tag("logo_iae@195.png", height: 35) %>
-          </span>
-        </div>
-        <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li class="<%= (@ctrl=='cours' ? 'active' : '') %>">
-              <%= link_to cours_path(@cours_params) do %>
-                <span class="glyphicon glyphicon-calendar"></span>
-                Planning
-              <% end %>
-            </li>
+        <ul class="navbar-nav">
+          <%= navbar_nav_item('cours', 'calendar', cours_path) %>
+          <%= navbar_nav_item('salles', 'chalkboard', occupation_salles_path) %>
+          <% if user_signed_in? %>
+            <%= navbar_nav_item('formations', 'briefcase', formations_path) %>
+            <%= navbar_nav_item('intervenants', 'chalkboard-teacher', intervenants_path) %>
+            <%= navbar_nav_item('etudiants', 'graduation-cap', etudiants_path) %>
+          <% end %>
+        </ul>
 
-            <li class="<%= (@ctrl=='salles' ? 'active' : '') %>">
-              <%= link_to occupation_salles_path do %>
-                <span class="glyphicon glyphicon-blackboard"></span>
-                Salles
-              <% end %>
-            </li>
-
-            <% if user_signed_in? %>
-              <li class="<%= (@ctrl=='formations' ? 'active' : '') %>">
-                <%= link_to formations_path do %>
-                  <span class="glyphicon glyphicon-briefcase"></span>
-                  Formations
-                <% end %>
-              </li>
-              <li class="<%= (@ctrl=='intervenants' ? 'active' : '') %>">
-                <%= link_to intervenants_path do %>
-                  <span class="glyphicon glyphicon-user"></span>
-                  Intervenants
-                <% end %>
-              </li>
-              <li class="<%= (@ctrl=='etudiants' ? 'active' : '') %>">
-                <%= link_to etudiants_path do %>
-                  <span class="glyphicon glyphicon-education"></span>
-                  Etudiants
-                <% end %>
-              </li>
-            <% end %>
-          </ul>
-
-          <ul class="nav navbar-nav navbar-right">
-            <% unless user_signed_in? %>
-              <li>
-                <%= link_to guide_index_path do %>
-                  <span class="glyphicon glyphicon-info-sign"></span>
-                  Mémo
-                <% end %>
-              </li>
-              <li>
-                <a href="/users/sign_in"><span class="glyphicon glyphicon-log-in"></span> Connexion</a>
-              </li>
-            <% else %>
+        <ul class="navbar-nav navbar-right">
+          <% if user_signed_in? %>
+            <span class="nav-link">
               <%= current_user.username %>
-              |
-              <%= link_to tools_index_path do %>
-                <span class="glyphicon glyphicon-wrench"></span>
-                Outils
-              <% end %>
-              |
-              <%= link_to guide_index_path do %>
-                <span class="glyphicon glyphicon-info-sign"></span>
-                Mémo
-              <% end %>
-              |
-              <%= link_to "/users/sign_out", method: :delete do %> 
-                <span class="glyphicon glyphicon-log-out"></span> Déconnexion
-              <% end %>
-            <% end %>
-          </ul>
-        </div>
+            </span>
+            <%= navbar_nav_item('guide', 'info-circle', guide_index_path) %>
+            <%= navbar_nav_item('tools', 'wrench', tools_index_path) if current_user.admin? %>
+            
+            <li class="nav-item">
+              <%= link_to destroy_user_session_path, method: :delete, title: "Fermer la session de #{current_user.email}", class: "nav-link text-secondary" do %><i class="fas fa-fw fa-sign-out-alt"></i></span> Déconnexion<% end %> 
+            </li>
+          <% else %>
+            <%= navbar_nav_item('guide', 'info-circle',  guide_index_path) %>
+            <%= navbar_nav_item('Se connecter', 'sign-in-alt', new_user_session_path) %>
+          <% end %>
+        </ul>
+        
       </div>
     </nav>
+    <br>
 
-    <div class="container">
+    <div class="container-fluid p-5">
       <% flash.each do |name, msg| %>
         <%= content_tag :div, class: "alert alert-#{ name == "error" ? "danger" : "success" } alert-dismissable", role: "alert" do %>
           <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
