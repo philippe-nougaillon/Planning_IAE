@@ -5,8 +5,9 @@ ruby '2.7.0'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 6.0.3', '>= 6.0.3.1'
-# Use sqlite3 as the database for Active Record
-gem 'sqlite3', '~> 1.4'
+
+gem 'mysql2', '~> 0.5.3'
+
 # Use Puma as the app server
 gem 'puma', '~> 4.1'
 # Use SCSS for stylesheets
@@ -54,3 +55,40 @@ end
 # gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'font_awesome5_rails'
+
+gem 'bootstrap_form', '~> 2.7'
+gem 'simple_calendar', '~> 2.0'
+gem 'devise', '>= 4.7.1'
+gem 'devise-i18n'
+gem 'audited', '~> 4.3'
+# gem 'carrierwave', '0.11.0'
+gem 'capture_stdout'
+gem 'will_paginate'
+gem 'will_paginate-bootstrap'
+gem 'pundit'
+# gem "select2-rails"
+
+# PDF
+gem 'prawn', '~> 2.2'
+gem 'prawn-table', '~> 0.2'
+
+# XLSX sheet
+gem 'spreadsheet'
+gem 'yaml_db'
+
+# iCal
+gem 'icalendar'
+
+# The `content_tag_for` method has been removed from Rails. To continue using it, add the `record_tag_helper` gem to your Gemfile:
+#gem 'record_tag_helper', '~> 1.0'
+
+# Access-Control-Allow-Origin (pour l'APP React)
+gem "rack-cors"
+
+# Sucker Punch is a single-process Ruby asynchronous processing library.
+gem 'sucker_punch', '~> 2.0'
+
+# Ruby finite-state-machine-inspired API for modeling workflow 
+gem 'workflow'
+gem 'workflow-activerecord'
+
