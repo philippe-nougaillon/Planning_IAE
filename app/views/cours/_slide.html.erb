@@ -1,6 +1,7 @@
-<tr>
-  <td>
-    <h3>
+<tr style="height:100px">
+
+  <td class="align-middle">
+    <h3 class="text-dark">
       <%= l(cours.debut, format: :heures_min) %>
       <small>
         - <%= l(cours.fin, format: :heures_min) %>
@@ -9,27 +10,26 @@
   </td>
   
   <td>
-    <h3>
-      <span style="background-color:<%= cours.try(:formation).try(:color) %>;padding-left: 7px;margin-right: 5px;"></span>
+    <h3 class="text-dark">
+      <span style="background-color:<%= cours.try(:formation).try(:color) %>;padding-left: 12px;margin-right: 5px;"></span>
       <%= cours.try(:formation).try(:nom_promo) %>
     </h3>
     
-    <h4 class="text-primary"><i><%= cours.nom_ou_ue %></i></h4>
-
-    <% if pct = cours.progress_bar_pct2 %>
-      <div class="progress">
-        <div class="progress-bar progress-bar-striped active" 
-            role="progressbar" aria-valuemin="0" aria-valuemax="100" 
-            style="width: <%= pct %>%; opacity: 0.2;">
-        </div>
-      </div>
+    <% if cours.nom_ou_ue %>
+      <h4 class="text-body"><i><%= cours.nom_ou_ue %></i></h4>
     <% else %>
-      <br><br>
+      <br>
     <% end %>
+
+    <div class="progress">
+      <div class="progress-bar bg-dark" 
+           style="opacity:0.3; width: <%= cours.progress_bar_pct2 %>%;">
+      </div>
+    </div>
   </td>
 
-  <td>
-    <h3>
+  <td class="align-middle">
+    <h3 class="text-dark">
       <%= cours.try(:intervenant).try(:nom_prenom) %>
       <% if cours.intervenant_binome_id %>
           / <%= cours.try(:intervenant_binome).try(:nom_prenom) %>
@@ -37,15 +37,10 @@
     </h3>
   </td>
   
-  <td style="text-align: center;">
-    <% if salle = cours.salle %>
-      <h2>
-        <span class="label <%= cours.style %>">
-          <%= salle.nom %>
-        </span>
-      </h2>
-    <% else %>
-      <h3><i class="glyphicon glyphicon-warning-sign"></i></h3>
-    <% end %>
+  <td class="align-middle" style="width:150px">
+    <span class="btn btn-lg btn-<%= cours.style %>">
+      <b><%= cours.try(:salle).try(:nom) %></b>
+    </span>
   </td>
+
 </tr>

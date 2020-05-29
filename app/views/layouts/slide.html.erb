@@ -1,49 +1,44 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <title><%= @sitename %>(Display)</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <meta name="description" content="">
     <meta name="author" content="">
-    <title><%= @sitename %> (Display)</title>
 
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <%= javascript_include_tag "https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js", "https://oss.maxcdn.com/respond/1.4.2/respond.min.js" %>
-    <![endif]-->
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>  
 
-    <%= csrf_meta_tags %>
-
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89540844-1"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'UA-89540844-1');
-    </script>
   </head>
 
   <body>
-    <nav class="navbar" role="navigation">
-      <div class="navbar-header">
-        <span class="navbar-brand">
-          <%= link_to image_tag("logo@100.png"), root_url %>
-        </span>
+    <nav class="navbar navbar-expand-sm bg-light fixed-top">
+    
+      <a class="navbar-brand" href="/">
+        <%= link_to image_tag('logo_iae@195'), root_url %>
+      </a>
+    
+      <div class="mx-auto">
+        <h2>
+          Planning du <%= l(@planning_date.to_date, format: :long) %>
+        </h2>
       </div>
-
-      <h1 style="text-align: center;margin-left: 1%; margin-top: 50px;">
-        Planning du <%= l(@planning_date.to_date, format: :long) %>
-      </h1>
     </nav>
+    <br>
+    <br>
 
-    <div class="slide_container">
+    <div class="container-fluid pt-5">
       <%= yield %>
     </div>
   </body>

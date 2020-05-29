@@ -26,7 +26,7 @@ class Cour < ApplicationRecord
   enum etat: [:planifié, :à_réserver, :confirmé, :reporté, :annulé, :réalisé]
   
   def self.styles
-    ['label-info','label-warning','label-success','label-danger','label-danger','label-default']
+    ['label-info','label-warning','success','label-danger','label-danger','label-default']
   end
 
   def style
