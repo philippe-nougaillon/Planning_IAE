@@ -1,0 +1,106 @@
+<script>
+  $(document).ready(function() { $(".select2").select2({theme: "bootstrap"}); });
+</script>
+
+<div class="page-header">
+  <h1>
+  	<span class="glyphicon glyphicon-calendar"></span>
+  	Réservation de créneaux horaires
+  </h1>
+</div>
+<div>
+  <h3>Cette fonction permet la création de créneaux horaires réservés</h3>
+</div>
+
+<br>
+
+<%= form_tag({action: "creation_cours_do", method: :post}, multipart: true) do %>
+
+  <div class="form-group">
+    <div class="row">
+      <div class="col-sm-5">
+        <%= label_tag :debut, "A partir du" %><br>
+        <%= datetime_select :cours, :start_date, minute_step:15 %>
+        <br><br>
+
+        <%= label_tag :fin, "Jusqu'au" %><br>
+        <%= date_select :cours, :end_date %>
+        <br><br>
+
+        <%= label_tag :semaines, "Semaines *" %>
+        <%= select_tag :semaines, options_for_select((1..52).to_a), 
+                          include_blank:true, multiple:true, class:"form-control" %>
+        <br>
+
+        <div class="field">
+          <%= label_tag :jours, nil %><br>
+          <%= check_box_tag :lundi, '1', params[:lundi] %> Lundi 
+          <%= check_box_tag :mardi, '1', params[:mardi] %> Mardi 
+          <%= check_box_tag :mercredi, '1', params[:mercredi] %> Mercredi
+          <%= check_box_tag :jeudi,  '1', params[:jeudi] %> Jeudi
+          <%= check_box_tag :vendredi, '1', params[:vendredi] %> Vendredi
+          <%= check_box_tag :samedi,  '1', params[:samedi] %> Samedi
+        </div>
+        <br>
+  
+        <%= label_tag :periode, "Période" %><br>
+        <%= check_box_tag :am, '1', params[:am] %> Matin (9h-12h)
+        <br />
+
+        <%= check_box_tag :pm, '1', params[:pm] %> Après-midi (13h-16h)
+        <br />
+
+        <%= check_box_tag :soir, '1', params[:soir] %> Soir
+        <%= radio_button_tag :soir_params, '1', params[:soir_params] == 1 %> (19h-22h)
+        <%= radio_button_tag :soir_params, '2', params[:soir_params] == 2 %> (18h15-20h15)
+        <%= radio_button_tag :soir_params, '3', params[:soir_params] == 3 %> (20h15-22h15) 
+        <br>
+
+        <%= check_box_tag :other, '1', params[:other] %> Autre. Durée: 
+        <%= select_tag :duree, 
+                        options_for_select([0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0], 3.0), 
+                        include_blank:true %> h
+      </div>
+
+      <div class="col-sm-1"></div>
+
+      <div class="col-sm-6">
+        <div class="row">
+
+        <%= label_tag "Formation" %>    
+        <%= select_tag :formation_id, 
+              options_from_collection_for_select(Formation.all, :id, :nom_promo), class:"form-control select2", include_blank:true %>
+        <br>
+
+        <%= label_tag :intervenant_id, "Intervenant" %>
+        <%= select_tag :intervenant_id,
+              options_from_collection_for_select(Intervenant.all, :id, :nom_prenom), class:"form-control select2", include_blank:true %>
+        <br>
+
+        <%= label_tag :nom, "Nom du cours *" %>
+        <%= text_field_tag :nom, params[:nom], class:"form-control" %>
+        <br>
+
+        <%= label_tag :salle_id, "Salle *" %>
+        <%= select_tag :salle_id, options_from_collection_for_select(Salle.all, :id, :nom_places, params[:salle_id]), include_blank: true, class:"form-control" %>
+        * Optionnel
+        <br><br>
+
+        <div class="field">
+          <b>Enregistrer les changements ?</b> <br>
+          <%= label :save, "Oui", :value => "true" %>
+          <%= radio_button_tag :save, true %>
+          <%= label :save, "Non", :value => "false" %>
+          <%= radio_button_tag :save, false, :checked => true %>
+          <br><i>Choisissez 'Non' pour tester votre création car <b>elle est irréversible !</b></i><br />
+        </div>
+        <br><br>
+      
+        <div class="actions">
+          <%= submit_tag "Lancer la création", class: "btn btn-success" %>
+        </div>
+
+      </div>
+  </div>
+  
+<% end %>

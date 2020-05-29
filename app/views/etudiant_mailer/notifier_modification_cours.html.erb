@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <%= image_tag("logo_iae.png") %>
+    <br>
+
+    <p>
+        <p>
+            Bonjour <%= @etudiant.prénom %>, 
+        </p>
+    
+        <p>
+            Votre cours du 
+            <%= l(@cours.debut, format: :long) %> 
+            (<%= "#{@cours.nom_ou_ue} - #{@cours.formation.nom}" %>) 
+            vient d'être modifié. 
+        </p>
+
+        <p>
+            <h4>Changements:</h4>
+            <ul><li>
+                <%= sanitize ApplicationController.helpers.prettify(@cours.audits.last).join('</li><li>') %>
+            </li></ul>
+        </p>
+
+        <p>
+            Bien cordialement, <br>
+            IAE Paris
+        </p>
+    </p>
+    
+    <p>
+      <%= link_to "Voir le planning", root_url(formation_id: @cours.formation_id, start_date: @cours.debut.to_date) %>
+    </p>
+  </body>
+</html>

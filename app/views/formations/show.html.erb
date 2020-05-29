@@ -1,0 +1,209 @@
+<div class="page-header">
+  <div class="btn-group pull-right">
+    <% if current_user.admin? %>
+      <%= link_to edit_formation_path(@formation), class: 'btn btn-primary' do %>
+        <span class="glyphicon glyphicon-pencil"></span>
+        Modifier
+      <% end %>
+
+      <a href="#audit" data-toggle="collapse" class='btn btn-default'>
+        <span class="glyphicon glyphicon-search"></span>
+        Audit
+      </a>
+
+      <%= link_to formations_path, class: 'btn btn-default' do %>
+        <span class="glyphicon glyphicon-list-alt"></span>
+        Retour
+      <% end %>
+    <% end %>
+  </div>
+  <br><br>
+</div>
+
+<div class="row">
+  <div class="col-sm-3">
+    <h1 style="font-size: 160px" class="glyphicon glyphicon-briefcase"></h1>
+  </div>  
+
+  <div class="col-sm-6">
+    <h2>
+      <small>Nom</small><br>
+      <%= @formation.nom %>
+    </h2>
+    
+    <% if @formation.archive %>
+      <p><mark>FORMATION ARCHIVEE !</mark></p>
+      <br>
+    <% end %>
+
+    <% if @formation.apprentissage %>
+      <p><mark>Apprentissage</mark></p>
+    <% end %>
+    
+    <% if @formation.hors_catalogue %>
+      <p><mark>Hors catalogue</mark></p>
+    <% end %>
+
+    <% if @formation.hss? %>
+      <p><mark>Hors états de services</mark></p>
+    <% end %>
+
+    <br>
+
+    <h3>
+      <small>Promo</small><br>
+      <%= @formation.promo %>
+    </h3>
+  </div>
+
+  <div class="col-sm-3">
+    <h2>
+      <small>Abrégé</small><br>
+      <%= @formation.try(:abrg) %>
+    </h2>
+    <br> 
+    <h3>
+      <small>Couleur</small><br>
+      <span style="background-color:<%= @formation.color %>;padding-left: 30px;margin-left: 5px"> </span>
+    </h3>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-9">
+    <h3>
+      <small>Diplôme</small><br>
+      <%= @formation.diplome %>
+    </h3>
+
+    <h3>
+      <small>Chargé(e) de formation</small><br>
+      <%= @formation.try(:user).try(:email) %>
+    </h3>
+  </div>
+
+  <div class="col-sm-3">
+    <h3>
+      <small>Code Analytique</small><br>
+      <%= @formation.Code_Analytique %>
+    </h3>
+    <h3>
+      <small>Taux Horaire</small><br>
+      <%= @formation.nomTauxTD %>
+    </h3>
+  </div>
+</div>
+
+
+<% if @formation.unites.any? %>
+  <h3>
+    <small>Unités d'enseignements</small>
+  </h3>
+  
+  <div class="table-responsive">
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Code</th>
+          <th>Intitulé</th>
+          <th>Cours</th>
+          <th>Heures</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% total_ue = total = 0.0 %>
+        <%= content_tag_for(:tr, @formation.unites) do | unite | %>
+          <% cours = @formation.cours.where(ue:unite.num) %>
+          <td><%= link_to unite.num, cours_path(formation_id:@formation, ue:unite.num) %></td>
+          <td><%= unite.nom %></td>
+          <td><%= link_to cours.count, cours_path(formation_id:@formation, ue:unite.num, filter:'all') %></td>
+          <td><%= total = cours.sum(:duree) %></td>
+          <% total_ue += total %>
+        <% end %>
+      </tbody>
+
+      <tfoot>
+        <tr>
+          <th /><th /><th />
+          <th><%= total_ue %></th>
+        </tr>
+      </tfoot>  
+    </table>
+  </div>
+<% end %>
+
+<% if @formation.etudiants.any? %>
+  <h3>
+    <small>Etudiants</small>
+  </h3>
+  
+  <div class="table-responsive">
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Prénom</th>
+          <th>Email</th>
+          <th>Mobile</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <%= content_tag_for(:tr, @formation.etudiants) do | etudiant | %>
+          <td><%= etudiant.nom %></td>
+          <td><%= etudiant.prénom %></td>
+          <td><%= etudiant.email %></td>
+          <td><%= etudiant.mobile %></td>
+        <% end %>
+      </tbody>
+
+      <tfoot>
+        <tr>
+          <th /><th /><th /><th />
+        </tr>
+      </tfoot>  
+    </table>
+  </div>
+<% end %>
+
+<% if @formation.vacations.any? %>
+  <h2>
+    <small>Vacations</small>
+  </h2>
+
+  <table class="table table-striped table-condensed table-hover">
+    <thead>
+      <th>Date</th>
+      <th>Formation</th>
+      <th>Activité</th>
+      <th>Intervenant</th>
+      <th>Qté</th>
+      <th>Forfait HTD</th>
+      <th>Commentaires</th>
+    </thead>
+
+    <% @formation.vacations.each do |vacation| %>
+      <%= render vacation %>
+    <% end %>
+  </table>
+<% end %>
+
+<div id="audit" class="collapse-out">
+  <% if @formation.audits.any? %>
+    <h3><span class="glyphicon glyphicon-search"></span> Audit des modifications</h3>
+    <table class="table table-bordered table-hover table-condensed">
+      <thead>
+        <th>Date</th>
+        <th>Utilisateur</th>            
+        <th>Type</th>
+        <th>Record_id</th>
+        <th>Action</th>
+        <th>Modifications</th>
+      </thead>
+
+      <%= render partial: 'tools/audit', collection: @formation.audits %>
+
+    </table>
+  <% end %>
+</div> 

@@ -1,0 +1,35 @@
+<div class="page-header">
+  <%= link_to documents_path, class: 'btn btn-default' do %>
+    <span class="glyphicon glyphicon-list-alt"></span>
+    Retour
+  <% end %>
+  <% if current_user.try(:admin?) %>
+    <%= link_to edit_document_path(@document), class: 'btn btn-primary' do %>
+      <span class="glyphicon glyphicon-pencil"></span>
+      Modifier
+    <% end %>
+  <% end %>
+  <h1><%= @document.nom %></h1>
+</div>
+
+
+<dl class="dl-horizontal">
+
+  <dt></dt>
+  <dd>
+    <%= image_tag @document.fichier.url(:thumb) %>
+  </dd>
+  <br>
+    
+  <dt>Formation:</dt>
+  <dd><%= @document.formation.nom_promo %></dd>
+
+  <dt>Publié par:</dt>
+  <dd><%= @document.intervenant.nom_prenom %></dd>
+
+  <dt>UE:</dt>
+  <dd><%= @document.unite.num_nom if @document.unite %></dd>
+
+  <dt>Fichier:</dt>
+  <dd><%= link_to @document.fichier, @document.fichier.url %></dd>
+</dl>

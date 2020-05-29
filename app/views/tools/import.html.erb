@@ -1,0 +1,63 @@
+<script>
+  $(document).ready(function() { $(".select2").select2({theme: "bootstrap"}); });
+</script>
+
+<div class="page-header">
+  <h1>
+  	<span class="glyphicon glyphicon-download-alt"></span>
+  	Import de cours
+  </h1>
+</div>
+
+<%= form_tag({action: "import_do", method: :post}, multipart: true) do %>
+  <div>
+    <h3>Importation des cours à partir d'un fichier Excel</h3>
+    <ul>
+      <li>
+        Le fichier source doit contenir <b>les mêmes entêtes de colonnes</b> 
+        que le fichier généré lors de l'export Excel: <br>
+          <%= Cour.xls_headers.join(", ") %>
+      </li>
+      <li>
+        Données obligatoires pour que la ligne soit importée : <br>
+        <b>id, Date_début, Heure_début, Date_fin, Heure_fin, Intervenant, UE, Intitulé</b>
+      </li>
+      <li>
+        Si 'id' est égal à '0', c'est une création de cours. Sinon c'est une mise à jour du cours ayant comme identifiant unique l'id' donné. Si le cours ayant cet 'id' n'existe pas, il sera créé.
+      </li>
+    </ul>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-4">
+      <%= label_tag "Formation" %>    
+      <%= select_tag :formation_id, 
+            options_from_collection_for_select(Formation.all, :id, :nom, params[:formation_id]), 
+              class:"form-control select2", include_blank:true %>
+
+      <%= label :filename, "Fichier source" %>
+      <%= file_field_tag 'upload', accept: '.xls', class: 'form-control' %>
+      <br>
+
+      <b>Enregistrer les changements ?</b> <br>
+      <label class="radio-inline">
+        <%= radio_button_tag :save, true, class: 'form-control' %>
+        Oui
+      </label>
+      <label class="radio-inline">     
+        <%= radio_button_tag :save, false, :checked => true %>
+        Non
+      </label>
+      
+      <br>
+      <i>Choisissez 'Non' pour tester votre import</b></i><br />
+      <br>
+
+      
+      <div class="actions">
+        <%= submit_tag "Lancer l'importation", class: "btn btn-success" %>
+      </div>
+    </div>
+  </div>
+<% end %>
+<br>

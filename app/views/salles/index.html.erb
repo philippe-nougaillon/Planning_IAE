@@ -1,0 +1,52 @@
+<div class="page-header">
+  <div class="btn-group pull-right">
+    <%= link_to new_salle_path, class: 'btn btn-primary' do %>
+      <span class="glyphicon glyphicon-plus"></span>
+      Ajouter
+    <% end %>
+  </div>
+  <h1>
+    <span class="glyphicon glyphicon-blackboard"></span>
+    Liste des salles
+  </h1>
+</div>
+
+<div class='container-fluid'>
+    <%= form_tag request.path, method: :get do %>
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm-2">
+            <%= label_tag "Salle" %>    
+              <%= select_tag :salle_id, 
+                      options_from_collection_for_select(Salle.order(:nom), :id, :nom, params[:salle_id]), 
+                        include_blank:true, onchange:'this.form.submit()', class:"form-control" %>
+          </div>
+        </div>
+      </div>  
+    <% end %>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-hover table-striped">
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Nbr places</th>
+        <th>Bloc</th>
+        <th colspan="2"></th>
+      </tr>
+    </thead>
+
+    <tfoot>
+      <tr>
+        <th /><th /><th /><th />
+      </tr>
+    </tfoot>
+
+    <tbody>
+        <%= render @salles %>
+    </tbody>
+  </table>
+</div>
+<br>
+

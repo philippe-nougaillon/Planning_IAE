@@ -1,0 +1,76 @@
+<script>
+  $(document).ready(function() { $(".select2").select2({theme: "bootstrap"}); });
+</script>
+
+<%=  bootstrap_form_for(@etudiant) do |f| %>
+  <% if @etudiant.errors.any? %>
+    <div class="alert alert-danger alert-dismissable" role="alert">
+      <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+      <h4><%= pluralize(@etudiant.errors.count, "error") %> prohibited this etudiant from being saved:</h4>
+
+      <ul>
+      <% @etudiant.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row">
+    <div class="col-sm-4">
+      <%= f.collection_select(:formation_id, Formation.unscoped.all, :id, :nom, {include_blank: true}, class:"select2") %>
+
+      <%= f.text_field :civilité %>
+      <%= f.text_field :nom %>
+      <%= f.text_field :nom_marital %>
+      <%= f.text_field :prénom %>
+      <div class="row">
+        <div class="col-sm-6">
+          <%= f.date_field :date_de_naissance, label: "Né(e) le" %>
+        </div>
+        <div class="col-sm-6">
+          <%= f.text_field :lieu_naissance %>
+        </div>
+      </div>
+      <%= f.text_field :pays_naissance %>
+      <%= f.text_field :nationalité %>
+  
+      <%= f.submit class: "btn btn-primary" %>
+  
+    </div>
+
+    <div class="col-sm-1">
+    </div>
+
+    <div class="col-sm-3">
+      <%= f.text_field :email %>
+      <%= f.text_field :adresse %>
+      <div class="row">
+        <div class="col-sm-6">
+          <%= f.text_field :cp %>
+        </div>
+        <div class="col-sm-6">
+          <%= f.text_field :ville %>
+        </div>
+      </div>
+      <%= f.text_field :mobile %>
+      <%= f.text_field :dernier_ets, label: "Dernier établissement fréquenté" %>
+      <%= f.text_field :dernier_diplôme %>
+      <%= f.text_field :cat_diplôme, label: "Catégorie 'Science' diplôme" %>
+      <%= f.text_field :num_sécu, label: "Numéro de Sécurité Sociale" %>
+    </div>
+
+    <div class="col-sm-1">
+    </div>
+
+    <div class="col-sm-3">
+      <%= f.select :workflow_state, Etudiant.workflow_spec.states.keys.to_a, include_blank: true, label: "Statut" %>
+      <%= f.text_field :num_apogée, label: "Numéro APOGEE" %>
+      <%= f.text_field :poste_occupé %>
+      <%= f.text_field :nom_entreprise, label: "Nom Entreprise" %>
+      <%= f.text_field :adresse_entreprise, label: "Adresse Entreprise" %>
+      <%= f.text_field :cp_entreprise, label: "Code postal Entreprise" %>
+      <%= f.text_field :ville_entreprise, label: "Ville Entreprise" %>
+    </div>
+  </div>
+<% end %>

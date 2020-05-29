@@ -1,0 +1,2 @@
+module CoursHelper
+end

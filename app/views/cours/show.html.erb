@@ -1,0 +1,84 @@
+<div class="page-header">
+  <div class="btn-group pull-right">
+    <%= link_to edit_cour_path(@cour), class: 'btn btn-primary' do %>
+      <span class="glyphicon glyphicon-pencil"></span>
+      Modifier
+    <% end %>
+
+    <% if current_user.admin? %>
+      <%= link_to(@cour, method: :delete, data:{confirm: 'Confirmez-vous la suppression définitive de ce cours ?'}, class:"btn btn-warning") do %>
+        <span class="glyphicon glyphicon-remove"></span>
+        Supprimer
+      <% end %>
+    <% end %>
+
+    <%= link_to cours_path, class: 'btn btn-default' do %>
+      <span class="glyphicon glyphicon-list-alt"></span>
+      Retour
+    <% end %>
+  </div>
+  
+  <h2>
+    <%= l(@cour.debut, format: :long) %>
+  </h2>
+</div>
+
+<h3>
+  <%= @cour.formation.try(:nom_promo) %> -> 
+  <%= @cour. nom_ou_ue %>
+</h3>
+
+<p>
+  <strong>Fin:</strong>
+  <%= l(@cour.fin, format: :long) %>
+</p>
+
+<p>
+  <strong>Durée:</strong>
+  <%= @cour.duree %>h
+</p>
+
+<p>
+  <strong>Intervenant:</strong>
+  <%= link_to @cour.intervenant.nom_prenom, @cour.intervenant %>
+</p>
+
+<p>
+  <strong>Formation:</strong>
+  <%= link_to @cour.formation.try(:nom_promo), @cour.formation %>
+</p>
+
+<p>
+  <strong>Salle:</strong>
+  <% if @cour.salle %>
+    <%= @cour.salle.nom %>
+    <% if @cour.manque_de_places? %>
+      <i class="glyphicon glyphicon-warning-sign" 
+          title="Salle trop petite. Manque <%= @cour.formation.nbr_etudiants - @cour.salle.places %> place(s)">
+      </i>
+    <% end %>
+  <% end %>
+</p>
+
+<p>
+  <strong>Etat:</strong>
+  <span class="label <%= @cour.style %>"><%= @cour.etat.humanize %></span>
+</p>
+<br>
+
+<% if @cour.audits.any? %>
+  <h3><span class="glyphicon glyphicon-search"></span> Audit des modifications</h3>
+  <table class="table table-bordered table-hover table-condensed">
+    <thead>
+      <th>Date</th>
+      <th>Utilisateur</th>            
+      <th>Type</th>
+      <th>Record_id</th>
+      <th>Action</th>
+      <th>Modifications</th>
+    </thead>
+
+    <%= render partial: 'tools/audit', collection: @cour.audits %>
+
+  </table>
+<% end %>

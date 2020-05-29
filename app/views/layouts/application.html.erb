@@ -1,15 +1,152 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Planning</title>
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="manifest" href="/manifest.json">
+    
+    <title><%= @sitename %></title>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <%= javascript_include_tag "https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js", "https://oss.maxcdn.com/respond/1.4.2/respond.min.js" %>
+    <![endif]-->
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    
+    <%= csrf_meta_tags %>
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-89540844-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-89540844-1');
+    </script>
   </head>
 
   <body>
-    <%= yield %>
+    <nav class="navbar navbar-<%= request.host == 'iae-test.philnoug.com' ?  'inverse' : 'default' %>" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <span class="navbar-brand">
+              <%= image_tag("logo_iae@195.png", height: 35) %>
+          </span>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="<%= (@ctrl=='cours' ? 'active' : '') %>">
+              <%= link_to cours_path(@cours_params) do %>
+                <span class="glyphicon glyphicon-calendar"></span>
+                Planning
+              <% end %>
+            </li>
+
+            <li class="<%= (@ctrl=='salles' ? 'active' : '') %>">
+              <%= link_to occupation_salles_path do %>
+                <span class="glyphicon glyphicon-blackboard"></span>
+                Salles
+              <% end %>
+            </li>
+
+            <% if user_signed_in? %>
+              <li class="<%= (@ctrl=='formations' ? 'active' : '') %>">
+                <%= link_to formations_path do %>
+                  <span class="glyphicon glyphicon-briefcase"></span>
+                  Formations
+                <% end %>
+              </li>
+              <li class="<%= (@ctrl=='intervenants' ? 'active' : '') %>">
+                <%= link_to intervenants_path do %>
+                  <span class="glyphicon glyphicon-user"></span>
+                  Intervenants
+                <% end %>
+              </li>
+              <li class="<%= (@ctrl=='etudiants' ? 'active' : '') %>">
+                <%= link_to etudiants_path do %>
+                  <span class="glyphicon glyphicon-education"></span>
+                  Etudiants
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+
+          <ul class="nav navbar-nav navbar-right">
+            <% unless user_signed_in? %>
+              <li>
+                <%= link_to guide_index_path do %>
+                  <span class="glyphicon glyphicon-info-sign"></span>
+                  Mémo
+                <% end %>
+              </li>
+              <li>
+                <a href="/users/sign_in"><span class="glyphicon glyphicon-log-in"></span> Connexion</a>
+              </li>
+            <% else %>
+              <%= current_user.username %>
+              |
+              <%= link_to tools_index_path do %>
+                <span class="glyphicon glyphicon-wrench"></span>
+                Outils
+              <% end %>
+              |
+              <%= link_to guide_index_path do %>
+                <span class="glyphicon glyphicon-info-sign"></span>
+                Mémo
+              <% end %>
+              |
+              <%= link_to "/users/sign_out", method: :delete do %> 
+                <span class="glyphicon glyphicon-log-out"></span> Déconnexion
+              <% end %>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <% flash.each do |name, msg| %>
+        <%= content_tag :div, class: "alert alert-#{ name == "error" ? "danger" : "success" } alert-dismissable", role: "alert" do %>
+          <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <%= msg.to_s.html_safe %>
+        <% end %>
+      <% end %>
+
+      <%= yield %>
+    </div>
   </body>
+
 </html>

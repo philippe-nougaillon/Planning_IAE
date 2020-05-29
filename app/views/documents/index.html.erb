@@ -1,0 +1,109 @@
+<div class="page-header">
+  <% if current_user.try(:admin?) %>
+    <%= link_to new_document_path, class: 'btn btn-primary' do %>
+      <span class="glyphicon glyphicon-plus"></span>
+      Document
+    <% end %>
+  <% end %>
+  <h1>
+    <span class="glyphicon glyphicon-book"></span>
+    Liste des documents
+  </h1>
+</div>
+
+<div class='container-fluid'>
+    <%= form_tag request.path, method: :get do %>
+      <div class="form-group">
+        <div class="row">
+    
+          <div class="col-sm-5">
+              <%= label_tag "Formation" %>    
+              <%= select_tag :formation_id, 
+                    options_from_collection_for_select(Formation.all, :id, :nom_promo, params[:formation_id]),  
+                      include_blank:true, onchange:'this.form.submit()', class:"form-control", 
+                        disabled:(current_user.formation) %>
+          </div>
+
+          <div class="col-sm-4">
+              <%= label_tag "Publié par" %>    
+              <%= select_tag :intervenant_id, 
+                    options_from_collection_for_select(Intervenant.all, :id, :nom_prenom, params[:intervenant_id]), 
+                      include_blank:true, onchange:'this.form.submit()', class:"form-control" %>
+          </div>
+    
+          <div class="col-sm-2">
+              <%= label_tag :ue, "UE" %>
+              <div class="input-group">
+              <%= select_tag :unite_id, 
+                    options_from_collection_for_select(Unite.where(formation_id:params[:formation_id]).order(:num), :id, :num_nom, params[:unite_id]), 
+                        include_blank: true, onchange:'this.form.submit()', class: "form-control" %>
+                <span class="input-group-btn">
+                  <%= submit_tag 'Filtrer', class:"btn btn-success" %>
+                </span>
+              </div>
+          </div>
+        
+        </div>
+      </div>  
+    <% end %>
+</div>
+
+<% if @documents.any? %>
+
+  <div class="table-responsive">
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th></th>
+          <th colspan="2">Publié par</th>
+          <th>Il y a</th>
+          <th>Nom</th>
+          <th>Formation</th>
+          <th>UE</th>
+          <% if current_user.try(:admin?) %>
+            <th />
+          <% end %>
+        </tr>
+      </thead>
+
+      <tbody>
+        <%= content_tag_for(:tr, @documents) do |document| %>
+            <td>
+              <%= link_to image_tag(document.fichier.url(:thumb), height:80, alt:' '), document %>
+            </td>
+            <td>
+              <% if document.intervenant.photo %>
+                <%= link_to(image_tag(document.intervenant.photo_url, class: "img-circle", size:'45x45'), document.intervenant) %>
+              <% end %>
+            </td>
+            <td>
+              <%= link_to document.intervenant.nom_prenom, document.intervenant %>
+            </td>
+            <td><%= time_ago_in_words(document.updated_at) %></td>
+            <td><%= link_to document.nom, document %></td>
+            <td><%= link_to document.formation.nom_promo, document.formation %></td>
+            <td><%= document.unite.num_nom if document.unite %></td>
+            <% if current_user.try(:admin?) %>
+              <td>
+                <%= link_to edit_document_path(document), class: "btn btn-default" do %>
+                  <i class="glyphicon glyphicon-pencil"></i>
+                <% end %>
+                <%= link_to(document, method: :delete, data:{confirm: 'Confirmez-vous ?'}, class: "btn btn-default") do %>
+                  <i class="glyphicon glyphicon-remove"></i>
+                <% end %>
+              </td>
+            <% end %>
+        <% end %>
+      </tbody>
+
+      <tfoot>
+        <tr>
+          <% 7.times do %><th /><% end %>
+          <% if current_user.try(:admin?) %>
+            <th />  
+          <% end %>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+<% end %>

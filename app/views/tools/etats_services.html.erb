@@ -1,0 +1,76 @@
+<script>
+  $(document).ready(function() { $(".select2").select2({theme: "bootstrap"}); });
+</script>
+
+<div class="page-header">
+  <h1>
+  	<span class="glyphicon glyphicon-list-alt"></span>
+  	Etats de services
+  </h1>
+</div>
+
+<h3>Récapitule les cours réalisés sur une période donnée, par intervenant</h3>
+<br>
+
+<%= form_tag(request.path, method: :get) do %>
+    <div class="row">
+
+        <div class="col-sm-2">
+            <%= label_tag "Du" %>    
+            <%= text_field_tag :start_date, params[:start_date], type: 'date', class: "form-control" %>
+        </div>
+
+        <div class="col-sm-2">
+            <%= label_tag "Au" %>    
+            <%= text_field_tag :end_date, params[:end_date], type: 'date', class: "form-control" %>
+        </div>
+
+        <div class="col-sm-2">
+            <%= label_tag :status, "Statut" %>
+            <%= select_tag :status, 
+                options_for_select(Intervenant.statuses, 
+                params[:status]), include_blank:true,
+                class: "form-control", onchange: 'this.form.submit()' %>
+        </div>
+
+        <div class="col-sm-4">
+            <% if @intervenants_for_select %>
+                <%= label_tag :intervenant_id, "Intervenant" %>
+                <div class="input-group">
+                    <%= select_tag :intervenant_id,
+                        options_from_collection_for_select(@intervenants_for_select, :id, :nom_prenom, params[:intervenant_id]), 
+                            include_blank:true, onchange:'this.form.submit()', class:"form-control select2" %>
+                    <span class="input-group-btn">
+                        <%= submit_tag 'Afficher', class:"btn btn-success" %>
+                    </span>
+                </div>
+            <% end %>
+       </div>
+    </div>
+<% end %>
+
+<% @intervenants.each do | intervenant | %>
+    <% next if intervenant.id == 445 %>
+
+    <%= render partial: 'etats_services', locals: {intervenant: intervenant } %>
+
+    <div class="text-right">
+        <%= link_to url_for(params
+                                .permit(:start_date, :end_date, :status)
+                                .merge(intervenant_id: intervenant.id, format: 'xls')), 
+                            class: 'btn btn-default btn-xs' do %>
+                <span class="glyphicon glyphicon-share"></span>
+                Export EXCEL
+        <% end %>
+
+        <%= link_to url_for(params
+                                .permit(:start_date, :end_date, :status)
+                                .merge(intervenant_id: intervenant.id, format: 'pdf')), 
+                            class: 'btn btn-danger btn-xs' do %>
+                <span class="glyphicon glyphicon-share"></span>
+                Export PDF
+        <% end %>
+    </div>
+
+<% end %>
+<br><br>

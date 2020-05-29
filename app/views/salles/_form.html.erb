@@ -1,0 +1,26 @@
+<%= bootstrap_form_for(@salle) do |f| %>
+  <% if @salle.errors.any? %>
+    <div class="alert alert-danger alert-dismissable" role="alert">
+      <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  
+      <h3><%= t('activerecord.errors.template.header',
+                  model: Salle.model_name.human, count: @salle.errors.count) %></h3>
+      <ul>
+      <% @salle.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <div class="col-sm-3">
+
+      <%= f.text_field :nom %>
+      <%= f.text_field :bloc %>
+      <%= f.number_field :places, label:"Nombre de places" %><i><small>Entrez 0 pour autoriser les doublons</small></i>
+      <br><br>
+      <%= f.submit class: "btn btn-primary" %>
+    </div>
+  </div>  
+<% end %>

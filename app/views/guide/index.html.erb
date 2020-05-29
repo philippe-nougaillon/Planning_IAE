@@ -1,0 +1,625 @@
+<div class="jumbotron">
+  <h3>
+    <span class="glyphicon glyphicon-info-sign"></span>
+    Mémo
+  </h3>
+  Aide-mémoire de l'application Planning, à l'usage des utilisateurs et des administrateurs
+</div>
+
+<div class="page-header">
+  <h1>
+    <span class="glyphicon glyphicon-calendar"></span>
+    Planning des cours
+  </h1>
+</div>
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="thumbnail">
+      <a href="/Images/guide/cours1.png">
+        <img src="/Images/guide/cours1.png" alt="Planning journalier" style="width:100%">
+        <div class="caption">
+          <p>Liste des cours à venir</p>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="thumbnail">
+      <a href="/Images/guide/cours_selection.png">
+        <img src="/Images/guide/cours_selection.png" alt="Occupation des salles" style="width:100%;height: 250px">
+        <div class="caption">
+          <p>Liste des cours d'une formation</p>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="thumbnail">
+      <a href="/Images/guide/cours_new.png">
+        <img src="/Images/guide/cours_new.png" alt="Planning mensuel" style="width:100%">
+        <div class="caption">
+          <p>Formulaire de réservation de salle</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<ul>
+    <li>Chaque cours est associé à une Formation, un ou deux Intervenants, une Salle et un Etat (Planifié, Confirmé, Reporté, Annulé, Réalisé)</li>
+    <li>Affichage des cours sous forme de Liste, de Calendrier (semaine/mois) ou Etat d'Occupation des salles</li>
+    <li>Recheche multi-critères (Filtre sur Date, Formation, Intervenant, Etat, Cours passés ou futurs)</li>
+    <li>Export des cours vers Excel (CSV), Outlook/Google Agenda(iCal), PDF</li>
+    <li>Sélection d'un ensemble de cours pour effectuer une action groupée :</li>
+    <ul>
+      <li>Changement d'état</li>
+      <li>Changement de salle (avec proposition des salles disponibles)</li>
+      <li>Changement de date</li>
+      <li>Changement d'intervenant</li>
+      <li>Export CSV</li>
+      <li>Export iCal</li>
+      <li>Export PDF</li>
+      <li>Supression (Seul le créateur d'un cours peut le supprimer)</li>
+    </ul>
+
+    <li>Saisie d'une réservation :</li>
+    <ul>
+      <li>Cochez <b>HSS?</b> pour que les heures de cours ne soient pas imputées sur l'état de service de l'intervenant (HSS = Hors Service Statutaire)</li>
+      <li>Cochez <b>E-learning?</b> pour indiquer que ce cours est de l'E-learning</li>
+      <li>Pour signaler que le cours utilise l'outil <b>ZOOM</b>; entrez comme nom de cours le lien ZOOM, puis son intitulé, séparés par un espace. Le lien ZOOM sera alors cliquable dans la liste publique des cours (PC/Mobile)</li>  
+    </ul>
+    <li>Impossibilité de saisir un nouveau cours ayant lieu un dimanche ou un jour de fermeture de l'établissement</li>
+    <li>Pas de chevauchement horaire pour un même intervenant. Il n'est pas possible de saisir un nouveau cours si le formateur intervient déjà sur un autre cours aux mêmes heures (sauf si les doublons sont autorisés pour cet intervenant)</li>
+
+    <li>Affichage d'un pictogramme <i class="glyphicon glyphicon-warning-sign glyph-custom-warning"></i> dans les cas suivants :</li>
+    <ul>
+      <li>Dépassement de capacité de la salle (le nbr de places est inférieur au nbr d'étudiants de la formation)</li>
+      <li>Le cours est dans l'état 'Confirmé' mais aucune salle n'a été réservée</li>
+    </ul>
+</ul>
+
+<br>
+
+
+<div class="page-header">
+  <h1>
+    <span class="glyphicon glyphicon-blackboard"></span>
+    Liste des salles
+  </h1>
+</div>
+
+<div class="row">
+  <div class="col-md-3">
+    <div class="thumbnail">
+      <a href="/Images/guide/salles1.png">
+        <img src="/Images/guide/salles1.png" alt="Occupation des salles jour" style="width:100%;height: 200px">
+        <div class="caption">
+          <p>Occupation des salles (jour)</p>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="thumbnail">
+      <a href="/Images/guide/salles2.png">
+        <img src="/Images/guide/salles2.png" alt="Occupation des salles semaine" style="width:100%;height: 200px">
+        <div class="caption">
+          <p>Occupation des salles (semaine)</p>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="thumbnail">
+      <a href="/Images/guide/cours3.png">
+        <img src="/Images/guide/cours3.png" alt="Occupation des salles semaine détail" style="width:100%">
+        <div class="caption">
+          <p>Occupation salles en détail (semaine)</p>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="thumbnail">
+      <a href="/Images/guide/cours4.png">
+        <img src="/Images/guide/cours4.png" alt="Occupation des salles semaine détail" style="width:100%">
+        <div class="caption">
+          <p>Occupation salles en détail (semaine)</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+<ul>
+    <li>Gestion de la capacité (alerte si dépassement)</li>
+    <li>Visualisation des créneaux horaires libres/occupés pour une date, une salle</li>
+    <strong>Pour autoriser les doublons: entrez 0 dans capacité</strong>
+</ul>
+<br>
+
+<br>
+
+<div class="page-header">
+  <h1>
+    <span class="glyphicon glyphicon-briefcase"></span>
+    Formations
+  </h1>
+</div>
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="thumbnail">
+      <a href="/Images/guide/formations.png">
+        <img src="/Images/guide/formations.png" alt="Liste des formations" style="width:100%">
+        <div class="caption">
+          <p>Liste des formations</p>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="thumbnail">
+      <a href="/Images/guide/formation.png">
+        <img src="/Images/guide/formation.png" alt="Une formation en détail" style="width:100%;height: 250px">
+        <div class="caption">
+          <p>Une formation en détail</p>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="thumbnail">
+      <a href="/Images/guide/formation_form.png">
+        <img src="/Images/guide/formation_form.png" alt="Ajout d'une formation" style="width:100%">
+        <div class="caption">
+          <p>Modification d'une formation</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<ul>
+    <li>Chaque formation est associée à un code couleur pour un répérage rapide dans le planning</li>
+    <li>Gestion des UE (une liste d'UE est associée à chaque formation, avec indication du nombre d'heures)</li>
+    <li>Gestion des étudiants liés à la formation</li>
+    <li>Gestion des vacations votées (nom de l'intervenant, nbr heures)</li>
+    <li>Archivage des formations</li>
+    <ul>
+      <li>
+        <b>Pour archiver une formation :</b>    
+        <br>
+        Pour faire disparaitre une formation du planning (sans la supprimer), allez dans Formations/Choisir la formation à archiver/Modifier => Cocher "Archivée" et Enregistrez. Cette formation ne sera plus visible dans toute l'application.
+        Pour faire réapparaitre une formation archivée, allez dans Formations/Cocher Archivées pour filtrer les formations archivées puis modifier la formation à faire réapparaitre, décochez "Archivée ?" et enregistrez. Cette formation est alors de nouveau visible dans toute l'application.
+        <strong>Attention: une formation ayant des cours à venir ne pourra pas être archivée  (l'option sera désactivée)!</strong>
+      </li>     
+    </ul>
+    <li>
+      Code Analytique (EOTP): Quand il s'agit d'une formation de plusieurs années civiles, il faut saisir la racine du code EOTP plus "?" (ex:7322PLHCOFCDFINS?). Le système remplacera le '?' par l'indice (1,2 ou 3) selon l'année de début début des cours de cette promotion (indice = année_du_premier_cours - année_en_cours + 1)  ((2018 - 2018) +1 ) = 1.  
+    </li>
+    <li>
+       Flag HSS?: L'activer permet de ne pas imputer aux états de sercices les cours liés à cette formation.
+    </li>
+</ul>
+<br>
+
+<div class="page-header">
+  <h1>
+    <span class="glyphicon glyphicon-user"></span>
+    Intervenants
+  </h1>
+</div>
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="thumbnail">
+      <a href="/Images/guide/intervenant.png">
+        <img src="/Images/guide/intervenant.png" alt="Liste des intervenants" style="width:100%">
+        <div class="caption">
+          <p>Liste des intervenants</p>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="thumbnail">
+      <a href="/Images/guide/intervenant_show.png">
+        <img src="/Images/guide/intervenant_show.png" alt="Audit des modifications" style="width:100%;height: 250px">
+        <div class="caption">
+          <p>Un intervenant</p>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="thumbnail">
+      <a href="/Images/guide/intervenant_form.png">
+        <img src="/Images/guide/intervenant_form.png" alt="Un intervenant en détail" style="width:100%">
+        <div class="caption">
+          <p>Un intervenant en détail</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<ul>
+    <li>Profil des intervenants avec photo (option), status, formations dispensées (affichage dynamique basé sur les cours enregistrés, avec le nombre d'heures planifiées et la date du premier cours)</li>
+    <li>Gestion des responsabilités (Titre, nbr heures attribuées)</li>
+    <ul>
+      <li>
+        <b>Filtrage des cours par intervenant;</b> Pour que la recherche d'un intervenant soit fructueuse :
+        <br>
+        Comme le système cherche un intervenant qui se nomme NOM + 'Espace' + PRENOM, il ne faut donc pas d’espace, ni dans le nom, ni dans le prénom.
+        Ex: "DE LA MARRE Henry" sera compris comme nom=DE, prénom=LA MARRE Henry. Il convient donc de remplacer l'espace par un '_', ce qui donnera "DE_LA_MARRE Henry".
+        Le nom et le prénom sont obligatoires. Remplissez un champ vide par un point si besoin.
+      </li>
+      <li>Cochez 'Autoriser les doublons' si vous souhaitez que l'intervenant puisse être sur plusieurs cours sur le même créneau horaire. C'est généralement le cas pour les groupes et non les individus.</li>
+  </ul>
+  <li>La saisie des Responsabilités n'est accessible que par les membres du groupe RH</li>
+</ul>
+<br>
+
+<div class="page-header">
+  <h1>
+    <span class="glyphicon glyphicon-education"></span>
+    Etudiants
+  </h1>
+</div>
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="thumbnail">
+      <a href="/Images/guide/etudiant.png">
+        <img src="/Images/guide/etudiant.png" alt="Liste des étudiants" style="width:100%">
+        <div class="caption">
+          <p>Liste des étudiants</p>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="thumbnail">
+      <a href="/Images/guide/etudiant_form.png">
+        <img src="/Images/guide/etudiant_form.png" alt="Un étudiant en détail" style="width:100%">
+        <div class="caption">
+          <p>Un étudiant en détail</p>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="thumbnail">
+      <a href="/Images/guide/etudiant_show.png">
+        <img src="/Images/guide/etudiant_show.png" alt="Audit des modifications" style="width:100%">
+        <div class="caption">
+          <p>Récapitulatif étudiant avec audit des modifications</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<ul>
+    <li>Chaque étudiant est associé à une formation</li>
+    <li>La saisie des coordonnées de l'étudiant permet de lui envoyer une notification par email/SMS en cas d'annulation de cours (option)</li>
+</ul>
+<br>
+
+<div class="page-header">
+  <h1>
+    <span class="glyphicon glyphicon-user"></span>
+    Utilisateurs
+  </h1>
+</div>
+
+<ul>
+    <li>Il existe 4 rôles utilisateur :</li>
+    <ul>
+      <li>Visiteur (utilisateur non authentifié)</li>
+      <li>Utilisateur (utilisateur authentifié, généralement un membre du service Scolarité)</li>
+      <li>Super utilisateur (peut réserver des salles, généralement un membre du service Planning)</li>
+      <li>Admin (peut administrer les cours et les utilisateurs)</li>
+    </ul>
+</ul>
+<br>
+
+
+<div class="page-header">
+  <h1>
+    <span class="glyphicon glyphicon-wrench"></span>
+    Outils
+  </h1>
+</div>
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="thumbnail">
+      <a href="/Images/guide/outils.png">
+        <img src="/Images/guide/outils.png" alt="Outils" style="width:100%;height: 230px">
+        <div class="caption">
+          <p>Liste des outils</p>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="thumbnail">
+      <a href="/Images/guide/imports-log.png">
+        <img src="/Images/guide/imports-log.png" alt="" style="width:100%">
+        <div class="caption">
+          <p>Le journal des importations (Imports log)</p>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="thumbnail">
+      <a href="/Images/guide/reservation-saison.png">
+        <img src="/Images/guide/reservation-saison.png" alt="Réservation créneaux sur une saison" style="width:100%">
+        <div class="caption">
+          <p>Réservation de créneaux horaires pour une saison</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<ul>
+  <li>Gestion des jours de fermeture</li>
+  <li>Réservation de créneaux horaires</li>
+  <li>Etats de services</li>
+  <li>Taux d'occupation jours ou salles</li>
+  <li>Import/Export de cours, intervenants, étudiants</li>
+  <li>Outils pour le rôle admin :</li>
+  <ul>
+    <li>Gestion des Utilisateurs</li>
+    <li>Import des utilisateurs</li>
+    <li>Intervertir deux intervenants</li>
+    <li>Audit des modifications</li>
+    <li>Gestion des Salles</li>
+    <li>Nouvelle saison (Réservation de cours sur une année)</li>
+  </ul>
+</ul>
+<br>
+
+<div class="page-header">
+  <h1>
+    <span class="glyphicon glyphicon-download-alt"></span>
+    Importation des données
+  </h1>
+</div>
+
+<ul>
+    <li>
+      <b>Importation de cours à partir d'un fichier Excel:</b><br> 
+      <ul>
+        <li>
+          Le fichier source doit contenir <b>les mêmes entêtes de colonnes</b> 
+          que le fichier généré lors de l'export Excel: <br>
+            <%= Cour.xls_headers.join(", ") %>
+        </li>
+        <li>
+          Données obligatoires pour que la ligne soit importée : <br>
+          <b>id, Date_début, Heure_début, Date_fin, Heure_fin, Intervenant, UE, Intitulé</b>
+        </li>
+        <li>
+          Si 'id' est égal à '0', c'est une création de cours. Sinon c'est une mise à jour du cours ayant comme identifiant unique l'id' donné. Si le cours ayant cet 'id' n'existe pas, il sera créé.
+        </li>
+      </ul>
+    </li>
+    <br>
+    
+    <li>
+      Les formations, intervenants, étudiants peuvent être importés en masse à partir d'un fichier XLS
+    </li>
+
+  	<br>
+    <li>
+    	<b>Importation d'utilisateurs:</b><br> 
+      - Le fichier source doit contenir les colonnes suivantes: <br>
+    	<pre>email;nom;prénom;mobile</pre>
+  	    <b><i>Chaque nouvel utilisateur sera averti de la création de son compte par l'envoi d'un email contenant un mot de passe unique généré automatiquement</i></b> 
+    </li>
+</ul>
+<br>
+
+<div class="page-header">
+  <h1>
+    <span class="glyphicon glyphicon-export"></span>
+    Exportation des données
+  </h1>
+</div>
+
+<ul>
+    <li>Toutes les données sont exportables au format Microsoft Excel (XLS)</li>
+</ul>
+<br>
+
+<div class="page-header">
+  <h1>
+    <span class="glyphicon glyphicon-search"></span>
+    Audit des modifications
+  </h1>
+</div>
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="thumbnail">
+      <a href="/Images/guide/audit1.png">
+        <img src="/Images/guide/audit1.png" alt="Liste des modifications" style="width:100%">
+        <div class="caption">
+          <p>Audit des modifications</p>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="thumbnail">
+      <a href="/Images/guide/audit2.png">
+        <img src="/Images/guide/audit2.png" alt="Audit des modifications cours" style="width:100%">
+        <div class="caption">
+          <p>Audit des cours modifiés </p>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="thumbnail">
+      <a href="/Images/guide/audit3.png">
+        <img src="/Images/guide/audit3.png" alt="Que les changements de salle" style="width:100%">
+        <div class="caption">
+          <p>Audit des changements de salle</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<ul>
+    <li>Chaque modification apportée aux données est enregistrée dans un journal, avec la date, l'utilisateur, la table, le champs et la valeur avant/après modification</li>
+</ul>
+<br>
+
+
+<div class="page-header">
+  <h1>
+    <span class="glyphicon glyphicon-list-alt"></span>
+    Etats de services
+  </h1>
+</div>
+
+<ul>
+    <li>Récapitule les cours <b>réalisés</b> sur une période donnée par un intervenant</li>
+    <li>Visualisation des états de services par statut</li>
+    <li>Etat liquidatif en PDF</li>
+</ul>
+<br>
+
+
+<div class="page-header">
+  <h1>
+    <span class="glyphicon glyphicon-transfer"></span>
+    API
+  </h1>
+</div>
+
+<ul>
+    <li>Une API fournit les données du planning au format JSON</li>
+    <li>Ex: https://planning.iae-paris.com/api/v1/cours.json?d=20190701 </li>
+</ul>
+<br>
+
+
+<div class="page-header">
+  <h1>
+    <span class="glyphicon glyphicon-asterisk"></span>
+    Notification
+  </h1>
+</div>
+
+<ul>
+    <li>Les chargés de scolarité et les étudiants peuvent recevoir une notification par email/SMS(à venir) lors de l'annulation de cours(option)</li>
+    <li>Chaque fin de semaine, les intervenants recoivent leur planning de la semaine à venir (option)</li>
+</ul>
+<br>
+
+<div class="page-header">
+  <h1>
+    <span class="glyphicon glyphicon-phone"></span>
+    Mobile
+  </h1>
+</div>
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="thumbnail">
+      <a href="/Images/guide/mobile0.png">
+        <img src="/Images/guide/mobile0.png" alt="Planning mobile" style="width:100%">
+        <div class="caption">
+          <p>Planning mobile</p>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="thumbnail">
+      <a href="/Images/guide/mobile1.png">
+        <img src="/Images/guide/mobile1.png" alt="Planning mobile" style="width:100%">
+        <div class="caption">
+          <p>Indicateur d'avancement des cours</p>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="thumbnail">
+      <a href="/Images/guide/mobileSalles.png">
+        <img src="/Images/guide/mobileSalles.png" alt="Planning hebdomadaire mobile" style="width:100%">
+        <div class="caption">
+          <p>Planning mobile hebdomadaire</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<ul>    
+  <li>Le planning peut être visualisé sur différents supports (Responsive Design)</li>
+  <li>Vue planning adaptée aux écrans de smartphones</li>
+  <li>Adapté au standard PWA (Progressive Web App)</li>
+</ul>
+<br>
+
+
+<div class="page-header">
+  <h1>
+    <span class="glyphicon glyphicon-film"></span>
+    Affichage sur panneaux lumineux
+  </h1>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="thumbnail">
+      <a href="/Images/guide/afficheur.png">
+        <img src="/Images/guide/afficheur.png" alt="Afficheur" style="width:100%">
+        <div class="caption">
+          <p>Planning sur afficheur 1/2</p>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="thumbnail">
+      <a href="/Images/guide/afficheur2.png">
+        <img src="/Images/guide/afficheur2.png" alt="Planning mensuel" style="width:100%">
+        <div class="caption">
+          <p>Planning sur afficheur 2/2</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+<ul>
+    <li>Planning du jour optimisé pour la diffusion sur un grands écrans, généralement installés à l'entrée des salles de cours, dans les couloirs ou à l'accueil</li>
+</ul>
+<br>
+
+<div class="page-header">
+  <h1>
+    <span class="glyphicon glyphicon-envelope"></span>
+    Contact
+  </h1>
+</div>
+
+<p>
+  <kbd>Vos commentaires et propositions sont les bienvenus, ils m'aident à améliorer l'application...
+    <br>
+    philippe.nougaillon@gmail.com
+  </kbd>
+</p>
+<br>

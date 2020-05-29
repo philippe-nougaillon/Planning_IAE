@@ -1,0 +1,43 @@
+<hr>
+<h4>
+  <%= l(cours.debut, format: :heures_min) %>
+  <small>- <%= l(cours.fin, format: :heures_min) %></small>
+  <div class="pull-right">
+    <% if cours.salle %>
+      <span class="label <%= cours.style %>">
+        <%= link_to cours.salle.nom, image_path("Plan_d_acces_Campus_BioPark_-_IAE_Paris.pdf"), style: "color: white", title: "Plan d'accès au campus BioPark" %>
+      </span>
+    <% end %>
+  </div>
+</h4>
+
+<b>
+  <%= cours.try(:formation).try(:nom) %>
+</b>
+<br>
+
+<%= cours.try(:intervenant).try(:nom_prenom) %><br>
+
+<% if cours.intervenant_binome %>
+  <br>
+  <%= cours.intervenant_binome.nom_prenom %>
+<% end %>
+
+<% if cours.url? && cours.elearning? %>
+  <%= link_to cours.nom.split(' ').first, target:"_blank" do %>
+      <%= cours.nom.split(' ').last %>
+      <span class="glyphicon glyphicon-link"></span>
+  <% end %>
+<% else %>         
+  <i><%= cours.nom_ou_ue %></i>
+<% end %>
+
+<% if (pct = cours.progress_bar_pct2) && (cours.debut.to_date == Date.today) %>
+  <br>
+  <div class="progress" style="width: 100%">
+    <div class="progress-bar progress-bar-striped active" 
+         role="progressbar" aria-valuemin="0" aria-valuemax="100" 
+         style="width:<%= pct %>%">
+    </div>
+  </div>
+<% end %>

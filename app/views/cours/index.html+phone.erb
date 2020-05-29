@@ -1,0 +1,64 @@
+<script type="text/javascript">   
+  $(document).ready(function() { $(".select2").select2({theme: "bootstrap"}); });
+</script>
+
+<div class="container-fluid">
+
+  <%= form_tag request.path, method: :get do %>
+
+    <div class="form-group">
+      <div class="row">
+        
+        <div class="col-sm-3">
+          <%= label_tag "Cours à partir du" %>
+          <div class="input-group">  
+            <%= text_field_tag :start_date, params[:start_date], type:'date', onchange:'this.form.submit()', class:"form-control" %>
+          </div>
+        </div>
+
+        <div class="col-sm-6">
+          <%= label_tag "Formation" %>    
+          <%= select_tag :formation, grouped_options_for_select(Formation.for_select, params[:formation]), class:"form-control select2", include_blank:true, onchange:'this.form.submit()' %>
+        </div>
+
+        <div class="col-sm-5">
+          <%= label_tag "Intervenant" %>    
+          <div class="input-group">
+            <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), class:"form-control select2", include_blank:true, onchange:'this.form.submit()' %>
+            <span class="input-group-btn">
+              <%= submit_tag 'Filtrer', class:"btn btn-success" %>
+              <%= submit_tag 'RàZ', class:"btn btn-default" %>
+
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <% current_date = "" %>
+  <% @cours.includes(:formation, :intervenant, :salle).each do | cours | %>
+    <% if cours.debut.to_date != current_date %>
+      <hr>
+      <div class="row">
+        <div class="cols-sm-12">
+          <h4><i class="glyphicon glyphicon-triangle-bottom"></i>
+          <%= l(cours.debut.to_date, format: :long).humanize %></h4> 
+        </div>
+      </div>
+      <% current_date = cours.debut.to_date %>
+    <% end %>  
+
+    <%= render partial: 'cours', locals: {cours: cours } %>
+  <% end %>
+  <hr>
+
+  <div class="page_info">
+    <%= page_entries_info @cours, model:Cour %>
+  </div>
+
+  <%= will_paginate @cours, inner_window: 0, outer_window:0, renderer: BootstrapPagination::Rails, class:"pagination pagination-sm" %>
+
+</div>
+
+

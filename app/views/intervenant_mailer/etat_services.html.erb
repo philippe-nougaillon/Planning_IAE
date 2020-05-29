@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Récapitulatif des cours réalisés du <%= @start_date %> au <%= @end_date %></h1>
+    <p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Durée</th>
+                <th>Formation</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @cours.each do |c| %>
+                <tr>
+                    <td><%= l(c.debut, format: :short) %></td>
+                    <td><%= c.duree.to_f %>h</td>
+                    <td><%= c.formation.nom %></td>
+                </tr>
+            <% end %>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td><%= "\n Total: #{@cours.count} cours, soit #{@cours.sum(:duree)} heure.s réalisée.s" %></td>
+            <tr>
+        </tfoot>
+    </table>
+
+    </p>
+    <p>Merci de vérifier ce récapitulatif et de nous signaler rapidement les omissions ou erreurs éventuelles.</p>
+  </body>
+</html>

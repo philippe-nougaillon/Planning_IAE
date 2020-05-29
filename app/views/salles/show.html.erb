@@ -1,0 +1,78 @@
+<div class="page-header">
+  <div class="btn-group pull-right">
+    <% if current_user.admin? %>
+      <%= link_to edit_salle_path(@salle), class: 'btn btn-primary' do %>
+        <span class="glyphicon glyphicon-pencil"></span>
+        Modifier
+      <% end %>
+      <%= link_to salles_path, class: 'btn btn-default' do %>
+        <span class="glyphicon glyphicon-list-alt"></span>
+        Retour
+      <% end %>
+    <% end %>
+  </div>
+  
+  <h2>
+    <%= @salle.nom %>
+  </h2>
+</div>
+
+<p>
+  <strong>Nom:</strong>
+  <%= @salle.nom %>
+</p>
+
+<p>
+  <strong>Places:</strong>
+  <%= @salle.places %>
+</p>
+
+<p>
+  <strong>Bloc:</strong>
+  <%= @salle.bloc %>
+</p>
+
+<h3><span class="glyphicon glyphicon-search"></span> Audit des modifications</h3>
+<table class="table table-bordered table-hover table-condensed">
+  <thead>
+    <th>Date</th>
+    <th>Utilisateur</th>            
+    <th>Type</th>
+    <th>Record_id</th>
+    <th>Action</th>
+    <th>Modifications</th>
+  </thead>
+  <%= render partial: 'tools/audit', collection: @salle.audits.includes(:user).reverse %>
+</table>
+
+<h3>
+  <span class="glyphicon glyphicon-refresh"></span>
+  Audit des attributions
+</h3>
+
+<table class="table table-bordered table-hover table-condensed">
+  <thead>
+    <th>Date</th>
+    <th>Qui</th>
+    <th>Cours</th>
+    <th>Formation</th>
+    <th>Date du cours</th>
+    <th>Action Salle</th>
+  </thead>
+  <% @audits.includes(:user).each do |audit| %>
+      <% if extract_salle_id(audit) == @salle.id %>
+          <% if cour = Cour.where(id: audit.auditable_id).first %>
+            <tr>
+              <td><%= l(audit.created_at, format: :perso) %></td>
+              <td><%= audit.try(:user).try(:email) %></td>
+              <td><%= link_to audit.auditable_id, cour_path(cour) %></td>
+              <td><%= cour.try(:formation).try(:nom) %></td>
+              <td><%= l(cour.debut, format: :perso) %></td>
+              <td><%= convertir_id_salles(audit) %></td>
+            </tr>
+          <% end %>  
+      <% end %>
+    <% end %>  
+</table>
+
+

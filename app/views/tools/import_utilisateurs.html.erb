@@ -1,0 +1,42 @@
+<div class="page-header">
+  <h1>
+  	<span class="glyphicon glyphicon-download-alt"></span>
+  	Import des utilisateurs
+  </h1>
+</div>
+
+<%= form_tag({action: "import_utilisateurs_do", method: :post}, multipart: true) do %>
+  <div>
+    <h3>Cette fonction permet l'importation des utilisateurs à partir d'un fichier CSV</h3>
+    <ul>
+        <li>Le fichier source peut avoir les colonnes suivantes: <b>email;nom;prénom;mobile</b></li>
+        <li>Ce fichier doit être au format CSV, Encodage: <b>UTF-8</b>, Séparateur: <b>Point-virgule</b>, Noms des colonnes: <b>Première ligne</b>
+        </li>
+        <li>Exemple de fichier conforme : <%= link_to "exemple_import_utilisateurs.csv", "/exemple_import_utilisateurs.csv" %></li>
+    </ul>
+    <b><i>Chaque nouvel utilisateur sera averti de la création de son compte par l'envoi d'un email contenant son mot de passe</i></b> 
+  </div>
+  <br>
+
+  <div class="field">
+      <%= label :filename, "Fichier source" %>
+      <%= file_field_tag 'upload', accept: 'text/csv' %>
+    </div>
+    <br>
+    
+    <div class="field">
+      <b>Enregistrer les changements ?</b> <br>
+      <%= label :save, "Oui", :value => "true" %>
+      <%= radio_button_tag :save, true %>
+      <%= label :save, "Non", :value => "false" %>
+      <%= radio_button_tag :save, false, :checked => true %>
+      <br><i>Choisissez 'Non' pour tester votre import car <b>il est irréversible !</b></i><br />
+    </div>
+    <br>
+    
+    <div class="actions">
+      <%= submit_tag "Lancer l'import", class: "btn btn-success" %>
+    </div>
+
+  </div>
+<% end %>

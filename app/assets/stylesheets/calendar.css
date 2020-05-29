@@ -1,0 +1,11 @@
+.meeting {
+	padding-top: 10px;
+}
+
+.calendar_day {
+	font-size: 20px;
+}
+
+.day_off {
+	background-color:lightcoral;
+}

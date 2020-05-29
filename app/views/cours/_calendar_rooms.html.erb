@@ -1,0 +1,67 @@
+<div class="row">
+  <div class="col-md-12">
+    <%= calendar partial: 'simple_calendar/week_rooms_calendar', 
+                  start_date_param: :calendar_rooms_starts_at,
+                  events: @cours.where(salle_id:nil), 
+                  salle_id:0, 
+                  number_of_days:6 do |date, meetings| %>
+      <% meetings.each do |meeting| %>
+          <span class="label <%= meeting.style %>"><%= meeting.etat.humanize %></span><br>
+          <b><%= l(meeting.debut, format: :heures_min) %></b>  
+           - <%= l(meeting.fin, format: :heures_min) %>
+          <br>
+          <% if meeting.try(:formation).try(:abrg) %>
+            <% if meeting.salle_id == nil %>
+              <%= link_to meeting.formation.abrg, edit_cour_path(meeting, from:'planning_salles'), title:meeting.nom %>
+            <% end %>
+          <% else %>
+            <%= link_to meeting.try(:formation).try(:nom), meeting %>
+          <% end %>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+  
+<div class="row">
+  <div class="col-md-12">
+    <% bloc = 'A' %> 
+    <% Salle.all.each do |salle| %>
+      <% @salle = salle %>
+      <% if bloc != salle.nom[0] %>
+        <br><br>
+        <% bloc = salle.nom[0] %>
+      <% end %>
+
+      <%= calendar partial: 'simple_calendar/week_rooms_calendar', 
+                    start_date_param: :calendar_rooms_starts_at,
+                    events: @cours.where(salle_id:salle.id), 
+                    salle_id:salle.id, 
+                    number_of_days: 6 do |date, meetings| %>
+
+        <% meetings.each do |meeting| %>
+          <!--- chercher si conflit de salle ! -->
+          <% if Cour.where("cours.id <> ? AND salle_id = ? AND (((debut BETWEEN ? AND ?) OR (fin BETWEEN ? AND ?)) OR (debut < ? AND fin > ?))", 
+                        meeting.id, salle.id, meeting.debut, meeting.fin, meeting.debut, meeting.fin, meeting.fin, meeting.debut)
+                        .where.not(debut:meeting.fin)
+                        .where.not(fin:meeting.debut)
+                        .any? %>
+            <span style="background-color:black;color:yellow;">BANZAÏ !!!</span>
+          <% end %>  
+
+          <% formation = Formation.unscoped.find(meeting.formation_id) %>
+          <div style="height:<%= 30 + (15 * meeting.duree) %>px;border-left:6px;border-left-style:solid;border-left-color:<%= formation.color %>;padding-left:5px;">
+            <b><%= l(meeting.debut, format: :heures_min) %></b>  
+             - <%= l(meeting.fin, format: :heures_min) %>
+            <br>
+
+            <% if formation.abrg %>
+              <%= link_to formation.abrg, edit_cour_path(meeting, from:'planning_salles'), title:meeting.nom %>
+            <% else %>
+              <%= link_to formation.nom, meeting %>
+            <% end %>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

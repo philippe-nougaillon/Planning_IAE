@@ -1,0 +1,121 @@
+{
+    "dir": "ltr",
+    "lang": "fr",
+    "name": "PLANNING IAE",
+    "scope": "",
+    "display": "fullscreen",
+    "start_url": "https://iae-planning.philnoug.com/",
+    "short_name": "IAE-PLANNING v2",
+    "theme_color": "transparent",
+    "description": "",
+    "orientation": "any",
+    "background_color": "transparent",
+    "related_applications": [],
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "/images/favicon.ico",
+            "sizes": "16x16"
+        },
+        {
+            "sizes": "70x70",
+            "src": "/images/ms-icon-70x70.png",
+            "type": "image/png"
+        },
+        {
+            "sizes": "150x150",
+            "src": "/images/ms-icon-150x150.png",
+            "type": "image/png"
+        },
+        {
+            "sizes": "310x310",
+            "src": "/images/ms-icon-310x310.png",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/fc8acabe-f209-8e1d-8755-80f220ab4fcd.webPlatform.png",
+            "sizes": "48x48",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/7c6fec83-7c31-ff18-c2cb-d934ac0d74a4.webPlatform.png",
+            "sizes": "1240x600",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/cb70b9d8-6ff7-8680-c62a-00a27d235c8e.webPlatform.png",
+            "sizes": "300x300",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/7e54939b-1c93-4f42-d281-30f4bb73d665.webPlatform.png",
+            "sizes": "88x88",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/0ff0eb2e-4b11-e929-8bcf-01867e726a04.webPlatform.png",
+            "sizes": "24x24",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/935eb37e-a7c7-0cc5-5bac-62d79a612b7f.webPlatform.png",
+            "sizes": "50x50",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/a8b19976-2e1d-a888-829f-77dfdb138a59.webPlatform.png",
+            "sizes": "620x300",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/7d6999f6-6471-db69-b872-69fbc69f0ebf.webPlatform.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/5d6d7a45-e5c3-67e6-47ab-9946e3985fae.webPlatform.png",
+            "sizes": "144x144",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/f94f5ce6-09cb-82a5-e57e-c1e3eee724ba.webPlatform.png",
+            "sizes": "96x96",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/85a11ef1-3c4d-f68c-c5b1-92a367e85a24.webPlatform.png",
+            "sizes": "72x72",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/7ec5f1bf-10d5-26fb-8951-7a459f4bdc6c.webPlatform.png",
+            "sizes": "36x36",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/fe813515-7243-2986-7a27-4fe7dfb73fbc.webPlatform.png",
+            "sizes": "1024x1024",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/7be7125f-2a53-02d5-1874-7b0c810972b1.webPlatform.png",
+            "sizes": "180x180",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/3ffecb5a-b2df-0c4e-a404-95ad549bb93d.webPlatform.png",
+            "sizes": "152x152",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/67c84b2f-d5d3-a756-6fd3-77aef53be617.webPlatform.png",
+            "sizes": "120x120",
+            "type": "image/png"
+        },
+        {
+            "src": "/images/a731097f-73ec-f184-ec13-bff2ad026184.webPlatform.png",
+            "sizes": "76x76",
+            "type": "image/png"
+        }
+    ]
+}

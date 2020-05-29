@@ -1,0 +1,46 @@
+<div class="page-header">
+  <h1>
+  	<span class="glyphicon glyphicon-calendar"></span>
+  	Intervertir intervenants
+  </h1>
+</div>
+<div>
+  <h3>Cette fonction permet de remplacer, sur tous les cours, un intervenant par un autre !</h3>
+</div>
+
+<br>
+
+<%= form_tag({action: "swap_intervenant_do", method: :post}, multipart: true) do %>
+
+  <div class="form-group">
+    <div class="row">
+      <div class="col-sm-5">
+
+        <%= label_tag :intervenant_from_id, "Intervenant à remplacer" %>
+        <%= select_tag :intervenant_from_id,
+              options_from_collection_for_select(Intervenant.all, :id, :nom_prenom, Intervenant.all), include_blank:true, class:"form-control" %>
+        <br>
+
+        <%= label_tag :intervenant_to_id, "Remplacer par" %>
+        <%= select_tag :intervenant_to_id,
+              options_from_collection_for_select(Intervenant.all, :id, :nom_prenom, Intervenant.all), include_blank:true, class:"form-control" %>
+        <br>
+
+        <div class="field">
+          <b>Enregistrer les changements ?</b> <br>
+          <%= label :save, "Oui", :value => "true" %>
+          <%= radio_button_tag :save, true %>
+          <%= label :save, "Non", :value => "false" %>
+          <%= radio_button_tag :save, false, :checked => true %>
+          <br><i>Choisissez 'Non' pour tester votre création car <b>elle est irréversible !</b></i><br />
+        </div>
+        <br><br>
+      
+        <div class="actions">
+          <%= submit_tag "Lancer la modification", class: "btn btn-success" %>
+        </div>
+
+    </div>
+  </div>
+  
+<% end %>

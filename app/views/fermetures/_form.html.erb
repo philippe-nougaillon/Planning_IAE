@@ -1,0 +1,39 @@
+<%= form_for(@fermeture, html: { class: "form-horizontal", role: "form" }) do |f| %>
+  <% if @fermeture.errors.any? %>
+    <div class="alert alert-danger alert-dismissable" role="alert">
+      <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
+      <h3><%= t('activerecord.errors.template.header',
+                  model: Fermeture.model_name.human, count: @fermeture.errors.count) %></h3>
+
+      <ul>
+        <% @fermeture.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :date, class: "col-sm-2 control-label" %>
+    <div class="col-sm-10">
+      <%= f.date_select :date, class: "form-control" %>
+    </div>
+  </div>
+
+  <% if @fermeture.new_record? %>
+    <div class="form-group">
+      <%= f.label :date_fin, class: "col-sm-2 control-label" %>
+      <div class="col-sm-10">
+        <%= date_select :date_fin, :date, class: "form-control" %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <%= f.submit class: "btn btn-primary" %>
+    </div>
+  </div>
+
+<% end %>

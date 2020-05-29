@@ -1,0 +1,8 @@
+<div class="page-header">
+  <h1>Résultat de l'import</h1>
+  <h3>
+  	Formation: <%= Formation.find(params[:formation_id]).nom %>
+  </h3>
+</div>
+
+<%= simple_format(@stream) %>

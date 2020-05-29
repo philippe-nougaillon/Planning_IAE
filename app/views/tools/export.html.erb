@@ -1,0 +1,58 @@
+<script>
+  $(document).ready(function() { $(".select2").select2({theme: "bootstrap"}); });
+</script>
+
+<div class="page-header">
+  <h1>
+  	<span class="glyphicon glyphicon-export"></span>
+  	Export de cours 
+  </h1>
+</div>
+<div>
+  <h3>Cette fonction permet la création d'une feuille Excel à partir des cours sélectionnés ci-dessous</h3>
+</div>
+
+<%= form_tag({action: "export_do", method: :post}) do %>
+
+  <div class="form-group">
+    <div class="row">
+      <div class="col-sm-4">
+
+        <div class="row">
+            <div class="col-sm-6">
+              <%= label_tag "Du" %>    
+              <%= text_field_tag :start_date, params[:start_date], type:'date', class:"form-control" %>
+            </div>
+
+            <div class="col-sm-6">
+              <%= label_tag "Au" %>    
+              <%= text_field_tag :end_date, params[:end_date], type:'date', class:"form-control" %>
+            </div>
+        </div>
+ 
+        <%= label_tag :etat, "Etat" %>
+        <%= select_tag :etat, options_for_select(Cour.etats, params[:etat]), include_blank:true, class:"form-control" %>
+        <br>
+
+        <%= label_tag "Formation" %>    
+        <%= select_tag :formation_id, 
+              options_from_collection_for_select(Formation.all, :id, :nom_promo), include_blank:true, class:"form-control select2" %>
+        <br>
+
+        <%= label_tag :intervenant_id, "Intervenant" %>
+        <%= select_tag :intervenant_id,
+              options_from_collection_for_select(Intervenant.all, :id, :nom_prenom), include_blank:true, class:"form-control select2" %>
+
+        <%= check_box_tag :binome, true, true %>
+        <%= label_tag "Exporter les binômes ?" %>
+        
+        <br><br>      
+
+        <div class="actions">
+          <%= submit_tag "Exporter", class: "btn btn-success" %>
+        </div>
+
+    </div>
+  </div>
+  
+<% end %>

@@ -1,0 +1,50 @@
+<script>
+  $(document).ready(function() { $(".select2").select2({theme: "bootstrap"}); });
+</script>
+
+<div class="page-header">
+  <h1>
+  	<span class="glyphicon glyphicon-download-alt"></span>
+  	Import des étudiants
+  </h1>
+</div>
+
+<%= form_tag({action: "import_etudiants_do", method: :post}, multipart: true) do %>
+  <div>
+    <h3>Cette fonction permet l'importation d'une liste d'étudiants à partir d'une feuille Excel</h3>
+    <p>Les champs attendus sont:</p>
+    <%= Etudiant.xls_headers.join(', ') %>
+    <p>Les champs obligatoires sont:</p>
+  </div>
+  <br />
+  
+  <div class="row">
+    <div class="col-sm-4">
+      <%= label_tag "Formation" %>    
+      <%= select_tag :formation_id, 
+            options_from_collection_for_select(Formation.all, :id, :nom, params[:formation_id]), 
+              class:"form-control select2", include_blank: true %>
+    </div>
+  </div>
+
+  <div class="field">
+    <%= label :filename, "Fichier source" %>
+    <%= file_field_tag 'upload', accept: '.xls' %>
+  </div>
+  <br>
+  
+  <div class="field">
+    <b>Enregistrer les changements ?</b> <br>
+    <%= label :save, "Oui", :value => "true" %>
+    <%= radio_button_tag :save, true %>
+    <%= label :save, "Non", :value => "false" %>
+    <%= radio_button_tag :save, false, :checked => true %>
+    <i>Choisissez 'Non' pour tester votre import car <b>il est irréversible !</b></i><br />
+  </div>
+  <br>
+  
+  <div class="actions">
+    <%= submit_tag "Lancer l'import", class: "btn btn-success" %>
+  </div>
+<% end %>
+<br>

@@ -1,0 +1,45 @@
+<div class="page-header">
+  <h1>
+  	<span class="glyphicon glyphicon-export"></span>
+  	Export des Intervenants 
+  </h1>
+</div>
+
+<div>
+  <h3>Cette fonction permet la création d'une feuille Excel contenant tous les intervenants</h3>
+</div>
+
+<%= form_tag({action: "export_intervenants_do", method: :post}) do %>
+
+  <div class="form-group">
+    <div class="row">
+      <div class="col-sm-2">
+        <%= label_tag "Intervenus du" %>    
+          <%= text_field_tag :date_debut, params[:date_debut], type: 'date', class: 'form-control' %>
+      </div>
+
+      <div class="col-sm-2">
+        <%= label_tag "au" %>    
+          <%= text_field_tag :date_fin, params[:date_fin], type: 'date', class: 'form-control' %>
+      </div>
+
+      <div class="col-sm-3">
+          <%= label_tag :status, "Statut" %>
+          <%= select_tag :status, 
+                options_for_select(Intervenant.statuses, params[:status]), 
+                include_blank:true,
+                class: 'form-control' %>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-2">    
+        <div class="actions">
+          <%= submit_tag "Exporter", class: "btn btn-success" %>
+        </div>
+      </div>
+    </div> 
+
+  </div>
+  
+<% end %>

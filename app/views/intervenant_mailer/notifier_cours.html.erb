@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    </head>
+  
+    <body>
+        <div class="container-fluid">
+            <p>
+                Bonjour,
+                <br /><br />
+                L'IAE Paris-Sorbonne a le plaisir de vous transmettre le récapitulatif de vos cours programmés du <%=l @debut %> au <%=l @fin %>
+            </p>
+            <br />
+
+            <table class="table table-condensed table-striped">
+                <tbody>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Heure</th>
+                            <th>Formation</th>
+                            <th>Intitulé du cours</th>
+                            <th>Salle</th>
+                        </tr>
+                    </thead>
+                    <% @cours.each do |c| %>
+                        <tr>
+                            <td><%= I18n.l(c.debut.to_date, format: :day) %> <%= I18n.l(c.debut.to_date) %></td>
+                            <td><%= I18n.l(c.debut, format: :heures_min) %>-<%= I18n.l(c.fin, format: :heures_min) %></td>
+                            <td><%= c.try(:formation).try(:nom) %></td>
+                            <td><%= c.nom_ou_ue %></td>
+                            <td><%= c.try(:salle).try(:nom) %></td>
+                        </tr>
+                    <% end %>
+                </tbody>
+            </table>
+
+            <p>
+                <b>
+                    Nous vous remercions de vérifier ce récapitulatif et de prendre contact 
+                    avec votre gestionnaire de formation au plus vite en cas d'erreur/omission/modification.
+                </b>
+                <br>
+
+                <table class="table table-condensed table-bordered" style="width: 50%">
+                    <thead>
+                        <tr>
+                            <th>Formation</th>
+                            <th>Adresse email du gestionnaire de formation</th>
+                        </tr>
+                    </thead>
+                    <% @gestionnaires.each do | f, g | %>
+                        <tr>
+                            <td><%= f %></td>
+                            <td><%= g %></td>
+                        </tr>
+                    <% end %>
+                </table>
+                <br />
+
+                En ces temps de confinement nous vous remercions tout particulièrement de votre implication à l'IAE Paris-Sorbonne
+                 afin de permettre la continuité pédagogique pour nos étudiants. 
+                <br /><br />
+
+                Bien cordialement
+                <br />
+
+                IAE Paris
+                <br />
+                #restezchezvous
+                <br />
+
+                <%= image_tag("logo_iae.png") %>
+                <br />
+                <small>
+                    <%= link_to "plan d'accès au campus biopark".upcase!, image_path("Plan_d_acces_Campus_BioPark_-_IAE_Paris.pdf") %>
+                    <br />
+                </small>
+            </p>
+        </div>
+    </body>
+</html>

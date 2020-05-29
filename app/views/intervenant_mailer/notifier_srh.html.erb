@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h2>Un nouvel intervenant vient d'être créé</h2>
+    <dl>
+        <dt>Nom:</dt>
+        <dd><%= @intervenant.nom %></dd>
+        <dt>Prénom:</dt>
+        <dd><%= @intervenant.prenom %></dd>
+        <dt>Email:</dt>
+        <dd><%= @intervenant.email %></dd>
+    </dl>
+    <%= link_to "Voir plus de détails", intervenant_url(@intervenant) %>
+  </body>
+</html>

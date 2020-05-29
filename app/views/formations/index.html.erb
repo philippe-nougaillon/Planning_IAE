@@ -1,0 +1,131 @@
+<div class="page-header">
+  <div class="btn-group pull-right">
+    <%= link_to new_formation_path, class: 'btn btn-primary' do %>
+      <span class="glyphicon glyphicon-plus"></span>
+      Formation
+    <% end %>
+  </div>
+  <h1>
+    <span class="glyphicon glyphicon-briefcase"></span>
+    Liste des formations
+  </h1>
+</div>
+
+<div class='container-fluid'>
+    <%= form_tag request.path, method: :get do %>
+      <div class="form-group">
+        <div class="row">
+
+          <div class="col-sm-5">
+            <%= label_tag :nom, "Nom/Abrg./Code/Promo" %>
+            <div class="input-group">    
+              <%= text_field_tag :nom, params[:nom], include_blank:true, onchange:'this.form.submit()', class:"form-control" %>
+              <span class="input-group-btn">
+                  <%= submit_tag 'Filtrer', class:"btn btn-success" %>
+              </span>
+            </div> 
+          </div>
+
+          <div class="col-sm-2">
+            <%= label_tag :catalogue, "Catalogue ?" %>
+            <br>
+            <%= radio_button_tag :catalogue, "yes", (params[:catalogue]=='yes'), onchange:'this.form.submit()' %>
+            Oui 
+            <%= radio_button_tag :catalogue, "no", (params[:catalogue]=='no'), onchange:'this.form.submit()' %>
+            Non 
+            <%= radio_button_tag :catalogue, "all", (params[:catalogue]=='all'), onchange:'this.form.submit()' %>
+            Tout           
+          </div>
+
+          <div class="col-sm-2">
+            <%= label_tag :archive, "Archivées ?" %>
+            <br>
+            <%= check_box_tag :archive, 1, params[:archive], onchange:'this.form.submit()' %>
+          </div>
+
+          <div class="col-sm-2">
+              <%= label_tag "Afficher" %>
+              <br> 
+              <%= radio_button_tag :paginate, "pages", (params[:paginate]=='pages'), onchange:'this.form.submit()' %>
+              Pages 
+              <%= radio_button_tag :paginate, "all", (params[:paginate]=='all'), onchange:'this.form.submit()' %>
+              Tout 
+          </div>
+          
+        </div>
+      </div>  
+    <% end %>
+</div>
+
+<% if @formations.any? %>
+  <div class="table-responsive">
+    <table class="table table-hover table-striped">
+      <thead>
+        <tr>
+          <th><%= sort_link 'formations.nom', 'Nom' %></th>
+          <th><%= sort_link 'formations.abrg', 'Abrg.' %></th>
+          <th><%= sort_link 'formations.nbr_etudiants', 'Etudiants' %></th>
+          <th><%= sort_link 'formations.Code_Analytique', 'Code' %></th>
+          <th>Planifiés</th>
+          <th>Confirmés</th>
+          <th>Réalisés</th>
+          <th colspan="2"></th>
+        </tr>
+      </thead>
+
+      <tfoot>
+        <tr>
+          <% 9.times do %><th><% end %>
+        </tr>
+      </tfoot>
+
+      <tbody>
+        <% @formations.includes(:cours).each do |formation| %>
+          <% formation_cours = formation.cours %>
+          <% formation_cours_planifié_count = formation_cours.planifié.count %>
+          <tr class=<%= formation_cours_planifié_count != 0 ? 'warning' : '' %>>
+            <td>
+              <span style="background-color:<%= formation.color %>;padding-left: 7px;"></span>
+              <span style="padding-left: 10px;"></span>
+              <%= link_to formation.nom, formation %>
+            </td>
+            <td><%= formation.abrg %></td>
+            <td><%= formation.nbr_etudiants %></td>
+            <td><%= formation.Code_Analytique %></td>
+            <td>
+              <%= link_to_unless formation_cours_planifié_count.zero?, formation_cours_planifié_count, cours_path(ids:formation_cours.planifié.pluck(:id)) %>
+            </td>
+            <td>
+              <% formation_cours_confirmé_count = formation_cours.confirmé.count %>
+              <%= link_to_unless (formation.archive || formation_cours_confirmé_count.zero?), formation_cours_confirmé_count, cours_path(ids:formation_cours.confirmé.pluck(:id), filter:'all') %>
+            </td>
+            <td>
+              <% formation_cours_réalisé_count = formation_cours.réalisé.count %>
+              <%= link_to_unless (formation.archive || formation_cours_réalisé_count.zero?), formation_cours_réalisé_count, cours_path(ids:formation_cours.réalisé.pluck(:id), filter:'all') %>
+            </td>
+            <td>
+              <%= link_to edit_formation_path(formation), class: "btn btn-default" do %>
+                <i class="glyphicon glyphicon-pencil"></i>
+              <% end %>
+            </td>
+            <td>
+              <% unless formation_cours.any? %>
+                <%= link_to(formation, method: :delete, data:{confirm: 'Confirmez-vous ?'}, class: "btn btn-default") do %>
+                  <i class="glyphicon glyphicon-remove"></i>
+                <% end %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <% if params[:paginate] == 'pages' %>
+      <div class="page_info">
+        <%= page_entries_info @formations %>
+      </div>
+      <%= will_paginate @formations, renderer: BootstrapPagination::Rails %>
+    <% end %>  
+  </div>
+<% end %>
+<br>

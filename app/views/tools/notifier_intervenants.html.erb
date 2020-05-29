@@ -1,0 +1,22 @@
+<div class="page-header">
+  <h1>
+      <span class="glyphicon glyphicon-envelope"></span>
+      Notification planning
+  </h1>
+  <p>
+      Pour envoyer, par mail, la liste des cours du mois prochain, 
+      cochez 'Intervenant/Notification planning ?' et vérifiez son adresse mail 
+  </p>
+</div>
+
+<%= form_tag({action: "notifier_intervenants_do", method: :post}) do %>
+    <div class="form-group">
+
+        <%= check_box_tag :draft, "1", true %> Mode DRAFT (Visualisation uniquement. Pas d'envoi de mails)  
+        <br /><br />
+
+        <div class="actions">
+            <%= submit_tag "Envoyer", class: "btn btn-success" %>
+        </div>
+    </div>
+<% end %>

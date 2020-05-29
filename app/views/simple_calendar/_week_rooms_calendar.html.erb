@@ -1,0 +1,46 @@
+<div class="simple-calendar">
+  <table class="table">
+    <% if @week_selector_visible %>
+      <% @week_selector_visible = false %>
+      <thead>
+        <tr>
+          <td />
+          <% date_range.slice(0, 7).each do |day| %>
+            <% unless day.sunday? %>
+              <th><%= l(day, format: :short) %></th>
+            <% end %>
+          <% end %>
+        </tr>
+      </thead>
+    <% end %>
+
+    <tbody>
+      <% date_range.each_slice(7) do |week| %>
+        <tr>
+          <td>
+            <% if @salle %>
+              <h3 id=<%= @salle.nom %> style="text-align: center;vertical-align: middle;"><%= @salle.nom %></h3>
+            <% else %>
+              A RESERVER
+            <% end %>
+          </td>
+          
+          <% week.each do |day| %>
+            <% unless day.sunday? %>
+              <% day_style_class = calendar.td_classes_for(day) %>
+              <% day_style_class = 'day_off' if Fermeture.find_by(date:day) %>
+              
+              <%= content_tag :td, class: day_style_class do %>
+                <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(block) %>
+                  <% capture_haml(day, sorted_events.fetch(day, []), &block) %>
+                <% else %>
+                  <% block.call day, sorted_events.fetch(day, []) %>
+                <% end %>
+              <% end %>
+            <% end %>  
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

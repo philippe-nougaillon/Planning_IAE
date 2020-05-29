@@ -1,0 +1,2 @@
+module ImportLogsHelper
+end

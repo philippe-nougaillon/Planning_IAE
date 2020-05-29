@@ -1,0 +1,20 @@
+<tr>
+  <td>
+    <%= l(audit.created_at, format: :perso) %>
+  </td>
+  <td>
+    <%= audit.try(:user).try(:email) %>
+  </td>
+  <td>
+    <%= audit.auditable_type %>
+  </td>
+  <td style="text-align: right;">
+    <%= link_to_if audited_view_path(audit), audit.auditable_id, audited_view_path(audit) %>
+  </td>
+  <td>
+    <%= audit.action.humanize %>
+  </td>
+  <td>
+    <%= sanitize prettify(audit).join('<br>') %>
+  </td>
+</tr>

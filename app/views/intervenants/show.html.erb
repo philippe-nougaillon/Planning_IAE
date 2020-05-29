@@ -1,0 +1,161 @@
+<div class="page-header">
+  <div class="btn-group pull-right">
+    <% if policy(:tool).can_see_RHGroup_private_tool? %>
+      <%= link_to edit_intervenant_path(@intervenant), class: 'btn btn-primary' do %>
+        <span class="glyphicon glyphicon-pencil"></span>
+        Modifier
+      <% end %>
+
+      <a href="#audit" data-toggle="collapse" class='btn btn-default'>
+        <span class="glyphicon glyphicon-search"></span>
+        Audit
+      </a>
+
+      <%= link_to intervenants_path, class: 'btn btn-default' do %>
+        <span class="glyphicon glyphicon-list-alt"></span>
+        Retour
+      <% end %>
+    <% end %>
+  </div>
+  <br><br>  
+</div>
+
+<div class="row">
+  <div class="col-sm-3">
+    <h1 style="font-size: 160px" class="glyphicon glyphicon-user"></h1>
+  </div>  
+
+  <div class="col-sm-3">
+    <h2>
+      <small>Nom</small><br>
+      <%= @intervenant.nom %>
+    </h2>
+    <br>
+    <h3>
+      <small>Mobile</small><br>
+      <%= @intervenant.téléphone_mobile %>
+    </h3>
+  </div>
+
+  <div class="col-sm-6">
+    <h2>
+      <small>Prénom</small><br>
+      <%= @intervenant.prenom %>
+    </h2>
+    <br> 
+    <h3>
+      <small>Courriel</small><br>
+      <%= mail_to @intervenant.email %>
+    </h3>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-12">
+    <h3>
+      <small>Titre</small><br>
+      <%= @intervenant.titre1 %>
+      <%= @intervenant.titre2 %>
+    </h3>
+
+    <h3>
+      <small>Statut</small><br>
+      <%= @intervenant.try(:status) %>
+    </h3>
+  </div>
+</div>
+
+<% if @formations.any? %>
+  <h2>
+    <small>
+      <%= "Formation".pluralize(@formations.count) %>
+      <%= "dispensée".pluralize(@formations.count) %>
+    </small>
+  </h2>
+
+  <% @formations.each_with_index do |formation, index| %>
+    <%= link_to formation.nom, 
+                cours_path(formation_id: formation, 
+                            intervenant_id: @intervenant, 
+                            intervenant: @intervenant.nom_prenom,
+                            filter: 'all') %><%= ',' if index != @formations.size - 1 %>
+  <% end %>
+<% end %>
+
+<% if policy(:tool).can_see_RHGroup_private_tool? %>
+  <% if @intervenant.responsabilites.any? %>
+    <h2>
+      <small>Responsabilités</small>
+    </h2>
+
+    <table class="table table-striped table-condensed">
+      <thead>
+        <th>Date</th>
+        <th>Formation</th>
+        <th>Titre</th>
+        <th>Forfait</th>
+        <th>Commentaires</th>
+      </thead>
+
+      <% @intervenant.responsabilites.each do |r| %>
+        <tr>
+            <td>
+              <%= l r.debut %>
+            </td>
+            <td>
+              <%= link_to(r.formation.nom, r.formation) %>
+            </td>
+            <td>
+              <%= r.titre %>
+            </td>
+            <td>
+              <%= r.heures %>h
+            </td>
+            <td>
+              <%= r.commentaires %>
+            </td>
+        </tr>
+      <% end %>
+    </table>
+  <% end %>
+<% end %>
+
+<% if @intervenant.vacations.any? %>
+  <h2>
+    <small>Vacations</small>
+  </h2>
+
+  <table class="table table-striped table-condensed table-hover">
+    <thead>
+      <th>Date</th>
+      <th>Formation</th>
+      <th>Activité</th>
+      <th>Intervenant</th>
+      <th>Qté</th>
+      <th>Forfait HTD</th>
+      <th>Commentaires</th>
+    </thead>
+
+    <% @intervenant.vacations.each do |vacation| %>
+      <%= render vacation %>
+    <% end %>
+  </table>
+
+<% end %>
+
+<div id="audit" class="collapse-out">
+  <h3><span class="glyphicon glyphicon-search"></span> Audit des modifications</h3>
+  <table class="table table-bordered table-hover table-condensed">
+    <thead>
+      <th>Date</th>
+      <th>Utilisateur</th>            
+      <th>Type</th>
+      <th>Record_id</th>
+      <th>Action</th>
+      <th>Modifications</th>
+    </thead>
+
+    <%= render partial: 'tools/audit', collection: @intervenant.audits %>
+
+  </table>
+</div>

@@ -1,0 +1,67 @@
+<div class="table-responsive">
+  <table class="table table-hover table-striped">
+    <thead>
+      <tr>
+        <th>Salle</th>
+        <th>Places</th>
+        <th>Cours</th>
+        <% (@date..(@date + 6.day)).each do |d| %>
+          <th>
+            <%= l(d, format: :day).humanize %>
+            <%= d.day %>
+           </th>
+        <% end %> 
+      </tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <% 21.times do %><th /><% end %>
+      </tr>
+    </tfoot>
+
+    <tbody>
+      <% bloc = 'A' %>
+      <% @salles.each do |salle| %>
+        <% @cours = Cour.where(etat: Cour.etats.values_at(:confirmé, :réalisé)) %>
+        <% @cours = @cours.where("salle_id = ? AND cours.debut BETWEEN DATE(?) AND DATE(?)", salle.id, @date, @date + 6.day).order(:debut) %>
+
+        <% if bloc != salle.nom[0] || salle.nom.size > 3 %>
+          <% bloc = salle.nom[0] %>
+          <thead>
+            <tr>
+              <th /><th /><th />
+              <% (@date..(@date + 6.day)).each do |d| %>
+                <th>
+                  <%= l(d, format: :day).humanize %>
+                  <%= d.day %>
+                </th>
+              <% end %> 
+            </tr>
+          </thead>
+        <% end %>
+
+        <tr>
+          <td><b><%= salle.nom[0..9] %></b></td>
+          <td><%= salle.places %></td>
+          <td>
+            <%= link_to_unless @cours.count.zero?, 
+                @cours.count, cours_path(ids:@cours.pluck(:id), view:'list', from:'occupation') 
+            %>
+          </td>
+          <% (@date..(@date + 6.day)).each do |d| %>
+            <% cours = @cours.where("cours.debut BETWEEN DATE(?) AND DATE(?)", d, d + 1.day) %>
+            <td>
+                <% color = cours.where("debut < ?", Time.parse(d.to_s + " 13:00")).any? ? 'red' : 'lightgreen' %>
+                <span style="background-color:<%= color %>;padding-left: 15px;"></span>
+
+                <% color = cours.where("debut >= ? AND debut <= ?", Time.parse(d.to_s + " 13:00"), Time.parse(d.to_s + " 18:00")).any? ? 'red' : 'lightgreen' %>
+                <span style="background-color:<%= color %>;padding-left: 15px;"></span>
+
+                <% color = cours.where("debut >= ?", Time.parse(d.to_s + " 18:00")).any? ? 'red' : 'lightgreen' %>
+                <span style="background-color:<%= color %>;padding-left: 15px;"></span>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>

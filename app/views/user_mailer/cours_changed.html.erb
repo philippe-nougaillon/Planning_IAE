@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <%= image_tag("logo_iae.png") %>
+    <br>
+    <h3>
+        Bonjour, <br><br>
+        Votre cours du <%= l(@cours.debut, format: :long) %> 
+        (<%= "#{@cours.nom_ou_ue} - #{@cours.formation.nom}" %>) vient d'être <%= @etat %>.<br><br> 
+        Nous reviendrons vers vous à ce sujet prochainement,<br><br> 
+        Bien cordialement, <br>
+        IAE Paris
+    </h3>
+    <p>
+      <%= link_to "Voir le planning", root_url(formation_id:@cours.formation_id, start_date:@cours.debut.to_date) %>
+    </p>
+  </body>
+</html>

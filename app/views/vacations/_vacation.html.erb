@@ -1,0 +1,23 @@
+<tr>
+    <td>
+        <%= l vacation.date if vacation.date %>
+    </td>
+    <td>
+        <%= link_to(Formation.unscoped.find(vacation.formation_id).nom, Formation.unscoped.find(vacation.formation_id)) %>
+    </td>
+    <td>
+        <%= vacation.titre %>
+    </td>
+    <td>
+        <%= vacation.intervenant.nom %>
+    </td>
+    <td>
+        <%= vacation.qte %>
+    </td>
+    <td>
+        <%= vacation.forfaithtd %> h
+    </td>
+    <td>
+        <%= vacation.commentaires %>
+    </td>
+</tr>

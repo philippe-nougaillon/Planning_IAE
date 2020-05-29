@@ -1,0 +1,39 @@
+<div class="page-header">
+  <h1>
+  	<span class="glyphicon glyphicon-dashboard"></span>
+  	Taux d'occupation jours
+  </h1>
+</div>
+<div>
+    <h3>Calcule le taux d'occupation des salles pour chaque jours d'une période donnée</h3>
+    <p>
+        Salles prises en compte les jours de la semaine: <%= Salle.salles_de_cours.pluck(:nom).join(', ') %><br>
+        Salles prises en compte le samedi: <%= Salle.salles_de_cours_du_samedi.pluck(:nom).join(', ') %><br>
+        Nombre d'heures de disponibilité par salle: <%= Salle.nb_heures_journée %>h en journée / <%= Salle.nb_heures_soirée %>h en soirée<br>
+        Les samedis soir, les dimanches et les jours de fermeture n'entrent pas dans le calcul de la moyenne qui apparait en fin de page<br>
+    </p>
+</div>
+
+<%= form_tag({action: "taux_occupation_jours_do", method: :post}) do %>
+
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-2">
+                <%= label_tag "Période du" %>    
+                <%= text_field_tag :start_date, params[:start_date], type:'date', class:"form-control" %>
+            </div>
+
+            <div class="col-sm-2">
+                <%= label_tag "Au" %>    
+                <%= text_field_tag :end_date, params[:end_date], type:'date', class:"form-control" %>
+            </div>
+            <br>
+        </div>
+        <br>
+        
+        <div class="actions">
+            <%= submit_tag "Valider", class: "btn btn-success" %>
+        </div>
+    </div>
+  
+<% end %>

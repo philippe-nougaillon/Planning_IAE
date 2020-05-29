@@ -1,0 +1,83 @@
+<div class="page-header">
+    <div class="btn-group pull-right">
+	  <% if current_user.try(:admin?) %>	
+
+	  	<%= link_to edit_user_path(@user), class: 'btn btn-primary' do %>
+	    	<span class="glyphicon glyphicon-pencil"></span>
+	    	Modifier
+	  	<% end %>
+
+		<a href="#audit" data-toggle="collapse" class='btn btn-default'>
+	      <span class="glyphicon glyphicon-search"></span>
+	      Audit
+	    </a>
+	  	<%= link_to users_path, class: 'btn btn-default' do %>
+	    	<span class="glyphicon glyphicon-list-alt"></span>
+	    	Retour
+	  	<% end %>
+	  <% end %>
+	</div>	  
+  <h1><%= @user.email %></h1>
+</div>
+
+<p>
+	<strong>Nom:</strong>
+	<%= @user.nom %>
+</p>
+<p>
+	<strong>Prénom:</strong>
+	<%= @user.prénom %>
+</p>
+<p>
+	<strong>Mobile:</strong>
+	<%= @user.mobile %>
+</p>
+<p>
+	<strong>Peut réserver une salle ?:</strong> 
+	<%= @user.reserver? ? "Oui" : "Non" %>
+</p>
+<p>
+	<strong>Peut administrer l'application ?:</strong> 
+	<%= @user.admin? ? "Oui" : "Non" %>
+</p>
+<br>
+
+<p>
+	Compte créé le: 
+	le <%= l(@user.created_at) %> 
+	| Il y a <%= time_ago_in_words(@user.created_at) %>
+</p>
+
+<% unless @user.sign_in_count.zero? %>
+	<p>
+		Connexion actuelle: 
+		le <%= l(@user.current_sign_in_at) %> 
+		| Il y a <%= time_ago_in_words(@user.current_sign_in_at) %>
+	</p>
+	<p>
+		Dernière connexion: 
+		le <%= l(@user.last_sign_in_at) %> 
+		| Il y a <%= time_ago_in_words(@user.last_sign_in_at) %>
+	</p>
+	<p>
+		Nbr connexions: <%= @user.sign_in_count %> 
+	</p>
+<% end %>
+<br>
+
+<div id="audit" class="collapse">
+  <% if current_user.admin? %>
+    <h3><span class="glyphicon glyphicon-search"></span> Audit des modifications</h3>
+	<table class="table table-bordered table-hover table-condensed">
+		<thead>
+			<th>Date</th>
+			<th>Utilisateur</th>            
+			<th>Type</th>
+			<th>Record_id</th>
+			<th>Action</th>
+			<th>Modifications</th>
+		</thead>
+		<%= render partial: 'tools/audit', collection: @user.audits %>
+	</table>
+  <% end %>
+</div> 

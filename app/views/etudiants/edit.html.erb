@@ -1,0 +1,15 @@
+<div class="page-header">
+	<div class="btn-group pull-right">
+	  <%= link_to @etudiant, class: 'btn btn-primary' do %>
+	    <span class="glyphicon glyphicon-info-sign"></span>
+	    Voir
+	  <% end %>
+	  <%= link_to etudiants_path, class: 'btn btn-default' do %>
+	    <span class="glyphicon glyphicon-list-alt"></span>
+	    Retour
+	  <% end %>
+	</div>
+  <h1>Modification étudiant</h1>
+</div>
+
+<%= render 'form' %>

@@ -1,0 +1,143 @@
+<div class="page-header">
+  <h1>
+  	<span class="glyphicon glyphicon-wrench"></span>
+  	Outils
+  </h1>
+</div>
+<br>	
+
+<div class="row">
+	<div class="col-sm-4">
+		<ul>
+			<li>
+				<span class="glyphicon glyphicon-lock"></span>
+				<%= link_to "Jours de fermeture", fermetures_path %>
+			</li>
+			<br>
+
+			<li>
+				<span class="glyphicon glyphicon-calendar"></span>
+				<%= link_to "Réservation de créneaux horaires", tools_creation_cours_path %>
+			</li>
+			<br>
+
+			<li>
+				<span class="glyphicon glyphicon-phone"></span>
+				<%= link_to "Planning", planning_cours_path %>
+			</li>
+			<br>
+
+			<li>
+				<span class="glyphicon glyphicon-dashboard"></span>
+				<%= link_to "Taux d'occupation jours", tools_taux_occupation_jours_path %>
+			</li>
+			<br>
+
+			<li>
+				<span class="glyphicon glyphicon-dashboard"></span>
+				<%= link_to "Taux d'occupation salles", tools_taux_occupation_salles_path %>
+			</li>
+			<br>
+			<br>
+			<li>
+				<span class="glyphicon glyphicon-list-alt"></span>
+				<%= link_to "Etats de services", tools_etats_services_path %>
+			</li>
+			<br>
+		</ul>
+	</div>
+	
+	<div class="col-sm-4">
+		<ul>
+			<li>
+				<span class="glyphicon glyphicon-download-alt"></span>
+				<%= link_to "Import de cours", tools_import_path %>
+			</li>
+			<br>
+
+			<li>
+				<span class="glyphicon glyphicon-download-alt"></span>
+				<%= link_to "Import d'intervenants", tools_import_intervenants_path %>
+			</li>
+			<br>
+
+			<li>
+				<span class="glyphicon glyphicon-download-alt"></span>
+				<%= link_to "Import d'étudiants", tools_import_etudiants_path %>
+			</li>
+			<br>
+
+			<li>
+				<span class="glyphicon glyphicon-inbox"></span>
+				<%= link_to "Import log", import_logs_path %>
+			</li>
+			<br>
+
+			<li>
+				<span class="glyphicon glyphicon-export"></span>
+				<%= link_to "Export de cours", tools_export_path %>
+			</li>
+			<br>
+
+			<li>
+				<span class="glyphicon glyphicon-export"></span>
+				<%= link_to "Export des intervenants", tools_export_intervenants_path %>
+			</li>
+			<br>
+
+			<li>
+				<span class="glyphicon glyphicon-export"></span>
+				<%= link_to "Export d'étudiants", tools_export_etudiants_path %>
+			</li>
+			<br>
+		</ul>
+	</div>
+
+	<% if current_user.admin? %>
+		<div class="col-sm-4">
+			<ul>
+				<li>
+					<span class="glyphicon glyphicon-user"></span>
+					<%= link_to "Utilisateurs", users_path %>
+				</li>
+				<br>
+
+				<li>
+					<span class="glyphicon glyphicon-download-alt"></span>
+					<%= link_to "Import des utilisateurs", tools_import_utilisateurs_path %>
+				</li>
+				<br>
+
+				<li>
+					<span class="glyphicon glyphicon-random"></span>
+					<%= link_to "Intervertir deux intervenants", tools_swap_intervenant_path %>
+				</li>
+				<br>
+
+				<li>
+					<span class="glyphicon glyphicon-search"></span>
+					<%= link_to "Audit des modifications", tools_audits_path %>
+				</li>
+				<br>
+
+				<li>
+					<span class="glyphicon glyphicon-blackboard"></span>
+					<%= link_to "Salles", salles_path %>
+				</li>
+				<br>
+
+				<li>
+					<span class="glyphicon glyphicon-calendar"></span>
+					<%= link_to "Nouvelle saison", tools_nouvelle_saison_path %>
+				</li>
+				<br>
+
+				<li>
+					<span class="glyphicon glyphicon-envelope"></span>
+					<%= link_to "Notification planning", tools_notifier_intervenants_path %>
+				</li>
+			</ul>
+		</div>
+	<% end %>
+
+</div>

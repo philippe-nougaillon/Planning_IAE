@@ -1,0 +1,101 @@
+<div class="page-header">
+  <div class="btn-group pull-right">
+    <%= link_to new_intervenant_path, class: 'btn btn-primary' do %>
+      <span class="glyphicon glyphicon-plus"></span>
+      Intervenant
+    <% end %>
+  </div>
+  <h1>
+    <span class="glyphicon glyphicon-user"></span>
+    Liste des intervenants
+  </h1>
+</div>
+
+<div class='container-fluid'>
+  <%= form_tag request.path, method: :get do %>
+    <div class="form-group">
+      <div class="row">
+        <div class="col-sm-4">
+          <%= label_tag :nom, "Nom/Prénom" %>    
+          <%= text_field_tag :nom, params[:nom], include_blank:true, onchange:'this.form.submit()', class:"form-control" %>
+        </div>
+        
+        <div class="col-sm-3">
+          <%= label_tag :status, "Statut" %>
+          <div class="input-group">
+            <%= select_tag :status, options_for_select(Intervenant.statuses, 
+                  params[:status]), include_blank:true,
+                  class:"form-control", onchange:'this.form.submit()' %>
+            <span class="input-group-btn">
+              <%= submit_tag 'Filtrer', class:"btn btn-success" %>
+            </span>
+          </div>
+        </div>
+
+        <div class="col-sm-2">
+          <%= label_tag :doublon, "Doublons autorisés ?" %>
+          <br>    
+          <%= check_box_tag :doublon, 1, params[:doublon], onchange:'this.form.submit()', class:"form-control" %>
+        </div>
+        
+      </div>
+    </div>  
+  <% end %>
+</div>
+
+<% if @intervenants.any? %>
+  <div class="table-responsive">
+    <table class="table table-hover table-striped">
+      <thead>
+        <tr>
+          <th><%= sort_link 'intervenants.nom', 'Nom' %></th>
+          <th>Prénom</th>
+          <th>Titre</th>
+          <th><%= sort_link 'intervenants.status', 'Statut' %></th>
+          <th>Doublons?</th>
+          <th><%= sort_link 'intervenants.nbr_heures_statutaire', 'Heures' %></th>
+          <th><%= sort_link 'intervenants.remise_dossier_srh', 'Date_SRH' %></th>
+          <th><%= sort_link 'intervenants.created_at', 'Créé il y a' %></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr>
+          <% 9.times do %><th /><% end %>
+        </tr>
+      </tfoot>
+
+      <tbody>
+        <% @intervenants.each do |intervenant| %>
+          <tr>
+            <td><b><%= link_to intervenant.nom, intervenant %></b></td>
+            <td><b><%= intervenant.prenom %></b></td>
+            <td><%= intervenant.titre1 %>
+            <td><%= intervenant.try(:status) %></td>
+            <td><%= intervenant.doublon ? "Autorisés" : "" %></td>
+            <td><%= intervenant.nbr_heures_statutaire %></td>
+            <td><%= l(intervenant.remise_dossier_srh.to_date) if intervenant.remise_dossier_srh %></td>
+            <td><%= time_ago_in_words(intervenant.created_at) %></td>
+            <td>
+              <%= link_to edit_intervenant_path(intervenant), class: "btn btn-default" do %>
+                <i class="glyphicon glyphicon-pencil"></i>
+              <% end %>
+              <% unless intervenant.cours.any? or Cour.where(intervenant_binome: intervenant).any? %> 
+                <%= link_to(intervenant, method: :delete, data:{confirm: 'Confirmez-vous ?'}, class: "btn btn-default") do %>
+                  <i class="glyphicon glyphicon-remove"></i>
+                <% end %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <div class="page_info">
+      <%= page_entries_info @intervenants %>
+    </div>
+    <%= will_paginate @intervenants, renderer: BootstrapPagination::Rails %>
+  </div>
+<% end %>
+
+

@@ -1,0 +1,27 @@
+<div class="row">
+    <div class="col-md-12">
+      <%= week_calendar events: @cours,
+                        start_date_param: :calendar_week_starts_at do |date, meetings| %>
+        <% meetings.each do |meeting| %>
+          <div class="meeting">
+            <b>
+              <%= l(meeting.debut, format: :heures_min) %>
+            </b>
+            -
+            <%= l(meeting.fin, format: :heures_min) %>
+            <%= "| Salle: #{meeting.salle.nom}" if meeting.salle %>  
+            <br>
+            <% if params[:formation].blank? %>
+              <%= link_to meeting.formation.nom, meeting %><br>
+            <% end %> 
+            <%= link_to meeting.intervenant.nom_prenom, 
+                        url_for(params
+                            .permit(:formation, :ue, :intervenant, :semaine, :start_date, :etat, :filter, :view)
+                            .merge(intervenant_id:meeting.intervenant_id)) %>
+            <br>
+            <%= meeting.nom_ou_ue %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>

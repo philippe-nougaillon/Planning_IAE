@@ -1,0 +1,51 @@
+body {
+    height: 240mm;
+}
+
+h3 {
+    color: #9E9E9E;
+}
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+header img {
+  display: inline-block;
+}
+
+header p.company {
+  vertical-align: top;
+  display: inline-block;
+  margin-left: 10px;
+  font-size: 20px;
+}
+
+content {
+  margin-top: 100px;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.table_pdf {
+  border-collapse: collapse;
+}
+
+.table_pdf th {
+    border: 1px solid;
+    font-size: 11px;
+}
+.table_pdf td {
+    border: 1px solid gray;
+    padding: .5em;
+    font-size: 12px;
+}
