@@ -1,13 +1,17 @@
 class IntervenantPolicy < ApplicationPolicy
-    class Scope < Scope
-      def resolve
-        scope
-      end
+  class Scope < Scope
+    def resolve
+      scope
     end
-  
-    def index?
-      user
-    end
+  end
+
+  def index?
+    user
+  end
+
+  def new?
+    user
+  end
 
 end
   

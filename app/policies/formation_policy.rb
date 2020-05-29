@@ -9,4 +9,8 @@ class FormationPolicy < ApplicationPolicy
       user
     end
 
+    def new?
+      user
+    end
+
 end

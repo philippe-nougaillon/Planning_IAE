@@ -9,4 +9,8 @@ class EtudiantPolicy < ApplicationPolicy
       user
     end
 
+    def new?
+      user
+    end
+
 end

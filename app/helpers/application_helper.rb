@@ -1,4 +1,5 @@
 module ApplicationHelper
+    
     def sort_link(column, title = nil)
         title ||= (@model_class ? @model_class.human_attribute_name(column) : column.titleize)
         direction = column == sort_column && sort_direction == "asc" ? "desc" : "asc"
@@ -14,7 +15,7 @@ module ApplicationHelper
         render(inline: %{
             <li class="nav-item">
                 <%= link_to '#{ url_for(path) }', 
-                            class: 'nav-link #{ 'bg-light text-info' if (@ctrl == name) }' do %>
+                            class: 'nav-link text-#{ (@ctrl == name) ? 'primary' : 'dark' }' do %>
                     <i class='fas fa-fw fa-#{ icon }'></i>
                     #{ name.humanize } 
                 <% end %>

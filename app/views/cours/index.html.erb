@@ -1,16 +1,10 @@
-<div class="page-header">
-  <% if user_signed_in? %>
-    <div class="btn-group pull-right">
-      <%= link_to new_cour_path(formation:session[:formation], debut:session[:start_date]), class: 'btn btn-primary' do %>
-        <span class="glyphicon glyphicon-plus"></span>
-        Cours
-      <% end %>
-    </div>
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <% if policy(Cour).new? %>
+    <%= link_to new_cour_path(formation:session[:formation], debut:session[:start_date]), class: 'btn text-info float-right' do %>
+      <i class="fas fa-plus-circle"></i> Cours
+    <% end %>
   <% end %>
-  <h1>
-    <span class="glyphicon glyphicon-calendar"></span>
-    Planning des cours
-  </h1>
+  <h2><i class="fas fa-calendar-alt"></i> Planning des cours</h2>
 </div>
 
 <div class='container-fluid'>
