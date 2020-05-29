@@ -66,7 +66,7 @@ gem 'capture_stdout'
 gem 'will_paginate'
 gem 'will_paginate-bootstrap'
 gem 'pundit'
-# gem "select2-rails"
+gem "select2-rails"
 
 # PDF
 gem 'prawn', '~> 2.2'
