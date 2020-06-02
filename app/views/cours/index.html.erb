@@ -1,6 +1,6 @@
 <div class="pb-2 mt-4 mb-2 border-bottom">
   <% if policy(Cour).new? %>
-    <%= link_to new_cour_path(formation:session[:formation], debut:session[:start_date]), class: 'btn text-info float-right' do %>
+    <%= link_to new_cour_path(formation: session[:formation], debut: session[:start_date]), class: 'btn text-info float-right' do %>
       <i class="fas fa-plus-circle"></i> Cours
     <% end %>
   <% end %>
@@ -89,21 +89,21 @@
     <% end %>
 </div>
 
-<% if params[:view] == "calendar_month" and !params[:start_date].blank? %>
+<% case params[:view] when 'calendar_month' %>
   <%= render partial: 'calendar_month' %>
 
-<% elsif params[:view] == "calendar_week" and !params[:start_date].blank? %>
+<% when 'calendar_week' %>
   <% @week_selector_visible = true %>
   <%= render partial: 'calendar_week' %>
 
-<% elsif params[:view] == "calendar_rooms" and !params[:start_date].blank? %>
+<% when 'calendar_rooms' %>
   <% @week_selector_visible = true %>
   <%= render partial: 'calendar_rooms' %>
 
-<% elsif params[:view] == "list" %>
-  <% if @cours.any? %>
+<% when 'list' %>
+  <% if @cours.size > 0 %>
 
-    <%= form_tag action_cours_path, name:'action' do %>
+    <%= form_tag action_cours_path, name: 'action' do %>
         <div class="table-responsive">
           <table class="table table-hover">
             <thead>
@@ -124,7 +124,7 @@
               </tr>
             </thead>
 
-            <% if @cours.any? %>
+            <% if @cours.size > 0 %>
               <tbody>
                 <% current_date = "" %>
                 <% @cours.includes(:formation, :intervenant, :salle).each do | cours | %>
@@ -213,13 +213,11 @@
           <%= will_paginate @cours, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
         <% end %>
 
-      <% end %>
-    <% else %>
-      Aucun résultat à afficher... 
-      <%= link_to "Effacer les filtres pour voir tous les cours", 
-          url_for(params.permit!.merge(commit: 'RàZ filtres')) %>
-      <% end %>
-<% else %>
-  <i><b>Veuillez choisir une date...</b></i>
+    <% end %>
+  <% else %>
+    Aucun résultat à afficher... 
+    <%= link_to "Effacer les filtres pour voir tous les cours", 
+                  url_for(params.permit!.merge(commit: 'RàZ filtres')) %>
+  <% end %>
 <% end %>
 
