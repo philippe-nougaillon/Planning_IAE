@@ -188,7 +188,7 @@ GEM
     selenium-webdriver (3.142.7)
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
-    simple_calendar (2.4.0)
+    simple_calendar (2.3.0)
       rails (>= 3.0)
     spreadsheet (1.2.6)
       ruby-ole (>= 1.0)
@@ -271,7 +271,7 @@ DEPENDENCIES
   rails (~> 6.0.3, >= 6.0.3.1)
   sass-rails (>= 6)
   selenium-webdriver
-  simple_calendar (~> 2.0)
+  simple_calendar (= 2.3.0)
   spreadsheet
   spring
   spring-watcher-listen (~> 2.0.0)

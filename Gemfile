@@ -57,11 +57,10 @@ end
 gem 'font_awesome5_rails'
 
 gem 'bootstrap_form', '~> 2.7'
-gem 'simple_calendar', '~> 2.0'
+gem 'simple_calendar', '2.3.0'
 gem 'devise', '>= 4.7.1'
 gem 'devise-i18n'
 gem 'audited', '~> 4.3'
-# gem 'carrierwave', '0.11.0'
 gem 'capture_stdout'
 gem 'will_paginate'
 gem 'will_paginate-bootstrap4'
