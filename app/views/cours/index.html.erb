@@ -133,7 +133,8 @@
                     <tr class="bg-light">
                       <% if user_signed_in? %><th></th><% end %>
                       <th colspan="<%= user_signed_in? ? '10' : '9' %>">
-                      <b><%= l(cours.debut.to_date, format: :long).humanize %></b> 
+                        <%= fa_icon 'calendar-day' %>
+                        <b><%= l(cours.debut.to_date, format: :long).humanize %></b> 
                       </th>
                     </tr>
                     <% current_date = cours.debut.to_date %>
