@@ -3,10 +3,11 @@
     <%= calendar partial: 'simple_calendar/week_rooms_calendar', 
                   start_date_param: :calendar_rooms_starts_at,
                   events: @cours.where(salle_id:nil), 
-                  salle_id:0, 
-                  number_of_days:6 do |date, meetings| %>
+                  salle_id: 0, 
+                  number_of_days: 6 do |date, meetings| %>
+
       <% meetings.each do |meeting| %>
-          <span class="label <%= meeting.style %>"><%= meeting.etat.humanize %></span><br>
+          <span class="badge badge-<%= meeting.style %>"><%= meeting.etat.humanize %></span><br>
           <b><%= l(meeting.debut, format: :heures_min) %></b>  
            - <%= l(meeting.fin, format: :heures_min) %>
           <br>
@@ -15,7 +16,7 @@
               <%= link_to meeting.formation.abrg, edit_cour_path(meeting, from:'planning_salles'), title:meeting.nom %>
             <% end %>
           <% else %>
-            <%= link_to meeting.try(:formation).try(:nom), meeting %>
+            <%= link_to_if user_signed_in?, meeting.try(:formation).try(:nom), meeting %>
           <% end %>
       <% end %>
     <% end %>
@@ -54,11 +55,13 @@
              - <%= l(meeting.fin, format: :heures_min) %>
             <br>
 
-            <% if formation.abrg %>
-              <%= link_to formation.abrg, edit_cour_path(meeting, from:'planning_salles'), title:meeting.nom %>
-            <% else %>
-              <%= link_to formation.nom, meeting %>
-            <% end %>
+            <b>
+              <% if formation.abrg %>
+                <%= link_to_if user_signed_in?, formation.abrg, edit_cour_path(meeting, from:'planning_salles'), title:meeting.nom %>
+              <% else %>
+                <%= link_to_if user_signed_in?, formation.nom, meeting %>
+              <% end %>
+            </b>
           </div>
         <% end %>
       <% end %>

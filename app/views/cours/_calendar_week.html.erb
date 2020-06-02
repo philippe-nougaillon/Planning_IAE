@@ -12,9 +12,10 @@
             <%= "| Salle: #{meeting.salle.nom}" if meeting.salle %>  
             <br>
             <% if params[:formation].blank? %>
-              <%= link_to meeting.formation.nom, meeting %><br>
+              <b><%= link_to_if user_signed_in?, meeting.formation.nom, meeting %></b>
+              <br>
             <% end %> 
-            <%= link_to meeting.intervenant.nom_prenom, 
+            <%= link_to_if user_signed_in?, meeting.intervenant.nom_prenom, 
                         url_for(params
                             .permit(:formation, :ue, :intervenant, :semaine, :start_date, :etat, :filter, :view)
                             .merge(intervenant_id:meeting.intervenant_id)) %>
