@@ -3,26 +3,25 @@
         <td><%= check_box_tag "[cours_id][#{cours.id}]", 'yes', false, class: 'check_all' %></td>
     <% end %>
     <td>
-        <b><%= l(cours.debut, format: :heures_min) %></b><br> 
-        <%= l(cours.fin, format: :heures_min) %>
+        <b><%= l(cours.debut, format: :heures_min) %></b>-<%= l(cours.fin, format: :heures_min) %>
     </td>
     <td>
         <%= number_with_precision(cours.duree, precision: 1) %>h
     </td>
     <td>
         <span style="background-color:<%= cours_formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
-        <%= link_to cours_formation.nom, cours_formation %>
+        <%= link_to_if user_signed_in?, cours_formation.nom, cours_formation %>
     </td>
     <td>
-        <%= link_to cours.intervenant.nom_prenom, cours.intervenant %>
+        <%= link_to_if user_signed_in?, cours.intervenant.nom_prenom, cours.intervenant %>
         <% if cours.intervenant_binome %>
-        <br>
-        <%= link_to cours.intervenant_binome.nom_prenom, cours.intervenant_binome %>
+            <br>
+            <%= link_to_if user_signed_in?, cours.intervenant_binome.nom_prenom, cours.intervenant_binome %>
         <% end %>
     </td>
     <td>
         <% if cours.ue %>
-        <%= link_to cours.ue, cours_path(ue:cours.ue) %>
+            <%= link_to_if user_signed_in?, cours.ue, cours_path(ue: cours.ue) %>
         <% end %>
     </td>
     <td>
@@ -37,11 +36,11 @@
         <% end %>
     </td>
     <td>
-        <span class="label <%= cours.style %>"><%= cours.etat.humanize %></span>
+        <span class="badge badge-<%= cours.style %>"><%= cours.etat.humanize %></span>
     </td>
     <td>
         <% if cours.salle %>
-            <%= link_to cours.salle.nom, cours_url(start_date:cours.debut.to_date, view:'calendar_rooms', anchor:cours.salle.nom), target: :_blank %>
+            <%= link_to_if user_signed_in?, cours.salle.nom, cours_url(start_date:cours.debut.to_date, view:'calendar_rooms', anchor:cours.salle.nom), target: :_blank %>
             <% if cours_formation.nbr_etudiants > cours.salle.places && user_signed_in? %>
                 <i class="glyphicon glyphicon-warning-sign glyph-custom-alert" 
                     data-toggle="tooltip" data-placement="bottom"
@@ -64,8 +63,8 @@
 
     <% if user_signed_in? %>
         <td>
-            <%= link_to edit_cour_path(cours, from:params[:from]), class:"btn btn-default" do %>
-                <i class="glyphicon glyphicon-pencil"></i>
+            <%= link_to edit_cour_path(cours, from: params[:from]), class: "btn btn-sm btn-outline-light text-dark" do %>
+                <%= fa_icon 'edit '%>
             <% end %>
         </td>
     <% end %>

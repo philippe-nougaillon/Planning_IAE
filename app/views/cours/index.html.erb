@@ -69,7 +69,7 @@
             <%= radio_button_tag :view, "calendar_rooms", (params[:view]=='calendar_rooms'), onchange:'this.form.submit()' %>    
             Salles 
             <%= radio_button_tag :view, "calendar_week", (params[:view]=='calendar_week'), onchange:'this.form.submit()' %>
-            Semaine 
+            Hebdo. 
             <%= radio_button_tag :view, "calendar_month", (params[:view]=='calendar_month'), onchange:'this.form.submit()' %>
             Mois 
           </div>
@@ -119,7 +119,7 @@
                 <th>Etat</th>
                 <th>Salle</th>
                 <% if user_signed_in? %>
-                  <th />
+                  <th></th>
                 <% end %>
               </tr>
             </thead>
@@ -130,10 +130,9 @@
                 <% @cours.includes(:formation, :intervenant, :salle).each do | cours | %>
 
                   <% if cours.debut.to_date != current_date %>
-                    <tr class="info">
-                      <% if user_signed_in? %><th /><% end %>
+                    <tr class="bg-light">
+                      <% if user_signed_in? %><th></th><% end %>
                       <th colspan="<%= user_signed_in? ? '10' : '9' %>">
-                      <i class="glyphicon glyphicon-triangle-bottom"></i>
                       <b><%= l(cours.debut.to_date, format: :long).humanize %></b> 
                       </th>
                     </tr>
@@ -149,20 +148,20 @@
               <tfoot>
                 <tr>
                   <% if user_signed_in? %>
-                    <th />
+                    <th></th>
                   <% end %>
-                  <th />
+                  <th></th>
                   <% if params[:paginate] == 'all' %>
                     <th>
                       <%= number_with_precision(@all_cours.sum(:duree), precision: 1) %>h
                     </th>
                   <% else %>
-                    <th />  
+                    <th></th>  
                   <% end %>
                   <% if user_signed_in? %>
-                    <% 7.times do %><th /><% end %>
+                    <% 7.times do %><th></th><% end %>
                   <% else %>
-                    <% 6.times do %><th /><% end %>
+                    <% 6.times do %><th></th><% end %>
                   <% end %>
                 </tr>
               </tfoot>
@@ -170,28 +169,19 @@
           </table>
         </div>
 
-        <% if params[:paginate] == 'pages' %>
-          <div class="page_info">
-            <%= page_entries_info @cours, model:Cour %>
-          </div>
-
-          <%= will_paginate @cours, renderer: BootstrapPagination::Rails %>
-        <% end %>
-
         <% if user_signed_in? %>
-          <div class="col-sm-3 pull-right">
-            <small>Action:</small>
+          <div class="input-group col-sm-4 ml-auto">
+
             <div class="input-group">
-              <% if current_user.admin? || current_user.reserver? %>
-                <%= select_tag "action_name", options_for_select(Cour.actions_admin), include_blank:true, class:"form-control", onchange:'this.form.submit()' %>
-              <% else %>
-                <%= select_tag "action_name", options_for_select(Cour.actions), include_blank:true, class:"form-control", onchange:'this.form.submit()' %>
-              <% end %>
+              <%= label_tag 'Action :' %>
+              <% actions = (current_user.admin? || current_user.reserver?) ? Cour.actions_admin : Cour.actions %>
+              <%= select_tag "action_name", options_for_select(actions), include_blank: true, class: 'form-control', onchange: 'this.form.submit()' %>
+
               <div class="input-group-btn">
-                <%= submit_tag 'Go', class: 'btn btn-sm btn-success' %>
+                <%= submit_tag 'Go', class: 'btn btn-success' %>
               </div>
             </div>
-            <br><br>
+
           </div>
         <% else %>
           <% if params[:formation].present? || params[:intervenant].present? %>
@@ -218,6 +208,15 @@
             </div>
           <% end %>
         <% end %>
+
+        <% if params[:paginate] == 'pages' %>
+          <div class="page_info">
+            <%= page_entries_info @cours, model: Cour, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+          </div>
+
+          <%= will_paginate @cours, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+        <% end %>
+
       <% end %>
     <% else %>
       Aucun résultat à afficher... 

@@ -64,7 +64,7 @@ gem 'audited', '~> 4.3'
 # gem 'carrierwave', '0.11.0'
 gem 'capture_stdout'
 gem 'will_paginate'
-gem 'will_paginate-bootstrap'
+gem 'will_paginate-bootstrap4'
 gem 'pundit'
 
 # PDF
