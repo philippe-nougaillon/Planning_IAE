@@ -1,23 +1,24 @@
 <div class="jumbotron">
-  <h3>
-    <span class="glyphicon glyphicon-info-sign"></span>
-    Mémo
-  </h3>
-  Aide-mémoire de l'application Planning, à l'usage des utilisateurs et des administrateurs
+  <div class="container">
+    <h4>
+      <%= fa_icon 'info-circle' %>
+      Mémo
+      <br>
+      <small>
+        Aide-mémoire de l'application Planning, à l'usage des utilisateurs et des administrateurs
+      </small>
+    </h4>
+  </div>
 </div>
 
-<div class="page-header">
-  <h1>
-    <span class="glyphicon glyphicon-calendar"></span>
-    Planning des cours
-  </h1>
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h2><%= fa_icon 'calendar-alt' %> Planning des cours</h2>
 </div>
-
 <div class="row">
   <div class="col-md-4">
     <div class="thumbnail">
       <a href="/Images/guide/cours1.png">
-        <img src="/Images/guide/cours1.png" alt="Planning journalier" style="width:100%">
+        <img src="/Images/guide/cours1.png" alt="" style="width:100%">
         <div class="caption">
           <p>Liste des cours à venir</p>
         </div>
@@ -27,7 +28,7 @@
   <div class="col-md-4">
     <div class="thumbnail">
       <a href="/Images/guide/cours_selection.png">
-        <img src="/Images/guide/cours_selection.png" alt="Occupation des salles" style="width:100%;height: 250px">
+        <img src="/Images/guide/cours_selection.png" alt="" style="width:100%">
         <div class="caption">
           <p>Liste des cours d'une formation</p>
         </div>
@@ -37,7 +38,7 @@
   <div class="col-md-4">
     <div class="thumbnail">
       <a href="/Images/guide/cours_new.png">
-        <img src="/Images/guide/cours_new.png" alt="Planning mensuel" style="width:100%">
+        <img src="/Images/guide/cours_new.png" alt="" style="width:100%">
         <div class="caption">
           <p>Formulaire de réservation de salle</p>
         </div>
@@ -45,7 +46,6 @@
     </div>
   </div>
 </div>
-
 <ul>
     <li>Chaque cours est associé à une Formation, un ou deux Intervenants, une Salle et un Etat (Planifié, Confirmé, Reporté, Annulé, Réalisé)</li>
     <li>Affichage des cours sous forme de Liste, de Calendrier (semaine/mois) ou Etat d'Occupation des salles</li>
@@ -79,21 +79,14 @@
     </ul>
 </ul>
 
-<br>
-
-
-<div class="page-header">
-  <h1>
-    <span class="glyphicon glyphicon-blackboard"></span>
-    Liste des salles
-  </h1>
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h2><%= fa_icon 'chalkboard' %> Liste des salles</h2>
 </div>
-
 <div class="row">
   <div class="col-md-3">
     <div class="thumbnail">
       <a href="/Images/guide/salles1.png">
-        <img src="/Images/guide/salles1.png" alt="Occupation des salles jour" style="width:100%;height: 200px">
+        <img src="/Images/guide/salles1.png" alt="" style="width:100%">
         <div class="caption">
           <p>Occupation des salles (jour)</p>
         </div>
@@ -103,7 +96,7 @@
   <div class="col-md-3">
     <div class="thumbnail">
       <a href="/Images/guide/salles2.png">
-        <img src="/Images/guide/salles2.png" alt="Occupation des salles semaine" style="width:100%;height: 200px">
+        <img src="/Images/guide/salles2.png" alt="" style="width:100%">
         <div class="caption">
           <p>Occupation des salles (semaine)</p>
         </div>
@@ -113,7 +106,7 @@
   <div class="col-md-3">
     <div class="thumbnail">
       <a href="/Images/guide/cours3.png">
-        <img src="/Images/guide/cours3.png" alt="Occupation des salles semaine détail" style="width:100%">
+        <img src="/Images/guide/cours3.png" alt="" style="width:100%">
         <div class="caption">
           <p>Occupation salles en détail (semaine)</p>
         </div>
@@ -123,7 +116,7 @@
   <div class="col-md-3">
     <div class="thumbnail">
       <a href="/Images/guide/cours4.png">
-        <img src="/Images/guide/cours4.png" alt="Occupation des salles semaine détail" style="width:100%">
+        <img src="/Images/guide/cours4.png" alt="" style="width:100%">
         <div class="caption">
           <p>Occupation salles en détail (semaine)</p>
         </div>
@@ -132,26 +125,19 @@
   </div>
 </div>
 <ul>
-    <li>Gestion de la capacité (alerte si dépassement)</li>
-    <li>Visualisation des créneaux horaires libres/occupés pour une date, une salle</li>
-    <strong>Pour autoriser les doublons: entrez 0 dans capacité</strong>
+  <li>Gestion de la capacité (alerte si dépassement)</li>
+  <li>Visualisation des créneaux horaires libres/occupés pour une date, une salle</li>
+  <strong>Pour autoriser les doublons: entrez 0 dans capacité</strong>
 </ul>
-<br>
 
-<br>
-
-<div class="page-header">
-  <h1>
-    <span class="glyphicon glyphicon-briefcase"></span>
-    Formations
-  </h1>
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h2><%= fa_icon 'briefcase' %> Formations</h2>
 </div>
-
 <div class="row">
   <div class="col-md-4">
     <div class="thumbnail">
       <a href="/Images/guide/formations.png">
-        <img src="/Images/guide/formations.png" alt="Liste des formations" style="width:100%">
+        <img src="/Images/guide/formations.png" alt="" style="width:100%">
         <div class="caption">
           <p>Liste des formations</p>
         </div>
@@ -161,7 +147,7 @@
   <div class="col-md-4">
     <div class="thumbnail">
       <a href="/Images/guide/formation.png">
-        <img src="/Images/guide/formation.png" alt="Une formation en détail" style="width:100%;height: 250px">
+        <img src="/Images/guide/formation.png" alt="" style="width:100%">
         <div class="caption">
           <p>Une formation en détail</p>
         </div>
@@ -171,7 +157,7 @@
   <div class="col-md-4">
     <div class="thumbnail">
       <a href="/Images/guide/formation_form.png">
-        <img src="/Images/guide/formation_form.png" alt="Ajout d'une formation" style="width:100%">
+        <img src="/Images/guide/formation_form.png" alt="" style="width:100%">
         <div class="caption">
           <p>Modification d'une formation</p>
         </div>
@@ -179,7 +165,6 @@
     </div>
   </div>
 </div>
-
 <ul>
     <li>Chaque formation est associée à un code couleur pour un répérage rapide dans le planning</li>
     <li>Gestion des UE (une liste d'UE est associée à chaque formation, avec indication du nombre d'heures)</li>
@@ -202,20 +187,16 @@
        Flag HSS?: L'activer permet de ne pas imputer aux états de sercices les cours liés à cette formation.
     </li>
 </ul>
-<br>
 
-<div class="page-header">
-  <h1>
-    <span class="glyphicon glyphicon-user"></span>
-    Intervenants
-  </h1>
+
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h2><%= fa_icon 'chalkboard-teacher' %> Intervenants</h2>
 </div>
-
 <div class="row">
   <div class="col-md-4">
     <div class="thumbnail">
       <a href="/Images/guide/intervenant.png">
-        <img src="/Images/guide/intervenant.png" alt="Liste des intervenants" style="width:100%">
+        <img src="/Images/guide/intervenant.png" alt="" style="width:100%">
         <div class="caption">
           <p>Liste des intervenants</p>
         </div>
@@ -225,7 +206,7 @@
   <div class="col-md-4">
     <div class="thumbnail">
       <a href="/Images/guide/intervenant_show.png">
-        <img src="/Images/guide/intervenant_show.png" alt="Audit des modifications" style="width:100%;height: 250px">
+        <img src="/Images/guide/intervenant_show.png" alt="" style="width:100%">
         <div class="caption">
           <p>Un intervenant</p>
         </div>
@@ -235,7 +216,7 @@
   <div class="col-md-4">
     <div class="thumbnail">
       <a href="/Images/guide/intervenant_form.png">
-        <img src="/Images/guide/intervenant_form.png" alt="Un intervenant en détail" style="width:100%">
+        <img src="/Images/guide/intervenant_form.png" alt="" style="width:100%">
         <div class="caption">
           <p>Un intervenant en détail</p>
         </div>
@@ -243,7 +224,6 @@
     </div>
   </div>
 </div>
-
 <ul>
     <li>Profil des intervenants avec photo (option), status, formations dispensées (affichage dynamique basé sur les cours enregistrés, avec le nombre d'heures planifiées et la date du premier cours)</li>
     <li>Gestion des responsabilités (Titre, nbr heures attribuées)</li>
@@ -259,20 +239,15 @@
   </ul>
   <li>La saisie des Responsabilités n'est accessible que par les membres du groupe RH</li>
 </ul>
-<br>
 
-<div class="page-header">
-  <h1>
-    <span class="glyphicon glyphicon-education"></span>
-    Etudiants
-  </h1>
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h2><%= fa_icon 'graduation-cap' %> Etudiants</h2>
 </div>
-
 <div class="row">
   <div class="col-md-4">
     <div class="thumbnail">
       <a href="/Images/guide/etudiant.png">
-        <img src="/Images/guide/etudiant.png" alt="Liste des étudiants" style="width:100%">
+        <img src="/Images/guide/etudiant.png" alt="" style="width:100%">
         <div class="caption">
           <p>Liste des étudiants</p>
         </div>
@@ -282,7 +257,7 @@
   <div class="col-md-4">
     <div class="thumbnail">
       <a href="/Images/guide/etudiant_form.png">
-        <img src="/Images/guide/etudiant_form.png" alt="Un étudiant en détail" style="width:100%">
+        <img src="/Images/guide/etudiant_form.png" alt="" style="width:100%">
         <div class="caption">
           <p>Un étudiant en détail</p>
         </div>
@@ -292,7 +267,7 @@
   <div class="col-md-4">
     <div class="thumbnail">
       <a href="/Images/guide/etudiant_show.png">
-        <img src="/Images/guide/etudiant_show.png" alt="Audit des modifications" style="width:100%">
+        <img src="/Images/guide/etudiant_show.png" alt="" style="width:100%">
         <div class="caption">
           <p>Récapitulatif étudiant avec audit des modifications</p>
         </div>
@@ -300,20 +275,14 @@
     </div>
   </div>
 </div>
-
 <ul>
     <li>Chaque étudiant est associé à une formation</li>
     <li>La saisie des coordonnées de l'étudiant permet de lui envoyer une notification par email/SMS en cas d'annulation de cours (option)</li>
 </ul>
-<br>
 
-<div class="page-header">
-  <h1>
-    <span class="glyphicon glyphicon-user"></span>
-    Utilisateurs
-  </h1>
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h2><%= fa_icon 'users' %> Utilisateurs</h2>
 </div>
-
 <ul>
     <li>Il existe 4 rôles utilisateur :</li>
     <ul>
@@ -323,21 +292,15 @@
       <li>Admin (peut administrer les cours et les utilisateurs)</li>
     </ul>
 </ul>
-<br>
 
-
-<div class="page-header">
-  <h1>
-    <span class="glyphicon glyphicon-wrench"></span>
-    Outils
-  </h1>
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h2><%= fa_icon 'wrench' %> Outils</h2>
 </div>
-
 <div class="row">
   <div class="col-md-4">
     <div class="thumbnail">
       <a href="/Images/guide/outils.png">
-        <img src="/Images/guide/outils.png" alt="Outils" style="width:100%;height: 230px">
+        <img src="/Images/guide/outils.png" alt="" style="width:100%">
         <div class="caption">
           <p>Liste des outils</p>
         </div>
@@ -359,7 +322,7 @@
   <div class="col-md-4">
     <div class="thumbnail">
       <a href="/Images/guide/reservation-saison.png">
-        <img src="/Images/guide/reservation-saison.png" alt="Réservation créneaux sur une saison" style="width:100%">
+        <img src="/Images/guide/reservation-saison.png" alt="" style="width:100%">
         <div class="caption">
           <p>Réservation de créneaux horaires pour une saison</p>
         </div>
@@ -367,7 +330,6 @@
     </div>
   </div>
 </div>
-
 <ul>
   <li>Gestion des jours de fermeture</li>
   <li>Réservation de créneaux horaires</li>
@@ -384,15 +346,10 @@
     <li>Nouvelle saison (Réservation de cours sur une année)</li>
   </ul>
 </ul>
-<br>
 
-<div class="page-header">
-  <h1>
-    <span class="glyphicon glyphicon-download-alt"></span>
-    Importation des données
-  </h1>
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h2><%= fa_icon 'download' %> Importation des données</h2>
 </div>
-
 <ul>
     <li>
       <b>Importation de cours à partir d'un fichier Excel:</b><br> 
@@ -425,32 +382,23 @@
   	    <b><i>Chaque nouvel utilisateur sera averti de la création de son compte par l'envoi d'un email contenant un mot de passe unique généré automatiquement</i></b> 
     </li>
 </ul>
-<br>
 
-<div class="page-header">
-  <h1>
-    <span class="glyphicon glyphicon-export"></span>
-    Exportation des données
-  </h1>
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h2><%= fa_icon 'upload' %> Exportation des données</h2>
 </div>
-
 <ul>
     <li>Toutes les données sont exportables au format Microsoft Excel (XLS)</li>
 </ul>
-<br>
 
-<div class="page-header">
-  <h1>
-    <span class="glyphicon glyphicon-search"></span>
-    Audit des modifications
-  </h1>
+
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h2><%= fa_icon 'search' %> Audit des modifications</h2>
 </div>
-
 <div class="row">
   <div class="col-md-4">
     <div class="thumbnail">
       <a href="/Images/guide/audit1.png">
-        <img src="/Images/guide/audit1.png" alt="Liste des modifications" style="width:100%">
+        <img src="/Images/guide/audit1.png" alt="" style="width:100%">
         <div class="caption">
           <p>Audit des modifications</p>
         </div>
@@ -460,7 +408,7 @@
   <div class="col-md-4">
     <div class="thumbnail">
       <a href="/Images/guide/audit2.png">
-        <img src="/Images/guide/audit2.png" alt="Audit des modifications cours" style="width:100%">
+        <img src="/Images/guide/audit2.png" alt="" style="width:100%">
         <div class="caption">
           <p>Audit des cours modifiés </p>
         </div>
@@ -470,7 +418,7 @@
   <div class="col-md-4">
     <div class="thumbnail">
       <a href="/Images/guide/audit3.png">
-        <img src="/Images/guide/audit3.png" alt="Que les changements de salle" style="width:100%">
+        <img src="/Images/guide/audit3.png" alt="" style="width:100%">
         <div class="caption">
           <p>Audit des changements de salle</p>
         </div>
@@ -478,67 +426,44 @@
     </div>
   </div>
 </div>
-
 <ul>
     <li>Chaque modification apportée aux données est enregistrée dans un journal, avec la date, l'utilisateur, la table, le champs et la valeur avant/après modification</li>
 </ul>
-<br>
 
 
-<div class="page-header">
-  <h1>
-    <span class="glyphicon glyphicon-list-alt"></span>
-    Etats de services
-  </h1>
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h2><%= fa_icon 'list-alt' %> Etats de services</h2>
 </div>
-
 <ul>
-    <li>Récapitule les cours <b>réalisés</b> sur une période donnée par un intervenant</li>
+    <li>Récapitule les cours <b>réalisés</b> par un intervenant sur une période donnée </li>
     <li>Visualisation des états de services par statut</li>
     <li>Etat liquidatif en PDF</li>
 </ul>
-<br>
 
-
-<div class="page-header">
-  <h1>
-    <span class="glyphicon glyphicon-transfer"></span>
-    API
-  </h1>
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h2><%= fa_icon 'exchange-alt' %> API</h2>
 </div>
-
 <ul>
-    <li>Une API fournit les données du planning au format JSON</li>
+    <li>Une API fournit les données du Planning au format JSON</li>
     <li>Ex: https://planning.iae-paris.com/api/v1/cours.json?d=20190701 </li>
 </ul>
-<br>
 
-
-<div class="page-header">
-  <h1>
-    <span class="glyphicon glyphicon-asterisk"></span>
-    Notification
-  </h1>
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h2><%= fa_icon 'asterisk' %> Notification</h2>
 </div>
-
 <ul>
     <li>Les chargés de scolarité et les étudiants peuvent recevoir une notification par email/SMS(à venir) lors de l'annulation de cours(option)</li>
     <li>Chaque fin de semaine, les intervenants recoivent leur planning de la semaine à venir (option)</li>
 </ul>
-<br>
 
-<div class="page-header">
-  <h1>
-    <span class="glyphicon glyphicon-phone"></span>
-    Mobile
-  </h1>
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h2><%= fa_icon 'mobile-alt' %> Mobile</h2>
 </div>
-
 <div class="row">
   <div class="col-md-4">
     <div class="thumbnail">
       <a href="/Images/guide/mobile0.png">
-        <img src="/Images/guide/mobile0.png" alt="Planning mobile" style="width:100%">
+        <img src="/Images/guide/mobile0.png" alt="" style="width:100%">
         <div class="caption">
           <p>Planning mobile</p>
         </div>
@@ -548,7 +473,7 @@
   <div class="col-md-4">
     <div class="thumbnail">
       <a href="/Images/guide/mobile1.png">
-        <img src="/Images/guide/mobile1.png" alt="Planning mobile" style="width:100%">
+        <img src="/Images/guide/mobile1.png" alt="" style="width:100%">
         <div class="caption">
           <p>Indicateur d'avancement des cours</p>
         </div>
@@ -558,7 +483,7 @@
   <div class="col-md-4">
     <div class="thumbnail">
       <a href="/Images/guide/mobileSalles.png">
-        <img src="/Images/guide/mobileSalles.png" alt="Planning hebdomadaire mobile" style="width:100%">
+        <img src="/Images/guide/mobileSalles.png" alt="" style="width:100%">
         <div class="caption">
           <p>Planning mobile hebdomadaire</p>
         </div>
@@ -566,27 +491,20 @@
     </div>
   </div>
 </div>
-
 <ul>    
   <li>Le planning peut être visualisé sur différents supports (Responsive Design)</li>
   <li>Vue planning adaptée aux écrans de smartphones</li>
   <li>Adapté au standard PWA (Progressive Web App)</li>
 </ul>
-<br>
 
-
-<div class="page-header">
-  <h1>
-    <span class="glyphicon glyphicon-film"></span>
-    Affichage sur panneaux lumineux
-  </h1>
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h2><%= fa_icon 'film' %> Affichage sur panneaux lumineux</h2>
 </div>
-
 <div class="row">
   <div class="col-md-6">
     <div class="thumbnail">
       <a href="/Images/guide/afficheur.png">
-        <img src="/Images/guide/afficheur.png" alt="Afficheur" style="width:100%">
+        <img src="/Images/guide/afficheur.png" alt="" style="width:100%">
         <div class="caption">
           <p>Planning sur afficheur 1/2</p>
         </div>
@@ -596,7 +514,7 @@
   <div class="col-md-6">
     <div class="thumbnail">
       <a href="/Images/guide/afficheur2.png">
-        <img src="/Images/guide/afficheur2.png" alt="Planning mensuel" style="width:100%">
+        <img src="/Images/guide/afficheur2.png" alt="" style="width:100%">
         <div class="caption">
           <p>Planning sur afficheur 2/2</p>
         </div>
@@ -607,19 +525,13 @@
 <ul>
     <li>Planning du jour optimisé pour la diffusion sur un grands écrans, généralement installés à l'entrée des salles de cours, dans les couloirs ou à l'accueil</li>
 </ul>
-<br>
 
-<div class="page-header">
-  <h1>
-    <span class="glyphicon glyphicon-envelope"></span>
-    Contact
-  </h1>
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h2><%= fa_icon 'comments' %> Contact</h2>
 </div>
 
 <p>
-  <kbd>Vos commentaires et propositions sont les bienvenus, ils m'aident à améliorer l'application...
-    <br>
-    philippe.nougaillon@gmail.com
-  </kbd>
+  Vos remarques et propositions sont les bienvenues.
+  philippe.nougaillon@gmail.com
 </p>
 <br>
