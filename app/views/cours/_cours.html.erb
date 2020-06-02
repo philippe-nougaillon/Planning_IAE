@@ -20,9 +20,7 @@
         <% end %>
     </td>
     <td>
-        <% if cours.ue %>
-            <%= link_to_if user_signed_in?, cours.ue, cours_path(ue: cours.ue) %>
-        <% end %>
+        <%= link_to_if user_signed_in?, cours.try(:ue), cours_path(ue: cours.ue) %>
     </td>
     <td>
         <% if cours.url? && cours.elearning  %>

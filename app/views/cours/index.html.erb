@@ -186,24 +186,19 @@
           </div>
         <% else %>
           <% if params[:formation].present? || params[:intervenant].present? %>
-            <div class="pull-right">
-              <br>
-            <!--
-              <%= link_to cours_url(format: :csv), class: 'btn btn-primary' do %>
-                <span class="glyphicon glyphicon-share"></span>
-                Export CSV
-              <% end %>
-            -->
-              <%= link_to cours_url(format: :xls), class: 'btn btn-default' do %>
-                <span class="glyphicon glyphicon-share"></span>
+            <div class="col-sm-4 ml-auto">
+              <%= link_to cours_url(format: :xls), class: 'btn btn-sm btn-success' do %>
+                <%= fa_icon 'file-excel' %>
                 Export Excel
               <% end %>
-              <%= link_to cours_url(format: :ics), class: 'btn btn-primary' do %>
-                <span class="glyphicon glyphicon-calendar"></span>
+
+              <%= link_to cours_url(format: :ics), class: 'btn btn-sm btn-primary' do %>
+                <%= fa_icon 'calendar-day' %>
                 Export iCal
               <% end %>
-              <%= link_to cours_url(format: :pdf), class: 'btn btn-danger' do %>
-                <span class="glyphicon glyphicon-share"></span>
+              
+              <%= link_to cours_url(format: :pdf), class: 'btn btn-sm btn-danger' do %>
+                <%= fa_icon 'file-pdf' %>
                 Export PDF
               <% end %>
             </div>
