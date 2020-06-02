@@ -1,43 +1,38 @@
-<% cour_etendue_horaire = Cour.etendue_horaire %>
-<% les_cours = Cour.where(etat: Cour.etats.values_at(:confirmé, :réalisé))
-                   .where("cours.debut BETWEEN DATE(?) AND DATE(?)", @date, @date + 1.day) 
-
-%>
-
 <div class="table-responsive">
-  <table class="table table-hover table-striped">
+  <table class="table table-sm table-hover table-striped">
     <thead>
       <tr>
         <th>Salle</th>
         <th>Places</th>
         <th>Cours</th>
         <th>Formations</th> 
-        <% cour_etendue_horaire.each_with_index do |heure, index| %>
+        <% @etendue_horaire.each_with_index do |heure, index| %>
           <th><%= heure %>h</th>
-          <% if [4,9].include?(index) %><th /><% end %>
+          <% if [4,9].include?(index) %><th></th><% end %>
         <% end %>
       </tr>
     </thead>
+
     <tfoot>
       <tr>
-        <% 21.times do %><th /><% end %>
+        <% 21.times do %><th></th><% end %>
       </tr>
     </tfoot>
 
     <tbody>
       <% bloc = 'A' %>
       <% @salles.each do |salle| %>
-        <% cours = les_cours.where(salle_id: salle.id) %>
+        <% cours = @cours.where(salle_id: salle.id) %>
         <% cours_count = cours.size %>
 
         <% if bloc != salle.nom[0] || salle.nom.size > 3 %>
           <% bloc = salle.nom[0] %>
           <thead>
             <tr>
-              <th /><th /><th /><th />
-              <% cour_etendue_horaire.each_with_index do |heure, index| %>
+              <th></th><th></th><th></th><th></th>
+              <% @etendue_horaire.each_with_index do |heure, index| %>
                 <th><%= heure %>h</th>
-                <% if [4,9].include?(index) %><th /><% end %>
+                <% if [4,9].include?(index) %><th></th><% end %>
               <% end %>
             </tr>
           </thead>
@@ -63,7 +58,7 @@
           <% if @date %>
             <% range = [] %>
             <% cours.each {|cours| range += cours.range } %>
-            <% map = cour_etendue_horaire.map {|i| range.include?(i) ? 'red' : 'lightgreen' } %>
+            <% map = @etendue_horaire.map {|i| range.include?(i) ? 'red' : 'lightgreen' } %>
             
             <% map.each_with_index do |color, index| %>
               <td>

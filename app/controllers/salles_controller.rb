@@ -16,6 +16,7 @@ class SallesController < ApplicationController
 
   def occupation
     params[:vue] ||= 'jour'
+    
     @salles = Salle.reorder(:bloc, :nom)
 
     unless session[:start_date].blank?
@@ -23,10 +24,6 @@ class SallesController < ApplicationController
     else
       params[:start_date] ||= Date.today
     end
-
-    #if params[:vue] == 'week'
-    #  params[:start_date] = Date.parse(params[:start_date]).beginning_of_week(start_day = :monday).to_s
-    #end  
 
     unless params[:salle_id].blank?
       @salles = @salles.where(id:params[:salle_id])
@@ -37,6 +34,15 @@ class SallesController < ApplicationController
     else
       @date = Date.today
     end
+
+    if params[:vue] == 'jour'
+      @cours = Cour.where("DATE(cours.debut) =  ?", @date)
+                   .where(etat: Cour.etats.values_at(:confirmé, :réalisé))
+    else  
+      @cours_semaine = Cour.where("cours.debut BETWEEN DATE(?) AND DATE(?)", @date, @date + 6.day)
+                           .where(etat: Cour.etats.values_at(:confirmé, :réalisé))
+                           .order(:debut) 
+    end  
 
     if user_signed_in?
       #
@@ -63,6 +69,8 @@ class SallesController < ApplicationController
       @taux_occupation = [(@nombre_heures_cours.first * 100 / @heures_dispo_salles.first),
                            (@nombre_heures_cours.last * 100 / @heures_dispo_salles.last)]
     end
+
+    @etendue_horaire = Cour.etendue_horaire
 
     session[:start_date] = params[:start_date]
   end

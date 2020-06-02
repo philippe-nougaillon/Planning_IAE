@@ -21,8 +21,6 @@ class Cour < ApplicationRecord
   before_save :change_etat_si_salle
   before_save :annuler_salle_si_cours_est_annulé
 
-  # after_validation :call_notifier
-
   enum etat: [:planifié, :à_réserver, :confirmé, :reporté, :annulé, :réalisé]
   
   def self.styles
@@ -200,12 +198,6 @@ class Cour < ApplicationRecord
 
 
   # SLIDER
-
-  # def progress_bar_pct(planning_date = nil)
-  #   # calcul le % de réalisation du cours
-  #   @now = DateTime.now.in_time_zone("Paris") + 1.hours
-  #   ((@now.to_f - self.debut.to_f) / (self.fin.to_f - self.debut.to_f) * 100).to_i
-  # end
 
   def progress_bar_pct2
     # calcul le % de réalisation du cours

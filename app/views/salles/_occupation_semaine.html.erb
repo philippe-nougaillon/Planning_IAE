@@ -13,23 +13,23 @@
         <% end %> 
       </tr>
     </thead>
+
     <tfoot>
       <tr>
-        <% 21.times do %><th /><% end %>
+        <% 21.times do %><th></th><% end %>
       </tr>
     </tfoot>
 
     <tbody>
       <% bloc = 'A' %>
-      <% @salles.each do |salle| %>
-        <% @cours = Cour.where(etat: Cour.etats.values_at(:confirmé, :réalisé)) %>
-        <% @cours = @cours.where("salle_id = ? AND cours.debut BETWEEN DATE(?) AND DATE(?)", salle.id, @date, @date + 6.day).order(:debut) %>
+      <% @salles.each do | salle | %>
+        <% @cours = @cours_semaine.where(salle_id: salle.id) %>
 
         <% if bloc != salle.nom[0] || salle.nom.size > 3 %>
           <% bloc = salle.nom[0] %>
           <thead>
             <tr>
-              <th /><th /><th />
+              <th></th><th></th><th></th>
               <% (@date..(@date + 6.day)).each do |d| %>
                 <th>
                   <%= l(d, format: :day).humanize %>
@@ -44,13 +44,14 @@
           <td><b><%= salle.nom[0..9] %></b></td>
           <td><%= salle.places %></td>
           <td>
-            <%= link_to_unless @cours.count.zero?, 
-                @cours.count, cours_path(ids:@cours.pluck(:id), view:'list', from:'occupation') 
-            %>
+            <%# <%= link_to_unless @cours.count.zero?, 
+                @cours.count, cours_path(ids: @cours.pluck(:id), view:'list', from:'occupation') 
+            %> %>
           </td>
-          <% (@date..(@date + 6.day)).each do |d| %>
-            <% cours = @cours.where("cours.debut BETWEEN DATE(?) AND DATE(?)", d, d + 1.day) %>
+          <% (@date..(@date + 6.day)).each do | d | %>
             <td>
+                <% cours = @cours.where("DATE(cours.debut) = ?", d) %>
+              
                 <% color = cours.where("debut < ?", Time.parse(d.to_s + " 13:00")).any? ? 'red' : 'lightgreen' %>
                 <span style="background-color:<%= color %>;padding-left: 15px;"></span>
 
