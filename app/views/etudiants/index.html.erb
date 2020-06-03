@@ -1,7 +1,7 @@
 <div class="pb-2 mt-4 mb-2 border-bottom">
   <% if policy(Etudiant).new? %>
     <%= link_to new_etudiant_path, class: 'btn text-info float-right' do %>
-      <i class="fas fa-plus-circle"></i> Etudiant
+      <%= fa_icon 'plus-circle' %> Etudiant
     <% end %>
   <% end %>
   <h2><%= fa_icon 'graduation-cap' %> Liste des étudiants</h2>

@@ -16,7 +16,7 @@ module ApplicationHelper
             <li class="nav-item">
                 <%= link_to '#{ url_for(path) }', 
                             class: 'nav-link text-#{ (@ctrl == name) ? 'primary' : 'dark' }' do %>
-                    <i class='fas fa-fw fa-#{ icon }'></i>
+                    <%= fa_icon '#{ icon }' %>
                     #{ name.humanize } 
                 <% end %>
             </li>

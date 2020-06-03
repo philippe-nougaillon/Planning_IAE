@@ -1,7 +1,7 @@
 <div class="pb-2 mt-4 mb-2 border-bottom">
   <% if policy(Formation).new? %>
     <%= link_to new_formation_path, class: 'btn text-info float-right' do %>
-      <i class="fas fa-plus-circle"></i> Formation
+      <%= fa_icon 'plus-circle' %> Formation
     <% end %>
   <% end %>
   <h2><%= fa_icon 'briefcase' %> Liste des formations</h2>
