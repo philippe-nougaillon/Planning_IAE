@@ -8,28 +8,34 @@
 </div>
 
 <div class='container-fluid'>
-    <%= form_tag request.path, method: :get do %>
+    <%= form_tag cours_path, method: :get do %>
       <div class="form-group">
         <div class="row">
           <div class="col-sm-5">
-              <%= label_tag "Formation" %>   
-              <%= select_tag :formation, grouped_options_for_select(Formation.for_select, params[:formation]), class:"form-control select2", include_blank:true, onchange:'this.form.submit()' %>
+            <%= label_tag "Formation" %>   
+            <%= select_tag :formation, grouped_options_for_select(Formation.for_select, params[:formation]), 
+                            class: "form-control  form-control-sm select2", 
+                            include_blank:true, onchange: 'this.form.submit()' %>
           </div>
 
           <div class="col-sm-2">
-              <%= label_tag :ue, "U.E." %>   
-              <%= select_tag :ue, options_for_select(@les_ue, params[:ue]), class:"form-control select2", include_blank:true, onchange:'this.form.submit()' %>
+            <%= label_tag :ue, "U.E." %>   
+            <%= select_tag :ue, options_for_select(@les_ue, params[:ue]), 
+                            class: "form-control form-control-sm select2", 
+                            include_blank:true, onchange: 'this.form.submit()' %>
           </div>
 
           <div class="col-sm-5">
-              <%= label_tag "Intervenant" %>    
-              <div class="input-group">
-                <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), class:"form-control select2", include_blank:true, onchange:'this.form.submit()' %>
-                <span class="input-group-btn">
-                  <%= submit_tag 'Filtrer', class:"btn btn-success" %>
-                  <%= submit_tag 'RàZ filtres', class:"btn btn-default" %>
-                </span>
-              </div>
+            <%= label_tag "Intervenant" %>    
+            <div class="input-group">
+              <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
+                              class: "form-control form-control-sm select2", 
+                              include_blank:true, onchange: 'this.form.submit()' %>
+              <span class="input-group-btn">
+                <%= submit_tag 'Filtrer', class:"btn btn-sm btn-outline-success" %>
+                <%= submit_tag 'RàZ filtres', class:"btn btn-sm btn-default" %>
+              </span>
+            </div>
           </div>
         </div>
     
@@ -38,18 +44,18 @@
             <%= label_tag "Semaine" %>    
             <%= select_tag :semaine, 
                     options_for_select(@week_numbers, params[:semaine]), 
-                      include_blank:true, onchange:'this.form.submit()', class:"form-control" %>
+                      include_blank:true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
           </div>
 
           <div class="col-sm-2">
             <%= label_tag "A partir du" %>    
-            <%= text_field_tag :start_date, params[:start_date], type:'date', onchange:'this.form.submit()', class:"form-control" %>
+            <%= text_field_tag :start_date, params[:start_date], type:'date', onchange:'this.form.submit()', class:"form-control form-control-sm" %>
           </div>
 
           <div class="col-sm-2">
             <%= label_tag :etat, "Etat" %>
             <%= select_tag :etat, options_for_select(Cour.etats, params[:etat]), include_blank:true,
-                    class:"form-control", onchange:'this.form.submit()' %>
+                    class:"form-control form-control-sm", onchange:'this.form.submit()' %>
           </div>
 
           <div class="col-sm-2">

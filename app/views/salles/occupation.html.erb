@@ -7,7 +7,7 @@
 
     <div class="col-sm-2">
       <%= label_tag "Date" %>    
-      <%= text_field_tag :start_date, params[:start_date], type:'date', onchange:'this.form.submit()', class:"form-control" %>
+      <%= text_field_tag :start_date, params[:start_date], type:'date', onchange:'this.form.submit()', class:"form-control form-control-sm" %>
     </div>
 
     <div class="col-sm-2">
@@ -24,17 +24,14 @@
       <div class="input-group">
         <%= select_tag :salle_id, 
                 options_from_collection_for_select(Salle.order(:nom), :id, :nom, params[:salle_id]), 
-                  include_blank:true, onchange:'this.form.submit()', class:"form-control select2" %>
+                  include_blank:true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
         <span class="input-group-btn">
-          <%= submit_tag 'Filtrer', class:"btn btn-success" %>
+          <%= submit_tag 'Filtrer', class:"btn btn-sm btn-success" %>
         </span>
       </div>
     </div>
   </div>
 <% end %>
+<br>
 
-<% if params[:vue] == 'jour' %>
-  <%= render partial: 'occupation_jour' %>
-<% else %>
-  <%= render partial: 'occupation_semaine' %>
-<% end %> 
+<%= render partial: "occupation_#{ params[:vue] }" %>

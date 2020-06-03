@@ -1,11 +1,11 @@
 <div class="table-responsive">
-  <table class="table table-hover table-striped">
+  <table class="table table-hover table-striped table-sm">
     <thead>
       <tr>
         <th>Salle</th>
         <th>Places</th>
         <th>Cours</th>
-        <% (@date..(@date + 6.day)).each do |d| %>
+        <% (@date..@date_fin).each do |d| %>
           <th>
             <%= l(d, format: :day).humanize %>
             <%= d.day %>
@@ -25,12 +25,12 @@
       <% @salles.each do | salle | %>
         <% @cours = @cours_semaine.where(salle_id: salle.id) %>
 
-        <% if bloc != salle.nom[0] || salle.nom.size > 3 %>
+        <% if (bloc != salle.nom[0] || salle.nom.size > 3) && @salles.size > 1 %>
           <% bloc = salle.nom[0] %>
           <thead>
             <tr>
               <th></th><th></th><th></th>
-              <% (@date..(@date + 6.day)).each do |d| %>
+              <% (@date..@date_fin).each do |d| %>
                 <th>
                   <%= l(d, format: :day).humanize %>
                   <%= d.day %>
@@ -41,14 +41,12 @@
         <% end %>
 
         <tr>
-          <td><b><%= salle.nom[0..9] %></b></td>
-          <td><%= salle.places %></td>
-          <td>
-            <%# <%= link_to_unless @cours.count.zero?, 
-                @cours.count, cours_path(ids: @cours.pluck(:id), view:'list', from:'occupation') 
-            %> %>
+          <td><b><%= salle.nom %></b></td>
+          <td class="text-center"><%= salle.places %></td>
+          <td class="text-center">
+            <%= link_to_if user_signed_in?, @cours.count, cours_path(ids: @cours.pluck(:id), view: 'list', from: 'occupation') %>
           </td>
-          <% (@date..(@date + 6.day)).each do | d | %>
+          <% (@date..@date_fin).each do | d | %>
             <td>
                 <% cours = @cours.where("DATE(cours.debut) = ?", d) %>
               

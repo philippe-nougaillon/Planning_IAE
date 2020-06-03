@@ -21,11 +21,11 @@
 
     <tbody>
       <% bloc = 'A' %>
-      <% @salles.each do |salle| %>
+      <% @salles.each do | salle | %>
         <% cours = @cours.where(salle_id: salle.id) %>
         <% cours_count = cours.size %>
 
-        <% if bloc != salle.nom[0] || salle.nom.size > 3 %>
+        <% if (bloc != salle.nom[0] || salle.nom.size > 3) && @salles.size > 1 %>
           <% bloc = salle.nom[0] %>
           <thead>
             <tr>

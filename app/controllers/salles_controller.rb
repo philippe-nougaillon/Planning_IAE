@@ -39,7 +39,8 @@ class SallesController < ApplicationController
       @cours = Cour.where("DATE(cours.debut) =  ?", @date)
                    .where(etat: Cour.etats.values_at(:confirmé, :réalisé))
     else  
-      @cours_semaine = Cour.where("cours.debut BETWEEN DATE(?) AND DATE(?)", @date, @date + 6.day)
+      @date_fin = @date + 10.day
+      @cours_semaine = Cour.where("cours.debut BETWEEN DATE(?) AND DATE(?)", @date, @date_fin + 1.day)
                            .where(etat: Cour.etats.values_at(:confirmé, :réalisé))
                            .order(:debut) 
     end  
