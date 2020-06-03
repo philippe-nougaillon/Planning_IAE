@@ -4,7 +4,7 @@
       <i class="fas fa-plus-circle"></i> Formation
     <% end %>
   <% end %>
-  <h2><i class="fas fa-calendar-alt"></i> Liste des formations</h2>
+  <h2><%= fa_icon 'briefcase' %> Liste des formations</h2>
 </div>
 
 <div class='container-fluid'>
@@ -83,7 +83,7 @@
 
     <% if params[:paginate] == 'pages' %>
       <div class="page_info">
-        <%= page_entries_info @formations, model: Cour, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+        <%= page_entries_info @formations, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
       </div>
 
       <%= will_paginate @formations, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>

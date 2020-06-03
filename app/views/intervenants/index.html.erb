@@ -4,7 +4,7 @@
       <i class="fas fa-plus-circle"></i> Intervenant
     <% end %>
   <% end %>
-  <h2><i class="fas fa-calendar-alt"></i> Liste des intervenants</h2>
+  <h2><%= fa_icon 'chalkboard-teacher' %> Liste des intervenants</h2>
 </div>
 
 <div class='container-fluid'>
@@ -41,7 +41,7 @@
 
 <% if @intervenants.any? %>
   <div class="table-responsive">
-    <table class="table table-hover table-striped">
+    <table class="table table-hover table-striped table-sm">
       <thead>
         <tr>
           <th><%= sort_link 'intervenants.nom', 'Nom' %></th>
@@ -55,6 +55,7 @@
           <th></th>
         </tr>
       </thead>
+
       <tfoot>
         <tr>
           <% 9.times do %><th /><% end %>
@@ -62,35 +63,17 @@
       </tfoot>
 
       <tbody>
-        <% @intervenants.each do |intervenant| %>
-          <tr>
-            <td><b><%= link_to intervenant.nom, intervenant %></b></td>
-            <td><b><%= intervenant.prenom %></b></td>
-            <td><%= intervenant.titre1 %>
-            <td><%= intervenant.try(:status) %></td>
-            <td><%= intervenant.doublon ? "Autorisés" : "" %></td>
-            <td><%= intervenant.nbr_heures_statutaire %></td>
-            <td><%= l(intervenant.remise_dossier_srh.to_date) if intervenant.remise_dossier_srh %></td>
-            <td><%= time_ago_in_words(intervenant.created_at) %></td>
-            <td>
-              <%= link_to edit_intervenant_path(intervenant), class: "btn btn-default" do %>
-                <i class="glyphicon glyphicon-pencil"></i>
-              <% end %>
-              <% unless intervenant.cours.any? or Cour.where(intervenant_binome: intervenant).any? %> 
-                <%= link_to(intervenant, method: :delete, data:{confirm: 'Confirmez-vous ?'}, class: "btn btn-default") do %>
-                  <i class="glyphicon glyphicon-remove"></i>
-                <% end %>
-              <% end %>
-            </td>
-          </tr>
-        <% end %>
+        <%= render @intervenants %>
       </tbody>
+
     </table>
 
     <div class="page_info">
-      <%= page_entries_info @intervenants %>
+      <%= page_entries_info @intervenants, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
     </div>
-    <%= will_paginate @intervenants, renderer: BootstrapPagination::Rails %>
+
+    <%= will_paginate @intervenants, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+
   </div>
 <% end %>
 

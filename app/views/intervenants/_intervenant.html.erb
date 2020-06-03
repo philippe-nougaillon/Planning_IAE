@@ -1,0 +1,20 @@
+<tr>
+    <td><b><%= link_to intervenant.nom, intervenant %></b></td>
+    <td><b><%= intervenant.prenom %></b></td>
+    <td><%= intervenant.titre1 %>
+    <td><%= intervenant.try(:status) %></td>
+    <td><%= intervenant.doublon ? "Autorisés" : "" %></td>
+    <td><%= intervenant.nbr_heures_statutaire %></td>
+    <td><%= l(intervenant.remise_dossier_srh.to_date) if intervenant.remise_dossier_srh %></td>
+    <td><%= time_ago_in_words(intervenant.created_at) %></td>
+    <td>
+        <%= link_to edit_intervenant_path(intervenant), class: "btn btn-default" do %>
+            <i class="glyphicon glyphicon-pencil"></i>
+        <% end %>
+        <% unless intervenant.cours.any? or Cour.where(intervenant_binome: intervenant).any? %> 
+            <%= link_to(intervenant, method: :delete, data:{confirm: 'Confirmez-vous ?'}, class: "btn btn-default") do %>
+                <i class="glyphicon glyphicon-remove"></i>
+            <% end %>
+        <% end %>
+    </td>
+</tr>

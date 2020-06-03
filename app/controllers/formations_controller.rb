@@ -54,7 +54,7 @@ class FormationsController < ApplicationController
     
     @all_formations = @formations
     if params[:paginate] == 'pages'
-       @formations = @formations.paginate(page: params[:page], per_page: 20)
+       @formations = @formations.paginate(page: params[:page], per_page: 10)
     end
 
     @diplomes = Formation.where.not(diplome: nil).select(:diplome).uniq.pluck(:diplome).sort
