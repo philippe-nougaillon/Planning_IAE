@@ -131,7 +131,7 @@ class CoursController < ApplicationController
     end
 
     if request.variant.include?(:phone)
-      @cours = @cours.paginate(page:params[:page], per_page:30)
+      @cours = @cours.paginate(page: params[:page], per_page: 15)
     end
 
     if params[:view] == "calendar_rooms"

@@ -1,7 +1,6 @@
 
 <%= form_tag request.path, method: :get do %>
-
-  <div class="form-group">
+  <div class="container">
     <%= label_tag "Cours à partir du" %>
     <%= text_field_tag :start_date, params[:start_date], type: 'date', onchange: 'this.form.submit()', class: "form-control form-control-sm" %>
     
@@ -16,7 +15,6 @@
         <%= submit_tag 'RàZ', class:"btn btn-sm btn-default" %>
       </span>
     </div>
-
   </div>
 <% end %>
 
@@ -39,6 +37,5 @@
   <%= page_entries_info @cours, model: Cour, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
 </div>
 
-<%= will_paginate @cours, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
-
+<%= will_paginate @cours, inner_window: 2, outer_window: 0, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
 
