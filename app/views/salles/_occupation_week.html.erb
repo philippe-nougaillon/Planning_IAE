@@ -48,19 +48,20 @@
           </td>
           <% (@date..@date_fin).each do | d | %>
             <td>
-                <% cours = @cours.where("DATE(cours.debut) = ?", d) %>
-              
-                <% color = cours.where("debut < ?", Time.parse(d.to_s + " 13:00")).any? ? 'red' : 'lightgreen' %>
-                <span style="background-color:<%= color %>;padding-left: 15px;"></span>
+              <% cours = @cours.where("DATE(cours.debut) = ?", d) %>
+            
+              <% color = cours.where("debut < ?", Time.parse(d.to_s + " 13:00")).any? ? 'red' : 'lightgreen' %>
+              <span style="background-color:<%= color %>;padding-left: 15px;"></span>
 
-                <% color = cours.where("debut >= ? AND debut <= ?", Time.parse(d.to_s + " 13:00"), Time.parse(d.to_s + " 18:00")).any? ? 'red' : 'lightgreen' %>
-                <span style="background-color:<%= color %>;padding-left: 15px;"></span>
+              <% color = cours.where("debut >= ? AND debut <= ?", Time.parse(d.to_s + " 13:00"), Time.parse(d.to_s + " 18:00")).any? ? 'red' : 'lightgreen' %>
+              <span style="background-color:<%= color %>;padding-left: 15px;"></span>
 
-                <% color = cours.where("debut >= ?", Time.parse(d.to_s + " 18:00")).any? ? 'red' : 'lightgreen' %>
-                <span style="background-color:<%= color %>;padding-left: 15px;"></span>
+              <% color = cours.where("debut >= ?", Time.parse(d.to_s + " 18:00")).any? ? 'red' : 'lightgreen' %>
+              <span style="background-color:<%= color %>;padding-left: 15px;"></span>
             </td>
           <% end %>
         </tr>
       <% end %>
     </tbody>
   </table>
+</div>
