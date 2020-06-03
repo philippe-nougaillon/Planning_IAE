@@ -1,4 +1,4 @@
-<%= bootstrap_form_for(@cour, layout: :horizontal, label_col: "col-sm-3", control_col: "col-sm-5") do |f| %>
+<%= bootstrap_form_for(@cour, layout: :horizontal, label_col: "col-sm-2", control_col: "col-sm-5") do |f| %>
   <% if @cour.errors.any? %>
     <div class="alert alert-danger alert-dismissable" role="alert">
       <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
@@ -13,10 +13,10 @@
       </ul>
     </div>
   <% end %>
-  <br>
 
   <%= hidden_field_tag :from, params[:from] %>
-  <%= f.datetime_select :debut, minute_step:15, start_hour: 8, end_hour: 22, label: "Début" %>
+
+  <%= f.datetime_select :debut, minute_step: 15, start_hour: 8, end_hour: 22, label: 'Début' %>
   <%= f.select(:duree, 
             options_for_select(['0.5','1.0','1.5','2.0','2.5','3.0','3.5','4.0','4.5','5.0','5.5','6.0','6.5','7.0','7.5','8.0','8.5','9.0','9.5','10.0','10.5','11.0','11.5','12.0','12.5','13.0','13.5','14.0'], @cour.duree.to_s), 
             {include_blank: true, label: "Durée"}, required: true) %>

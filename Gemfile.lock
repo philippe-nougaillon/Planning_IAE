@@ -64,7 +64,9 @@ GEM
     bindex (0.8.1)
     bootsnap (1.4.6)
       msgpack (~> 1.0)
-    bootstrap_form (2.7.0)
+    bootstrap_form (4.5.0)
+      actionpack (>= 5.2)
+      activemodel (>= 5.2)
     builder (3.2.4)
     byebug (11.1.3)
     capture_stdout (0.0.1)
@@ -252,7 +254,7 @@ PLATFORMS
 DEPENDENCIES
   audited (~> 4.3)
   bootsnap (>= 1.4.2)
-  bootstrap_form (~> 2.7)
+  bootstrap_form (~> 4.5)
   byebug
   capture_stdout
   capybara (>= 2.15)
