@@ -55,7 +55,7 @@
 
 <% if @formations.any? %>
   <div class="table-responsive">
-    <table class="table table-hover table-striped">
+    <table class="table table-hover table-striped table-sm">
       <thead>
         <tr>
           <th><%= sort_link 'formations.nom', 'Nom' %></th>
@@ -76,51 +76,17 @@
       </tfoot>
 
       <tbody>
-        <% @formations.includes(:cours).each do |formation| %>
-          <% formation_cours = formation.cours %>
-          <% formation_cours_planifié_count = formation_cours.planifié.count %>
-          <tr class=<%= formation_cours_planifié_count != 0 ? 'warning' : '' %>>
-            <td>
-              <span style="background-color:<%= formation.color %>;padding-left: 7px;"></span>
-              <span style="padding-left: 10px;"></span>
-              <%= link_to formation.nom, formation %>
-            </td>
-            <td><%= formation.abrg %></td>
-            <td><%= formation.nbr_etudiants %></td>
-            <td><%= formation.Code_Analytique %></td>
-            <td>
-              <%= link_to_unless formation_cours_planifié_count.zero?, formation_cours_planifié_count, cours_path(ids:formation_cours.planifié.pluck(:id)) %>
-            </td>
-            <td>
-              <% formation_cours_confirmé_count = formation_cours.confirmé.count %>
-              <%= link_to_unless (formation.archive || formation_cours_confirmé_count.zero?), formation_cours_confirmé_count, cours_path(ids:formation_cours.confirmé.pluck(:id), filter:'all') %>
-            </td>
-            <td>
-              <% formation_cours_réalisé_count = formation_cours.réalisé.count %>
-              <%= link_to_unless (formation.archive || formation_cours_réalisé_count.zero?), formation_cours_réalisé_count, cours_path(ids:formation_cours.réalisé.pluck(:id), filter:'all') %>
-            </td>
-            <td>
-              <%= link_to edit_formation_path(formation), class: "btn btn-default" do %>
-                <i class="glyphicon glyphicon-pencil"></i>
-              <% end %>
-            </td>
-            <td>
-              <% unless formation_cours.any? %>
-                <%= link_to(formation, method: :delete, data:{confirm: 'Confirmez-vous ?'}, class: "btn btn-default") do %>
-                  <i class="glyphicon glyphicon-remove"></i>
-                <% end %>
-              <% end %>
-            </td>
-          </tr>
-        <% end %>
+        <%= render @formations.includes(:cours) %>
       </tbody>
+
     </table>
 
     <% if params[:paginate] == 'pages' %>
       <div class="page_info">
-        <%= page_entries_info @formations %>
+        <%= page_entries_info @formations, model: Cour, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
       </div>
-      <%= will_paginate @formations, renderer: BootstrapPagination::Rails %>
+
+      <%= will_paginate @formations, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
     <% end %>  
   </div>
 <% end %>
