@@ -1,22 +1,29 @@
 <hr>
-<h4>
-  <%= l(cours.debut, format: :heures_min) %>
-  <small>- <%= l(cours.fin, format: :heures_min) %></small>
-  <div class="pull-right">
+<div class="row">
+  
+  <div class="col">
+    <b><%= l(cours.debut, format: :heures_min) %></b>
+    <small>- <%= l(cours.fin, format: :heures_min) %></small>
+  </div>
+
+  <div class="col text-right">
     <% if cours.salle %>
-      <span class="label <%= cours.style %>">
-        <%= link_to cours.salle.nom, image_path("Plan_d_acces_Campus_BioPark_-_IAE_Paris.pdf"), style: "color: white", title: "Plan d'accès au campus BioPark" %>
-      </span>
+      <h4>
+        <span class="badge badge-pill badge-<%= cours.style %>">
+          <%= link_to cours.salle.nom, image_path("Plan_d_acces_Campus_BioPark_-_IAE_Paris.pdf"), style: "color: white", title: "Plan d'accès au campus BioPark" %>
+        </span>
+      </h4>
     <% end %>
   </div>
-</h4>
+</div>
 
 <b>
   <%= cours.try(:formation).try(:nom) %>
 </b>
 <br>
 
-<%= cours.try(:intervenant).try(:nom_prenom) %><br>
+<%= cours.try(:intervenant).try(:nom_prenom) %>
+<br>
 
 <% if cours.intervenant_binome %>
   <br>
