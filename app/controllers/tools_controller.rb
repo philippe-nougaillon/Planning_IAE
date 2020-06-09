@@ -758,7 +758,10 @@ class ToolsController < ApplicationController
 
     unless params[:status].blank?
       # Peupler la liste des intervenants ayant eu des cours en principal ou binome
-      @cours =  Cour.réalisé.where("debut between ? and ?", @start_date, @end_date)
+      @cours = Cour
+                .where(etat: Cour.etats.values_at(:confirmé, :réalisé))
+                .where("debut between ? and ?", @start_date, @end_date)
+
       ids = @cours.distinct(:intervenant_id).pluck(:intervenant_id)
       ids << @cours.distinct(:intervenant_binome_id).pluck(:intervenant_binome_id)
 

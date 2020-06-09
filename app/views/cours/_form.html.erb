@@ -16,34 +16,46 @@
 
   <%= hidden_field_tag :from, params[:from] %>
 
-  <%= f.datetime_select :debut, minute_step: 15, start_hour: 8, end_hour: 22, label: 'Début' %>
-  <%= f.select(:duree, 
-            options_for_select(['0.5','1.0','1.5','2.0','2.5','3.0','3.5','4.0','4.5','5.0','5.5','6.0','6.5','7.0','7.5','8.0','8.5','9.0','9.5','10.0','10.5','11.0','11.5','12.0','12.5','13.0','13.5','14.0'], @cour.duree.to_s), 
-            {include_blank: true, label: "Durée"}, required: true) %>
-  <%= f.collection_select(:formation_id, 
-                          Formation.unscoped.order(:nom, :promo), 
-                          :id, 
-                          :nom_promo, 
-                          {include_blank: true},
-                          required: true, 
-                          class: "select2") %>
-  <%= f.collection_select(:intervenant_id, Intervenant.all, :id, :nom_prenom, {include_blank: true}, required: true, class: "select2") %>
-  <%= f.collection_select(:intervenant_binome_id, Intervenant.all, :id, :nom_prenom, {include_blank: true, label: "Intervenant en binôme"}, class: "select2") %>
-  <%= f.text_field :ue, placeholder: "UE#", label: "UE" %>
-  <%= f.text_field :nom, placeholder: "Nom du cours (si vide; sera remplacé par le nom de l'UE)" %>
+  <div data-controller="dispo">
 
-  <%= f.form_group do %>
-    <%= f.check_box :hors_service_statutaire, label: "Hors Service Statutaire ?" %>
-    <%= f.check_box :elearning, label: "eLearning ?" %>
-  <% end %>
+    <%= f.text_field :debut, type: "datetime-local", label: "Date", data: {"target":"dispo.date"} %>
 
-  <% if current_user.admin? || current_user.reserver? %>
-    <% unless @cour.new_record? %>
-      <%= f.select(:etat, Cour.etats.keys.to_a, {include_blank: true}) %>
+    <%= f.select(:duree, 
+              options_for_select(['0.5','1.0','1.5','2.0','2.5','3.0','3.5','4.0','4.5','5.0','5.5','6.0','6.5','7.0','7.5','8.0','8.5','9.0','9.5','10.0','10.5','11.0','11.5','12.0','12.5','13.0','13.5','14.0'], @cour.duree.to_s), 
+              {include_blank: true, label: "Durée"}, required: true) %>
+    <%= f.collection_select(:formation_id, 
+                            Formation.unscoped.order(:nom, :promo), 
+                            :id, 
+                            :nom_promo, 
+                            {include_blank: true},
+                            required: true, 
+                            class: "select2") %>
+    <%= f.collection_select(:intervenant_id, Intervenant.all, :id, :nom_prenom, {include_blank: true}, required: true, class: "select2", data: {"target":"dispo.intervenant"}) %>
+    <%= f.collection_select(:intervenant_binome_id, Intervenant.all, :id, :nom_prenom, {include_blank: true, label: "Intervenant en binôme"}, class: "select2") %>
+    <%= f.text_field :ue, placeholder: "UE#", label: "UE" %>
+    <%= f.text_field :nom, placeholder: "Nom du cours (si vide; sera remplacé par le nom de l'UE)" %>
+
+    <%= f.form_group do %>
+      <%= f.check_box :hors_service_statutaire, label: "Hors Service Statutaire ?" %>
+      <%= f.check_box :elearning, label: "eLearning ?" %>
     <% end %>
 
-    <%= f.collection_select(:salle_id, Salle.all, :id, :nom_places, {include_blank: true}) %>
-  <% end %>
+    <% if current_user.admin? || current_user.reserver? %>
+      <% unless @cour.new_record? %>
+        <%= f.select(:etat, Cour.etats.keys.to_a, {include_blank: true}) %>
+      <% end %>
+
+      <span data-action="click->dispo#click">
+        <div class="btn btn-lg">GO </div>
+      </span>
+
+      <span data-target="dispo.output">
+      </span>
+      
+      <%= f.collection_select(:salle_id, Salle.all, :id, :nom_places, {include_blank: true }) %>
+
+    <% end %>
+  </div>
 
   <%= f.text_area :commentaires %>
 
