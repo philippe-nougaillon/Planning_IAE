@@ -23,3 +23,5 @@ import "../stylesheets/application";
 import "@fortawesome/fontawesome-free/js/all";
 import "../dropdown_select";
 
+
+import "controllers"
