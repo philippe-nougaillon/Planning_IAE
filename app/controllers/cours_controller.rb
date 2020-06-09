@@ -24,6 +24,7 @@ class CoursController < ApplicationController
       session[:formation] = params[:formation] = nil
       session[:intervenant] = params[:intervenant] = nil
       session[:ue] = params[:ue] = nil
+      session[:semaine] = params[:semaine] = nil
       session[:start_date] = params[:start_date] = Date.today.to_s
       session[:etat] = params[:etat] = nil
       session[:view] = params[:view] = 'list'

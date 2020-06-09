@@ -32,11 +32,13 @@
           <% week.each do |day| %>
             <% unless day.sunday? %>
               <%= content_tag :td, class: calendar.td_classes_for(day) do %>
-                <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(block) %>
-                  <% capture_haml(day, sorted_events.fetch(day, []), &block) %>
-                <% else %>
-                  <% block.call day, sorted_events.fetch(day, []) %>
-                <% end %>
+                <div class="shadow p-2 mb-4 bg-white" >
+                  <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(block) %>
+                    <% capture_haml(day, sorted_events.fetch(day, []), &block) %>
+                  <% else %>
+                    <% block.call day, sorted_events.fetch(day, []) %>
+                  <% end %>
+                </div>
               <% end %>
             <% end %>
           <% end %>
