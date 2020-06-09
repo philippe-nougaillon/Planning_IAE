@@ -1,28 +1,28 @@
-<div class="row">
-    <div class="col-md-12">
-      <%= week_calendar events: @cours,
-                        start_date_param: :calendar_week_starts_at do |date, meetings| %>
-        <% meetings.each do |meeting| %>
-          <div class="meeting">
-            <b>
-              <%= l(meeting.debut, format: :heures_min) %>
-            </b>
-            -
-            <%= l(meeting.fin, format: :heures_min) %>
-            <%= "| Salle: #{meeting.salle.nom}" if meeting.salle %>  
-            <br>
-            <% if params[:formation].blank? %>
-              <b><%= link_to_if user_signed_in?, meeting.formation.nom, meeting %></b>
-              <br>
-            <% end %> 
-            <%= link_to_if user_signed_in?, meeting.intervenant.nom_prenom, 
-                        url_for(params
-                            .permit(:formation, :ue, :intervenant, :semaine, :start_date, :etat, :filter, :view)
-                            .merge(intervenant_id:meeting.intervenant_id)) %>
-            <br>
-            <%= meeting.nom_ou_ue %>
-          </div>
-        <% end %>
-      <% end %>
+<%= week_calendar events: @cours,
+                  start_date_param: :calendar_week_starts_at do |date, meetings| %>
+  <% meetings.each do |meeting| %>
+    <div class="meeting">
+      <b><%= l(meeting.debut, format: :heures_min) %></b>
+      -
+      <%= l(meeting.fin, format: :heures_min) %>
+      /
+      <%= meeting.try(:salle).try(:nom) %>  
+      <br>
+
+      <% if params[:formation].blank? %>
+        <span style="background-color:<%= meeting.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
+        <b><%= link_to_if user_signed_in?, meeting.formation.nom, meeting %></b>
+        <br>
+      <% end %> 
+
+      <%= link_to_if user_signed_in?, meeting.intervenant.nom_prenom, 
+                  url_for(params
+                      .permit(:formation, :ue, :intervenant, :semaine, :start_date, :etat, :filter, :view)
+                      .merge(intervenant_id:meeting.intervenant_id)) %>
+      <br>
+
+      <%= meeting.nom_ou_ue %>
+      <hr>
     </div>
-  </div>
+  <% end %>
+<% end %>

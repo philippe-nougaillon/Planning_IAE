@@ -3,16 +3,17 @@
         <td><%= check_box_tag "[cours_id][#{cours.id}]", 'yes', false, class: 'check_all' %></td>
     <% end %>
     <td>
-        <b><%= l(cours.debut, format: :heures_min) %></b>-<%= l(cours.fin, format: :heures_min) %>
+        <b><%= l(cours.debut, format: :heures_min) %></b> 
+        <%= l(cours.fin, format: :heures_min) %>
     </td>
     <td>
         <%= number_with_precision(cours.duree, precision: 1) %>h
     </td>
-    <td>
+    <td style="white-space: nowrap;">
         <span style="background-color:<%= cours_formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
         <%= link_to_if user_signed_in?, cours_formation.nom, cours_formation %>
     </td>
-    <td>
+    <td style="white-space: nowrap;">
         <%= link_to_if user_signed_in?, cours.intervenant.nom_prenom, cours.intervenant %>
         <% if cours.intervenant_binome %>
             <br>
@@ -36,7 +37,7 @@
     <td>
         <span class="badge badge-<%= cours.style %>"><%= cours.etat.humanize %></span>
     </td>
-    <td>
+    <td style="white-space: nowrap;">
         <% if cours.salle %>
             <%= link_to_if user_signed_in?, cours.salle.nom, cours_url(start_date:cours.debut.to_date, view:'calendar_rooms', anchor:cours.salle.nom), target: :_blank %>
             <% if cours_formation.nbr_etudiants > cours.salle.places && user_signed_in? %>

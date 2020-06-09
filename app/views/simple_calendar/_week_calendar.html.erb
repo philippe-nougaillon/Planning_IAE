@@ -1,25 +1,6 @@
 <div class="simple-calendar">
-  <% if @week_selector_visible %>
-    <div class="calendar-heading">
-      <%= link_to url_for(params
-                            .permit(:formation, :ue, :intervenant, :semaine, :start_date, :etat, :filter, :view)
-                            .merge(semaine:(params[:semaine].to_i > 1 ? params[:semaine].to_i - 1 : '1' ))),
-             class: "btn btn-default" do %>
-          <i class="glyphicon glyphicon-backward"></i>
-      <% end %>
-      <span class="calendar-title">Semaine <b><%= calendar.week_number %></b></span>
-      <%= link_to url_for(params
-                            .permit(:formation, :ue, :intervenant, :semaine, :start_date, :etat, :filter, :view)
-                            .merge(semaine:(params[:semaine].to_i < 52 ? params[:semaine].to_i + 1 : '52' ))),
-               class: "btn btn-default" do %>
-          <i class="glyphicon glyphicon-forward"></i>
-      <% end %>
-    </div>
-  <% end %>
   
   <table class="table">
-    <% if @week_selector_visible %>
-      <% @week_selector_visible = false %>
       <thead>
         <tr>
           <% date_range.slice(0, 7).each do |day| %>
@@ -29,17 +10,10 @@
           <% end %>
         </tr>
       </thead>
-    <% end %>
 
     <tbody>
       <% date_range.each_slice(7) do |week| %>
         <tr>
-          <% if defined? @week_selector_visible and @salle %>
-            <td>
-              <h2><%= @salle.nom %></h2>
-            </td>
-          <% end %>
-          
           <% week.each do |day| %>
             <% unless day.sunday? %>
               <%= content_tag :td, class: calendar.td_classes_for(day) do %>

@@ -95,18 +95,7 @@
     <% end %>
 </div>
 
-<% case params[:view] when 'calendar_month' %>
-  <%= render partial: 'calendar_month' %>
-
-<% when 'calendar_week' %>
-  <% @week_selector_visible = true %>
-  <%= render partial: 'calendar_week' %>
-
-<% when 'calendar_rooms' %>
-  <% @week_selector_visible = true %>
-  <%= render partial: 'calendar_rooms' %>
-
-<% when 'list' %>
+<% if params[:view] == 'list' %>
   <% if @cours.size > 0 %>
 
     <%= form_tag action_cours_path, name: 'action' do %>
@@ -121,7 +110,7 @@
                 <th>Durée</th>
                 <th>Formation</th>
                 <th>Intervenant</th>
-                <th colspan="2">Intitulé cours</th>
+                <th colspan="2">UE/Intitulé du cours</th>
                 <th>Etat</th>
                 <th>Salle</th>
                 <% if user_signed_in? %>
@@ -225,5 +214,7 @@
     <%= link_to "Effacer les filtres pour voir tous les cours", 
                   url_for(params.permit!.merge(commit: 'RàZ filtres')) %>
   <% end %>
+<% else %>
+  <%= render partial: params[:view] %>
 <% end %>
 

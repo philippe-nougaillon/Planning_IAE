@@ -12,9 +12,13 @@
             </b>
             -
             <%= l(meeting.fin, format: :heures_min) %>
-            <%= "| Salle: #{meeting.salle.nom}" if meeting.salle %>  
+            /
+            <%= meeting.try(:salle).try(:nom) %>  
             <br>
+
             <% if params[:formation].blank? %>
+              <span style="background-color:<%= meeting.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
+
               <b><%= link_to_if user_signed_in?, meeting.try(:formation).try(:nom), meeting %></b>
               <br>
             <% end %> 
@@ -24,6 +28,7 @@
                                   .merge(intervenant_id:meeting.intervenant_id)) %>
             <br>
             <%= meeting.nom_ou_ue %>
+            <hr>
           </div>
         <% end %>
       <% end %>

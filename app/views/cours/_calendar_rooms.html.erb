@@ -46,11 +46,11 @@
                         .where.not(debut:meeting.fin)
                         .where.not(fin:meeting.debut)
                         .any? %>
-            <span style="background-color:black;color:yellow;">BANZAÏ !!!</span>
+            <%= fa_icon 'exclamation-triangle', title: "Deux cours ont lieu dans la même salle !" %>
           <% end %>  
 
           <% formation = Formation.unscoped.find(meeting.formation_id) %>
-          <div style="height:<%= 30 + (15 * meeting.duree) %>px;border-left:6px;border-left-style:solid;border-left-color:<%= formation.color %>;padding-left:5px;">
+          <div class="shadow p-2 mb-4 bg-white" style="height:<%= 80 + (15 * meeting.duree) %>px;border-left:6px;border-left-style:solid;border-left-color:<%= formation.color %>;padding-left:5px;">
             <b><%= l(meeting.debut, format: :heures_min) %></b>  
              - <%= l(meeting.fin, format: :heures_min) %>
             <br>
@@ -62,6 +62,7 @@
                 <%= link_to_if user_signed_in?, formation.nom, meeting %>
               <% end %>
             </b>
+
           </div>
         <% end %>
       <% end %>

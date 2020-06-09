@@ -1,19 +1,5 @@
 <div class="simple-calendar">
   <table class="table">
-    <% if @week_selector_visible %>
-      <% @week_selector_visible = false %>
-      <thead>
-        <tr>
-          <td />
-          <% date_range.slice(0, 7).each do |day| %>
-            <% unless day.sunday? %>
-              <th><%= l(day, format: :short) %></th>
-            <% end %>
-          <% end %>
-        </tr>
-      </thead>
-    <% end %>
-
     <tbody>
       <% date_range.each_slice(7) do |week| %>
         <tr>
