@@ -34,7 +34,7 @@ class ExportPdf
         move_down 30
         font_size 6
         text "Liste au #{I18n.l(Date.today, format: :long)}"
-      end
+    end
   
     def generate_liste_des_cours_cell(c, show_comments)
         [
@@ -49,7 +49,6 @@ class ExportPdf
         ] 
     end
   
-
     def export_etats_de_services(cours, intervenants, start_date, end_date)
         intervenant = intervenants.first
 
@@ -159,26 +158,28 @@ class ExportPdf
 
             data += [ [
                 resp.formation.Code_Analytique,
-                resp.formation.Code_Analytique_avec_indice(c).include?('DISTR') ? "101PAIE" : "102PAIE",
+                resp.formation.Code_Analytique_avec_indice(resp).include?('DISTR') ? "101PAIE" : "102PAIE",
                 I18n.l(resp.debut),
                 nil,
                 resp.formation.nom,
                 resp.titre,
                 resp.heures,
-                nil, nil, nil,
+                'TD', 
+                Cour.Tarif,
+                nil,
                 montant_responsabilite
                 ] ]
 
             if index == responsabilites.size - 1
                 data += [ [
-                    nil, nil, nil, nil, nil, nil, nil, nil, nil,
-                    "#{responsabilites.count} responsabilité.s au total",
-                    "<b>#{cumul_resps}</b>",
-                    nil
+                    "<i><b>#{ responsabilites.count } #{ responsabilites.count > 1 ? 'responsabilités' : 'responsabilité' } au total</i></b>",
+                    nil, nil, nil, nil, nil,
+                    nil,
+                    nil, nil, nil,
+                    "<b>#{ cumul_resps }</b>"
                     ] ]
             end
         end
-
 
         # Grand TOTAL
         s = nil
