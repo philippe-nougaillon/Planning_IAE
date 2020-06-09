@@ -1,15 +1,5 @@
-<div class="page-header">
-	<div class="btn-group pull-right">
-	  <%= link_to @cour, class: 'btn btn-primary' do %>
-	    <span class="glyphicon glyphicon-info-sign"></span>
-	    Voir
-	  <% end %>
-	  <%= link_to cours_path, class: 'btn btn-default' do %>
-	    <span class="glyphicon glyphicon-list-alt"></span>
-	    Retour
-	  <% end %>
-	</div>
-  <h1>Modification Cours</h1>
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h2><%= fa_icon 'calendar-day'%> Modification d'un cours</h2>
 </div>
 
 <%= render 'form' %>

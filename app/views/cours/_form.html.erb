@@ -52,7 +52,7 @@
     <% if @cour.new_record? %>
       <%= f.submit "Enregistrer et saisir le suivant", name: 'create_and_add', class:"btn btn-default" %>
     <% else %>
-      <%= f.submit "Enregistrer et notifier les étudiants des changements", name: 'notifier', class:"btn btn-primary" %>
+      <%= f.submit "Enregistrer et notifier les étudiants", name: 'notifier', class:"btn btn-primary" %>
     <% end %>
   <% end %>
 
