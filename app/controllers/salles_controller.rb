@@ -142,6 +142,36 @@ class SallesController < ApplicationController
     end
   end
 
+  def libres
+    # validates :debut, :formation_id, :intervenant_id, :duree
+    cours = Cour.new(debut: DateTime.parse(params[:date]), 
+                    duree: params[:duree], 
+                    formation_id: params[:formation_id], 
+                    intervenant_id: params[:intervenant_id],
+                    intervenant_binome_id: 249,
+                    salle_id: Salle.first.id)
+
+    logger.debug cours.inspect                
+    logger.debug cours.valid?
+    logger.debug cours.errors.messages
+
+    # Afficher les salles disponibles
+    salles_dispos_ids = []
+    Salle.all.each do |s|
+      cours.salle = s 
+      salles_dispos_ids << s.id if cours.valid?
+    end
+
+    logger.debug salles_dispos_ids
+
+    respond_to do |format|
+      format.json do
+        render json: Salle.where(id: salles_dispos_ids).to_json
+      end
+    end
+  end
+
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_salle

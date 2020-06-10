@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   resources :salles do
     collection do
       get :occupation
+      get :libres
     end
   end
 
