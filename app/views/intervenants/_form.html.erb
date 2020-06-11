@@ -17,110 +17,118 @@
       <%= f.text_field :nom %>
       <%= f.text_field :prenom, label:"Prénom" %>
       <%= f.text_field :email %>
-      <%= f.text_field :titre1, label:"Titre" %>
-      <%= f.text_field :bureau %>
-      <%= f.text_field :linkedin_url, label:"Profil LinkedIn", placeholder:'URL du profil public' %>
+      <div class="row">        
+        <div class="col">
+          <%= f.text_field :titre1, label:"Titre" %>
+        </div>
+        <div class="col">
+          <%= f.text_field :bureau %>
+        </div>
+      </div>
+
+      <div class="row">        
+        <div class="col">
+          <%= f.text_field :téléphone_fixe %>
+        </div>
+        <div class="col">
+          <%= f.text_field :téléphone_mobile %>
+        </div>
+      </div>
     </div>
 
     <div class="col-sm-1">
     </div>
 
     <div class="col-sm-6">
-      <div class="col-sm-6">
-        <%= f.select :status, Intervenant.statuses.keys.to_a, {include_blank: true, label: 'Statut'} %>
+      <div class="row">
+        <div class="col">
+          <%= f.select :status, Intervenant.statuses.keys.to_a, {include_blank: true, label: 'Statut'} %>
+        </div>
+
+        <div class="col">
+          <%= f.number_field :nbr_heures_statutaire, label:"Nombre heures statutaires" %>
+        </div>
       </div>
 
-      <div class="col-sm-6">
-        <%= f.number_field :nbr_heures_statutaire, label:"Nombre heures statutaires" %>
+      <div class="row">
+        <div class="col">
+          <%= f.date_field :date_naissance %>
+        </div>
+
+        <div class="col">
+          <%= f.date_field :remise_dossier_srh, label:"Date remise dossier SRH" %>
+        </div>
       </div>
 
-      <div class="col-sm-6">
-        <%= f.date_field :date_naissance %>
-      </div>
+      <%= f.text_field :adresse %>
 
-      <div class="col-sm-6">
-        <%= f.date_field :remise_dossier_srh, label:"Date remise dossier SRH" %>
-        <br>
-      </div>
-
-      <div class="col-sm-12">
-        <%= f.text_field :adresse %>
-      </div>
-        
-      <div class="col-sm-3">
-        <%= f.text_field :cp %>
-      </div> 
-      <div class="col-sm-9">
-        <%= f.text_field :ville %>
+      <div class="row">        
+        <div class="col-sm-3">
+          <%= f.text_field :cp %>
+        </div> 
+        <div class="col-sm-9">
+          <%= f.text_field :ville %>
+        </div>
       </div>
     
-      <div class="col-sm-6">
-        <%= f.text_field :téléphone_fixe %>
-      </div>
-      <div class="col-sm-6">
-        <%= f.text_field :téléphone_mobile %>
-      </div>
       <!---
       <%= f.file_field :photo %>
       -->
 
       <% if current_user.admin? %>
-          <div class="col-sm-6">
+        <div class="row">        
+          <div class="col">
             <%= f.check_box :doublon, 
                             label:"Autoriser les doublons ?", 
                             title:"Autorise les doublons de cours sur un même créneau horaire !" 
             %>
           </div>
           
-          <div class="col-sm-6">
+          <div class="col">
             <%= f.check_box :notifier, 
                               label: "Notification planning ?",
                               title: "Envoyer la liste des cours du mois prochain"
             %>
           </div>
+        </div>
       <% end %>
 
     </div>   
   </div>
 
   <% if policy(:tool).can_see_RHGroup_private_tool? %>
-    <div class="page-header"> 
-      <h4>Responsabilités</h4>
-    </div> 
-    <ul>
-      <%= f.fields_for :responsabilites do |r| %>
-        <div class="row">
-          <li>
-            <div class="col-sm-2">
-              <%= r.date_field :debut, label:"Date" %>
-            </div>
+    <h4>Responsabilités</h4>
+    <hr>
+    <%= f.fields_for :responsabilites do |r| %>
+      <div class="row shadow">
+          <div class="col-sm-2">
+            <%= r.date_field :debut, label:"Date" %>
+          </div>
 
-            <div class="col-sm-6">
-              <%= r.select :titre, Intervenant.liste_responsabilites, include_blank: true %>
-            </div>
+          <div class="col-sm-6">
+            <%= r.select :titre, Intervenant.liste_responsabilites, include_blank: true %>
+          </div>
 
-            <div class="col-sm-3">
-              <%= r.collection_select :formation_id, 
-                      Formation.where(hors_catalogue: false), 
-                      :id, :nom_eotp, {include_blank: true, label: "Formation/EOTP"} %>
-            </div>  
-    
-            <div class="col-sm-1">
-              <%= r.text_field :heures, label:"Forfait" %>
-            </div>
+          <div class="col-sm-3">
+            <%= r.collection_select :formation_id, 
+                    Formation.where(hors_catalogue: false), 
+                    :id, :nom_eotp, {include_blank: true, label: "Formation/EOTP"} %>
+          </div>  
+  
+          <div class="col-sm-1">
+            <%= r.text_field :heures, label:"Forfait" %>
+          </div>
 
-            <div class="col-sm-8">
-              <%= r.text_field :commentaires, label:"Commentaires" %>
-            </div>
+          <div class="col-sm-8">
+            <%= r.text_field :commentaires, label:"Commentaires" %>
+          </div>
 
-            <div class="col-sm-2">
-              <br>
-              <%= r.check_box :_destroy, label:"Supprimer ?" %>
-            </div>
-          </li> 
-        </div>
-      <% end %>
-    </ul>
+          <div class="col-sm-2">
+            <br>
+            <%= r.check_box :_destroy, label:"Supprimer ?" %>
+          </div>
+      </div>
+    <% end %>
   <% end %>
 
   <%= f.submit class: "btn btn-primary" %>

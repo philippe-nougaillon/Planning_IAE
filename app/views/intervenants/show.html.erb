@@ -1,28 +1,28 @@
-<div class="page-header">
-  <div class="btn-group pull-right">
-    <% if policy(:tool).can_see_RHGroup_private_tool? %>
-      <%= link_to edit_intervenant_path(@intervenant), class: 'btn btn-primary' do %>
-        <span class="glyphicon glyphicon-pencil"></span>
-        Modifier
+<div class="pb-2 mt-4 mb-2 border-top">
+  <% if policy(:tool).can_see_RHGroup_private_tool? %>
+    <div class="btn-group float-right">
+      <%= link_to edit_intervenant_path(@intervenant), class: 'btn btn-sm btn-outline-primary' do %>
+        <%= fa_icon 'edit' %> Modifier
       <% end %>
 
-      <a href="#audit" data-toggle="collapse" class='btn btn-default'>
-        <span class="glyphicon glyphicon-search"></span>
+      <a href="#audit" data-toggle="collapse" class='btn btn-sm btn-outline-primary'>
         Audit
       </a>
 
-      <%= link_to intervenants_path, class: 'btn btn-default' do %>
-        <span class="glyphicon glyphicon-list-alt"></span>
-        Retour
+      <%= link_to intervenants_path, class: 'btn btn-sm btn-outline-primary' do %>
+        <%= fa_icon 'list' %> Retour
       <% end %>
-    <% end %>
-  </div>
-  <br><br>  
+    </div>
+  <% end %>
 </div>
+
 
 <div class="row">
   <div class="col-sm-3">
-    <h1 style="font-size: 160px" class="glyphicon glyphicon-user"></h1>
+    <h2>
+      <br>
+      <%= fa_icon 'chalkboard-teacher 3x' %>
+    </h2>
   </div>  
 
   <div class="col-sm-3">
@@ -88,7 +88,7 @@
       <small>Responsabilités</small>
     </h2>
 
-    <table class="table table-striped table-condensed">
+    <table class="table table-striped table-sm">
       <thead>
         <th>Date</th>
         <th>Formation</th>
@@ -125,7 +125,7 @@
     <small>Vacations</small>
   </h2>
 
-  <table class="table table-striped table-condensed table-hover">
+  <table class="table table-striped table-sm ">
     <thead>
       <th>Date</th>
       <th>Formation</th>
@@ -143,19 +143,22 @@
 
 <% end %>
 
-<div id="audit" class="collapse-out">
-  <h3><span class="glyphicon glyphicon-search"></span> Audit des modifications</h3>
-  <table class="table table-bordered table-hover table-condensed">
-    <thead>
-      <th>Date</th>
-      <th>Utilisateur</th>            
-      <th>Type</th>
-      <th>Record_id</th>
-      <th>Action</th>
-      <th>Modifications</th>
-    </thead>
 
-    <%= render partial: 'tools/audit', collection: @intervenant.audits %>
+<% if false %>
+  <div id="audit" class="collapse-out">
+    <h3><span class="glyphicon glyphicon-search"></span> Audit des modifications</h3>
+    <table class="table table-bordered table-hover table-sm">
+      <thead>
+        <th>Date</th>
+        <th>Utilisateur</th>            
+        <th>Type</th>
+        <th>Record_id</th>
+        <th>Action</th>
+        <th>Modifications</th>
+      </thead>
 
-  </table>
-</div>
+      <%= render partial: 'tools/audit', collection: @intervenant.audits %>
+
+    </table>
+  </div>
+<% end %>

@@ -1,6 +1,6 @@
 <div class="pb-2 mt-4 mb-2 border-bottom">
   <% if policy(Intervenant).new? %>
-    <%= link_to new_intervenant_path, class: 'btn text-info float-right' do %>
+    <%= link_to new_intervenant_path, class: 'btn text-primary float-right' do %>
       <%= fa_icon 'plus-circle' %> Intervenant
     <% end %>
   <% end %>
@@ -31,7 +31,7 @@
         <div class="col-sm-2">
           <%= label_tag :doublon, "Doublons autorisés ?" %>
           <br>    
-          <%= check_box_tag :doublon, 1, params[:doublon], onchange:'this.form.submit()', class:"form-control" %>
+          <%= check_box_tag :doublon, 1, params[:doublon], onchange:'this.form.submit()' %>
         </div>
         
       </div>
