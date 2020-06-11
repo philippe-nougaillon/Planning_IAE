@@ -6,12 +6,12 @@ class Cour < ApplicationRecord
 
   belongs_to :formation
   belongs_to :intervenant
-  belongs_to :intervenant_binome, class_name: :Intervenant, foreign_key: :intervenant_binome_id 
+  belongs_to :intervenant_binome, class_name: :Intervenant, foreign_key: :intervenant_binome_id, optional: true 
   belongs_to :salle
 
   validates :debut, :formation_id, :intervenant_id, :duree, presence: true
   validate :check_chevauchement_intervenant
-  validate :check_chevauchement, if: Proc.new {|cours| cours.salle_id }
+  validate :check_chevauchement, if: Proc.new { |cours| cours.salle_id }
   validate :jour_fermeture
   validate :reservation_dates_must_make_sense
 
@@ -69,6 +69,12 @@ class Cour < ApplicationRecord
           Code_Analytique Intervenant_id Intervenant Binôme UE Intitulé Etat
           Salle Durée E-learning? HSS? Taux_TD HETD Commentaires Créé_le Par Modifié_le}  
   end
+
+  def self.durées
+    ['0.5','1.0','1.5','2.0','2.5','3.0','3.5','4.0','4.5','5.0','5.5',
+     '6.0','6.5','7.0','7.5','8.0','8.5','9.0','9.5',
+     '10.0','10.5','11.0','11.5','12.0','12.5','13.0','13.5','14.0']
+  end  
 
   # Simple_calendar attributes
   def start_time
@@ -598,7 +604,9 @@ class Cour < ApplicationRecord
                           self.intervenant_id, self.debut, self.fin, self.debut, self.fin)
 
       # si cours en chevauchement n'est pas le cours lui même (modif de cours)
-      cours = cours.where.not(id:self.id).where.not(fin:self.debut).where.not(debut:self.fin)
+      cours = cours.where.not(id: self.id)
+                    .where.not(fin: self.debut)
+                    .where.not(debut: self.fin)
 
       if cours.any?
         errors.add(:cours, "en chevauchement (période, intervenant) avec le(s) cours ##{cours.pluck(:id).join(',')}")

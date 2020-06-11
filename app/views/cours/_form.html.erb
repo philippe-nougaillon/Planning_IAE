@@ -18,10 +18,12 @@
 
   <div data-controller="dispo">
 
-    <%= f.text_field :debut, type: "datetime-local", label: "Date", data: {"target":"dispo.date"} %>
+    <%= hidden_field_tag :id, @cour.id, data: {"target":"dispo.id"} %>
+
+    <%= f.text_field :debut, value: @cour.debut.strftime("%Y-%m-%dT%H:%M"), type: "datetime-local", label: "Date", data: {"target":"dispo.date"} %>
 
     <%= f.select(:duree, 
-                  options_for_select(['0.5','1.0','1.5','2.0','2.5','3.0','3.5','4.0','4.5','5.0','5.5','6.0','6.5','7.0','7.5','8.0','8.5','9.0','9.5','10.0','10.5','11.0','11.5','12.0','12.5','13.0','13.5','14.0'], @cour.duree.to_s), 
+                  options_for_select(Cour.durées, @cour.duree.to_s), 
                   {include_blank: true}, 
                   label: "Durée", 
                   required: true, 
@@ -51,7 +53,12 @@
                               "target":"dispo.intervenant_id"
                             }) %>
 
-    <%= f.collection_select(:intervenant_binome_id, Intervenant.all, :id, :nom_prenom, {include_blank: true, label: "Intervenant en binôme"}, class: "select2") %>
+    <%= f.collection_select(:intervenant_binome_id, 
+                            Intervenant.all, 
+                            :id, 
+                            :nom_prenom, 
+                            {include_blank: true, label: "Intervenant en binôme"}, 
+                            class: "select2") %>
     
     <%= f.text_field :ue, placeholder: "UE#", label: "UE" %>
     <%= f.text_field :nom, placeholder: "Nom du cours (si vide; sera remplacé par le nom de l'UE)" %>
@@ -66,13 +73,6 @@
         <%= f.select(:etat, Cour.etats.keys.to_a, {include_blank: true}) %>
       <% end %>
 
-      <span data-action="click->dispo#click">
-        <div class="btn btn-lg">GO </div>
-      </span>
-
-      <span data-target="dispo.output">
-      </span>
-      
       <%= f.collection_select(:salle_id, 
                               Salle.all, 
                               :id, 
@@ -80,7 +80,14 @@
                               {include_blank: true },
                               data: {"target":"dispo.salles"}
                               ) %>
+      <%= f.form_group do %>
+            <span data-action="click->dispo#show_dispo" 
+                  class="btn btn-sm btn-outline-success">
+                  Recharger liste salles dispos
+            </span>
+      <% end %>
 
+      <span data-target="dispo.output"></span>
     <% end %>
   </div>
 

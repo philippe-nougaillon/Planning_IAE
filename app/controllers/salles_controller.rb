@@ -143,26 +143,31 @@ class SallesController < ApplicationController
   end
 
   def libres
-    # validates :debut, :formation_id, :intervenant_id, :duree
-    cours = Cour.new(debut: DateTime.parse(params[:date]), 
-                    duree: params[:duree], 
-                    formation_id: params[:formation_id], 
-                    intervenant_id: params[:intervenant_id],
-                    intervenant_binome_id: 249,
-                    salle_id: Salle.first.id)
-
-    logger.debug cours.inspect                
-    logger.debug cours.valid?
-    logger.debug cours.errors.messages
-
     # Afficher les salles disponibles
     salles_dispos_ids = []
-    Salle.all.each do |s|
-      cours.salle = s 
-      salles_dispos_ids << s.id if cours.valid?
+
+    unless params[:id].blank?
+      cours = Cour.find(params[:id])
+    else
+      cours = Cour.new(debut: DateTime.parse(params[:date]), 
+                      duree: params[:duree], 
+                      formation_id: params[:formation_id], 
+                      intervenant_id: params[:intervenant_id],
+                      salle_id: Salle.first.id)
     end
 
-    logger.debug salles_dispos_ids
+    Salle.all.each do |s|
+      cours.salle = s 
+      if cours.valid?
+        salles_dispos_ids << s.id
+        #logger.debug "Salle #{s.nom} valide :)"
+      #else
+      #  logger.debug "Salle #{s.nom} non valide !"
+      #  logger.debug cours.errors.messages
+      end 
+    end
+
+    #logger.debug salles_dispos_ids
 
     respond_to do |format|
       format.json do

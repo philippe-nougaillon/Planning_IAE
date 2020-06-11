@@ -3,7 +3,7 @@ import Rails from "@rails/ujs";
 import $ from 'jquery';
 
 export default class extends Controller {
-    static targets = [ 'date', 'duree', 'formation_id', 'intervenant_id', 'salles', 'output' ]
+    static targets = [ 'id','date', 'duree', 'formation_id', 'intervenant_id', 'salles', 'output' ]
 
     initialize() {
         this.clearResult()
@@ -19,28 +19,16 @@ export default class extends Controller {
           });
     }
 
-    // get date() {
-    //     return this.targets.find("date").value
+    // click() {
+    //     console.log("Click !")
+
+    //     this.outputTarget.textContent =
+    //         `Hello, Date: ${this.dateTarget.value} 
+    //         | durée: ${this.dureeTarget.value}
+    //         | formation_id: ${this.formation_idTarget.value}
+    //         | intervenant_id: ${this.intervenant_idTarget.value}
+    //         `
     // }
-
-    // get duree() {
-    //     return this.targets.find("duree").value
-    // }
-
-    // get formation_id() {
-    //     return this.targets.find("formation_id").value
-    // }
-
-    click() {
-        console.log("Click !")
-
-        this.outputTarget.textContent =
-            `Hello, Date: ${this.dateTarget.value} 
-            | durée: ${this.dureeTarget.value}
-            | formation_id: ${this.formation_idTarget.value}
-            | intervenant_id: ${this.intervenant_idTarget.value}
-            `
-    }
 
     show_dispo() {
         console.log("Show_dispo!!")
@@ -57,12 +45,13 @@ export default class extends Controller {
         Rails.ajax({
           type: "GET",
           url: "/salles/libres.json",
-          data: "date=" + this.dateTarget.value 
+          data: "date=" + this.dateTarget.value
+                + "&id=" + this.idTarget.value 
                 + "&duree=" + this.dureeTarget.value
                 + "&formation_id=" + this.formation_idTarget.value
                 + "&intervenant_id=" + this.intervenant_idTarget.value,
           success: (data) => {
-            console.log('Available rooms loaded!')
+            // console.log('Available rooms loaded!')
             this.refreshDropdownValues(data)
           }
         })

@@ -1,8 +1,12 @@
 <div class="pb-2 mt-4 mb-2 border-bottom">
   <% if policy(Cour).new? %>
-    <%= link_to new_cour_path(formation: session[:formation], debut: session[:start_date]), class: 'btn text-info float-right' do %>
+
+    <%= link_to new_cour_path(formation: session[:formation], 
+                              debut: DateTime.now), 
+                              class: 'btn text-info float-right' do %>
       <%= fa_icon 'plus-circle' %> Cours
     <% end %>
+
   <% end %>
   <h2><%= fa_icon 'calendar-alt' %> Planning des cours</h2>
 </div>
