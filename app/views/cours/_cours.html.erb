@@ -1,4 +1,4 @@
-<tr class="shadow-lg bg-white">
+<tr class="shadow bg-white">
     <% if user_signed_in? %>
         <td><%= check_box_tag "[cours_id][#{cours.id}]", 'yes', false, class: 'check_all' %></td>
     <% end %>
