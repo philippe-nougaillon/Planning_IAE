@@ -1,29 +1,28 @@
-<div class="page-header">
-  <div class="btn-group pull-right">
-    <% if current_user.admin? %>
-      <%= link_to edit_formation_path(@formation), class: 'btn btn-primary' do %>
-        <span class="glyphicon glyphicon-pencil"></span>
-        Modifier
+<div class="pb-2 mt-4 mb-2 border-top">
+  <% if current_user.admin? %>
+    <div class="btn-group float-right">
+      <%= link_to edit_formation_path(@formation), class: 'btn btn-sm btn-outline-primary' do %>
+        <%= fa_icon 'edit' %> Modifier
       <% end %>
 
-      <a href="#audit" data-toggle="collapse" class='btn btn-default'>
-        <span class="glyphicon glyphicon-search"></span>
+      <a href="#audit" data-toggle="collapse" class='btn btn-sm btn-outline-primary'>
         Audit
       </a>
 
-      <%= link_to formations_path, class: 'btn btn-default' do %>
-        <span class="glyphicon glyphicon-list-alt"></span>
-        Retour
+      <%= link_to formations_path, class: 'btn btn-sm btn-outline-primary' do %>
+        <%= fa_icon 'list' %> Retour
       <% end %>
-    <% end %>
-  </div>
-  <br><br>
+    </div>
+  <% end %>
 </div>
 
 <div class="row">
-  <div class="col-sm-3">
-    <h1 style="font-size: 160px" class="glyphicon glyphicon-briefcase"></h1>
-  </div>  
+  <div class="col-sm-2">
+    <h2>
+      <br>
+      <%= fa_icon 'briefcase 3x' %>
+    </h2>
+  </div>    
 
   <div class="col-sm-6">
     <h2>
@@ -56,7 +55,7 @@
     </h3>
   </div>
 
-  <div class="col-sm-3">
+  <div class="col-sm-4">
     <h2>
       <small>Abrégé</small><br>
       <%= @formation.try(:abrg) %>
@@ -70,7 +69,7 @@
 </div>
 
 <div class="row">
-  <div class="col-sm-9">
+  <div class="col-sm-5">
     <h3>
       <small>Diplôme</small><br>
       <%= @formation.diplome %>
@@ -82,7 +81,7 @@
     </h3>
   </div>
 
-  <div class="col-sm-3">
+  <div class="col-sm-7">
     <h3>
       <small>Code Analytique</small><br>
       <%= @formation.Code_Analytique %>

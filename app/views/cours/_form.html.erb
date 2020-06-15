@@ -65,7 +65,6 @@
 
     <%= f.form_group do %>
       <%= f.check_box :hors_service_statutaire, label: "Hors Service Statutaire ?" %>
-      <%= f.check_box :elearning, label: "eLearning ?" %>
     <% end %>
 
     <% if current_user.admin? || current_user.reserver? %>
@@ -91,14 +90,18 @@
     <% end %>
   </div>
 
+  <%= f.form_group do %>
+    <%= f.check_box :elearning, label: "eLearning ?" %>
+  <% end %>
+
   <%= f.text_area :commentaires %>
 
   <%= f.form_group do %>
     <%= f.submit "Enregistrer", class: "btn btn-primary" %>
     <% if @cour.new_record? %>
-      <%= f.submit "Enregistrer et saisir le suivant", name: 'create_and_add', class:"btn btn-default" %>
+      <%= f.submit "Enregistrer et en saisir une autre", name: 'create_and_add', class: 'btn btn-outline-primary' %>
     <% else %>
-      <%= f.submit "Enregistrer et notifier les étudiants", name: 'notifier', class:"btn btn-primary" %>
+      <%= f.submit "Enregistrer les modifications et en notifier les étudiants", name: 'notifier', class: 'btn btn-primary' %>
     <% end %>
   <% end %>
 

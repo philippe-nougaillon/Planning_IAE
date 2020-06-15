@@ -14,161 +14,159 @@
     </div>
   <% end %>
 
-  <div class="form-group">
-    <div class="row">
-      <div class="col-sm-5">
-        <%= f.text_field :nom %>
+  <div class="row">
+    <div class="col-sm-5">
+      <%= f.text_field :nom %>
 
-        <div class="row">
-          <div class="col-sm-6">
-            <%= f.text_field :abrg, label: 'Abr.' %>
-          </div>
-          <div class="col-sm-6">
-            <%= f.color_field :color, label: 'Couleur' %>
-          </div>
+      <div class="row">
+        <div class="col">
+          <%= f.text_field :abrg, label: 'Abr.' %>
         </div>
+        <div class="col">
+          <%= f.color_field :color, label: 'Couleur' %>
+        </div>
+      </div>
 
-        <div class="row">
-          <div class="col-sm-6">
-            <%= f.check_box :hors_catalogue, label: "Hors catalogue ?" %>
-          </div>
-          <div class="col-sm-6">
-            <% if @formation.archive? %>
+      <div class="row">
+        <div class="col">
+          <%= f.check_box :hors_catalogue, label: "Hors catalogue ?" %>
+        </div>
+        <div class="col">
+          <% if @formation.archive? %>
+            <%= f.check_box :archive, label: "Archivée ?" %>
+          <% else %>
+            <% if @formation.cours.where("DATE(debut) >= ?", Date.today).count.zero? %>
               <%= f.check_box :archive, label: "Archivée ?" %>
             <% else %>
-              <% if @formation.cours.where("DATE(debut) >= ?", Date.today).count.zero? %>
-                <%= f.check_box :archive, label: "Archivée ?" %>
-              <% else %>
-                <%= f.check_box :archive, label: "Archivée ?", disabled: true, 
-                title: "Vous ne pouvez pas archiver cette formation car des cours à venir existent dans le planning !" %>
-              <% end %>
-            <% end %>  
-          </div>
+              <%= f.check_box :archive, label: "Archivée ?", disabled: true, 
+              title: "Vous ne pouvez pas archiver cette formation car des cours à venir existent dans le planning !" %>
+            <% end %>
+          <% end %>  
         </div>
-
-        <div class="row">
-          <div class="col-sm-6">
-            <%= f.text_field :promo %>
-          </div>
-          <div class="col-sm-6">
-            <%= f.text_field :diplome, label: "Diplôme" %>
-          </div>  
-        </div>
-
-        <%= f.text_field :domaine %>
-        <%= f.check_box :apprentissage, label: "Apprentissage ?" %>
-        
       </div>
 
-      <div class="col-sm-1">
-      </div>
-
-      <div class="col-sm-6">
-        <%= f.collection_select :user_id, User.where.not(nom: nil).order(:nom), :id, :nom_et_prénom, {include_blank: true, label:"Gestionnaire de formation"} %>
-        
-        <div class="row">
-          <div class="col-sm-5">
-            <%= f.number_field :nbr_etudiants, label: "Nombre d'étudiants prévus" %>
-          </div>  
-          <div class="col-sm-5">
-            <%= f.number_field :nbr_heures, label: "Nombre d'heures prévues" %>
-          </div>  
+      <div class="row">
+        <div class="col">
+          <%= f.text_field :promo %>
+        </div>
+        <div class="col">
+          <%= f.text_field :diplome, label: "Diplôme" %>
         </div>  
-
-        <div class="row">
-          <div class="col-sm-6">
-            <%= f.text_field :Code_Analytique, label: "Code Analytique (EOTP)" %>
-          </div>
-          <div class="col-sm-3">
-            <%= f.select :nomTauxTD, ['','TD','CM','3xTD'] ,label: "Taux Horaire" %>
-          </div>
-          <div class="col-sm-3">
-            <br />
-            <%= f.check_box :hss, label: "HSS?", title: "Cochez pour ne pas imputer dans les états de services" %>
-          </div>
-        </div>
-
-        <%= f.text_area :memo, label: "Mémo" %>
-        <%= f.text_field :courriel, label: "Adresse mail générique de la formation", placeholder: "mastermmc.app.iae@univ-paris1.fr" %>
-
-        <%= f.submit class: "btn btn-primary" %>     
       </div>
+
+      <div class="row">
+        <div class="col">
+          <%= f.text_field :domaine %>
+        </div>
+        <div class="col">
+          <br>
+          <%= f.check_box :apprentissage, label: "Apprentissage ?" %>
+        </div>
+      </div>
+
+      <%= f.submit class: "btn btn-primary" %>     
+
+    </div>
+
+    <div class="col-sm-1">
+    </div>
+
+    <div class="col-sm-6">
+      <%= f.collection_select :user_id, User.where.not(nom: nil).order(:nom), :id, :nom_et_prénom, {include_blank: true, label:"Gestionnaire de formation"} %>
+      
+      <div class="row">
+        <div class="col">
+          <%= f.number_field :nbr_etudiants, label: "Nombre d'étudiants prévus" %>
+        </div>  
+        <div class="col">
+          <%= f.number_field :nbr_heures, label: "Nombre d'heures prévues" %>
+        </div>  
+      </div>  
+
+      <div class="row">
+        <div class="col-sm-6">
+          <%= f.text_field :Code_Analytique, label: "Code Analytique (EOTP)" %>
+        </div>
+        <div class="col-sm-3">
+          <%= f.select :nomTauxTD, ['','TD','CM','3xTD'] ,label: "Taux Horaire" %>
+        </div>
+        <div class="col-sm-3">
+          <br />
+          <%= f.check_box :hss, label: "HSS?", title: "Cochez pour ne pas imputer dans les états de services" %>
+        </div>
+      </div>
+
+      <%= f.text_area :memo, label: "Mémo" %>
+      <%= f.text_field :courriel, label: "Adresse mail générique de la formation", placeholder: "mastermmc.app.iae@univ-paris1.fr" %>
+
     </div>
   </div>
 
-  <a href="#UE" data-toggle="collapse" class="btn btn-success btn-md">Afficher les UE</a>
-  | 
-  <a href="#Etudiants" data-toggle="collapse" class="btn btn-info btn-md">Afficher les étudiants</a>
-  | 
-  <a href="#Vacations" data-toggle="collapse" class="btn btn-warning btn-md">Afficher les vacations</a>
+  <div id="UE" class="collapse shadow p-4">
+    <h4>
+      <%= fa_icon 'book' %>
+      Unités d'enseignements
+    </h4>
+    <hr>
 
-
-  <div id="UE" class="collapse">
-    <div class="page-header"> 
-      <h4>Unités d'enseignements</h4>
-    </div> 
-    <ul>
-      <%= f.fields_for :unites do |ue| %>
-        <div class="row">
-          <li>
-            <div class="col-sm-3">
-              <%= ue.text_field :num, placeholder:"UE# ex:UE3", label:"Code" %>
-            </div>  
-            <div class="col-sm-7">
-              <%= ue.text_field :nom %>
-            </div>
-            <div class="col-sm-2">
-              <br>
-              <%= ue.check_box :_destroy, label:"Supprimer ?" %>
-            </div>
-          </li> 
+    <%= f.fields_for :unites do |ue| %>
+      <div class="row shadow-sm">
+        <div class="col-sm-3">
+          <%= ue.text_field :num, placeholder:"UE# ex:UE3", label:"Code" %>
+        </div>  
+        <div class="col-sm-7">
+          <%= ue.text_field :nom %>
         </div>
-      <% end %>
-    </ul>
+        <div class="col-sm-2">
+          <br>
+          <%= ue.check_box :_destroy, label:"Supprimer ?" %>
+        </div>
+      </div>
+    <% end %>
+
     <%= f.submit "Enregistrer", class: "btn btn-primary" %>
-    <br>    
   </div>
   
-  <div id="Etudiants" class="collapse">
-    <div class="page-header"> 
-      <h4>Etudiants</h4>
-    </div>
-    <ul>
-      <%= f.fields_for :etudiants do |etudiant| %>
-        <div class="row">
-          <li>
-            <div class="col-sm-2">
-              <%= etudiant.text_field :nom %>
-            </div>  
-            <div class="col-sm-2">
-              <%= etudiant.text_field :prénom %>
-            </div>
-            <div class="col-sm-4">
-              <%= etudiant.text_field :email %>
-            </div>
-            <div class="col-sm-2">
-              <%= etudiant.text_field :mobile %>
-            </div>
-            <div class="col-sm-2">
-              <br>
-              <%= etudiant.check_box :_destroy, label:"Supprimer ?" %>
-            </div>
-          </li> 
+  <div id="Etudiants" class="collapse shadow p-4">
+    <h4>
+      <%= fa_icon 'graduation-cap' %>
+      Etudiants
+    </h4>
+    <hr>
+
+    <%= f.fields_for :etudiants do |etudiant| %>
+      <div class="row shadow-sm">
+        <div class="col-sm-2">
+          <%= etudiant.text_field :nom %>
+        </div>  
+        <div class="col-sm-2">
+          <%= etudiant.text_field :prénom %>
         </div>
-      <% end %>
-    </ul>
+        <div class="col-sm-4">
+          <%= etudiant.text_field :email %>
+        </div>
+        <div class="col-sm-2">
+          <%= etudiant.text_field :mobile %>
+        </div>
+        <div class="col-sm-2">
+          <br>
+          <%= etudiant.check_box :_destroy, label:"Supprimer ?" %>
+        </div>
+      </div>
+    <% end %>
+
     <%= f.submit class: "btn btn-primary" %>    
-    <br>
   </div>
 
-  <div id="Vacations" class="collapse">
-    <div class="page-header"> 
-      <h4>Vacations ou autres activités</h4>
-    </div>
-    <ul>
+  <div id="Vacations" class="collapse shadow p-4">
+      <h4>
+        <%= fa_icon 'user-md' %>
+        Vacations ou autres activités
+      </h4>
+      <hr>
+
       <%= f.fields_for :vacations do |vacation| %>
-        <div class="row">
-          <li>
+        <div class="row shadow-sm">
             <div class="col-sm-2">
               <%= vacation.date_field :date, label: "*Date" %>
             </div>
@@ -198,13 +196,9 @@
             <div class="col-sm-2">
               <%= vacation.check_box :_destroy, label: "Supprimer ?" %>
             </div>
-          </li> 
         </div>
       <% end %>
-    </ul>
     <%= f.submit class: "btn btn-primary" %>    
   </div>
 
 <% end %>
-<br>
-<br>
