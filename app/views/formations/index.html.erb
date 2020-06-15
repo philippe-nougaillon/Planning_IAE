@@ -1,6 +1,6 @@
 <div class="pb-2 mt-4 mb-2 border-bottom">
   <% if policy(Formation).new? %>
-    <%= link_to new_formation_path, class: 'btn text-info float-right' do %>
+    <%= link_to new_formation_path, class: 'btn text-primary float-right' do %>
       <%= fa_icon 'plus-circle' %> Formation
     <% end %>
   <% end %>
@@ -15,9 +15,9 @@
           <div class="col-sm-5">
             <%= label_tag :nom, "Nom/Abrg./Code/Promo" %>
             <div class="input-group">    
-              <%= text_field_tag :nom, params[:nom], include_blank:true, onchange:'this.form.submit()', class:"form-control" %>
+              <%= text_field_tag :nom, params[:nom], include_blank:true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
               <span class="input-group-btn">
-                  <%= submit_tag 'Filtrer', class:"btn btn-success" %>
+                  <%= submit_tag 'Filtrer', class:"btn btn-sm btn-success" %>
               </span>
             </div> 
           </div>
@@ -55,7 +55,7 @@
 
 <% if @formations.any? %>
   <div class="table-responsive">
-    <table class="table table-hover table-striped table-sm">
+    <table class="table table-hover table-bordered">
       <thead>
         <tr>
           <th><%= sort_link 'formations.nom', 'Nom' %></th>
@@ -90,4 +90,3 @@
     <% end %>  
   </div>
 <% end %>
-<br>

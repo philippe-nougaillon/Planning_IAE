@@ -67,8 +67,11 @@
 <% if @formations.any? %>
   <h2>
     <small>
-      <%= "Formation".pluralize(@formations.count) %>
-      <%= "dispensée".pluralize(@formations.count) %>
+      <%= "Formation".pluralize(@formations.size) %>
+      <%= "dispensée".pluralize(@formations.size) %>
+      <span class="badge badge-pill badge-info">
+        <%= @formations.size %>
+      </span>
     </small>
   </h2>
 
@@ -79,66 +82,74 @@
                             intervenant: @intervenant.nom_prenom,
                             filter: 'all') %><%= ',' if index != @formations.size - 1 %>
   <% end %>
+  <br><br>
 <% end %>
 
 <% if policy(:tool).can_see_RHGroup_private_tool? %>
   <% if @intervenant.responsabilites.any? %>
-    <h2>
-      <small>Responsabilités</small>
-    </h2>
+    <div class="shadow p-4">
+      <h2>
+        <%= fa_icon 'file-contract' %>
+        Responsabilités
+      </h2>
 
-    <table class="table table-striped table-sm">
-      <thead>
-        <th>Date</th>
-        <th>Formation</th>
-        <th>Titre</th>
-        <th>Forfait</th>
-        <th>Commentaires</th>
-      </thead>
+      <table class="table table-striped table-sm">
+        <thead>
+          <th>Date</th>
+          <th>Formation</th>
+          <th>Titre</th>
+          <th>Forfait</th>
+          <th>Commentaires</th>
+        </thead>
 
-      <% @intervenant.responsabilites.each do |r| %>
-        <tr>
-            <td>
-              <%= l r.debut %>
-            </td>
-            <td>
-              <%= link_to(r.formation.nom, r.formation) %>
-            </td>
-            <td>
-              <%= r.titre %>
-            </td>
-            <td>
-              <%= r.heures %>h
-            </td>
-            <td>
-              <%= r.commentaires %>
-            </td>
-        </tr>
-      <% end %>
-    </table>
+        <% @intervenant.responsabilites.each do |r| %>
+          <tr>
+              <td>
+                <%= l r.debut %>
+              </td>
+              <td>
+                <%= link_to(r.formation.nom, r.formation) %>
+              </td>
+              <td>
+                <%= r.titre %>
+              </td>
+              <td>
+                <%= r.heures %>h
+              </td>
+              <td>
+                <%= r.commentaires %>
+              </td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+    <br>
   <% end %>
 <% end %>
 
 <% if @intervenant.vacations.any? %>
-  <h2>
-    <small>Vacations</small>
-  </h2>
+  <div class="shadow p-4">
+    <h2>
+      <%= fa_icon 'user-md' %>
+      Vacations
+    </h2>
 
-  <table class="table table-striped table-sm ">
-    <thead>
-      <th>Date</th>
-      <th>Formation</th>
-      <th>Activité</th>
-      <th>Intervenant</th>
-      <th>Qté</th>
-      <th>Forfait HTD</th>
-      <th>Commentaires</th>
-    </thead>
+    <table class="table table-striped table-sm ">
+      <thead>
+        <th>Date</th>
+        <th>Formation</th>
+        <th>Activité</th>
+        <th>Intervenant</th>
+        <th>Qté</th>
+        <th>Forfait_HTD</th>
+        <th>Commentaires</th>
+      </thead>
 
-    <% @intervenant.vacations.each do |vacation| %>
-      <%= render vacation %>
-    <% end %>
-  </table>
+      <% @intervenant.vacations.each do |vacation| %>
+        <%= render vacation %>
+      <% end %>
+    </table>
+  </div>
 
 <% end %>
 

@@ -1,15 +1,15 @@
-<div class="page-header">
-	<div class="btn-group pull-right">
-	  <%= link_to @etudiant, class: 'btn btn-primary' do %>
-	    <span class="glyphicon glyphicon-info-sign"></span>
-	    Voir
-	  <% end %>
-	  <%= link_to etudiants_path, class: 'btn btn-default' do %>
-	    <span class="glyphicon glyphicon-list-alt"></span>
-	    Retour
-	  <% end %>
+<div class="pb-2 mt-4 mb-2 border-bottom">
+	<div class="btn-group float-right">
+		<%= link_to @etudiant, class: 'btn btn-sm btn-outline-primary' do %>
+			<%= fa_icon 'eye' %> Voir
+		<% end %>
+
+		<%= link_to etudiants_path, class: 'btn btn-sm btn-outline-primary' do %>
+			<%= fa_icon 'list' %> Retour
+		<% end %>
+
 	</div>
-  <h1>Modification étudiant</h1>
+  	<h2><%= fa_icon 'graduation-cap' %> Modification d'un étudiant</h2>
 </div>
 
 <%= render 'form' %>

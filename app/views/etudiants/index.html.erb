@@ -1,6 +1,6 @@
 <div class="pb-2 mt-4 mb-2 border-bottom">
   <% if policy(Etudiant).new? %>
-    <%= link_to new_etudiant_path, class: 'btn text-info float-right' do %>
+    <%= link_to new_etudiant_path, class: 'btn text-primary float-right' do %>
       <%= fa_icon 'plus-circle' %> Etudiant
     <% end %>
   <% end %>
@@ -14,25 +14,29 @@
 
           <div class="col-sm-3">
             <%= label_tag :nom, "Nom/Entreprise" %>    
-            <%= text_field_tag :nom, params[:nom], include_blank:true, onchange:'this.form.submit()', class:"form-control" %>
+            <%= text_field_tag :nom, params[:nom], include_blank:true, onchange:'this.form.submit()', class: 'form-control form-control-sm' %>
           </div>
 
           <div class="col-sm-2">
             <%= label_tag :workflow_state, "Statut" %>
-            <%= select_tag :workflow_state, options_for_select(Etudiant.workflow_spec.states.keys.to_a, params[:workflow_state]), 
-                                    include_blank: true,
-                                    class: "form-control", 
-                                    onchange: 'this.form.submit()' %>
+            <%= select_tag :workflow_state, 
+                                options_for_select(Etudiant.workflow_spec.states.keys.to_a, params[:workflow_state]), 
+                                include_blank: true,
+                                class: 'form-control form-control-sm', 
+                                onchange: 'this.form.submit()' %>
           </div>
 
           <div class="col-sm-6">
             <%= label_tag "Formation" %>    
             <div class="input-group">
               <%= select_tag :formation_id, 
-                    options_from_collection_for_select(Formation.unscoped.all, :id, :nom, params[:formation_id]), 
-                      class:"form-control select2", include_blank:true, onchange:'this.form.submit()' %>
+                                  options_from_collection_for_select(Formation.unscoped.all, :id, :nom, params[:formation_id]), 
+                                  class: 'form-control form-control-sm select2', 
+                                  include_blank: true, 
+                                  onchange: 'this.form.submit()' %>
+
               <span class="input-group-btn">
-                <%= submit_tag 'Filtrer', class:"btn btn-success" %>
+                <%= submit_tag 'Filtrer', class: 'btn btn-sm btn-success' %>
               </span>
             </div> 
           </div>
@@ -43,7 +47,7 @@
 </div>
 
 <div class="table-responsive">
-  <table class="table table-striped table-hover table-sm">
+  <table class="table table-bordered table-hover">
     <thead>
       <tr>
         <th><%= sort_link 'etudiants.nom', 'Nom' %></th>
