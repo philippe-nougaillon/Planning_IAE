@@ -1,11 +1,10 @@
-<div class="page-header">
-  <h1>
-  	<span class="glyphicon glyphicon-export"></span>
-  	Export de cours 
-  </h1>
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h2><%= fa_icon 'inbox' %> Export de cours</h2>
 </div>
+<br>
+
 <div>
-  <h3>Cette fonction permet la création d'une feuille Excel à partir des cours sélectionnés ci-dessous</h3>
+  <h4>Cette fonction permet la création d'une feuille Excel à partir des cours sélectionnés ci-dessous</h4>
 </div>
 
 <%= form_tag({action: "export_do", method: :post}) do %>

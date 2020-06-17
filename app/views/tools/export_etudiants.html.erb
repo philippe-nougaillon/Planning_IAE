@@ -1,12 +1,13 @@
-<div class="page-header">
-  <h1>
-  	<span class="glyphicon glyphicon-export"></span>
-  	Export des étudiants 
-  </h1>
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h2><%= fa_icon 'inbox' %> Export des étudiants </h2>
 </div>
+<br>
 
 <div>
-  <h4>Permet la création d'une feuille Excel contenant tous les étudiants ou seulement ceux de la formation sélectionnée ci-dessous</h4>
+  <h4>
+      Permet la création d'une feuille Excel contenant tous les étudiants <br>
+      ou seulement ceux de la formation sélectionnée ci-dessous
+  </h4>
 </div>
 
 <%= form_tag({action: "export_etudiants_do", method: :post}) do %>
