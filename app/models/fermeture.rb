@@ -2,9 +2,9 @@ class Fermeture < ApplicationRecord
 	
 	audited
 
-	validates :date, presence: true
+	validates :date, :nom, presence: true
 	validates :date, uniqueness: true
 	
-	default_scope { order(:date) } 
+	default_scope { order('updated_at DESC, date DESC') } 
 
 end

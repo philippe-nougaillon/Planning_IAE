@@ -9,4 +9,8 @@ class FermeturePolicy < ApplicationPolicy
       user
     end
 
+    def new?
+      user.admin?
+    end
+
 end
