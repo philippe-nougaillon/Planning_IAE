@@ -1,9 +1,7 @@
-<div class="page-header">
-  <h1>
-  	<span class="glyphicon glyphicon-list-alt"></span>
-  	Etats de services
-  </h1>
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h2><%= fa_icon 'list-alt' %> Etats de services</h2>
 </div>
+<br>
 
 <h3>Récapitule les cours réalisés sur une période donnée, par intervenant</h3>
 <br>
@@ -32,14 +30,11 @@
         <div class="col-sm-4">
             <% if @intervenants_for_select %>
                 <%= label_tag :intervenant_id, "Intervenant" %>
-                <div class="input-group">
-                    <%= select_tag :intervenant_id,
-                        options_from_collection_for_select(@intervenants_for_select, :id, :nom_prenom, params[:intervenant_id]), 
-                            include_blank:true, onchange:'this.form.submit()', class:"form-control select2" %>
-                    <span class="input-group-btn">
-                        <%= submit_tag 'Afficher', class:"btn btn-success" %>
-                    </span>
-                </div>
+                <%= select_tag :intervenant_id,
+                                    options_from_collection_for_select(@intervenants_for_select, :id, :nom_prenom, params[:intervenant_id]), 
+                                    include_blank:true, 
+                                    onchange:'this.form.submit()', 
+                                    class: "form-control" %>
             <% end %>
        </div>
     </div>

@@ -6,19 +6,27 @@ class ImportLogLine < ApplicationRecord
   enum etat: [:succès, :echec]
 
   def icon_etat
-    if self.etat == "succès"
-      "glyphicon glyphicon-ok-circle text-success"
+    if self.etat == 'succès'
+      'check-circle'
     else
-      "glyphicon glyphicon-remove-circle text-danger"
+      'times-circle'
+    end
+  end
+
+  def icon_color
+    if self.etat == 'succès'
+      'text-success'
+    else  
+      'text-danger'
     end
   end
 
   def pretiffy_message   
   	if self.message.include?('||')	
-		[self.message.split('|| ERREURS:').first, self.message.split('|| ERREURS:').last]
-	else
-		[self.message, nil]
-	end
+      [self.message.split('|| ERREURS:').first, self.message.split('|| ERREURS:').last]
+    else
+      [self.message, nil]
+    end
   end	
 
 end

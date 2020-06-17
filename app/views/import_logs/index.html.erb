@@ -1,15 +1,13 @@
-<div class="page-header">
-  <h1>
-    <span class="glyphicon glyphicon-inbox"></span>  
-    Import logs
-  </h1>
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h2><%= fa_icon 'inbox' %> Import logs</h2>
 </div>
+<br>
 
 <div class="table-responsive">
   <table class="table table-striped table-bordered table-hover">
     <thead>
       <tr>
-        <th />
+        <th></th>
         <th>Le</th>
         <th>Type</th>
         <th>Par</th>
@@ -20,18 +18,20 @@
     </thead>
 
     <tbody>
-      <%= content_tag_for(:tr, @import_logs) do |import_log| %>
-        <td><i class="btn-lg <%= import_log.icon_etat %>"></i></td>
-        <td><%= l(import_log.created_at.in_time_zone('Paris'), format: :short) %></td>
-        <td><%= import_log.model_type %></td>
-        <td><%= import_log.user.username if import_log.user %></td>
-        <td><%= import_log.etat.humanize %></td>
-        <td><%= import_log.message %></td>
-        <td>
-          <%= link_to import_log, class:"btn btn-default" do %>
-            <i class="glyphicon glyphicon-zoom-in"></i>
-          <% end %>
-        </td>
+      <% @import_logs.each do |import_log| %>
+        <tr>
+          <td><%= fa_icon import_log.icon_etat, class: import_log.icon_color %></td>
+          <td><%= l(import_log.created_at.in_time_zone('Paris'), format: :short) %></td>
+          <td><%= import_log.model_type %></td>
+          <td><%= import_log.user.username if import_log.user %></td>
+          <td><%= import_log.etat.humanize %></td>
+          <td><%= import_log.message %></td>
+          <td>
+            <%= link_to import_log, class: "btn btn-outline-primary" do %>
+              <%= fa_icon 'eye' %>
+            <% end %>
+          </td>
+        </tr>
       <% end %>
     </tbody>
   </table>

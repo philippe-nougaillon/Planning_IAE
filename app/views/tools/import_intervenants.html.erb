@@ -1,9 +1,7 @@
-<div class="page-header">
-  <h1>
-  	<span class="glyphicon glyphicon-download-alt"></span>
-  	Import des intervenants
-  </h1>
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h2><%= fa_icon 'download' %> Import des intervenants</h2>
 </div>
+<br>
 
 <%= form_tag({action: "import_intervenants_do", method: :post}, multipart: true) do %>
   <div>
@@ -11,21 +9,18 @@
   </div>
   <br>
 
-  <div class="row">
-    <div class="field">
-      <%= label :filename, "Fichier source" %>
-      <%= file_field_tag 'upload', accept: '.xls' %>
-    </div>
+  <div class="form-group">
+    <%= label :filename, "Fichier source" %>
+    <%= file_field_tag 'upload', accept: '.xls' %>
+    <br>
     <br>
     
-    <div class="field">
-      <b>Enregistrer les changements ?</b> <br>
-      <%= label :save, "Oui", :value => "true" %>
-      <%= radio_button_tag :save, true %>
-      <%= label :save, "Non", :value => "false" %>
-      <%= radio_button_tag :save, false, :checked => true %>
-      <br><i>Choisissez 'Non' pour tester votre import car <b>il est irréversible !</b></i><br />
-    </div>
+    <b>Enregistrer les changements ?</b> <br>
+    <%= label :save, "Oui", :value => "true" %>
+    <%= radio_button_tag :save, true %>
+    <%= label :save, "Non", :value => "false" %>
+    <%= radio_button_tag :save, false, :checked => true %>
+    <br><i>Choisissez 'Non' pour tester votre import car <b>il est irréversible !</b></i><br />
     <br>
     
     <div class="actions">

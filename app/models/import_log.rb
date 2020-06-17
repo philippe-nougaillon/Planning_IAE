@@ -10,14 +10,22 @@ class ImportLog < ApplicationRecord
   enum etat: [:succès, :echec, :warning]
 
   def icon_etat
-    case self.etat
-    when "succès"
-      "glyphicon glyphicon-ok-circle text-success"
-    when "echec"
-      "glyphicon glyphicon-remove-circle text-danger"
-    when "warning"
-      "glyphicon glyphicon-remove-circle text-warning"
+    if self.etat == 'succès'
+      'check-circle'
+    else
+      'times-circle'
     end
-  end  
-    
+  end 
+  
+  def icon_color
+    case self.etat
+    when 'succès'
+      'text-success'
+    when 'echec', 
+      'text-danger'
+    when 'warning'
+      'text-warning'
+    end
+  end
+  
 end

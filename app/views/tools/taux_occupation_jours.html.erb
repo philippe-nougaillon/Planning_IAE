@@ -1,11 +1,11 @@
-<div class="page-header">
-  <h1>
-  	<span class="glyphicon glyphicon-dashboard"></span>
-  	Taux d'occupation jours
-  </h1>
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h2><%= fa_icon 'tachometer-alt' %> Taux d'occupation jours</h2>
 </div>
+<br>
+
 <div>
     <h3>Calcule le taux d'occupation des salles pour chaque jours d'une période donnée</h3>
+    <br>
     <p>
         Salles prises en compte les jours de la semaine: <%= Salle.salles_de_cours.pluck(:nom).join(', ') %><br>
         Salles prises en compte le samedi: <%= Salle.salles_de_cours_du_samedi.pluck(:nom).join(', ') %><br>
@@ -13,6 +13,7 @@
         Les samedis soir, les dimanches et les jours de fermeture n'entrent pas dans le calcul de la moyenne qui apparait en fin de page<br>
     </p>
 </div>
+<br>
 
 <%= form_tag({action: "taux_occupation_jours_do", method: :post}) do %>
 

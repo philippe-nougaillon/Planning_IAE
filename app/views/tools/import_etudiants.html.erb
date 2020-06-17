@@ -1,9 +1,7 @@
-<div class="page-header">
-  <h1>
-  	<span class="glyphicon glyphicon-download-alt"></span>
-  	Import des étudiants
-  </h1>
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h2><%= fa_icon 'download' %> Import des étudiants</h2>
 </div>
+<br>
 
 <%= form_tag({action: "import_etudiants_do", method: :post}, multipart: true) do %>
   <div>
@@ -12,7 +10,6 @@
     <%= Etudiant.xls_headers.join(', ') %>
     <p>Les champs obligatoires sont:</p>
   </div>
-  <br />
   
   <div class="row">
     <div class="col-sm-4">

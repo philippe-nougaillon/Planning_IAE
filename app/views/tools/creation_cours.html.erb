@@ -1,13 +1,6 @@
-<div class="page-header">
-  <h1>
-  	<span class="glyphicon glyphicon-calendar"></span>
-  	Réservation de créneaux horaires
-  </h1>
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h2><%= fa_icon 'calendar-alt' %> Réservation de créneaux horaires</h2>
 </div>
-<div>
-  <h3>Cette fonction permet la création de créneaux horaires réservés</h3>
-</div>
-
 <br>
 
 <%= form_tag({action: "creation_cours_do", method: :post}, multipart: true) do %>
@@ -60,7 +53,7 @@
 
       <div class="col-sm-1"></div>
 
-      <div class="col-sm-6">
+      <div class="col-sm-5">
         <div class="row">
 
         <%= label_tag "Formation" %>    
@@ -90,7 +83,7 @@
           <%= radio_button_tag :save, false, :checked => true %>
           <br><i>Choisissez 'Non' pour tester votre création car <b>elle est irréversible !</b></i><br />
         </div>
-        <br><br>
+        <br><br><br><br>
       
         <div class="actions">
           <%= submit_tag "Lancer la création", class: "btn btn-success" %>
