@@ -809,6 +809,11 @@
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-5.13.0.tgz#fcb113d1aca4b471b709e8c9c168674fbd6e06d9"
   integrity sha512-xKOeQEl5O47GPZYIMToj6uuA2syyFlq9EMSl2ui0uytjY9xbe8XS0pexNWmxrdcCyNGyDmLyYw5FtKsalBUeOg==
 
+"@github/check-all@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@github/check-all/-/check-all-0.4.0.tgz#358b8a273f4c221e01009876a185f9a11339361d"
+  integrity sha512-/Gk6kP1POa7qkA/ID5ovatXLZS4wJ1II0TX8zbQm6PclKY2N6Fj+3qcJM/QS6egBsm4PWYrhvcnmVr5sqmgsNQ==
+
 "@rails/actioncable@^6.0.0":
   version "6.0.3"
   resolved "https://registry.yarnpkg.com/@rails/actioncable/-/actioncable-6.0.3.tgz#722b4b639936129307ddbab3a390f6bcacf3e7bc"
@@ -6782,6 +6787,14 @@ stdout-stream@^1.4.0:
   integrity sha512-j4emi03KXqJWcIeF8eIXkjMFN1Cmb8gUlDYGeBALLPo5qdyTfA9bOtl8m33lRoC+vFMkP3gl0WsDr6+gzxbbTA==
   dependencies:
     readable-stream "^2.0.1"
+
+stimulus-check-all@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/stimulus-check-all/-/stimulus-check-all-0.3.0.tgz#759465f209315db24ddebf0fc5a9f6a75bfdf41d"
+  integrity sha512-IVpbaCoJMW/9QvdVmD9TTB7utDmVJw7cdr8nlM9wLI0KjTuuAWC8eer9e/cf9qagl+2HgDcxBoC1jCB6cz/AJQ==
+  dependencies:
+    "@github/check-all" "^0.4.0"
+    stimulus "^1.1.1"
 
 stimulus@^1.1.1:
   version "1.1.1"

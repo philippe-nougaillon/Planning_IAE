@@ -102,12 +102,13 @@
   <% if @cours.size > 0 %>
 
     <%= form_tag action_cours_path, name: 'action' do %>
+      <div data-controller="check-all">
         <div class="table-responsive">
           <table class="table table-hover">
             <thead>
               <tr>
                 <% if user_signed_in? %>
-                  <th><%= check_box_tag "check_all_trigger", false %></th>
+                  <th><input type="checkbox" data-target="check-all.all"></th>
                 <% end %>
                 <th>Heure</th>
                 <th>Durée</th>
@@ -211,6 +212,7 @@
           <%= will_paginate @cours, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
         <% end %>
 
+      </div>
     <% end %>
   <% else %>
     Aucun résultat à afficher... 
