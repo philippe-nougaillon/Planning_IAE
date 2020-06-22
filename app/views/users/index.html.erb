@@ -1,39 +1,38 @@
-<div class="page-header">
-  <div class="btn-group pull-right">
-    <%= link_to new_user_path, class: 'btn btn-primary' do %>
-      <span class="glyphicon glyphicon-plus"></span>
-      Utilisateur
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <% if policy(Formation).new? %>
+    <%= link_to new_user_path, class: 'btn text-primary float-right' do %>
+      <%= fa_icon 'plus-circle' %> Utilisateur
     <% end %>
-  </div>
-  <h1>Liste des utilisateurs</h1>
+  <% end %>
+  <h2><%= fa_icon 'users' %> Liste des utilisateurs</h2>
 </div>
 
 <div class='container-fluid'>
   <%= form_tag request.path, method: :get do %>
-    <div class="row">
-      <div class="form-group">
+    <div class="form-group">
+      <div class="row">
         <div class="col-sm-4">
           <%= label_tag :search, "Nom/Prénom/Courriel" %>    
           <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class:"form-control" %>
         </div>
 
-        <div class="col-sm-5">
+        <div class="col-sm-3">
           <br>
-          <div class="checkbox">
-            <label>
-              <%= check_box_tag :reserver, 1, params[:reserver], onchange:'this.form.submit()', class:"form-control" %>
-              Peut réserver une salle ?
-            </label>
-          </div>
-          <div class="checkbox">
-            <label>
-              <%= check_box_tag :admin, 1, params[:admin], onchange:'this.form.submit()', class:"form-control" %>
-              Peut administrer ?
-            </label>
-          </div>
+          <label>
+            <%= check_box_tag :reserver, 1, params[:reserver], onchange:'this.form.submit()' %>
+            Peut réserver une salle ?
+          </label>
+        </div>
+        
+        <div class="col-sm-2">
+          <br>
+          <label>
+            <%= check_box_tag :admin, 1, params[:admin], onchange:'this.form.submit()' %>
+            Peut administrer ?
+          </label>
         </div>
       </div>
-    </div>  
+    </div>
   <% end %>
 </div>
 
@@ -52,34 +51,36 @@
 
     <tfoot>
       <tr>
-        <th /><th /><th /><th /><th /><th />
+        <th></th><th></th><th></th><th></th><th></th><th></th>
       </tr>
     </tfoot>
 
     <tbody>
-      <%= content_tag_for(:tr, @users) do |user| %>
-        <td><%= link_to user.nom, user %></td>
-        <td><%= user.prénom %></td>
-        <td><%= user.email %></td>
-        <td><%= user.reserver? ? "Oui" : '' %></td>
-        <td><%= user.admin? ? "Oui" : '' %></td>
-        <td>
-          <%= link_to edit_user_path(user), class: "btn btn-default" do %>
-            <i class="glyphicon glyphicon-pencil"></i>
-          <% end %>
-          <%= link_to(user, method: :delete, data:{confirm: 'Confirmez-vous ?'}, class: "btn btn-default") do %>
-            <i class="glyphicon glyphicon-remove"></i>
-          <% end %>
-        </td>
+      <% @users.each do |user| %>
+        <tr>
+          <td><%= link_to user.nom, user %></td>
+          <td><%= user.prénom %></td>
+          <td><%= user.email %></td>
+          <td><%= user.reserver? ? "Oui" : '' %></td>
+          <td><%= user.admin? ? "Oui" : '' %></td>
+          <td>
+            <%= link_to edit_user_path(user), class: "btn btn-default" do %>
+              <i class="glyphicon glyphicon-pencil"></i>
+            <% end %>
+            <%= link_to(user, method: :delete, data:{confirm: 'Confirmez-vous ?'}, class: "btn btn-default") do %>
+              <i class="glyphicon glyphicon-remove"></i>
+            <% end %>
+          </td>
+        </tr>
       <% end %>
     </tbody>
   </table>
 
   <div class="page_info">
-    <%= page_entries_info @users %>
+    <%= page_entries_info @users, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
   </div>
 
-  <%= will_paginate @users, renderer: BootstrapPagination::Rails %>
+  <%= will_paginate @users, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
 </div>
 <br>
 

@@ -11,7 +11,7 @@
     </td>
     <td style="white-space: nowrap;">
         <span style="background-color:<%= cours_formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
-        <%= link_to_if user_signed_in?, cours_formation.nom, cours_formation %>
+        <%= link_to cours_formation.nom, cours_formation %>
     </td>
     <td style="white-space: nowrap;">
         <%= link_to_if user_signed_in?, cours.intervenant.nom_prenom, cours.intervenant %>

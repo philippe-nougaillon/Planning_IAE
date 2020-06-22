@@ -123,49 +123,47 @@
               </tr>
             </thead>
 
-            <% if @cours.size > 0 %>
-              <tbody>
-                <% current_date = "" %>
-                <% @cours.includes(:formation, :intervenant, :salle).each do | cours | %>
+            <tbody>
+              <% current_date = "" %>
+              <% @cours.includes(:formation, :intervenant, :salle).each do | cours | %>
 
-                  <% if cours.debut.to_date != current_date %>
-                    <tr class="bg-light">
-                      <% if user_signed_in? %><th></th><% end %>
-                      <th colspan="<%= user_signed_in? ? '10' : '9' %>">
-                        <%= fa_icon 'calendar-day' %>
-                        <b><%= l(cours.debut.to_date, format: :long).humanize %></b> 
-                      </th>
-                    </tr>
-                    <% current_date = cours.debut.to_date %>
-                  <% end %>  
-
-                  <%= render partial: 'cours', locals: 
-                            {cours: cours, cours_formation: Formation.unscoped.find(cours.formation_id)} %>
-
-                <% end %>
-              </tbody>
-
-              <tfoot>
-                <tr>
-                  <% if user_signed_in? %>
-                    <th></th>
-                  <% end %>
-                  <th></th>
-                  <% if params[:paginate] == 'all' %>
-                    <th>
-                      <%= number_with_precision(@all_cours.sum(:duree), precision: 1) %>h
+                <% if cours.debut.to_date != current_date %>
+                  <tr class="bg-light">
+                    <% if user_signed_in? %><th></th><% end %>
+                    <th colspan="<%= user_signed_in? ? '10' : '9' %>">
+                      <%= fa_icon 'calendar-day' %>
+                      <b><%= l(cours.debut.to_date, format: :long).humanize %></b> 
                     </th>
-                  <% else %>
-                    <th></th>  
-                  <% end %>
-                  <% if user_signed_in? %>
-                    <% 7.times do %><th></th><% end %>
-                  <% else %>
-                    <% 6.times do %><th></th><% end %>
-                  <% end %>
-                </tr>
-              </tfoot>
-            <% end %>
+                  </tr>
+                  <% current_date = cours.debut.to_date %>
+                <% end %>  
+
+                <%= render partial: 'cours', locals: 
+                          {cours: cours, cours_formation: Formation.unscoped.find(cours.formation_id)} %>
+
+              <% end %>
+            </tbody>
+
+            <tfoot>
+              <tr>
+                <% if user_signed_in? %>
+                  <th></th>
+                <% end %>
+                <th></th>
+                <% if params[:paginate] == 'all' %>
+                  <th>
+                    <%= number_with_precision(@all_cours.sum(:duree), precision: 1) %>h
+                  </th>
+                <% else %>
+                  <th></th>  
+                <% end %>
+                <% if user_signed_in? %>
+                  <% 7.times do %><th></th><% end %>
+                <% else %>
+                  <% 6.times do %><th></th><% end %>
+                <% end %>
+              </tr>
+            </tfoot>
           </table>
         </div>
 

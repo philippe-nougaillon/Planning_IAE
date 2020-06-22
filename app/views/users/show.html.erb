@@ -1,24 +1,25 @@
-<div class="page-header">
-    <div class="btn-group pull-right">
-	  <% if current_user.try(:admin?) %>	
+<div class="pb-2 mt-4 mb-2 border-bottom">
 
-	  	<%= link_to edit_user_path(@user), class: 'btn btn-primary' do %>
-	    	<span class="glyphicon glyphicon-pencil"></span>
-	    	Modifier
-	  	<% end %>
+	<% if current_user.try(:admin?) %>	
+		<div class="buttons-group float-right">
+			<%= link_to edit_user_path(@user), class: 'btn btn-default' do %>
+				<%= fa_icon 'edit', text: ' Modifier' %>
+			<% end %>
 
-		<a href="#audit" data-toggle="collapse" class='btn btn-default'>
-	      <span class="glyphicon glyphicon-search"></span>
-	      Audit
-	    </a>
-	  	<%= link_to users_path, class: 'btn btn-default' do %>
-	    	<span class="glyphicon glyphicon-list-alt"></span>
-	    	Retour
-	  	<% end %>
-	  <% end %>
-	</div>	  
-  <h1><%= @user.email %></h1>
+			<a href="#audit" data-toggle="collapse" class='btn btn-default'>
+				<%= fa_icon 'search', text: ' Audit' %>
+			</a>
+
+			<%= link_to users_path, class: 'btn btn-default' do %>
+				<%= fa_icon 'list-alt', text: ' Retour' %>
+			<% end %>
+		</div>
+
+	<% end %>
+
+	<h2><%= fa_icon 'user' %> <%= @user.email %></h2>
 </div>
+<br>
 
 <p>
 	<strong>Nom:</strong>
