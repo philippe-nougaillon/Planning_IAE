@@ -100,7 +100,7 @@
   </h3>
   
   <div class="table-responsive">
-    <table class="table table-striped table-hover">
+    <table class="table table-striped table-hover table-sm">
       <thead>
         <tr>
           <th>Code</th>
@@ -112,19 +112,21 @@
 
       <tbody>
         <% total_ue = total = 0.0 %>
-        <%= content_tag_for(:tr, @formation.unites) do | unite | %>
-          <% cours = @formation.cours.where(ue:unite.num) %>
-          <td><%= link_to unite.num, cours_path(formation_id:@formation, ue:unite.num) %></td>
-          <td><%= unite.nom %></td>
-          <td><%= link_to cours.count, cours_path(formation_id:@formation, ue:unite.num, filter:'all') %></td>
-          <td><%= total = cours.sum(:duree) %></td>
-          <% total_ue += total %>
+        <% @formation.unites.each do | unite | %>
+          <tr>
+            <% cours = @formation.cours.where(ue: unite.num) %>
+            <td><%= link_to unite.num, cours_path(formation_id: @formation, ue: unite.num) %></td>
+            <td><%= unite.nom %></td>
+            <td><%= link_to cours.count, cours_path(formation_id: @formation, ue: unite.num, filter: 'all') %></td>
+            <td><%= total = cours.sum(:duree) %></td>
+            <% total_ue += total %>
+          </tr>
         <% end %>
       </tbody>
 
       <tfoot>
         <tr>
-          <th /><th /><th />
+          <th></th><th></th><th></th>
           <th><%= total_ue %></th>
         </tr>
       </tfoot>  
@@ -138,7 +140,7 @@
   </h3>
   
   <div class="table-responsive">
-    <table class="table table-striped table-hover">
+    <table class="table table-striped table-hover table-sm">
       <thead>
         <tr>
           <th>Nom</th>
@@ -149,17 +151,19 @@
       </thead>
 
       <tbody>
-        <%= content_tag_for(:tr, @formation.etudiants) do | etudiant | %>
-          <td><%= etudiant.nom %></td>
-          <td><%= etudiant.prénom %></td>
-          <td><%= etudiant.email %></td>
-          <td><%= etudiant.mobile %></td>
+        <% @formation.etudiants.each do | etudiant | %>
+          <tr>
+            <td><%= etudiant.nom %></td>
+            <td><%= etudiant.prénom %></td>
+            <td><%= etudiant.email %></td>
+            <td><%= etudiant.mobile %></td>
+          </tr>
         <% end %>
       </tbody>
 
       <tfoot>
         <tr>
-          <th /><th /><th /><th />
+          <th></th><th></th><th></th><th></th>
         </tr>
       </tfoot>  
     </table>
@@ -171,7 +175,7 @@
     <small>Vacations</small>
   </h2>
 
-  <table class="table table-striped table-condensed table-hover">
+  <table class="table table-striped table-hover table-sm">
     <thead>
       <th>Date</th>
       <th>Formation</th>

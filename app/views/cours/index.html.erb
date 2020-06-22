@@ -103,7 +103,7 @@
 
     <%= form_tag action_cours_path, name: 'action' do %>
       <div data-controller="check-all">
-        <div class="table-responsive">
+        <div class="">
           <table class="table table-hover">
             <thead>
               <tr>
@@ -115,11 +115,11 @@
                 <th>Formation</th>
                 <th>Intervenant</th>
                 <th colspan="2">UE/Intitulé du cours</th>
-                <th>Etat</th>
                 <th>Salle</th>
                 <% if user_signed_in? %>
                   <th></th>
                 <% end %>
+                <th></th>
               </tr>
             </thead>
 
@@ -130,7 +130,7 @@
                 <% if cours.debut.to_date != current_date %>
                   <tr class="bg-light">
                     <% if user_signed_in? %><th></th><% end %>
-                    <th colspan="<%= user_signed_in? ? '10' : '9' %>">
+                    <th colspan=<%= user_signed_in? ? '9' : '8' %>>
                       <%= fa_icon 'calendar-day' %>
                       <b><%= l(cours.debut.to_date, format: :long).humanize %></b> 
                     </th>

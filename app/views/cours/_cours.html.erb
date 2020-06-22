@@ -1,4 +1,4 @@
-<tr class="shadow bg-white">
+<tr class="shadow shadow-sm">
     <% if user_signed_in? %>
         <td><%= check_box_tag "[cours_id][#{cours.id}]", 'yes', false %></td>
     <% end %>
@@ -34,12 +34,14 @@
             <%= cours.nom_ou_ue %>
         <% end %>
     </td>
-    <td>
-        <span class="badge badge-<%= cours.style %>"><%= cours.etat.humanize %></span>
-    </td>
     <td style="white-space: nowrap;">
         <% if cours.salle %>
-            <%= link_to_if user_signed_in?, cours.salle.nom, cours_url(start_date:cours.debut.to_date, view:'calendar_rooms', anchor:cours.salle.nom), target: :_blank %>
+            <h5>
+                <span class="badge badge-pill badge-<%= cours.style %>">
+                    <%= cours.salle.nom %>
+                </span>             
+            </h5>
+
             <% if cours_formation.nbr_etudiants > cours.salle.places && user_signed_in? %>
                 <i class="glyphicon glyphicon-warning-sign glyph-custom-alert" 
                     data-toggle="tooltip" data-placement="bottom"
@@ -59,6 +61,7 @@
                     title="<%= cours.commentaires %>" >
         <% end %>
     </td>
+    <td></td>
 
     <% if user_signed_in? %>
         <td>

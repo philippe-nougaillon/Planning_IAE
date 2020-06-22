@@ -3,7 +3,7 @@ import Rails from "@rails/ujs";
 import $ from 'jquery';
 
 export default class extends Controller {
-    static targets = [ 'id','date', 'duree', 'formation_id', 'intervenant_id', 'salles', 'output' ]
+    static targets = [ 'id','date', 'duree', 'formation_id', 'intervenant_id', 'salles' ]
 
     initialize() {
         this.clearResult()
@@ -19,19 +19,8 @@ export default class extends Controller {
           });
     }
 
-    // click() {
-    //     console.log("Click !")
-
-    //     this.outputTarget.textContent =
-    //         `Hello, Date: ${this.dateTarget.value} 
-    //         | durée: ${this.dureeTarget.value}
-    //         | formation_id: ${this.formation_idTarget.value}
-    //         | intervenant_id: ${this.intervenant_idTarget.value}
-    //         `
-    // }
-
     show_dispo() {
-        console.log("Show_dispo!!")
+        //console.log("Show_dispo!!")
         this.updateAvailableRooms()
     }
     
@@ -51,23 +40,23 @@ export default class extends Controller {
                 + "&formation_id=" + this.formation_idTarget.value
                 + "&intervenant_id=" + this.intervenant_idTarget.value,
           success: (data) => {
-            // console.log('Available rooms loaded!')
+            //console.log('Available rooms loaded!')
             this.refreshDropdownValues(data)
           }
         })
     }
     
-      refreshDropdownValues(data) {
-        this.sallesTarget.innerHTML = ""
-        for(var i = 0; i < data.length; i++) {
-          var opt = data[i]
-          this.sallesTarget.innerHTML += "<option value=\"" + opt.id + "\">" + opt.nom + "</option>"
-        }
+    refreshDropdownValues(data) {
+      this.sallesTarget.innerHTML = ""
+      for(var i = 0; i < data.length; i++) {
+        var opt = data[i]
+        this.sallesTarget.innerHTML += "<option value=\"" + opt.id + "\">" + opt.nom + "</option>"
       }
-    
-      clearResult() {
-        this.sallesTarget.innerHTML = ""
-      }
+    }
+  
+    clearResult() {
+      this.sallesTarget.innerHTML = ""
+    }
 
 }
 
