@@ -1,11 +1,8 @@
-<div class="page-header">
-  	<div class="btn-group pull-right">
-	  <%= link_to salles_path, class: 'btn btn-default' do %>
-	    <span class="glyphicon glyphicon-list-alt"></span>
-	    Retour
-	  <% end %>
-	</div>
-  <h1>Ajout d'une salle</h1>
+<div class="pb-2 mt-4 mb-2 border-bottom">
+	<%= link_to salles_path, class: 'btn text-primary float-right' do %>
+		<%= fa_icon 'list-alt' %> Retour
+	<% end %>
+	<h2><%= fa_icon 'chalkboard' %> Liste des étudiants</h2>
 </div>
 
 <%= render 'form' %>

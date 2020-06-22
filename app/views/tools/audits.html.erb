@@ -1,8 +1,5 @@
-<div class="page-header">
-  <h1>
-    <span class="glyphicon glyphicon-search"></span>
-    Audit des modifications
-  </h1>
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h2><%= fa_icon 'search' %> Audit des modifications</h2>
 </div>
 
 <div class='container-fluid'>
@@ -57,7 +54,7 @@
     <% end %>
 </div>
 
-<table class="table table-bordered table-hover table-condensed">
+<table class="table table-bordered table-hover table-sm">
     <thead>
         <tr>
             <th>Date</th>
@@ -74,8 +71,7 @@
 </table>
 
 <div class="page_info">
-    <%= page_entries_info @audits %>
+  <%= page_entries_info @audits, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
 </div>
-<%= will_paginate @audits, renderer: BootstrapPagination::Rails %>
 
-
+<%= will_paginate @audits, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>

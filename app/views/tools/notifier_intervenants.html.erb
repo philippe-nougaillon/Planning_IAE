@@ -1,13 +1,11 @@
-<div class="page-header">
-  <h1>
-      <span class="glyphicon glyphicon-envelope"></span>
-      Notification planning
-  </h1>
-  <p>
-      Pour envoyer, par mail, la liste des cours du mois prochain, 
-      cochez 'Intervenant/Notification planning ?' et vérifiez son adresse mail 
-  </p>
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h2>
+    <%= fa_icon 'envelope' %> Notification planning
+    <br>
+    <small>Envoyer aux intervenants la liste de leurs cours du mois prochain</small>
+  </h2>
 </div>
+<br>
 
 <%= form_tag({action: "notifier_intervenants_do", method: :post}) do %>
     <div class="form-group">

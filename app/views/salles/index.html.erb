@@ -1,14 +1,8 @@
-<div class="page-header">
-  <div class="btn-group pull-right">
-    <%= link_to new_salle_path, class: 'btn btn-primary' do %>
-      <span class="glyphicon glyphicon-plus"></span>
-      Ajouter
-    <% end %>
-  </div>
-  <h1>
-    <span class="glyphicon glyphicon-blackboard"></span>
-    Liste des salles
-  </h1>
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <%= link_to new_salle_path, class: 'btn text-primary float-right' do %>
+    <%= fa_icon 'plus-circle' %> Ajouter
+  <% end %>
+  <h2><%= fa_icon 'chalkboard' %> Liste des salles</h2>
 </div>
 
 <div class='container-fluid'>
@@ -27,7 +21,7 @@
 </div>
 
 <div class="table-responsive">
-  <table class="table table-hover table-striped">
+  <table class="table table-hover table-striped table-sm">
     <thead>
       <tr>
         <th>Nom</th>
