@@ -173,10 +173,14 @@
             <div class="input-group">
               <%= label_tag 'Action :' %>
               <% actions = (current_user.admin? || current_user.reserver?) ? Cour.actions_admin : Cour.actions %>
-              <%= select_tag "action_name", options_for_select(actions), include_blank: true, class: 'form-control', onchange: 'this.form.submit()' %>
+              <%= select_tag "action_name", 
+                                options_for_select(actions), 
+                                include_blank: true, 
+                                class: 'form-control form-control-sm', 
+                                onchange: 'this.form.submit()' %>
 
               <div class="input-group-btn">
-                <%= submit_tag 'Go', class: 'btn btn-success' %>
+                <%= submit_tag 'Go', class: 'btn btn-success btn-sm' %>
               </div>
             </div>
 

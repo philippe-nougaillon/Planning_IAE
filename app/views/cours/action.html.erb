@@ -1,14 +1,15 @@
-<%= form_tag :action_do_cours do %>
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h2><%= fa_icon 'exclamation-triangle' %> <%= params[:action_name] %></h2>
+</div>
+<br>
 
-  <div class="page-header">
-  	<h2><%= params[:action_name] %></h2>
-  </div>
+<%= bootstrap_form_tag url:  :action_do_cours do %>
 
 	<%= hidden_field_tag :action_name, params[:action_name] %>
 
   <h3>Cours sélectionnés</h3>
 
-  <table class="table table-hover table-condensed">
+  <table class="table table-hover table-bordered table-striped table-sm">
     <% @cours.each do |cours| %>
       <tr>
         <td><%= check_box_tag "[cours_id][#{cours.id}]", true, true %></td>                
@@ -26,17 +27,20 @@
       </tr>
     <% end %>
   </table>
+  <br>
 
   <% if params[:action_name] == "Changer de salle" %>  
     <% if @salles_dispos %>
-      <h3>Salles disponibles</h3>
+      <h3>
+        Salles disponibles
+      </h3>
       <% @salles_dispos.each do |salle| %>
         <%= link_to salle, 
                     action_do_cours_path(params
                                           .permit!
                                           .merge(salle_id: Salle.find_by(nom: salle))),
                     method: :post, 
-                    class: "btn btn-success btn-xs" %>
+                    class: "btn btn-outline-success btn-sm mb-1" %>
       <% end %>
       <br><br>
     <% end %>
@@ -44,22 +48,22 @@
   <% elsif params[:action_name] == "Changer d'état" %>
     <div class="col-sm-2">
       <%= label_tag "Nouvel état" %>    
-      <%= select_tag :etat, options_for_select(Cour.etats, params[:etat]), include_blank:true, class:"form-control" %>
+      <%= select_tag :etat, options_for_select(Cour.etats, params[:etat]), class:"form-control" %>
     </div>
 
   <% elsif params[:action_name] == "Changer de date" %>
-    <div class="col-sm-2">
-      <%= label_tag "Nouvelle date" %>    
-      <%= text_field_tag :new_date, params[:new_date], type:'date', class:"form-control" %>
+    <div class="row">
+      <div class="col-sm-2">
+        <%= label_tag "Nouvelle date" %>    
+        <%= text_field_tag :new_date, params[:new_date], type:'date', class:"form-control" %>
+      </div>
+
+      <div class="col-sm-1">ou</div>
+      <div class="col-sm-6">
+        <%= label_tag "Décaler de x jours" %><br>
+        <%= number_field_tag :add_n_days, class: "form-control" %>
+      </div>
     </div>
-    <div class="col-sm-1">
-      OU
-    </div>
-    <div class="col-sm-6">
-      <%= label_tag "Décaler de x jours" %><br>
-      <%= number_field_tag :add_n_days %>
-    </div>
-    <br><br><br><br>
 
   <% elsif params[:action_name] == "Changer d'intervenant" %>
     <div class="col-sm-6">
@@ -82,7 +86,7 @@
 
   <div class="row">
     <div class="col-sm-12">
-      <%= submit_tag 'Appliquer', class:"btn btn-default" %>
+      <%= submit_tag 'Appliquer', class:"btn btn-primary" %>
     </div>
   </div>
 

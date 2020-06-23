@@ -24,7 +24,7 @@ class Cour < ApplicationRecord
   enum etat: [:planifié, :à_réserver, :confirmé, :reporté, :annulé, :réalisé]
   
   def self.styles
-    ['label-info','label-warning','success','label-danger','label-danger','label-default']
+    ['info', 'warning', 'success', 'danger', 'danger', 'default']
   end
 
   def style
@@ -40,7 +40,7 @@ class Cour < ApplicationRecord
   end
 
   def self.actions_admin
-    ["Changer de salle", "Changer d'état", "Changer de date"] + self.actions
+    ["Changer de salle", "Changer de date"] + self.actions
   end
 
   def self.etendue_horaire

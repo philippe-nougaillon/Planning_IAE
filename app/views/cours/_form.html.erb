@@ -48,8 +48,8 @@
                             id: "intervenant_id",
                             class: "select2",
                             data: {
-                              "action": "change->dispo#show_dispo", 
-                              "target": "dispo.intervenant_id"
+                              "target": "dispo.intervenant_id",
+                              "action": (@cour.new_record? ? "change->dispo#show_dispo" : '') 
                             }) %>
 
     <%= f.collection_select(:intervenant_binome_id, 
@@ -69,26 +69,23 @@
     <% if current_user.admin? || current_user.reserver? %>
       <% unless @cour.new_record? %>
         <%= f.select(:etat, Cour.etats.keys.to_a, { include_blank: true }) %>
+      <% end %>
 
+      <% if @cour.new_record? %>
+
+        <!-- Chargement de la liste des salles dispos que si c'est un nouveau cours -->
+        <%= f.collection_select(:salle_id, Salle.all, :id, :nom_places, { include_blank: true },
+                                    data: { "target": "dispo.salles" } ) %>
         <%= f.form_group do %>
-          <b>Salle actuelle: <%= @cour.salle.nom_places %></b>
-        <% end %>
-      <% end %>
-
-      <%= f.collection_select(:salle_id, 
-                              Salle.all, 
-                              :id, 
-                              :nom_places, 
-                              { include_blank: true },
-                              data: { "target": "dispo.salles" }
-                              ) %>
-
-      <%= f.form_group do %>
-        <span data-action="click->dispo#show_dispo" 
-              class="btn btn-sm btn-outline-success">
+          <span data-action="click->dispo#show_dispo" 
+                class="btn btn-sm btn-outline-success">
                 Recharger la liste des salles disponibles
-        </span>
+          </span>
+        <% end %>
+      <% else %>
+        <%= f.collection_select :salle_id, Salle.all, :id, :nom_places, { include_blank: true } %>
       <% end %>
+      
     <% end %>
   </div>
 
