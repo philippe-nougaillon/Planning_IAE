@@ -3,7 +3,7 @@ import Rails from "@rails/ujs";
 import $ from 'jquery';
 
 export default class extends Controller {
-    static targets = [ 'id','date', 'duree', 'formation_id', 'intervenant_id', 'salles' ]
+    static targets = [ 'id', 'date', 'duree', 'formation_id', 'intervenant_id', 'salles' ]
 
     initialize() {
         this.clearResult()
@@ -20,7 +20,7 @@ export default class extends Controller {
     }
 
     show_dispo() {
-        //console.log("Show_dispo!!")
+        console.log("Show_dispo!!")
         this.updateAvailableRooms()
     }
     

@@ -160,10 +160,6 @@ class SallesController < ApplicationController
       cours.salle = s 
       if cours.valid?
         salles_dispos_ids << s.id
-        #logger.debug "Salle #{s.nom} valide :)"
-      #else
-      #  logger.debug "Salle #{s.nom} non valide !"
-      #  logger.debug cours.errors.messages
       end 
     end
 

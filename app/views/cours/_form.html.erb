@@ -18,17 +18,16 @@
 
   <div data-controller="dispo">
 
-    <%= hidden_field_tag :id, @cour.id, data: {"target":"dispo.id"} %>
+    <%= hidden_field_tag :id, @cour.id, data: { "target": "dispo.id" } %>
 
-    <%= f.text_field :debut, value: @cour.debut.strftime("%Y-%m-%dT%H:%M"), type: "datetime-local", label: "Date", data: {"target":"dispo.date"} %>
+    <%= f.text_field :debut, value: @cour.debut.strftime("%Y-%m-%dT%H:%M"), type: "datetime-local", label: "Date", data: {  "target":"dispo.date" } %>
 
     <%= f.select(:duree, 
                   options_for_select(Cour.durées, @cour.duree.to_s), 
-                  {include_blank: true}, 
-                  label: "Durée", 
+                  { include_blank: true, 
+                  label: "Durée" }, 
                   required: true, 
-                  data: {
-                    "target":"dispo.duree"}
+                  data: { "target": "dispo.duree" }
                   ) %>
     
     <%= f.collection_select(:formation_id, 
@@ -38,7 +37,7 @@
                             {include_blank: true},
                             required: true, 
                             class: "select2",
-                            data: {"target":"dispo.formation_id"}) %>
+                            data: { "target": "dispo.formation_id"}) %>
     
     <%= f.collection_select(:intervenant_id, 
                             Intervenant.all, 
@@ -49,15 +48,15 @@
                             id: "intervenant_id",
                             class: "select2",
                             data: {
-                              "action":"change->dispo#show_dispo", 
-                              "target":"dispo.intervenant_id"
+                              "action": "change->dispo#show_dispo", 
+                              "target": "dispo.intervenant_id"
                             }) %>
 
     <%= f.collection_select(:intervenant_binome_id, 
                             Intervenant.all, 
                             :id, 
                             :nom_prenom, 
-                            {include_blank: true, label: "Intervenant en binôme"}, 
+                            { include_blank: true, label: "Intervenant en binôme" }, 
                             class: "select2") %>
     
     <%= f.text_field :ue, placeholder: "UE#", label: "UE" %>
@@ -69,24 +68,27 @@
 
     <% if current_user.admin? || current_user.reserver? %>
       <% unless @cour.new_record? %>
-        <%= f.select(:etat, Cour.etats.keys.to_a, {include_blank: true}) %>
+        <%= f.select(:etat, Cour.etats.keys.to_a, { include_blank: true }) %>
+
+        <%= f.form_group do %>
+          <b>Salle actuelle: <%= @cour.salle.nom_places %></b>
+        <% end %>
       <% end %>
 
       <%= f.collection_select(:salle_id, 
                               Salle.all, 
                               :id, 
                               :nom_places, 
-                              {include_blank: true },
-                              data: {"target":"dispo.salles"}
+                              { include_blank: true },
+                              data: { "target": "dispo.salles" }
                               ) %>
-      <%= f.form_group do %>
-            <span data-action="click->dispo#show_dispo" 
-                  class="btn btn-sm btn-outline-success">
-                  Recharger liste salles dispos
-            </span>
-      <% end %>
 
-      <span data-target="dispo.output"></span>
+      <%= f.form_group do %>
+        <span data-action="click->dispo#show_dispo" 
+              class="btn btn-sm btn-outline-success">
+                Recharger la liste des salles disponibles
+        </span>
+      <% end %>
     <% end %>
   </div>
 
@@ -101,7 +103,7 @@
     <% if @cour.new_record? %>
       <%= f.submit "Enregistrer et en saisir une autre", name: 'create_and_add', class: 'btn btn-outline-primary' %>
     <% else %>
-      <%= f.submit "Enregistrer les modifications et en notifier les étudiants", name: 'notifier', class: 'btn btn-primary' %>
+      <%= f.submit "Enregistrer et notifier les étudiants", name: 'notifier', class: 'btn btn-outline-primary' %>
     <% end %>
   <% end %>
 
