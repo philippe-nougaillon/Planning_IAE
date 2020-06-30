@@ -136,7 +136,7 @@ ActiveRecord::Schema.define(version: 2020_06_17_073218) do
     t.index ["user_id"], name: "index_formations_on_user_id"
   end
 
-  create_table "import_log_lines", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "import_log_lines", id: :integer, force: :cascade do |t|
     t.integer "import_log_id"
     t.integer "num_ligne"
     t.integer "etat"
@@ -146,7 +146,7 @@ ActiveRecord::Schema.define(version: 2020_06_17_073218) do
     t.index ["import_log_id"], name: "index_import_log_lines_on_import_log_id"
   end
 
-  create_table "import_logs", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "import_logs", id: :integer, force: :cascade do |t|
     t.string "model_type"
     t.integer "etat"
     t.integer "nbr_lignes"
@@ -185,7 +185,7 @@ ActiveRecord::Schema.define(version: 2020_06_17_073218) do
     t.boolean "notifier"
   end
 
-  create_table "responsabilites", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "responsabilites", id: :integer, force: :cascade do |t|
     t.integer "intervenant_id"
     t.string "titre"
     t.decimal "heures", precision: 5, scale: 2
@@ -241,7 +241,7 @@ ActiveRecord::Schema.define(version: 2020_06_17_073218) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  create_table "vacations", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "vacations", id: :integer, force: :cascade do |t|
     t.integer "formation_id"
     t.integer "intervenant_id"
     t.string "titre"
