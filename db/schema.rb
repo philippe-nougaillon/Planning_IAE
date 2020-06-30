@@ -12,7 +12,7 @@
 
 ActiveRecord::Schema.define(version: 2020_06_17_073218) do
 
-  create_table "audits", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "audits", id: :integer, force: :cascade do |t|
     t.integer "auditable_id"
     t.string "auditable_type"
     t.integer "associated_id"
@@ -34,7 +34,7 @@ ActiveRecord::Schema.define(version: 2020_06_17_073218) do
     t.index ["user_id", "user_type"], name: "user_index"
   end
 
-  create_table "cours", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "cours", id: :integer, force: :cascade do |t|
     t.datetime "debut"
     t.datetime "fin"
     t.integer "formation_id"
@@ -57,7 +57,7 @@ ActiveRecord::Schema.define(version: 2020_06_17_073218) do
     t.index ["salle_id"], name: "index_cours_on_salle_id"
   end
 
-  create_table "documents", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "documents", id: :integer, force: :cascade do |t|
     t.string "nom"
     t.integer "formation_id"
     t.integer "intervenant_id"
@@ -70,7 +70,7 @@ ActiveRecord::Schema.define(version: 2020_06_17_073218) do
     t.index ["unite_id"], name: "index_documents_on_unite_id"
   end
 
-  create_table "etudiants", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "etudiants", id: :integer, force: :cascade do |t|
     t.integer "formation_id"
     t.string "nom"
     t.string "prénom"
@@ -102,7 +102,7 @@ ActiveRecord::Schema.define(version: 2020_06_17_073218) do
     t.index ["workflow_state"], name: "index_etudiants_on_workflow_state"
   end
 
-  create_table "fermetures", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "fermetures", id: :integer, force: :cascade do |t|
     t.date "date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -110,7 +110,7 @@ ActiveRecord::Schema.define(version: 2020_06_17_073218) do
     t.index ["date"], name: "index_fermetures_on_date"
   end
 
-  create_table "formations", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "formations", id: :integer, force: :cascade do |t|
     t.string "nom"
     t.string "promo"
     t.string "diplome"
@@ -159,7 +159,7 @@ ActiveRecord::Schema.define(version: 2020_06_17_073218) do
     t.index ["user_id"], name: "index_import_logs_on_user_id"
   end
 
-  create_table "intervenants", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "intervenants", id: :integer, force: :cascade do |t|
     t.string "nom"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -199,7 +199,7 @@ ActiveRecord::Schema.define(version: 2020_06_17_073218) do
     t.index ["intervenant_id"], name: "index_responsabilites_on_intervenant_id"
   end
 
-  create_table "salles", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "salles", id: :integer, force: :cascade do |t|
     t.string "nom"
     t.integer "places"
     t.datetime "created_at", null: false
@@ -207,7 +207,7 @@ ActiveRecord::Schema.define(version: 2020_06_17_073218) do
     t.string "bloc"
   end
 
-  create_table "unites", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "unites", id: :integer, force: :cascade do |t|
     t.integer "formation_id"
     t.string "nom"
     t.datetime "created_at", null: false
@@ -217,7 +217,7 @@ ActiveRecord::Schema.define(version: 2020_06_17_073218) do
     t.index ["num"], name: "index_unites_on_num"
   end
 
-  create_table "users", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "users", id: :integer, force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
