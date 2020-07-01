@@ -66,9 +66,20 @@ class SallesController < ApplicationController
       @heures_dispo_salles = [@salles_dispo * @nb_heures_journée, 
                               @salles_dispo_samedi * @nb_heures_soirée] 
 
-      # taux d'occupation  
-      @taux_occupation = [(@nombre_heures_cours.first * 100 / @heures_dispo_salles.first),
-                           (@nombre_heures_cours.last * 100 / @heures_dispo_salles.last)]
+      # taux d'occupation
+      unless @heures_dispo_salles.first.zero?
+        taux_occupation_matin = @nombre_heures_cours.first * 100 / @heures_dispo_salles.first
+      else
+        taux_occupation_matin = 0
+      end 
+      
+      unless @heures_dispo_salles.last.zero?
+        taux_occupation_soir  = @nombre_heures_cours.last * 100 / @heures_dispo_salles.last
+      else  
+        taux_occupation_soir  = 0
+      end
+
+      @taux_occupation = [taux_occupation_matin, taux_occupation_soir]
     end
 
     @etendue_horaire = Cour.etendue_horaire
