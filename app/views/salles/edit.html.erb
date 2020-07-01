@@ -1,15 +1,13 @@
-<div class="page-header">
-    <div class="btn-group pull-right">
-	  <%= link_to @salle, class: 'btn btn-primary' do %>
-	    <span class="glyphicon glyphicon-info-sign"></span>
-	    Voir
-	  <% end %>
-	  <%= link_to salles_path, class: 'btn btn-default' do %>
-	    <span class="glyphicon glyphicon-list-alt"></span>
-	    Retour
-	  <% end %>
-	</div>
-  <h1>Modification Salle</h1>
+<div class="pb-2 mt-4 mb-2 border-bottom">
+	<%= link_to salles_path, class: 'btn text-primary float-right' do %>
+		<%= fa_icon 'list-alt' %> Retour
+	<% end %>
+
+	<%= link_to @salle, class: 'btn text-primary float-right' do %>
+	   	<%= fa_icon 'eye', text: 'Voir' %>
+	<% end %>
+
+	<h2><%= fa_icon 'chalkboard' %> Modification d'une salle</h2>
 </div>
 
 <%= render 'form' %>
