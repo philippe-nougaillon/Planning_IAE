@@ -1005,36 +1005,46 @@ class ToolsController < ApplicationController
   end
 
   def nouvelle_saison_create
-    _date_debut = Date.parse(params[:date_debut])
-    _date_fin = Date.parse(params[:date_fin])
-    _formation = Formation.find(params[:formation_id])
-    _intervenant = Intervenant.find(445) # A CONFIRMER
-    _semaines = params[:semaine].try(:keys)
-    _errors = 0
-    _jours = []
+    # Créer des créneaux vides sur toutes une année pour une formation
+    # Permet de faire des réservations au nom de l'intervenant 'A CONFIRMER'
 
-    if _semaines
-      (_date_debut.._date_fin).each do |j|
-        if _semaines.include?(j.cweek.to_s)
-          wday = j.wday
-          ok_jours = ((params[:lundi] && wday == 1) || (params[:mardi] && wday == 2) || 
-                      (params[:mercredi] && wday == 3) || (params[:jeudi] && wday == 4) || 
-                      (params[:vendredi] && wday == 5) || (params[:samedi] && wday == 6))
-          if ok_jours
-            _jours << j
-            unless création_cours(_formation, j, _intervenant, true, true)
-              _errors = _errors + 1 
+    if Intervenant.exists?(445)
+
+      _intervenant = Intervenant.find(445) # A CONFIRMER
+      _date_debut = Date.parse(params[:date_debut])
+      _date_fin = Date.parse(params[:date_fin])
+      _formation = Formation.find(params[:formation_id])
+      _intervenant = Intervenant.find(445) # A CONFIRMER
+      _semaines = params[:semaine].try(:keys)
+      _errors = 0
+      _jours = []
+
+      if _semaines
+        (_date_debut.._date_fin).each do |j|
+          if _semaines.include?(j.cweek.to_s)
+            wday = j.wday
+            ok_jours = ((params[:lundi] && wday == 1) || (params[:mardi] && wday == 2) || 
+                        (params[:mercredi] && wday == 3) || (params[:jeudi] && wday == 4) || 
+                        (params[:vendredi] && wday == 5) || (params[:samedi] && wday == 6))
+            if ok_jours
+              _jours << j
+              unless création_cours(_formation, j, _intervenant, true, true)
+                _errors = _errors + 1 
+              end
             end
-          end
-        end  
+          end  
+        end
       end
+
+      if _errors.zero?
+        flash[:notice] = "#{_jours.count} cours créés"
+      else
+        flash[:error] = "#{_jours.count} cours créés + #{_errors} erreurs (ces cours n'ont pas été créés) !"
+      end
+    else
+      flash[:error] = "L'intervenant générique 'A CONFIRMER' (445) doit exister !"
     end
 
-    if _errors.zero?
-      flash[:notice] = "#{_jours.count} cours créés"
-    else
-      flash[:error] = "#{_jours.count} cours créés + #{_errors} erreurs (ces cours n'ont pas été créés) !"
-    end  
     redirect_to cours_path(formation_id: _formation, etat: Cour.etats[:plannifié])
 
   end
