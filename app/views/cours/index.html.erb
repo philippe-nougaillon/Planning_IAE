@@ -103,69 +103,67 @@
 
     <%= form_tag action_cours_path, name: 'action' do %>
       <div data-controller="check-all">
-        <div class="">
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <% if user_signed_in? %>
-                  <th><input type="checkbox" data-target="check-all.all"></th>
-                <% end %>
-                <th>Heure</th>
-                <th>Durée</th>
-                <th>Formation</th>
-                <th>Intervenant</th>
-                <th colspan="2">UE/Intitulé du cours</th>
-                <th>Salle</th>
-                <% if user_signed_in? %>
-                  <th></th>
-                <% end %>
-                <th></th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <% current_date = "" %>
-              <% @cours.includes(:formation, :intervenant, :salle).each do | cours | %>
-
-                <% if cours.debut.to_date != current_date %>
-                  <tr class="bg-light">
-                    <% if user_signed_in? %><th></th><% end %>
-                    <th colspan=<%= user_signed_in? ? '9' : '8' %>>
-                      <%= fa_icon 'calendar-day' %>
-                      <b><%= l(cours.debut.to_date, format: :long).humanize %></b> 
-                    </th>
-                  </tr>
-                  <% current_date = cours.debut.to_date %>
-                <% end %>  
-
-                <%= render partial: 'cours', locals: 
-                          {cours: cours, cours_formation: Formation.unscoped.find(cours.formation_id)} %>
-
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <% if user_signed_in? %>
+                <th><input type="checkbox" data-target="check-all.all"></th>
               <% end %>
-            </tbody>
-
-            <tfoot>
-              <tr>
-                <% if user_signed_in? %>
-                  <th></th>
-                <% end %>
+              <th>Heure</th>
+              <th>Durée</th>
+              <th>Formation</th>
+              <th>Intervenant</th>
+              <th colspan="2">UE/Intitulé du cours</th>
+              <th>Salle</th>
+              <% if user_signed_in? %>
                 <th></th>
-                <% if params[:paginate] == 'all' %>
-                  <th>
-                    <%= number_with_precision(@all_cours.sum(:duree), precision: 1) %>h
+              <% end %>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% current_date = "" %>
+            <% @cours.includes(:formation, :intervenant, :salle).each do | cours | %>
+
+              <% if cours.debut.to_date != current_date %>
+                <tr class="bg-light shadow shadow-sm">
+                  <% if user_signed_in? %><th></th><% end %>
+                  <th colspan=<%= user_signed_in? ? '9' : '8' %>>
+                    <%= fa_icon 'calendar-day' %>
+                    <b><%= l(cours.debut.to_date, format: :long).humanize %></b> 
                   </th>
-                <% else %>
-                  <th></th>  
-                <% end %>
-                <% if user_signed_in? %>
-                  <% 7.times do %><th></th><% end %>
-                <% else %>
-                  <% 6.times do %><th></th><% end %>
-                <% end %>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
+                </tr>
+                <% current_date = cours.debut.to_date %>
+              <% end %>  
+
+              <%= render partial: 'cours', locals: 
+                        {cours: cours, cours_formation: Formation.unscoped.find(cours.formation_id)} %>
+
+            <% end %>
+          </tbody>
+
+          <tfoot>
+            <tr>
+              <% if user_signed_in? %>
+                <th></th>
+              <% end %>
+              <th></th>
+              <% if params[:paginate] == 'all' %>
+                <th>
+                  <%= number_with_precision(@all_cours.sum(:duree), precision: 1) %>h
+                </th>
+              <% else %>
+                <th></th>  
+              <% end %>
+              <% if user_signed_in? %>
+                <% 7.times do %><th></th><% end %>
+              <% else %>
+                <% 6.times do %><th></th><% end %>
+              <% end %>
+            </tr>
+          </tfoot>
+        </table>
 
         <% if user_signed_in? %>
           <div class="input-group col-sm-4 ml-auto">
