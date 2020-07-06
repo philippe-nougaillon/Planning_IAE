@@ -10,9 +10,43 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_17_073218) do
+ActiveRecord::Schema.define(version: 2020_07_06_131001) do
 
-  create_table "audits", id: :integer, force: :cascade do |t|
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
+  create_table "action_text_rich_texts", force: :cascade do |t|
+    t.string "name", null: false
+    t.text "body"
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
+  end
+
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.bigint "byte_size", null: false
+    t.string "checksum", null: false
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "audits", id: :serial, force: :cascade do |t|
     t.integer "auditable_id"
     t.string "auditable_type"
     t.integer "associated_id"
@@ -34,7 +68,7 @@ ActiveRecord::Schema.define(version: 2020_06_17_073218) do
     t.index ["user_id", "user_type"], name: "user_index"
   end
 
-  create_table "cours", id: :integer, force: :cascade do |t|
+  create_table "cours", id: :serial, force: :cascade do |t|
     t.datetime "debut"
     t.datetime "fin"
     t.integer "formation_id"
@@ -57,7 +91,7 @@ ActiveRecord::Schema.define(version: 2020_06_17_073218) do
     t.index ["salle_id"], name: "index_cours_on_salle_id"
   end
 
-  create_table "documents", id: :integer, force: :cascade do |t|
+  create_table "documents", id: :serial, force: :cascade do |t|
     t.string "nom"
     t.integer "formation_id"
     t.integer "intervenant_id"
@@ -70,7 +104,16 @@ ActiveRecord::Schema.define(version: 2020_06_17_073218) do
     t.index ["unite_id"], name: "index_documents_on_unite_id"
   end
 
-  create_table "etudiants", id: :integer, force: :cascade do |t|
+  create_table "envoi_logs", force: :cascade do |t|
+    t.datetime "date_prochain"
+    t.string "workflow_state"
+    t.string "cible"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "date_exécution"
+  end
+
+  create_table "etudiants", id: :serial, force: :cascade do |t|
     t.integer "formation_id"
     t.string "nom"
     t.string "prénom"
@@ -102,7 +145,7 @@ ActiveRecord::Schema.define(version: 2020_06_17_073218) do
     t.index ["workflow_state"], name: "index_etudiants_on_workflow_state"
   end
 
-  create_table "fermetures", id: :integer, force: :cascade do |t|
+  create_table "fermetures", id: :serial, force: :cascade do |t|
     t.date "date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -110,7 +153,7 @@ ActiveRecord::Schema.define(version: 2020_06_17_073218) do
     t.index ["date"], name: "index_fermetures_on_date"
   end
 
-  create_table "formations", id: :integer, force: :cascade do |t|
+  create_table "formations", id: :serial, force: :cascade do |t|
     t.string "nom"
     t.string "promo"
     t.string "diplome"
@@ -136,7 +179,7 @@ ActiveRecord::Schema.define(version: 2020_06_17_073218) do
     t.index ["user_id"], name: "index_formations_on_user_id"
   end
 
-  create_table "import_log_lines", id: :integer, force: :cascade do |t|
+  create_table "import_log_lines", id: :serial, force: :cascade do |t|
     t.integer "import_log_id"
     t.integer "num_ligne"
     t.integer "etat"
@@ -146,7 +189,7 @@ ActiveRecord::Schema.define(version: 2020_06_17_073218) do
     t.index ["import_log_id"], name: "index_import_log_lines_on_import_log_id"
   end
 
-  create_table "import_logs", id: :integer, force: :cascade do |t|
+  create_table "import_logs", id: :serial, force: :cascade do |t|
     t.string "model_type"
     t.integer "etat"
     t.integer "nbr_lignes"
@@ -159,7 +202,7 @@ ActiveRecord::Schema.define(version: 2020_06_17_073218) do
     t.index ["user_id"], name: "index_import_logs_on_user_id"
   end
 
-  create_table "intervenants", id: :integer, force: :cascade do |t|
+  create_table "intervenants", id: :serial, force: :cascade do |t|
     t.string "nom"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -185,7 +228,7 @@ ActiveRecord::Schema.define(version: 2020_06_17_073218) do
     t.boolean "notifier"
   end
 
-  create_table "responsabilites", id: :integer, force: :cascade do |t|
+  create_table "responsabilites", id: :serial, force: :cascade do |t|
     t.integer "intervenant_id"
     t.string "titre"
     t.decimal "heures", precision: 5, scale: 2
@@ -199,7 +242,7 @@ ActiveRecord::Schema.define(version: 2020_06_17_073218) do
     t.index ["intervenant_id"], name: "index_responsabilites_on_intervenant_id"
   end
 
-  create_table "salles", id: :integer, force: :cascade do |t|
+  create_table "salles", id: :serial, force: :cascade do |t|
     t.string "nom"
     t.integer "places"
     t.datetime "created_at", null: false
@@ -207,7 +250,7 @@ ActiveRecord::Schema.define(version: 2020_06_17_073218) do
     t.string "bloc"
   end
 
-  create_table "unites", id: :integer, force: :cascade do |t|
+  create_table "unites", id: :serial, force: :cascade do |t|
     t.integer "formation_id"
     t.string "nom"
     t.datetime "created_at", null: false
@@ -217,7 +260,7 @@ ActiveRecord::Schema.define(version: 2020_06_17_073218) do
     t.index ["num"], name: "index_unites_on_num"
   end
 
-  create_table "users", id: :integer, force: :cascade do |t|
+  create_table "users", id: :serial, force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -241,7 +284,7 @@ ActiveRecord::Schema.define(version: 2020_06_17_073218) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  create_table "vacations", id: :integer, force: :cascade do |t|
+  create_table "vacations", id: :serial, force: :cascade do |t|
     t.integer "formation_id"
     t.integer "intervenant_id"
     t.string "titre"
@@ -255,6 +298,7 @@ ActiveRecord::Schema.define(version: 2020_06_17_073218) do
     t.index ["intervenant_id"], name: "index_vacations_on_intervenant_id"
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "import_log_lines", "import_logs"
   add_foreign_key "import_logs", "users"
   add_foreign_key "responsabilites", "formations"

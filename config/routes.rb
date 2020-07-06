@@ -30,6 +30,12 @@ Rails.application.routes.draw do
       get :download_imported_file
     end
   end
+
+  resources :envoi_logs do
+    member do
+      get :lancer
+    end
+  end
   
   namespace :tools do
     get :index
