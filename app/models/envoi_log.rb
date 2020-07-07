@@ -14,12 +14,14 @@ class EnvoiLog < ApplicationRecord
         end
 
         state :prêt do
+            event :suspendre, :transitions_to => :pause
             event :envoyer, :transitions_to => :succès
-            event :planter, :transitions_to => :echec
         end
 
         state :succès
         state :echec
     end
-    
+
+    default_scope { order('id DESC') }
+
 end

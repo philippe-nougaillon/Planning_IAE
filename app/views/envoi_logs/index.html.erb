@@ -7,8 +7,8 @@
       <th>Status</th>
       <th>Cible</th>
       <th>Message</th>
-      <th>Exécutée le</th>
-      <th colspan="3"></th>
+      <th>Exécuté le</th>
+      <th colspan="5"></th>
     </tr>
   </thead>
 
@@ -16,13 +16,17 @@
     <% @envoi_logs.each do |envoi_log| %>
       <tr>
         <td><%= l envoi_log.date_prochain %></td>
-        <td><%= envoi_log.workflow_state %></td>
+        <td><%= envoi_log.workflow_state.humanize %></td>
         <td><%= envoi_log.cible %></td>
         <td><%= envoi_log.msg %></td>
         <td><%= envoi_log.date_exécution %></td>
 
         <td><%= link_to 'Voir', envoi_log %></td>
         <td><%= link_to 'Modifier', edit_envoi_log_path(envoi_log) %></td>
+        <td>
+          <%= link_to_if envoi_log.prêt?, 'Suspendre', suspendre_envoi_log_path(envoi_log) %>
+          <%= link_to_if envoi_log.pause?, 'Activer', activer_envoi_log_path(envoi_log) %>
+        </td>
         <td><%= link_to_if envoi_log.prêt?, 'Lancer', lancer_envoi_log_path(envoi_log) %></td>
 
         <td><%= link_to '[X]', envoi_log, method: :delete, data: { confirm: 'Are you sure?' } %></td>

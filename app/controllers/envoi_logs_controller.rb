@@ -1,5 +1,5 @@
 class EnvoiLogsController < ApplicationController
-  before_action :set_envoi_log, only: [:show, :lancer, :edit, :update, :destroy]
+  before_action :set_envoi_log, only: [:show, :lancer, :suspendre, :activer, :edit, :update, :destroy]
 
   # GET /envoi_logs
   # GET /envoi_logs.json
@@ -12,27 +12,20 @@ class EnvoiLogsController < ApplicationController
   def show
   end
 
-  # Lancer un envoi
+  # Lancer le job d'envoi des notifications
   def lancer
-    if @envoi_log.cible == 'Testeurs'
-      require 'rake'
+    EnvoyerNotificationsJob.perform_later(@envoi_log.id)
+    redirect_to envoi_logs_url, notice: "Job placé dans la file d'attente pour exécution immédiate"
+  end
 
-      Rake::Task.clear # necessary to avoid tasks being loaded several times in dev mode
-      Rails.application.load_tasks # providing your application name is 'sample'
-        
-      # capture output
-      @stdout_stream = capture_stdout do
-        Rake::Task['cours:envoyer_liste_cours'].reenable # in case you're going to invoke the same task second time.
-        Rake::Task['cours:envoyer_liste_cours'].invoke(@envoi_log.id)
-      end
-    else
-      # Lancer le job ?
-      # envoi_log = EnvoiLog.with_prêt_state.first
-      EnvoyerNotificationsJob.perform_later(@envoi_log.id)
+  def suspendre
+    @envoi_log.suspendre!
+    redirect_to envoi_logs_url, notice: "Job suspendu..."
+  end
 
-      redirect_to envoi_logs_url, notice: "Job placé dans la file d'attente pour exécution"
-    end
-
+  def activer
+    @envoi_log.activer!
+    redirect_to envoi_logs_url, notice: "Job prêt !"
   end
 
   # GET /envoi_logs/new
