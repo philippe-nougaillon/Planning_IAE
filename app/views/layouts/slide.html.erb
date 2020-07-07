@@ -12,20 +12,15 @@
     <meta name="author" content="">
 
     <link rel="manifest" href="/manifest.json">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>  
-
   </head>
 
   <body>
     <nav class="navbar navbar-expand-sm fixed-top shadow p-4 mb-4 bg-white">
     
-      <%= link_to image_tag('logo_iae@195'), root_url, class: 'navbar-brand' %>
+      <%= link_to image_tag('logo_iae@195.png', alt: 'logo IAE'), root_url, class: 'navbar-brand' %>
     
       <div class="ml-2">
         <h2>
