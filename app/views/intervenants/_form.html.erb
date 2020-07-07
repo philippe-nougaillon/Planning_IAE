@@ -100,7 +100,7 @@
     <h4>Responsabilités</h4>
     <hr>
     <%= f.fields_for :responsabilites do |r| %>
-      <div class="row shadow">
+      <div class="row shadow-sm p-1 m-1">
           <div class="col-sm-2">
             <%= r.date_field :debut, label:"Date" %>
           </div>
@@ -130,6 +130,7 @@
       </div>
     <% end %>
   <% end %>
+  <br>
 
   <%= f.submit class: "btn btn-primary" %>
 <% end %>

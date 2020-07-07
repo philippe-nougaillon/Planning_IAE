@@ -1,15 +1,11 @@
 <tr>
-    <td><b><%= salle.nom %></b></td>
+    <td><%= link_to salle.nom, salle %></td>
     <td><%= salle.places %></td>
     <td><%= salle.bloc %></td>
     <td class="text-center">
-        <%= link_to salle, class: "btn btn-default" do %>
-            <i class="glyphicon glyphicon-zoom-in"></i>
-        <% end %>
-
-        <% unless Cour.where(salle_id:salle).any? %>
-            <%= link_to(salle, method: :delete, data:{confirm: 'Confirmez-vous ?'}, class: "btn btn-default") do %>
-            <i class="glyphicon glyphicon-remove"></i>
+        <% unless Cour.where(salle_id: salle).any? %>
+            <%= link_to(salle, method: :delete, data: {confirm: 'Confirmez-vous ?'}, class: "btn btn-default") do %>
+                <%= fa_icon 'trash' %>
             <% end %>
         <% end %>
     </td>

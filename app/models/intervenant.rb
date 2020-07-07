@@ -26,8 +26,6 @@ class Intervenant < ApplicationRecord
 
 	after_create :envoyer_mail
 
-    #mount_uploader :photo, AvatarUploader
-
 	def self.for_select
 		{
 		  'Groupes (Doublons autorisés)' => where(doublon:true).map { |i| "#{i.nom} #{i.prenom}" },

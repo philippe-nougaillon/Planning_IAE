@@ -52,8 +52,18 @@ class ExportPdf
     def export_etats_de_services(cours, intervenants, start_date, end_date)
         intervenant = intervenants.first
 
-        cours_ids = cours.where(intervenant: intervenant).where("hors_service_statutaire IS NOT TRUE").joins(:formation).order("formations.code_analytique").pluck(:id).flatten
-        cours_ids << cours.where(intervenant_binome: intervenant).where("hors_service_statutaire IS NOT TRUE").joins(:formation).order("formations.code_analytique").pluck(:id).flatten
+        cours_ids = cours.where(intervenant: intervenant)
+                         .where("hors_service_statutaire IS NOT TRUE")
+                         .joins(:formation)
+                         .pluck(:id)
+                         .flatten
+
+        cours_ids << cours
+                        .where(intervenant_binome: intervenant)
+                        .where("hors_service_statutaire IS NOT TRUE")
+                        .joins(:formation)
+                        .pluck(:id)
+                        .flatten
         
         vacations = intervenant.vacations.where("date BETWEEN ? AND ?", start_date, end_date)
         responsabilites = intervenant.responsabilites.where("debut BETWEEN ? AND ?", start_date, end_date)

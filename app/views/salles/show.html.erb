@@ -1,21 +1,23 @@
-<div class="page-header">
-  <div class="btn-group pull-right">
+<div class="pb-2 mt-4 mb-2 border-top">
+  <div class="btn-group float-right">
     <% if current_user.admin? %>
-      <%= link_to edit_salle_path(@salle), class: 'btn btn-primary' do %>
-        <span class="glyphicon glyphicon-pencil"></span>
-        Modifier
-      <% end %>
-      <%= link_to salles_path, class: 'btn btn-default' do %>
-        <span class="glyphicon glyphicon-list-alt"></span>
-        Retour
+      <%= link_to edit_salle_path(@salle), class: 'btn btn-sm btn-outline-primary' do %>
+        <%= fa_icon 'edit' %> Modifier
       <% end %>
     <% end %>
+
+    <%= link_to salles_path, class: 'btn btn-sm btn-outline-primary' do %>
+      <%= fa_icon 'list' %> Retour
+    <% end %>
   </div>
-  
+
   <h2>
-    <%= @salle.nom %>
+    Salle <%= @salle.nom %>
   </h2>
+  
 </div>
+
+
 
 <p>
   <strong>Nom:</strong>
@@ -23,17 +25,17 @@
 </p>
 
 <p>
-  <strong>Places:</strong>
-  <%= @salle.places %>
-</p>
-
-<p>
   <strong>Bloc:</strong>
   <%= @salle.bloc %>
 </p>
 
+<p>
+  <strong>Places:</strong>
+  <%= @salle.places %>
+</p>
+
 <h3><span class="glyphicon glyphicon-search"></span> Audit des modifications</h3>
-<table class="table table-bordered table-hover table-condensed">
+<table class="table table-bordered table-hover table-sm">
   <thead>
     <th>Date</th>
     <th>Utilisateur</th>            
@@ -50,7 +52,7 @@
   Audit des attributions
 </h3>
 
-<table class="table table-bordered table-hover table-condensed">
+<table class="table table-bordered table-striped table-hover table-sm">
   <thead>
     <th>Date</th>
     <th>Qui</th>

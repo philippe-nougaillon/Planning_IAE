@@ -47,7 +47,7 @@ class Formation < ApplicationRecord
 	end
 
 	def Code_Analytique_avec_indice(cours)
-		code = self.Code_Analytique
+		code = self.Code_Analytique || ''
 		if code.last == '?'
 			indice = ((cours.debut.year - self.cours.first.debut.year) + 1).to_s
 			return code.gsub('?', indice)

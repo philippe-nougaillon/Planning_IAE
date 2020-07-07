@@ -63,7 +63,7 @@
 
     <tfoot>
       <tr>
-        <% 7.times do %><th></th><% end %>
+        <% 8.times do %><th></th><% end %>
       </tr>
     </tfoot>
 
@@ -73,7 +73,7 @@
   </table>
 
   <div class="page_info">
-    <%= page_entries_info @etudiants, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+    <%= page_entries_info @etudiants, model: 'étudiant', renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
   </div>
 
   <%= will_paginate @etudiants, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
