@@ -68,7 +68,7 @@ class ExportPdf
         font "Helvetica"
         text "Etat liquidatif des vacations d'enseignements", size: 18
         font_size 10
-        text "Décrets 87-889 du 29/10/1987 et 88-994 du 18/10/88 - CA du 9/09/2019"
+        text "Décrets 87-889 du 29/10/1987 et 88-994 du 18/10/88 - CAR du 20/05/2020"
         text "Centre de coût 7322GRH"
         move_down @margin_down
 
