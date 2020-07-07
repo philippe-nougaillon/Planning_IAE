@@ -1,0 +1,36 @@
+<h1>Envoi Logs</h1>
+
+<table class="table table-striped table-hover table-sm">
+  <thead>
+    <tr>
+      <th>Date prochaine exécution</th>
+      <th>Status</th>
+      <th>Cible</th>
+      <th>Message</th>
+      <th>Exécutée le</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @envoi_logs.each do |envoi_log| %>
+      <tr>
+        <td><%= l envoi_log.date_prochain %></td>
+        <td><%= envoi_log.workflow_state %></td>
+        <td><%= envoi_log.cible %></td>
+        <td><%= envoi_log.msg %></td>
+        <td><%= envoi_log.date_exécution %></td>
+
+        <td><%= link_to 'Voir', envoi_log %></td>
+        <td><%= link_to 'Modifier', edit_envoi_log_path(envoi_log) %></td>
+        <td><%= link_to_if envoi_log.prêt?, 'Lancer', lancer_envoi_log_path(envoi_log) %></td>
+
+        <td><%= link_to '[X]', envoi_log, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Envoi Log', new_envoi_log_path %>

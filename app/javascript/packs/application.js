@@ -23,5 +23,9 @@ import "../stylesheets/application";
 import "@fortawesome/fontawesome-free/js/all";
 import "../dropdown_select";
 
-
+// importe le code Stimulus
 import "controllers"
+
+// Rich text area
+require("trix")
+require("@rails/actiontext")

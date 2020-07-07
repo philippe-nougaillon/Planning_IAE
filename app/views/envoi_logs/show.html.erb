@@ -1,0 +1,23 @@
+<p>
+    <%= @envoi_log.date_prochain %>
+</p>
+
+<p>
+    <%= @envoi_log.workflow_state%>
+</p>
+
+<p>
+    <%= @envoi_log.cible %>
+</p>
+
+<p>
+    <%= @envoi_log.msg %>
+</p>
+
+<p>
+    <strong>Date exécution</strong>
+    <%= @envoi_log.date_exécution %>
+</p>
+
+<%= link_to 'Edit', edit_envoi_log_path(@envoi_log) %> |
+<%= link_to 'Back', envoi_logs_path %>

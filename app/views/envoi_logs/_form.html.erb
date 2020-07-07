@@ -1,0 +1,22 @@
+<%= bootstrap_form_with(model: envoi_log, local: true) do |form| %>
+  <% if envoi_log.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(envoi_log.errors.count, "error") %> prohibited this envoi_log from being saved:</h2>
+
+      <ul>
+        <% envoi_log.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form.text_field :date_prochain, type: :date, value: envoi_log.date_prochain.to_date %>
+  <%= form.select :workflow_state, EnvoiLog.workflow_spec.states.keys.to_a, label: 'Statut' %>
+  <%= form.select :cible, ['Testeurs', 'Intervenants'] %>
+  <%= form.rich_text_area :msg, class: "customized-min-height" %>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

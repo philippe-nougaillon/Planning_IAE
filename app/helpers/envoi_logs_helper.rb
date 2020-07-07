@@ -1,0 +1,2 @@
+module EnvoiLogsHelper
+end
