@@ -118,8 +118,6 @@ Rails.application.configure do
   ActionMailer::Base.delivery_method = :smtp
 
   config.action_mailer.default_url_options = { host: 'planning4-demo.herokuapp.com', protocol: 'https' }
-
-  # Enable serving of images, stylesheets, and JavaScripts from an asset server.
-  config.action_controller.asset_host = 'https://planning4-demo.herokuapp.com'
+  config.action_mailer.asset_host = "https://planning4-demo.herokuapp.com"
 
 end
