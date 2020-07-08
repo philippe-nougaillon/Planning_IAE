@@ -14,33 +14,14 @@
   </thead>
 
   <tbody>
-    <% @envoi_logs.each do |envoi_log| %>
-      <tr class="table-<%= envoi_log.prêt? ? 'primary' : 'light' %>">
-        <td class="text-right"><%= envoi_log.id %></td>
-        <td><%= l envoi_log.date_prochain %></td>
-        <td><%= envoi_log.workflow_state.humanize %></td>
-        <td><%= envoi_log.cible %></td>
-        <td><%= envoi_log.msg %></td>
-        <td><%= envoi_log.date_exécution %></td>
-
-        <td><%= link_to 'Voir', envoi_log %></td>
-        <td>
-          <% if envoi_log.current_state < :succès %>
-            <%= link_to 'Modifier', edit_envoi_log_path(envoi_log) %>
-            <%= link_to_if envoi_log.prêt?, 'Suspendre', suspendre_envoi_log_path(envoi_log) %>
-            <%= link_to_if envoi_log.pause?, 'Activer', activer_envoi_log_path(envoi_log) %>
-            <%= link_to_if envoi_log.prêt?, 'Lancer', lancer_envoi_log_path(envoi_log) %>
-          <% end %>
-        </td>
-       </tr>
-    <% end %>
+    <%= render @envoi_logs %>
   </tbody>
 </table>
 
 <div class="page_info">
-    <%= page_entries_info @envoi_logs, model: 'envoi', renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
-  </div>
+  <%= page_entries_info @envoi_logs, model: 'envoi', renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+</div>
 
-  <%= will_paginate @envoi_logs, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+<%= will_paginate @envoi_logs, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
 
 <br>
