@@ -14,7 +14,12 @@ class EnvoiLogsController < ApplicationController
 
   # Lancer le job d'envoi des notifications
   def lancer
+    # Passer à l'état 'Lancé'
+    @envoi_log.lancer!
+
+    # placer le job dans la file d'attente
     EnvoyerNotificationsJob.perform_later(@envoi_log.id)
+
     redirect_to envoi_logs_url, notice: "Job placé dans la file d'attente pour exécution immédiate"
   end
 
