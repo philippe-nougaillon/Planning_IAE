@@ -4,7 +4,7 @@ class EnvoiLogsController < ApplicationController
   # GET /envoi_logs
   # GET /envoi_logs.json
   def index
-    @envoi_logs = EnvoiLog.all
+    @envoi_logs = EnvoiLog.paginate(page: params[:page], per_page: 20)
   end
 
   # GET /envoi_logs/1

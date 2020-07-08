@@ -1,23 +1,33 @@
 <p>
-    <%= @envoi_log.date_prochain %>
+    <strong>Id : </strong>
+    <%= @envoi_log.id %>
 </p>
 
 <p>
-    <%= @envoi_log.workflow_state%>
+    <strong>Date prévue d'envoi : </strong>
+    <%= l @envoi_log.date_prochain %>
 </p>
 
 <p>
+    <strong>Statut : </strong>
+    <%= @envoi_log.workflow_state.humanize %>
+</p>
+
+<p>
+    <strong>Cible : </strong>
     <%= @envoi_log.cible %>
 </p>
 
 <p>
+    <strong>Message en bas de mail : </strong>
+    <br>
     <%= @envoi_log.msg %>
 </p>
 
 <p>
-    <strong>Date exécution</strong>
-    <%= @envoi_log.date_exécution %>
+    <strong>Date d'exécution : </strong>
+    <%= l(@envoi_log.date_exécution) if @envoi_log.date_exécution %>
 </p>
 
-<%= link_to 'Edit', edit_envoi_log_path(@envoi_log) %> |
-<%= link_to 'Back', envoi_logs_path %>
+<%= link_to 'Modifier', edit_envoi_log_path(@envoi_log) %> |
+<%= link_to 'Retour', envoi_logs_path %>

@@ -1,20 +1,22 @@
-<h1>Envoi Logs</h1>
+<h1>Journal des envois</h1>
 
-<table class="table table-striped table-hover table-sm">
+<table class="table table-hover table-sm">
   <thead>
     <tr>
-      <th>Date prochaine exécution</th>
+      <th>ID</th>
+      <th>Date prévue d'envoi</th>
       <th>Status</th>
       <th>Cible</th>
       <th>Message</th>
       <th>Exécuté le</th>
-      <th colspan="5"></th>
+      <th colspan="2"></th>
     </tr>
   </thead>
 
   <tbody>
     <% @envoi_logs.each do |envoi_log| %>
-      <tr>
+      <tr class="table-<%= envoi_log.prêt? ? 'primary' : 'light' %>">
+        <td class="text-right"><%= envoi_log.id %></td>
         <td><%= l envoi_log.date_prochain %></td>
         <td><%= envoi_log.workflow_state.humanize %></td>
         <td><%= envoi_log.cible %></td>
@@ -22,19 +24,23 @@
         <td><%= envoi_log.date_exécution %></td>
 
         <td><%= link_to 'Voir', envoi_log %></td>
-        <td><%= link_to 'Modifier', edit_envoi_log_path(envoi_log) %></td>
         <td>
-          <%= link_to_if envoi_log.prêt?, 'Suspendre', suspendre_envoi_log_path(envoi_log) %>
-          <%= link_to_if envoi_log.pause?, 'Activer', activer_envoi_log_path(envoi_log) %>
+          <% if envoi_log.current_state < :succès %>
+            <%= link_to 'Modifier', edit_envoi_log_path(envoi_log) %>
+            <%= link_to_if envoi_log.prêt?, 'Suspendre', suspendre_envoi_log_path(envoi_log) %>
+            <%= link_to_if envoi_log.pause?, 'Activer', activer_envoi_log_path(envoi_log) %>
+            <%= link_to_if envoi_log.prêt?, 'Lancer', lancer_envoi_log_path(envoi_log) %>
+          <% end %>
         </td>
-        <td><%= link_to_if envoi_log.prêt?, 'Lancer', lancer_envoi_log_path(envoi_log) %></td>
-
-        <td><%= link_to '[X]', envoi_log, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
+       </tr>
     <% end %>
   </tbody>
 </table>
 
-<br>
+<div class="page_info">
+    <%= page_entries_info @envoi_logs, model: 'envoi', renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+  </div>
 
-<%= link_to 'New Envoi Log', new_envoi_log_path %>
+  <%= will_paginate @envoi_logs, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+
+<br>

@@ -4,7 +4,7 @@ namespace :cours do
 
   desc "TODO"
   task update_duree: :environment do
-	Cour.where(duree:0).each do |cours|
+	  Cour.where(duree:0).each do |cours|
 	  	cours.update_attributes(duree:(cours.fin - cours.debut) / 60 / 60)
   	end
   end
@@ -32,7 +32,7 @@ namespace :cours do
 
     if envoi_specs.cible == 'Testeurs'
       # id des intervenants tests
-      intervenants = Intervenant.where(id: [2, 3])
+      intervenants = Intervenant.where("UPPER(nom) LIKE '%NOUGAILLON%' OR UPPER(nom) LIKE '%FITCH%'")
     else
       intervenants = Intervenant.all
     end

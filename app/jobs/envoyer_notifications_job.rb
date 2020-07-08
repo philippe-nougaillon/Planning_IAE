@@ -12,12 +12,17 @@ class EnvoyerNotificationsJob < ApplicationJob
     Rake::Task['cours:envoyer_liste_cours'].reenable # in case you're going to invoke the same task second time.
     Rake::Task['cours:envoyer_liste_cours'].invoke(envoi_log.id)
 
+    # créer le prochain envoi à partir des paramètres de celui que l'on vient de lancer
     new_envoi_log = EnvoiLog.new(envoi_log.dup.attributes)
     new_envoi_log.msg = envoi_log.msg
     new_envoi_log.date_exécution = nil
     new_envoi_log.save
 
+    # Passer à l'état 'Envoyé'
     envoi_log.envoyer!
+
+    # Marquer la date d'exécution 
+    # TODDO: code à déplacer dans le workflow
     envoi_log.date_exécution = DateTime.now
     envoi_log.save
 

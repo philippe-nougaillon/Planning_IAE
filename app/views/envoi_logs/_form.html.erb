@@ -11,7 +11,7 @@
     </div>
   <% end %>
 
-  <%= form.text_field :date_prochain, type: :date, value: envoi_log.date_prochain.to_date %>
+  <%= form.text_field :date_prochain, type: :date, value: envoi_log.date_prochain.to_date, label: 'Date prévue' %>
   <%= form.select :workflow_state, EnvoiLog.workflow_spec.states.keys.to_a, label: 'Statut' %>
   <%= form.select :cible, ['Testeurs', 'Intervenants'] %>
   <%= form.rich_text_area :msg, class: "customized-min-height" %>
