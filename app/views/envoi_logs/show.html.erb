@@ -31,3 +31,13 @@
 
 <%= link_to 'Modifier', edit_envoi_log_path(@envoi_log) %> |
 <%= link_to 'Retour', envoi_logs_path %>
+<br>
+
+<table class="table">
+    <% @envoi_log.audits.each do | audit | %>
+        <tr>
+            <td><%= audit.created_at %></td>
+            <td><%= audit.audited_changes %></td>
+        </tr>
+    <% end %>
+</table>

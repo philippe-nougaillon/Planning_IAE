@@ -27,6 +27,12 @@ class EnvoiLog < ApplicationRecord
 
     default_scope { order('id DESC') }
 
+    # pour que le changement se voit dans l'audit trail
+    def persist_workflow_state(new_value)
+        self[:workflow_state] = new_value
+        save!
+    end
+
     def style
         self.current_state.meta[:style]
     end
