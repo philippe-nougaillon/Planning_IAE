@@ -114,6 +114,7 @@ class ToolsController < ApplicationController
       # Enregistre le fichier localement (format = Date + nom du fichier)
       filename = I18n.l(Time.now, format: :long) + ' - ' + params[:upload].original_filename
       file_with_path = Rails.root.join('public', 'tmp', filename)
+      
       File.open(file_with_path, 'wb') do |file|
         file.write(params[:upload].read)
       end
@@ -168,9 +169,6 @@ class ToolsController < ApplicationController
           horaire_fin = horaire_fin.hour.to_s + ":" + horaire_fin.minute.to_s
         end  
 
-        debut = Time.parse(jour_debut + " " + horaire_debut + 'UTC')
-        fin   = Time.parse(jour_fin + " " +  horaire_fin + 'UTC')
-
         intervenant = nil
         if row[headers.index 'Intervenant']
           if row[headers.index 'Intervenant'] == 'A CONFIRMER'
@@ -193,30 +191,42 @@ class ToolsController < ApplicationController
           binome = Intervenant.where(nom: nom_binome, prenom: prenom_binome).first_or_initialize
         end
 
-        cours.debut = debut
-        cours.fin = fin
-        cours.duree = ((fin - debut)/3600)
-        cours.intervenant = intervenant
-        cours.intervenant_binome = binome
-        cours.formation_id = params[:formation_id]
+        begin
+          debut = Time.parse(jour_debut + " " + horaire_debut + 'UTC')
+          fin   = Time.parse(jour_fin + " " +  horaire_fin + 'UTC')
 
-        cours.ue = row[headers.index 'UE'] ? row[headers.index 'UE'].gsub(' ','') : ""
-        cours.nom = row[headers.index 'Intitulé']
-        cours.elearning = true if row[headers.index 'E-learning?'].try(:upcase) == 'OUI'
-        cours.hors_service_statutaire = true if row[headers.index 'HSS?'].try(:upcase) == 'OUI'
+          cours.debut = debut
+          cours.fin = fin
+          cours.duree = ((fin - debut)/3600)
+          cours.intervenant = intervenant
+          cours.intervenant_binome = binome
+          cours.formation_id = params[:formation_id]
+          cours.ue = row[headers.index 'UE'] ? row[headers.index 'UE'].gsub(' ','') : ""
+          cours.nom = row[headers.index 'Intitulé']
+          cours.elearning = true if row[headers.index 'E-learning?'].try(:upcase) == 'OUI'
+          cours.hors_service_statutaire = true if row[headers.index 'HSS?'].try(:upcase) == 'OUI'
 
-        msg = "COURS #{cours.new_record? ? 'NEW' : 'UPDATE'} => id:#{id} changes:#{cours.changes}"
+          msg = "COURS #{cours.new_record? ? 'NEW' : 'UPDATE'} => id:#{id} changes:#{cours.changes}"
 
-        if cours.valid? 
-          cours.save if params[:save] == 'true'
-        else
-          msg << " || ERREURS: " + cours.errors.messages.map{|m| "#{m.first} => #{m.last}"}.join(',')
+          if cours.valid? 
+            cours.save if params[:save] == 'true'
+          else
+            msg << " || ERREURS: " + cours.errors.messages.map{|m| "#{m.first} => #{m.last}"}.join(',')
+          end
+
+          _etat = ( cours.valid? ? ImportLogLine.etats[:succès] : ImportLogLine.etats[:echec]) 
+
+          cours.valid? ? @importes += 1 : @errors += 1 
+
+        rescue StandardError => e  
+          msg = "ERREUR FATALE: #{ e.message }"
+
+          _etat = ImportLogLine.etats[:echec]
+          @errors += 1 
         end
 
-        _etat = ( cours.valid? ? ImportLogLine.etats[:succès] : ImportLogLine.etats[:echec]) 
         log.import_log_lines.build(etat: _etat, num_ligne: index, message: msg)
 
-        cours.valid? ? @importes += 1 : @errors += 1 
       end
 
       _etat = if @errors.zero?
