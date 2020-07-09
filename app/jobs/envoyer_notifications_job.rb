@@ -10,10 +10,20 @@ class EnvoyerNotificationsJob < ApplicationJob
     Rails.application.load_tasks # providing your application name is 'sample'
       
     Rake::Task['cours:envoyer_liste_cours'].reenable # in case you're going to invoke the same task second time.
-    Rake::Task['cours:envoyer_liste_cours'].invoke(envoi_log.id)
+    
+    begin
+      # Lancer la tâche d'envoi
+      Rake::Task['cours:envoyer_liste_cours'].invoke(envoi_log.id)
 
-    # Passer à l'état 'Succès'
-    envoi_log.envoyer!
+      # Passer à l'état 'Succès' si la tâche a été lancée avec succès
+      envoi_log.envoyer!
+    rescue Exception => e
+      # Une erreur est survenue !
+      logger.debug "[JOB FAILED] #{e}"
+
+      # Passer à l'état 'Echoué'
+      envoi_log.echec!
+    end
 
     # Marquer la date d'exécution 
     # TODDO: code à déplacer dans le workflow
@@ -29,6 +39,6 @@ class EnvoyerNotificationsJob < ApplicationJob
 
     # Passer à l'état 'Prêt'
     new_envoi_log.activer!    
-    
   end
+
 end

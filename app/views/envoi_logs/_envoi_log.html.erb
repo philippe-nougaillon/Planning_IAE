@@ -5,7 +5,7 @@
         <span class="badge <%= envoi_log.style %>"><%= envoi_log.workflow_state.humanize %></span>
     </td>
     <td><%= envoi_log.cible %></td>
-    <td><%= envoi_log.msg %></td>
+    <td><%= time_ago_in_words(envoi_log.date_exécution) if envoi_log.date_exécution %></td>
     <td><%= envoi_log.date_exécution %></td>
 
     <td><%= link_to 'Voir', envoi_log %></td>

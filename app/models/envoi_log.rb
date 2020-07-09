@@ -20,9 +20,12 @@ class EnvoiLog < ApplicationRecord
 
         state :lancé, meta: {style: 'badge-warning'} do 
             event :envoyer, :transitions_to => :exécuté
+            event :echec, :transitions_to => :échoué
         end
 
         state :exécuté, meta: {style: 'badge-success'}
+
+        state :échoué, meta: {style: 'badge-danger'}
     end
 
     default_scope { order('id DESC') }
