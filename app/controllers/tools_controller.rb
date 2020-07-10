@@ -99,6 +99,9 @@ class ToolsController < ApplicationController
           formation = Formation.find_by(nom: row[headers.index 'Formation'].strip)
         end
 
+        elearning = (row[headers.index 'Intervenant'] == 'E-LEARNING Hors_IAE') || 
+                    (row[headers.index 'E-learning?'].try(:upcase) == 'OUI')
+        
         begin
           debut = Time.parse(jour_debut + " " + horaire_debut + 'UTC')
           fin   = Time.parse(jour_fin + " " +  horaire_fin + 'UTC')
@@ -109,9 +112,9 @@ class ToolsController < ApplicationController
           cours.intervenant = intervenant
           cours.intervenant_binome = binome
           cours.formation = formation
+          cours.elearning = elearning
           cours.ue = row[headers.index 'UE'] ? row[headers.index 'UE'].gsub(' ','') : ""
           cours.nom = row[headers.index 'Intitulé']
-          cours.elearning = true if row[headers.index 'E-learning?'].try(:upcase) == 'OUI'
           cours.hors_service_statutaire = true if row[headers.index 'HSS?'].try(:upcase) == 'OUI'
 
           msg = "COURS #{cours.new_record? ? 'NEW' : 'UPDATE'} => id:#{id} changes:#{cours.changes}"
