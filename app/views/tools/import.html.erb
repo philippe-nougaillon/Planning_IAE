@@ -27,7 +27,7 @@
       <%= label_tag "Formation" %>    
       <%= select_tag :formation_id, 
             options_from_collection_for_select(Formation.all, :id, :nom, params[:formation_id]), 
-              class:"form-control select2", include_blank:true %>
+              class:"form-control select2", include_blank: true %>
 
       <%= label :filename, "Fichier source" %>
       <%= file_field_tag 'upload', accept: '.xls', class: 'form-control' %>

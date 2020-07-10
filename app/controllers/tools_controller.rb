@@ -10,7 +10,7 @@ class ToolsController < ApplicationController
   end
 
   def import_do
-    if params[:upload] and !params[:formation_id].blank?
+    if params[:upload]
       
       # Enregistre le fichier localement (format = Date + nom du fichier)
       filename = I18n.l(Time.now, format: :long) + ' - ' + params[:upload].original_filename
@@ -92,6 +92,13 @@ class ToolsController < ApplicationController
           binome = Intervenant.where(nom: nom_binome, prenom: prenom_binome).first_or_initialize
         end
 
+        formation = nil
+        if !params[:formation_id].blank?
+          formation = Formation.find(params[:formation_id])
+        elsif row[headers.index 'Formation']
+          formation = Formation.find_by(nom: row[headers.index 'Formation'].strip)
+        end
+
         begin
           debut = Time.parse(jour_debut + " " + horaire_debut + 'UTC')
           fin   = Time.parse(jour_fin + " " +  horaire_fin + 'UTC')
@@ -101,7 +108,7 @@ class ToolsController < ApplicationController
           cours.duree = ((fin - debut)/3600)
           cours.intervenant = intervenant
           cours.intervenant_binome = binome
-          cours.formation_id = params[:formation_id]
+          cours.formation = formation
           cours.ue = row[headers.index 'UE'] ? row[headers.index 'UE'].gsub(' ','') : ""
           cours.nom = row[headers.index 'Intitulé']
           cours.elearning = true if row[headers.index 'E-learning?'].try(:upcase) == 'OUI'
@@ -112,7 +119,7 @@ class ToolsController < ApplicationController
           if cours.valid? 
             cours.save if params[:save] == 'true'
           else
-            msg << " || ERREURS: " + cours.errors.messages.map{|m| "#{m.first} => #{m.last}"}.join(',')
+            msg << " || ERREURS: " + cours.errors.messages.map{|m| "#{m.first} => #{m.last}"}.join(', ')
           end
 
           _etat = ( cours.valid? ? ImportLogLine.etats[:succès] : ImportLogLine.etats[:echec]) 
@@ -142,7 +149,9 @@ class ToolsController < ApplicationController
       
       log.update(etat: _etat, nbr_lignes: @importes + @errors, lignes_importees: @importes)
       log.update(message: (params[:save] == 'true' ? "Importation" : "Simulation") )
-      log.update(message: log.message + " | Formation: #{Formation.find(params[:formation_id]).try(:nom)}" )
+
+      # log.update(message: log.message + " | Formation: #{ formation ? formation.try(:nom) : 'INCONNUE' }" )
+
       if @errors > 0
         log.update(message: log.message + " | #{@errors} lignes rejetées !")
       end   
