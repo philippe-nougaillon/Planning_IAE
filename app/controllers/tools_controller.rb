@@ -113,7 +113,7 @@ class ToolsController < ApplicationController
       
       # Enregistre le fichier localement (format = Date + nom du fichier)
       filename = I18n.l(Time.now, format: :long) + ' - ' + params[:upload].original_filename
-      file_with_path = Rails.root.join('public', 'tmp', filename)
+      file_with_path = Rails.root.join('public', filename)
       
       File.open(file_with_path, 'wb') do |file|
         file.write(params[:upload].read)
