@@ -21,7 +21,7 @@ class ImportLogsController < ApplicationController
 
   def download_imported_file
     import_log = ImportLog.find(params[:id])
-    file_path = "#{Rails.root}/public/tmp/#{import_log.fichier}"
+    file_path = "#{Rails.root}/public/#{import_log.fichier}"
 
     if File.exists?(file_path)
       send_file(file_path)

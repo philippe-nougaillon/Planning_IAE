@@ -3,109 +3,10 @@
 class ToolsController < ApplicationController  
   include ActionView::Helpers::NumberHelper
 
-  require 'csv'
   require 'capture_stdout'
 
   def index
     authorize :tool, :index?
-  end
-
-  def import_csv_do
-    if params[:upload] and !params[:formation_id].blank?
-      
-      # Enregistre le fichier localement (format = Date + nom du fichier)
-      filename = I18n.l(Time.now, format: :long) + ' - ' + params[:upload].original_filename
-      file_with_path = Rails.root.join('public', 'tmp', filename)
-      File.open(file_with_path, 'wb') do |file|
-        file.write(params[:upload].read)
-      end
-
-      log = ImportLog.new(model_type: 'Cours', fichier: filename, user_id: current_user.id)
-
-      @importes = @errors = 0 
-      index = 1
-
-      CSV.foreach(file_with_path, headers: true, col_sep: ';', quote_char:'"', encoding: 'UTF-8') do |row|
-        index += 1
-
-        intervenant = nil
-        if row['Intervenant']
-          if row['Intervenant'] == 'A CONFIRMER'
-            intervenant = Intervenant.where(nom:'A', prenom:'CONFIRMER').first
-          else  
-            nom = row['Intervenant'].strip.split(' ').first.upcase
-            prenom = row['Intervenant'].strip.split(' ').last
-            intervenant = Intervenant.where(nom:nom, prenom:prenom).first_or_initialize
-            if intervenant.new_record?
-              intervenant.email = "?"
-              intervenant.save if params[:save] == 'true'
-            end
-          end
-        end
-
-        # MAJ cours existant ? si l'id est égal à 0 => c'est une création
-        id = row[0].to_i 
-        if id == 0
-          cours = Cour.new
-        else
-          if Cour.exists?(id)
-            cours = Cour.find(id)
-          else
-            cours = Cour.new
-          end
-        end
-
-        debut = Time.parse(row['Date début'] + " " + row['Heure début'] + 'UTC')
-        fin   = Time.parse(row['Date fin'] + " " + row['Heure fin'] + 'UTC')
-        cours.debut = debut
-        cours.fin = fin
-        cours.duree = ((fin - debut)/3600)
-        cours.intervenant_id = intervenant.id
-        cours.formation_id = params[:formation_id]
-
-        cours.ue = row['UE'] ? row['UE'].gsub(' ','') : ""
-        cours.nom = row['Intitulé']
-        cours.elearning = true if row['E-learning?'] == 'OUI'
-        cours.hors_service_statutaire = true if row['HSS?'] == 'OUI'
-
-        msg = "COURS #{cours.new_record? ? 'NEW' : 'UPDATE'} => id:#{id} changes:#{cours.changes}"
-
-        if cours.valid? 
-          cours.save if params[:save] == 'true'
-        else
-          msg << " || ERREURS: " + cours.errors.messages.map{|m| "#{m.first} => #{m.last}"}.join(',')
-        end
-
-        _etat = ( cours.valid? ? ImportLogLine.etats[:succès] : ImportLogLine.etats[:echec]) 
-        log.import_log_lines.build(etat: _etat, num_ligne: index, message: msg)
-
-        cours.valid? ? @importes += 1 : @errors += 1 
-      end
-
-      _etat = if @errors.zero?
-        ImportLog.etats[:succès] 
-      else 
-        if @errors < @importes 
-          ImportLog.etats[:warning]
-        else
-          ImportLog.etats[:echec]
-        end
-      end   
-      
-      log.update(etat: _etat, nbr_lignes: @importes + @errors, lignes_importees: @importes)
-      log.update(message: (params[:save] == 'true' ? "Importation" : "Simulation") )
-      log.update(message: log.message + " | Formation: #{Formation.find(params[:formation_id]).try(:nom)}" )
-      if @errors > 0
-        log.update(message: log.message + " | #{@errors} lignes rejetées !")
-      end   
-      log.save
-      
-      flash[:notice] = "L'importation a bien été exécutée"
-      redirect_to import_logs_path
-    else
-      flash[:error] = "Manque le fichier source ou la formation pour pouvoir lancer l'importation !"
-      redirect_to action: 'import'
-    end  
   end
 
   def import_do
@@ -264,7 +165,7 @@ class ToolsController < ApplicationController
       # Enregistre le fichier localement (format = Date + nom du fichier)
       filename = I18n.l(Time.now, format: :long) + ' - ' + params[:upload].original_filename
 
-      file_with_path = Rails.root.join('public', 'tmp', filename)
+      file_with_path = Rails.root.join('public', filename)
       File.open(file_with_path, 'wb') do |file|
         file.write(params[:upload].read)
       end
@@ -355,7 +256,7 @@ class ToolsController < ApplicationController
     if params[:upload]
     	
       # Enregistre le fichier localement
-      file_with_path = Rails.root.join('public', 'tmp', params[:upload].original_filename)
+      file_with_path = Rails.root.join('public', params[:upload].original_filename)
       File.open(file_with_path, 'wb') do |file|
           file.write(params[:upload].read)
       end
@@ -424,7 +325,7 @@ class ToolsController < ApplicationController
       # Enregistre le fichier localement (format = Date + nom du fichier)
       filename = I18n.l(Time.now, format: :long) + ' - ' + params[:upload].original_filename
 
-      file_with_path = Rails.root.join('public', 'tmp', filename)
+      file_with_path = Rails.root.join('public', filename)
       File.open(file_with_path, 'wb') do |file|
         file.write(params[:upload].read)
       end
