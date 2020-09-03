@@ -1,4 +1,4 @@
-<tr class="table-<%= envoi_log.prêt? ? 'primary' : 'light' %>">
+<tr>
     <td class="text-right"><%= envoi_log.id %></td>
     <td><%= l envoi_log.date_prochain %></td>
     <td>
@@ -6,15 +6,52 @@
     </td>
     <td><%= envoi_log.cible %></td>
     <td><%= time_ago_in_words(envoi_log.date_exécution) if envoi_log.date_exécution %></td>
-    <td><%= envoi_log.date_exécution %></td>
-
-    <td><%= link_to 'Voir', envoi_log %></td>
     <td>
-        <% if envoi_log.current_state < :lancé %>
-        <%= link_to 'Modifier', edit_envoi_log_path(envoi_log) %>
-        <%= link_to_if envoi_log.prêt?, 'Suspendre', suspendre_envoi_log_path(envoi_log) %>
-        <%= link_to_if envoi_log.pause?, 'Activer', activer_envoi_log_path(envoi_log) %>
-        <%= link_to_if envoi_log.prêt?, 'Lancer', lancer_envoi_log_path(envoi_log) %>
+        <%= link_to envoi_log, class: "btn btn-sm btn-link" do %>
+            <%= fa_icon 'eye', text: ' Voir' %>
         <% end %>
     </td>
+
+    <% if envoi_log.current_state < :lancé %>
+        <td>
+            <%= link_to edit_envoi_log_path(envoi_log), class: "btn btn-sm btn-link" do %>
+                <%= fa_icon 'edit', text: ' Modifier' %>
+            <% end %>
+        </td>
+        <td>
+            <% if envoi_log.prêt? %>
+                <%= link_to suspendre_envoi_log_path(envoi_log), class: "btn btn-sm btn-secondary"  do %>
+                    <%= fa_icon 'pause', text: ' Suspendre' %> 
+                <% end %>
+            <% else %>
+                <%= link_to '#', class: "btn btn-sm btn-light"  do %>
+                    <%= fa_icon 'pause', text: ' Suspendre' %> 
+                <% end %>
+            <% end %>
+        </td>
+        <td>    
+            <% if envoi_log.pause? %>
+                <%= link_to activer_envoi_log_path(envoi_log), class: "btn btn-sm btn-success" do %>
+                    <%= fa_icon 'play', text: ' Activer' %>
+                <% end %>
+            <% else %>
+                <%= link_to '#', class: "btn btn-sm btn-light" do %>
+                    <%= fa_icon 'play', text: ' Activer' %>
+                <% end %>
+            <% end %>
+        </td>
+        <td>
+            <% if envoi_log.prêt? %>
+                <%= link_to lancer_envoi_log_path(envoi_log), class: "btn btn-sm btn-primary" do %>
+                    <%= fa_icon 'paper-plane', text: ' Envoyer' %>
+                <% end %>
+            <% else %>
+                <%= link_to '#', class: "btn btn-sm btn-light" do %>
+                    <%= fa_icon 'paper-plane', text: ' Envoyer' %>
+                <% end %>
+            <% end %>
+        </td>
+    <% else %>
+        <% 4.times do %><td></td><% end %>
+    <% end %>
 </tr>

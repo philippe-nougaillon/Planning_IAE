@@ -13,7 +13,7 @@ class EnvoiLog < ApplicationRecord
             event :activer, :transitions_to => :prêt
         end
 
-        state :prêt, meta: {style: 'badge-primary'} do
+        state :prêt, meta: {style: 'badge-success'} do
             event :suspendre, :transitions_to => :pause
             event :lancer, :transitions_to => :lancé
         end
@@ -23,7 +23,7 @@ class EnvoiLog < ApplicationRecord
             event :echec, :transitions_to => :échoué
         end
 
-        state :exécuté, meta: {style: 'badge-success'}
+        state :exécuté, meta: {style: 'badge-primary'}
 
         state :échoué, meta: {style: 'badge-danger'}
     end

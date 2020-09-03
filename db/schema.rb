@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_06_131001) do
+ActiveRecord::Schema.define(version: 2020_09_03_132046) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -107,7 +107,7 @@ ActiveRecord::Schema.define(version: 2020_07_06_131001) do
   create_table "envoi_logs", force: :cascade do |t|
     t.datetime "date_prochain"
     t.string "workflow_state"
-    t.string "cible"
+    t.string "cible", default: "Testeurs"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "date_exécution"

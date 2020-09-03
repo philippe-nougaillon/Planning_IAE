@@ -1,10 +1,26 @@
+<div class="pb-2 mt-4 mb-2 border-top">
+  <div class="btn-group float-right">
+    <%= link_to edit_envoi_log_path(@envoi_log), class: 'btn btn-sm btn-outline-primary' do %>
+      <%= fa_icon 'edit' %> Modifier
+    <% end %>
+
+    <a href="#audit" data-toggle="collapse" class='btn btn-sm btn-outline-primary'>
+      <%= fa_icon 'search' %> Audit
+    </a>
+
+    <%= link_to envoi_logs_path, class: 'btn btn-sm btn-outline-primary' do %>
+      <%= fa_icon 'list' %> Retour
+    <% end %>
+  </div>
+</div>
+
 <p>
     <strong>Id : </strong>
     <%= @envoi_log.id %>
 </p>
 
 <p>
-    <strong>Date prévue d'envoi : </strong>
+    <strong>Envoi prévu le : </strong>
     <%= l @envoi_log.date_prochain %>
 </p>
 
@@ -19,25 +35,29 @@
 </p>
 
 <p>
-    <strong>Message en bas de mail : </strong>
-    <br>
-    <%= @envoi_log.msg %>
-</p>
-
-<p>
     <strong>Date d'exécution : </strong>
     <%= l(@envoi_log.date_exécution) if @envoi_log.date_exécution %>
 </p>
 
-<%= link_to 'Modifier', edit_envoi_log_path(@envoi_log) %> |
-<%= link_to 'Retour', envoi_logs_path %>
-<br>
+<p>
+    <strong>Message (en bas du corps du mail)</strong>
+    <br>
+    <div class="jumbotron">
+        <%= @envoi_log.msg %>
+    </div>
+</p>
 
-<table class="table">
-    <% @envoi_log.audits.each do | audit | %>
-        <tr>
-            <td><%= audit.created_at %></td>
-            <td><%= audit.audited_changes %></td>
-        </tr>
-    <% end %>
-</table>
+<div id="audit" class="collapse">
+    <br>
+
+    <h4>Audit des modifications</h4>
+    <table class="table table-sm">
+        <% @envoi_log.audits.each do | audit | %>
+            <tr>
+                <td><%= audit.created_at %></td>
+                <td><%= audit.audited_changes %></td>
+            </tr>
+        <% end %>
+    </table>
+
+</div>
