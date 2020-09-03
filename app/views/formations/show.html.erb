@@ -6,7 +6,7 @@
       <% end %>
 
       <a href="#audit" data-toggle="collapse" class='btn btn-sm btn-outline-primary'>
-        Audit
+        <%= fa_icon 'search' %> Audit
       </a>
 
       <%= link_to formations_path, class: 'btn btn-sm btn-outline-primary' do %>
@@ -26,7 +26,7 @@
 
   <div class="col-sm-6">
     <h2>
-      <small>Nom</small><br>
+      <small class="text-muted">Nom</small><br>
       <%= @formation.nom %>
     </h2>
     
@@ -50,19 +50,19 @@
     <br>
 
     <h3>
-      <small>Promo</small><br>
+      <small class="text-muted">Promo</small><br>
       <%= @formation.promo %>
     </h3>
   </div>
 
   <div class="col-sm-4">
     <h2>
-      <small>Abrégé</small><br>
+      <small class="text-muted">Abrégé</small><br>
       <%= @formation.try(:abrg) %>
     </h2>
     <br> 
     <h3>
-      <small>Couleur</small><br>
+      <small class="text-muted">Couleur</small><br>
       <span style="background-color:<%= @formation.color %>;padding-left: 30px;margin-left: 5px"> </span>
     </h3>
   </div>
@@ -71,23 +71,23 @@
 <div class="row">
   <div class="col-sm-5">
     <h3>
-      <small>Diplôme</small><br>
+      <small class="text-muted">Diplôme</small><br>
       <%= @formation.diplome %>
     </h3>
 
     <h3>
-      <small>Chargé(e) de formation</small><br>
+      <small class="text-muted">Chargé(e) de formation</small><br>
       <%= @formation.try(:user).try(:email) %>
     </h3>
   </div>
 
   <div class="col-sm-7">
     <h3>
-      <small>Code Analytique</small><br>
+      <small class="text-muted">Code Analytique</small><br>
       <%= @formation.Code_Analytique %>
     </h3>
     <h3>
-      <small>Taux Horaire</small><br>
+      <small class="text-muted">Taux Horaire</small><br>
       <%= @formation.nomTauxTD %>
     </h3>
   </div>
@@ -96,7 +96,7 @@
 
 <% if @formation.unites.any? %>
   <h3>
-    <small>Unités d'enseignements</small>
+    <small class="text-muted">Unités d'enseignements</small>
   </h3>
   
   <div class="table-responsive">
@@ -136,7 +136,7 @@
 
 <% if @formation.etudiants.any? %>
   <h3>
-    <small>Etudiants</small>
+    <small class="text-muted">Etudiants</small>
   </h3>
   
   <div class="table-responsive">
@@ -172,7 +172,7 @@
 
 <% if @formation.vacations.any? %>
   <h2>
-    <small>Vacations</small>
+    <small class="text-muted">Vacations</small>
   </h2>
 
   <table class="table table-striped table-hover table-sm">
@@ -192,9 +192,11 @@
   </table>
 <% end %>
 
-<div id="audit" class="collapse-out">
+<hr>
+<br>
+<div id="audit" class="collapse">
   <% if @formation.audits.any? %>
-    <h3><span class="glyphicon glyphicon-search"></span> Audit des modifications</h3>
+    <h4><span class="glyphicon glyphicon-search"></span> Audit des modifications</h4>
     <table class="table table-bordered table-hover table-condensed">
       <thead>
         <th>Date</th>

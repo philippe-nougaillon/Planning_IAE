@@ -9,7 +9,7 @@ class User < ApplicationRecord
   devise :database_authenticatable,
          :recoverable, :rememberable, :trackable, :validatable
 
-  belongs_to :formation   
+  belongs_to :formation, optional: true   
 
   validates :nom, :prénom, presence: true    
 

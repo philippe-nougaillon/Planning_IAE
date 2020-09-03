@@ -5,7 +5,7 @@
     <% end %>
 
     <a href="#audit" data-toggle="collapse" class='btn btn-sm btn-outline-primary'>
-      Audit
+      <%= fa_icon 'search' %> Audit
     </a>
 
     <%= link_to etudiants_path, class: 'btn btn-sm btn-outline-primary' do %>
@@ -24,16 +24,16 @@
 
   <div class="col-sm-6">
     <h2>
-      <small>Nom</small><br>
+      <small class="text-muted">Nom</small><br>
       <%= @etudiant.nom %>
     </h2>
     <h3>
-      <small>Prénom</small><br>
+      <small class="text-muted">Prénom</small><br>
       <%= @etudiant.prénom %>
     </h3>
 
     <h3>
-      <small>Formation</small><br>
+      <small class="text-muted">Formation</small><br>
       <% if @etudiant.formation_id %>
           <% formation = Formation.unscoped.find(@etudiant.formation_id) %>
           <%= link_to formation.nom, formation %>
@@ -44,16 +44,16 @@
 
   <div class="col-sm-4">
     <h3>
-      <small>Nom Marital</small><br>
+      <small class="text-muted">Nom Marital</small><br>
       <%= @etudiant.nom_marital %>
     </h3>
     <br> 
     <h3>
-      <small>Civilité</small><br>
+      <small class="text-muted">Civilité</small><br>
       <%= @etudiant.civilité %>
     </h3>
     <h3>
-      <small>Date de Naissance</small><br>
+      <small class="text-muted">Date de Naissance</small><br>
       <%= l(@etudiant.date_de_naissance) if @etudiant.date_de_naissance %>
     </h3>
   </div>
@@ -63,14 +63,14 @@
 
   <div class="col">
     <h3>
-      <small>Email</small><br>
+      <small class="text-muted">Email</small><br>
       <%= @etudiant.email %>
     </h3>
   </div>
 
   <div class="col">
     <h3>
-      <small>Mobile</small><br>
+      <small class="text-muted">Mobile</small><br>
       <%= @etudiant.mobile %>
     </h3>
   </div>
@@ -154,9 +154,11 @@
 
 </div>
 
-
 <div id="audit" class="collapse">
-  <br />
+  <br><br>
+
+  <h4><span class="glyphicon glyphicon-search"></span> Audit des modifications</h4>
+
   <table class="table table-bordered table-hover table-condensed">
     <thead>
       <th>Date</th>
@@ -166,7 +168,9 @@
       <th>Action</th>
       <th>Modifications</th>
     </thead>
-    <%= render partial: 'tools/audit', collection: @etudiant.audits %>
+    <tbody>
+      <%= render partial: 'tools/audit', collection: @etudiant.audits %>
+    </tbody>
   </table>
 </div> 
 

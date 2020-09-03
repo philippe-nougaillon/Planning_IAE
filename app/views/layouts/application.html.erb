@@ -69,8 +69,8 @@
             <span class="nav-link">
               <%= current_user.username %>
             </span>
-            <%= navbar_nav_item('guide', 'info-circle', guide_index_path) %>
             <%= navbar_nav_item('outils', 'wrench', tools_index_path) if current_user.admin? %>
+            <%= navbar_nav_item('guide', 'info-circle', guide_index_path) %>
             
             <li class="nav-item">
               <%= link_to destroy_user_session_path, method: :delete, title: "Fermer la session de #{current_user.email}", class: "nav-link text-secondary" do %><i class="fas fa-fw fa-sign-out-alt"></i></span> Déconnexion<% end %> 

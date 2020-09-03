@@ -6,6 +6,10 @@
       <% end %>
     <% end %>
 
+    <a href="#audit" data-toggle="collapse" class='btn btn-sm btn-outline-primary'>
+      <%= fa_icon 'search' %> Audit
+    </a>
+
     <%= link_to salles_path, class: 'btn btn-sm btn-outline-primary' do %>
       <%= fa_icon 'list' %> Retour
     <% end %>
@@ -14,9 +18,7 @@
   <h2>
     Salle <%= @salle.nom %>
   </h2>
-  
 </div>
-
 
 
 <p>
@@ -34,47 +36,53 @@
   <%= @salle.places %>
 </p>
 
-<h3><span class="glyphicon glyphicon-search"></span> Audit des modifications</h3>
-<table class="table table-bordered table-hover table-sm">
-  <thead>
-    <th>Date</th>
-    <th>Utilisateur</th>            
-    <th>Type</th>
-    <th>Record_id</th>
-    <th>Action</th>
-    <th>Modifications</th>
-  </thead>
-  <%= render partial: 'tools/audit', collection: @salle.audits.includes(:user).reverse %>
-</table>
+<hr>
+<br>
 
-<h3>
-  <span class="glyphicon glyphicon-refresh"></span>
-  Audit des attributions
-</h3>
+<div id="audit" class="collapse">
+  <h4><span class="glyphicon glyphicon-search"></span> Audit des modifications</h4>
+  <table class="table table-bordered table-hover table-sm">
+    <thead>
+      <th>Date</th>
+      <th>Utilisateur</th>            
+      <th>Type</th>
+      <th>Record_id</th>
+      <th>Action</th>
+      <th>Modifications</th>
+    </thead>
+    <tbody>
+      <%= render partial: 'tools/audit', collection: @salle.audits.includes(:user).reverse %>
+    </tbody>
+  </table>
 
-<table class="table table-bordered table-striped table-hover table-sm">
-  <thead>
-    <th>Date</th>
-    <th>Qui</th>
-    <th>Cours</th>
-    <th>Formation</th>
-    <th>Date du cours</th>
-    <th>Action Salle</th>
-  </thead>
-  <% @audits.includes(:user).each do |audit| %>
-      <% if extract_salle_id(audit) == @salle.id %>
-          <% if cour = Cour.where(id: audit.auditable_id).first %>
-            <tr>
-              <td><%= l(audit.created_at, format: :perso) %></td>
-              <td><%= audit.try(:user).try(:email) %></td>
-              <td><%= link_to audit.auditable_id, cour_path(cour) %></td>
-              <td><%= cour.try(:formation).try(:nom) %></td>
-              <td><%= l(cour.debut, format: :perso) %></td>
-              <td><%= convertir_id_salles(audit) %></td>
-            </tr>
-          <% end %>  
-      <% end %>
-    <% end %>  
-</table>
+  <h4>
+    <span class="glyphicon glyphicon-refresh"></span>
+    Audit des attributions
+  </h4>
 
+  <table class="table table-bordered table-striped table-hover table-sm">
+    <thead>
+      <th>Date</th>
+      <th>Qui</th>
+      <th>Cours</th>
+      <th>Formation</th>
+      <th>Date du cours</th>
+      <th>Action Salle</th>
+    </thead>
+    <% @audits.includes(:user).each do |audit| %>
+        <% if extract_salle_id(audit) == @salle.id %>
+            <% if cour = Cour.where(id: audit.auditable_id).first %>
+              <tr>
+                <td><%= l(audit.created_at, format: :perso) %></td>
+                <td><%= audit.try(:user).try(:email) %></td>
+                <td><%= link_to audit.auditable_id, cour_path(cour) %></td>
+                <td><%= cour.try(:formation).try(:nom) %></td>
+                <td><%= l(cour.debut, format: :perso) %></td>
+                <td><%= convertir_id_salles(audit) %></td>
+              </tr>
+            <% end %>  
+        <% end %>
+      <% end %>  
+  </table>
+</div>
 
