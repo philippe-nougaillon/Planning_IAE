@@ -439,7 +439,7 @@ class CoursController < ApplicationController
     @cour = Cour.new(cour_params)
 
     respond_to do |format|
-      if @cour.save
+      if @cour.valid? && @cour.save
         format.html do
           if params[:create_and_add]  
             redirect_to new_cour_path(debut:@cour.debut, fin:@cour.fin, 

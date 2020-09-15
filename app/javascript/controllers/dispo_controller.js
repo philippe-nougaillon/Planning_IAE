@@ -20,7 +20,7 @@ export default class extends Controller {
     }
 
     show_dispo() {
-        console.log("Show_dispo!!")
+        //console.log("Show_dispo!!")
         this.updateAvailableRooms()
     }
     
@@ -48,9 +48,14 @@ export default class extends Controller {
     
     refreshDropdownValues(data) {
       this.sallesTarget.innerHTML = ""
-      for(var i = 0; i < data.length; i++) {
-        var opt = data[i]
-        this.sallesTarget.innerHTML += "<option value=\"" + opt.id + "\">" + opt.nom + "</option>"
+
+      if (data.length > 0) {
+        for(var i = 0; i < data.length; i++) {
+          var opt = data[i]
+          this.sallesTarget.innerHTML += "<option value=\"" + opt.id + "\">" + opt.nom + "</option>"
+        }
+      } else {
+        this.sallesTarget.innerHTML += "<option>Salle ou intervenant pas disponible</option>"
       }
     }
   
