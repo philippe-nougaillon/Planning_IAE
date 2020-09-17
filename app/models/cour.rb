@@ -7,7 +7,7 @@ class Cour < ApplicationRecord
   belongs_to :formation
   belongs_to :intervenant
   belongs_to :intervenant_binome, class_name: :Intervenant, foreign_key: :intervenant_binome_id, optional: true 
-  belongs_to :salle
+  belongs_to :salle, optional: true
 
   validates :debut, :formation_id, :intervenant_id, :duree, presence: true
   validate :check_chevauchement_intervenant
