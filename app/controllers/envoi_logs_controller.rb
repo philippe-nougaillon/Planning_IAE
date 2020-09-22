@@ -49,7 +49,7 @@ class EnvoiLogsController < ApplicationController
 
     respond_to do |format|
       if @envoi_log.save
-        format.html { redirect_to @envoi_log, notice: 'Envoi log was successfully created.' }
+        format.html { redirect_to @envoi_log, notice: 'Planification créée.' }
         format.json { render :show, status: :created, location: @envoi_log }
       else
         format.html { render :new }
@@ -63,7 +63,7 @@ class EnvoiLogsController < ApplicationController
   def update
     respond_to do |format|
       if @envoi_log.update(envoi_log_params)
-        format.html { redirect_to @envoi_log, notice: 'Envoi log was successfully updated.' }
+        format.html { redirect_to @envoi_log, notice: 'Planification modifiée' }
         format.json { render :show, status: :ok, location: @envoi_log }
       else
         format.html { render :edit }
@@ -77,7 +77,7 @@ class EnvoiLogsController < ApplicationController
   def destroy
     @envoi_log.destroy
     respond_to do |format|
-      format.html { redirect_to envoi_logs_url, notice: 'Envoi log was successfully destroyed.' }
+      format.html { redirect_to envoi_logs_url, notice: 'Planification supprimée.' }
       format.json { head :no_content }
     end
   end

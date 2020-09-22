@@ -12,17 +12,19 @@
   <% end %>
 
   <%= form.text_field :date_prochain, type: :date, value: envoi_log.date_prochain.to_date, label: 'Date prévue' %>
-  <%= form.select :workflow_state, EnvoiLog.workflow_spec.states.keys.to_a, label: 'Statut' %>
-  <%= form.select :cible, ['Testeurs', 'Intervenants'] %>
-  <%= form.rich_text_area :msg, class: "customized-min-height" %>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
+
+  <div class="row">
+    <div class="col">
+      <%= form.select :workflow_state, EnvoiLog.workflow_spec.states.keys.to_a, label: 'Statut' %>
+    </div>
+    <div class="col">
+      <%= form.select :cible, ['Testeurs', 'Intervenants'] %>
+    </div>
+  </div>
+
+  <%= form.rich_text_area :msg, label: "Message (apparaît en bas du corps du mail)", class: "customized-min-height" %>
   
   <div class="actions">
-    <%= form.submit %>
+    <%= form.submit "Enregistrer" %>
   </div>
 <% end %>
