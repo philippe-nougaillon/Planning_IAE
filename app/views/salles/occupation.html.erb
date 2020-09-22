@@ -2,36 +2,39 @@
   <h2><%= fa_icon 'chalkboard' %> Occupation des salles</h2>
 </div>
 
-<%= form_tag request.path, method: :get do %>
-  <div class="row">
+<div class="container-fluid p-3 shadow shadow-sm">
 
-    <div class="col-sm-2">
-      <%= label_tag "Date" %>    
-      <%= text_field_tag :start_date, params[:start_date], type:'date', onchange:'this.form.submit()', class:"form-control form-control-sm" %>
-    </div>
+  <%= form_tag request.path, method: :get do %>
+    <div class="row">
 
-    <div class="col-sm-2">
-      <%= label_tag "Afficher" %>
-      <br> 
-      <%= radio_button_tag :vue, "jour", (params[:vue]=='jour'), onchange:'this.form.submit()' %>
-      Jour 
-      <%= radio_button_tag :vue, "week", (params[:vue]=='week'), onchange:'this.form.submit()' %>
-      Semaine
-    </div>
+      <div class="col-sm-3">
+        <%= label_tag "Date" %>    
+        <%= text_field_tag :start_date, params[:start_date], type:'date', onchange:'this.form.submit()', class:"form-control form-control-sm" %>
+      </div>
 
-    <div class="col-sm-2">
-      <%= label_tag "Salle" %>
-      <div class="input-group">
-        <%= select_tag :salle_id, 
-                options_from_collection_for_select(Salle.order(:nom), :id, :nom, params[:salle_id]), 
-                  include_blank:true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
-        <span class="input-group-btn">
-          <%= submit_tag 'Filtrer', class:"btn btn-sm btn-success" %>
-        </span>
+      <div class="col-sm-2">
+        <%= label_tag "Afficher" %>
+        <br> 
+        <%= radio_button_tag :vue, "jour", (params[:vue]=='jour'), onchange:'this.form.submit()' %>
+        Jour 
+        <%= radio_button_tag :vue, "week", (params[:vue]=='week'), onchange:'this.form.submit()' %>
+        Semaine
+      </div>
+
+      <div class="col-sm-3">
+        <%= label_tag "Salle" %>
+        <div class="input-group">
+          <%= select_tag :salle_id, 
+                  options_from_collection_for_select(Salle.order(:nom), :id, :nom, params[:salle_id]), 
+                    include_blank:true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
+          <span class="input-group-btn">
+            <%= submit_tag 'Filtrer', class:"btn btn-sm btn-success" %>
+          </span>
+        </div>
       </div>
     </div>
-  </div>
-<% end %>
+  <% end %>
+</div>
 <br>
 
 <%= render partial: "occupation_#{ params[:vue] }" %>

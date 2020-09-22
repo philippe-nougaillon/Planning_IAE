@@ -7,7 +7,7 @@
   <h2><%= fa_icon 'graduation-cap' %> Liste des étudiants</h2>
 </div>
 
-<div class='container-fluid'>
+<div class="container-fluid p-3 shadow shadow-sm">
     <%= form_tag request.path, method: :get do %>
       <div class="form-group">
         <div class="row">
@@ -45,6 +45,7 @@
       </div>  
     <% end %>
 </div>
+<br>
 
 <div class="table-responsive">
   <table class="table table-bordered table-striped table-hover">

@@ -11,7 +11,7 @@
   <h2><%= fa_icon 'calendar-alt' %> Planning des cours</h2>
 </div>
 
-<div class='container-fluid'>
+<div class="container-fluid p-3 shadow shadow-sm">
     <%= form_tag cours_path, method: :get do %>
       <div class="form-group">
         <div class="row">
@@ -97,6 +97,7 @@
       </div>  
     <% end %>
 </div>
+<br>
 
 <% if params[:view] == 'list' %>
   <% if @cours.size > 0 %>
@@ -170,10 +171,9 @@
 
             <div class="input-group">
               <%= label_tag 'Action :' %>
-              <% actions = (current_user.admin? || current_user.reserver?) ? Cour.actions_admin : Cour.actions %>
               <%= select_tag "action_name", 
-                                options_for_select(actions), 
-                                include_blank: true, 
+                                options_for_select((current_user.admin? || current_user.reserver?) ? Cour.actions_admin : Cour.actions), 
+                                include_blank: true,
                                 class: 'form-control form-control-sm', 
                                 onchange: 'this.form.submit()' %>
 
