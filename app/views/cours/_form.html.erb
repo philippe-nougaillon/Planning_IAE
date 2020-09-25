@@ -1,4 +1,5 @@
 <%= bootstrap_form_for(@cour, layout: :horizontal, label_col: "col-sm-2", control_col: "col-sm-5") do |f| %>
+
   <% if @cour.errors.any? %>
     <div class="alert alert-danger alert-dismissable" role="alert">
       <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
@@ -74,7 +75,7 @@
         <%= f.select(:etat, Cour.etats.keys.to_a, { include_blank: true }) %>
       <% end %>
 
-      <% if @cour.new_record? %>
+      <% if @cour.new_record? && !params[:from] %>
 
         <!-- Chargement de la liste des salles dispos que si c'est un nouveau cours -->
         <%= f.collection_select(:salle_id, Salle.all, :id, :nom_places, { include_blank: true },

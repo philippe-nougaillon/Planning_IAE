@@ -105,7 +105,7 @@
     <%= form_tag action_cours_path, name: 'action' do %>
       <div data-controller="check-all">
         <table class="table table-hover">
-          <thead>
+          <thead class="shadow shwdow-sm">
             <tr>
               <% if user_signed_in? %>
                 <th><input type="checkbox" data-target="check-all.all"></th>
@@ -128,7 +128,7 @@
             <% @cours.includes(:formation, :intervenant, :salle).each do | cours | %>
 
               <% if cours.debut.to_date != current_date %>
-                <tr class="bg-light shadow shadow-sm">
+                <tr class="bg-light">
                   <% if user_signed_in? %><th></th><% end %>
                   <th colspan=<%= user_signed_in? ? '9' : '8' %>>
                     <%= fa_icon 'calendar-day' %>
