@@ -11,14 +11,9 @@
     </div>
   <% end %>
 
-  <%= form.text_field :date_prochain, type: :date, value: envoi_log.date_prochain.to_date, label: 'Date prévue' %>
-
   <div class="row">
-    <div class="col">
-      <%= form.select :workflow_state, EnvoiLog.workflow_spec.states.keys.to_a, label: 'Statut' %>
-    </div>
-    <div class="col">
-      <%= form.select :cible, ['Testeurs', 'Intervenants'] %>
+    <div class="col-sm-3">
+      <%= form.text_field :date_prochain, type: :date, value: envoi_log.date_prochain.to_date, label: 'Date prévue' %>
     </div>
   </div>
 

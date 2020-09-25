@@ -30,17 +30,12 @@
 </p>
 
 <p>
-    <strong>Cible : </strong>
-    <%= @envoi_log.cible %>
-</p>
-
-<p>
     <strong>Date d'exécution : </strong>
     <%= l(@envoi_log.date_exécution) if @envoi_log.date_exécution %>
 </p>
 
 <p>
-    <strong>Message (apparaît en bas du corps du mail)</strong>
+    <strong>Message :</strong>
     <br>
     <div class="jumbotron">
         <%= @envoi_log.msg %>
