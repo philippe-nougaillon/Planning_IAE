@@ -1,5 +1,5 @@
 class EnvoiLogsController < ApplicationController
-  before_action :set_envoi_log, only: [:show, :lancer, :suspendre, :activer, :edit, :update, :destroy]
+  before_action :set_envoi_log, only: [:show, :tester, :suspendre, :activer, :edit, :update, :destroy]
 
   # GET /envoi_logs
   # GET /envoi_logs.json
@@ -13,12 +13,23 @@ class EnvoiLogsController < ApplicationController
   end
 
   # Lancer le job d'envoi des notifications
-  def lancer
-    # Passer à l'état 'Lancé'
-    @envoi_log.lancer!
+  def tester
+    @envoi_log.cible = 'Testeurs'
+    @envoi_log.save
+    @envoi_log.tester!
 
     # placer le job dans la file d'attente
     EnvoyerNotificationsJob.perform_later(@envoi_log.id)
+
+    # Marquer la date d'exécution 
+    @envoi_log.date_exécution = DateTime.now
+    @envoi_log.save
+
+    # créer le prochain envoi
+    new_envoi_log = EnvoiLog.new
+    new_envoi_log.date_prochain = @envoi_log.date_prochain
+    new_envoi_log.msg = @envoi_log.msg
+    new_envoi_log.save
 
     redirect_to envoi_logs_url, notice: "Job placé dans la file d'attente pour exécution immédiate"
   end

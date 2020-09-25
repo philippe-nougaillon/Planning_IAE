@@ -33,9 +33,9 @@ Rails.application.routes.draw do
 
   resources :envoi_logs do
     member do
-      get :lancer
-      get :suspendre
       get :activer
+      get :tester
+      get :suspendre
     end
   end
   

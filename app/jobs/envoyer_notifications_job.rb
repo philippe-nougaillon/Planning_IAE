@@ -16,7 +16,8 @@ class EnvoyerNotificationsJob < ApplicationJob
       Rake::Task['cours:envoyer_liste_cours'].invoke(envoi_log.id)
 
       # Passer à l'état 'Succès' si la tâche a été lancée avec succès
-      envoi_log.envoyer!
+      # envoi_log.envoyer!
+
     rescue Exception => e
       # Une erreur est survenue !
       logger.debug "[JOB FAILED] #{e}"
@@ -25,20 +26,6 @@ class EnvoyerNotificationsJob < ApplicationJob
       envoi_log.echec!
     end
 
-    # Marquer la date d'exécution 
-    # TODDO: code à déplacer dans le workflow
-    envoi_log.date_exécution = DateTime.now
-    envoi_log.save
-
-    # créer le prochain envoi à partir des paramètres de celui que l'on vient de lancer
-    new_envoi_log = EnvoiLog.new(envoi_log.dup.attributes)
-    new_envoi_log.workflow_state = nil
-    new_envoi_log.msg = envoi_log.msg
-    new_envoi_log.date_exécution = nil
-    new_envoi_log.save
-
-    # Passer à l'état 'Prêt'
-    new_envoi_log.activer!    
   end
 
 end

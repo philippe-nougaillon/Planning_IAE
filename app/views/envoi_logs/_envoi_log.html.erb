@@ -1,18 +1,19 @@
 <tr>
     <td class="text-right"><%= envoi_log.id %></td>
-    <td><%= l envoi_log.date_prochain %></td>
+    <td>
+        <%= l envoi_log.date_prochain, format: :short %>
+    </td>
     <td>
         <span class="badge <%= envoi_log.style %>"><%= envoi_log.workflow_state.humanize %></span>
     </td>
-    <td><%= envoi_log.cible %></td>
-    <td><%= time_ago_in_words(envoi_log.date_exécution) if envoi_log.date_exécution %></td>
+    <td><%= "Il y a #{time_ago_in_words(envoi_log.date_exécution)}" if envoi_log.date_exécution %></td>
     <td>
         <%= link_to envoi_log, class: "btn btn-sm btn-link" do %>
             <%= fa_icon 'eye', text: ' Voir' %>
         <% end %>
     </td>
 
-    <% if envoi_log.current_state < :lancé %>
+    <% if envoi_log.current_state < :testé %>
         <td>
             <%= link_to edit_envoi_log_path(envoi_log), class: "btn btn-sm btn-link" do %>
                 <%= fa_icon 'edit', text: ' Modifier' %>
@@ -41,13 +42,13 @@
             <% end %>
         </td>
         <td>
-            <% if envoi_log.prêt? %>
-                <%= link_to lancer_envoi_log_path(envoi_log), class: "btn btn-sm btn-primary", title: "Lancer le job pour envoyer les notifications à la cible choisie" do %>
-                    <%= fa_icon 'paper-plane', text: ' Envoyer' %>
+            <% if envoi_log.pause? %>
+                <%= link_to tester_envoi_log_path(envoi_log), class: "btn btn-sm btn-warning", title: "Envoyer les notifications aux testeurs uniquement" do %>
+                    <%= fa_icon 'paper-plane', text: ' Tester' %>
                 <% end %>
             <% else %>
-                <%= link_to '#', class: "btn btn-sm btn-light", title: "Lancer le job pour envoyer les notifications à la cible choisie" do %>
-                    <%= fa_icon 'paper-plane', text: ' Envoyer' %>
+                <%= link_to '#', class: "btn btn-sm btn-light", title: "Envoyer les notifications aux testeurs uniquement" do %>
+                    <%= fa_icon 'paper-plane', text: ' Tester' %>
                 <% end %>
             <% end %>
         </td>

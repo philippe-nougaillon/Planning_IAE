@@ -71,6 +71,9 @@ fr:
     - :month
     - :year
   datetime:
+    formats:
+      default: "%d/%m/%Y %H:%m"
+      short: "%a %e %b"
     distance_in_words:
       about_x_hours:
         one: environ une heure
