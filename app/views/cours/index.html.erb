@@ -104,12 +104,16 @@
   <% if @cours.size > 0 %>
 
     <%= form_tag action_cours_path, name: 'action' do %>
-      <div data-controller="check-all action">
+      <div data-controller="<%= "check-all action" if user_signed_in? %>">
         <table class="table table-hover">
           <thead class="shadow-sm">
             <tr>
               <% if user_signed_in? %>
-                <th><input type="checkbox" data-target="check-all.all"></th>
+                <th>
+                  <span data-action="click->action#click">
+                    <input type="checkbox" data-target="check-all.all action.source">
+                  </span>
+                </th>
               <% end %>
               <th>Heure</th>
               <th>Durée</th>
