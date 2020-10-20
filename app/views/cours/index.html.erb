@@ -104,7 +104,7 @@
   <% if @cours.size > 0 %>
 
     <%= form_tag action_cours_path, name: 'action' do %>
-      <div data-controller="check-all">
+      <div data-controller="check-all action">
         <table class="table table-hover">
           <thead class="shadow-sm">
             <tr>
@@ -166,42 +166,46 @@
             </tr>
           </tfoot>
         </table>
-      </div>
 
-      <div class="row">
-        <div class="col">
-          <% if params[:paginate] == 'pages' %>
-            <%= page_entries_info @cours, model: Cour, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
-            <%= will_paginate @cours, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
-          <% end %>
-        </div>
-        <div class="col">
-          <% if user_signed_in? %>
-              <span class="align-bottom">Choisir une action a exécuter sur les cours sélectionnés</span>
-              <%= select_tag "action_name", 
-                              options_for_select((current_user.admin? || current_user.reserver?) ? Cour.actions_admin : Cour.actions), 
-                              include_blank: true,
-                              class: 'form-control form-control-sm', 
-                              onchange: 'this.form.submit()' %>
-          <% else %>
-            <% if params[:formation].present? || params[:intervenant].present? %>
-              <span class="align-bottom">Exporter les cours de cet intervenant/formation vers...</span>
-              <%= link_to cours_url(format: :xls), class: 'btn btn-sm btn-success' do %>
-                <%= fa_icon 'file-excel' %>
-                Feuille Excel
-              <% end %>
+        <div class="row">
+          <div class="col">
+            <% if params[:paginate] == 'pages' %>
+              <%= page_entries_info @cours, model: Cour, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+              <%= will_paginate @cours, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+            <% end %>
+          </div>
+          <div class="col">
+            <% if user_signed_in? %>
+              <div data-target="action.selector">  
+                <span class="align-bottom">
+                  Choisir une action a exécuter sur les cours sélectionnés
+                </span>
+                <%= select_tag :action_name, 
+                                options_for_select((current_user.admin? || current_user.reserver?) ? Cour.actions_admin : Cour.actions), 
+                                include_blank: true,
+                                class: 'form-control form-control-sm', 
+                                onchange: 'this.form.submit()' %>
+              </div>
+            <% else %>
+              <% if params[:formation].present? || params[:intervenant].present? %>
+                <span class="align-bottom">Exporter les cours de cet intervenant/formation vers...</span>
+                <%= link_to cours_url(format: :xls), class: 'btn btn-sm btn-success' do %>
+                  <%= fa_icon 'file-excel' %>
+                  Feuille Excel
+                <% end %>
 
-              <%= link_to cours_url(format: :pdf), class: 'btn btn-sm btn-danger' do %>
-                <%= fa_icon 'file-pdf' %>
-                Document PDF
-              <% end %>
+                <%= link_to cours_url(format: :pdf), class: 'btn btn-sm btn-danger' do %>
+                  <%= fa_icon 'file-pdf' %>
+                  Document PDF
+                <% end %>
 
-              <%= link_to cours_url(format: :ics), class: 'btn btn-sm btn-primary' do %>
-                <%= fa_icon 'calendar-day' %>
-                Calendrier iCal
+                <%= link_to cours_url(format: :ics), class: 'btn btn-sm btn-primary' do %>
+                  <%= fa_icon 'calendar-day' %>
+                  Calendrier iCal
+                <% end %>
               <% end %>
             <% end %>
-          <% end %>
+        </div>
       </div>
     </div>
 
