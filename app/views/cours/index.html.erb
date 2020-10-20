@@ -166,54 +166,45 @@
             </tr>
           </tfoot>
         </table>
+      </div>
 
-        <% if user_signed_in? %>
-          <div class="input-group col-sm-4 ml-auto">
-
-            <div class="input-group">
-              <%= label_tag 'Action :' %>
+      <div class="row">
+        <div class="col">
+          <% if params[:paginate] == 'pages' %>
+            <%= page_entries_info @cours, model: Cour, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+            <%= will_paginate @cours, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+          <% end %>
+        </div>
+        <div class="col">
+          <% if user_signed_in? %>
+              <span class="align-bottom">Choisir une action a exécuter sur les cours sélectionnés</span>
               <%= select_tag "action_name", 
-                                options_for_select((current_user.admin? || current_user.reserver?) ? Cour.actions_admin : Cour.actions), 
-                                include_blank: true,
-                                class: 'form-control form-control-sm', 
-                                onchange: 'this.form.submit()' %>
-
-              <div class="input-group-btn">
-                <%= submit_tag 'Go', class: 'btn btn-success btn-sm' %>
-              </div>
-            </div>
-
-          </div>
-        <% else %>
-          <% if params[:formation].present? || params[:intervenant].present? %>
-            <div class="col-sm-4 ml-auto">
+                              options_for_select((current_user.admin? || current_user.reserver?) ? Cour.actions_admin : Cour.actions), 
+                              include_blank: true,
+                              class: 'form-control form-control-sm', 
+                              onchange: 'this.form.submit()' %>
+          <% else %>
+            <% if params[:formation].present? || params[:intervenant].present? %>
+              <span class="align-bottom">Exporter les cours de cet intervenant/formation vers...</span>
               <%= link_to cours_url(format: :xls), class: 'btn btn-sm btn-success' do %>
                 <%= fa_icon 'file-excel' %>
-                Export Excel
+                Feuille Excel
+              <% end %>
+
+              <%= link_to cours_url(format: :pdf), class: 'btn btn-sm btn-danger' do %>
+                <%= fa_icon 'file-pdf' %>
+                Document PDF
               <% end %>
 
               <%= link_to cours_url(format: :ics), class: 'btn btn-sm btn-primary' do %>
                 <%= fa_icon 'calendar-day' %>
-                Export iCal
+                Calendrier iCal
               <% end %>
-              
-              <%= link_to cours_url(format: :pdf), class: 'btn btn-sm btn-danger' do %>
-                <%= fa_icon 'file-pdf' %>
-                Export PDF
-              <% end %>
-            </div>
+            <% end %>
           <% end %>
-        <% end %>
-
-        <% if params[:paginate] == 'pages' %>
-          <div class="page_info">
-            <%= page_entries_info @cours, model: Cour, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
-          </div>
-
-          <%= will_paginate @cours, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
-        <% end %>
-
       </div>
+    </div>
+
     <% end %>
   <% else %>
     Aucun résultat à afficher... 
