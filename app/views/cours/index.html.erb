@@ -11,7 +11,7 @@
   <h2><%= fa_icon 'calendar-alt' %> Planning des cours</h2>
 </div>
 
-<div class="container-fluid p-3 shadow shadow-sm">
+<div class="container-fluid p-3 shadow-sm">
     <%= form_tag cours_path, method: :get do %>
       <div class="form-group">
         <div class="row">
@@ -105,7 +105,7 @@
     <%= form_tag action_cours_path, name: 'action' do %>
       <div data-controller="check-all">
         <table class="table table-hover">
-          <thead class="shadow shwdow-sm">
+          <thead class="shadow-sm">
             <tr>
               <% if user_signed_in? %>
                 <th><input type="checkbox" data-target="check-all.all"></th>

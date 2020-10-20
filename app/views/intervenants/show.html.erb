@@ -87,7 +87,7 @@
 
 <% if policy(:tool).can_see_RHGroup_private_tool? %>
   <% if @intervenant.responsabilites.any? %>
-    <div class="shadow p-4">
+    <div class="shadow-sm p-4">
       <h2>
         <%= fa_icon 'file-contract' %>
         Responsabilités
@@ -128,7 +128,7 @@
 <% end %>
 
 <% if @intervenant.vacations.any? %>
-  <div class="shadow p-4">
+  <div class="shadow-sm p-4">
     <h2>
       <%= fa_icon 'user-md' %>
       Vacations
