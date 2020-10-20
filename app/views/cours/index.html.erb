@@ -41,6 +41,7 @@
             </div>
           </div>
         </div>
+        <br>
     
         <div class="row">
           <div class="col-sm-1">
@@ -128,7 +129,7 @@
             <% @cours.includes(:formation, :intervenant, :salle).each do | cours | %>
 
               <% if cours.debut.to_date != current_date %>
-                <tr class="bg-light">
+                <tr class="shadow-sm bg-light">
                   <% if user_signed_in? %><th></th><% end %>
                   <th colspan=<%= user_signed_in? ? '9' : '8' %>>
                     <%= fa_icon 'calendar-day' %>

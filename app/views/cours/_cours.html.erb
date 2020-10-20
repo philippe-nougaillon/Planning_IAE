@@ -4,10 +4,11 @@
     <% end %>
     <td>
         <b><%= l(cours.debut, format: :heures_min) %></b> 
+        <br>
         <%= l(cours.fin, format: :heures_min) %>
     </td>
     <td>
-        <%= number_with_precision(cours.duree, precision: 1) %>h
+        <%= number_with_precision(cours.duree, precision: 1) %> h
     </td>
     <td style="white-space: nowrap;">
         <span style="background-color:<%= cours_formation.color %>;padding-left: 5px;margin-right: 3px;"></span>
