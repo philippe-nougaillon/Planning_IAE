@@ -127,7 +127,7 @@ class FormationsController < ApplicationController
     end
 
     def sortable_columns
-      ['formations.nom', 'formations.abrg','formations.nbr_etudiants','formations.Code_Analytique']
+      ['formations.nom', 'formations.abrg','formations.nbr_etudiants','formations.code_analytique']
     end
 
     def sort_column
@@ -142,7 +142,7 @@ class FormationsController < ApplicationController
     def formation_params
       params.require(:formation)
             .permit(:nom, :promo, :diplome, :domaine, :apprentissage, :memo, :nbr_etudiants, :nbr_heures, 
-                    :abrg, :user_id, :color, :Forfait_HETD, :hors_catalogue, :nomTauxTD, :Code_Analytique, :catalogue, :archive, :hss, :courriel,
+                    :abrg, :user_id, :color, :Forfait_HETD, :hors_catalogue, :nomtauxtd, :code_analytique, :catalogue, :archive, :hss, :courriel,
                     unites_attributes: [:id, :num, :nom, :_destroy],
                     etudiants_attributes: [:id, :nom, :prénom, :email, :mobile, :_destroy],
                     vacations_attributes: [:id, :date, :intervenant_id, :titre, :qte, :forfaithtd, :commentaires, :_destroy])

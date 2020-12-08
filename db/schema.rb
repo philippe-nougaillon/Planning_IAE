@@ -167,14 +167,14 @@ ActiveRecord::Schema.define(version: 2020_09_03_132046) do
     t.string "abrg"
     t.integer "user_id"
     t.string "color"
-    t.string "Forfait_HETD"
-    t.decimal "Taux_TD", precision: 10, scale: 2, default: "0.0"
-    t.string "Code_Analytique"
+    t.string "forfait_hetd"
+    t.decimal "taux_td", precision: 10, scale: 2, default: "0.0"
+    t.string "code_analytique"
     t.boolean "hors_catalogue", default: false
     t.boolean "archive"
     t.boolean "hss"
     t.string "courriel"
-    t.string "nomTauxTD"
+    t.string "nomtauxtd"
     t.index ["archive"], name: "index_formations_on_archive"
     t.index ["user_id"], name: "index_formations_on_user_id"
   end
@@ -298,11 +298,4 @@ ActiveRecord::Schema.define(version: 2020_09_03_132046) do
     t.index ["intervenant_id"], name: "index_vacations_on_intervenant_id"
   end
 
-  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "import_log_lines", "import_logs"
-  add_foreign_key "import_logs", "users"
-  add_foreign_key "responsabilites", "formations"
-  add_foreign_key "responsabilites", "intervenants"
-  add_foreign_key "vacations", "formations"
-  add_foreign_key "vacations", "intervenants"
 end

@@ -9,7 +9,7 @@
     </td>
     <td><%= formation.abrg %></td>
     <td><%= formation.nbr_etudiants %></td>
-    <td><%= formation.Code_Analytique %></td>
+    <td><%= formation.code_analytique %></td>
     <td>
         <%= link_to_unless formation_cours_planifié_count.zero?, formation_cours_planifié_count, cours_path(ids:formation_cours.planifié.pluck(:id)) %>
     </td>

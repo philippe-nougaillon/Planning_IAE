@@ -48,7 +48,7 @@
                 <td><%= link_to l(c.debut.to_date), cours_path(start_date: c.debut.to_date) %></td>
                 <td class="text-right"><%= c.debut.strftime("%k:%M") %></td>
                 <td><%= link_to formation.abrg, formation_path(formation), target:"_new", title: formation.nom_promo %></td>
-                <td><%= formation.Code_Analytique_avec_indice(c) %></td>
+                <td><%= formation.code_analytique_avec_indice(c) %></td>
                 <td><%= link_to "#{c.ue} #{c.nom_ou_ue}", edit_cour_path(c), target:"_new" %></td>
                 <td class="text-center">
                     <% unless c.commentaires.blank? %>
@@ -66,8 +66,8 @@
                     <% end %>
                 </td>
                 <td class="text-right"><%= c.duree.to_f %></td>
-                <td class="text-center"><%= formation.nomTauxTD %></td>
-                <td class="text-right"><%= c.Taux_TD %></td>
+                <td class="text-center"><%= formation.nomtauxtd %></td>
+                <td class="text-right"><%= c.taux_td %></td>
                 <td class="text-right"><%= c.HETD %></td>
                 <td class="text-right"><%= montant_service %></td>
                 <td class="text-right">
@@ -101,7 +101,7 @@
                 <td><%= l vacation.date %></td>
                 <td />
                 <td><%= link_to formation.nom, formation, target:"_new" %></td>
-                <td><%= formation.Code_Analytique %></td>
+                <td><%= formation.code_analytique %></td>
                 <td><%= vacation.titre %></td>
                 <td />
                 <td class="text-right"><%= vacation.qte %></td>
@@ -137,7 +137,7 @@
                 <td><%= l resp.debut %></td>
                 <td />
                 <td><%= link_to resp.formation.nom, resp.formation, target:"_new" %></td>
-                <td><%= resp.formation.Code_Analytique %></td>
+                <td><%= resp.formation.code_analytique %></td>
                 <td><%= resp.titre %></td>
                 <td />
                 <td class="text-right"><%= resp.heures %></td>

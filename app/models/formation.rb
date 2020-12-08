@@ -43,11 +43,11 @@ class Formation < ApplicationRecord
 	end
 
 	def nom_eotp
-		self.Code_Analytique.blank? ? self.nom : "#{self.nom} -> #{self.Code_Analytique}"
+		self.code_analytique.blank? ? self.nom : "#{self.nom} -> #{self.code_analytique}"
 	end
 
-	def Code_Analytique_avec_indice(cours)
-		code = self.Code_Analytique || ''
+	def code_analytique_avec_indice(cours)
+		code = self.code_analytique || ''
 		if code.last == '?'
 			indice = ((cours.debut.year - self.cours.first.debut.year) + 1).to_s
 			return code.gsub('?', indice)

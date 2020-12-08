@@ -98,7 +98,7 @@ class ExportPdf
                 montant_service = c.montant_service.round(2)
                 cumul_tarif += montant_service
                 formation = Formation.unscoped.find(c.formation_id)
-                eotp = formation.Code_Analytique_avec_indice(c)
+                eotp = formation.code_analytique_avec_indice(c)
                 cumul_eotp.keys.include?(eotp) ? cumul_eotp[eotp] += montant_service : cumul_eotp[eotp] = montant_service
                 cumul_eotp_durée.keys.include?(eotp) ? cumul_eotp_durée[eotp] += c.duree : cumul_eotp_durée[eotp] = c.duree
             end
@@ -106,15 +106,15 @@ class ExportPdf
             formation = Formation.unscoped.find(c.formation_id)
 
             data += [ [
-                formation.Code_Analytique_avec_indice(c),
-                formation.Code_Analytique_avec_indice(c).include?('DISTR') ? "101PAIE" : "102PAIE",
+                formation.code_analytique_avec_indice(c),
+                formation.code_analytique_avec_indice(c).include?('DISTR') ? "101PAIE" : "102PAIE",
                 I18n.l(c.debut.to_date),
                 c.debut.strftime("%k:%M"),
                 formation.abrg,
                 "#{c.ue} #{c.nom_ou_ue}",
                 c.duree.to_f,
-                formation.nomTauxTD,
-                c.Taux_TD,
+                formation.nomtauxtd,
+                c.taux_td,
                 c.HETD,
                 montant_service
             ] ]
@@ -139,8 +139,8 @@ class ExportPdf
             formation = Formation.unscoped.find(vacation.formation_id) 
             
             data += [ [
-                formation.Code_Analytique,
-                formation.Code_Analytique.include?('DISTR') ? "101PAIE" : "102PAIE",
+                formation.code_analytique,
+                formation.code_analytique.include?('DISTR') ? "101PAIE" : "102PAIE",
                 I18n.l(vacation.date),
                 nil,
                 formation.nom,
@@ -167,8 +167,8 @@ class ExportPdf
             cumul_hetd += resp.heures
 
             data += [ [
-                resp.formation.Code_Analytique,
-                resp.formation.Code_Analytique_avec_indice(resp).include?('DISTR') ? "101PAIE" : "102PAIE",
+                resp.formation.code_analytique,
+                resp.formation.code_analytique_avec_indice(resp).include?('DISTR') ? "101PAIE" : "102PAIE",
                 I18n.l(resp.debut),
                 nil,
                 resp.formation.nom,

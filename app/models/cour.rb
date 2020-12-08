@@ -66,7 +66,7 @@ class Cour < ApplicationRecord
 
   def self.xls_headers
       %w{id Date_début Heure_début Date_fin Heure_fin Formation_id Formation
-          Code_Analytique Intervenant_id Intervenant Binôme UE Intitulé Etat
+          code_analytique Intervenant_id Intervenant Binôme UE Intitulé Etat
           Salle Durée E-learning? HSS? Taux_TD HETD Commentaires Créé_le Par Modifié_le}  
   end
 
@@ -169,7 +169,7 @@ class Cour < ApplicationRecord
   end
 
   def Taux_TD
-    case Formation.unscoped.find(self.formation_id).nomTauxTD
+    case Formation.unscoped.find(self.formation_id).nomtauxtd
     when 'TD'
       Cour.Tarif
     when 'CM'
@@ -182,7 +182,7 @@ class Cour < ApplicationRecord
   end
 
   def HETD
-    case Formation.unscoped.find(self.formation_id).nomTauxTD
+    case Formation.unscoped.find(self.formation_id).nomtauxtd
     when 'TD'
       1
     when 'CM'
@@ -195,7 +195,7 @@ class Cour < ApplicationRecord
   end
 
   def montant_service
-    self.duree * self.Taux_TD
+    self.duree * self.taux_td
   end
 
   def imputable?
@@ -256,7 +256,7 @@ class Cour < ApplicationRecord
             c.debut.to_s(:time), 
             I18n.l(c.fin.to_date), 
             c.fin.to_s(:time), 
-            c.formation_id, formation.nom_promo, formation.Code_Analytique, 
+            c.formation_id, formation.nom_promo, formation.code_analytique, 
             c.intervenant_id, c.intervenant.nom_prenom,
             c.intervenant_binome.try(:nom_prenom), 
             c.ue, c.nom, 
@@ -264,7 +264,7 @@ class Cour < ApplicationRecord
             c.duree,
             (c.elearning ? "OUI" : nil), 
             (!(c.imputable?) ? "OUI" : nil),
-            ((voir_champs_privés && c.imputable?) ? formation.Taux_TD : nil),
+            ((voir_champs_privés && c.imputable?) ? formation.taux_td : nil),
             ((voir_champs_privés && c.imputable?) ? c.HETD : nil),
             (voir_champs_privés ? c.commentaires : nil),
             c.created_at,
@@ -346,7 +346,7 @@ class Cour < ApplicationRecord
                 I18n.l(c.debut.to_date),
                 c.debut.strftime("%k:%M"), 
                 formation.abrg, 
-                formation.Code_Analytique_avec_indice(c), 
+                formation.code_analytique_avec_indice(c), 
                 c.nom_ou_ue,
                 c.etat,
                 c.commentaires,
@@ -355,7 +355,7 @@ class Cour < ApplicationRecord
                 (c.elearning ? "OUI" : ''), 
                 (c.intervenant && c.intervenant_binome ? "OUI" : ''),
                 c.CMTD?, 
-                formation.Taux_TD.to_s.gsub(/\./, ','),
+                formation.taux_td.to_s.gsub(/\./, ','),
                 c.HETD.to_s.gsub(/\./, ','),
                 montant_service.to_s.gsub(/\./, ','),
                 cumul_hetd.to_s.gsub(/\./, ','),
@@ -372,7 +372,7 @@ class Cour < ApplicationRecord
                   vacation.date,
                   nil,
                   vacation.formation.nom,
-                  vacation.formation.Code_Analytique,
+                  vacation.formation.code_analytique,
                   vacation.titre,
                   nil, 
                   vacation.qte,
@@ -391,7 +391,7 @@ class Cour < ApplicationRecord
                   I18n.l(resp.debut),
                   I18n.l(resp.fin),
                   resp.formation.nom,
-                  resp.formation.Code_Analytique,
+                  resp.formation.code_analytique,
                   resp.titre,
                   nil, 
                   resp.heures.to_s.gsub(/\./, ','), 
@@ -453,7 +453,7 @@ class Cour < ApplicationRecord
             I18n.l(c.debut.to_date),
             c.debut.strftime("%k:%M"), 
             formation.abrg, 
-            formation.Code_Analytique_avec_indice(c), 
+            formation.code_analytique_avec_indice(c), 
             c.nom_ou_ue,
             c.etat,
             c.commentaires,
@@ -461,8 +461,8 @@ class Cour < ApplicationRecord
             (c.hors_service_statutaire ? "OUI" : ''),
             (c.elearning ? "OUI" : ''), 
             (c.intervenant && c.intervenant_binome ? "OUI" : ''),
-            formation.nomTauxTD, 
-            c.Taux_TD,
+            formation.nomtauxtd, 
+            c.taux_td,
             c.HETD,
             montant_service,
             cumul_hetd,
@@ -484,7 +484,7 @@ class Cour < ApplicationRecord
               I18n.l(vacation.date.to_date),
               nil,
               formation.nom,
-              formation.Code_Analytique,
+              formation.code_analytique,
               vacation.titre,
               nil, nil, 
               vacation.qte,
@@ -510,7 +510,7 @@ class Cour < ApplicationRecord
               I18n.l(resp.debut),
               nil,
               formation.nom,
-              formation.Code_Analytique,
+              formation.code_analytique,
               resp.titre,
               nil,
               nil, 
@@ -599,7 +599,7 @@ class Cour < ApplicationRecord
       # Pas de test si les doublons sont autorisés
       return if self.intervenant.doublon 
 
-      # s'il y a dejà des cours dans la même salle et à la même date
+      # s'il y a dejà des cours pour le même intervenant à la même date
       cours = Cour.where("intervenant_id = ? AND ((debut BETWEEN ? AND ?) OR (fin BETWEEN ? AND ?))", 
                           self.intervenant_id, self.debut, self.fin, self.debut, self.fin)
 
