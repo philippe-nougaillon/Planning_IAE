@@ -7,7 +7,7 @@
   <h2><%= fa_icon 'briefcase' %> Liste des formations</h2>
 </div>
 
-<div class="container-fluid p-3 shadow-sm shadow-sm">
+<div class="container-fluid p-3 shadow-sm">
     <%= form_tag request.path, method: :get do %>
       <div class="form-group">
         <div class="row">
@@ -53,7 +53,6 @@
     <% end %>
 </div>
 <br>
-
 
 <% if @formations.any? %>
   <div class="table-responsive">

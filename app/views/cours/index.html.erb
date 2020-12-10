@@ -12,96 +12,98 @@
 </div>
 
 <div class="container-fluid p-3 shadow-sm">
-    <%= form_tag cours_path, method: :get do %>
-      <div class="form-group">
-        <div class="row">
-          <div class="col-sm-5">
-            <%= label_tag "Formation" %>   
-            <%= select_tag :formation, grouped_options_for_select(Formation.for_select, params[:formation]), 
-                            class: "form-control  form-control-sm select2", 
-                            include_blank:true, onchange: 'this.form.submit()' %>
-          </div>
+  <%= form_tag cours_path, method: :get do %>
+    <div class="form-group">
+      <div class="row">
+        <div class="col-sm-5">
+          <%= label_tag "Formation" %>   
+          <%= select_tag :formation, grouped_options_for_select(Formation.for_select, params[:formation]), 
+                          class: "form-control  form-control-sm select2", 
+                          include_blank:true, onchange: 'this.form.submit()' %>
+        </div>
 
-          <div class="col-sm-2">
-            <%= label_tag :ue, "U.E." %>   
-            <%= select_tag :ue, options_for_select(@les_ue, params[:ue]), 
+        <div class="col-sm-2">
+          <%= label_tag :ue, "U.E." %>   
+          <%= select_tag :ue, options_for_select(@les_ue, params[:ue]), 
+                          class: "form-control form-control-sm select2", 
+                          include_blank:true, onchange: 'this.form.submit()' %>
+        </div>
+
+        <div class="col-sm-5">
+          <%= label_tag "Intervenant" %>    
+          <div class="input-group">
+            <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
                             class: "form-control form-control-sm select2", 
                             include_blank:true, onchange: 'this.form.submit()' %>
-          </div>
-
-          <div class="col-sm-5">
-            <%= label_tag "Intervenant" %>    
-            <div class="input-group">
-              <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
-                              class: "form-control form-control-sm select2", 
-                              include_blank:true, onchange: 'this.form.submit()' %>
-              <span class="input-group-btn">
-                <%= submit_tag 'RàZ', class:"btn btn-sm btn-default", title: "Remise à zéro des filtres" %>
-              </span>
-            </div>
+            <span class="input-group-btn">
+              <%= submit_tag 'RàZ', class:"btn btn-sm btn-default", title: "Remise à zéro des filtres" %>
+            </span>
           </div>
         </div>
-        <br>
-    
-        <div class="row">
-          <div class="col-sm-1">
-            <%= label_tag "Semaine" %>    
-            <%= select_tag :semaine, 
-                    options_for_select(@week_numbers, params[:semaine]), 
-                      include_blank:true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
-          </div>
-
-          <div class="col-sm-2">
-            <%= label_tag "A partir du" %>    
-            <%= text_field_tag :start_date, params[:start_date], type:'date', onchange:'this.form.submit()', class:"form-control form-control-sm" %>
-          </div>
-
-          <div class="col-sm-2">
-            <%= label_tag :etat, "Etat" %>
-            <%= select_tag :etat, options_for_select(Cour.etats, params[:etat]), include_blank:true,
-                    class:"form-control form-control-sm", onchange:'this.form.submit()' %>
-          </div>
-
-          <div class="col-sm-2">
-            <%= label_tag "Cours" %>
-            <br> 
-            <%= radio_button_tag :filter, "upcoming", (params[:filter]=='upcoming'), onchange:'this.form.submit()' %>
-            A venir 
-            <%= radio_button_tag :filter, "all", (params[:filter]=='all'), onchange:'this.form.submit()' %>
-            Tous 
-          </div>
-
-          <div class="col-sm-3">
-            <%= label_tag "Vue" %>
-            <br> 
-            <%= radio_button_tag :view, "list", (params[:view]=='list'), onchange:'this.form.submit()' %>
-            Liste 
-            <%= radio_button_tag :view, "calendar_rooms", (params[:view]=='calendar_rooms'), onchange:'this.form.submit()' %>    
-            Salles 
-            <%= radio_button_tag :view, "calendar_week", (params[:view]=='calendar_week'), onchange:'this.form.submit()' %>
-            Sem
-            <%= radio_button_tag :view, "calendar_month", (params[:view]=='calendar_month'), onchange:'this.form.submit()' %>
-            Mois 
-          </div>
-
-          <% if params[:view] == 'list' %>
-            <div class="col-sm-2">
-              <%= label_tag "Afficher" %>
-              <br> 
-              <%= radio_button_tag :paginate, "pages", (params[:paginate]=='pages'), onchange:'this.form.submit()' %>
-              Pages 
-              <%= radio_button_tag :paginate, "all", (params[:paginate]=='all'), onchange:'this.form.submit()' %>
-              Tout 
-            </div>
-          <% end %>
+      </div>
+      <br>
+  
+      <div class="row">
+        <div class="col-sm-1">
+          <%= label_tag "Semaine" %>    
+          <%= select_tag :semaine, 
+                  options_for_select(@week_numbers, params[:semaine]), 
+                    include_blank:true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
         </div>
-      </div>  
-    <% end %>
+
+        <div class="col-sm-2">
+          <%= label_tag "A partir du" %>    
+          <%= text_field_tag :start_date, params[:start_date], type:'date', onchange:'this.form.submit()', class:"form-control form-control-sm" %>
+        </div>
+
+        <div class="col-sm-2">
+          <%= label_tag :etat, "Etat" %>
+          <%= select_tag :etat, options_for_select(Cour.etats, params[:etat]), include_blank:true,
+                  class:"form-control form-control-sm", onchange:'this.form.submit()' %>
+        </div>
+
+        <div class="col-sm-2">
+          <%= label_tag "Cours" %>
+          <br> 
+          <%= radio_button_tag :filter, "upcoming", (params[:filter]=='upcoming'), onchange:'this.form.submit()' %>
+          A venir 
+          <%= radio_button_tag :filter, "all", (params[:filter]=='all'), onchange:'this.form.submit()' %>
+          Tous 
+        </div>
+
+        <div class="col-sm-3">
+          <%= label_tag "Vue" %>
+          <br> 
+          <%= radio_button_tag :view, "list", (params[:view]=='list'), onchange:'this.form.submit()' %>
+          Liste 
+          <%= radio_button_tag :view, "calendar_rooms", (params[:view]=='calendar_rooms'), onchange:'this.form.submit()' %>    
+          Salles 
+          <%= radio_button_tag :view, "calendar_week", (params[:view]=='calendar_week'), onchange:'this.form.submit()' %>
+          Sem
+          <%= radio_button_tag :view, "calendar_month", (params[:view]=='calendar_month'), onchange:'this.form.submit()' %>
+          Mois 
+        </div>
+
+        <% if params[:view] == 'list' %>
+          <div class="col-sm-2">
+            <%= label_tag "Afficher" %>
+            <br> 
+            <%= radio_button_tag :paginate, "pages", (params[:paginate]=='pages'), onchange:'this.form.submit()' %>
+            Pages 
+            <%= radio_button_tag :paginate, "all", (params[:paginate]=='all'), onchange:'this.form.submit()' %>
+            Tout 
+          </div>
+        <% end %>
+      </div>
+    </div>  
+  <% end %>
 </div>
 <br>
 
 <% if params[:view] == 'list' %>
   <% if @cours.size > 0 %>
+
+    <div class="table-responsive">
 
     <%= form_tag action_cours_path, name: 'action' do %>
       <div data-controller="<%= "check-all action" if user_signed_in? %>">
@@ -214,6 +216,8 @@
     </div>
 
     <% end %>
+
+  </div>
   <% else %>
     Aucun résultat à afficher... 
     <%= link_to "Effacer les filtres pour voir tous les cours", 

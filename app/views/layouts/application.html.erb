@@ -81,10 +81,8 @@
             <%= navbar_nav_item('Se connecter', 'sign-in-alt', new_user_session_path) %>
           <% end %>
         </ul>
-        
       </div>
     </nav>
-    <br>
 
     <div class="container-fluid pt-5 w-75">
       <% flash.each do |name, msg| %>
@@ -95,6 +93,7 @@
       <% end %>
 
       <%= yield %>
+      
     </div>
   </body>
 
