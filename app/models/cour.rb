@@ -168,7 +168,7 @@ class Cour < ApplicationRecord
     41.41
   end
 
-  def Taux_TD
+  def taux_td
     case Formation.unscoped.find(self.formation_id).nomtauxtd
     when 'TD'
       Cour.Tarif
