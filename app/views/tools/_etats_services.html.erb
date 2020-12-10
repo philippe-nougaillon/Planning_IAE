@@ -69,7 +69,7 @@
                 <td class="text-center"><%= formation.nomtauxtd %></td>
                 <td class="text-right"><%= c.taux_td %></td>
                 <td class="text-right"><%= c.HETD %></td>
-                <td class="text-right"><%= montant_service %></td>
+                <td class="text-right"><%= number_to_currency(montant_service) %></td>
                 <td class="text-right">
                     <%= cumul_hetd %>
                     <% if (nbr_heures_statutaire > 0) && (cumul_hetd >= nbr_heures_statutaire) %>
@@ -87,7 +87,7 @@
             <th class="text-right"><%= cumul_duree %></th>
             <th /><th /> 
             <th class="text-right"><%= cumul_hetd %></th>
-            <th class="text-right"><%= cumul_tarif %></th> 
+            <th class="text-right"><%= number_to_currency(cumul_tarif) %></th> 
             <th class="text-right"><%= cumul_hetd %></th>   
         </tr>
 
