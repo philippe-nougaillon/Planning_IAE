@@ -1,5 +1,16 @@
-<div class="simple-calendar">
+<div class="calendar">
   <table class="table">
+    <thead>
+      <tr>
+        <th></th>
+        <% date_range.slice(0, 7).each do |day| %>
+          <% unless day.sunday? %>
+            <th><%= l(day, format: :short) %></th>
+          <% end %>
+        <% end %>
+      </tr>
+    </thead>
+
     <tbody>
       <% date_range.each_slice(7) do |week| %>
         <tr>
@@ -7,7 +18,7 @@
             <% if @salle %>
               <h3 id=<%= @salle.nom %> style="text-align: center;vertical-align: middle;"><%= @salle.nom %></h3>
             <% else %>
-              A RESERVER
+              <span>A RESERVER</span>
             <% end %>
           </td>
           
@@ -17,11 +28,7 @@
               <% day_style_class = 'day_off' if Fermeture.find_by(date:day) %>
               
               <%= content_tag :td, class: day_style_class do %>
-                <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(block) %>
-                  <% capture_haml(day, sorted_events.fetch(day, []), &block) %>
-                <% else %>
-                  <% block.call day, sorted_events.fetch(day, []) %>
-                <% end %>
+                <% block.call day, sorted_events.fetch(day, []) %>
               <% end %>
             <% end %>  
           <% end %>

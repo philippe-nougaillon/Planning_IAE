@@ -1,5 +1,3 @@
-<div class="row">
-  <div class="col-md-12">
     <%= calendar partial: 'simple_calendar/week_rooms_calendar', 
                   start_date_param: :calendar_rooms_starts_at,
                   events: @cours.where(salle_id:nil), 
@@ -20,11 +18,9 @@
           <% end %>
       <% end %>
     <% end %>
-  </div>
-</div>
   
 <div class="row">
-  <div class="col-md-12">
+  <div class="col">
     <% bloc = 'A' %> 
     <% Salle.all.each do |salle| %>
       <% @salle = salle %>
@@ -41,13 +37,23 @@
 
         <% meetings.each do |meeting| %>
           <!--- chercher si conflit de salle ! -->
-          <% if user_signed_in? %>
-            <% if Cour.where("cours.id <> ? AND salle_id = ? AND (((debut BETWEEN ? AND ?) OR (fin BETWEEN ? AND ?)) OR (debut < ? AND fin > ?))", 
-                          meeting.id, salle.id, meeting.debut, meeting.fin, meeting.debut, meeting.fin, meeting.fin, meeting.debut)
-                          .where.not(debut:meeting.fin)
-                          .where.not(fin:meeting.debut)
-                          .any? %>
-              <%= fa_icon 'exclamation-triangle', title: "Deux cours ont lieu dans la même salle !" %>
+          <% unless meeting.salle.places.zero? %>
+              <% if Cour.where("cours.id <> ? AND salle_id = ? AND (((debut BETWEEN ? AND ?) OR (fin BETWEEN ? AND ?)) OR (debut < ? AND fin > ?))", 
+                        meeting.id, salle.id, meeting.debut, meeting.fin, meeting.debut, meeting.fin, meeting.fin, meeting.debut)
+                        .where.not(debut:meeting.fin)
+                        .where.not(fin:meeting.debut)
+                        .any? %>
+                <span style="background-color:black;color:yellow;">CONFLIT SALLE !</span>
+              <% end %>
+          <% else %>
+            <% if Cour.where("cours.id <> ? AND (intervenant_id = ? OR intervenant_binome_id = ?) AND (((debut BETWEEN ? AND ?) OR (fin BETWEEN ? AND ?)) OR (debut < ? AND fin > ?))", 
+                      meeting.id, meeting.intervenant_id, meeting.intervenant_id, meeting.debut, meeting.fin, meeting.debut, meeting.fin, meeting.fin, meeting.debut)
+                      .where.not(debut:meeting.fin)
+                      .where.not(fin:meeting.debut)
+                      .any? %>
+              <% unless meeting.intervenant.try(:doublon) || meeting.intervenant_binome.try(:boublon) %>
+                <span style="background-color: red; color: white;">CONFLIT INTERVENANT !</span>
+              <% end %>
             <% end %>
           <% end %>  
 
