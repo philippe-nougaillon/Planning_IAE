@@ -10,11 +10,10 @@ class CourPolicy < ApplicationPolicy
   end
 
   def destroy?
-    # on peut supprimer ue cours que si 
-    # - c'est son créateur qui le demande 
-    # - ou le gestionnaire de formation 
-    # - ou un admin
-
+    # Ne peuvent supprimer un cours que 
+    # - son créateur 
+    # - le gestionnaire de formation 
+    # - un admin
     (record.audits.first.user == user) || 
     (record.formation.user == user) || 
     (user.admin?) 
