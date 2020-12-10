@@ -209,10 +209,10 @@ class Cour < ApplicationRecord
     # calcul le % de réalisation du cours
     
     # Heure d'hiver
-    #now = DateTime.now.in_time_zone("Paris") + 1.hours
+    now = DateTime.now.in_time_zone("Paris") + 1.hours
 
     # Heure d'été
-    now = DateTime.now.in_time_zone("Paris") + 2.hours
+    #now = DateTime.now.in_time_zone("Paris") + 2.hours
 
     pct = ((now.to_f - self.debut.to_f) / (self.fin.to_f - self.debut.to_f) * 100).to_i
 
