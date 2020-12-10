@@ -105,119 +105,125 @@
 
     <div class="table-responsive">
 
-    <%= form_tag action_cours_path, name: 'action' do %>
-      <div data-controller="<%= "check-all action" if user_signed_in? %>">
-        <table class="table table-hover">
-          <thead class="shadow-sm">
-            <tr>
-              <% if user_signed_in? %>
-                <th>
-                  <span data-action="click->action#click">
-                    <input type="checkbox" data-target="check-all.all action.source">
-                  </span>
-                </th>
-              <% end %>
-              <th>Heure</th>
-              <th>Durée</th>
-              <th>Formation</th>
-              <th>Intervenant</th>
-              <th colspan="2">UE/Intitulé du cours</th>
-              <th>Salle</th>
-              <% if user_signed_in? %>
-                <th></th>
-              <% end %>
-              <th></th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <% current_date = "" %>
-            <% @cours.includes(:formation, :intervenant, :salle).each do | cours | %>
-
-              <% if cours.debut.to_date != current_date %>
-                <tr class="shadow-sm bg-light">
-                  <% if user_signed_in? %><th></th><% end %>
-                  <th colspan=<%= user_signed_in? ? '9' : '8' %>>
-                    <%= fa_icon 'calendar-day' %>
-                    <b><%= l(cours.debut.to_date, format: :long).humanize %></b> 
+      <%= form_tag action_cours_path, name: 'action' do %>
+        <div data-controller="<%= "check-all action" if user_signed_in? %>">
+          <table class="table table-hover">
+            <thead class="shadow-sm">
+              <tr>
+                <% if user_signed_in? %>
+                  <th>
+                    <span data-action="click->action#click">
+                      <input type="checkbox" data-target="check-all.all action.source">
+                    </span>
                   </th>
-                </tr>
-                <% current_date = cours.debut.to_date %>
-              <% end %>  
-
-              <%= render partial: 'cours', locals: 
-                        {cours: cours, cours_formation: Formation.unscoped.find(cours.formation_id)} %>
-
-            <% end %>
-          </tbody>
-
-          <tfoot>
-            <tr>
-              <% if user_signed_in? %>
+                <% end %>
+                <th>Heure</th>
+                <th>Durée</th>
+                <th>Formation</th>
+                <th>Intervenant</th>
+                <th colspan="2">UE/Intitulé du cours</th>
+                <th>Salle</th>
+                <% if user_signed_in? %>
+                  <th></th>
+                <% end %>
                 <th></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <% current_date = "" %>
+              <% @cours.includes(:formation, :intervenant, :salle).each do | cours | %>
+
+                <% if cours.debut.to_date != current_date %>
+                  <tr class="shadow-sm bg-light">
+                    <% if user_signed_in? %><th></th><% end %>
+                    <th colspan=<%= user_signed_in? ? '9' : '8' %>>
+                      <%= fa_icon 'calendar-day' %>
+                      <b><%= l(cours.debut.to_date, format: :long).humanize %></b> 
+                    </th>
+                  </tr>
+                  <% current_date = cours.debut.to_date %>
+                <% end %>  
+
+                <%= render partial: 'cours', locals: 
+                          {cours: cours, cours_formation: Formation.unscoped.find(cours.formation_id)} %>
+
               <% end %>
-              <th></th>
-              <% if params[:paginate] == 'all' %>
-                <th>
-                  <%= number_with_precision(@all_cours.sum(:duree), precision: 1) %>h
-                </th>
-              <% else %>
-                <th></th>  
+            </tbody>
+
+            <tfoot>
+              <tr>
+                <% if user_signed_in? %>
+                  <th></th>
+                <% end %>
+                <th></th>
+                <% if params[:paginate] == 'all' %>
+                  <th>
+                    <%= number_with_precision(@all_cours.sum(:duree), precision: 1) %>h
+                  </th>
+                <% else %>
+                  <th></th>  
+                <% end %>
+                <% if user_signed_in? %>
+                  <% 7.times do %><th></th><% end %>
+                <% else %>
+                  <% 6.times do %><th></th><% end %>
+                <% end %>
+              </tr>
+            </tfoot>
+          </table>
+
+          <div class="row">
+            <div class="col">
+              <% if params[:paginate] == 'pages' %>
+                <%= page_entries_info @cours, model: Cour, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+                <%= will_paginate @cours, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
               <% end %>
+            </div>
+            <div class="col">
               <% if user_signed_in? %>
-                <% 7.times do %><th></th><% end %>
+                <div data-target="action.selector">  
+                  <span class="align-bottom">
+                    Choisir une action a exécuter sur les cours sélectionnés
+                  </span>
+              
+                  <% if current_user.admin? %>
+                    <% actions = Cour.actions_admin %>
+                  <% elsif current_user.reserver? %>
+                    <% actions = Cour.actions_peut_reserver %>
+                  <% else %>
+                    <% actions = Cour.actions %>
+                  <% end %>
+
+                  <%= select_tag "action_name", options_for_select(actions), include_blank:true, class:"form-control", onchange:'this.form.submit()' %>
+
+                </div>
               <% else %>
-                <% 6.times do %><th></th><% end %>
-              <% end %>
-            </tr>
-          </tfoot>
-        </table>
+                <% if params[:formation].present? || params[:intervenant].present? %>
+                  <span class="align-bottom">Exporter les cours de cet intervenant/formation vers...</span>
+                  <%= link_to cours_url(format: :xls), class: 'btn btn-sm btn-success' do %>
+                    <%= fa_icon 'file-excel' %>
+                    Feuille Excel
+                  <% end %>
 
-        <div class="row">
-          <div class="col">
-            <% if params[:paginate] == 'pages' %>
-              <%= page_entries_info @cours, model: Cour, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
-              <%= will_paginate @cours, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
-            <% end %>
+                  <%= link_to cours_url(format: :pdf), class: 'btn btn-sm btn-danger' do %>
+                    <%= fa_icon 'file-pdf' %>
+                    Document PDF
+                  <% end %>
+
+                  <%= link_to cours_url(format: :ics), class: 'btn btn-sm btn-primary' do %>
+                    <%= fa_icon 'calendar-day' %>
+                    Calendrier iCal
+                  <% end %>
+                <% end %>
+              <% end %>
           </div>
-          <div class="col">
-            <% if user_signed_in? %>
-              <div data-target="action.selector">  
-                <span class="align-bottom">
-                  Choisir une action a exécuter sur les cours sélectionnés
-                </span>
-                <%= select_tag :action_name, 
-                                options_for_select((current_user.admin? || current_user.reserver?) ? Cour.actions_admin : Cour.actions), 
-                                include_blank: true,
-                                class: 'form-control form-control-sm', 
-                                onchange: 'this.form.submit()' %>
-              </div>
-            <% else %>
-              <% if params[:formation].present? || params[:intervenant].present? %>
-                <span class="align-bottom">Exporter les cours de cet intervenant/formation vers...</span>
-                <%= link_to cours_url(format: :xls), class: 'btn btn-sm btn-success' do %>
-                  <%= fa_icon 'file-excel' %>
-                  Feuille Excel
-                <% end %>
-
-                <%= link_to cours_url(format: :pdf), class: 'btn btn-sm btn-danger' do %>
-                  <%= fa_icon 'file-pdf' %>
-                  Document PDF
-                <% end %>
-
-                <%= link_to cours_url(format: :ics), class: 'btn btn-sm btn-primary' do %>
-                  <%= fa_icon 'calendar-day' %>
-                  Calendrier iCal
-                <% end %>
-              <% end %>
-            <% end %>
         </div>
       </div>
-    </div>
 
     <% end %>
-
   </div>
+
   <% else %>
     Aucun résultat à afficher... 
     <%= link_to "Effacer les filtres pour voir tous les cours", 
