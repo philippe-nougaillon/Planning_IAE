@@ -8,16 +8,16 @@
 
   <div class="col text-right">
     <% if cours.salle %>
-      <h4>
+      <h5>
         <span class="badge badge-pill badge-<%= cours.style %>">
           <%= link_to cours.salle.nom, image_path("Plan_d_acces_Campus_BioPark_-_IAE_Paris.pdf"), style: "color: white", title: "Plan d'accès au campus BioPark" %>
         </span>
-      </h4>
+      </h5>
     <% end %>
   </div>
 </div>
 
-<span style="background-color:<%= cours.formation.color %>;padding-left: 10px;margin-right: 7px;"></span>
+<span style="background-color:<%= cours.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
 
 <b>
   <%= cours.try(:formation).try(:nom) %>

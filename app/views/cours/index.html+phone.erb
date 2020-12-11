@@ -1,19 +1,26 @@
 
 <%= form_tag request.path, method: :get do %>
   <div class="container">
-    <%= label_tag "Cours à partir du" %>
-    <%= text_field_tag :start_date, params[:start_date], type: 'date', onchange: 'this.form.submit()', class: "form-control form-control-sm" %>
-    
-    <%= label_tag "Formation" %>    
-    <%= select_tag :formation, grouped_options_for_select(Formation.for_select, params[:formation]), class:"form-control form-control-sm select2", include_blank:true, onchange:'this.form.submit()' %>
 
-    <%= label_tag "Intervenant" %>    
-    <div class="input-group">
-      <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), class:"form-control form-control-sm select2", include_blank:true, onchange:'this.form.submit()' %>
-      <span class="input-group-btn">
-        <%= submit_tag 'RàZ', class:"btn btn-sm btn-default" %>
-      </span>
+    <div class="form-group">
+      <%= label_tag "Cours à partir du" %>
+      <%= text_field_tag :start_date, params[:start_date], type: 'date', onchange: 'this.form.submit()', class: "form-control form-control-sm" %>
+    </div>  
+    
+    <div class="form-group">
+      <%= label_tag "Formation" %>    
+      <%= select_tag :formation, grouped_options_for_select(Formation.for_select, params[:formation]), class:"form-control form-control-sm", include_blank:true, onchange:'this.form.submit()' %>
     </div>
+
+    <div class="form-group">
+      <%= label_tag "Intervenant" %>    
+      <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), class:"form-control form-control-sm", include_blank:true, onchange:'this.form.submit()' %>
+    </div>
+
+    <%= submit_tag 'Filtrer', class:"btn btn-sm btn-success" %>
+
+    <%= submit_tag 'RàZ', class:"btn btn-sm btn-light" %>
+
   </div>
 <% end %>
 
@@ -21,10 +28,10 @@
 <% @cours.includes(:formation, :intervenant, :salle).each do | cours | %>
   <% if cours.debut.to_date != current_date %>
     <hr>
-    <h4>
+    <h5>
       <%= fa_icon 'calendar-day' %>
       <%= l(cours.debut.to_date, format: :long).humanize %>
-    </h4> 
+    </h5> 
     <% current_date = cours.debut.to_date %>
   <% end %>  
 
@@ -37,4 +44,4 @@
 </div>
 
 <%= will_paginate @cours, inner_window: 2, outer_window: 0, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
-
+<br>
