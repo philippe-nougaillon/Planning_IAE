@@ -15,14 +15,14 @@
         <%= number_with_precision(cours.duree, precision: 1) %> h
     </td>
     <td style="white-space: nowrap;">
-        <span style="background-color:<%= cours_formation.color %>;padding-left: 5px;margin-right: 3px;"></span>
+        <span style="background-color:<%= cours_formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
         <%= link_to cours_formation.nom, cours_formation %>
     </td>
     <td style="white-space: nowrap;">
-        <%= link_to_if user_signed_in?, cours.intervenant.nom_prenom, cours.intervenant %>
+        <%= link_to cours.intervenant.nom_prenom, cours.intervenant %>
         <% if cours.intervenant_binome %>
             <br>
-            <%= link_to_if user_signed_in?, cours.intervenant_binome.nom_prenom, cours.intervenant_binome %>
+            <%= link_to cours.intervenant_binome.nom_prenom, cours.intervenant_binome %>
         <% end %>
     </td>
     <td>

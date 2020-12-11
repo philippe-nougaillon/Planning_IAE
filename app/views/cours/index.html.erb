@@ -11,7 +11,7 @@
   <h2><%= fa_icon 'calendar-alt' %> Planning des cours</h2>
 </div>
 
-<div class="container-fluid p-3 shadow-sm">
+<div class="container p-3 shadow-sm">
   <%= form_tag cours_path, method: :get do %>
     <div class="form-group">
       <div class="row">
@@ -102,127 +102,122 @@
 
 <% if params[:view] == 'list' %>
   <% if @cours.size > 0 %>
-
-    <div class="table-responsive">
-
-      <%= form_tag action_cours_path, name: 'action' do %>
-        <div data-controller="<%= "check-all action" if user_signed_in? %>">
-          <table class="table table-hover">
-            <thead class="shadow-sm">
-              <tr>
-                <% if user_signed_in? %>
-                  <th>
-                    <span data-action="click->action#click">
-                      <input type="checkbox" data-target="check-all.all action.source">
-                    </span>
-                  </th>
-                <% end %>
-                <th>Heure</th>
-                <th>Durée</th>
-                <th>Formation</th>
-                <th>Intervenant</th>
-                <th colspan="2">UE/Intitulé du cours</th>
-                <th>Salle</th>
-                <% if user_signed_in? %>
-                  <th></th>
-                <% end %>
-                <th></th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <% current_date = "" %>
-              <% @cours.includes(:formation, :intervenant, :salle).each do | cours | %>
-
-                <% if cours.debut.to_date != current_date %>
-                  <tr class="shadow-sm bg-light">
-                    <% if user_signed_in? %><th></th><% end %>
-                    <th colspan=<%= user_signed_in? ? '9' : '8' %>>
-                      <%= fa_icon 'calendar-day' %>
-                      <b><%= l(cours.debut.to_date, format: :long).humanize %></b> 
-                    </th>
-                  </tr>
-                  <% current_date = cours.debut.to_date %>
-                <% end %>  
-
-                <%= render partial: 'cours', locals: 
-                          {cours: cours, cours_formation: Formation.unscoped.find(cours.formation_id)} %>
-
-              <% end %>
-            </tbody>
-
-            <tfoot>
-              <tr>
-                <% if user_signed_in? %>
-                  <th></th>
-                <% end %>
-                <th></th>
-                <% if params[:paginate] == 'all' %>
-                  <th>
-                    <%= number_with_precision(@all_cours.sum(:duree), precision: 1) %>h
-                  </th>
-                <% else %>
-                  <th></th>  
-                <% end %>
-                <% if user_signed_in? %>
-                  <% 7.times do %><th></th><% end %>
-                <% else %>
-                  <% 6.times do %><th></th><% end %>
-                <% end %>
-              </tr>
-            </tfoot>
-          </table>
-
-          <div class="row">
-            <div class="col">
-              <% if params[:paginate] == 'pages' %>
-                <%= page_entries_info @cours, model: Cour, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
-                <%= will_paginate @cours, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
-              <% end %>
-            </div>
-            <div class="col">
+    
+    <%= form_tag action_cours_path, name: 'action' do %>
+      <div data-controller="<%= "check-all action" if user_signed_in? %>">
+        <table class="table table-hover">
+          <thead class="shadow-sm">
+            <tr>
               <% if user_signed_in? %>
-                <div data-target="action.selector">  
-                  <span class="align-bottom">
-                    Choisir une action a exécuter sur les cours sélectionnés
+                <th>
+                  <span data-action="click->action#click">
+                    <input type="checkbox" data-target="check-all.all action.source">
                   </span>
-              
-                  <% if current_user.admin? %>
-                    <% actions = Cour.actions_admin %>
-                  <% elsif current_user.reserver? %>
-                    <% actions = Cour.actions_peut_reserver %>
-                  <% else %>
-                    <% actions = Cour.actions %>
-                  <% end %>
+                </th>
+              <% end %>
+              <th>Heure</th>
+              <th>Durée</th>
+              <th>Formation</th>
+              <th>Intervenant</th>
+              <th colspan="2">UE/Intitulé du cours</th>
+              <th>Salle</th>
+              <% if user_signed_in? %>
+                <th></th>
+              <% end %>
+              <th></th>
+            </tr>
+          </thead>
 
-                  <%= select_tag "action_name", options_for_select(actions), include_blank:true, class:"form-control", onchange:'this.form.submit()' %>
+          <tbody>
+            <% current_date = "" %>
+            <% @cours.includes(:formation, :intervenant, :salle).each do | cours | %>
 
-                </div>
-              <% else %>
-                <% if params[:formation].present? || params[:intervenant].present? %>
-                  <span class="align-bottom">Exporter les cours de cet intervenant/formation vers...</span>
-                  <%= link_to cours_url(format: :xls), class: 'btn btn-sm btn-success' do %>
-                    <%= fa_icon 'file-excel' %>
-                    Feuille Excel
-                  <% end %>
-
-                  <%= link_to cours_url(format: :pdf), class: 'btn btn-sm btn-danger' do %>
-                    <%= fa_icon 'file-pdf' %>
-                    Document PDF
-                  <% end %>
-
-                  <%= link_to cours_url(format: :ics), class: 'btn btn-sm btn-primary' do %>
+              <% if cours.debut.to_date != current_date %>
+                <tr class="shadow-sm">
+                  <% if user_signed_in? %><th></th><% end %>
+                  <th colspan=<%= user_signed_in? ? '9' : '8' %>>
                     <%= fa_icon 'calendar-day' %>
-                    Calendrier iCal
-                  <% end %>
+                    <b><%= l(cours.debut.to_date, format: :long).humanize %></b> 
+                  </th>
+                </tr>
+                <% current_date = cours.debut.to_date %>
+              <% end %>  
+
+              <%= render partial: 'cours', locals: 
+                        {cours: cours, cours_formation: Formation.unscoped.find(cours.formation_id)} %>
+
+            <% end %>
+          </tbody>
+
+          <tfoot>
+            <tr>
+              <% if user_signed_in? %>
+                <th></th>
+              <% end %>
+              <th></th>
+              <% if params[:paginate] == 'all' %>
+                <th>
+                  <%= number_with_precision(@all_cours.sum(:duree), precision: 1) %>h
+                </th>
+              <% else %>
+                <th></th>  
+              <% end %>
+              <% if user_signed_in? %>
+                <% 7.times do %><th></th><% end %>
+              <% else %>
+                <% 6.times do %><th></th><% end %>
+              <% end %>
+            </tr>
+          </tfoot>
+        </table>
+
+        <div class="row">
+          <div class="col">
+            <% if params[:paginate] == 'pages' %>
+              <%= page_entries_info @cours, model: Cour, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+              <%= will_paginate @cours, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+            <% end %>
+          </div>
+          <div class="col">
+            <% if user_signed_in? %>
+              <div data-target="action.selector">  
+                <span class="align-bottom">
+                  Choisir une action a exécuter sur les cours sélectionnés
+                </span>
+            
+                <% if current_user.admin? %>
+                  <% actions = Cour.actions_admin %>
+                <% elsif current_user.reserver? %>
+                  <% actions = Cour.actions_peut_reserver %>
+                <% else %>
+                  <% actions = Cour.actions %>
+                <% end %>
+
+                <%= select_tag "action_name", options_for_select(actions), include_blank:true, class:"form-control", onchange:'this.form.submit()' %>
+
+              </div>
+            <% else %>
+              <% if params[:formation].present? || params[:intervenant].present? %>
+                <span class="align-bottom">Exporter les cours de cet intervenant/formation vers...</span>
+                <%= link_to cours_url(format: :xls), class: 'btn btn-sm btn-success' do %>
+                  <%= fa_icon 'file-excel' %>
+                  Feuille Excel
+                <% end %>
+
+                <%= link_to cours_url(format: :pdf), class: 'btn btn-sm btn-danger' do %>
+                  <%= fa_icon 'file-pdf' %>
+                  Document PDF
+                <% end %>
+
+                <%= link_to cours_url(format: :ics), class: 'btn btn-sm btn-primary' do %>
+                  <%= fa_icon 'calendar-day' %>
+                  Calendrier iCal
                 <% end %>
               <% end %>
-          </div>
+            <% end %>
         </div>
       </div>
-
     <% end %>
-  </div>
 
   <% else %>
     Aucun résultat à afficher... 
