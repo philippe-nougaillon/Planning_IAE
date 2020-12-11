@@ -11,7 +11,6 @@
     <div class="input-group">
       <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), class:"form-control form-control-sm select2", include_blank:true, onchange:'this.form.submit()' %>
       <span class="input-group-btn">
-        <%= submit_tag 'Filtrer', class:"btn btn-sm btn-success" %>
         <%= submit_tag 'RàZ', class:"btn btn-sm btn-default" %>
       </span>
     </div>
