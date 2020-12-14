@@ -198,7 +198,7 @@
               </div>
             <% else %>
               <% if params[:formation].present? || params[:intervenant].present? %>
-                <span class="align-bottom">Exporter les cours de cet intervenant/formation vers...</span>
+                <span class="align-bottom">Exporter vers </span>
                 <%= link_to cours_url(format: :xls), class: 'btn btn-sm btn-success' do %>
                   <%= fa_icon 'file-excel' %>
                   Feuille Excel
