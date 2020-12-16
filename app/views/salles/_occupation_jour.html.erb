@@ -67,11 +67,7 @@
                     <span style="background-color:<%= color %>;padding-left: 15px;"></span>
                   <% end %>
                 <% else %>
-                  <% debut_cours = DateTime.parse("#{@date} #{index + 8}:00") %>
-                  <% c = Cour.find_by("? <= fin AND ? >= debut", debut_cours, debut_cours) %>
-                  <%= link_to '#', title: c.formation.nom do %>
-                    <span style="background-color:<%= color %>;padding-left: 15px;"></span> 
-                  <% end %>
+                  <span style="background-color:<%= color %>;padding-left: 15px;"></span> 
                 <% end %>
               </td>
               <% if [4,9].include?(index) %><td /><% end %>
