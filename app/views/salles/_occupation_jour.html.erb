@@ -63,11 +63,15 @@
             <% map.each_with_index do |color, index| %>
               <td>
                 <% if color == 'lightgreen' %>
-                  <%= link_to new_cour_path(debut:@date, heure:(index + 8), salle_id:salle.id, from:'occupation') do %>
+                  <%= link_to new_cour_path(debut: @date, heure: (index + 8), salle_id: salle.id, from: 'occupation') do %>
                     <span style="background-color:<%= color %>;padding-left: 15px;"></span>
                   <% end %>
                 <% else %>
-                  <span style="background-color:<%= color %>;padding-left: 15px;"></span> 
+                  <% debut_cours = DateTime.parse("#{@date} #{index + 8}:00") %>
+                  <% c = Cour.find_by("? <= fin AND ? >= debut AND salle_id = ?", debut_cours, debut_cours, salle.id) %>
+                    <%= link_to '#', title: c.try(:formation).try(:nom) do %>
+                      <span style="background-color: <%= color %>;padding-left: 15px;"></span> 
+                    <% end %>
                 <% end %>
               </td>
               <% if [4,9].include?(index) %><td /><% end %>
