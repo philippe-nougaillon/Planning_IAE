@@ -6,10 +6,10 @@
     </head>
   
     <body>
-        <%= image_tag("logo_iae.png") %>
-        <br />
 
-        <div style="font-family: sans-serif;">
+        <div style="font-family: sans-serif; padding: 15px">
+            <%= image_tag(image_path("logo_iae.png")) %>
+            <br />
 
             <p>
                 Bonjour,
@@ -51,7 +51,7 @@
                     avec votre gestionnaire de formation au plus vite en cas d'erreur/omission/modification.
                 </b>
                 <br>
-            <p>
+            </p>
 
             <% if @gestionnaires.any? %>
                 <table style="border: 1px solid lightgrey;" cellpadding=5 cellspacing=5>
