@@ -1,4 +1,5 @@
 class IntervenantMailer < ApplicationMailer
+    include Roadie::Rails::Automatic
     default from: "IAE-Paris <planning-iae@philnoug.com>"
 
     def etat_services(intervenant_id, cours_ids, start_date, end_date)
@@ -16,9 +17,7 @@ class IntervenantMailer < ApplicationMailer
         @gestionnaires = gestionnaires
         @intervenant = intervenant
         @message = EnvoiLog.find(envoi_log_id).msg
-
         mail(to: @intervenant.email, subject:"[PLANNING] Rappel de vos cours à l'IAE Paris du #{l @debut} au #{l @fin}")
-
     end
 
     def notifier_srh(intervenant)

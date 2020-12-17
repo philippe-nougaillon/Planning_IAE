@@ -118,6 +118,6 @@ Rails.application.configure do
   ActionMailer::Base.delivery_method = :smtp
 
   config.action_mailer.default_url_options = { host: 'planning4-demo.herokuapp.com', protocol: 'https' }
-  config.action_mailer.asset_host = "https://planning4-demo.herokuapp.com"
+  config.action_mailer.asset_host = nil
 
 end

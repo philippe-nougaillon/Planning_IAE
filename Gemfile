@@ -90,3 +90,5 @@ gem 'sucker_punch', '~> 2.0'
 gem 'workflow'
 gem 'workflow-activerecord'
 
+# This gem hooks up your Rails application with Roadie to help you generate HTML emails.
+gem 'roadie-rails', '~> 2.2'
