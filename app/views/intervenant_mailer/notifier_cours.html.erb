@@ -35,7 +35,7 @@
                             </td>
                             <td>
                                 <b><%= I18n.l(c.debut, format: :heures_min) %></b>
-                                -<%= I18n.l(c.fin, format: :heures_min) %>
+                                - <%= I18n.l(c.fin, format: :heures_min) %>
                             </td>
                             <td><b><%= c.try(:formation).try(:nom) %></b></td>
                             <td><%= c.nom_ou_ue %></td>
@@ -54,18 +54,12 @@
             <p>
 
             <% if @gestionnaires.any? %>
-                <table cellpadding=5 cellspacing=5>
-                    <thead>
-                        <tr>
-                            <th>Formation</th>
-                            <th>Courriel du gestionnaire de formation</th>
-                        </tr>
-                    </thead>
+                <table style="border: 1px solid lightgrey;" cellpadding=5 cellspacing=5>
                     <tbody>
                         <% @gestionnaires.each do | formation, email | %>
                             <% unless email.blank? %>
                                 <tr>
-                                    <td><%= formation %></td>
+                                    <td style="border: 1px solid lightgrey;"><%= formation %></td>
                                     <td><%= email %></td>
                                 </tr>
                             <% end %>
@@ -75,10 +69,20 @@
                 <br />
             <% end %>
 
+            <% unless @message.blank? %>
+                <div style="padding: 15px; background-color: #f2f2f2;">
+                    <%= @message %>
+                </div>
+                <br>
+            <% end %>
+
             <p>
-                <%= @message %>
+                 Bien cordialement,
+                <br>
+
+                IAE Paris
+                <br>
             </p>
-            <br>
 
             <small>
                 <%= link_to "plan d'accès au campus biopark".upcase!, image_path("Plan_d_acces_Campus_BioPark_-_IAE_Paris.pdf") %>
