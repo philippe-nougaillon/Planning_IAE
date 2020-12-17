@@ -6,9 +6,10 @@
     </head>
   
     <body>
+        <%= image_tag("logo_iae.png") %>
+        <br />
+
         <div style="font-family: sans-serif;">
-            <%= image_tag("logo_iae.png") %>
-            <br />
 
             <p>
                 Bonjour,
@@ -52,23 +53,27 @@
                 <br>
             <p>
 
-            <table cellpadding=5 cellspacing=5>
-                <thead>
-                    <tr>
-                        <th>Formation</th>
-                        <th>Adresse email du gestionnaire de formation</th>
-                    </tr>
-                </thead>
-                <tbody>
-                <% @gestionnaires.each do | f, g | %>
+            <% if @gestionnaires.any? %>
+                <table cellpadding=5 cellspacing=5>
+                    <thead>
                         <tr>
-                            <td><%= f %></td>
-                            <td><%= g %></td>
+                            <th>Formation</th>
+                            <th>Courriel du gestionnaire de formation</th>
                         </tr>
-                    <% end %>
-                </tbody>
-            </table>
-            <br />
+                    </thead>
+                    <tbody>
+                        <% @gestionnaires.each do | formation, email | %>
+                            <% unless email.blank? %>
+                                <tr>
+                                    <td><%= formation %></td>
+                                    <td><%= email %></td>
+                                </tr>
+                            <% end %>
+                        <% end %>
+                    </tbody>
+                </table>
+                <br />
+            <% end %>
 
             <p>
                 <%= @message %>
@@ -77,8 +82,9 @@
 
             <small>
                 <%= link_to "plan d'accès au campus biopark".upcase!, image_path("Plan_d_acces_Campus_BioPark_-_IAE_Paris.pdf") %>
-                <br />
             </small>
+            <br />
+
         </div>
     </body>
 </html>
