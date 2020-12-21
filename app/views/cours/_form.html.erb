@@ -68,6 +68,7 @@
 
     <%= f.form_group do %>
       <%= f.check_box :hors_service_statutaire, label: "Hors Service Statutaire ?" %>
+      <%= f.check_box :elearning, label: "eLearning ?" %>
     <% end %>
 
     <% if current_user.admin? || current_user.reserver? %>
@@ -93,10 +94,6 @@
       
     <% end %>
   </div>
-
-  <%= f.form_group do %>
-    <%= f.check_box :elearning, label: "eLearning ?" %>
-  <% end %>
 
   <%= f.text_area :commentaires %>
 

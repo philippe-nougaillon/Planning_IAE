@@ -52,7 +52,7 @@ export default class extends Controller {
       if (data.length > 0) {
         for(var i = 0; i < data.length; i++) {
           var opt = data[i]
-          this.sallesTarget.innerHTML += "<option value=\"" + opt.id + "\">" + opt.nom + "</option>"
+          this.sallesTarget.innerHTML += "<option value=\"" + opt.id + "\">" + opt.nom + " (" + opt.places +"p)" + "</option>"
         }
       } else {
         this.sallesTarget.innerHTML += "<option>Salle ou intervenant pas disponible</option>"
