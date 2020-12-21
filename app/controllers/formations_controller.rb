@@ -27,7 +27,8 @@ class FormationsController < ApplicationController
     end
 
     unless params[:nom].blank?
-      @formations = @formations.where("nom like ? OR abrg like ? OR code_analytique like ?", "%#{params[:nom]}%", "%#{params[:nom]}%", "%#{params[:nom]}%")
+      s = "%#{params[:nom]}%".downcase
+      @formations = @formations.where("LOWER(nom) like ? OR LOWER(abrg) like ? OR LOWER(code_analytique) like ?", s, s, s)
     end
 
     unless params[:apprentissage].blank?

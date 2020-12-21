@@ -14,7 +14,8 @@ class EtudiantsController < ApplicationController
     @etudiants = Etudiant.all
 
     unless params[:nom].blank?
-      @etudiants = @etudiants.where("nom like ? OR nom_entreprise like ?", "%#{params[:nom]}%", "%#{params[:nom]}%")
+      s = "%#{params[:nom]}%".downcase
+      @etudiants = @etudiants.where("LOWER(nom) like ? OR LOWER(nom_entreprise) like ?", s, s)
     end
 
     unless params[:workflow_state].blank?

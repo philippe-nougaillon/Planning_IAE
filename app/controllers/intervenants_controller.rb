@@ -19,7 +19,8 @@ class IntervenantsController < ApplicationController
     @intervenants = Intervenant.all
 
     unless params[:nom].blank?
-      @intervenants = @intervenants.where("nom like ? or prenom like ?", "%#{params[:nom]}%", "%#{params[:nom]}%" )
+      s = "%#{params[:nom]}%".downcase
+      @intervenants = @intervenants.where("LOWER(nom) like ? or LOWER(prenom) like ?", s, s)
     end
 
     unless params[:doublon].blank?

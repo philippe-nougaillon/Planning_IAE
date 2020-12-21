@@ -758,7 +758,7 @@ class ToolsController < ApplicationController
     end
 
     unless params[:search].blank?
-      @audits = @audits.where("audited_changes like ?", "%#{params[:search]}%")
+      @audits = @audits.where("LOWER(audited_changes) like ?", "%#{params[:search]}%".downcase)
     end
 
     unless params[:chgt_salle].blank?
