@@ -52,17 +52,23 @@
                 <td><%= link_to "#{c.ue} #{c.nom_ou_ue}", edit_cour_path(c), target:"_new" %></td>
                 <td class="text-center">
                     <% unless c.commentaires.blank? %>
-                        <span class="glyphicon Soutenance de Sarah PELLERIN  glyphicon-comment" title="<%= c.commentaires %>" />
+                        <span title="<%= c.commentaires %>">
+                            <%= fa_icon 'comment-dots' %>
+                        </span>
                     <% end %>
                     <% if c.elearning %>
-                        <span class="glyphicon glyphicon-home" />
+                        <%= fa_icon 'laptop-house' %>
                     <% end %>
                     <% if c.hors_service_statutaire || formation.hss %>
-                        <span class="glyphicon glyphicon-remove" />
+                        <%= fa_icon 'calendar-times' %>
                     <% end %>
                     <% if c.intervenant_id && c.intervenant_binome_id %>
-                        <span class="glyphicon glyphicon-user" title="<%= c.intervenant.nom_prenom %>" />
-                        <span class="glyphicon glyphicon-user" title="<%= c.intervenant_binome.nom_prenom %>" />
+                        <span title="<%= c.intervenant.nom_prenom %>">
+                            <%= fa_icon 'user' %>
+                        </span>
+                        <span title="<%= c.intervenant_binome.nom_prenom %>">
+                            <%= fa_icon 'user' %>
+                        </span>
                     <% end %>
                 </td>
                 <td class="text-right"><%= c.duree.to_f %></td>
@@ -73,7 +79,7 @@
                 <td class="text-right">
                     <%= cumul_hetd %>
                     <% if (nbr_heures_statutaire > 0) && (cumul_hetd >= nbr_heures_statutaire) %>
-                            <i class="glyphicon glyphicon-plus-sign" />
+                            <%= fa_icon 'plus-circle' %>
                             <%= cumul_hetd - nbr_heures_statutaire %>
                     <% end %>
                 </td>
@@ -111,7 +117,7 @@
                 <td class="text-right">
                     <%= cumul_hetd %>
                     <% if (nbr_heures_statutaire > 0) && (cumul_hetd >= nbr_heures_statutaire) %>
-                            <i class="glyphicon glyphicon-plus-sign" />
+                            <%= fa_icon 'plus-circle' %>
                             <%= cumul_hetd - nbr_heures_statutaire %>
                     <% end %>
                 </td>
@@ -146,7 +152,7 @@
                 <td class="text-right">
                     <%= cumul_hetd %>
                     <% if (nbr_heures_statutaire > 0) && (cumul_hetd >= nbr_heures_statutaire) %>
-                            <i class="glyphicon glyphicon-plus-sign" />
+                            <%= fa_icon 'plus-circle' %>
                             <%= cumul_hetd - nbr_heures_statutaire %>
                     <% end %>
                 </td>

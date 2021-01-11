@@ -33,7 +33,7 @@
             <%= link_to cours.nom.split(' ').first, target:"_blank" do %>
                 <%= cours.nom.split(' ').last %>
                 (E-learning)
-                <span class="glyphicon glyphicon-link"></span>
+                <%= fa_icon 'link' %>
             <% end %>
         <% else %>         
             <%= cours.nom_ou_ue %>
@@ -48,22 +48,21 @@
             </h5>
 
             <% if cours_formation.nbr_etudiants > cours.salle.places && user_signed_in? %>
-                <i class="glyphicon glyphicon-warning-sign glyph-custom-alert" 
-                    data-toggle="tooltip" data-placement="bottom"
-                    title="Manque <%= cours_formation.nbr_etudiants - cours.salle.places %> place.s">
+                <i title="Manque <%= cours_formation.nbr_etudiants - cours.salle.places %> place.s">
+                    <%= fa_icon 'exclamation-circle' %>
                 </i>
             <% end %>
         <% else %>
             <% if cours.confirmé? && user_signed_in? %>
-                <i class="glyphicon glyphicon-warning-sign glyph-custom-warning" 
-                    data-toggle="tooltip" data-placement="top"
-                    title="Pas de salle réservée !">
+                <i title="Pas de salle réservée !">
+                    <%= fa_icon 'exclamation-circle' %>
+                </i>
             <% end %>
         <% end %>
         <% if user_signed_in? && !cours.commentaires.blank? %>
-            <i class="glyphicon glyphicon-comment" 
-                    data-toggle="tooltip" data-placement="top"
-                    title="<%= cours.commentaires %>" >
+            <i title="<%= cours.commentaires %>" >
+                <%= fa_icon 'comment-dots' %>         
+            </i>
         <% end %>
     </td>
     <td></td>

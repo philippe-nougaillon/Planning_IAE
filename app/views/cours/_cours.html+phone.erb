@@ -35,7 +35,7 @@
 <% if cours.url? && cours.elearning? %>
   <%= link_to cours.nom.split(' ').first, target:"_blank" do %>
       <%= cours.nom.split(' ').last %>
-      <span class="glyphicon glyphicon-link"></span>
+      <%= fa_icon 'link' %>
   <% end %>
 <% else %>         
   <i><%= cours.nom_ou_ue %></i>

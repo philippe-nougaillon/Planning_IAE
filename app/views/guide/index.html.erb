@@ -72,7 +72,7 @@
     <li>Impossibilité de saisir un nouveau cours ayant lieu un dimanche ou un jour de fermeture de l'établissement</li>
     <li>Pas de chevauchement horaire pour un même intervenant. Il n'est pas possible de saisir un nouveau cours si le formateur intervient déjà sur un autre cours aux mêmes heures (sauf si les doublons sont autorisés pour cet intervenant)</li>
 
-    <li>Affichage d'un pictogramme <i class="glyphicon glyphicon-warning-sign glyph-custom-warning"></i> dans les cas suivants :</li>
+    <li>Affichage d'un pictogramme <%= fa_icon 'exclamation_circle' %> dans les cas suivants :</li>
     <ul>
       <li>Dépassement de capacité de la salle (le nbr de places est inférieur au nbr d'étudiants de la formation)</li>
       <li>Le cours est dans l'état 'Confirmé' mais aucune salle n'a été réservée</li>

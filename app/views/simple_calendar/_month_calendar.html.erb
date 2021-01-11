@@ -3,7 +3,7 @@
     <%= link_to url_for(params
                           .permit(:formation, :ue, :intervenant, :semaine, :start_date, :etat, :filter, :view)
                           .merge(semaine:nil, start_date:params[:start_date].to_date - 1.month)), class: "btn btn-default" do %>
-        <i class="glyphicon glyphicon-backward"></i>
+        <%= fa_icon 'chevron-circle-left' %>
     <% end %>
 
     <span class="calendar-title"><%= t('date.month_names')[start_date.month].humanize %> <%= start_date.year %></span>
@@ -11,7 +11,7 @@
     <%= link_to url_for(params
                           .permit(:formation, :ue, :intervenant, :semaine, :start_date, :etat, :filter, :view)
                           .merge(semaine:nil, start_date:params[:start_date].to_date + 1.month)), class: "btn btn-default" do %>
-        <i class="glyphicon glyphicon-forward"></i>
+        <%= fa_icon 'chevron-circle-right' %>
     <% end %>
   </div>
 

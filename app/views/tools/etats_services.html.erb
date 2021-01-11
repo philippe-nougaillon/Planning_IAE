@@ -50,7 +50,7 @@
                                 .permit(:start_date, :end_date, :status)
                                 .merge(intervenant_id: intervenant.id, format: 'xls')), 
                             class: 'btn btn-default btn-xs' do %>
-                <span class="glyphicon glyphicon-share"></span>
+                <%= fa_icon 'file-excel' %>
                 Export EXCEL
         <% end %>
 
@@ -58,7 +58,7 @@
                                 .permit(:start_date, :end_date, :status)
                                 .merge(intervenant_id: intervenant.id, format: 'pdf')), 
                             class: 'btn btn-danger btn-xs' do %>
-                <span class="glyphicon glyphicon-share"></span>
+                <%= fa_icon 'file-pdf' %>
                 Export PDF
         <% end %>
     </div>
