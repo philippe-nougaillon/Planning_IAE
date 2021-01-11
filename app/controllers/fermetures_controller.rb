@@ -9,6 +9,8 @@ class FermeturesController < ApplicationController
     authorize Fermeture
 
     params[:paginate] ||= 'pages'
+    params[:column] ||= session[:column]
+    params[:direction_fermetures] ||= session[:direction_fermetures]
 
     @fermetures = Fermeture.all
     @noms_périodes = Fermeture.where.not(nom: nil).pluck(:nom).uniq.sort
@@ -28,9 +30,14 @@ class FermeturesController < ApplicationController
       end
     end
 
+    @fermetures = @fermetures.order("#{sort_column} #{sort_direction}")
+
     if params[:paginate] == 'pages'
        @fermetures = @fermetures.paginate(page: params[:page], per_page: 20)
     end
+
+    session[:column] = params[:column]
+    session[:direction_fermetures] = params[:direction_fermetures]
 
   end
 
@@ -111,6 +118,18 @@ class FermeturesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_fermeture
       @fermeture = Fermeture.find(params[:id])
+    end
+
+    def sortable_columns
+      ['fermetures.date', 'fermetures.nom', 'fermetures.updated_at']
+    end
+
+    def sort_column
+      sortable_columns.include?(params[:column]) ? params[:column] : "date, updated_at"
+    end
+
+    def sort_direction
+      %w[asc desc].include?(params[:direction_fermetures]) ? params[:direction_fermetures] : "asc"
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
