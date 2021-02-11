@@ -3,10 +3,8 @@
     <thead>
       <tr>
         <th></th>
-        <% date_range.slice(0, 7).each do |day| %>
-          <% unless day.sunday? %>
-            <th><%= l(day, format: :short) %></th>
-          <% end %>
+        <% date_range.slice(0, 6).each do |day| %>
+          <th style="width: 160px;"><%= l(day, format: :short) %></th>
         <% end %>
       </tr>
     </thead>

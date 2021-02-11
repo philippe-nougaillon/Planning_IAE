@@ -133,7 +133,7 @@
             <% @cours.includes(:formation, :intervenant, :salle).each do | cours | %>
 
               <% if cours.debut.to_date != current_date %>
-                <tr class="shadow-sm">
+                <tr class="shadow-sm bg-light">
                   <% if user_signed_in? %><th></th><% end %>
                   <th colspan=<%= user_signed_in? ? '9' : '8' %>>
                     <%= fa_icon 'calendar-day' %>
