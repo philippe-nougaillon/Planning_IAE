@@ -32,7 +32,8 @@ namespace :cours do
 
     if envoi_specs.cible == 'Testeurs'
       # id des intervenants tests
-      intervenants = Intervenant.where("UPPER(nom) LIKE '%NOUGAILLON%' OR UPPER(nom) LIKE '%FITCH%'")
+      intervenants = Intervenant.where("UPPER(nom) LIKE '%NOUGAILLON%' OR UPPER(nom) LIKE '%FITSCH%'")
+      puts "Intervenants TEST = #{ intervenants.pluck(:nom) }" 
     else
       intervenants = Intervenant.all
     end
