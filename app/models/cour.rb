@@ -113,6 +113,10 @@ class Cour < ApplicationRecord
     end
   end
 
+  def nom_et_étudiants
+    "#{self.nom} (#{self.formation.nbr_etudiants})" 
+  end
+
   def url?
     # Correct URL ?
     self.nom =~ /https?:\/\/[\S]+/
