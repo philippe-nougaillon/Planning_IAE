@@ -42,6 +42,10 @@ class Formation < ApplicationRecord
 		self.promo.blank? ? "#{self.nom} (#{self.nbr_etudiants}E)"  : "#{self.nom} - #{self.promo} (#{self.nbr_etudiants}E)" 
 	end
 
+	def nom_nbr_etudiants
+		"#{self.nom} (#{self.nbr_etudiants} ET.)" 
+	end
+
 	def nom_eotp
 		self.code_analytique.blank? ? self.nom : "#{self.nom} -> #{self.code_analytique}"
 	end

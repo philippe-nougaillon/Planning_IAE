@@ -16,9 +16,13 @@
     </td>
     <td>
         <span style="background-color:<%= cours_formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
-        <%= link_to cours_formation.nom, cours_formation %>
+        <% if user_signed_in? %>
+            <%= link_to cours_formation.nom_nbr_etudiants, cours_formation %>
+        <% else %>
+            <%= link_to cours_formation.nom, cours_formation %>
+        <% end %>
     </td>
-    <td style="white-space: nowrap;">
+    <td>
         <%= link_to cours.intervenant.nom_prenom, cours.intervenant %>
         <% if cours.intervenant_binome %>
             <br>
@@ -29,15 +33,7 @@
         <%= link_to_if user_signed_in?, cours.try(:ue), cours_path(ue: cours.ue) %>
     </td>
     <td>
-        <% if cours.url? && cours.elearning  %>
-            <%= link_to cours.nom.split(' ').first, target:"_blank" do %>
-                <%= cours.nom.split(' ').last %>
-                (E-learning)
-                <%= fa_icon 'link' %>
-            <% end %>
-        <% else %>         
-            <%= cours.nom_ou_ue %>
-        <% end %>
+        <%= cours.nom_ou_ue %>
     </td>
     <td style="white-space: nowrap;">
         <% if cours.salle %>
@@ -65,7 +61,6 @@
             </i>
         <% end %>
     </td>
-    <td></td>
 
     <% if user_signed_in? %>
         <td>
