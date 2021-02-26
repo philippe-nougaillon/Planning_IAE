@@ -1,4 +1,4 @@
-<%= bootstrap_form_for(@cour, layout: :horizontal, label_col: "col-sm-2", control_col: "col-sm-5") do |f| %>
+<%= bootstrap_form_for(@cour, layout: :horizontal, label_col: "col-sm-2", control_col: "col-sm-6") do |f| %>
 
   <% if @cour.errors.any? %>
     <div class="alert alert-danger alert-dismissable" role="alert">
@@ -97,10 +97,11 @@
 
   <%= f.form_group do %>
     <%= f.submit "Enregistrer", class: "btn btn-primary" %>
+    <%= link_to "Annuler", cours_path, class: "btn btn-light" %>
     <% if @cour.new_record? %>
       <%= f.submit "Enregistrer et en saisir une autre", name: 'create_and_add', class: 'btn btn-outline-primary' %>
-    <% else %>
-      <%= f.submit "Enregistrer et notifier les étudiants", name: 'notifier', class: 'btn btn-outline-primary' %>
+    <%# <% else %>
+      <%= f.submit "Enregistrer et notifier les étudiants", name: 'notifier', class: 'btn btn-outline-primary' %> %>
     <% end %>
   <% end %>
 
