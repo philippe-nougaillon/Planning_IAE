@@ -6,44 +6,44 @@ export default class extends Controller {
     static targets = [ 'id', 'date', 'duree', 'formation_id', 'intervenant_id', 'salles' ]
 
     initialize() {
-        this.clearResult()
+      //this.clearResult()
     }
 
     connect() {
-        console.log("Hello, Stimulus!", this.element)
+      //console.log("Hello, Stimulus!", this.element)
 
-        $("#intervenant_id").on('select2:select', function () {
-            console.log("list item selected");
-            let event = new Event('change', { bubbles: true }) // fire a native event
-            this.dispatchEvent(event);
-          });
+      $("#intervenant_id").on('select2:select', function () {
+          //console.log("list item selected");
+          let event = new Event('change', { bubbles: true }) // fire a native event
+          this.dispatchEvent(event);
+      });
     }
 
     show_dispo() {
-        //console.log("Show_dispo!!")
-        this.updateAvailableRooms()
+      //console.log("Show_dispo!!")
+      this.updateAvailableRooms()
     }
     
     toggleLoading() {
-        this.targets.find("button").classList.toggle("is-loading")
+      this.targets.find("button").classList.toggle("is-loading")
     }
     
     updateAvailableRooms() {
-        this.clearResult()
-    
-        Rails.ajax({
-          type: "GET",
-          url: "/salles/libres.json",
-          data: "date=" + this.dateTarget.value
-                + "&id=" + this.idTarget.value 
-                + "&duree=" + this.dureeTarget.value
-                + "&formation_id=" + this.formation_idTarget.value
-                + "&intervenant_id=" + this.intervenant_idTarget.value,
-          success: (data) => {
-            //console.log('Available rooms loaded!')
-            this.refreshDropdownValues(data)
-          }
-        })
+      //this.clearResult()
+  
+      Rails.ajax({
+        type: "GET",
+        url:  "/salles/libres.json",
+        data: "date=" + this.dateTarget.value
+              + "&id=" + this.idTarget.value 
+              + "&duree=" + this.dureeTarget.value
+              + "&formation_id=" + this.formation_idTarget.value
+              + "&intervenant_id=" + this.intervenant_idTarget.value,
+        success: (data) => {
+          //console.log('Available rooms loaded!')
+          this.refreshDropdownValues(data)
+        }
+      })
     }
     
     refreshDropdownValues(data) {
@@ -60,7 +60,7 @@ export default class extends Controller {
     }
   
     clearResult() {
-      this.sallesTarget.innerHTML = ""
+      //this.sallesTarget.innerHTML = ""
     }
 
 }

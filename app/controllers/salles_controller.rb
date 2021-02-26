@@ -153,18 +153,18 @@ class SallesController < ApplicationController
     end
   end
 
+  # Afficher les salles disponibles en JSON
   def libres
-    # Afficher les salles disponibles
     salles_dispos_ids = []
 
     unless params[:id].blank?
       cours = Cour.find(params[:id])
     else
       cours = Cour.new(debut: DateTime.parse(params[:date]), 
-                      duree: params[:duree], 
-                      formation_id: params[:formation_id], 
-                      intervenant_id: params[:intervenant_id],
-                      salle_id: Salle.first.id)
+                        duree: params[:duree], 
+                        formation_id: params[:formation_id], 
+                        intervenant_id: params[:intervenant_id],
+                        salle_id: Salle.first.id)
     end
 
     Salle.all.each do |s|

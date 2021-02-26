@@ -18,21 +18,20 @@
   <%= hidden_field_tag :from, params[:from] %>
 
   <div data-controller="dispo">
-
     <%= hidden_field_tag :id, @cour.id, data: { "target": "dispo.id" } %>
 
     <%= f.text_field :debut, 
-                    value: @cour.debut.strftime("%Y-%m-%dT%H:%M"), 
-                    type: "datetime-local", 
-                    label: "Date", 
-                    data: { "target":"dispo.date" } %>
+                            value: @cour.debut.strftime("%Y-%m-%dT%H:%M"), 
+                            type: "datetime-local", 
+                            label: "Date", 
+                            data: { "target":"dispo.date" } %>
 
     <%= f.select  :duree, 
-                  options_for_select(Cour.durées, @cour.duree.to_s), 
-                  { include_blank: true, 
-                  label: "Durée" }, 
-                  required: true, 
-                  data: { "target": "dispo.duree" } %>
+                            options_for_select(Cour.durées, @cour.duree.to_s), 
+                            { include_blank: true, 
+                            label: "Durée" }, 
+                            required: true, 
+                            data: { "target": "dispo.duree" } %>
     
     <%= f.collection_select :formation_id, 
                             Formation.unscoped.order(:nom, :promo), 
@@ -76,21 +75,20 @@
         <%= f.select(:etat, Cour.etats.keys.to_a, { include_blank: true }) %>
       <% end %>
 
-      <% if @cour.new_record? && !params[:from] %>
-
-        <!-- Chargement de la liste des salles dispos que si c'est un nouveau cours -->
-        <%= f.collection_select(:salle_id, Salle.all, :id, :nom_places, { include_blank: true },
-                                    data: { "target": "dispo.salles" } ) %>
-        <%= f.form_group do %>
-        
-          <span data-action="click->dispo#show_dispo" 
-                class="btn btn-sm btn-outline-success">
-                Chercher les salles disponibles
-          </span>
-        <% end %>
-      <% else %>
-        <%= f.collection_select :salle_id, Salle.all, :id, :nom_places, { include_blank: true } %>
+      <%= f.collection_select :salle_id, 
+                                        Salle.all, 
+                                        :id, 
+                                        :nom_places, 
+                                        { include_blank: true },
+                                        data: { "target": "dispo.salles" } %>
+  
+      <%= f.form_group do %>
+        <span data-action="click->dispo#show_dispo" 
+              class="btn btn-sm btn-outline-success">
+              Chercher les salles disponibles
+        </span>
       <% end %>
+
       
     <% end %>
   </div>
