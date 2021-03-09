@@ -29,10 +29,8 @@ class EtudiantsController < ApplicationController
     session[:column] = params[:column]
     session[:direction_etudiants] = params[:direction_etudiants]
 
-    @etudiants = @etudiants
-                    .includes(:formation)
-                    .order("#{sort_column} #{sort_direction}")
-                    .paginate(page: params[:page], per_page: 20)
+    @etudiants = @etudiants.reorder("#{sort_column} #{sort_direction}")
+    @etudiants = @etudiants.paginate(page: params[:page], per_page: 20)
   end
 
   # GET /etudiants/1
@@ -96,11 +94,11 @@ class EtudiantsController < ApplicationController
     end
 
     def sortable_columns
-      ['etudiants.nom', 'etudiants.date_de_naissance', 'etudiants.workflow_state', 'etudiants.nom_entreprise', 'etudiants.updated_at']
+      ['etudiants.nom', 'etudiants.prénom', 'etudiants.date_de_naissance', 'etudiants.workflow_state', 'etudiants.nom_entreprise', 'etudiants.updated_at']
     end
 
     def sort_column
-        sortable_columns.include?(params[:column]) ? params[:column] : "nom, prénom"
+        sortable_columns.include?(params[:column]) ? params[:column] : "etudiants.nom"
     end
 
     def sort_direction
