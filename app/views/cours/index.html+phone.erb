@@ -38,7 +38,7 @@
 <hr>
 
 <div class="page_info">
-  <%= page_entries_info @cours, model: Cour, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+  <%= page_entries_info @cours %>
 </div>
 
 <%= will_paginate @cours, inner_window: 2, outer_window: 0, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>

@@ -70,7 +70,7 @@
     </table>
 
     <div class="page_info">
-      <%= page_entries_info @intervenants, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+      <%= page_entries_info @intervenants %>
     </div>
 
     <%= will_paginate @intervenants, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>

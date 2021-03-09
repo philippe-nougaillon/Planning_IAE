@@ -74,7 +74,7 @@
   </table>
 
   <div class="page_info">
-    <%= page_entries_info @etudiants, model: 'étudiant', renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+    <%= page_entries_info @etudiants %>
   </div>
 
   <%= will_paginate @etudiants, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>

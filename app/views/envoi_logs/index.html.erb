@@ -27,7 +27,7 @@
 </table>
 
 <div class="page_info">
-  <%= page_entries_info @envoi_logs, model: 'envoi', renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+  <%= page_entries_info @envoi_logs %>
 </div>
 
 <%= will_paginate @envoi_logs, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>

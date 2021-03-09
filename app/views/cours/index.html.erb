@@ -169,7 +169,7 @@
         <div class="row">
           <div class="col">
             <% if params[:paginate] == 'pages' %>
-              <%= page_entries_info @cours, model: Cour, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+              <%= page_entries_info @cours %>
               <%= will_paginate @cours, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
             <% end %>
           </div>
