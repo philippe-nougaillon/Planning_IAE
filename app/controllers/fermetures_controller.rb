@@ -115,7 +115,7 @@ class FermeturesController < ApplicationController
     date_debut = @fermeture.date
     @fermeture.destroy
     respond_to do |format|
-      format.html { redirect_to fermetures_url(date_debut: date_debut, date_fin: date_debut + 1.year), notice: 'Jour de fermeture supprimé' }
+      format.html { redirect_to fermetures_url(date_debut: date_debut, date_fin: date_debut + 1.year, paginate: 'all'), notice: 'Jour de fermeture supprimé' }
       format.json { head :no_content }
     end
   end
