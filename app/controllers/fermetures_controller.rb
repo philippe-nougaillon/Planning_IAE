@@ -8,6 +8,7 @@ class FermeturesController < ApplicationController
   def index
     authorize Fermeture
 
+    params[:futur] ||= 'oui'
     params[:paginate] ||= 'pages'
     params[:column] ||= session[:column]
     params[:direction_fermetures] ||= session[:direction_fermetures]
@@ -31,6 +32,10 @@ class FermeturesController < ApplicationController
     end
 
     @fermetures = @fermetures.order("#{sort_column} #{sort_direction}")
+
+    if params[:futur] == 'oui'
+      @fermetures = @fermetures.where('date >= ?', Date.today)
+    end
 
     if params[:paginate] == 'pages'
        @fermetures = @fermetures.paginate(page: params[:page], per_page: 20)

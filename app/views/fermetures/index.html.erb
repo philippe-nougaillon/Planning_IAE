@@ -33,6 +33,15 @@
         </div>
 
         <div class="col-sm-2">
+          <%= label_tag "Fermetures" %>
+          <br> 
+          <%= radio_button_tag :futur, 'oui', (params[:futur]=='oui'), onchange:'this.form.submit()' %>
+          A venir
+          <%= radio_button_tag :futur, 'non', (params[:futur]=='non'), onchange:'this.form.submit()' %>
+          Toutes 
+        </div>
+
+        <div class="col-sm-2">
           <%= label_tag "Afficher" %>
           <br> 
           <%= radio_button_tag :paginate, "pages", (params[:paginate]=='pages'), onchange:'this.form.submit()' %>
