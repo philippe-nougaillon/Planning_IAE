@@ -112,9 +112,10 @@ class FermeturesController < ApplicationController
   # DELETE /fermetures/1
   # DELETE /fermetures/1.json
   def destroy
+    date_debut = @fermeture.date
     @fermeture.destroy
     respond_to do |format|
-      format.html { redirect_to fermetures_url, notice: 'Jour de fermeture supprimé' }
+      format.html { redirect_to fermetures_url(date_debut: date_debut, date_fin: date_debut + 1.year), notice: 'Jour de fermeture supprimé' }
       format.json { head :no_content }
     end
   end
