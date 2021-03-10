@@ -7,7 +7,7 @@
         <th>Cours</th>
         <th>Formations</th> 
         <% @etendue_horaire.each_with_index do |heure, index| %>
-          <th><%= heure %>h</th>
+          <th class="<%= 'alert alert-primary' if heure == DateTime.now.hour %>"><%= heure %>h</th>
           <% if [4,9].include?(index) %><th></th><% end %>
         <% end %>
       </tr>
@@ -29,9 +29,9 @@
           <% bloc = salle.nom[0] %>
           <thead>
             <tr>
-              <th></th><th></th><th></th><th></th>
+              <th colspan=4></th>
               <% @etendue_horaire.each_with_index do |heure, index| %>
-                <th><%= heure %>h</th>
+                <th class="<%= 'alert alert-primary' if heure == DateTime.now.hour %>"><%= heure %>h</th>
                 <% if [4,9].include?(index) %><th></th><% end %>
               <% end %>
             </tr>
