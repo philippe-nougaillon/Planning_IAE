@@ -1,28 +1,28 @@
-    <%= calendar partial: 'simple_calendar/week_rooms_calendar', 
-                  start_date_param: :calendar_rooms_starts_at,
-                  events: @cours.where(salle_id:nil), 
-                  salle_id: 0, 
-                  number_of_days: 6 do |date, meetings| %>
+<%= calendar partial: 'simple_calendar/week_rooms_calendar', 
+              start_date_param: :calendar_rooms_starts_at,
+              events: @cours.where(salle_id: nil), 
+              salle_id: 0, 
+              number_of_days: 6 do |date, meetings| %>
 
-      <% meetings.each do |meeting| %>
-          <span class="badge badge-<%= meeting.style %>"><%= meeting.etat.humanize %></span><br>
-          <b><%= l(meeting.debut, format: :heures_min) %></b>  
-           - <%= l(meeting.fin, format: :heures_min) %>
-          <br>
-          <% if meeting.try(:formation).try(:abrg) %>
-            <% if meeting.salle_id == nil %>
-              <%= link_to meeting.formation.abrg, edit_cour_path(meeting, from:'planning_salles'), title:meeting.nom %>
-            <% end %>
-          <% else %>
-            <%= link_to_if user_signed_in?, meeting.try(:formation).try(:nom), meeting %>
-          <% end %>
+  <% meetings.each do |meeting| %>
+      <span class="badge badge-<%= meeting.style %>"><%= meeting.etat.humanize %></span><br>
+      <b><%= l(meeting.debut, format: :heures_min) %></b>  
+        - <%= l(meeting.fin, format: :heures_min) %>
+      <br>
+      <% if meeting.try(:formation).try(:abrg) %>
+        <% if meeting.salle_id == nil %>
+          <%= link_to meeting.formation.abrg, edit_cour_path(meeting, from:'planning_salles'), title:meeting.nom %>
+        <% end %>
+      <% else %>
+        <%= link_to_if user_signed_in?, meeting.try(:formation).try(:nom), meeting %>
       <% end %>
-    <% end %>
+  <% end %>
+<% end %>
   
 <div class="row">
   <div class="col">
     <% bloc = 'A' %> 
-    <% Salle.all.each do |salle| %>
+    <% Salle.all.reorder(:bloc, :nom).each do |salle| %>
       <% @salle = salle %>
       <% if bloc != salle.nom[0] %>
         <br><br>
@@ -60,7 +60,7 @@
           <% end %>  
 
           <% formation = Formation.unscoped.find(meeting.formation_id) %>
-          <div class="shadow-sm p-2 mb-2 bg-white" style="height:<%= 80 + (15 * meeting.duree) %>px; border-left:6px; border-left-style:solid; border-left-color:<%= formation.color %>; padding-left:5px;">
+          <div class="shadow-sm p-2 mb-2 bg-white" style="height:<%= 80 + (10 * meeting.duree) %>px; border-left:6px; border-left-style:solid; border-left-color:<%= formation.color %>; padding-left:5px;">
             <b><%= l(meeting.debut, format: :heures_min) %></b>  
              - <%= l(meeting.fin, format: :heures_min) %>
             <br>
