@@ -260,6 +260,16 @@ class CoursController < ApplicationController
           end
           @salles_dispos = @salles_dispos & salles
         end
+      elsif params[:action_name] == 'Intervertir'
+        # Tester si la durée de deux cours n'est pas égale
+        # pour prévenir l'utilisateur qu'il y a danger de chevauchement
+        durées = [] 
+        @action_ids.each do |id|
+          durées << Cour.find(id).duree.to_f
+        end
+        if durées.first != durées.last
+          @intervertir_alerte = "Attention, les deux cours n'ont pas la même durée, il y a un risque de chevauchement..."
+        end   
       end
 
       @cours = Cour
@@ -326,6 +336,29 @@ class CoursController < ApplicationController
         @cours.each do |c|
           c.intervenant_id = params[:intervenant_id].to_i
           c.save
+        end
+
+      when 'Intervertir'
+        # il faut 2 cours
+        if params[:cours_id].keys.count == 2
+          # TODO: dans une transaction, ça serait plus sûr !
+          cours_A = Cour.find(params[:cours_id].keys.first)
+          cours_B = Cour.find(params[:cours_id].keys.last)
+          # puts cours_A.inspect
+          # puts cours_B.inspect
+          if params[:intervertir_intervenants]
+            intervenant_A = cours_A.intervenant_id
+            # puts intervenant_A.inspect
+            intervenant_B = cours_B.intervenant_id
+            # puts intervenant_B.inspect
+
+            cours_A.update_columns(intervenant_id: intervenant_B)
+            # cours_A.save(validate: false)
+            cours_B.update_columns(intervenant_id: intervenant_A)
+            # cours_B.save(validate: false)
+          end  
+        else
+          flash[:error] = "Il faut deux cours à intervertir ! Opération annulée"
         end
 
       when "Supprimer" 

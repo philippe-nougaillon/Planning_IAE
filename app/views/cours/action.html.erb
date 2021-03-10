@@ -9,7 +9,7 @@
 
   <h3>Cours sélectionnés</h3>
 
-  <table class="table table-hover table-bordered table-striped table-sm">
+  <table class="table table-hover table-bordered table-striped table-condensed">
     <% @cours.each do |cours| %>
       <tr>
         <td><%= check_box_tag "[cours_id][#{cours.id}]", true, true %></td>                
@@ -73,6 +73,42 @@
                       include_blank:true, class:"form-control" %>
       <br><br>
     </div>
+
+  <% elsif params[:action_name] == "Intervertir" %>
+    <h3>Que voulez-vous intervertir ?</h3>
+    <br>
+    <div class="row">
+      <div class="col-sm-2">
+        <%= check_box_tag :intervertir_intervenants %>
+        <%= label_tag "Intervenants" %>    
+      </div>
+
+      <div class="col-sm-2">
+        <%= check_box_tag :intervertir_binomes %>
+        <%= label_tag "Binômes" %>    
+      </div>
+
+      <div class="col-sm-2">
+        <%= check_box_tag :intervertir_intitulé %>
+        <%= label_tag "Intitulé cours" %>    
+      </div>
+
+      <div class="col-sm-2">
+        <%= check_box_tag :intervertir_ue %>
+        <%= label_tag "UE" %>    
+      </div>
+
+      <div class="col-sm-2">
+        <%= check_box_tag :intervertir_salles %>
+        <%= label_tag "Salles" %>    
+      </div>
+    </div>
+    <br>
+    <% if @intervertir_alerte %>
+      <div class="alert alert-warning">
+        <%= @intervertir_alerte %>
+      </div>
+    <% end %>
 
   <% elsif params[:action_name] == "Supprimer" %>
     <div class="col-sm-8">

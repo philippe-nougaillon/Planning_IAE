@@ -40,11 +40,11 @@ class Cour < ApplicationRecord
   end
 
   def self.actions_peut_reserver
-    ["Changer de salle", "Changer d'intervenant"] + self.actions 
+    ["Changer de salle", "Changer d'intervenant", "Intervertir"] + self.actions 
   end
 
   def self.actions_admin
-    ["Changer de salle", "Changer d'état", "Changer de date", "Exporter vers Excel", "Exporter vers iCalendar", "Exporter en PDF", "Supprimer"]
+    ["Changer de salle", "Changer d'état", "Changer de date", "Intervertir", "Exporter vers Excel", "Exporter vers iCalendar", "Exporter en PDF", "Supprimer"]
   end
   
   def self.etendue_horaire
