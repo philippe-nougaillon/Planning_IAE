@@ -1,5 +1,5 @@
 <div class="table-responsive">
-  <table class="table table-sm table-hover table-striped">
+  <table class="table table-sm table-hover">
     <thead>
       <tr>
         <th>Salle</th>
@@ -7,16 +7,14 @@
         <th>Cours</th>
         <th>Formations</th> 
         <% @etendue_horaire.each_with_index do |heure, index| %>
-          <th class="<%= 'alert alert-primary' if heure == DateTime.now.hour %>"><%= heure %>h</th>
-          <% if [4,9].include?(index) %><th></th><% end %>
+          <th class="<%= 'alert alert-warning' if heure == DateTime.now.hour %>"><%= heure %>h</th>
+          <% if [4,9].include?(index) %><th></th><th></th><% end %>
         <% end %>
       </tr>
     </thead>
 
     <tfoot>
-      <tr>
-        <% 21.times do %><th></th><% end %>
-      </tr>
+      <tr><th colspan=22></th></tr>
     </tfoot>
 
     <tbody>
@@ -31,8 +29,8 @@
             <tr>
               <th colspan=4></th>
               <% @etendue_horaire.each_with_index do |heure, index| %>
-                <th class="<%= 'alert alert-primary' if heure == DateTime.now.hour %>"><%= heure %>h</th>
-                <% if [4,9].include?(index) %><th></th><% end %>
+                <th class="<%= 'alert alert-warning' if heure == DateTime.now.hour %>"><%= heure %>h</th>
+                <% if [4,9].include?(index) %><th></th><th></th><% end %>
               <% end %>
             </tr>
           </thead>
@@ -61,7 +59,7 @@
             <% map = @etendue_horaire.map {|i| range.include?(i) ? 'red' : 'lightgreen' } %>
             
             <% map.each_with_index do |color, index| %>
-              <td>
+              <td class="text-center">
                 <% if color == 'lightgreen' %>
                   <%= link_to new_cour_path(debut: @date, heure: (index + 8), salle_id: salle.id, from: 'occupation') do %>
                     <span style="background-color:<%= color %>;padding-left: 15px;"></span>
@@ -74,11 +72,12 @@
                     <% end %>
                 <% end %>
               </td>
-              <% if [4,9].include?(index) %><td /><% end %>
+              <% if [4,9].include?(index) %><th></th><th></th><% end %>
             <% end %>
           <% else %>
-            <% 18.times do %><td /><% end %>
+            <td colspan=18></td>
           <% end %>
+          <td><%= salle.nom[0..2] %></td>
         </tr>
       <% end %>
     </tbody>
