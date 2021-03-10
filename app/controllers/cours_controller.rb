@@ -344,18 +344,31 @@ class CoursController < ApplicationController
           # TODO: dans une transaction, ça serait plus sûr !
           cours_A = Cour.find(params[:cours_id].keys.first)
           cours_B = Cour.find(params[:cours_id].keys.last)
-          # puts cours_A.inspect
-          # puts cours_B.inspect
           if params[:intervertir_intervenants]
             intervenant_A = cours_A.intervenant_id
-            # puts intervenant_A.inspect
             intervenant_B = cours_B.intervenant_id
-            # puts intervenant_B.inspect
-
             cours_A.update_columns(intervenant_id: intervenant_B)
-            # cours_A.save(validate: false)
             cours_B.update_columns(intervenant_id: intervenant_A)
-            # cours_B.save(validate: false)
+          elsif params[:intervertir_binomes]
+            intervenant_A = cours_A.intervenant_binome_id
+            intervenant_B = cours_B.intervenant_binome_id
+            cours_A.update_columns(intervenant_binome_id: intervenant_B)
+            cours_B.update_columns(intervenant_binome_id: intervenant_A)
+          elsif params[:intervertir_intitulé]
+            intitulé_A = cours_A.nom
+            intitulé_B = cours_B.nom
+            cours_A.update_columns(nom: intitulé_B)
+            cours_B.update_columns(nom: intitulé_A)
+          elsif params[:intervertir_ue]
+            ue_A = cours_A.ue
+            ue_B = cours_B.ue
+            cours_A.update_columns(ue: ue_B)
+            cours_B.update_columns(ue: ue_A)
+          elsif params[:intervertir_salles]
+            salle_A = cours_A.salle_id
+            salle_B = cours_B.salle_id
+            cours_A.update_columns(salle_id: salle_B)
+            cours_B.update_columns(salle_id: salle_A)
           end  
         else
           flash[:error] = "Il faut deux cours à intervertir ! Opération annulée"
