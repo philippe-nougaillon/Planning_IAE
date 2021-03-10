@@ -22,8 +22,11 @@ module ApplicationHelper
     end
 
     def time_in_paris
+
+        DateTime.now.in_time_zone("Paris")
+
         # Heure d'hiver
-        DateTime.now.in_time_zone("Paris") + 1.hours
+        #DateTime.now.in_time_zone("Paris") + 1.hours
 
         # Heure d'été
         #DateTime.now.in_time_zone("Paris") + 2.hours
