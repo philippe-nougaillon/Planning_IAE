@@ -293,6 +293,11 @@ class Cour < ApplicationRecord
     require 'icalendar'
     
     calendar = Icalendar::Calendar.new
+
+    calendar.timezone do |t|
+      t.tzid = "Europe/Paris"
+    end
+    
     cours.each do | c |
       event = Icalendar::Event.new
       event.dtstart = c.debut.strftime("%Y%m%dT%H%M%S")
