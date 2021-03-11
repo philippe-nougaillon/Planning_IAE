@@ -300,9 +300,10 @@ class Cour < ApplicationRecord
       event.summary = c.formation.nom
       event.description = c.nom
       event.location = "BioPark #{c.salle.nom if c.salle}"
+      event.url = "https://planning4-demo.herokuapp.com/"
       calendar.add_event(event)
     end  
-     return calendar
+    return calendar
   end
 
   def self.generate_etats_services_csv(cours, intervenants, start_date, end_date)
