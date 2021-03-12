@@ -66,10 +66,9 @@
                   <% end %>
                 <% else %>
                   <% debut_cours = DateTime.parse("#{@date} #{index + 8}:00") %>
+                  <% nom_formation = Formation.select(:nom).joins(:cours).where('cours.debut <= ?', debut_cours).where('cours.fin >= ?', debut_cours).where('cours.salle_id': salle.id).limit(1).pluck(:nom) %>
 
-                  <% f = Formation.select(:nom).joins(:cours).where('cours.debut <= ?', debut_cours).where('cours.fin >= ?', debut_cours).where('cours.salle_id': salle.id).limit(1) %>
-
-                  <%= link_to '#', title: f.try(:nom) do %>
+                  <%= link_to '#', title: nom_formation do %>
                     <span style="background-color: <%= color %>;padding-left: 15px;"></span> 
                   <% end %>
                 <% end %>
