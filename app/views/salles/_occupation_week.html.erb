@@ -25,8 +25,8 @@
       <% @salles.each do | salle | %>
         <% @cours = @cours_semaine.where(salle_id: salle.id) %>
 
-        <% if (bloc != salle.nom[0] || salle.nom.size > 3) && @salles.size > 1 %>
-          <% bloc = salle.nom[0] %>
+        <% if salle.bloc != bloc %>
+          <% bloc = salle.bloc %>
           <thead>
             <tr>
               <th></th><th></th><th></th>
