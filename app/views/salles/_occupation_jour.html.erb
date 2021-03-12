@@ -59,7 +59,7 @@
             <% map = @etendue_horaire.map {|i| range.include?(i) ? 'red' : 'lightgreen' } %>
             
             <% map.each_with_index do |color, index| %>
-              <td class="text-center">
+              <td class="<%= 'text-center alert alert-warning' if (index + 8) == time_in_paris.hour %>">
                 <% if color == 'lightgreen' %>
                   <%= link_to new_cour_path(debut: @date, heure: (index + 8), salle_id: salle.id, from: 'occupation') do %>
                     <span style="background-color:<%= color %>;padding-left: 15px;"></span>
@@ -67,7 +67,6 @@
                 <% else %>
                   <% debut_cours = DateTime.parse("#{@date} #{index + 8}:00") %>
                   <% nom_formation = Formation.select(:nom).joins(:cours).where('cours.debut <= ?', debut_cours).where('cours.fin >= ?', debut_cours).where('cours.salle_id': salle.id).limit(1).pluck(:nom) %>
-
                   <%= link_to '#', title: nom_formation do %>
                     <span style="background-color: <%= color %>;padding-left: 15px;"></span> 
                   <% end %>
