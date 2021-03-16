@@ -4,10 +4,10 @@
       <tr>
         <th>Salle</th>
         <th>Places</th>
-        <th>Cours</th>
         <th>Formations</th> 
+        <th>Cours</th>
         <% @etendue_horaire.each_with_index do |heure, index| %>
-          <th class="<%= 'alert alert-warning' if heure == time_in_paris.hour %>"><%= heure %>h</th>
+          <th class="<%= 'alert alert-warning' if ((@date == Date.today) && (heure == time_in_paris.hour)) %>"><%= heure %>h</th>
           <% if [4,9].include?(index) %><th></th><th></th><% end %>
         <% end %>
       </tr>
@@ -29,7 +29,7 @@
             <tr>
               <th colspan=4></th>
               <% @etendue_horaire.each_with_index do |heure, index| %>
-                <th class="<%= 'alert alert-warning' if heure == time_in_paris.hour %>"><%= heure %>h</th>
+                <th class="<%= 'alert alert-warning' if ((@date == Date.today) && (heure == time_in_paris.hour)) %>"><%= heure %>h</th>
                 <% if [4,9].include?(index) %><th></th><th></th><% end %>
               <% end %>
             </tr>
@@ -37,12 +37,8 @@
         <% end %>
 
         <tr class="shadow-sm">
-          <td><b><%= salle.nom[0..9] %></b></td>
-          <td><%= salle.places %></td>
-          <td>
-            <%= link_to_unless cours_count.zero?, cours_count, 
-                              cours_path(ids:cours.pluck(:id), view:'list', from:'occupation') %>
-          </td>
+          <td><b><%= salle.nom[0..7] %></b></td>
+          <td class="text-right"><%= salle.places %></td>
           <td>
             <% cours.pluck(:formation_id).uniq.each do |id| %> 
                 <% formation = Formation.unscoped.find(id) %> 
@@ -52,6 +48,10 @@
                 <span style="padding-right:10px;"></span> 
             <% end %> 
           </td>
+          <td class="text-right">
+            <%= link_to_unless cours_count.zero?, cours_count, 
+                              cours_path(ids:cours.pluck(:id), view:'list', from:'occupation') %>
+          </td>
 
           <% if @date %>
             <% range = [] %>
@@ -59,7 +59,7 @@
             <% map = @etendue_horaire.map {|i| range.include?(i) ? 'red' : 'lightgreen' } %>
             
             <% map.each_with_index do |color, index| %>
-              <td class="<%= 'text-center alert alert-warning' if (index + 8) == time_in_paris.hour %>">
+              <td class="<%= 'text-center alert alert-warning' if ((@date == Date.today) && ((index + 8) == time_in_paris.hour)) %>">
                 <% if color == 'lightgreen' %>
                   <%= link_to new_cour_path(debut: @date, heure: (index + 8), salle_id: salle.id, from: 'occupation') do %>
                     <span style="background-color:<%= color %>;padding-left: 15px;"></span>
