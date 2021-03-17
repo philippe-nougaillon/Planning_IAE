@@ -896,7 +896,7 @@ class ToolsController < ApplicationController
 
   def nouvelle_saison
 
-    @years ||= ['2018/2019','2019/2020','2020/2021','2021/2022','2022/2023','2023/2024','2024/2025']
+    @years ||= ['2021/2022','2022/2023','2023/2024','2024/2025']
 
     unless params[:saison].blank?
       @formations = Formation.where(hors_catalogue:false)
@@ -904,11 +904,11 @@ class ToolsController < ApplicationController
       
       case params[:saison]
       when @years[0]
-        @date_debut = Date.parse('2018-09-03')
-        @date_fin = Date.parse('2019-07-15')
+        @date_debut = Date.parse('2021-09-02')
+        @date_fin = Date.parse('2022-07-08')
       when @years[1]
-        @date_debut = Date.parse('2019-09-02')
-        @date_fin = Date.parse('2020-07-15')
+        @date_debut = Date.parse('2022-09-02')
+        @date_fin = Date.parse('2023-07-15')
       else
         annee_debut = params[:saison].split('/').first
         annee_fin = params[:saison].split('/').last
@@ -937,10 +937,12 @@ class ToolsController < ApplicationController
       _date_debut = Date.parse(params[:date_debut])
       _date_fin = Date.parse(params[:date_fin])
       _formation = Formation.find(params[:formation_id])
+      _salle_id = params[:salle_id]
+      _save = params[:save]
       _intervenant = Intervenant.find(445) # A CONFIRMER
       _semaines = params[:semaine].try(:keys)
-      _errors = 0
       _jours = []
+      @errors = []
 
       if _semaines
         (_date_debut.._date_fin).each do |j|
@@ -951,29 +953,33 @@ class ToolsController < ApplicationController
                         (params[:vendredi] && wday == 5) || (params[:samedi] && wday == 6))
             if ok_jours
               _jours << j
-              unless création_cours(_formation, j, _intervenant, true, true)
-                _errors = _errors + 1 
+              _retval = création_cours(_formation, j, _intervenant, _salle_id, _save, true, true)
+              if _retval.count > 0
+                @errors << _retval
+
+                puts "RETVAL: #{ _retval.inspect }"
+
               end
             end
           end  
         end
       end
 
-      if _errors.zero?
-        flash[:notice] = "#{_jours.count} cours créés"
+      if @errors.count.zero?
+        flash[:notice] = "#{ _jours.count } cours créés"
       else
-        flash[:error] = "#{_jours.count} cours créés + #{_errors} erreurs (ces cours n'ont pas été créés) !"
+        flash[:error] = "#{ @errors.count } erreurs empêchent la création des cours !"
       end
     else
       flash[:error] = "L'intervenant générique 'A CONFIRMER' (445) doit exister !"
     end
 
-    redirect_to cours_path(formation_id: _formation, etat: Cour.etats[:plannifié])
+    #redirect_to cours_path(formation_id: _formation, etat: Cour.etats[:plannifié])
 
   end
 
-  def création_cours(formation, jour, intervenant, am, pm)
-    new_cours = Cour.new(formation: formation, intervenant: intervenant)
+  def création_cours(formation, jour, intervenant, salle, save, am, pm)
+    new_cours = Cour.new(formation: formation, intervenant: intervenant, salle_id: salle)
     if am || pm
       if am
         new_cours.duree = 3
@@ -998,22 +1004,22 @@ class ToolsController < ApplicationController
       new_cours.fin = eval("new_cours.debut + #{new_cours.duree}.hour")
     end
 
-    _ok = true  
+    _retval = []  
     if new_cours.valid?
-      new_cours.save
+      new_cours.save if save == 'true'
     else
-      _ok = false 
+      _retval << [new_cours.debut, new_cours.errors.messages] 
     end
 
     if new_cours_pm
       if new_cours_pm.valid?
-        new_cours_pm.save 
+        new_cours_pm.save if save == 'true'
       else
-        _ok = false
+        _retval << [new_cours_pm.debut, new_cours_pm.errors.messages] 
       end
     end
-    
-    return _ok
+  
+    return _retval
   end
 
   def notifier_intervenants

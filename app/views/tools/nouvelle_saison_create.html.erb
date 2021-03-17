@@ -1,5 +1,17 @@
-<h2>
-    <%= @jours.count %> jours créés 
-</h2>
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h2>
+    <%= fa_icon 'calendar' %> Réservations en masse
+    <br>
+    <small>Réservation de créneaux horaires sur toute une année scolaire</small>
+  </h2>
+</div>
+<br>
 
-<%= debug @jours %>
+
+<% @errors.each do |error| %>
+    <% error.each do |e| %>
+        <b><%= l(e.first, format: :perso) %></b>
+        <%= simple_format e.last[:cours].last %>
+    <% end %>
+<% end %>
+

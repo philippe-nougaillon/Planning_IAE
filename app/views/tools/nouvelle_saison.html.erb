@@ -51,7 +51,7 @@
               <%= label_tag "Semaines de présence", nil %><br>
               <table class="table table-striped table-bordered table-condensed table-hover">
                   <tr>
-                    <th>N°</th>
+                    <th>N° Semaine</th>
                     <th>Premier jour de la semaine</th>
                     <th>Présence</th>
                   </tr>
@@ -64,6 +64,22 @@
                   <% end %>
               </table>
 
+              <%= label_tag "Salle" %>    
+              <%= select_tag :salle_id, 
+                              options_from_collection_for_select(Salle.order(:nom), :id, :nom_places, params[:salle_id]), 
+                              include_blank:true, class:"form-control form-control-sm" %>
+              <br>
+
+              <div class="field">
+                <b>Enregistrer les changements ?</b> <br>
+                <%= label :save, "Oui", :value => "true" %>
+                <%= radio_button_tag :save, true %>
+                <%= label :save, "Non", :value => "false" %>
+                <%= radio_button_tag :save, false, :checked => true %>
+                <br><i>Choisissez 'Non' pour tester votre création car <b>elle est irréversible !</b></i><br />
+              </div>
+              <br>
+
               <div class="actions">
                   <%= submit_tag "Lancer la création", class: "btn btn-success" %>
               </div>
@@ -72,3 +88,4 @@
       </div>
   </div>
 <% end %>
+<br>
