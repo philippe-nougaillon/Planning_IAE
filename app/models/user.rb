@@ -25,8 +25,7 @@ class User < ApplicationRecord
         'fitsch-mouras.iae@univ-paris1.fr',
         'manzano.iae@univ-paris1.fr',
         'denis.iae@univ-paris1.fr',
-        'riviere.iae@univ-paris1.fr',
-        'lacaud.iae@univ-paris1.fr'
+        'riviere.iae@univ-paris1.fr'
       ].include?(self.email)
   end
 
