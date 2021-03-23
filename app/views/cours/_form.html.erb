@@ -99,6 +99,7 @@
     <% if @cour.new_record? %>
       <%= f.submit "Enregistrer et en saisir une autre", name: 'create_and_add', class: 'btn btn-outline-primary' %>
     <% end %>
+    <%= check_box_tag :notifier %> Notifier les étudiants ?
   <% end %>
 
 <% end %>

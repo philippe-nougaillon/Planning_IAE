@@ -514,7 +514,7 @@ class CoursController < ApplicationController
       if @cour.update(cour_params)
         format.html do
           # notifier les étudiants des changements ?
-          if params[:notifier] == "Enregistrer et notifier les étudiants des changements"
+          if params[:notifier]
             @cour.formation.etudiants.each do | etudiant |
               EtudiantMailer.notifier_modification_cours(etudiant, @cour).deliver_later
             end
