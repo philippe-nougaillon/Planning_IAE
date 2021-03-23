@@ -516,10 +516,10 @@ class CoursController < ApplicationController
           # notifier les étudiants des changements ?
           if params[:notifier]
             @cour.formation.etudiants.each do | etudiant |
-              EtudiantMailer.notifier_modification_cours(etudiant, @cour).deliver_later
+              NotifierEtudiantsJob.perform_later(etudiant, @cour)
             end
           end
-
+    
           # repartir à la page où a eu lieu la demande de modification
           if params[:from] == 'planning_salles'
             redirect_to cours_path(view:"calendar_rooms", start_date:@cour.debut)
