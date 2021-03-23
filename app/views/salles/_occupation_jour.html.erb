@@ -83,7 +83,7 @@
     </tbody>
   </table>
 
-  <% if current_user.admin? && (!params[:salle_id] || params[:salle_id].blank?) %>
+  <% if current_user && current_user.admin? && (!params[:salle_id] || params[:salle_id].blank?) %>
     <div class="row">
       <div class="col-sm-6">
         <h5>
