@@ -13,17 +13,15 @@
         </p>
     
         <p>
-            Votre cours du 
+            Votre cours initialement prévu le 
             <%= l(@cours.debut, format: :long) %> 
             (<%= "#{@cours.nom_ou_ue} - #{@cours.formation.nom}" %>) 
-            vient d'être modifié. 
-        </p>
-
-        <p>
-            <h4>Changements:</h4>
-            <ul><li>
+            vient d'être modifié : 
+            <ul>
+              <li>
                 <%= sanitize ApplicationController.helpers.prettify(@cours.audits.last).join('</li><li>') %>
-            </li></ul>
+              </li>
+            </ul>
         </p>
 
         <p>
@@ -33,7 +31,7 @@
     </p>
     
     <p>
-      <%= link_to "Voir le planning", root_url(formation_id: @cours.formation_id, start_date: @cours.debut.to_date) %>
+      <%= link_to "Voir ce cours dans le planning", root_url(ids: @cours.id) %>
     </p>
   </body>
 </html>
