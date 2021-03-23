@@ -7,11 +7,14 @@
 </div>
 <br>
 
-
-<% @errors.each do |error| %>
-    <% error.each do |e| %>
-        <b><%= l(e.first, format: :perso) %></b>
-        <%= simple_format e.last[:cours].last %>
-    <% end %>
+<% if @errors.any? %>
+  <% @errors.each do |error| %>
+    <b><%= l(error.first, format: :perso) %></b>
+    <%= simple_format error.last[:cours].last %>
+  <% end %>
+  <br>
 <% end %>
 
+<% if @ids_ok.any? %>
+  <%= link_to 'Afficher les cours créés', cours_path(ids: @ids_ok) %>
+<% end %>

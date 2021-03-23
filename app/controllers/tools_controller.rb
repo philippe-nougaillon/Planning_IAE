@@ -932,17 +932,16 @@ class ToolsController < ApplicationController
     # Permet de faire des réservations au nom de l'intervenant 'A CONFIRMER'
 
     if Intervenant.exists?(445)
-
       _intervenant = Intervenant.find(445) # A CONFIRMER
       _date_debut = Date.parse(params[:date_debut])
       _date_fin = Date.parse(params[:date_fin])
       _formation = Formation.find(params[:formation_id])
       _salle_id = params[:salle_id]
       _save = params[:save]
-      _intervenant = Intervenant.find(445) # A CONFIRMER
       _semaines = params[:semaine].try(:keys)
       _jours = []
       @errors = []
+      @ids_ok = []
 
       if _semaines
         (_date_debut.._date_fin).each do |j|
@@ -953,72 +952,70 @@ class ToolsController < ApplicationController
                         (params[:vendredi] && wday == 5) || (params[:samedi] && wday == 6))
             if ok_jours
               _jours << j
-              _retval = création_cours(_formation, j, _intervenant, _salle_id, _save, true, true)
-              if _retval.count > 0
-                @errors << _retval
-
-                puts "RETVAL: #{ _retval.inspect }"
-
-              end
+              _retval = création_cours_am(_formation, j, _intervenant, _salle_id, _save)
+              @errors << _retval if _retval.is_a?(Array)
+              @ids_ok << _retval if _retval.is_a?(Integer)
+                
+              _retval = création_cours_pm(_formation, j, _intervenant, _salle_id, _save)
+              @errors << _retval if _retval.is_a?(Array)
+              @ids_ok << _retval if _retval.is_a?(Integer)
             end
           end  
         end
       end
 
-      if @errors.count.zero?
-        flash[:notice] = "#{ _jours.count } cours créés"
-      else
-        flash[:error] = "#{ @errors.count } erreurs empêchent la création des cours !"
-      end
+      if @errors.count > 0
+        flash[:error] = "#{ @errors.count } erreurs empêchent la création de cours !"
+      end 
+
+      flash[:notice] = "#{ @ids_ok.count } cours créés"
     else
       flash[:error] = "L'intervenant générique 'A CONFIRMER' (445) doit exister !"
     end
 
-    #redirect_to cours_path(formation_id: _formation, etat: Cour.etats[:plannifié])
-
   end
 
-  def création_cours(formation, jour, intervenant, salle, save, am, pm)
+  def création_cours_am(formation, jour, intervenant, salle, save)
+
     new_cours = Cour.new(formation: formation, intervenant: intervenant, salle_id: salle)
-    if am || pm
-      if am
-        new_cours.duree = 3
-        new_cours.debut = Time.parse(jour.to_s + " 9:00 UTC")
-        new_cours.fin = eval("new_cours.debut + #{new_cours.duree}.hour")
-      elsif pm
-        new_cours.duree = 3
-        new_cours.debut = Time.parse(jour.to_s + " 13:00 UTC")
-        new_cours.fin = eval("new_cours.debut + #{new_cours.duree}.hour")
-      end
-      # création du cours de l'après midi si besoin
-      if (am && pm)
-        new_cours_pm = Cour.new(formation: formation, intervenant: intervenant)
-        new_cours_pm.duree = 3
-        new_cours_pm.debut = Time.parse(jour.to_s + " 13:00 UTC")
-        new_cours_pm.fin = eval("new_cours_pm.debut + #{new_cours_pm.duree}.hour")
-      end  
-    else
-      # calcul de la date & heure de début et de fin  
-      new_cours.duree = duree
-      new_cours.debut = Time.parse(jour.to_s + " #{params[:cours]["start_date(4i)"]}:#{params[:cours]["start_date(5i)"]} UTC")
-      new_cours.fin = eval("new_cours.debut + #{new_cours.duree}.hour")
-    end
 
-    _retval = []  
+    new_cours.debut = Time.parse(jour.to_s + " 9:00 UTC")
+    new_cours.duree = 3
+    new_cours.fin = eval("new_cours.debut + #{new_cours.duree}.hour")
+
     if new_cours.valid?
-      new_cours.save if save == 'true'
-    else
-      _retval << [new_cours.debut, new_cours.errors.messages] 
-    end
-
-    if new_cours_pm
-      if new_cours_pm.valid?
-        new_cours_pm.save if save == 'true'
+      if save == 'true'
+        new_cours.save 
+        _retval = new_cours.id
       else
-        _retval << [new_cours_pm.debut, new_cours_pm.errors.messages] 
+        _retval = 0
       end
+    else
+      _retval = [new_cours.debut, new_cours.errors.messages] 
     end
   
+    return _retval
+  end
+
+  def création_cours_pm(formation, jour, intervenant, salle, save)
+
+    new_cours = Cour.new(formation: formation, intervenant: intervenant, salle_id: salle)
+
+    new_cours.debut = Time.parse(jour.to_s + " 13:00 UTC")
+    new_cours.duree = 3
+    new_cours.fin = eval("new_cours.debut + #{new_cours.duree}.hour")
+
+    if new_cours.valid?
+      if save == 'true'
+        new_cours.save 
+        _retval = new_cours.id
+      else
+        _retval = 0
+      end
+    else
+      _retval = [new_cours.debut, new_cours.errors.messages] 
+    end
+    
     return _retval
   end
 
