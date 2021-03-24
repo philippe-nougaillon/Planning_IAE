@@ -950,14 +950,30 @@ class ToolsController < ApplicationController
             ok_jours = ((params[:lundi] && wday == 1) || (params[:mardi] && wday == 2) || 
                         (params[:mercredi] && wday == 3) || (params[:jeudi] && wday == 4) || 
                         (params[:vendredi] && wday == 5) || (params[:samedi] && wday == 6))
+            # Si on est sur un jour coché, on essaye de créer le cours
             if ok_jours
               _jours << j
-              _retval = création_cours_am(_formation, j, _intervenant, _salle_id, _save)
-              @errors << _retval if _retval.is_a?(Array)
+
+              # créer le cours du matin
+              _retval = création_cours('9:00 UTC', _formation, j, _intervenant, _salle_id, _save)
+              # si la création ne fonctionne pas
+              if _retval.is_a?(Array)
+                # on essaye dans la salle
+                _retval = création_cours('9:00 UTC', _formation, j, _intervenant, nil, _save)
+                # si ça ne fonctionne toujours pas, alors c'est une erreur
+                @errors << _retval if _retval.is_a?(Array)
+              end
               @ids_ok << _retval if _retval.is_a?(Integer)
                 
-              _retval = création_cours_pm(_formation, j, _intervenant, _salle_id, _save)
-              @errors << _retval if _retval.is_a?(Array)
+              # créer le cours du soir
+              _retval = création_cours('13:00 UTC', _formation, j, _intervenant, _salle_id, _save)
+              if _retval.is_a?(Array)
+                # on essaye dans la salle
+                _retval = création_cours('13:00 UTC', _formation, j, _intervenant, nil, _save)
+                # si ça ne fonctionne toujours pas, alors c'est une erreur
+                @errors << _retval if _retval.is_a?(Array)
+              end
+
               @ids_ok << _retval if _retval.is_a?(Integer)
             end
           end  
@@ -975,11 +991,11 @@ class ToolsController < ApplicationController
 
   end
 
-  def création_cours_am(formation, jour, intervenant, salle, save)
+  def création_cours(heure, formation, jour, intervenant, salle, save)
 
     new_cours = Cour.new(formation: formation, intervenant: intervenant, salle_id: salle)
 
-    new_cours.debut = Time.parse(jour.to_s + " 9:00 UTC")
+    new_cours.debut = Time.parse(jour.to_s + ' ' + heure)
     new_cours.duree = 3
     new_cours.fin = eval("new_cours.debut + #{new_cours.duree}.hour")
 
@@ -994,28 +1010,6 @@ class ToolsController < ApplicationController
       _retval = [new_cours.debut, new_cours.errors.messages] 
     end
   
-    return _retval
-  end
-
-  def création_cours_pm(formation, jour, intervenant, salle, save)
-
-    new_cours = Cour.new(formation: formation, intervenant: intervenant, salle_id: salle)
-
-    new_cours.debut = Time.parse(jour.to_s + " 13:00 UTC")
-    new_cours.duree = 3
-    new_cours.fin = eval("new_cours.debut + #{new_cours.duree}.hour")
-
-    if new_cours.valid?
-      if save == 'true'
-        new_cours.save 
-        _retval = new_cours.id
-      else
-        _retval = 0
-      end
-    else
-      _retval = [new_cours.debut, new_cours.errors.messages] 
-    end
-    
     return _retval
   end
 
