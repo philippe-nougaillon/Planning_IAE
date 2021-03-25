@@ -8,11 +8,12 @@ module ToolsHelper
         
         audit.audited_changes.each do |c|
             key = c.first.humanize
-            if key == 'Salle'
+            case key
+            when 'Salle'
                 if salle = convertir_id_salles(audit)
                     pretty_changes << salle
                 end
-            elsif key == 'Formation'
+            when 'Formation'
                 ids = audit.audited_changes['formation_id']
                 case ids.class.name
                 when 'Integer'
@@ -24,7 +25,7 @@ module ToolsHelper
                         pretty_changes << "#{key} changée de '#{Formation.unscoped.find(ids.first).nom}' à 'nil'"
                     end
                 end 
-            elsif key == 'Intervenant'
+            when 'Intervenant'
                 ids = audit.audited_changes['intervenant_id']
                 case ids.class.name
                 when 'Integer'
@@ -32,7 +33,7 @@ module ToolsHelper
                 when 'Array'
                     pretty_changes << "#{key} changé de '#{Intervenant.find(ids.first).nom_prenom}' à '#{Intervenant.find(ids.last).nom_prenom}'"
                 end 
-                elsif key == 'User'
+            when 'User'
                 ids = audit.audited_changes['user_id']
                 case ids.class.name
                 when 'Integer'
@@ -40,10 +41,18 @@ module ToolsHelper
                 when 'Array'
                     pretty_changes << "#{key} changé de '#{User.find(ids.first).nom_et_prénom if ids.first}' à '#{User.find(ids.last).nom_et_prénom if ids.last}'"
                 end 
-            elsif key == 'Debut' and audit.audited_changes['debut'].class.name == 'Array'
-                pretty_changes << "Horaire de début modifié de '#{I18n.l(c.last.first, format: :long)}' à '#{I18n.l(c.last.last, format: :long)}'"
-            elsif key == 'Fin' and audit.audited_changes['fin'].class.name == 'Array'
-                pretty_changes << "Horaire de fin modifié de '#{I18n.l(c.last.first, format: :long)}' à '#{I18n.l(c.last.last, format: :long)}'"
+            when 'Debut' 
+                if audit.audited_changes['debut'].class.name == 'Array'
+                    pretty_changes << "Horaire de début modifié de '#{I18n.l(c.last.first, format: :long)}' à '#{I18n.l(c.last.last, format: :long)}'"
+                end
+            when 'Fin' 
+                if audit.audited_changes['fin'].class.name == 'Array'
+                    pretty_changes << "Horaire de fin modifié de '#{I18n.l(c.last.first, format: :long)}' à '#{I18n.l(c.last.last, format: :long)}'"
+                end
+            when 'Etat'
+                if audit.audited_changes['etat'].class.name == 'Array'
+                    pretty_changes << "Etat modifié de '#{ Cour.etats.keys[c.last.first].humanize }' à '#{ Cour.etats.keys[c.last.last].humanize }'"
+                end
             else
                 if audit.action == 'update'
                     unless c.last.first.blank? && c.last.last.blank?    
