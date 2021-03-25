@@ -53,8 +53,15 @@
                 <i title="Pas de salle réservée !">
                     <%= fa_icon 'exclamation-circle' %>
                 </i>
+            <% else %>
+                <h5>
+                    <span class="badge badge-pill badge-<%= cours.style %>">
+                        <%= cours.etat.humanize %>
+                    </span>
+                </h5>
             <% end %>
         <% end %>
+
         <% if user_signed_in? && !cours.commentaires.blank? %>
             <i title="<%= cours.commentaires %>" >
                 <%= fa_icon 'comment-dots' %>         
