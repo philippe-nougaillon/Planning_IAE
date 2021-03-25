@@ -17,7 +17,7 @@ class SallesController < ApplicationController
   def occupation
     params[:vue] ||= 'jour'
     
-    @salles = Salle.reorder(:bloc, :nom)
+    @salles = Salle.all
 
     unless session[:start_date].blank?
       params[:start_date] ||= session[:start_date]
@@ -25,8 +25,12 @@ class SallesController < ApplicationController
       params[:start_date] ||= Date.today
     end
 
+    unless params[:bloc].blank?
+      @salles = @salles.where(bloc: params[:bloc])
+    end
+
     unless params[:salle_id].blank?
-      @salles = @salles.where(id:params[:salle_id])
+      @salles = @salles.where(id: params[:salle_id])
     end
 
     unless params[:start_date].blank?

@@ -13,25 +13,28 @@
       </div>
 
       <div class="col-sm-2">
-        <%= label_tag "Afficher" %>
+        <%= label_tag "Batiment" %>
+        <%= select_tag :bloc, 
+                    options_for_select(Salle.blocs, params[:bloc]), 
+                    include_blank:true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
+      </div>
+
+      <div class="col-sm-2">
+        <%= label_tag "Salle" %>
+        <%= select_tag :salle_id, 
+                    options_from_collection_for_select(Salle.all, :id, :nom, params[:salle_id]), 
+                    include_blank:true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
+      </div>
+
+      <div class="col-sm-3">
+        <%= label_tag "Vue" %>
         <br> 
         <%= radio_button_tag :vue, "jour", (params[:vue]=='jour'), onchange:'this.form.submit()' %>
-        Jour 
+        Journée 
         <%= radio_button_tag :vue, "week", (params[:vue]=='week'), onchange:'this.form.submit()' %>
         Semaine
       </div>
 
-      <div class="col-sm-3">
-        <%= label_tag "Salle" %>
-        <div class="input-group">
-          <%= select_tag :salle_id, 
-                    options_from_collection_for_select(Salle.order(:nom), :id, :nom, params[:salle_id]), 
-                    include_blank:true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
-          <span class="input-group-btn">
-            <%= submit_tag 'Filtrer', class:"btn btn-sm btn-success" %>
-          </span>
-        </div>
-      </div>
     </div>
   <% end %>
 </div>
