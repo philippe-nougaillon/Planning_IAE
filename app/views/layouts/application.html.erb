@@ -49,14 +49,14 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-expand-sm navbar-light">
+    <nav class="navbar navbar-expand navbar-light shadow-sm">
       <a class="navbar-brand" href="/">
-        <%= image_tag("logo_iae@195.png", height: 45) %>
+        <%= image_tag("logo_iae@195.png", height: 40) %>
       </a>
 
       <div class="container-fluid">
         <ul class="navbar-nav">
-          <%= navbar_nav_item('cours', 'calendar-alt', cours_path) %>
+          <%= navbar_nav_item('cours', 'calendar-alt', cours_path, 'Planning') %>
           <%= navbar_nav_item('salles', 'chalkboard', occupation_salles_path) %>
           <% if user_signed_in? %>
             <%= navbar_nav_item('formations', 'briefcase', formations_path) %>
