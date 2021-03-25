@@ -23,7 +23,7 @@
         <% cours = @cours.where(salle_id: salle.id) %>
         <% cours_count = cours.length %>
 
-        <% if salle.bloc != bloc %>
+        <% if params[:bloc].blank? && salle.bloc != bloc %>
           <% bloc = salle.bloc %>
           <thead>
             <tr>
@@ -77,7 +77,7 @@
           <% else %>
             <td colspan=18></td>
           <% end %>
-          <td><%= salle.nom[0..2] %></td>
+          <td><b><%= salle.nom[0..2] %></b></td>
         </tr>
       <% end %>
     </tbody>
