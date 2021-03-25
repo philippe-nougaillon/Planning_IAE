@@ -22,7 +22,7 @@
       <div class="col-sm-2">
         <%= label_tag "Salle" %>
         <%= select_tag :salle_id, 
-                    options_from_collection_for_select(Salle.all, :id, :nom, params[:salle_id]), 
+                    options_from_collection_for_select((params[:bloc].blank? ? Salle.all : Salle.where(bloc: params[:bloc])), :id, :nom, params[:salle_id]), 
                     include_blank:true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
       </div>
 
