@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   
+  resources :dossiers
   devise_for :users
   
   resources :cours do

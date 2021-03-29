@@ -1,0 +1,31 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Dossiers</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Intervenant</th>
+      <th>Période</th>
+      <th>Workflow state</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @dossiers.each do |dossier| %>
+      <tr>
+        <td><%= dossier.intervenant_id %></td>
+        <td><%= dossier.période %></td>
+        <td><%= dossier.workflow_state %></td>
+        <td><%= link_to 'Show', dossier %></td>
+        <td><%= link_to 'Edit', edit_dossier_path(dossier) %></td>
+        <td><%= link_to 'Destroy', dossier, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Dossier', new_dossier_path %>

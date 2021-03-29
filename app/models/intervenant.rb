@@ -15,6 +15,7 @@ class Intervenant < ApplicationRecord
 																	attributes['heures'].blank? }
 
 	has_many :vacations
+	has_many :dossiers
 
 	validates_uniqueness_of :nom, scope: :email, case_sensitive: false
 	validates :nom, :email, :prenom, :status, presence: true
