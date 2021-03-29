@@ -4,8 +4,13 @@ class Dossier < ApplicationRecord
 
   audited
 
+  extend FriendlyId
+  friendly_id :slug_candidates, use: :slugged
+
   belongs_to :intervenant
-  has_many :documents
+
+  has_many :documents, dependent: :destroy
+
   accepts_nested_attributes_for :documents, 
                                 allow_destroy:true, 
                                 reject_if: lambda {|attributes| 
@@ -19,6 +24,13 @@ class Dossier < ApplicationRecord
     state :validé
     state :refusé
     state :archivé
+  end
+
+private
+
+  # only one candidate for an nice id; one random UDID
+  def slug_candidates
+    [SecureRandom.uuid]
   end
 
 end

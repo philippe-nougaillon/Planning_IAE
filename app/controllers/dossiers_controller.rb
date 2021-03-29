@@ -60,7 +60,7 @@ class DossiersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_dossier
-      @dossier = Dossier.find(params[:id])
+      @dossier = Dossier.find_by(slug: params[:id])
     end
 
     # Only allow a list of trusted parameters through.

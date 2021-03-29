@@ -92,3 +92,6 @@ gem 'workflow-activerecord'
 
 # This gem hooks up your Rails application with Roadie to help you generate HTML emails.
 gem 'roadie-rails', '~> 2.2'
+
+# UDID
+gem 'friendly_id', '~> 5.2.4'
