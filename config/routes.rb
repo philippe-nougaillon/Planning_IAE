@@ -22,7 +22,6 @@ Rails.application.routes.draw do
   resources :intervenants
   resources :users
   resources :fermetures
-  resources :documents
   resources :etudiants
  
   resources :import_logs do
