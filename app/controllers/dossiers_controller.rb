@@ -4,6 +4,20 @@ class DossiersController < ApplicationController
   # GET /dossiers or /dossiers.json
   def index
     @dossiers = Dossier.all
+
+    unless params[:nom].blank?
+      @dossiers = @dossiers.joins(:intervenant).where("intervenants.nom ILIKE ?", "%#{params[:nom].upcase}%")
+    end 
+
+    unless params[:période].blank?
+      @dossiers = @dossiers.where(période: params[:période])
+    end
+
+    unless params[:workflow_state].blank?
+      @dossiers = @dossiers.where("dossiers.workflow_state = ?", params[:dossiers].to_s.downcase)
+    end
+
+    @dossiers = @dossiers.paginate(page: params[:page], per_page: 20)
   end
 
   # GET /dossiers/1 or /dossiers/1.json
@@ -26,7 +40,7 @@ class DossiersController < ApplicationController
 
     respond_to do |format|
       if @dossier.save
-        format.html { redirect_to @dossier, notice: "Dossier was successfully created." }
+        format.html { redirect_to @dossier, notice: "Dossier créé" }
         format.json { render :show, status: :created, location: @dossier }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -57,7 +71,17 @@ class DossiersController < ApplicationController
     end
   end
 
-  private
+  def ajout_document
+    document = Document.new(params.permit![:document])
+    if document.save 
+      flash[:notice] = "Document ajouté"
+    else
+      flash[:error] = "Votre document n'a pas été ajouté !"
+    end
+    redirect_to document.dossier
+  end
+
+private
     # Use callbacks to share common setup or constraints between actions.
     def set_dossier
       @dossier = Dossier.find_by(slug: params[:id])

@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
   
-  resources :dossiers
   devise_for :users
   
   resources :cours do
@@ -38,7 +37,16 @@ Rails.application.routes.draw do
       get :suspendre
     end
   end
-  
+
+  resources :dossiers do
+    member do
+      post :ajout_document
+    end
+  end
+
+  resources :documents
+
+
   namespace :tools do
     get :index
 

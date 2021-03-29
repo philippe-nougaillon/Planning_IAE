@@ -1,13 +1,47 @@
-<p id="notice"><%= notice %></p>
+<br>
+<h1>Dossiers CEV</h1>
 
-<h1>Dossiers</h1>
+<div class="container-fluid p-3 shadow-sm">
+    <%= form_tag request.path, method: :get do %>
+      <div class="form-group">
+        <div class="row">
+
+          <div class="col-sm-3">
+            <%= label_tag :nom, "Nom" %>    
+            <%= text_field_tag :nom, params[:nom], include_blank:true, onchange:'this.form.submit()', class: 'form-control form-control-sm' %>
+          </div>
+
+          <div class="col-sm-2">
+            <%= label_tag :période, "Période" %>
+            <%= select_tag :période, 
+                                options_for_select(['2021/2022','2022/2023','2023/2024','2024/2025'], params[:période]), 
+                                include_blank: true,
+                                class: 'form-control form-control-sm', 
+                                onchange: 'this.form.submit()' %>
+          </div>
+
+
+          <div class="col-sm-2">
+            <%= label_tag :workflow_state, "Statut" %>
+            <%= select_tag :workflow_state, 
+                                options_for_select(Dossier.workflow_spec.states.keys.to_a, params[:workflow_state]), 
+                                include_blank: true,
+                                class: 'form-control form-control-sm', 
+                                onchange: 'this.form.submit()' %>
+          </div>
+          
+        </div>
+      </div>  
+    <% end %>
+</div>
+<br>
 
 <table class="table">
   <thead>
     <tr>
       <th>Intervenant</th>
       <th>Période</th>
-      <th>Workflow state</th>
+      <th>Statut</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -15,9 +49,9 @@
   <tbody>
     <% @dossiers.each do |dossier| %>
       <tr>
-        <td><%= dossier.intervenant_id %></td>
+        <td><%= dossier.intervenant.nom_prenom %></td>
         <td><%= dossier.période %></td>
-        <td><%= dossier.workflow_state %></td>
+        <td><%= dossier.workflow_state.humanize %></td>
         <td><%= link_to 'Voir', dossier %></td>
         <td><%= link_to 'Modifier', edit_dossier_path(dossier) %></td>
         <td><%= link_to '[X]', dossier, method: :delete, data: { confirm: 'Etes-vous bien certain.e ?' } %></td>
@@ -26,6 +60,9 @@
   </tbody>
 </table>
 
-<br>
+<div class="page_info">
+  <%= page_entries_info @dossiers %>
+</div>
 
-<%= link_to 'New Dossier', new_dossier_path %>
+<%= will_paginate @dossiers, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+

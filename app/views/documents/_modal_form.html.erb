@@ -1,0 +1,13 @@
+<%= bootstrap_form_with(url: ajout_document_dossier_path, model: document, method: :post, local: true) do |form| %>
+    <%= form.hidden_field :dossier_id %>
+    <%= form.select :nom, options_for_select(["Acte d'engagement", "Justificatif d'activité", "RIB", "Carte d'identité/Passport", 'Carte vitale', 'Attestation Sécurité Sociale', 'CV', 'Attestation de cumul', 'Extrait K-BIS', "Avis d'imposition", 'Attestation URSSAF', 'Carte étudiant', 'Titre de pension'], params[:nom]) %>
+    <%= form.file_field :fichier, required: true %>
+    <%= form.submit "Ajouter", class: "btn btn-success" %>
+<% end %>
+
+<script type="application/javascript">
+    $('input[type="file"]').change(function(e){
+        var fileName = e.target.files[0].name;
+        $('.custom-file-label').html(fileName);
+    });
+</script> 
