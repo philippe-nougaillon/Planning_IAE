@@ -71,16 +71,6 @@ class DossiersController < ApplicationController
     end
   end
 
-  def ajout_document
-    document = Document.new(params.permit![:document])
-    if document.save 
-      flash[:notice] = "Document ajouté"
-    else
-      flash[:error] = "Votre document n'a pas été ajouté !"
-    end
-    redirect_to document.dossier
-  end
-
 private
     # Use callbacks to share common setup or constraints between actions.
     def set_dossier

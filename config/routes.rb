@@ -23,6 +23,8 @@ Rails.application.routes.draw do
   resources :users
   resources :fermetures
   resources :etudiants
+  resources :dossiers 
+  resources :documents
  
   resources :import_logs do
     member do
@@ -37,15 +39,6 @@ Rails.application.routes.draw do
       get :suspendre
     end
   end
-
-  resources :dossiers do
-    member do
-      post :ajout_document
-    end
-  end
-
-  resources :documents
-
 
   namespace :tools do
     get :index
