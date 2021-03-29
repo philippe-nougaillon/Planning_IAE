@@ -15,5 +15,13 @@
   <%= @dossier.workflow_state %>
 </p>
 
+<% @dossier.documents.each do | doc | %>
+  <%= doc.nom %>
+  <%= doc.fichier.filename %>
+  <%= link_to 'voir', url_for(doc.fichier) %>
+  <br>
+<% end %>
+<br>
+
 <%= link_to 'Modifier', edit_dossier_path(@dossier) %> |
 <%= link_to 'Retour', dossiers_path %>

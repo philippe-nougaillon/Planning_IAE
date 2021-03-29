@@ -11,9 +11,9 @@
     </div>
   <% end %>
 
-  <%= form.text_field :intervenant_id %>
+  <%= form.hidden_field :intervenant_id %>
   <%= form.text_field :période %>
-  <%= form.text_field :workflow_state %>
+  <%= form.select :workflow_state, Dossier.workflow_spec.states.keys.to_a, include_blank: true, label: "Statut" %>
 
   <%= form.fields_for :documents do |doc| %>
     <div class="row">
