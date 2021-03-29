@@ -2,7 +2,7 @@
 
 <h1>Dossiers</h1>
 
-<table>
+<table class="table">
   <thead>
     <tr>
       <th>Intervenant</th>
@@ -18,9 +18,9 @@
         <td><%= dossier.intervenant_id %></td>
         <td><%= dossier.période %></td>
         <td><%= dossier.workflow_state %></td>
-        <td><%= link_to 'Show', dossier %></td>
-        <td><%= link_to 'Edit', edit_dossier_path(dossier) %></td>
-        <td><%= link_to 'Destroy', dossier, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Voir', dossier %></td>
+        <td><%= link_to 'Modifier', edit_dossier_path(dossier) %></td>
+        <td><%= link_to '[X]', dossier, method: :delete, data: { confirm: 'Etes-vous bien certain.e ?' } %></td>
       </tr>
     <% end %>
   </tbody>

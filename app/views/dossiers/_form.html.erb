@@ -1,4 +1,4 @@
-<%= form_with(model: dossier) do |form| %>
+<%= bootstrap_form_with(model: dossier, local: true) do |form| %>
   <% if dossier.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(dossier.errors.count, "error") %> prohibited this dossier from being saved:</h2>
@@ -11,22 +11,29 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :intervenant_id %>
-    <%= form.text_field :intervenant_id %>
-  </div>
+  <%= form.text_field :intervenant_id %>
+  <%= form.text_field :période %>
+  <%= form.text_field :workflow_state %>
 
-  <div class="field">
-    <%= form.label :période %>
-    <%= form.text_field :période %>
-  </div>
-
-  <div class="field">
-    <%= form.label :workflow_state %>
-    <%= form.text_field :workflow_state %>
-  </div>
+  <%= form.fields_for :documents do |doc| %>
+    <div class="row">
+      <%= doc.text_field :nom %>
+      <%= doc.file_field :fichier, required: true, accept: '.pdf' %>
+    </div>
+  <% end %>
 
   <div class="actions">
     <%= form.submit %>
   </div>
 <% end %>
+
+<%
+=begin%>
+ <script type="application/javascript">
+  $('input[type="file"]').change(function(e){
+      var fileName = e.target.files[0].name;
+      $('.custom-file-label').html(fileName);
+  });
+</script> 
+<%
+=end%>

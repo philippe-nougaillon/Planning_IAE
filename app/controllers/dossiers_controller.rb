@@ -13,6 +13,7 @@ class DossiersController < ApplicationController
   # GET /dossiers/new
   def new
     @dossier = Dossier.new
+    3.times { @dossier.documents.build }
   end
 
   # GET /dossiers/1/edit
@@ -64,6 +65,7 @@ class DossiersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def dossier_params
-      params.require(:dossier).permit(:intervenant_id, :période, :workflow_state)
+      params.require(:dossier).permit(:intervenant_id, :période, :workflow_state, 
+                                      documents_attributes: [:id, :nom, :fichier])
     end
 end
