@@ -1,7 +1,7 @@
 <%= bootstrap_form_with(model: document, method: :post, local: true) do |form| %>
     <%= form.hidden_field :dossier_id %>
-    <%= form.select :nom, options_for_select(["Acte d'engagement", "Justificatif d'activité", "RIB", "Carte d'identité/Passport", 'Carte vitale', 'Attestation Sécurité Sociale', 'CV', 'Attestation de cumul', 'Extrait K-BIS', "Avis d'imposition", 'Attestation URSSAF', 'Carte étudiant', 'Titre de pension'], params[:nom]) %>
-    <%= form.file_field :fichier, required: true %>
+    <%= form.select :nom, options_for_select(Document.types, params[:nom]), label: 'Type du document' %>
+    <%= form.file_field :fichier, required: true, label: 'Fichier PDF', accept: 'application/pdf'  %>
     <%= form.submit "Ajouter", class: "btn btn-success" %>
 <% end %>
 

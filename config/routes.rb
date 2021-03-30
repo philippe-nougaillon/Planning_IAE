@@ -26,6 +26,7 @@ Rails.application.routes.draw do
   resources :dossiers do
     member do
       get :deposer
+      get :envoyer
     end
   end
   resources :documents

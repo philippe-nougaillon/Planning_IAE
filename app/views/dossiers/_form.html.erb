@@ -12,14 +12,20 @@
   <% end %>
 
   <%= form.hidden_field :intervenant_id %>
-  <%= form.text_field :période %>
-  <%= form.select :workflow_state, Dossier.workflow_spec.states.keys.to_a, include_blank: true, label: "Statut" %>
+  <%= form.select :intervenant_id, 
+                  options_from_collection_for_select(Intervenant.all, :id, :nom_prenom, params[:intervenant_id]), 
+                  class: "form-control form-control-sm select2" %>
 
-  <%= form.fields_for :documents do |doc| %>
-    <div class="row">
-      <%= doc.text_field :nom %>
-      <%= doc.file_field :fichier, required: true, accept: '.pdf' %>
-    </div>
+  <%= form.select :période, options_for_select(Dossier.périodes, params[:période]) %>
+  <%= form.select :workflow_state, Dossier.workflow_spec.states.keys.to_a, label: "Statut" %>
+
+  <% unless dossier.new_record? %>
+    <%= form.fields_for :documents do |doc| %>
+      <div class="row">
+        <%= doc.text_field :nom %>
+        <%= doc.file_field :fichier, required: true, accept: '.pdf' %>
+      </div>
+    <% end %>
   <% end %>
 
   <div class="actions">

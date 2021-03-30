@@ -1,9 +1,11 @@
 class DossiersController < ApplicationController
-  before_action :set_dossier, only: %i[ show edit update destroy deposer ]
   skip_before_action :authenticate_user!, only: %i[ show deposer]
+  before_action :set_dossier, only: %i[ show edit update destroy envoyer deposer ]
 
   # GET /dossiers or /dossiers.json
   def index
+    authorize Dossier
+
     @dossiers = Dossier.all
 
     unless params[:nom].blank?
@@ -15,7 +17,7 @@ class DossiersController < ApplicationController
     end
 
     unless params[:workflow_state].blank?
-      @dossiers = @dossiers.where("dossiers.workflow_state = ?", params[:dossiers].to_s.downcase)
+      @dossiers = @dossiers.where("dossiers.workflow_state = ?", params[:workflow_state].to_s.downcase)
     end
 
     @dossiers = @dossiers.paginate(page: params[:page], per_page: 20)
@@ -41,7 +43,7 @@ class DossiersController < ApplicationController
 
     respond_to do |format|
       if @dossier.save
-        format.html { redirect_to @dossier, notice: "Dossier créé" }
+        format.html { redirect_to @dossier, notice: "Nouveau dossier créé avec succès" }
         format.json { render :show, status: :created, location: @dossier }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -72,10 +74,16 @@ class DossiersController < ApplicationController
     end
   end
 
+
+  # Actions du Workflow
   def deposer
-    
 
   end
+
+  def envoyer
+    @dossier.envoyer!
+  end
+
 
 private
     # Use callbacks to share common setup or constraints between actions.

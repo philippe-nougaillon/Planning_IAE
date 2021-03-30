@@ -20,16 +20,16 @@
 </p>
 
 <%= link_to 'Modifier', edit_dossier_path(@dossier) %> |
+<%= link_to 'Envoyer', envoyer_dossier_path(@dossier), title: "Envoyer un mail à l'intervenant avec le lien vers son dossier" %> |
 <%= link_to 'Retour', dossiers_path %>
 <br><br>
-
 
 <h3>Pièces justificatives</h3>
 
 <% if @dossier.documents.any? %>
   <table class="table table-sm table-hover">
     <thead>
-      <th>Nom</th>
+      <th>Type</th>
       <th>Fichier</th>
       <th colspan=2></th>
     </thead>

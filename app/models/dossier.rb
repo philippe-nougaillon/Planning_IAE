@@ -17,15 +17,42 @@ class Dossier < ApplicationRecord
                                                     attributes['nom'].blank? || 
                                                     attributes['fichier'].blank?}
 
+  default_scope { order('updated_at DESC') }
+                              
+                              
+  # WORKFLOW
+
+  NOUVEAU = 'nouveau'
+  ENVOYE  = 'envoyé'
+  DEPOSE  = 'deposé'
+  VALIDE  = 'validé'
+  REJETE  = 'rejeté'
+  ARCHIVE = 'archivé'
+
   workflow do
-    state :nouveau
-    state :envoyé
-    state :crée
+    state NOUVEAU do
+      event :envoyer, transitions_to: ENVOYE
+    end
+    
+    state ENVOYE do
+      event :déposer, transitions_to: DEPOSE
+    end
+
+    state DEPOSE do
+      event :valider, transitions_to: VALIDE
+      event :rejeter, transitions_to: REJETE
+    end
+
     state :validé
     state :refusé
     state :archivé
   end
 
+  def self.périodes
+    ['2021/2022','2022/2023','2023/2024','2024/2025']
+  end
+
+  
 private
 
   # only one candidate for an nice id; one random UDID
