@@ -23,7 +23,11 @@ Rails.application.routes.draw do
   resources :users
   resources :fermetures
   resources :etudiants
-  resources :dossiers 
+  resources :dossiers do
+    member do
+      get :deposer
+    end
+  end
   resources :documents
  
   resources :import_logs do

@@ -1,5 +1,6 @@
 class DocumentsController < ApplicationController
     before_action :set_document, only: [:destroy]
+    skip_before_action :authenticate_user!, only: %i[ create destroy]
 
     # POST /dossiers
     def create

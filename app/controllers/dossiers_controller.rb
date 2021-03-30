@@ -1,5 +1,6 @@
 class DossiersController < ApplicationController
-  before_action :set_dossier, only: %i[ show edit update destroy ]
+  before_action :set_dossier, only: %i[ show edit update destroy deposer ]
+  skip_before_action :authenticate_user!, only: %i[ show deposer]
 
   # GET /dossiers or /dossiers.json
   def index
@@ -69,6 +70,11 @@ class DossiersController < ApplicationController
       format.html { redirect_to dossiers_url, notice: "Dossier was successfully destroyed." }
       format.json { head :no_content }
     end
+  end
+
+  def deposer
+    
+
   end
 
 private
