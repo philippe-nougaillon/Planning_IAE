@@ -20,7 +20,7 @@
 </p>
 
 <%= link_to 'Modifier', edit_dossier_path(@dossier) %> |
-<%= link_to 'Envoyer', envoyer_dossier_path(@dossier), title: "Envoyer un mail à l'intervenant avec le lien vers son dossier" %> |
+<%= link_to 'Envoyer', envoyer_dossier_path(@dossier), title: "Envoyer un mail à l'intervenant contenant un lien unique vers son dossier" %> |
 <%= link_to 'Retour', dossiers_path %>
 <br><br>
 
@@ -42,6 +42,7 @@
         <td><%= link_to '[X]', doc, method: :delete, data: { confirm: 'Etes-vous bien certain.e ?' } %></td>
       </tr>
     <% end %>
+    <tfoot><tr><td colspan=4></tr></tfoot>
   </table>
 <% else %>
   <p class="alert alert-warning">
@@ -53,19 +54,19 @@
 <% end %>
 <br>
 
-<%= link_to new_document_path(dossier_id: @dossier.id), class: 'btn btn-success', data: {toggle: "modal", target: "#myModal" } do %>
-  <%= fa_icon 'plus-circle' %> Ajouter un document
-<% end %>
+<% if policy(@dossier).déposer? %>
+  <%= link_to new_document_path(dossier_id: @dossier.id), class: 'btn btn-success', data: {toggle: "modal", target: "#myModal" } do %>
+    <%= fa_icon 'plus-circle' %> Ajouter un document
+  <% end %>
 
-<%= link_to deposer_dossier_path(dossier_id: @dossier.id), data: { confirm: 'Etes-vous bien certain.e de vouloir déposer ce dossier ?' }, class: "btn btn-outline-info #{ 'disabled' unless @dossier.documents.any? }" do %>
-  <%= fa_icon 'plus-circle' %> Déposer le dossier
+  <%= link_to deposer_dossier_path(dossier_id: @dossier.id), data: { confirm: 'Etes-vous bien certain.e de vouloir déposer ce dossier ?' }, class: "btn btn-outline-info #{ 'disabled' unless @dossier.documents.any? }" do %>
+    <%= fa_icon 'plus-circle' %> Déposer le dossier
+  <% end %>
 <% end %>
-<br><br>
-
 
 <% if policy(@dossier).audits? %>
   <h4>Audit des modifications</h4>
-  <table class="table table-bordered table-hover table-condensed">
+  <table class="table table-bordered table-hover table-sm">
     <thead>
       <th>Date</th>
       <th>Utilisateur</th>            

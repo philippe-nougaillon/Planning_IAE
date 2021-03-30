@@ -17,4 +17,8 @@ class DossierPolicy < ApplicationPolicy
       new?
     end
 
+    def déposer?
+      !new?
+    end
+
 end
