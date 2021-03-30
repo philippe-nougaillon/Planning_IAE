@@ -6,11 +6,15 @@ class DossierPolicy < ApplicationPolicy
     end
   
     def index?
-      user
+      user.isRHGroupMember?
     end
 
     def new?
-        user.isRHGroupMember?
+      index?
+    end
+
+    def audits?
+      new?
     end
 
 end

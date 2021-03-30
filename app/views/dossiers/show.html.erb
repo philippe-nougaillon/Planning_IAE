@@ -60,7 +60,23 @@
 <%= link_to deposer_dossier_path(dossier_id: @dossier.id), data: { confirm: 'Etes-vous bien certain.e de vouloir déposer ce dossier ?' }, class: "btn btn-outline-info #{ 'disabled' unless @dossier.documents.any? }" do %>
   <%= fa_icon 'plus-circle' %> Déposer le dossier
 <% end %>
+<br><br>
 
+
+<% if policy(@dossier).audits? %>
+  <h4>Audit des modifications</h4>
+  <table class="table table-bordered table-hover table-condensed">
+    <thead>
+      <th>Date</th>
+      <th>Utilisateur</th>            
+      <th>Type</th>
+      <th>Record_id</th>
+      <th>Action</th>
+      <th>Modifications</th>
+    </thead>
+    <%= render partial: 'tools/audit', collection: @dossier.own_and_associated_audits %>
+  </table>
+<% end %>
 
 <!-- The Modal -->
 <div class="modal fade" id="myModal">

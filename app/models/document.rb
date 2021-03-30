@@ -2,9 +2,10 @@ class Document < ApplicationRecord
   include Workflow
   include WorkflowActiverecord
 
-  audited
+  audited associated_with: :dossier
 
   belongs_to :dossier
+
   has_one_attached :fichier
 
   workflow do

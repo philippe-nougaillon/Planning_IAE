@@ -10,6 +10,7 @@ class Dossier < ApplicationRecord
   belongs_to :intervenant
 
   has_many :documents, dependent: :destroy
+  has_associated_audits
 
   accepts_nested_attributes_for :documents, 
                                 allow_destroy:true, 
