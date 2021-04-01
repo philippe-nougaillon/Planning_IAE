@@ -1,6 +1,6 @@
 class DossiersController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[ show deposer]
-  before_action :set_dossier, only: %i[ show edit update destroy envoyer deposer ]
+  before_action :set_dossier, only: %i[ show edit update destroy envoyer deposer valider rejeter archiver ]
 
   # GET /dossiers or /dossiers.json
   def index
@@ -25,6 +25,7 @@ class DossiersController < ApplicationController
 
   # GET /dossiers/1 or /dossiers/1.json
   def show
+    #authorize @dossier
   end
 
   # GET /dossiers/new
@@ -56,7 +57,7 @@ class DossiersController < ApplicationController
   def update
     respond_to do |format|
       if @dossier.update(dossier_params)
-        format.html { redirect_to @dossier, notice: "Dossier was successfully updated." }
+        format.html { redirect_to @dossier, notice: "Dossier modifié." }
         format.json { render :show, status: :ok, location: @dossier }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -76,14 +77,29 @@ class DossiersController < ApplicationController
 
 
   # Actions du Workflow
-  def deposer
-
-  end
-
   def envoyer
     @dossier.envoyer!
+    redirect_to dossiers_url, notice: "Un mail va bientôt être envoyé à l'intervant"
   end
 
+  def deposer
+    @dossier.déposer!
+  end
+
+  def valider
+    @dossier.valider!
+    redirect_to dossiers_url, notice: 'Dossier validé'
+  end
+
+  def rejeter
+    @dossier.rejeter!
+    redirect_to dossiers_url, notice: 'Dossier rejeté'
+  end
+
+  def archiver
+    @dossier.archiver!
+    redirect_to dossiers_url, notice: 'Dossier archivé'
+  end
 
 private
     # Use callbacks to share common setup or constraints between actions.

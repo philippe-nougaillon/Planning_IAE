@@ -21,4 +21,8 @@ class DossierPolicy < ApplicationPolicy
       !new?
     end
 
+    def show?
+      #record.can_déposer? || user
+    end
+
 end

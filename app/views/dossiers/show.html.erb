@@ -1,6 +1,7 @@
 <br>
 
-<p class="h2">
+<p class="h3">
+  <%= fa_icon 'folder' %>
   Dossier de candidature 
 </p>
 <br>
@@ -19,25 +20,30 @@
 
   <p>
     <strong>Statut:</strong>
-    <%= @dossier.workflow_state.humanize %>
+    <span class="badge <%= @dossier.style %>"><%= @dossier.workflow_state.humanize %></span>  
   </p>
 
   <p>
-    <strong>MàJ:</strong>
-    Il y a <%= time_ago_in_words @dossier.updated_at %>
+    <strong>Créé le:</strong>
+    <%= l @dossier.created_at %>
+  </p>
+
+  <p>
+    <strong>MàJ le:</strong>
+    <%= l @dossier.updated_at %>
   </p>
 
   <%= link_to 'Modifier', edit_dossier_path(@dossier) %> |
-  <%= link_to_if @dossier.can_envoyer?, 'Envoyer', envoyer_dossier_path(@dossier), title: "Envoyer un mail à l'intervenant contenant un lien unique vers son dossier" %> |
-  <%= link_to_if @dossier.can_valider?, 'Valider', valider_dossier_path(@dossier) %> |
-  <%= link_to_if @dossier.can_rejeter?, 'Rejeter', rejeter_dossier_path(@dossier) %> |
-  <%= link_to_if @dossier.can_archiver?, 'Archiver', archiver_dossier_path(@dossier) %> |
+  <%= link_to_if @dossier.can_envoyer?, 'Envoyer', envoyer_dossier_path(@dossier), title: "Envoyer un mail à l'intervenant contenant un lien unique vers son dossier", class: 'btn btn-sm btn-primary' %> |
+  <%= link_to_if @dossier.can_valider?, 'Valider', valider_dossier_path(@dossier), class: 'btn btn-sm btn-success' %> |
+  <%= link_to_if @dossier.can_rejeter?, 'Rejeter', rejeter_dossier_path(@dossier), class: 'btn btn-sm btn-danger' %> |
+  <%= link_to_if @dossier.can_archiver?, 'Archiver', archiver_dossier_path(@dossier), class: 'btn btn-sm btn-secondary' %> |
   <%= link_to 'Retour', dossiers_path %>
   <br>
 <% end %>
 <br>
 
-<h3>Pièces justificatives</h3>
+<h4>Pièces justificatives</h4>
 <br>
 
 <% if @dossier.documents.any? %>
@@ -45,7 +51,6 @@
     <thead>
       <th>Type</th>
       <th>Fichier</th>
-      <th>Statut</th>
       <th>Ajouté il y a</th>
       <th></th>
     </thead>
@@ -54,7 +59,6 @@
         <tr>
           <td><%= doc.nom %></td>
           <td><%= link_to doc.fichier.filename, url_for(doc.fichier), target: '_blank' %></td>
-          <td><%= doc.workflow_state.humanize %></td>
           <td><%= time_ago_in_words(doc.created_at) %></td>
           <td><%= link_to '[X]', doc, method: :delete, data: { confirm: 'Etes-vous bien certain.e ?' } %></td>
         </tr>
@@ -78,7 +82,7 @@
 <% end %>
 <br>
 
-<% if policy(@dossier).déposer? %>
+<% if @dossier.can_déposer? %>
   <%= link_to new_document_path(dossier_id: @dossier.id), class: 'btn btn-success', data: {toggle: "modal", target: "#myModal" } do %>
     <%= fa_icon 'plus-circle' %> Ajouter un document
   <% end %>
@@ -86,6 +90,8 @@
   <%= link_to deposer_dossier_path(dossier_id: @dossier.id), data: { confirm: 'Etes-vous bien certain.e de vouloir déposer ce dossier ?' }, class: "btn btn-outline-info #{ 'disabled' unless @dossier.documents.any? }" do %>
     <%= fa_icon 'plus-circle' %> Déposer le dossier
   <% end %>
+  <br>
+
 <% end %>
 
 <% if policy(@dossier).audits? %>

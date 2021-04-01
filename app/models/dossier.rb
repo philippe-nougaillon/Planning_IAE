@@ -12,11 +12,11 @@ class Dossier < ApplicationRecord
   has_many :documents, dependent: :destroy
   has_associated_audits
 
-  accepts_nested_attributes_for :documents, 
-                                allow_destroy:true, 
-                                reject_if: lambda {|attributes| 
-                                                    attributes['nom'].blank? || 
-                                                    attributes['fichier'].blank?}
+  # accepts_nested_attributes_for :documents, 
+  #                               allow_destroy:true, 
+  #                               reject_if: lambda {|attributes| 
+  #                                                   attributes['nom'].blank? || 
+  #                                                   attributes['fichier'].blank?}
 
   default_scope { order('updated_at DESC') }
                               
@@ -25,32 +25,36 @@ class Dossier < ApplicationRecord
 
   NOUVEAU = 'nouveau'
   ENVOYE  = 'envoyé'
-  DEPOSE  = 'deposé'
+  DEPOSE  = 'déposé'
   VALIDE  = 'validé'
   REJETE  = 'rejeté'
   ARCHIVE = 'archivé'
 
   workflow do
-    state NOUVEAU do
+    state NOUVEAU, meta: {style: 'badge-info'} do
       event :envoyer, transitions_to: ENVOYE
     end
     
-    state ENVOYE do
+    state ENVOYE, meta: {style: 'badge-primary'} do
       event :déposer, transitions_to: DEPOSE
     end
 
-    state DEPOSE do
+    state DEPOSE, meta: {style: 'badge-warning'} do
       event :valider, transitions_to: VALIDE
       event :rejeter, transitions_to: REJETE
     end
 
-    state VALIDE do
+    state VALIDE, meta: {style: 'badge-success'} do
       event :archiver, transitions_to: ARCHIVE
     end
 
-    state REJETE
+    state REJETE, meta: {style: 'badge-danger'} do
+      
+    end
 
-    state ARCHIVE
+    state ARCHIVE, meta: {style: 'badge-secondary'} do
+      
+    end
 
   end
 
@@ -60,6 +64,9 @@ class Dossier < ApplicationRecord
     save!
   end
   
+  def style
+    self.current_state.meta[:style]
+  end
 
   def self.périodes
     ['2021/2022','2022/2023','2023/2024','2024/2025', '2025/2026']

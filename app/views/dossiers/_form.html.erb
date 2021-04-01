@@ -19,7 +19,9 @@
   <%= form.select :période, options_for_select(Dossier.périodes, params[:période]) %>
   <%= form.select :workflow_state, Dossier.workflow_spec.states.keys.to_a, label: "Statut" %>
 
-  <% unless dossier.new_record? %>
+  <%
+=begin%>
+ <% unless dossier.new_record? %>
     <%= form.fields_for :documents do |doc| %>
       <div class="row">
         <%= doc.text_field :nom %>
@@ -27,7 +29,9 @@
       </div>
     <% end %>
   <% end %>
-  <br>
+  <br> 
+<%
+=end%>
 
   <div class="actions">
     <%= form.submit %>
