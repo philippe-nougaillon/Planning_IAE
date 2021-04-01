@@ -3,6 +3,7 @@
 <p class="h2">
   Dossier de candidature 
 </p>
+<br>
 
 <p>
   <strong>Intervenant:</strong>
@@ -14,43 +15,66 @@
   <%= @dossier.période %>
 </p>
 
-<p>
-  <strong>Statut:</strong>
-  <%= @dossier.workflow_state.humanize %>
-</p>
+<% if current_user %>
 
-<%= link_to 'Modifier', edit_dossier_path(@dossier) %> |
-<%= link_to 'Envoyer', envoyer_dossier_path(@dossier), title: "Envoyer un mail à l'intervenant contenant un lien unique vers son dossier" %> |
-<%= link_to 'Retour', dossiers_path %>
-<br><br>
+  <p>
+    <strong>Statut:</strong>
+    <%= @dossier.workflow_state.humanize %>
+  </p>
+
+  <p>
+    <strong>MàJ:</strong>
+    Il y a <%= time_ago_in_words @dossier.updated_at %>
+  </p>
+
+  <%= link_to 'Modifier', edit_dossier_path(@dossier) %> |
+  <%= link_to_if @dossier.can_envoyer?, 'Envoyer', envoyer_dossier_path(@dossier), title: "Envoyer un mail à l'intervenant contenant un lien unique vers son dossier" %> |
+  <%= link_to_if @dossier.can_valider?, 'Valider', valider_dossier_path(@dossier) %> |
+  <%= link_to_if @dossier.can_rejeter?, 'Rejeter', rejeter_dossier_path(@dossier) %> |
+  <%= link_to_if @dossier.can_archiver?, 'Archiver', archiver_dossier_path(@dossier) %> |
+  <%= link_to 'Retour', dossiers_path %>
+  <br>
+<% end %>
+<br>
 
 <h3>Pièces justificatives</h3>
+<br>
 
 <% if @dossier.documents.any? %>
   <table class="table table-sm table-hover">
     <thead>
       <th>Type</th>
       <th>Fichier</th>
-      <th colspan=2></th>
+      <th>Statut</th>
+      <th>Ajouté il y a</th>
+      <th></th>
     </thead>
-    </thead>
-    <% @dossier.documents.each do | doc | %>
-      <tr>
-        <td><%= doc.nom %></td>
-        <td><%= doc.fichier.filename %></td>
-        <td><%= link_to 'Ouvrir', url_for(doc.fichier), target: '_blank' %></td>
-        <td><%= link_to '[X]', doc, method: :delete, data: { confirm: 'Etes-vous bien certain.e ?' } %></td>
-      </tr>
-    <% end %>
+    <tbody>
+      <% @dossier.documents.each do | doc | %>
+        <tr>
+          <td><%= doc.nom %></td>
+          <td><%= link_to doc.fichier.filename, url_for(doc.fichier), target: '_blank' %></td>
+          <td><%= doc.workflow_state.humanize %></td>
+          <td><%= time_ago_in_words(doc.created_at) %></td>
+          <td><%= link_to '[X]', doc, method: :delete, data: { confirm: 'Etes-vous bien certain.e ?' } %></td>
+        </tr>
+      <% end %>
+    </tbody>
     <tfoot><tr><td colspan=4></tr></tfoot>
   </table>
 <% else %>
-  <p class="alert alert-warning">
-    <br>
-    Veuillez ajouter vos justificatifs en utilisant le bouton 'Ajouter un document' ci-dessous.<br>
-    Quand le dossier est complet et prêt à être déposé, cliquez sur 'Déposer le dossier'.
-    <br><br>
-  </p>
+  <% if current_user %>
+    <p>
+      Aucun document pour l'instant.
+    </p>
+  <% else %>
+    <p class="alert alert-warning">
+      <br>
+      Veuillez ajouter vos justificatifs en utilisant le bouton 'Ajouter un document' ci-dessous.<br>
+      Quand le dossier est complet et prêt à être déposé, cliquez sur 'Déposer le dossier'.
+      <br><br>
+    </p>
+  <% end %>
 <% end %>
 <br>
 
@@ -66,7 +90,7 @@
 
 <% if policy(@dossier).audits? %>
   <h4>Audit des modifications</h4>
-  <table class="table table-bordered table-hover table-sm">
+  <table class="table table-hover table-sm">
     <thead>
       <th>Date</th>
       <th>Utilisateur</th>            
@@ -77,9 +101,10 @@
     </thead>
     <%= render partial: 'tools/audit', collection: @dossier.own_and_associated_audits %>
   </table>
+  <br>
 <% end %>
 
-<!-- The Modal -->
+<!-- Modal -->
 <div class="modal fade" id="myModal">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">

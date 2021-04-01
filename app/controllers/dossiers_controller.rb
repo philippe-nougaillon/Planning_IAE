@@ -69,7 +69,7 @@ class DossiersController < ApplicationController
   def destroy
     @dossier.destroy
     respond_to do |format|
-      format.html { redirect_to dossiers_url, notice: "Dossier was successfully destroyed." }
+      format.html { redirect_to dossiers_url, notice: "Dossier supprimé." }
       format.json { head :no_content }
     end
   end

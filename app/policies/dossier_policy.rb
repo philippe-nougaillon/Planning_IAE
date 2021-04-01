@@ -6,7 +6,7 @@ class DossierPolicy < ApplicationPolicy
     end
   
     def index?
-      user.isRHGroupMember?
+      user && user.isRHGroupMember?
     end
 
     def new?

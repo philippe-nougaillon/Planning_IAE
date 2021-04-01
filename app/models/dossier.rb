@@ -44,15 +44,26 @@ class Dossier < ApplicationRecord
       event :rejeter, transitions_to: REJETE
     end
 
-    state :validé
-    state :refusé
-    state :archivé
+    state VALIDE do
+      event :archiver, transitions_to: ARCHIVE
+    end
+
+    state REJETE
+
+    state ARCHIVE
+
   end
+
+  # pour que le changement se voit dans l'audit trail
+  def persist_workflow_state(new_value)
+    self[:workflow_state] = new_value
+    save!
+  end
+  
 
   def self.périodes
-    ['2021/2022','2022/2023','2023/2024','2024/2025']
+    ['2021/2022','2022/2023','2023/2024','2024/2025', '2025/2026']
   end
-
   
 private
 

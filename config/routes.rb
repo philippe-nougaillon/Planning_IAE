@@ -1,7 +1,14 @@
 Rails.application.routes.draw do
   
   devise_for :users
-  
+
+  resources :formations
+  resources :intervenants
+  resources :users
+  resources :fermetures
+  resources :etudiants
+  resources :documents
+
   resources :cours do
     collection do
       get :planning, to: 'cours#index_slide'
@@ -18,18 +25,15 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :formations
-  resources :intervenants
-  resources :users
-  resources :fermetures
-  resources :etudiants
   resources :dossiers do
     member do
       get :deposer
       get :envoyer
+      get :valider
+      get :rejeter
+      get :archiver
     end
   end
-  resources :documents
  
   resources :import_logs do
     member do

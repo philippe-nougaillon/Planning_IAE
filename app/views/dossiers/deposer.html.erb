@@ -1,4 +1,18 @@
 <br>
-<p class="h2">
-    Dossier <%= @dossier.slug %> déposé. Merci.
+<p class="h3">
+    Dossier déposé avec succès. Merci.
+</p>
+<br>
+
+<p>
+    Déposé le: <%= l DateTime.now %>
+</p>
+
+<p>
+    Référence: <%= @dossier.slug %> 
+</p>
+
+<p class="alert alert-info">
+    Votre gestionnaire va traiter votre dossier dans les meilleurs délais.
+    Vous pouvez maintenant fermer cette fenêtre.
 </p>

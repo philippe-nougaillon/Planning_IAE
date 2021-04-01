@@ -13,8 +13,8 @@
 
   <%= form.hidden_field :intervenant_id %>
   <%= form.select :intervenant_id, 
-                  options_from_collection_for_select(Intervenant.all, :id, :nom_prenom, params[:intervenant_id]), 
-                  class: "form-control form-control-sm select2" %>
+                  options_from_collection_for_select(Intervenant.where(status: 'CEV'), :id, :nom_prenom, params[:intervenant_id]), 
+                  class: 'form-control form-control-sm select2' %>
 
   <%= form.select :période, options_for_select(Dossier.périodes, params[:période]) %>
   <%= form.select :workflow_state, Dossier.workflow_spec.states.keys.to_a, label: "Statut" %>
@@ -27,6 +27,7 @@
       </div>
     <% end %>
   <% end %>
+  <br>
 
   <div class="actions">
     <%= form.submit %>
