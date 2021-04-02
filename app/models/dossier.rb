@@ -25,6 +25,9 @@ class Dossier < ApplicationRecord
 
   NOUVEAU = 'nouveau'
   ENVOYE  = 'envoyé'
+  RELANCE1= 'relancé 1 fois'
+  RELANCE2= 'relancé 2 fois'
+  RELANCE3= 'relancé 3 fois'
   DEPOSE  = 'déposé'
   VALIDE  = 'validé'
   REJETE  = 'rejeté'
@@ -34,11 +37,24 @@ class Dossier < ApplicationRecord
     state NOUVEAU, meta: {style: 'badge-info'} do
       event :envoyer, transitions_to: ENVOYE
     end
-    
+
     state ENVOYE, meta: {style: 'badge-primary'} do
+      event :relancer, transitions_to: RELANCE1
       event :déposer, transitions_to: DEPOSE
     end
 
+    state RELANCE1, meta: {style: 'badge-secondary'} do
+      event :relancer, transitions_to: RELANCE2
+    end
+
+    state RELANCE2, meta: {style: 'badge-secondary'} do
+      event :relancer, transitions_to: RELANCE3
+    end
+    
+    state RELANCE3, meta: {style: 'badge-secondary'} do
+      
+    end
+    
     state DEPOSE, meta: {style: 'badge-warning'} do
       event :valider, transitions_to: VALIDE
       event :rejeter, transitions_to: REJETE

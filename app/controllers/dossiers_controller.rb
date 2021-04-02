@@ -75,8 +75,10 @@ class DossiersController < ApplicationController
     end
   end
 
+  # 
+  # WORKFLOW
+  # 
 
-  # Actions du Workflow
   def envoyer
     @dossier.envoyer!
     redirect_to dossiers_url, notice: "Un mail va bientôt être envoyé à l'intervant"
