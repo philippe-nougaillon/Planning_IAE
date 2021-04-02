@@ -5,13 +5,25 @@ class Document < ApplicationRecord
   audited associated_with: :dossier
 
   belongs_to :dossier
-
   has_one_attached :fichier
 
+  DEPOSE = 'déposé'
+  VALIDE = 'validé'
+  REJETE = 'rejeté'
+  ARCHIVE= 'archivé'
+
   workflow do
-    state :nouveau
-    state :validé
-    state :refusé
+    state DEPOSE do
+      event :valider, transitions_to: VALIDE
+      event :rejeter, transitions_to: REJETE
+    end
+    state VALIDE do
+      event :archiver, transitions_to: ARCHIVE
+    end
+    state REJETE do
+      event :archiver, transitions_to: ARCHIVE
+    end
+    state ARCHIVE
   end
 
   def self.types

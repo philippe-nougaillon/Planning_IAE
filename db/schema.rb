@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_29_123141) do
+ActiveRecord::Schema.define(version: 2021_04_02_174148) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -104,6 +104,7 @@ ActiveRecord::Schema.define(version: 2021_03_29_123141) do
     t.string "workflow_state"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "commentaire"
     t.index ["dossier_id"], name: "index_documents_on_dossier_id"
   end
 
@@ -114,6 +115,7 @@ ActiveRecord::Schema.define(version: 2021_03_29_123141) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "slug"
+    t.string "mémo"
     t.index ["intervenant_id"], name: "index_dossiers_on_intervenant_id"
     t.index ["slug"], name: "index_dossiers_on_slug"
   end

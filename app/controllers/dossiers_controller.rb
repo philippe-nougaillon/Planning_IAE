@@ -89,6 +89,9 @@ class DossiersController < ApplicationController
   end
 
   def valider
+    @dossier.documents.each do | doc |
+      doc.valider! if doc.can_valider?
+    end
     @dossier.valider!
     redirect_to dossiers_url, notice: 'Dossier validé'
   end
@@ -99,8 +102,12 @@ class DossiersController < ApplicationController
   end
 
   def archiver
+    @dossier.documents.each do | doc |
+      doc.fichier.purge
+      doc.archiver!
+    end
     @dossier.archiver!
-    redirect_to dossiers_url, notice: 'Dossier archivé'
+    redirect_to dossiers_url, notice: 'Dossier archivé, documents supprimés'
   end
 
 private
@@ -111,7 +118,7 @@ private
 
     # Only allow a list of trusted parameters through.
     def dossier_params
-      params.require(:dossier).permit(:intervenant_id, :période, :workflow_state, 
-                                      documents_attributes: [:id, :nom, :fichier])
+      params.require(:dossier).permit(:intervenant_id, :période, :workflow_state, :mémo,
+                                      documents_attributes: [:id, :nom, :fichier, :workflow_state, :commentaire])
     end
 end

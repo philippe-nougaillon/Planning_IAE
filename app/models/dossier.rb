@@ -12,14 +12,11 @@ class Dossier < ApplicationRecord
   has_many :documents, dependent: :destroy
   has_associated_audits
 
-  # accepts_nested_attributes_for :documents, 
-  #                               allow_destroy:true, 
-  #                               reject_if: lambda {|attributes| 
-  #                                                   attributes['nom'].blank? || 
-  #                                                   attributes['fichier'].blank?}
+  accepts_nested_attributes_for :documents, 
+                                allow_destroy:true, 
+                                reject_if: lambda {|attributes| attributes['nom'].blank? }
 
-  default_scope { order('updated_at DESC') }
-                              
+  default_scope { order('updated_at DESC') }                              
                               
   # WORKFLOW
 
