@@ -62,7 +62,7 @@ class Dossier < ApplicationRecord
     end
 
     state REJETE, meta: {style: 'badge-danger'} do
-      
+      event :déposer, transitions_to: DEPOSE
     end
 
     state ARCHIVE, meta: {style: 'badge-secondary'} do

@@ -109,13 +109,23 @@ class DossiersController < ApplicationController
   end
 
   def rejeter
-    # Passe le dossier à l'état 'Rejeté'
-    @dossier.rejeter!
+    # Vérifier qu'il y a au moins un document à l'état rejeté
+    rejeter = false
+    @dossier.documents.each do | doc |
+      rejeter = true if doc.rejeté?
+    end
+    
+    if rejeter
+      # Passe le dossier à l'état 'Rejeté'
+      @dossier.rejeter!
 
-    # Informe l'intervenant
-    DossierMailer.with(dossier: @dossier).rejeter_email.deliver_later
+      # Informe l'intervenant
+      DossierMailer.with(dossier: @dossier).rejeter_email.deliver_later
 
-    redirect_to dossiers_url, notice: "Dossier rejeté. L'intervenant va en être informé."
+      redirect_to dossier_url(@dossier), notice: "Dossier rejeté. L'intervenant va en être informé."
+    else
+      redirect_to dossier_url(@dossier), alert: "Il faut au moins un document rejeté !"
+    end
   end
 
   def archiver
