@@ -72,9 +72,7 @@
             </td>
             <td>
               <%= doc.workflow_state.humanize %>
-              <% if doc.rejeté? && !current_user %>
-                <%= ": #{ doc.commentaire}" %>
-              <% end %>
+              <%= ": #{ doc.commentaire}" if doc.rejeté? %>
             </td>
             <td><%= time_ago_in_words(doc.created_at) %></td>
             <td><%= link_to '[X]', doc, method: :delete, data: { confirm: 'Etes-vous bien certain.e ?' } %></td>
@@ -111,7 +109,7 @@
 <br><br>
 
 
-<% if @dossier.can_déposer? %>
+<% if !current_user && @dossier.can_déposer? %>
   <%= link_to new_document_path(dossier_id: @dossier.id), class: 'btn btn-success', data: {toggle: "modal", target: "#myModal" } do %>
     <%= fa_icon 'plus-circle' %> Ajouter un document
   <% end %>
