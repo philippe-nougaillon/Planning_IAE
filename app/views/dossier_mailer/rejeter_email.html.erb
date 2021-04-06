@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <p>
+        Bonjour M., Mme, Mlle <%= @dossier.intervenant.nom %>,
+    </p>
+
+    <p>
+        <b>Votre dossier vient d'être rejeté.</b>
+    </p>
+
+    <p>
+        Veuillez consulter <%= link_to 'votre dossier en ligne', url_for(dossier_url(@dossier)) %> pour en savoir plus.
+    </p>
+
+    <p>
+        Restant à votre disposition,
+    </p>
+
+    <p>
+        Bien cordialement,
+    </p>
+
+    <p>
+        Marielle DENIS
+    </p>
+
+    <p>
+        Service des Ressources Humaines
+    </p>
+
+    <p>
+        Gestionnaire RH
+    </p>
+
+  </body>
+</html>

@@ -80,10 +80,13 @@ class DossiersController < ApplicationController
   # 
 
   def envoyer
-    DossierMailer.with(dossier: @dossier).dossier_email.deliver_now
-
+    # Passe le dossier à l'état 'Envoyé'
     @dossier.envoyer!
-    redirect_to dossiers_url, notice: "Un mail va bientôt être envoyé à l'intervant"
+
+    # Informe l'intervenant
+    DossierMailer.with(dossier: @dossier).dossier_email.deliver_later
+
+    redirect_to dossiers_url, notice: "Un email va être envoyé à l'intervenant"
   end
 
   def deposer
@@ -91,16 +94,28 @@ class DossiersController < ApplicationController
   end
 
   def valider
+    # Valide tous les documents
     @dossier.documents.each do | doc |
       doc.valider! if doc.can_valider?
     end
+
+    # Passe le dossier à l'état 'Validé'
     @dossier.valider!
-    redirect_to dossiers_url, notice: 'Dossier validé'
+
+    # Informe l'intervenant
+    DossierMailer.with(dossier: @dossier).valider_email.deliver_later
+
+    redirect_to dossiers_url, notice: "Dossier validé avec succès. L'intervenant va en être informé."
   end
 
   def rejeter
+    # Passe le dossier à l'état 'Rejeté'
     @dossier.rejeter!
-    redirect_to dossiers_url, notice: 'Dossier rejeté'
+
+    # Informe l'intervenant
+    DossierMailer.with(dossier: @dossier).rejeter_email.deliver_later
+
+    redirect_to dossiers_url, notice: "Dossier rejeté. L'intervenant va en être informé."
   end
 
   def archiver

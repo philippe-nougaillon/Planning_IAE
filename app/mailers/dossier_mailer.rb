@@ -13,4 +13,19 @@ class DossierMailer < ApplicationMailer
              subject: "[Enseignement IAE-Paris #{ @dossier.période }] Dossier administratif")
     end
 
+
+    def valider_email
+        @dossier = params[:dossier]
+
+        mail(to: @dossier.intervenant.email, 
+             subject: "[Enseignement IAE-Paris #{ @dossier.période }] Dossier administratif validé")
+    end
+
+    def rejeter_email
+        @dossier = params[:dossier]
+
+        mail(to: @dossier.intervenant.email, 
+             subject: "[Enseignement IAE-Paris #{ @dossier.période }] Dossier administratif rejeté")
+    end
+
 end
