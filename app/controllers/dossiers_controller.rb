@@ -80,6 +80,8 @@ class DossiersController < ApplicationController
   # 
 
   def envoyer
+    DossierMailer.with(dossier: @dossier).dossier_email.deliver_now
+
     @dossier.envoyer!
     redirect_to dossiers_url, notice: "Un mail va bientôt être envoyé à l'intervant"
   end
