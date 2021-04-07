@@ -124,7 +124,7 @@ class DossiersController < ApplicationController
 
       redirect_to dossier_url(@dossier), notice: "Dossier rejeté. L'intervenant va en être informé."
     else
-      redirect_to dossier_url(@dossier), alert: "Il faut au moins un document rejeté !"
+      redirect_to dossier_url(@dossier), alert: "Pour rejeter ce dossier, il faut qu'un document soit en statut 'Rejeté' !"
     end
   end
 

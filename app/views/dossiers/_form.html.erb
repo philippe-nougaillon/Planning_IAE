@@ -16,10 +16,10 @@
   <div class="row">
     <div class="col">
       <%= form.select :intervenant_id, 
-                      options_from_collection_for_select(Intervenant.where(status: 'CEV'), :id, :nom_prenom, params[:intervenant_id]), 
+                      options_from_collection_for_select(Intervenant.where(status: 'CEV'), :id, :nom_prenom, @dossier.intervenant_id), 
                       class: 'form-control form-control-sm select2' %>
 
-      <%= form.select :période, options_for_select(Dossier.périodes, params[:période]) %>
+      <%= form.select :période, options_for_select(Dossier.périodes, @dossier.période) %>
     </div>
 
     <div class="col">
@@ -29,12 +29,13 @@
   </div>
 
   <% unless dossier.new_record? %>
+    <h5>Pièces justificatives</h5>
     <%= form.fields_for :documents do |doc| %>
-      <div class="row">
-        <div class="col">
+      <div class="row shadow-sm">
+        <div class="col-sm-3">
           <%= doc.text_field :nom %>
         </div>
-        <div class="col">
+        <div class="col-sm-2">
           <%= doc.select :workflow_state, Document.workflow_spec.states.keys.to_a, label: "Statut" %>
         </div>
         <div class="col">
