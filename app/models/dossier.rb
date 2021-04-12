@@ -49,7 +49,7 @@ class Dossier < ApplicationRecord
     end
     
     state RELANCE3, meta: {style: 'badge-secondary'} do
-      
+      event :relancer, transitions_to: RELANCE1
     end
     
     state DEPOSE, meta: {style: 'badge-warning'} do

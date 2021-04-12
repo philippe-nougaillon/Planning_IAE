@@ -86,7 +86,7 @@ class DossiersController < ApplicationController
     # Informe l'intervenant
     DossierMailer.with(dossier: @dossier).dossier_email.deliver_later
 
-    redirect_to dossiers_url, notice: "Un email va être envoyé à l'intervenant"
+    redirect_to @dossier, notice: "Un email va être envoyé à l'intervenant"
   end
 
   def deposer
@@ -105,7 +105,7 @@ class DossiersController < ApplicationController
     # Informe l'intervenant
     DossierMailer.with(dossier: @dossier).valider_email.deliver_later
 
-    redirect_to dossiers_url, notice: "Dossier validé avec succès. L'intervenant va en être informé."
+    redirect_to @dossier, notice: "Dossier validé avec succès. L'intervenant va en être informé."
   end
 
   def rejeter
@@ -122,19 +122,23 @@ class DossiersController < ApplicationController
       # Informe l'intervenant
       DossierMailer.with(dossier: @dossier).rejeter_email.deliver_later
 
-      redirect_to dossier_url(@dossier), notice: "Dossier rejeté. L'intervenant va en être informé."
+      redirect_to @dossier, notice: "Dossier rejeté. L'intervenant va en être informé."
     else
-      redirect_to dossier_url(@dossier), alert: "Pour rejeter ce dossier, il faut qu'un document soit en statut 'Rejeté' !"
+      redirect_to @dossier, alert: "Pour rejeter ce dossier, il faut qu'un document soit en statut 'Rejeté' !"
     end
   end
 
   def archiver
     @dossier.documents.each do | doc |
-      doc.fichier.purge
-      doc.archiver!
+      if doc.validé?
+        doc.fichier.purge
+        doc.archiver!
+      elsif doc.rejeté?
+        doc.destroy
+      end
     end
     @dossier.archiver!
-    redirect_to dossiers_url, notice: 'Dossier archivé, documents supprimés'
+    redirect_to @dossier, notice: 'Dossier archivé, les fichiers sources (PDF) des documents validés ont été supprimés'
   end
 
 private
