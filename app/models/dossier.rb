@@ -65,10 +65,7 @@ class Dossier < ApplicationRecord
       event :déposer, transitions_to: DEPOSE
     end
 
-    state ARCHIVE, meta: {style: 'badge-secondary'} do
-      
-    end
-
+    state ARCHIVE, meta: {style: 'badge-secondary'}
   end
 
   # pour que le changement se voit dans l'audit trail
