@@ -64,13 +64,19 @@
                  <span class="badge <%= doc.style %>">
                   <%= doc.workflow_state.humanize %>
                 </span>
-                <%= "#{ doc.commentaire}" if doc.rejeté? %>
+                <% if doc.rejeté? %>
+                  <br>
+                  <%= doc.commentaire %>
+                <% end %>
               </td>
               <td><%= time_ago_in_words(doc.created_at) %></td>
               <td><%= link_to '[X]', doc, method: :delete, data: { confirm: 'Etes-vous bien certain.e ?' } %></td>
             </tr>
           <% end %>
         </tbody>
+        <tfoot>
+          <tr><th colspan=5></th></tr>
+        </tfoot>
       </table>
     <% else %>
       <% if current_user %>
@@ -109,7 +115,7 @@
     <%= link_to new_document_path(dossier_id: @dossier.id), data: { toggle: "modal", target: "#myModal" }, class: 'btn btn-link' do %>
       <%= fa_icon 'plus-circle' %> Ajouter un document
     <% end %>
-    
+
     <br><br>
   <% end %>
 
