@@ -512,7 +512,7 @@ class ToolsController < ApplicationController
         cours = []
 
         # création du cours type
-        new_cours = Cour.new(formation_id: params[:formation_id], intervenant_id: params[:intervenant_id], nom: nom_cours, salle_id: salle_id)
+        new_cours = Cour.new(formation_id: params[:formation_id], intervenant_id: params[:intervenant_id], nom: nom_cours, ue: params[:ue], salle_id: salle_id)
 
         # cours du matin
         if params[:am]

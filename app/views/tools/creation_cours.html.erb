@@ -70,6 +70,10 @@
         <%= text_field_tag :nom, params[:nom], class:"form-control" %>
         <br>
 
+        <%= label_tag :ue, "UE *" %>
+        <%= text_field_tag :ue, params[:ue], class:"form-control" %>
+        <br>
+
         <%= label_tag :salle_id, "Salle *" %>
         <%= select_tag :salle_id, options_from_collection_for_select(Salle.all, :id, :nom_places, params[:salle_id]), include_blank: true, class:"form-control" %>
         * Optionnel
