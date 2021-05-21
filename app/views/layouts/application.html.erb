@@ -62,6 +62,9 @@
             <%= navbar_nav_item('formations', 'briefcase', formations_path) %>
             <%= navbar_nav_item('intervenants', 'chalkboard-teacher', intervenants_path) %>
             <%= navbar_nav_item('etudiants', 'graduation-cap', etudiants_path) %>
+            <% if current_user.isRHGroupMember? %>
+              <%= navbar_nav_item('dossiers', 'folder', dossiers_path) %>
+            <% end %>
           <% end %>
         </ul>
 

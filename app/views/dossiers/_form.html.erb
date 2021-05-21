@@ -1,0 +1,53 @@
+<%= bootstrap_form_with(model: dossier, local: true) do |form| %>
+  <% if dossier.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(dossier.errors.count, "error") %> prohibited this dossier from being saved:</h2>
+
+      <ul>
+        <% dossier.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form.hidden_field :intervenant_id %>
+
+  <div class="row">
+    <div class="col">
+      <%= form.select :intervenant_id, 
+                      options_from_collection_for_select(Intervenant.where(status: 'CEV'), :id, :nom_prenom, @dossier.intervenant_id), 
+                      class: 'form-control form-control-sm select2' %>
+
+      <%= form.select :période, options_for_select(Dossier.périodes, @dossier.période) %>
+    </div>
+
+    <div class="col">
+      <%= form.select :workflow_state, Dossier.workflow_spec.states.keys.to_a, label: "Statut" %>
+      <%= form.text_area :mémo %>
+    </div>
+  </div>
+
+  <% unless dossier.new_record? %>
+    <h5>Pièces justificatives</h5>
+    <%= form.fields_for :documents do |doc| %>
+      <div class="row shadow-sm">
+        <div class="col-sm-3">
+          <%= doc.text_field :nom %>
+        </div>
+        <div class="col-sm-2">
+          <%= doc.select :workflow_state, Document.workflow_spec.states.keys.to_a, label: "Statut" %>
+        </div>
+        <div class="col">
+          <%= doc.text_field :commentaire %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+  <br> 
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
+

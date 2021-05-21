@@ -81,7 +81,7 @@ gem 'icalendar'
 #gem 'record_tag_helper', '~> 1.0'
 
 # Access-Control-Allow-Origin (pour l'APP React)
-gem "rack-cors"
+gem 'rack-cors'
 
 # Sucker Punch is a single-process Ruby asynchronous processing library.
 gem 'sucker_punch', '~> 2.0'
@@ -94,3 +94,10 @@ gem 'workflow-activerecord'
 gem 'roadie-rails', '~> 2.2'
 
 gem 'exception_notification'
+
+# UDID
+gem 'friendly_id', '~> 5.2.4'
+
+# Cloud file storage service Amazon’s S3.
+gem 'aws-sdk-s3', require: false
+

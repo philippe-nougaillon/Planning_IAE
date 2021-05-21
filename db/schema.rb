@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_03_132046) do
+ActiveRecord::Schema.define(version: 2021_04_02_174148) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(version: 2020_09_03_132046) do
     t.bigint "byte_size", null: false
     t.string "checksum", null: false
     t.datetime "created_at", null: false
+    t.string "service_name", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
@@ -97,17 +98,26 @@ ActiveRecord::Schema.define(version: 2020_09_03_132046) do
     t.index ["salle_id"], name: "index_cours_on_salle_id"
   end
 
-  create_table "documents", id: :serial, force: :cascade do |t|
+  create_table "documents", force: :cascade do |t|
+    t.bigint "dossier_id", null: false
     t.string "nom"
-    t.integer "formation_id"
-    t.integer "intervenant_id"
-    t.integer "unite_id"
-    t.string "fichier"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["formation_id"], name: "index_documents_on_formation_id"
-    t.index ["intervenant_id"], name: "index_documents_on_intervenant_id"
-    t.index ["unite_id"], name: "index_documents_on_unite_id"
+    t.string "workflow_state"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "commentaire"
+    t.index ["dossier_id"], name: "index_documents_on_dossier_id"
+  end
+
+  create_table "dossiers", force: :cascade do |t|
+    t.bigint "intervenant_id", null: false
+    t.string "période"
+    t.string "workflow_state"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "slug"
+    t.string "mémo"
+    t.index ["intervenant_id"], name: "index_dossiers_on_intervenant_id"
+    t.index ["slug"], name: "index_dossiers_on_slug"
   end
 
   create_table "dossiers", force: :cascade do |t|
@@ -316,4 +326,7 @@ ActiveRecord::Schema.define(version: 2020_09_03_132046) do
     t.index ["intervenant_id"], name: "index_vacations_on_intervenant_id"
   end
 
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "documents", "dossiers"
+  add_foreign_key "dossiers", "intervenants"
 end

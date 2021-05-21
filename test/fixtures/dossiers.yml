@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  intervenant: one
+  période: MyString
+  workflow_state: MyString
+
+two:
+  intervenant: two
+  période: MyString
+  workflow_state: MyString

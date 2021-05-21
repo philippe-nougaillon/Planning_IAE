@@ -1,0 +1,83 @@
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <% if policy(Dossier).new? %>
+    <%= link_to new_dossier_path, class: 'btn text-primary float-right' do %>
+      <%= fa_icon 'plus-circle' %> Dossier
+    <% end %>
+  <% end %>
+  <h3><%= fa_icon 'folder' %> Liste des dossiers de candidature 
+</h3>
+</div>
+
+<div class="container-fluid p-3 shadow-sm">
+    <%= form_tag request.path, method: :get do %>
+      <div class="form-group">
+        <div class="row">
+
+          <div class="col-sm-3">
+            <%= label_tag :nom, "Nom" %>    
+            <%= text_field_tag :nom, params[:nom], include_blank:true, onchange:'this.form.submit()', class: 'form-control form-control-sm' %>
+          </div>
+
+          <div class="col-sm-2">
+            <%= label_tag :période, "Période" %>
+            <%= select_tag :période, 
+                                options_for_select(Dossier.périodes, params[:période]), 
+                                include_blank: true,
+                                class: 'form-control form-control-sm', 
+                                onchange: 'this.form.submit()' %>
+          </div>
+
+
+          <div class="col-sm-2">
+            <%= label_tag :workflow_state, "Statut" %>
+            <%= select_tag :workflow_state, 
+                                options_for_select(Dossier.workflow_spec.states.keys.to_a, params[:workflow_state]), 
+                                include_blank: true,
+                                class: 'form-control form-control-sm', 
+                                onchange: 'this.form.submit()' %>
+          </div>
+          
+        </div>
+      </div>  
+    <% end %>
+</div>
+<br>
+
+<table class="table table-hover table-striped">
+  <thead>
+    <tr>
+      <th>Intervenant</th>
+      <th>Période</th>
+      <th>Statut</th>
+      <th>Création</th>
+      <th>MàJ</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @dossiers.each do |dossier| %>
+      <tr>
+        <td><%= dossier.intervenant.nom_prenom %></td>
+        <td><%= dossier.période %></td>
+        <td><span class="badge <%= dossier.style %>"><%= dossier.workflow_state.humanize %></span>  </td>
+        <td><%= time_ago_in_words dossier.created_at %></td>
+        <td><%= time_ago_in_words dossier.updated_at %></td>
+        <td><%= link_to 'Voir', dossier %></td>
+        <td><%= link_to 'Modifier', edit_dossier_path(dossier) %></td>
+        <td><%= link_to '[X]', dossier, method: :delete, data: { confirm: 'Etes-vous bien certain.e ?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+
+  <tfoot>
+    <tr><th colspan=8></th></tr>
+  </tfoot>
+</table>
+
+<div class="page_info">
+  <%= page_entries_info @dossiers %>
+</div>
+
+<%= will_paginate @dossiers, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+

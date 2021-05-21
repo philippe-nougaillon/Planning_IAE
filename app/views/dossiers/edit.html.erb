@@ -1,0 +1,12 @@
+<br>
+
+<h1>Modification Dossier</h1>
+
+<h3><%= @dossier.intervenant.nom_prenom %></h3>
+
+<br>
+
+<%= render 'form', dossier: @dossier %>
+
+<%= link_to 'Voir', @dossier %> |
+<%= link_to 'Retour', dossiers_path %>
