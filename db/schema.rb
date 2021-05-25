@@ -120,18 +120,6 @@ ActiveRecord::Schema.define(version: 2021_04_02_174148) do
     t.index ["slug"], name: "index_dossiers_on_slug"
   end
 
-  create_table "dossiers", force: :cascade do |t|
-    t.bigint "intervenant_id", null: false
-    t.string "période"
-    t.string "workflow_state"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.string "slug"
-    t.string "mémo"
-    t.index ["intervenant_id"], name: "index_dossiers_on_intervenant_id"
-    t.index ["slug"], name: "index_dossiers_on_slug"
-  end
-
   create_table "envoi_logs", force: :cascade do |t|
     t.datetime "date_prochain"
     t.string "workflow_state"
@@ -328,5 +316,4 @@ ActiveRecord::Schema.define(version: 2021_04_02_174148) do
 
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "documents", "dossiers"
-  add_foreign_key "dossiers", "intervenants"
 end
