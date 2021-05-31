@@ -113,13 +113,13 @@ Rails.application.configure do
     :address        => ENV['MAILGUN_SMTP_SERVER'],
     :user_name      => ENV['MAILGUN_SMTP_LOGIN'],
     :password       => ENV['MAILGUN_SMTP_PASSWORD'],
-    :domain         => 'mg.philnoug.com',
+    :domain         => 'planning-iae.herokuapp.com',
     :authentication => :plain,
   }
   ActionMailer::Base.delivery_method = :smtp
 
-  config.action_mailer.default_url_options = { host: 'planning4-demo.herokuapp.com', protocol: 'https' }
-  config.action_mailer.asset_host = 'planning4-demo.herokuapp.com'
+  config.action_mailer.default_url_options = { host: 'planning-iae.herokuapp.com', protocol: 'https' }
+  config.action_mailer.asset_host = 'planning-iae.herokuapp.com'
 
   # set the session cookie to expire automatically 12.hours after creation
   config.session_store :cookie_store, expire_after: 12.hours
