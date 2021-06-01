@@ -133,6 +133,8 @@ class CoursController < ApplicationController
 
     if request.variant.include?(:phone)
       @cours = @cours.paginate(page: params[:page], per_page: 15)
+      @formations = Formation.select(:nom).where(hors_catalogue: false).pluck(:nom)
+      @intervenants = Intervenant.where("intervenants.doublon = ? OR intervenants.doublon is null", false)
     end
 
     if params[:view] == "calendar_rooms"

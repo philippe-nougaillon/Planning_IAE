@@ -25,7 +25,7 @@ class Formation < ApplicationRecord
 	belongs_to :user
 
 	validates :nom, :nbr_etudiants, :nbr_heures, :abrg, presence: true
-	validates :nom, uniqueness: {scope: :promo}
+	validates :nom, uniqueness: { scope: :promo }
 	
 	default_scope { where("archive is null OR archive is false") }
 	default_scope { order(:nom, :promo) } 
