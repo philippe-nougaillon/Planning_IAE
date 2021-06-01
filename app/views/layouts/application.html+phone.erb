@@ -37,25 +37,26 @@
     </head>
 
     <body>
-        <div class="container-sm p-3 my-3">
-            <nav class="navbar bg-light mb-3">
-                <a class="navbar-brand" href="/">
-                    <%= image_tag('logo_iae@195.png', height: 25) %>
-                </a>
+        <nav class="navbar bg-light mb-3">
+            <a class="navbar-brand" href="/">
+                <%= image_tag('logo_iae@195.png', height: 25) %>
+            </a>
 
-                <!-- Toggler/collapsibe Button -->
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-                    <%= fa_icon 'bars' %>
-                </button>
+            <!-- Toggler/collapsibe Button -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                <%= fa_icon 'bars' %>
+            </button>
 
-                <!-- Navbar links -->
-                <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                    <ul class="navbar-nav">
-                        <%= navbar_nav_item('cours', 'calendar-alt', cours_path) %>
-                        <%= navbar_nav_item('salles', 'chalkboard', occupation_salles_path) %>
-                    </ul>
-                </div>
-            </nav>
+            <!-- Navbar links -->
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav">
+                    <%= navbar_nav_item('cours', 'calendar-alt', cours_path) %>
+                    <%= navbar_nav_item('salles', 'chalkboard', occupation_salles_path) %>
+                </ul>
+            </div>
+        </nav>
+    
+        <div class="container-sm my-3">
 
             <%= yield %>
         </div>
