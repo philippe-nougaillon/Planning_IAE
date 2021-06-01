@@ -101,3 +101,5 @@ gem 'friendly_id', '~> 5.2.4'
 # Cloud file storage service Amazon’s S3.
 gem 'aws-sdk-s3', require: false
 
+# SitemapGenerator is the easiest way to generate Sitemaps in Ruby. 
+gem 'sitemap_generator'
