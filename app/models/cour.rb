@@ -114,7 +114,7 @@ class Cour < ApplicationRecord
   end
 
   def nom_et_étudiants
-    "#{self.nom} (#{self.formation.nbr_etudiants})" 
+    "#{self.nom} (#{self.formation.try(:nbr_etudiants)})" 
   end
 
   def url?
