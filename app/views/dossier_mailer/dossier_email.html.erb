@@ -3,42 +3,49 @@
   <head>
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
+  
   <body>
     <p>
-        Bonjour M., Mme, Mlle <%= @dossier.intervenant.nom %>,
+        Madame, monsieur
     </p>
 
     <p>
-        Nous vous remercions d’avoir accepté d’intervenir à l’IAE Paris en qualité d’enseignant vacataire pour l’année universitaire <%= @dossier.période %>.
+        Nous vous remercions d’avoir accepté d’intervenir à l’IAE Paris en qualité d’enseignant vacataire, 
+        pour l’année universitaire <%= @dossier.période %>.
     </p>
 
     <p>
-        Vous trouverez ci-joint le dossier d'engagement .
+        Vous trouverez le lien permettant la transmission du dossier administratif nécessaire au paiement, 
+        ainsi que les pièces justificatives.
     </p>
 
     <p>
-        Conformément à la réglementation, vous devez le retourner au service RH, renseigné et signé par vos soins et accompagné des pièces justificatives avant votre première intervention à l’IAE Paris.
+        Conformément à la réglementation, vous devez le transmettre au service 
+        RH, renseigné et signé par vos soins et complet, <b>avant votre première 
+        intervention à l’IAE Paris</b>.
     </p>
 
     <p>
-        A cet effet vous trouverez également la liste des pièces à fournir selon votre situation et une note relative à la réglementation qui régit le recrutement d’enseignants vacataires dans l’enseignement supérieur public.
+        A cet effet, vous trouverez la liste de ces pièces à fournir selon 
+        votre situation et une note relative à la réglementation qui régit le 
+        recrutement d’enseignants vacataires dans l’enseignement supérieur public.
     </p>
 
     <p>
-        Le retour du dossier se fait par mail de préférence, cev.iae@univ-paris1.fr .
+        Pour rappel, le paiement se fait uniquement sous réserve de réception 
+        de votre dossier 2020/2021 complet et validé par le SRH et a lieu dans 
+        un délai de 2 mois après prestation. Le bulletin de paie sera accessible 
+        sur le site sécurisé <%= link_to 'ensap.gouv.fr', 'https://ensap.gouv.fr/web/accueilnonconnecte' %>.
     </p>
 
     <p>
-        Vous pouvez également déposer votre dossier en ligne en suivant ce lien :
+        Déposer votre dossier en ligne en suivant ce lien :
         <%= link_to 'déposer en ligne', url_for(dossier_url(@dossier)) %>
     </p>
 
     <p>
-        Pour rappel, les cours effectués seront mis en paiement uniquement sous réserve de réception de votre dossier <%= @dossier.période %> complet et validé par le SRH dans un délai de 2 mois après prestation et le bulletin de paie sera accessible sur le site sécurisé ensap.gouv.fr.
-    </p>
-
-    <p>
-        Restant à votre disposition,
+        Restant à votre disposition, vous pouvez nous contacter sur la 
+        messagerie <%= mail_to 'cev.iae@univ-paris1.fr' %>. 
     </p>
 
     <p>
