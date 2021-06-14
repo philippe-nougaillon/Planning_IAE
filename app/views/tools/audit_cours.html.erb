@@ -1,0 +1,119 @@
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h3><%= fa_icon 'search' %> Audit des cours planifiés par la scolarité</h3>
+</div>
+
+<%= form_tag request.path, method: :get do %>
+    <div class="form-group">
+        <div class="row">
+
+            <div class="col-sm-3">
+                <%= label_tag "Période du" %>    
+                <%= text_field_tag :start_date, params[:start_date], type:'date', class:"form-control" %>
+            </div>
+
+            <div class="col-sm-3">
+                <%= label_tag "au" %>    
+                <%= text_field_tag :end_date, params[:end_date], type:'date', class:"form-control", onchange:'this.form.submit()' %>
+            </div>
+
+            <div class="col-sm-3">
+                <p>Trier par</p>
+
+                 <div class="form-check-inline">
+                    <label class="form-check-label">
+                        <%= radio_button_tag :tri, :date_création, params[:tri] == 'date_création' , class: "form-check-input", onchange:'this.form.submit()' %>
+                        Date de création
+                    </label>
+                </div>
+
+                <div class="form-check-inline">
+                    <label class="form-check-label">
+                        <%= radio_button_tag :tri, :date_cours, params[:tri] == 'date_cours', class: "form-check-input", onchange:'this.form.submit()' %>
+                        Date du cours
+                    </label>
+                </div>
+            </div>
+
+        </div>
+    </div>
+<% end %>
+
+<table class="table table-hover table-sm">
+    <% @cours.each do | cours | %>
+        <tr class="shadow-sm">
+            <td>
+                <b><%= l cours.debut.to_date %></b>
+            </td>
+            <td>
+                <b><%= l(cours.debut, format: :heures_min) %></b> 
+                <%= l(cours.fin, format: :heures_min) %>
+            </td>
+            <td>
+                <span style="background-color:<%= cours.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
+                <%= link_to cours.formation.nom_nbr_etudiants, cours.formation %>
+            </td>
+            <td>
+                <%= cours.intervenant.nom_prenom %>
+                <% if cours.intervenant_binome %>
+                    <br>
+                    <%= cours.intervenant_binome.nom_prenom %>
+                <% end %>
+            </td>
+            <td>
+                <%= cours.try(:ue) %>
+            </td>
+            <td>
+                <%= cours.nom_ou_ue %>
+            </td>
+            <td style="white-space: nowrap;">
+                <% if cours.salle %>
+                    <h5>
+                        <span class="badge badge-pill badge-<%= cours.style %>">
+                            <%= cours.salle.nom %>
+                        </span>             
+                    </h5>
+
+                    <% if cours_formation.nbr_etudiants > cours.salle.places %>
+                        <i title="Manque <%= cours_formation.nbr_etudiants - cours.salle.places %> place.s">
+                            <%= fa_icon 'exclamation-circle' %>
+                        </i>
+                    <% end %>
+                <% else %>
+                    <% if cours.confirmé? %>
+                        <i title="Pas de salle réservée !">
+                            <%= fa_icon 'exclamation-circle' %>
+                        </i>
+                    <% else %>
+                        <h5>
+                            <span class="badge badge-pill badge-<%= cours.style %>">
+                                <%= cours.etat.humanize %>
+                            </span>
+                        </h5>
+                    <% end %>
+                <% end %>
+
+                <% unless cours.commentaires.blank? %>
+                    <%= fa_icon 'comment-dots' %>         
+                    <%= cours.commentaires %>
+                <% end %>
+            </td>
+
+            <td>                
+                Il y a <%= time_ago_in_words cours.audits.first.created_at %>
+            </td>
+
+            <td>
+                <%= cours.audits.first.user.nom_et_prénom %>
+            </td>
+            
+            <td>
+                <%= link_to edit_cour_path(cours), target: '_blank', class: "btn btn-outline-light text-dark" do %>
+                    <%= fa_icon 'edit '%>
+                <% end %>
+            </td>
+        </tr>
+    <% end %>
+</table>
+
+<%= "Affichage de #{ @cours.length } cours au total" %>
+<br>
