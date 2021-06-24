@@ -2,6 +2,8 @@ class DossiersController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[ show deposer]
   before_action :set_dossier, only: %i[ show edit update destroy envoyer deposer valider rejeter archiver ]
 
+  layout :determine_layout
+
   # GET /dossiers or /dossiers.json
   def index
     authorize Dossier
@@ -151,5 +153,9 @@ private
     def dossier_params
       params.require(:dossier).permit(:intervenant_id, :période, :workflow_state, :mémo,
                                       documents_attributes: [:id, :nom, :fichier, :workflow_state, :commentaire])
+    end
+
+    def determine_layout
+      'public' unless user_signed_in?
     end
 end
