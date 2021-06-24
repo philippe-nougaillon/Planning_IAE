@@ -5,3 +5,5 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+EnvoiLog.create(date_prochain: Date.parse('2021-09-24')) unless EnvoiLog.any?

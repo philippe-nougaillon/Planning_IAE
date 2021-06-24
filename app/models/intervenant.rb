@@ -17,9 +17,9 @@ class Intervenant < ApplicationRecord
 	has_many :vacations
 	has_many :dossiers
 
-	validates_uniqueness_of :nom, scope: :email, case_sensitive: false
 	validates :nom, :email, :prenom, :status, presence: true
 	validates :email, format: { with: URI::MailTo::EMAIL_REGEXP } 
+	validates_uniqueness_of :email, case_sensitive: false
 	
   	enum status: [:CEV, :Permanent, :PR, :MCF, :MCF_HDR, :PAST, :PRAG, :Admin]
 

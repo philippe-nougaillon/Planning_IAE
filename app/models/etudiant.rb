@@ -22,16 +22,15 @@ class Etudiant < ApplicationRecord
   end
 
   def self.xls_headers
-    [ 'Civilité', 'NOM', 'NOM marital', 'Prénom', 'Date de naissance', 
-      nil, nil, 
+    [ 'id','Statut',
+      'Civilité', 'NOM', 'NOM marital', 'Prénom', 'Date de naissance', 
       'Lieu de naissance', 'Pays de la ville de naissance', 'Nationalité',
       'Mail', 'Adresse', 'CP', 'Ville', 'Téléphone',
       'Dernier établmt fréquenté', 'Dernier diplôme obtenu', 'Catégorie "Science" diplôme', 
       'Numéro Sécurité sociale',
-      nil, nil, nil, 
       'Numéro Apogée étudiant', 'Poste occupé', 
-      nil, 
-      'Nom Entreprise', 'Adresse entreprise', 'CP entreprise', 'Ville entreprise'  
+      'Nom Entreprise', 'Adresse entreprise', 'CP entreprise', 'Ville entreprise',
+      'Formation_ID','Formation','created_at', 'updated_at'  
     ]
   end
 
@@ -44,9 +43,7 @@ class Etudiant < ApplicationRecord
 		sheet = book.create_worksheet name: 'Etudiants'
 		bold = Spreadsheet::Format.new :weight => :bold, :size => 10
 
-    sheet.row(0).concat ['id','Statut']
 		sheet.row(0).concat Etudiant.xls_headers
-    sheet.row(0).concat ['Formation_ID','Formation','created_at', 'updated_at']
     sheet.row(0).default_format = bold
 		
 		index = 1
@@ -60,7 +57,6 @@ class Etudiant < ApplicationRecord
           i.nom_marital,
           i.prénom, 
           i.date_de_naissance,
-          nil,nil,
           i.lieu_naissance,
           i.pays_naissance,
           i.nationalité,
@@ -73,10 +69,8 @@ class Etudiant < ApplicationRecord
           i.dernier_diplôme,
           i.cat_diplôme,
           i.num_sécu,
-          nil, nil, nil,
           i.num_apogée,
           i.poste_occupé,
-          nil,
           i.nom_entreprise,
           i.adresse_entreprise,
           i.cp_entreprise,
