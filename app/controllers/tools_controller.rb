@@ -365,11 +365,11 @@ class ToolsController < ApplicationController
         end
 
         etudiant = Etudiant
-                    .where("lower(nom) = ? AND lower(prénom) = ? AND date_de_naissance = ?", 
-                      row[headers.index 'NOM'].try(:strip).try(:downcase), 
-                      row[headers.index 'Prénom'].try(:strip).try(:downcase),
-                      date_de_naissance)
-                    .first_or_initialize
+                        .where("lower(nom) = ? AND lower(prénom) = ? AND date_de_naissance = ?", 
+                          row[headers.index 'NOM'].try(:strip).try(:downcase), 
+                          row[headers.index 'Prénom'].try(:strip).try(:downcase),
+                          date_de_naissance)
+                        .first_or_initialize
 
         etudiant.formation_id = formation_id
         etudiant.workflow_state = workflow_state
