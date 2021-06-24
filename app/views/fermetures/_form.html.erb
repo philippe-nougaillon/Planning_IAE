@@ -16,7 +16,7 @@
   <br>
 
   <%= f.text_field :date, 
-                    value: @fermeture.date.strftime("%Y-%m-%dT%H:%M"), 
+                    value: !@fermeture.new_record? ? @fermeture.date.strftime("%Y-%m-%dT%H:%M") : nil, 
                     type: 'datetime-local',
                     label: 'Début de la période de fermeture', class: 'col-sm-3' %>
 
