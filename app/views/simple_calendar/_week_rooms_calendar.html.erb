@@ -14,7 +14,9 @@
         <tr>
           <td>
             <% if @salle %>
-              <h3 id=<%= @salle.nom %> style="text-align: center;vertical-align: middle;"><%= @salle.nom %></h3>
+              <h4 id=<%= @salle.nom %> style="text-align: center;vertical-align: middle;">
+                <%= @salle.nom %>
+              </h4>
             <% else %>
               <span>A RESERVER</span>
             <% end %>
@@ -22,7 +24,7 @@
           
           <% week.each do |day| %>
             <% unless day.sunday? %>
-              <% day_style_class = 'shadow-sm bg-warning' if day == Date.today %>
+              <% day_style_class = 'shadow-sm alert-warning' if day == Date.today %>
               <% day_style_class = 'day_off' if Fermeture.find_by(date: day) %>
               
               <%= content_tag :td, class: day_style_class do %>
