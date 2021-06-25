@@ -1,42 +1,43 @@
+<div class="container">
+  <%= form_tag request.path, method: :get do %>
 
-<%= form_tag request.path, method: :get do %>
+      <div class="form-group">
+        <%= label_tag "Cours à partir du" %>
+        <%= text_field_tag :start_date, params[:start_date], type: 'date', onchange: 'this.form.submit()', class: "form-control form-control-sm" %>
+      </div>  
+      
+      <div class="form-group">
+        <%= label_tag "Formation" %>    
+        <%= select_tag :formation, options_for_select(@formations, params[:formation]), class:"form-control form-control-sm", include_blank:true, onchange:'this.form.submit()' %>
+      </div>
 
-    <div class="form-group">
-      <%= label_tag "Cours à partir du" %>
-      <%= text_field_tag :start_date, params[:start_date], type: 'date', onchange: 'this.form.submit()', class: "form-control form-control-sm" %>
-    </div>  
-    
-    <div class="form-group">
-      <%= label_tag "Formation" %>    
-      <%= select_tag :formation, options_for_select(@formations, params[:formation]), class:"form-control form-control-sm", include_blank:true, onchange:'this.form.submit()' %>
-    </div>
+      <div class="form-group">
+        <%= label_tag "Intervenant" %>    
+        <%= select_tag :intervenant, options_from_collection_for_select(@intervenants, :nom_prenom,  :nom_prenom, params[:intervenant]), class:"form-control form-control-sm", include_blank:true, onchange:'this.form.submit()' %>
+      </div>
 
-    <div class="form-group">
-      <%= label_tag "Intervenant" %>    
-      <%= select_tag :intervenant, options_from_collection_for_select(@intervenants, :nom_prenom,  :nom_prenom, params[:intervenant]), class:"form-control form-control-sm", include_blank:true, onchange:'this.form.submit()' %>
-    </div>
+      <%= submit_tag 'Filtrer', class:"btn btn-sm btn-success" %>
 
-    <%= submit_tag 'Filtrer', class:"btn btn-sm btn-success" %>
+      <%= submit_tag 'RàZ', class:"btn btn-sm btn-light" %>
 
-    <%= submit_tag 'RàZ', class:"btn btn-sm btn-light" %>
+  <% end %>
+  <br>
 
-<% end %>
-<br>
+  <% current_date = '' %>
+  <% @cours.includes(:formation, :intervenant, :salle).each do | cours | %>
+    <% if cours.debut.to_date != current_date %>
+      <div class="shadow-sm text-secondary p-3">
+        <h5>
+          <%= fa_icon 'calendar-day' %>
+          <%= l(cours.debut.to_date, format: :long).humanize %>
+        </h5> 
+      </div>
+      <% current_date = cours.debut.to_date %>
+    <% end %>  
 
-<% current_date = '' %>
-<% @cours.includes(:formation, :intervenant, :salle).each do | cours | %>
-  <% if cours.debut.to_date != current_date %>
-    <div class="shadow-sm text-secondary p-3">
-      <h5>
-        <%= fa_icon 'calendar-day' %>
-        <%= l(cours.debut.to_date, format: :long).humanize %>
-      </h5> 
-    </div>
-    <% current_date = cours.debut.to_date %>
-  <% end %>  
-
-  <%= render partial: 'cours', locals: {cours: cours, cours_formation: Formation.unscoped.find(cours.formation_id) } %>
-<% end %>
+    <%= render partial: 'cours', locals: {cours: cours, cours_formation: Formation.unscoped.find(cours.formation_id) } %>
+  <% end %>
+</div>
 <hr>
 
 <div class="text-center">
