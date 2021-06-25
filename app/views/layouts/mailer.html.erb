@@ -3,23 +3,31 @@
     <head>
         <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style type="text/css">
+          .center {
+            margin-left: 10%;
+            margin-right: 10%;
+          }
+        </style>
     </head>
   
-    <body style="padding: 10px">
-      <table style="margin:30px 200px 30px 200px;">
-        <thead>
+    <body>
+      <table class="center">
+        <thead >
           <tr>
             <th>
-              <%= image_tag 'logo@100.png' %>
+              <img src="/Images/logo@100.png">
             </th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td>
-              <div style="font-family: sans-serif;">
-                <%= yield %>
-              </div>
+              <table>
+                <div style="font-family: sans-serif;">
+                  <%= yield %>
+                </div>
+              </table>
             </td>
           </tr>
         </tbody>
