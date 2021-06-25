@@ -35,7 +35,7 @@
       <% current_date = cours.debut.to_date %>
     <% end %>  
 
-    <%= render partial: 'cours', locals: {cours: cours } %>
+    <%= render partial: 'cours', locals: {cours: cours, cours_formation: Formation.unscoped.find(cours.formation_id) } %>
   <% end %>
 </div>
 <hr>
