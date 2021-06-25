@@ -6,7 +6,24 @@
     </head>
   
     <body style="padding: 10px">
-      <%= yield %>
+      <table style="margin:30px 200px 30px 200px;">
+        <thead>
+          <tr>
+            <th>
+              <%= image_tag 'logo@100.png' %>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div style="font-family: sans-serif;">
+                <%= yield %>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </body>
 </html>
     
