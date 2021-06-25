@@ -1,37 +1,20 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
-  </head>
-  <body>
-    <%= image_tag("logo_iae.png") %>
-    <br>
+<p>
+  Bonjour <%= @etudiant.prénom %>, 
+  <br><br>
+  Votre cours initialement prévu le 
+  <%= l(@cours.debut, format: :long) %> 
+  (<%= "#{@cours.nom_ou_ue} - #{@cours.formation.nom}" %>) 
+  vient d'être modifié : 
+  <ul>
+    <li>
+      <%= sanitize ApplicationController.helpers.prettify(@cours.audits.last).join('</li><li>') %>
+    </li>
+  </ul>
 
-    <p>
-        <p>
-            Bonjour <%= @etudiant.prénom %>, 
-        </p>
-    
-        <p>
-            Votre cours initialement prévu le 
-            <%= l(@cours.debut, format: :long) %> 
-            (<%= "#{@cours.nom_ou_ue} - #{@cours.formation.nom}" %>) 
-            vient d'être modifié : 
-            <ul>
-              <li>
-                <%= sanitize ApplicationController.helpers.prettify(@cours.audits.last).join('</li><li>') %>
-              </li>
-            </ul>
-        </p>
+  <%= link_to "Voir ce cours dans le planning", root_url(ids: @cours.id) %>
 
-        <p>
-            Bien cordialement, <br>
-            IAE Paris
-        </p>
-    </p>
-    
-    <p>
-      <%= link_to "Voir ce cours dans le planning", root_url(ids: @cours.id) %>
-    </p>
-  </body>
-</html>
+  <br><br>
+  Bien cordialement,
+  <br>
+  IAE Paris
+</p>
