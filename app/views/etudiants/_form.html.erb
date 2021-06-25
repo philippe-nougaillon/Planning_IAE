@@ -2,7 +2,7 @@
   <% if @etudiant.errors.any? %>
     <div class="alert alert-danger alert-dismissable" role="alert">
       <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-      <h4><%= pluralize(@etudiant.errors.count, "error") %> prohibited this etudiant from being saved:</h4>
+      <h4><%= pluralize(@etudiant.errors.count, "error") %> empêche d'enregistrer cet étudiant :</h4>
 
       <ul>
       <% @etudiant.errors.full_messages.each do |msg| %>
