@@ -44,9 +44,9 @@
   <% if (pct = cours.progress_bar_pct2) && (cours.debut.to_date == Date.today) %>
     <br>
     <div class="progress" style="width: 100%">
-      <div class="progress-bar progress-bar-striped active" 
+      <div class="progress-bar bg-dark" 
           role="progressbar" aria-valuemin="0" aria-valuemax="100" 
-          style="width:<%= pct %>%">
+          style="width: <%= pct %>%; opacity: 0.3;">
       </div>
     </div>
   <% end %>
