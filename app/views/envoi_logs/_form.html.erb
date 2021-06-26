@@ -1,7 +1,7 @@
 <%= bootstrap_form_with(model: envoi_log, local: true) do |form| %>
   <% if envoi_log.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(envoi_log.errors.count, "error") %> prohibited this envoi_log from being saved:</h2>
+      <h2><%= pluralize(envoi_log.errors.count, "error") %> empêche cet enregistrement d'être enregistré :</h2>
 
       <ul>
         <% envoi_log.errors.full_messages.each do |message| %>
