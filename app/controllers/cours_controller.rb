@@ -196,7 +196,7 @@ class CoursController < ApplicationController
     # page courante
     session[:page_slide] ||= 0
 
-    @now = ApplicationController.helpers.time_in_paris
+    @now = ApplicationController.helpers.time_in_paris_selon_la_saison
     
     if params[:planning_date]
       # Afficher tous les cours du jours
