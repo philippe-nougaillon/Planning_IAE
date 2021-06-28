@@ -215,7 +215,7 @@ class Cour < ApplicationRecord
 
   def progress_bar_pct2
     # calcul le % de réalisation du cours
-    now = ApplicationController.helpers.time_in_paris
+    now = ApplicationController.helpers.time_in_paris_selon_la_saison
     pct = ((now.to_f - self.debut.to_f) / (self.fin.to_f - self.debut.to_f) * 100).to_i
     return (pct > 0 && pct <= 100) ? pct : nil
   end
