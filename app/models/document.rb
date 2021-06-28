@@ -31,6 +31,21 @@ class Document < ApplicationRecord
   end
 
   def self.types
-    ["Acte d'engagement", "Justificatif d'activité", "RIB", "Carte d'identité/Passport", 'Carte vitale', 'Attestation Sécurité Sociale', 'CV', 'Attestation de cumul', 'Extrait K-BIS', "Avis d'imposition", 'Attestation URSSAF', 'Carte étudiant', 'Titre de pension'].sort
+    [ "Acte d'engagement", 
+      "Justificatif d'activité", 
+      "RIB", 
+      "Carte d'identité/Passeport", 
+      'Carte vitale', 
+      'Attestation Sécurité Sociale', 
+      'CV', 
+      'Attestation de cumul', 
+      'Extrait K-BIS', 
+      "Avis d'imposition", 
+      'Attestation URSSAF', 
+      "Carte étudiant(e)", 
+      'Titre de pension',
+      'Autre'
+    ].sort
+
   end
 end
