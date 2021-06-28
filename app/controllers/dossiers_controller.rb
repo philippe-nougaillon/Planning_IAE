@@ -33,11 +33,17 @@ class DossiersController < ApplicationController
   # GET /dossiers/new
   def new
     @dossier = Dossier.new
+    @intervenants = Intervenant
+                        .where(status: 'CEV')
+                        .joins(:cours)
+                        .where("DATE(cours.debut) BETWEEN '2021-09-01' AND '2021-12-31'")
+                        .uniq
     3.times { @dossier.documents.build }
   end
 
   # GET /dossiers/1/edit
   def edit
+    @intervenants = Intervenant.where(id: @dossier.intervenant)
   end
 
   # POST /dossiers or /dossiers.json
