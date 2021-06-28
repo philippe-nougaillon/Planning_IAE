@@ -23,19 +23,23 @@
       <%= @dossier.période %>
     </p>
 
-    <% if current_user %>
+    <% if @dossier.validé? || @dossier.rejeté? %>
       <p>
-        <strong>Mémo:</strong>
-        <%= @dossier.mémo %>
+        <strong>Statut:</strong> 
+        <span class="badge <%= @dossier.style %>">
+          <%= @dossier.workflow_state.humanize %>
+        </span>
       </p>
     <% end %>
 
-    <p>
-      <strong>Statut:</strong> 
-      <span class="badge <%= @dossier.style %>">
-        <%= @dossier.workflow_state.humanize %>
-      </span>
-    </p>
+    <% unless @dossier.mémo.blank? %>
+      <p>
+        <p class="alert alert-warning">
+          <strong>Informations :</strong>
+          <%= @dossier.mémo %>
+        </p>
+      </p>
+    <% end %>
 
   </div>
 
@@ -66,7 +70,7 @@
                 </span>
                 <% if doc.rejeté? %>
                   <br>
-                  <%= doc.commentaire %>
+                  <b><%= "Motif: #{ doc.commentaire }" %></b>
                 <% end %>
               </td>
               <td><%= time_ago_in_words(doc.created_at) %></td>
@@ -86,11 +90,20 @@
       <% else %>
         <p class="alert alert-warning">
           <br>
-          Veuillez ajouter vos justificatifs en utilisant le bouton 'Ajouter un document'.<br>
+          Veuillez ajouter vos justificatifs en utilisant le bouton
+          <%= link_to new_document_path(dossier_id: @dossier.id), data: { toggle: "modal", target: "#myModal" }, class: 'btn btn-link' do %>
+            <%= fa_icon 'plus-circle' %> Ajouter un document
+          <% end %>
+          <br>
+
           Quand le dossier est complet et prêt à être déposé, cliquez sur 'Déposer le dossier'.
           <br><br>
         </p>
       <% end %>
+    <% end %>
+
+    <%= link_to new_document_path(dossier_id: @dossier.id), data: { toggle: "modal", target: "#myModal" }, class: 'btn btn-link' do %>
+      <%= fa_icon 'plus-circle' %> Ajouter un document
     <% end %>
 
   </div>
@@ -110,10 +123,6 @@
     <br>
     <%= link_to deposer_dossier_path(dossier_id: @dossier.id), data: { confirm: 'Etes-vous bien certain.e de vouloir déposer ce dossier ?' }, class: "btn btn-success #{ 'disabled' unless @dossier.documents.any? }" do %>
       <%= fa_icon 'arrow-circle-up' %> Déposer le dossier
-    <% end %>
-
-    <%= link_to new_document_path(dossier_id: @dossier.id), data: { toggle: "modal", target: "#myModal" }, class: 'btn btn-link' do %>
-      <%= fa_icon 'plus-circle' %> Ajouter un document
     <% end %>
 
     <br><br>
