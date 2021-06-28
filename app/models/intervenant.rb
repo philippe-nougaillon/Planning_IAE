@@ -62,6 +62,14 @@ class Intervenant < ApplicationRecord
 		self.prenom.blank? ? self.nom.upcase : "#{self.nom} #{self.prenom}" 
 	end
 
+	def prenom_nom
+		"#{self.try(:prenom)} #{self.nom}" 
+	end
+
+	def nom_prenom_etat_dossier
+		self.prenom.blank? ? self.nom.upcase : "#{self.nom} #{self.prenom} -> #{self.dossiers.any? ? self.dossiers.last.workflow_state.humanize : nil }" 
+	end
+
 	def total_cours
 		self.cours.where(etat:Cour.etats[:confirmé]).count
 	end

@@ -196,7 +196,7 @@ class CoursController < ApplicationController
     # page courante
     session[:page_slide] ||= 0
 
-    @now = Time.now.in_time_zone("Paris") + 2.hours
+    @now = ApplicationController.helpers.time_in_paris
     
     if params[:planning_date]
       # Afficher tous les cours du jours
@@ -222,7 +222,7 @@ class CoursController < ApplicationController
     unless @cours_count.zero?
       if request.variant.include?(:desktop) and !params[:planning_date]
         # effectuer une rotation de x pages de 6 cours 
-        per_page = 6
+        per_page = 8
         @max_page_slide = (@cours_count / per_page)
         @max_page_slide += 1 unless @cours_count.%(per_page).zero?
 
