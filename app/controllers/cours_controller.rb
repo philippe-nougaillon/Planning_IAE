@@ -23,6 +23,7 @@ class CoursController < ApplicationController
     if params[:commit] && params[:commit][0..2] == 'RàZ'
       session[:formation] = params[:formation] = nil
       session[:intervenant] = params[:intervenant] = nil
+      session[:intervenant_nom] = params[:intervenant_nom] = nil
       session[:ue] = params[:ue] = nil
       session[:semaine] = params[:semaine] = nil
       session[:start_date] = params[:start_date] = Date.today.to_s
@@ -35,6 +36,7 @@ class CoursController < ApplicationController
     params[:start_date] ||= session[:start_date]
     params[:formation] ||= session[:formation]
     params[:intervenant] ||= session[:intervenant]
+    params[:intervenant_nom] ||= session[:intervenant_nom]
     params[:ue] ||= session[:ue]
     params[:etat] ||= session[:etat]
     params[:view] ||= session[:view]
@@ -103,6 +105,12 @@ class CoursController < ApplicationController
       @cours = @cours.where("intervenant_id = ? OR intervenant_binome_id = ?", intervenant_id, intervenant_id)
     end
 
+    unless params[:intervenant_nom].blank?
+      if intervenant = Intervenant.where("nom LIKE ?", "%#{ params[:intervenant_nom].strip.upcase }%").first
+        @cours = @cours.where("intervenant_id = ? OR intervenant_binome_id = ?", intervenant.id, intervenant.id)
+      end
+    end
+
     unless params[:intervenant_id].blank?
       intervenant_id = params[:intervenant_id]
       @cours = @cours.where("intervenant_id = ? OR intervenant_binome_id = ?", intervenant_id, intervenant_id)
@@ -134,7 +142,7 @@ class CoursController < ApplicationController
     if request.variant.include?(:phone)
       @cours = @cours.includes(:formation, :intervenant, :salle).paginate(page: params[:page], per_page: 15)
       @formations = Formation.select(:nom).where(hors_catalogue: false).pluck(:nom)
-      @intervenants = Intervenant.where("intervenants.doublon = ? OR intervenants.doublon is null", false)
+      #@intervenants = Intervenant.where("intervenants.doublon = ? OR intervenants.doublon is null", false)
     end
 
     if params[:view] == "calendar_rooms"
@@ -146,6 +154,7 @@ class CoursController < ApplicationController
 
     session[:formation] = params[:formation]
     session[:intervenant] = params[:intervenant]
+    session[:intervenant_nom] = params[:intervenant_nom]
     session[:ue] = params[:ue]
     session[:start_date] = params[:start_date]
     session[:etat] = params[:etat]

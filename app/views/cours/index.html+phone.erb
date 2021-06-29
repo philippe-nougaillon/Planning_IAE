@@ -12,7 +12,7 @@
 
     <div class="form-group">
       <%= label_tag "Intervenant" %>    
-      <%= select_tag :intervenant, options_from_collection_for_select(@intervenants, :nom_prenom,  :nom_prenom, params[:intervenant]), class:"custom-select", include_blank:true, onchange:'this.form.submit()' %>
+      <%= text_field_tag :intervenant_nom, params[:intervenant_nom], class:"form-control", onchange:'this.form.submit()' %>
     </div>
 
     <%= submit_tag 'Filtrer', class:"btn btn-sm btn-success" %>
@@ -25,11 +25,12 @@
 <% current_date = '' %>
 <% @cours.each do | cours | %>
   <% if cours.debut.to_date != current_date %>
-    <div class="shadow-sm text-secondary p-3">
-      <h5>
-        <%= fa_icon 'calendar-day' %>
+    <div class="text-primary m-3">
+      <br>
+      <h6>
+          <%= fa_icon 'calendar-day' %>
         <%= l(cours.debut.to_date, format: :long).humanize %>
-      </h5> 
+      </h6> 
     </div>
     <% current_date = cours.debut.to_date %>
   <% end %>  
