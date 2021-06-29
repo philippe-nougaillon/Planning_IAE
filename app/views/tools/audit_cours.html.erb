@@ -1,5 +1,8 @@
 <div class="pb-2 mt-4 mb-2 border-bottom">
-  <h3><%= fa_icon 'search' %> Cours planifiés par la scolarité, à confirmer</h3>
+  <h3><%= fa_icon 'search' %> Cours récemment planifiés, à confirmer</h3>
+  <p class="">
+    Affiche les cours 'Planifiés' créés par un utilisateur autre que le gestionnaire des salles (Th.D-#41)
+  </p>
 </div>
 
 <%= form_tag request.path, method: :get do %>
@@ -39,6 +42,20 @@
 <% end %>
 
 <table class="table table-hover table-sm">
+    <thead class="shadow-sm">
+        <tr>
+            <th>Date</th>
+            <th>Heure</th>
+            <th>Formation</th>
+            <th>Intervenant</th>
+            <th colspan="2">UE/Intitulé du cours</th>
+            <th>Etat</th>
+            <th>Depuis</th>
+            <th>Par</th>
+            <th />
+        </tr>
+    </thead>
+
     <% @cours.each do | cours | %>
         <tr class="shadow-sm">
             <td>
@@ -99,7 +116,7 @@
             </td>
 
             <td>                
-                Il y a <%= time_ago_in_words cours.audits.first.created_at %>
+                <%= time_ago_in_words cours.audits.first.created_at %>
             </td>
 
             <td>
