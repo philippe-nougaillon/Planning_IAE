@@ -73,8 +73,8 @@
                         </span>             
                     </h5>
 
-                    <% if cours_formation.nbr_etudiants > cours.salle.places %>
-                        <i title="Manque <%= cours_formation.nbr_etudiants - cours.salle.places %> place.s">
+                    <% if cours.formation.nbr_etudiants > cours.salle.places %>
+                        <i title="Manque <%= cours.formation.nbr_etudiants - cours.salle.places %> place.s">
                             <%= fa_icon 'exclamation-circle' %>
                         </i>
                     <% end %>
