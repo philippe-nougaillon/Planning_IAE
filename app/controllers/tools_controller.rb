@@ -1028,5 +1028,42 @@ class ToolsController < ApplicationController
       Rake::Task['cours:envoyer_liste_cours'].invoke(params[:draft].present?)
     end
   end  
+
+  def audit_cours
+    # Afficher les cours 'planifiés' 
+    # entre deux dates
+    # créés par un utilisateur autre que Thierry (#41)
+    
+    params[:start_date] ||= '2021-09-01'
+    params[:end_date] ||= '2022-07-01'
+    params[:tri] ||= 'date_création'
+
+    unless params[:start_date].blank? && params[:end_date].blank? 
+      @date_début = params[:start_date]
+      @date_fin = params[:end_date]
+    end
+
+    # ids des cours créés par utilisateur autre que Thierry (#41)
+    id_cours = Audited::Audit.where(auditable_type: 'Cour')
+                             .where(action: 'create')
+                             .where.not(user_id: 41)
+                             .pluck(:auditable_id)
+
+
+    # vérifie que la date de début de cours est dans la période observée
+    @cours = Cour.where(id: id_cours)
+                 .planifié
+                 .where("cours.debut BETWEEN ? AND ?", @date_début, @date_fin)
+
+    # change l'ordre de tri
+    unless params[:tri].blank?
+      if params[:tri] == 'date_création'
+        @cours = @cours.order(created_at: :desc)
+      else
+        @cours = @cours.order(:debut)
+      end
+    end
+                  
+  end
   
 end

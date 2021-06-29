@@ -68,6 +68,7 @@ Rails.application.routes.draw do
     get :nouvelle_saison
     get :notifier_intervenants
     get :creation_cours
+    get :audit_cours
 
     post :import_do
     post :creation_cours_do
