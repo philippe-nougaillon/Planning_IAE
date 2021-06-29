@@ -1030,29 +1030,30 @@ class ToolsController < ApplicationController
   end  
 
   def audit_cours
-    # Afficher les cours 'plannifiés' 
+    # Afficher les cours 'planifiés' 
     # entre deux dates
-    # créés par un utilisateur autre que thierry (#41)
+    # créés par un utilisateur autre que Thierry (#41)
     
     params[:start_date] ||= '2021-09-01'
     params[:end_date] ||= '2021-12-31'
     params[:tri] ||= 'date_création'
- 
-    # ids des cours créés par utilisateur autre que Thierry (#41)
-    id_cours = Audited::Audit
-                      .where(auditable_type: 'Cour')
-                      .where(action: 'create')
-                      .where.not(user_id: 41)
-                      .pluck(:auditable_id)
 
     unless params[:start_date].blank? && params[:end_date].blank? 
       @date_début = params[:start_date]
       @date_fin = params[:end_date]
     end
 
+    # ids des cours créés par utilisateur autre que Thierry (#41)
+    id_cours = Audited::Audit.where(auditable_type: 'Cour')
+                             .where(action: 'create')
+                             .where.not(user_id: 41)
+                             .pluck(:auditable_id)
+
+
     # vérifie que la date de début de cours est dans la période observée
     @cours = Cour.where(id: id_cours)
-                 .planifié.where("cours.debut BETWEEN ? AND ?", @date_début, @date_fin)
+                 .planifié
+                 .where("cours.debut BETWEEN ? AND ?", @date_début, @date_fin)
 
     # change l'ordre de tri
     unless params[:tri].blank?
