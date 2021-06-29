@@ -39,7 +39,7 @@
     <body>
         <nav class="navbar bg-light mb-3">
             <a class="navbar-brand" href="/">
-                <%= image_tag('logo_iae@195.png', height: 25) %>
+                <%= image_tag('logo_iae@195.png', height: 40) %>
             </a>
 
             <!-- Toggler/collapsibe Button -->
@@ -55,7 +55,9 @@
                 </ul>
             </div>
         </nav>
-        
-        <%= yield %>
+
+        <div class="container-fluid">
+            <%= yield %>
+        </div>
     </body>
 </html>
