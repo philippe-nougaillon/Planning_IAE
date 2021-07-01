@@ -31,7 +31,7 @@ class Document < ApplicationRecord
   end
 
   def self.types
-    [ "Acte d'engagement", 
+    [ "Dossier de recrutement", 
       "Justificatif d'activité", 
       "RIB", 
       "Carte d'identité/Passeport", 
