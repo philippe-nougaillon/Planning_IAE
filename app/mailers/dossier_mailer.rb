@@ -10,7 +10,7 @@ class DossierMailer < ApplicationMailer
         attachments['Note réglementaire.pdf']       = File.read('app/assets/attachments/Note sur les conditions de recrutement 2021-2022.pdf')
 
         mail(to: @dossier.intervenant.email, 
-             subject: "[Enseignement IAE-Paris #{ @dossier.période }] Dossier administratif")
+             subject: "[Enseignement IAE-Paris #{ @dossier.période }] Dossier de recrutement")
     end
 
 
@@ -18,14 +18,14 @@ class DossierMailer < ApplicationMailer
         @dossier = params[:dossier]
 
         mail(to: @dossier.intervenant.email, 
-             subject: "[Enseignement IAE-Paris #{ @dossier.période }] Dossier administratif validé")
+             subject: "[Enseignement IAE-Paris #{ @dossier.période }] Dossier de recrutement")
     end
 
     def rejeter_email
         @dossier = params[:dossier]
 
         mail(to: @dossier.intervenant.email, 
-             subject: "[Enseignement IAE-Paris #{ @dossier.période }] Dossier administratif rejeté")
+             subject: "[Enseignement IAE-Paris #{ @dossier.période }] Dossier de recrutement")
     end
 
 end
