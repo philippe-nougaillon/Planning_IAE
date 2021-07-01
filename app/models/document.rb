@@ -9,7 +9,7 @@ class Document < ApplicationRecord
 
   DEPOSE = 'déposé'
   VALIDE = 'validé'
-  REJETE = 'rejeté'
+  REJETE = 'non_conforme'
   ARCHIVE= 'archivé'
 
   workflow do
@@ -45,7 +45,6 @@ class Document < ApplicationRecord
       "Carte étudiant(e)", 
       'Titre de pension',
       'Autre'
-    ].sort
-
+    ]
   end
 end

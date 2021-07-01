@@ -27,7 +27,7 @@ class Dossier < ApplicationRecord
   RELANCE3= 'relancé 3 fois'
   DEPOSE  = 'déposé'
   VALIDE  = 'validé'
-  REJETE  = 'non-conforme'
+  REJETE  = 'non_conforme'
   ARCHIVE = 'archivé'
 
   workflow do
