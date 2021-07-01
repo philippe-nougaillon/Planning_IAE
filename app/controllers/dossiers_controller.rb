@@ -120,7 +120,7 @@ class DossiersController < ApplicationController
     # Vérifier qu'il y a au moins un document à l'état rejeté
     rejeter = false
     @dossier.documents.each do | doc |
-      rejeter = true if doc.rejeté?
+      rejeter = true if doc.non_conforme?
     end
     
     if rejeter
@@ -132,7 +132,7 @@ class DossiersController < ApplicationController
 
       redirect_to @dossier, notice: "Dossier rejeté. L'intervenant va en être informé."
     else
-      redirect_to @dossier, alert: "Pour rejeter ce dossier, il faut qu'un document soit en statut 'Rejeté' !"
+      redirect_to @dossier, alert: "Pour rejeter ce dossier, il faut qu'un document soit en statut 'Non_conforme' !"
     end
   end
 
