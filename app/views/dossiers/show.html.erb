@@ -23,7 +23,7 @@
       <%= @dossier.période %>
     </p>
 
-    <% if @dossier.validé? || @dossier.rejeté? %>
+    <% if @dossier.validé? || @dossier.non_conforme? %>
       <p>
         <strong>Statut:</strong> 
         <span class="badge <%= @dossier.style %>">
@@ -68,7 +68,7 @@
                  <span class="badge <%= doc.style %>">
                   <%= doc.workflow_state.humanize %>
                 </span>
-                <% if doc.rejeté? %>
+                <% if doc.non_conforme? %>
                   <br>
                   <b><%= "Motif: #{ doc.commentaire }" %></b>
                 <% end %>
@@ -90,7 +90,8 @@
       <% else %>
         <p class="alert alert-warning">
           <br>
-          Veuillez ajouter vos justificatifs en utilisant le bouton
+          Veuillez ajouter les justificatifs correspondants à votre situation 
+          (voir le document 'Pièces à fournir.pdf') en utilisant le bouton
           <%= link_to new_document_path(dossier_id: @dossier.id), data: { toggle: "modal", target: "#myModal" }, class: 'btn btn-link' do %>
             <%= fa_icon 'plus-circle' %> Ajouter un document
           <% end %>
