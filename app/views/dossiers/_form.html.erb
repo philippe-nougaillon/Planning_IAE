@@ -16,7 +16,7 @@
   <div class="row">
     <div class="col">
       <%= form.select :intervenant_id, 
-                      options_from_collection_for_select(Intervenant.where(status: 'CEV'), :id, :nom_prenom, @dossier.intervenant_id), 
+                      options_from_collection_for_select(@intervenants, :id, :nom_prenom_etat_dossier, @dossier.intervenant_id), 
                       class: 'form-control form-control-sm select2' %>
 
       <%= form.select :période, options_for_select(Dossier.périodes, @dossier.période) %>

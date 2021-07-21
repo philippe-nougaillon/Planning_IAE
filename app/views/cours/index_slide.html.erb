@@ -17,9 +17,8 @@
   </table>
 
   <span class="navbar-text">
-    Màj: <%= l(@planning_date.utc) %>
     <% if @max_page_slide %> 
-      | Page <%= session[:page_slide] %> sur <%= @max_page_slide %>
+      Page <%= session[:page_slide] %> sur <%= @max_page_slide %>
     <% end %>
     | <%= @cours_count %> Cours au total
   </span>

@@ -1,7 +1,10 @@
 <p>
-    Bonjour M., Mme, Mlle <%= @dossier.intervenant.nom %>,
+    Bonjour <%= @dossier.intervenant.prenom_nom %>,
     <br><br>
-    <b>Votre dossier vient d'être validé.</b>
+    <b>Votre dossier d'enseignant vacataire vient d'être validé.</b>
+    <p>
+        Nous sommes ravis de vous accueillir dans l'équipe pédagogique de l'IAE Paris-Sorbonne.
+    </p>
 </p>
 
 <%= render partial: 'mailer_footer_marielle_denis' %>

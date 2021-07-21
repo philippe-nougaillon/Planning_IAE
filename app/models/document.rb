@@ -9,7 +9,7 @@ class Document < ApplicationRecord
 
   DEPOSE = 'déposé'
   VALIDE = 'validé'
-  REJETE = 'rejeté'
+  REJETE = 'non_conforme'
   ARCHIVE= 'archivé'
 
   workflow do
@@ -31,6 +31,20 @@ class Document < ApplicationRecord
   end
 
   def self.types
-    ["Acte d'engagement", "Justificatif d'activité", "RIB", "Carte d'identité/Passport", 'Carte vitale', 'Attestation Sécurité Sociale', 'CV', 'Attestation de cumul', 'Extrait K-BIS', "Avis d'imposition", 'Attestation URSSAF', 'Carte étudiant', 'Titre de pension'].sort
+    [ "Dossier de recrutement", 
+      "Justificatif d'activité", 
+      "RIB", 
+      "Carte d'identité/Passeport", 
+      'Carte vitale', 
+      'Attestation Sécurité Sociale', 
+      'CV', 
+      'Attestation de cumul', 
+      'Extrait K-BIS', 
+      "Avis d'imposition", 
+      'Attestation URSSAF', 
+      "Carte étudiant(e)", 
+      'Titre de pension',
+      'Autre'
+    ]
   end
 end

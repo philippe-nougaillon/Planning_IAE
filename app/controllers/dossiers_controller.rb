@@ -33,11 +33,17 @@ class DossiersController < ApplicationController
   # GET /dossiers/new
   def new
     @dossier = Dossier.new
+    @intervenants = Intervenant
+                        .where(status: 'CEV')
+                        .joins(:cours)
+                        .where("DATE(cours.debut) BETWEEN '2021-09-01' AND '2021-12-31'")
+                        .uniq
     3.times { @dossier.documents.build }
   end
 
   # GET /dossiers/1/edit
   def edit
+    @intervenants = Intervenant.where(id: @dossier.intervenant)
   end
 
   # POST /dossiers or /dossiers.json
@@ -114,7 +120,7 @@ class DossiersController < ApplicationController
     # Vérifier qu'il y a au moins un document à l'état rejeté
     rejeter = false
     @dossier.documents.each do | doc |
-      rejeter = true if doc.rejeté?
+      rejeter = true if doc.non_conforme?
     end
     
     if rejeter
@@ -126,7 +132,7 @@ class DossiersController < ApplicationController
 
       redirect_to @dossier, notice: "Dossier rejeté. L'intervenant va en être informé."
     else
-      redirect_to @dossier, alert: "Pour rejeter ce dossier, il faut qu'un document soit en statut 'Rejeté' !"
+      redirect_to @dossier, alert: "Pour rejeter ce dossier, il faut qu'un document soit en statut 'Non_conforme' !"
     end
   end
 

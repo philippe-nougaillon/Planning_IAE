@@ -1,9 +1,13 @@
 <p>
-    Bonjour M., Mme, Mlle <%= @dossier.intervenant.nom %>,
+    Bonjour <%= @dossier.intervenant.prenom_nom %>,
     <br><br>
-    <b>Votre dossier vient d'être rejeté.</b>
+    <b>Votre dossier nécessite un complément d'information. Nous vous remercions de bien vouloir consulter votre dossier en ligne.
+    </b>
     <br><br>
     Veuillez consulter <%= link_to 'votre dossier en ligne', url_for(dossier_url(@dossier)) %> pour en savoir plus.
+    <br>
+    <br>
+    <p>Nous vous remercions de votre implication dans l'équipe pédagogique de l'IAE Paris-Sorbonne.</p>
 </p>
 
 <%= render partial: 'mailer_footer_marielle_denis' %>
