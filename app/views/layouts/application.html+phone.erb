@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
     <head>
         <title><%= @sitename %></title>
+        <meta name="description" content="Planning des cours de l'IAE de Paris">
         <%= csrf_meta_tags %>
         <%= csp_meta_tag %>
 
@@ -39,7 +40,7 @@
     <body>
         <nav class="navbar bg-light mb-3">
             <a class="navbar-brand" href="/">
-                <%= image_tag('logo_iae@195.png', height: 25) %>
+                <%= image_tag('logo_iae@195.png', height: 25, alt: 'logo IAE') %>
             </a>
 
             <!-- Toggler/collapsibe Button -->

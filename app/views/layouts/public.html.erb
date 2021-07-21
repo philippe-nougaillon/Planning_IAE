@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
   <head>
     <title><%= @sitename %></title>
+    <meta name="description" content="Planning des cours de l'IAE de Paris">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -51,7 +52,7 @@
   <body>
     <nav class="navbar navbar-expand navbar-light shadow-sm">
       <a class="navbar-brand" href="/">
-        <%= image_tag("logo_iae@195.png", height: 50) %>
+        <%= image_tag("logo_iae@195.png", height: 50, alt: 'logo IAE') %>
       </a>
     </nav>
 
