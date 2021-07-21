@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
   <head>
     <title><%= @sitename %></title>
+    <meta name="description" content="Planning des cours de l'IAE de Paris">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -50,8 +51,8 @@
 
   <body>
     <nav class="navbar navbar-expand navbar-light shadow-sm">
-      <a class="navbar-brand" href="/">
-        <%= image_tag("logo_iae@195.png", height: 40) %>
+      <a class="navbar-brand" href="/" aria-label="logo">
+        <%= image_tag("logo_iae@195.png", height: 40, alt: 'logo IAE') %>
       </a>
 
       <div class="container-fluid">
@@ -91,7 +92,7 @@
     <div class="container">
       <% flash.each do |name, msg| %>
         <%= content_tag :div, class: "alert alert-#{ (name == "alert" || name == "error") ? "danger" : "success" } alert-dismissable", role: "alert" do %>
-          <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <button type="button" class="close" data-dismiss="alert" aria-label="bouton du menu"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
           <%= msg.to_s.html_safe %>
         <% end %>
       <% end %>
