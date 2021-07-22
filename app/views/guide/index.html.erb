@@ -54,36 +54,39 @@
   </div>
 </div>
 <ul>
-    <li>Chaque cours est associé à une Formation, un ou deux Intervenants, une Salle et un Etat (Planifié, Confirmé, Reporté, Annulé, Réalisé)</li>
-    <li>Affichage des cours sous forme de Liste, de Calendrier (semaine/mois) ou Etat d'Occupation des salles</li>
-    <li>Recheche multi-critères (Filtre sur Date, Formation, Intervenant, Etat, Cours passés ou futurs)</li>
-    <li>Export des cours vers Excel (CSV), Outlook/Google Agenda(iCal), PDF</li>
-    <li>Sélection d'un ensemble de cours pour effectuer une action groupée :</li>
-    <ul>
-      <li>Changement d'état</li>
-      <li>Changement de salle (avec proposition des salles disponibles)</li>
-      <li>Changement de date</li>
-      <li>Changement d'intervenant</li>
-      <li>Export CSV</li>
-      <li>Export iCal</li>
-      <li>Export PDF</li>
-      <li>Supression (Seul le créateur d'un cours peut le supprimer)</li>
-    </ul>
-
-    <li>Saisie d'une réservation :</li>
-    <ul>
-      <li>Cochez <b>HSS?</b> pour que les heures de cours ne soient pas imputées sur l'état de service de l'intervenant (HSS = Hors Service Statutaire)</li>
-      <li>Cochez <b>E-learning?</b> pour indiquer que ce cours est de l'E-learning</li>
-      <li>Pour signaler que le cours utilise l'outil <b>ZOOM</b>; entrez comme nom de cours le lien ZOOM, puis son intitulé, séparés par un espace. Le lien ZOOM sera alors cliquable dans la liste publique des cours (PC/Mobile)</li>  
-    </ul>
-    <li>Impossibilité de saisir un nouveau cours ayant lieu un dimanche ou un jour de fermeture de l'établissement</li>
-    <li>Pas de chevauchement horaire pour un même intervenant. Il n'est pas possible de saisir un nouveau cours si le formateur intervient déjà sur un autre cours aux mêmes heures (sauf si les doublons sont autorisés pour cet intervenant)</li>
-
-    <li>Affichage d'un pictogramme <%= fa_icon 'exclamation_circle' %> dans les cas suivants :</li>
-    <ul>
-      <li>Dépassement de capacité de la salle (le nbr de places est inférieur au nbr d'étudiants de la formation)</li>
-      <li>Le cours est dans l'état 'Confirmé' mais aucune salle n'a été réservée</li>
-    </ul>
+  <li>Chaque cours est associé à une Formation, un ou deux Intervenants, une Salle et un Etat (Planifié, Confirmé, Reporté, Annulé, Réalisé)</li>
+  <li>Affichage des cours sous forme de Liste, de Calendrier (semaine/mois) ou Etat d'Occupation des salles</li>
+  <li>Recheche multi-critères (Filtre sur Date, Formation, Intervenant, Etat, Cours passés ou futurs)</li>
+  <li>Export des cours vers Excel (CSV), Outlook/Google Agenda(iCal), PDF</li>
+  <li>Sélection d'un ensemble de cours pour effectuer une action groupée :</li>
+</ul>
+<ul style="list-style-position: inside; list-style-type: circle;">
+  <li>Changement d'état</li>
+  <li>Changement de salle (avec proposition des salles disponibles)</li>
+  <li>Changement de date</li>
+  <li>Changement d'intervenant</li>
+  <li>Export CSV</li>
+  <li>Export iCal</li>
+  <li>Export PDF</li>
+  <li>Supression (Seul le créateur d'un cours peut le supprimer)</li>
+</ul>
+<ul>
+  <li>Saisie d'une réservation :</li>
+</ul>
+<ul style="list-style-position: inside; list-style-type: circle;">
+  <li>Cochez <b>HSS?</b> pour que les heures de cours ne soient pas imputées sur l'état de service de l'intervenant (HSS = Hors Service Statutaire)</li>
+  <li>Cochez <b>E-learning?</b> pour indiquer que ce cours est de l'E-learning</li>
+  <li>Pour signaler que le cours utilise l'outil <b>ZOOM</b>; entrez comme nom de cours le lien ZOOM, puis son intitulé, séparés par un espace. Le lien ZOOM sera alors cliquable dans la liste publique des cours (PC/Mobile)</li>  
+</ul>
+<ul>
+  <li>Impossibilité de saisir un nouveau cours ayant lieu un dimanche ou un jour de fermeture de l'établissement</li>
+  <li>Pas de chevauchement horaire pour un même intervenant. Il n'est pas possible de saisir un nouveau cours si le formateur intervient déjà sur un autre cours aux mêmes heures (sauf si les doublons sont autorisés pour cet intervenant)</li>
+  <li>Pas de chevauchement horaire pour une même salle. <strong>Pour autoriser les doublons : entrez 0 dans la capacité de la salle.</strong></li>
+  <li>Affichage d'un pictogramme <%= fa_icon 'exclamation_circle' %> dans les cas suivants :</li>
+</ul>
+<ul style="list-style-position: inside; list-style-type: circle;">
+  <li>Dépassement de capacité de la salle (le nbr de places est inférieur au nbr d'étudiants de la formation)</li>
+  <li>Le cours est dans l'état 'Confirmé' mais aucune salle n'a été réservée</li>
 </ul>
 
 <div class="pb-2 mt-4 mb-2 border-bottom">
@@ -134,7 +137,6 @@
 <ul>
   <li>Gestion de la capacité (alerte si dépassement)</li>
   <li>Visualisation des créneaux horaires libres/occupés pour une date, une salle</li>
-  <strong>Pour autoriser les doublons: entrez 0 dans capacité</strong>
 </ul>
 
 <div class="pb-2 mt-4 mb-2 border-bottom">
