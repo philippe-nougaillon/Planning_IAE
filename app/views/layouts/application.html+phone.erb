@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
     <head>
         <title><%= @sitename %></title>
+        <meta name="description" content="Planning des cours de l'IAE de Paris">
         <%= csrf_meta_tags %>
         <%= csp_meta_tag %>
 
@@ -39,11 +40,11 @@
     <body>
         <nav class="navbar bg-light mb-3">
             <a class="navbar-brand" href="/">
-                <%= image_tag('logo_iae@195.png', height: 40) %>
+                <%= image_tag('logo_iae@195.png', height: 40, alt: 'logo IAE') %>
             </a>
 
             <!-- Toggler/collapsibe Button -->
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" aria-label="menu">
                 <%= fa_icon 'bars' %>
             </button>
 

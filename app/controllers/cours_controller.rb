@@ -165,13 +165,6 @@ class CoursController < ApplicationController
     respond_to do |format|
       format.html 
     
-      format.csv do
-        @csv_string = Cour.generate_csv(@cours, !params[:intervenant])
-        filename = "Export_Cours_#{Date.today.to_s}"
-        response.headers['Content-Disposition'] = 'attachment; filename="' + filename + '.csv"'
-        render "cours/action_do.csv.erb"
-      end
-
       format.xls do
         book = Cour.generate_xls(@cours, !params[:intervenant])
         file_contents = StringIO.new
@@ -396,11 +389,6 @@ class CoursController < ApplicationController
             end
           end
         end
-
-      when "Exporter vers CSV"
-        @csv_string = Cour.generate_csv(@cours.includes(:formation, :intervenant, :salle, :audits), true, true)
-        request.format = 'csv'
-
       when "Exporter vers Excel"
         request.format = 'xls'
 

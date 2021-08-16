@@ -4,7 +4,8 @@
       <h3><%= fa_icon 'bullhorn' %> Nouveautés de la v.4.2</h3>
     </div>
     <a  href="https://github.com/philippe-nougaillon/Planning_IAE/wiki/Nouveaut%C3%A9s-de-la-version-4.2"
-        target="_blank">
+        target="_blank"
+        rel="noopener noreferrer">
       https://github.com/philippe-nougaillon/Planning_IAE/wiki/Nouveautés-de-la-version-4.2
     </a>
   </div>
@@ -18,13 +19,13 @@
 </div>
 
 <div class="pb-2 mt-4 mb-2 border-bottom">
-  <h3><%= fa_icon 'calendar-alt' %> Planning des cours</h3>
+  <h2><%= fa_icon 'calendar-alt' %> Planning des cours</h2>
 </div>
 <div class="row">
   <div class="col-md-4">
     <div class="img-thumbnail">
       <a href="/Images/guide/cours1.png">
-        <img src="/Images/guide/cours1.png" alt="" style="width:100%">
+        <img src="/Images/guide/cours1.png" alt="Liste des cours à venir" style="width:100%">
         <div class="caption">
           <p>Liste des cours à venir</p>
         </div>
@@ -34,7 +35,7 @@
   <div class="col-md-4">
     <div class="img-thumbnail">
       <a href="/Images/guide/cours_selection.png">
-        <img src="/Images/guide/cours_selection.png" alt="" style="width:100%">
+        <img src="/Images/guide/cours_selection.png" alt="Liste des cours d'une formation" style="width:100%">
         <div class="caption">
           <p>Liste des cours d'une formation</p>
         </div>
@@ -44,7 +45,7 @@
   <div class="col-md-4">
     <div class="img-thumbnail">
       <a href="/Images/guide/cours_new.png">
-        <img src="/Images/guide/cours_new.png" alt="" style="width:100%">
+        <img src="/Images/guide/cours_new.png" alt="Formulaire de réservation de salle" style="width:100%">
         <div class="caption">
           <p>Formulaire de réservation de salle</p>
         </div>
@@ -53,36 +54,39 @@
   </div>
 </div>
 <ul>
-    <li>Chaque cours est associé à une Formation, un ou deux Intervenants, une Salle et un Etat (Planifié, Confirmé, Reporté, Annulé, Réalisé)</li>
-    <li>Affichage des cours sous forme de Liste, de Calendrier (semaine/mois) ou Etat d'Occupation des salles</li>
-    <li>Recheche multi-critères (Filtre sur Date, Formation, Intervenant, Etat, Cours passés ou futurs)</li>
-    <li>Export des cours vers Excel (CSV), Outlook/Google Agenda(iCal), PDF</li>
-    <li>Sélection d'un ensemble de cours pour effectuer une action groupée :</li>
-    <ul>
-      <li>Changement d'état</li>
-      <li>Changement de salle (avec proposition des salles disponibles)</li>
-      <li>Changement de date</li>
-      <li>Changement d'intervenant</li>
-      <li>Export CSV</li>
-      <li>Export iCal</li>
-      <li>Export PDF</li>
-      <li>Supression (Seul le créateur d'un cours peut le supprimer)</li>
-    </ul>
-
-    <li>Saisie d'une réservation :</li>
-    <ul>
-      <li>Cochez <b>HSS?</b> pour que les heures de cours ne soient pas imputées sur l'état de service de l'intervenant (HSS = Hors Service Statutaire)</li>
-      <li>Cochez <b>E-learning?</b> pour indiquer que ce cours est de l'E-learning</li>
-      <li>Pour signaler que le cours utilise l'outil <b>ZOOM</b>; entrez comme nom de cours le lien ZOOM, puis son intitulé, séparés par un espace. Le lien ZOOM sera alors cliquable dans la liste publique des cours (PC/Mobile)</li>  
-    </ul>
-    <li>Impossibilité de saisir un nouveau cours ayant lieu un dimanche ou un jour de fermeture de l'établissement</li>
-    <li>Pas de chevauchement horaire pour un même intervenant. Il n'est pas possible de saisir un nouveau cours si le formateur intervient déjà sur un autre cours aux mêmes heures (sauf si les doublons sont autorisés pour cet intervenant)</li>
-
-    <li>Affichage d'un pictogramme <%= fa_icon 'exclamation_circle' %> dans les cas suivants :</li>
-    <ul>
-      <li>Dépassement de capacité de la salle (le nbr de places est inférieur au nbr d'étudiants de la formation)</li>
-      <li>Le cours est dans l'état 'Confirmé' mais aucune salle n'a été réservée</li>
-    </ul>
+  <li>Chaque cours est associé à une Formation, un ou deux Intervenants, une Salle et un Etat (Planifié, Confirmé, Reporté, Annulé, Réalisé)</li>
+  <li>Affichage des cours sous forme de Liste, de Calendrier (semaine/mois) ou Etat d'Occupation des salles</li>
+  <li>Recheche multi-critères (Filtre sur Date, Formation, Intervenant, Etat, Cours passés ou futurs)</li>
+  <li>Export des cours vers Excel (CSV), Outlook/Google Agenda(iCal), PDF</li>
+  <li>Sélection d'un ensemble de cours pour effectuer une action groupée :</li>
+</ul>
+<ul style="list-style-position: inside; list-style-type: circle;">
+  <li>Changement d'état</li>
+  <li>Changement de salle (avec proposition des salles disponibles)</li>
+  <li>Changement de date</li>
+  <li>Changement d'intervenant</li>
+  <li>Export CSV</li>
+  <li>Export iCal</li>
+  <li>Export PDF</li>
+  <li>Supression (Seul le créateur d'un cours peut le supprimer)</li>
+</ul>
+<ul>
+  <li>Saisie d'une réservation :</li>
+</ul>
+<ul style="list-style-position: inside; list-style-type: circle;">
+  <li>Cochez <b>HSS?</b> pour que les heures de cours ne soient pas imputées sur l'état de service de l'intervenant (HSS = Hors Service Statutaire)</li>
+  <li>Cochez <b>E-learning?</b> pour indiquer que ce cours est de l'E-learning</li>
+  <li>Pour signaler que le cours utilise l'outil <b>ZOOM</b>; entrez comme nom de cours le lien ZOOM, puis son intitulé, séparés par un espace. Le lien ZOOM sera alors cliquable dans la liste publique des cours (PC/Mobile)</li>  
+</ul>
+<ul>
+  <li>Impossibilité de saisir un nouveau cours ayant lieu un dimanche ou un jour de fermeture de l'établissement</li>
+  <li>Pas de chevauchement horaire pour un même intervenant. Il n'est pas possible de saisir un nouveau cours si le formateur intervient déjà sur un autre cours aux mêmes heures (sauf si les doublons sont autorisés pour cet intervenant)</li>
+  <li>Pas de chevauchement horaire pour une même salle. <strong>Pour autoriser les doublons : entrez 0 dans la capacité de la salle.</strong></li>
+  <li>Affichage d'un pictogramme <%= fa_icon 'exclamation_circle' %> dans les cas suivants :</li>
+</ul>
+<ul style="list-style-position: inside; list-style-type: circle;">
+  <li>Dépassement de capacité de la salle (le nbr de places est inférieur au nbr d'étudiants de la formation)</li>
+  <li>Le cours est dans l'état 'Confirmé' mais aucune salle n'a été réservée</li>
 </ul>
 
 <div class="pb-2 mt-4 mb-2 border-bottom">
@@ -92,7 +96,7 @@
   <div class="col-md-3">
     <div class="img-thumbnail">
       <a href="/Images/guide/salles1.png">
-        <img src="/Images/guide/salles1.png" alt="" style="width:100%">
+        <img src="/Images/guide/salles1.png" alt="Occupation des salles (jour)" style="width:100%">
         <div class="caption">
           <p>Occupation des salles (jour)</p>
         </div>
@@ -102,7 +106,7 @@
   <div class="col-md-3">
     <div class="img-thumbnail">
       <a href="/Images/guide/salles2.png">
-        <img src="/Images/guide/salles2.png" alt="" style="width:100%">
+        <img src="/Images/guide/salles2.png" alt="Occupation des salles (semaine)" style="width:100%">
         <div class="caption">
           <p>Occupation des salles (semaine)</p>
         </div>
@@ -112,7 +116,7 @@
   <div class="col-md-3">
     <div class="img-thumbnail">
       <a href="/Images/guide/cours3.png">
-        <img src="/Images/guide/cours3.png" alt="" style="width:100%">
+        <img src="/Images/guide/cours3.png" alt="Occupation salles en détail (semaine)" style="width:100%">
         <div class="caption">
           <p>Occupation salles en détail (semaine)</p>
         </div>
@@ -122,7 +126,7 @@
   <div class="col-md-3">
     <div class="img-thumbnail">
       <a href="/Images/guide/cours4.png">
-        <img src="/Images/guide/cours4.png" alt="" style="width:100%">
+        <img src="/Images/guide/cours4.png" alt="Occupation salles en détail (semaine)" style="width:100%">
         <div class="caption">
           <p>Occupation salles en détail (semaine)</p>
         </div>
@@ -133,7 +137,6 @@
 <ul>
   <li>Gestion de la capacité (alerte si dépassement)</li>
   <li>Visualisation des créneaux horaires libres/occupés pour une date, une salle</li>
-  <strong>Pour autoriser les doublons: entrez 0 dans capacité</strong>
 </ul>
 
 <div class="pb-2 mt-4 mb-2 border-bottom">
@@ -143,7 +146,7 @@
   <div class="col-md-4">
     <div class="img-thumbnail">
       <a href="/Images/guide/formations.png">
-        <img src="/Images/guide/formations.png" alt="" style="width:100%">
+        <img src="/Images/guide/formations.png" alt="Liste des formations" style="width:100%">
         <div class="caption">
           <p>Liste des formations</p>
         </div>
@@ -153,7 +156,7 @@
   <div class="col-md-4">
     <div class="img-thumbnail">
       <a href="/Images/guide/formation.png">
-        <img src="/Images/guide/formation.png" alt="" style="width:100%">
+        <img src="/Images/guide/formation.png" alt="Une formation en détail" style="width:100%">
         <div class="caption">
           <p>Une formation en détail</p>
         </div>
@@ -163,7 +166,7 @@
   <div class="col-md-4">
     <div class="img-thumbnail">
       <a href="/Images/guide/formation_form.png">
-        <img src="/Images/guide/formation_form.png" alt="" style="width:100%">
+        <img src="/Images/guide/formation_form.png" alt="Modification d'une formation" style="width:100%">
         <div class="caption">
           <p>Modification d'une formation</p>
         </div>
@@ -202,7 +205,7 @@
   <div class="col-md-4">
     <div class="img-thumbnail">
       <a href="/Images/guide/intervenant.png">
-        <img src="/Images/guide/intervenant.png" alt="" style="width:100%">
+        <img src="/Images/guide/intervenant.png" alt="Liste des intervenants" style="width:100%">
         <div class="caption">
           <p>Liste des intervenants</p>
         </div>
@@ -212,7 +215,7 @@
   <div class="col-md-4">
     <div class="img-thumbnail">
       <a href="/Images/guide/intervenant_show.png">
-        <img src="/Images/guide/intervenant_show.png" alt="" style="width:100%">
+        <img src="/Images/guide/intervenant_show.png" alt="Un intervenant" style="width:100%">
         <div class="caption">
           <p>Un intervenant</p>
         </div>
@@ -222,7 +225,7 @@
   <div class="col-md-4">
     <div class="img-thumbnail">
       <a href="/Images/guide/intervenant_form.png">
-        <img src="/Images/guide/intervenant_form.png" alt="" style="width:100%">
+        <img src="/Images/guide/intervenant_form.png" alt="Un intervenant en détail" style="width:100%">
         <div class="caption">
           <p>Un intervenant en détail</p>
         </div>
@@ -253,7 +256,7 @@
   <div class="col-md-4">
     <div class="img-thumbnail">
       <a href="/Images/guide/etudiant.png">
-        <img src="/Images/guide/etudiant.png" alt="" style="width:100%">
+        <img src="/Images/guide/etudiant.png" alt=Liste des étudiants" style="width:100%">
         <div class="caption">
           <p>Liste des étudiants</p>
         </div>
@@ -263,7 +266,7 @@
   <div class="col-md-4">
     <div class="img-thumbnail">
       <a href="/Images/guide/etudiant_form.png">
-        <img src="/Images/guide/etudiant_form.png" alt="" style="width:100%">
+        <img src="/Images/guide/etudiant_form.png" alt="Un étudiant en détail" style="width:100%">
         <div class="caption">
           <p>Un étudiant en détail</p>
         </div>
@@ -273,7 +276,7 @@
   <div class="col-md-4">
     <div class="img-thumbnail">
       <a href="/Images/guide/etudiant_show.png">
-        <img src="/Images/guide/etudiant_show.png" alt="" style="width:100%">
+        <img src="/Images/guide/etudiant_show.png" alt="Récapitulatif étudiant avec audit des modifications" style="width:100%">
         <div class="caption">
           <p>Récapitulatif étudiant avec audit des modifications</p>
         </div>
@@ -306,7 +309,7 @@
   <div class="col-md-4">
     <div class="img-thumbnail">
       <a href="/Images/guide/outils.png">
-        <img src="/Images/guide/outils.png" alt="" style="width:100%">
+        <img src="/Images/guide/outils.png" alt="Liste des outils" style="width:100%">
         <div class="caption">
           <p>Liste des outils</p>
         </div>
@@ -317,7 +320,7 @@
   <div class="col-md-4">
     <div class="img-thumbnail">
       <a href="/Images/guide/imports-log.png">
-        <img src="/Images/guide/imports-log.png" alt="" style="width:100%">
+        <img src="/Images/guide/imports-log.png" alt="Le journal des importations (Imports log)" style="width:100%">
         <div class="caption">
           <p>Le journal des importations (Imports log)</p>
         </div>
@@ -328,7 +331,7 @@
   <div class="col-md-4">
     <div class="img-thumbnail">
       <a href="/Images/guide/reservation-saison.png">
-        <img src="/Images/guide/reservation-saison.png" alt="" style="width:100%">
+        <img src="/Images/guide/reservation-saison.png" alt="Réservation de créneaux horaires pour une saison" style="width:100%">
         <div class="caption">
           <p>Réservation de créneaux horaires pour une saison</p>
         </div>
@@ -404,7 +407,7 @@
   <div class="col-md-4">
     <div class="img-thumbnail">
       <a href="/Images/guide/audit1.png">
-        <img src="/Images/guide/audit1.png" alt="" style="width:100%">
+        <img src="/Images/guide/audit1.png" alt="Audit des modifications" style="width:100%">
         <div class="caption">
           <p>Audit des modifications</p>
         </div>
@@ -414,7 +417,7 @@
   <div class="col-md-4">
     <div class="img-thumbnail">
       <a href="/Images/guide/audit2.png">
-        <img src="/Images/guide/audit2.png" alt="" style="width:100%">
+        <img src="/Images/guide/audit2.png" alt="Audit des cours modifiés" style="width:100%">
         <div class="caption">
           <p>Audit des cours modifiés </p>
         </div>
@@ -424,7 +427,7 @@
   <div class="col-md-4">
     <div class="img-thumbnail">
       <a href="/Images/guide/audit3.png">
-        <img src="/Images/guide/audit3.png" alt="" style="width:100%">
+        <img src="/Images/guide/audit3.png" alt="Audit des changements de salle" style="width:100%">
         <div class="caption">
           <p>Audit des changements de salle</p>
         </div>
@@ -469,7 +472,7 @@
   <div class="col-md-4">
     <div class="img-thumbnail">
       <a href="/Images/guide/mobile0.png">
-        <img src="/Images/guide/mobile0.png" alt="" style="width:100%">
+        <img src="/Images/guide/mobile0.png" alt="Planning mobile" style="width:100%">
         <div class="caption">
           <p>Planning mobile</p>
         </div>
@@ -479,7 +482,7 @@
   <div class="col-md-4">
     <div class="img-thumbnail">
       <a href="/Images/guide/mobile1.png">
-        <img src="/Images/guide/mobile1.png" alt="" style="width:100%">
+        <img src="/Images/guide/mobile1.png" alt="Indicateur d'avancement des cours" style="width:100%">
         <div class="caption">
           <p>Indicateur d'avancement des cours</p>
         </div>
@@ -489,7 +492,7 @@
   <div class="col-md-4">
     <div class="img-thumbnail">
       <a href="/Images/guide/mobileSalles.png">
-        <img src="/Images/guide/mobileSalles.png" alt="" style="width:100%">
+        <img src="/Images/guide/mobileSalles.png" alt="Planning mobile hebdomadaire" style="width:100%">
         <div class="caption">
           <p>Planning mobile hebdomadaire</p>
         </div>
@@ -510,7 +513,7 @@
   <div class="col-md-6">
     <div class="img-thumbnail">
       <a href="/Images/guide/afficheur.png">
-        <img src="/Images/guide/afficheur.png" alt="" style="width:100%">
+        <img src="/Images/guide/afficheur.png" alt="Planning sur afficheur 1/2" style="width:100%">
         <div class="caption">
           <p>Planning sur afficheur 1/2</p>
         </div>
@@ -520,7 +523,7 @@
   <div class="col-md-6">
     <div class="img-thumbnail">
       <a href="/Images/guide/afficheur2.png">
-        <img src="/Images/guide/afficheur2.png" alt="" style="width:100%">
+        <img src="/Images/guide/afficheur2.png" alt="Planning sur afficheur 2/2" style="width:100%">
         <div class="caption">
           <p>Planning sur afficheur 2/2</p>
         </div>
