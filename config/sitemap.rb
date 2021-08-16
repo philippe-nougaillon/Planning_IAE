@@ -1,5 +1,10 @@
 # Set the host name for URL creation
-SitemapGenerator::Sitemap.default_host = "https://planning-iae.herokuapp.com"
+SitemapGenerator::Sitemap.default_host = "https://planning.iae-paris.com"
+
+# Ne pas indéxer la liste des cours
+SitemapGenerator::Sitemap.include_root = false
+
+SitemapGenerator::Sitemap.compress = false
 
 SitemapGenerator::Sitemap.create do
   # Put links creation logic here.
@@ -25,6 +30,6 @@ SitemapGenerator::Sitemap.create do
   #     add article_path(article), :lastmod => article.updated_at
   #   end
 
-  add guide_index_path
+  add guide_index_path, :priority => 0.9,  :changefreq => 'monthly'
 
 end

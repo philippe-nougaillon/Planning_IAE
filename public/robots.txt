@@ -1,2 +1,4 @@
-# See https://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file
-Sitemap: https://planning-iae.herokuapp.com/sitemap.xml
+User-agent: *
+Disallow: /
+
+Sitemap: https://planning.iae-paris.com/sitemap.xml
