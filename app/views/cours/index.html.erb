@@ -18,7 +18,7 @@
         <div class="col-sm-5">
           <%= label_tag "Formation" %>   
           <%= select_tag :formation, grouped_options_for_select(Formation.for_select, params[:formation]), 
-                          class: "form-control  form-control-sm select2", 
+                          class: "form-control form-control-sm select2", 
                           include_blank:true, onchange: 'this.form.submit()' %>
         </div>
 
@@ -177,7 +177,7 @@
             <% if user_signed_in? %>
               <div data-target="action.selector">  
                 <span class="align-bottom">
-                  Choisir une action a exécuter sur les cours sélectionnés
+                  Choisir une action à exécuter sur les cours sélectionnés
                 </span>
             
                 <% if current_user.admin? %>

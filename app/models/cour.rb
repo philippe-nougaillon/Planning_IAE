@@ -302,10 +302,10 @@ class Cour < ApplicationRecord
       event = Icalendar::Event.new
       event.dtstart = c.debut.strftime("%Y%m%dT%H%M%S")
       event.dtend = c.fin.strftime("%Y%m%dT%H%M%S")
-      event.summary = c.formation.nom
+      event.summary = c.try(:formation).try(:nom)
       event.description = c.nom
       event.location = "BioPark #{c.salle.nom if c.salle}"
-      event.url = "https://planning4-demo.herokuapp.com/"
+      event.url = "https://planning.iae-paris.com/"
       calendar.add_event(event)
     end  
     return calendar
@@ -573,9 +573,13 @@ class Cour < ApplicationRecord
     end  
 
     def reservation_dates_must_make_sense
-      if fin <= debut 
-        errors.add(:fin, "du cours ne peut pas être avant son commencement !")
-      end
+      unless fin 
+        errors.add(:fin, "du cours doit être précisée !")
+      else
+        if fin <= debut 
+          errors.add(:fin, "du cours ne peut pas être avant son commencement !")
+        end
+      end  
     end
 
     def check_chevauchement
