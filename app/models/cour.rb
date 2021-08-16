@@ -573,9 +573,13 @@ class Cour < ApplicationRecord
     end  
 
     def reservation_dates_must_make_sense
-      if fin <= debut 
-        errors.add(:fin, "du cours ne peut pas être avant son commencement !")
-      end
+      unless fin 
+        errors.add(:fin, "du cours doit être précisée !")
+      else
+        if fin <= debut 
+          errors.add(:fin, "du cours ne peut pas être avant son commencement !")
+        end
+      end  
     end
 
     def check_chevauchement
