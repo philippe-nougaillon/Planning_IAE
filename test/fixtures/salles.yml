@@ -1,0 +1,14 @@
+A1:
+  id: 1
+  nom: A1
+  places: 30
+
+A2:
+  id: 2
+  nom: A2
+  places: 35
+
+En_ligne:
+  id: 3
+  nom: En Ligne
+  places: 0

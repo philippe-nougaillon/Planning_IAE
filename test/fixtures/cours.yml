@@ -1,1 +1,17 @@
+cours_management_commercial:
+  id: 1
+  formation_id: 1
+  intervenant_id: 1
+  salle_id: 1
+  debut: "2021-11-22 12:00:00"
+  duree: 3
+  etat: confirmé
+
+cours_non_confirmé:
+  id: 2
+  formation_id: 1
+  intervenant_id: 1
+  salle_id: 1
+  debut: "2021-11-22 12:00:00"
+  duree: 3
   
