@@ -37,13 +37,18 @@
 <% end %>
 <br>
 
-<div class="page_info m-3">
-  <%= page_entries_info @cours %>
-</div>
+<% if @cours.length > 0 %>
+  <div class="page_info m-3">
+    <%= page_entries_info @cours %>
+  </div>
 
-<%= will_paginate @cours, inner_window: 0, 
-                          outer_window: 0, 
-                          renderer: WillPaginate::ActionView::BootstrapLinkRenderer,
-                          list_classes: %w(pagination justify-content-center h4) %>
-
+  <%= will_paginate @cours, inner_window: 0, 
+                            outer_window: 0, 
+                            renderer: WillPaginate::ActionView::BootstrapLinkRenderer,
+                            list_classes: %w(pagination justify-content-center h4) %>
+<% else %>
+  <p>
+    Aucun cours à afficher...
+  </p>
+<% end %>
 <br>

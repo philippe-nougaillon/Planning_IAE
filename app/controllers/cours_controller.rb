@@ -128,8 +128,10 @@ class CoursController < ApplicationController
     end
 
     unless params[:intervenant_nom].blank?
-      if intervenant = Intervenant.where("nom LIKE ?", "%#{ params[:intervenant_nom].strip.upcase }%").first
-        @cours = @cours.where("intervenant_id = ? OR intervenant_binome_id = ?", intervenant.id, intervenant.id)
+      if intervenants_id = Intervenant.where("nom LIKE ?", "%#{ params[:intervenant_nom].strip.upcase }%").pluck(:id)
+        @cours = @cours
+                    .where(intervenant_id: intervenants_id)
+                    .or(@cours.where(intervenant_binome_id: intervenants_id))
       else
         # ne rien afficher si l'intervenant n'existe pas
         @cours = Cour.where(id: 0)
