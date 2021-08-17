@@ -105,12 +105,6 @@ class CoursController < ApplicationController
       @cours = @cours.where("intervenant_id = ? OR intervenant_binome_id = ?", intervenant_id, intervenant_id)
     end
 
-    unless params[:intervenant_nom].blank?
-      if intervenant = Intervenant.where("nom LIKE ?", "%#{ params[:intervenant_nom].strip.upcase }%").first
-        @cours = @cours.where("intervenant_id = ? OR intervenant_binome_id = ?", intervenant.id, intervenant.id)
-      end
-    end
-
     unless params[:intervenant_id].blank?
       intervenant_id = params[:intervenant_id]
       @cours = @cours.where("intervenant_id = ? OR intervenant_binome_id = ?", intervenant_id, intervenant_id)
@@ -131,6 +125,15 @@ class CoursController < ApplicationController
     unless params[:ids].blank?
       # affiche les cours d'un ID donné
       @cours = Cour.where(id:params[:ids]).order(:debut)
+    end
+
+    unless params[:intervenant_nom].blank?
+      if intervenant = Intervenant.where("nom LIKE ?", "%#{ params[:intervenant_nom].strip.upcase }%").first
+        @cours = @cours.where("intervenant_id = ? OR intervenant_binome_id = ?", intervenant.id, intervenant.id)
+      else
+        # ne rien afficher si l'intervenant n'existe pas
+        @cours = Cour.where(id: 0)
+      end
     end
 
     @all_cours = @cours
