@@ -15,11 +15,11 @@ class SalleTest < ActiveSupport::TestCase
   end
 
   test "le nom d'une salle doit être unique" do
-    salle_A1_copy = salles(:A1).dup
-    assert salle_A1_copy.invalid?
-    assert_equal ["n'est pas disponible"], salle_A1_copy.errors[:nom]
-    salle_A1_copy.nom = 'A2'
-    assert salle_A1_copy.valid?
+    salle_nom_deja_pris = Salle.create(nom: 'A1', places: 23)
+    assert salle_nom_deja_pris.invalid?
+    assert_equal ["n'est pas disponible"], salle_nom_deja_pris.errors[:nom]
+    salle_nom_deja_pris.nom = 'NomDeSalleDisponible'
+    assert salle_nom_deja_pris.valid?
   end
 
 
