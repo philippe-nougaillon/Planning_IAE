@@ -12,7 +12,6 @@ Rails.application.routes.draw do
   resources :cours do
     collection do
       get :planning, to: 'cours#index_slide'
-
       post :action
       post :action_do
     end

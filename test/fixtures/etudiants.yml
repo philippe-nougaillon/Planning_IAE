@@ -1,0 +1,8 @@
+nicolas:
+  id: 1
+  nom: Petit
+  prénom: Nicolas
+  civilité: M.
+  email: nicolas.petit@gmail.com
+  formation_id: 1
+
