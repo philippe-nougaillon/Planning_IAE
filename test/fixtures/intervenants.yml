@@ -1,0 +1,23 @@
+florent:
+  id: 1
+  nom: Dubois 
+  prenom: Florent
+  email: florent.dubois@gmail.com
+  status: CEV
+  doublon: false
+
+christophe:
+  id: 2
+  nom: Dupont 
+  prenom: Christophe
+  email: christophe.dupont@gmail.com
+  status: CEV
+  doublon: false
+
+marie:
+  id: 3
+  nom: Thomas
+  prenom: Marie
+  email: marie.thomas@gmail.com
+  status: CEV
+  doublon: false

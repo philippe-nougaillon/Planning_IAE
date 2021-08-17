@@ -1,0 +1,13 @@
+MGEN_2021:
+  id: 1
+  user_id: 1
+  nom: MGEN_2021
+  abrg: M21
+  nbr_heures: 100 
+
+Master_CGAO:
+  id: 2
+  user_id: 1
+  nom: Master CGAO - JB 2021/2022
+  abrg: MCGAO21/22
+  nbr_heures: 100

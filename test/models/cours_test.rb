@@ -1,134 +1,157 @@
-# require 'test_helper'
+require "test_helper"
 
 class CoursTest < ActiveSupport::TestCase
 
-    test "the truth" do
-        assert true
-    end
-
-    test "Ajouter un cours en ligne" do
-        # USER
-        user = User.create(email: "philippe.nougaillon@gmail.com", 
-                            nom: "philnoug", 
-                            prénom: "philippe",
-                            password: "12345678!", 
-                            password_confirmation: "12345678!")
-
-        assert user.valid?, "User valide ?"
-
-        # FORMATIONS
-        formation = Formation.create(nom: "Formation TEST1", 
-                                     abrg: "FTEST1", 
-                                     nbr_heures: 100, 
-                                     user: user)
-        
-        assert formation.valid?, "Formation valide ?"
-
-        formation2 = Formation.create(nom: "Formation TEST2", 
-                                    abrg: "FTEST2", 
-                                    nbr_heures: 100, 
-                                    user: user)
-
-        assert formation2.valid?, "Formation2 valide ?"
-
-        # INTERVENANTS
-        intervenant = Intervenant.create(nom: "Intervenant1", 
-                                        prenom: "prénom intervenant1", 
-                                        email: "pp@pp.com", 
-                                        status: "CEV",
-                                        doublon: false)
-
-        assert intervenant.valid?, "Intervenant valide ?"
-
-        intervenant2 = Intervenant.create(nom: "Intervenant2", 
-                                        prenom: "prénom intervenant2", 
-                                        email: "pop@popp.com", 
-                                        status: "CEV",
-                                        doublon: false)
-
-        assert intervenant2.valid?, "Intervenant2 valide ?"
-
-        # COURS
-        cours = Cour.create(debut: "2020-12-01 12:00:00", 
+    setup do
+        @cour_management_commercial = 
+            Cour.create(
+                        debut: "2021-11-24 12:00:00", 
                         duree: 2,
-                        formation: formation, 
-                        intervenant: intervenant)
+                        formation_id: 1, 
+                        intervenant_id: 1
+                        
+            )
+        @cour_finance = 
+            Cour.create(
+                        debut: "2021-11-24 13:00:00",
+                        duree: 3,
+                        formation_id: 2, 
+                        intervenant_id: 2
+            )
 
-        assert cours.valid?, "Cours valide ?"
-        assert cours.etat == "planifié", "Cours en état 'Planifié ?"
-
-        # SALLE
-        salle = Salle.create(nom: "SALLE A1", places: 30)
-        assert salle.valid?, "Salle valide?"
-
-        # CHGT COURS => ETAT ET SALLE
-        cours.salle = salle
-        cours.etat  = "confirmé"
-        assert cours.valid?, "on assigne une salle à un cours"
-        cours.save
-
-        #puts cours.inspect
-
-        # COURS EN CHEVAUCHEMENT SI MEME SALLE
-        cours_en_doublon = Cour.create(debut: "2020-12-01 13:00:00", 
-                                        duree: 2,
-                                        intervenant: intervenant2,
-                                        formation: formation2, 
-                                        salle: salle,
-                                        etat: "confirmé")
-
-        assert_not cours_en_doublon.valid?, "COURS EN CHEVAUCHEMENT MEME SALLE"
-        #puts cours_en_doublon.errors.inspect
-
-
-        # COURS EN CHEVAUCHEMENT SI MEME DATE & INTERVENANT
-        cours_en_doublon2 = Cour.create(debut: "2020-12-01 13:00:00", 
-                                        duree: 2,
-                                        intervenant: intervenant,
-                                        formation: formation2, 
-                                        salle: salle,
-                                        etat: "confirmé")
-
-        assert_not cours_en_doublon2.valid?, "COURS EN CHEVAUCHEMENT MEME INTERVENANT"
-        #puts cours_en_doublon2.errors.inspect
-
-        # SALLE PLACE = 0 => DOUBLON AUTORISE
-        salle_en_ligne = Salle.create(nom: "En ligne", places: 0)
-        assert salle_en_ligne.valid?
-        #puts salle_en_ligne.inspect
-
-        # COURS #2 EN LIGNE
-        cours2 = Cour.create(debut: "2020-12-01 14:00:00", duree: 3,
-                        intervenant: intervenant,
-                        formation: formation, 
-                        salle: salle_en_ligne,
-                        etat: "confirmé")
-
-        assert cours2.valid?, "Cours #2 en ligne en doublon autorisé(EN LIGNE) avec cours #1"
-        puts cours2.inspect
-
-        # COURS #3 EN LIGNE
-        cours3 = Cour.create(debut: "2020-12-01 14:00:00", duree: 3,
-                        intervenant: intervenant,
-                        formation: formation, 
-                        salle: salle_en_ligne,
-                        etat: "confirmé")
-
-        assert_not cours3.valid?, "Cours #3 en ligne en doublon non autorisé avec cours #2 en ligne (même heure, même intervenant)"
-        puts cours3.inspect
-        # puts cours3.errors.messages
-
-        # COURS #4 EN LIGNE BINOME
-        cours4 = Cour.create(debut: "2020-12-01 14:00:00", duree: 3,
-                        intervenant: intervenant2,
-                        intervenant_binome: intervenant,
-                        formation: formation, 
-                        salle: salle_en_ligne,
-                        etat: "confirmé")
-
-        assert cours4.valid?, "Cours #4 intervenant en binome en doublon"
-        puts cours4.inspect
-
+        @cour_marketing = 
+            Cour.create(
+                        debut: "2021-11-24 14:00:00",
+                        duree: 2,
+                        formation_id: 1, 
+                        intervenant_id: 2
+            )
+        
+        # @cour_veille =
+        #     Cour.create(
+        #                 debut: "2021-11-24 13:00:00",
+        #                 duree: 2,
+        #                 formation_id: 1, 
+        #                 intervenant_id: 3
+        #     )
+        
+        @cour_cloture_module =
+            Cour.create(
+                        debut: "2021-11-24 10:00:00",
+                        duree: 6,
+                        formation_id: 2, 
+                        intervenant_id: 3,
+                        intervenant_binome_id: 1
+            )
+        @cour_en_ligne = 
+            Cour.create(
+                        debut: "2021-11-24 11:00:00",
+                        duree: 4,
+                        formation_id: 1, 
+                        intervenant_id: 3
+            )
     end
 
+
+    test "un cour a quelques champs obligatoires" do
+        cour = Cour.new(debut: "2020-12-01 12:00:00") # debut obligatoire, sinon wday ne sera pas trouvé
+        assert cour.invalid?
+		assert cour.errors[:formation].any?
+        assert cour.errors[:formation_id].any?
+        assert cour.errors[:intervenant].any?
+        assert cour.errors[:intervenant_id].any?
+        assert cour.errors[:fin].any?
+    end
+
+    test "le cour doit être créé s'il a des attributs valides" do
+		assert @cour_management_commercial.valid?
+	end
+
+    test "le cour est de base en état planifié" do
+        assert @cour_management_commercial.etat == "planifié"
+    end
+
+    test "le cours passe en état confirmé si une salle lui a été attribuée" do
+        @cour_management_commercial.salle_id = 1
+        @cour_management_commercial.save
+        assert @cour_management_commercial.etat == "confirmé"
+    end
+
+    test "il ne peut pas y avoir deux cours dans la même salle" do
+        @cour_management_commercial.salle_id = 1
+        @cour_management_commercial.save
+
+        @cour_finance.salle_id = 1
+        @cour_finance.etat = "confirmé"
+
+        assert @cour_finance.invalid?
+        assert_equal ["en chevauchement (période, salle) avec le cours <a href='/cours/#{@cour_management_commercial.id}'>#{@cour_management_commercial.id}</a>"], @cour_finance.errors[:cours]
+    end
+
+    test "deux cours peuvent être dans la même salle de capacité = 0 (ex: en ligne)" do
+        @cour_management_commercial.salle_id = 3
+        @cour_management_commercial.save
+
+        @cour_en_ligne.salle_id = 3
+        @cour_en_ligne.save
+
+        assert @cour_en_ligne.valid?
+    end
+
+    # tester que l'intervenant n'est pas deux cours en même temps
+    test "un intervenant ne peut pas avoir deux cours en même temps" do
+        @cour_finance.salle_id = 1
+        @cour_finance.save
+
+        @cour_marketing.salle_id = 2
+        @cour_marketing.etat = "confirmé"
+
+        assert @cour_marketing.invalid?
+        assert_equal ["en chevauchement (période, intervenant) avec le(s) cours ##{@cour_finance.id}"], @cour_marketing.errors[:cours]
+    end
+
+
+    #test que l'intervenant doublon n'ai pas deux cours en même temps
+
+    test "un intervenant doublon ne peut pas avoir deux cours en même temps" do
+        # puts 'a'
+        # puts @cour_management_commercial.inspect
+        # @cour_management_commercial.salle_id = 1
+        # puts 'b'
+        # puts @cour_management_commercial.inspect
+        # @cour_management_commercial.save
+        # puts 'c'
+        # puts @cour_management_commercial.inspect
+
+        # puts 'd'
+        # puts @cour_cloture_module.inspect
+        # @cour_cloture_module.salle_id = 2
+        # # puts 'e'
+        # # puts @cour_cloture_module.inspect
+        # @cour_cloture_module.save
+        # puts 'f'
+        # puts @cour_cloture_module.inspect
+
+        # assert @cour_cloture_module.invalid?
+        # assert_equal ["en chevauchement (période, intervenant) avec le(s) cours ##{@cour_management_commercial.id}"], @cour_cloture_module.errors[:cours]
+        # puts @cour_cloture_module.errors.full_messages
+        # # puts @cour_cloture_module.inspect
+    end
+
+
+    # tester qu'une formation n'est pas deux cours en même temps
+    # test "une formation ne peut pas être dans deux cours en même temps" do
+    #     @cour_management_commercial.salle_id = 1
+    #     @cour_management_commercial.save
+    #     puts @cour_management_commercial.inspect
+
+    #     @cour_veille.salle_id = 2
+    #     @cour_veille.etat = "confirmé"
+    #     assert @cour_veille.invalid?
+    #     puts @cour_veille.errors.full_messages
+    #     puts @cour_veille.inspect
+    #     puts @cour_finance.inspect
+
+    #     assert_equal ["en chevauchement (période, salle) avec le cours ##{@cour_management_commercial.id}"], @cour_veille.errors[:cours]
+    # end
 end
