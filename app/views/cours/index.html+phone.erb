@@ -1,38 +1,35 @@
 <%= form_tag request.path, method: :get do %>
 
-    <div class="form-group">
-      <%= label_tag "Cours à partir du" %>
-      <%= text_field_tag :start_date, params[:start_date], type: 'date', onchange: 'this.form.submit()', class: "form-control form-control-sm", id: 'Cours___partir_du' %>
-    </div>  
-    
-    <div class="form-group">
-      <%= label_tag "Formation" %>    
-      <%= select_tag :formation, options_for_select(@formations, params[:formation]), class:"custom-select", include_blank:true, onchange:'this.form.submit()' %>
+  <div class="form-group">
+    <%= label_tag "Cours à partir du" %>
+    <%= text_field_tag :start_date, params[:start_date], type: 'date', onchange: 'this.form.submit()', class: "form-control form-control-sm", id: 'Cours___partir_du' %>
+  </div>  
+  
+  <div class="form-group">
+    <%= label_tag "Formation" %>    
+    <%= select_tag :formation, options_for_select(@formations, params[:formation]), class: "custom-select", include_blank:true, onchange:'this.form.submit()' %>
+  </div>
+
+  <%= label_tag "Nom de l'intervenant" %>    
+  <div class="input-group">
+    <%= text_field_tag :intervenant_nom, params[:intervenant_nom], class: "form-control", id: 'Intervenant' %>
+    <div class="input-group-append">
+      <%= submit_tag 'Filtrer', class: "btn btn-success" %>
+      <%= submit_tag 'RàZ', class: "btn btn-light" %>
     </div>
-
-    <div class="form-group">
-      <%= label_tag "Intervenant" %>    
-      <%= text_field_tag :intervenant_nom, params[:intervenant_nom], class:"form-control", onchange:'this.form.submit()', id:'Intervenant' %>
-    </div>
-
-    <%= submit_tag 'Filtrer', class:"btn btn-sm btn-success" %>
-
-    <%= submit_tag 'RàZ', class:"btn btn-sm btn-light" %>
+  </div>
 
 <% end %>
-<br>
 
 <% current_date = '' %>
 <% @cours.each do | cours | %>
-  <% if cours.debut.to_date != current_date %>
-    <div class="text-primary m-3">
-      <br>
-      <h6>
-          <%= fa_icon 'calendar-day' %>
-        <%= l(cours.debut.to_date, format: :long).humanize %>
-      </h6> 
+  <% _date_cours = cours.debut.to_date %>
+  <% if _date_cours != current_date %>
+    <div class="text-primary mt-4">
+      <%= fa_icon 'calendar-day' %>
+      <%= l(_date_cours, format: :long).humanize %>
     </div>
-    <% current_date = cours.debut.to_date %>
+    <% current_date = _date_cours %>
   <% end %>  
 
   <%= render partial: 'cours', 
@@ -47,6 +44,6 @@
 <%= will_paginate @cours, inner_window: 0, 
                           outer_window: 0, 
                           renderer: WillPaginate::ActionView::BootstrapLinkRenderer,
-                          list_classes: %w(pagination justify-content-center h3) %>
+                          list_classes: %w(pagination justify-content-center h4) %>
 
 <br>
