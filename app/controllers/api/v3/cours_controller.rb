@@ -12,7 +12,7 @@ module Api
 				@cours = Cour
 							.where("DATE(debut) >= ?", params[:d])
 							.order(:debut, :fin)
-							.paginate(page: params[:page], per_page: 100)
+							.paginate(page: params[:page], per_page: 25)
 			end
 			
 		end
