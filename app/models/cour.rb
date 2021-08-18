@@ -170,6 +170,14 @@ class Cour < ApplicationRecord
       self.formation.try(:color)
   end
 
+  # render json methods V3
+  # 
+
+  def date_json_v3
+    I18n.l(self.debut.to_date)
+  end
+
+
   # ETATS DE SERVICES 
 
   def self.Tarif

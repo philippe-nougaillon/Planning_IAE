@@ -99,6 +99,14 @@ Rails.application.routes.draw do
         end
         resources :etudiants
     end 
+  
+    namespace :v3 do 
+      resources :cours do
+        collection do
+          get :in_progress
+        end
+      end
+    end 
   end 
 
   root 'cours#index'
