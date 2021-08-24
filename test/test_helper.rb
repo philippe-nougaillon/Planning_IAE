@@ -17,8 +17,23 @@ class ActiveSupport::TestCase
     intervenant_christophe = intervenants(:christophe)
     cour_management_commercial = cours(:cours_management_commercial)
     salle_A1 = salles(:A1)
-    
+    @user_admin = User.create(
+      email: 'pascal.durand@gmail.com',
+      prénom: 'Pascal',
+      nom: 'Durand',
+      password: '1234567890a',
+      password_confirmation: '1234567890a',
+      admin: true)
+  end
 
+  def login_user
+    visit new_user_session_path
+
+    click_on "Se connecter"
+
+    fill_in "user_email", with: @user_admin.email
+    fill_in "user_password", with: @user_admin.password
+    click_on "Connexion"
   end
 
   # Add more helper methods to be used by all tests here...

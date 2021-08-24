@@ -4,56 +4,55 @@ class CoursTest < ActiveSupport::TestCase
 
     setup do
         @cour_management_commercial = 
-            Cour.create(
-                        debut: "2021-11-24 12:00:00", 
-                        duree: 2,
-                        formation_id: 1, 
-                        intervenant_id: 1
-                        
-            )
+        Cour.create(
+            debut: "2021-11-24 12:00:00", 
+            duree: 2,
+            formation_id: 1, 
+            intervenant_id: 1
+        )
         @cour_finance = 
-            Cour.create(
-                        debut: "2021-11-24 13:00:00",
-                        duree: 3,
-                        formation_id: 2, 
-                        intervenant_id: 2
-            )
+        Cour.create(
+            debut: "2021-11-24 13:00:00",
+            duree: 3,
+            formation_id: 2, 
+            intervenant_id: 2
+        )
 
         @cour_marketing = 
-            Cour.create(
-                        debut: "2021-11-24 14:00:00",
-                        duree: 2,
-                        formation_id: 1, 
-                        intervenant_id: 2
-            )
+        Cour.create(
+            debut: "2021-11-24 14:00:00",
+            duree: 2,
+            formation_id: 1, 
+            intervenant_id: 2
+        )
         
         # @cour_veille =
-        #     Cour.create(
-        #                 debut: "2021-11-24 13:00:00",
-        #                 duree: 2,
-        #                 formation_id: 1, 
-        #                 intervenant_id: 3
-        #     )
+        # Cour.create(
+        #     debut: "2021-11-24 13:00:00",
+        #     duree: 2,
+        #     formation_id: 1, 
+        #     intervenant_id: 3
+        # )
         
         @cour_cloture_module =
-            Cour.create(
-                        debut: "2021-11-24 10:00:00",
-                        duree: 6,
-                        formation_id: 2, 
-                        intervenant_id: 3,
-                        intervenant_binome_id: 1
-            )
+        Cour.create(
+            debut: "2021-11-24 10:00:00",
+            duree: 6,
+            formation_id: 2, 
+            intervenant_id: 3,
+            intervenant_binome_id: 1
+        )
         @cour_en_ligne = 
-            Cour.create(
-                        debut: "2021-11-24 11:00:00",
-                        duree: 4,
-                        formation_id: 1, 
-                        intervenant_id: 3
-            )
+        Cour.create(
+            debut: "2021-11-24 11:00:00",
+            duree: 4,
+            formation_id: 1, 
+            intervenant_id: 3
+        )
     end
 
 
-    test "un cour a quelques champs obligatoires" do
+    test "un cours a quelques champs obligatoires" do
         cour = Cour.new(debut: "2020-12-01 12:00:00") # debut obligatoire, sinon wday ne sera pas trouvé
         assert cour.invalid?
 		assert cour.errors[:formation].any?
@@ -63,11 +62,11 @@ class CoursTest < ActiveSupport::TestCase
         assert cour.errors[:fin].any?
     end
 
-    test "le cour doit être créé s'il a des attributs valides" do
+    test "le cours doit être créé s'il a des attributs valides" do
 		assert @cour_management_commercial.valid?
 	end
 
-    test "le cour est de base en état planifié" do
+    test "le cours est de base en état planifié" do
         assert @cour_management_commercial.etat == "planifié"
     end
 

@@ -1,7 +1,7 @@
 thomas:
   id: 1
   formation_id: 1
-  email: thomas@gmail.com
+  email: thomas.robert@gmail.com
   prénom: Thomas
   nom: Robert
   encrypted_password: 12345678!
