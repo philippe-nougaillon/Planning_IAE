@@ -17,12 +17,12 @@ class IntervenantsTest < ApplicationSystemTestCase
 
     click_on "Intervenant"
 
-    fill_in 'intervenant_nom', with: intervenants(:florent).nom
-    fill_in 'intervenant_prenom', with: intervenants(:florent).prenom
-    fill_in 'intervenant_email', with: intervenants(:florent).email
+    fill_in 'intervenant_nom', with: 'Simmons'
+    fill_in 'intervenant_prenom', with: 'Michael'
+    fill_in 'intervenant_email', with: 'michael.simmons@gmail.com'
     select intervenants(:florent).status ,from: 'intervenant_status'
-
     click_on "Créer un(e) Intervenant"
-    sleep(10)
+
+    assert_text "Intervenant ajouté."
   end
 end

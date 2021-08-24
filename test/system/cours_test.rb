@@ -15,7 +15,7 @@ class CoursTest < ApplicationSystemTestCase
     visit cours_url
   end
 
-  test "visiting the index" do
+  test "visiter l'index" do
     assert_selector "h3", text: "Planning des cours"
   end
 
