@@ -49,7 +49,7 @@ class IntervenantsController < ApplicationController
                                       .count(:id)
                                       .sort_by{|k, v| v}
                                       .reverse
-                                      .collect{ |x| x.first ? Salle.find(x.first).try(:nom) : nil }
+                                      .collect{ |x| x.first ? "#{Salle.find(x.first).try(:nom)} (#{ x.last })" : nil }
                                       .select{ |x| !x.nil? }
                                       .join(', ')
   end
