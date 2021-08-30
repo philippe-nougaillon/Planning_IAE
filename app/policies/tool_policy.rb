@@ -6,7 +6,7 @@ class ToolPolicy < ApplicationPolicy
     end
 
     def index?
-      user
+      user.admin? || user.reserver?
     end
   
     def import_utilisateurs?

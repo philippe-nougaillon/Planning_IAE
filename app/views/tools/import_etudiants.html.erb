@@ -22,13 +22,12 @@
       <%= select_tag :formation_id, 
             options_from_collection_for_select(Formation.all, :id, :nom, params[:formation_id]), 
               class:"form-control select2", include_blank: true %>
+      <br>
+      <div class="field">
+        <%= label :filename, "Fichier source" %>
+        <%= file_field_tag 'upload', accept: 'application/vnd.ms-excel', class: 'form-control pb-5 pt-3' %>
+      </div>
     </div>
-  </div>
-  <br>
-
-  <div class="field">
-    <%= label :filename, "Fichier source" %>
-    <%= file_field_tag 'upload', accept: '.xls' %>
   </div>
   <br>
   
