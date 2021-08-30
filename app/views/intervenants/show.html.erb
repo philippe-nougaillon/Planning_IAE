@@ -55,7 +55,14 @@
       <small class="text-muted">Mobile</small><br>
       <%= @intervenant.téléphone_mobile %>
     </h3>
-    <% if @formations.any? %>
+    <h3>
+    <small class="text-muted">Salles habituelles</small><br>
+      <%= @salles_habituelles %>
+    </h3>
+  </div>
+</div>
+
+<% if @formations.any? %>
       <h2>
         <small>
           <%= "Formation".pluralize(@formations.size) %>
@@ -74,13 +81,6 @@
                                 filter: 'all') %><%= ',' if index != @formations.size - 1 %>
       <% end %>
     <% end %>
-
-    <h3>
-    <small class="text-muted">Salles habituelles</small><br>
-      <%= @salles_habituelles %>
-    </h3>
-  </div>
-</div>
 
 <% if policy(:tool).can_see_RHGroup_private_tool? %>
   <% if @intervenant.responsabilites.any? %>
