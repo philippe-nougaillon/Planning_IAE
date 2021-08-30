@@ -43,6 +43,15 @@ class IntervenantsController < ApplicationController
   # GET /intervenants/1.json
   def show
     @formations = @intervenant.formations.uniq
+    @salles_habituelles = @intervenant.cours
+                                      .select('cours.id')
+                                      .group(:salle_id)
+                                      .count(:id)
+                                      .sort_by{|k, v| v}
+                                      .reverse
+                                      .collect{ |x| x.first ? Salle.find(x.first).try(:nom) : nil }
+                                      .select{ |x| !x.nil? }
+                                      .join(', ')
   end
 
   # GET /intervenants/new
