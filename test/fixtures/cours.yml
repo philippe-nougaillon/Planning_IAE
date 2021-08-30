@@ -4,7 +4,8 @@ cours_management_commercial:
   intervenant_id: 1
   salle_id: 1
   debut: "2021-11-22 12:00:00"
-  duree: 3
+  duree: 3.0
+  fin: "2021-11-22 15:00:00"
   etat: confirmé
 
 cours_non_confirmé:
@@ -14,4 +15,5 @@ cours_non_confirmé:
   salle_id: 1
   debut: "2021-11-22 12:00:00"
   duree: 3
+  fin: "2021-11-22 15:00:00"
   
