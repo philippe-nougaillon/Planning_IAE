@@ -74,7 +74,7 @@
             <span class="nav-link">
               <%= current_user.username %>
             </span>
-            <%= navbar_nav_item('outils', 'wrench', tools_index_path) if current_user.admin? %>
+            <%= navbar_nav_item('outils', 'wrench', tools_index_path) if (current_user.admin? || current_user.reserver?) %>
             <%= navbar_nav_item('guide', 'info-circle', guide_index_path) %>
             
             <li class="nav-item">
