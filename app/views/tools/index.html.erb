@@ -7,12 +7,6 @@
 	<div class="col-sm-4">
 		<ul>
 			<li>
-				<%= fa_icon 'umbrella-beach' %>
-				<%= link_to "Jours de fermeture", fermetures_path %>
-			</li>
-			<br>
-
-			<li>
 				<%= fa_icon 'calendar-day' %>
 				<%= link_to "Réservation de créneaux horaires", tools_creation_cours_path %>
 			</li>
@@ -138,6 +132,12 @@
 				<li>
 					<%= fa_icon 'search' %>
 					<%= link_to 'Audit des cours récemment planifiés', tools_audit_cours_path %>
+				</li>
+				<br>
+
+				<li>
+					<%= fa_icon 'umbrella-beach' %>
+					<%= link_to "Jours de fermeture", fermetures_path %>
 				</li>
 			</ul>
 		</div>

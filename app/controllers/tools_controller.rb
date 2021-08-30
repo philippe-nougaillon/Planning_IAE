@@ -694,6 +694,13 @@ class ToolsController < ApplicationController
                 .distinct(:intervenant_id)
                 .pluck(:intervenant_id)
 
+      # Ajouter les responsables
+
+      ids << Responsabilite
+                .where("debut between ? and ?", @start_date, @end_date)
+                .distinct(:intervenant_id)
+                .pluck(:intervenant_id)
+
       @intervenants = Intervenant.where(id: ids.flatten).where(status: params[:status])
       @intervenants_for_select = @intervenants
     end 

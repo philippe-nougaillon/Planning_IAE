@@ -22,11 +22,11 @@
         <td>
             <% if envoi_log.prêt? %>
                 <%= link_to suspendre_envoi_log_path(envoi_log), class: "btn btn-sm btn-secondary", title: "Passe en état 'Pause'. La notification ne sera pas exécutée à la date prévue" do %>
-                    <%= fa_icon 'pause', text: ' Suspendre' %> 
+                    <%= fa_icon 'pause', text: ' Mettre en pause' %> 
                 <% end %>
             <% else %>
                 <%= link_to '#', class: "btn btn-sm btn-light", title: "Passe en état 'Pause'. La notification ne sera pas exécutée à la date prévue" do %>
-                    <%= fa_icon 'pause', text: ' Suspendre' %> 
+                    <%= fa_icon 'pause', text: ' Mettre en pause' %> 
                 <% end %>
             <% end %>
         </td>
