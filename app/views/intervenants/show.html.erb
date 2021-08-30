@@ -22,68 +22,65 @@
       <br>
       <%= fa_icon 'chalkboard-teacher 3x' %>
     </h2>
+    <h3>
+      <small class="text-muted">Titre</small><br>
+      <%= @intervenant.titre1 %>
+      <%= @intervenant.titre2 %>
+    </h3>
+    <h3>
+      <small class="text-muted">Statut</small><br>
+      <%= @intervenant.try(:status) %>
+    </h3>
   </div>  
 
-  <div class="col-sm-3">
+  <div class="col-sm-5">
     <h2>
       <small class="text-muted">Nom</small><br>
       <%= @intervenant.nom %>
     </h2>
     <br>
     <h3>
-      <small class="text-muted">Mobile</small><br>
-      <%= @intervenant.téléphone_mobile %>
-    </h3>
-  </div>
-
-  <div class="col-sm-6">
-    <h2>
-      <small class="text-muted">Prénom</small><br>
-      <%= @intervenant.prenom %>
-    </h2>
-    <br> 
-    <h3>
       <small class="text-muted">Courriel</small><br>
       <%= mail_to @intervenant.email %>
     </h3>
   </div>
-</div>
 
-<div class="row">
-  <div class="col-sm-12">
+  <div class="col-sm-4">
+    <h2>
+      <small class="text-muted">Prénom</small><br>
+      <%= @intervenant.prenom %>
+    </h2>
+    <br>
     <h3>
-      <small class="text-muted">Titre</small><br>
-      <%= @intervenant.titre1 %>
-      <%= @intervenant.titre2 %>
+      <small class="text-muted">Mobile</small><br>
+      <%= @intervenant.téléphone_mobile %>
     </h3>
-
     <h3>
-      <small class="text-muted">Statut</small><br>
-      <%= @intervenant.try(:status) %>
+    <small class="text-muted">Salles habituelles</small><br>
+      <%= @salles_habituelles %>
     </h3>
   </div>
 </div>
 
 <% if @formations.any? %>
-  <h2>
-    <small>
-      <%= "Formation".pluralize(@formations.size) %>
-      <%= "dispensée".pluralize(@formations.size) %>
-      <span class="badge badge-pill badge-info">
-        <%= @formations.size %>
-      </span>
-    </small>
-  </h2>
+      <h2>
+        <small>
+          <%= "Formation".pluralize(@formations.size) %>
+          <%= "dispensée".pluralize(@formations.size) %>
+          <span class="badge badge-pill badge-info">
+            <%= @formations.size %>
+          </span>
+        </small>
+      </h2>
 
-  <% @formations.each_with_index do |formation, index| %>
-    <%= link_to formation.nom, 
-                cours_path(formation_id: formation, 
-                            intervenant_id: @intervenant, 
-                            intervenant: @intervenant.nom_prenom,
-                            filter: 'all') %><%= ',' if index != @formations.size - 1 %>
-  <% end %>
-  <br><br>
-<% end %>
+      <% @formations.each_with_index do |formation, index| %>
+        <%= link_to formation.nom, 
+                    cours_path(formation_id: formation, 
+                                intervenant_id: @intervenant, 
+                                intervenant: @intervenant.nom_prenom,
+                                filter: 'all') %><%= ',' if index != @formations.size - 1 %>
+      <% end %>
+    <% end %>
 
 <% if policy(:tool).can_see_RHGroup_private_tool? %>
   <% if @intervenant.responsabilites.any? %>
@@ -108,7 +105,7 @@
                 <%= l r.debut %>
               </td>
               <td>
-                <%= link_to(r.formation.nom, r.formation) %>
+                <%= link_to(Formation.unscoped.find(r.formation_id).nom, formations_path(r.formation_id)) %>
               </td>
               <td>
                 <%= r.titre %>
