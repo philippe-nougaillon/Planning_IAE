@@ -10,13 +10,6 @@ class ActiveSupport::TestCase
   fixtures :all
 
   setup do
-    user_thomas = users(:thomas)
-    formation_MGEN_2021 = formations(:MGEN_2021)
-    formation_Master_CGAO = formations(:Master_CGAO)
-    intervenant_florent = intervenants(:florent)
-    intervenant_christophe = intervenants(:christophe)
-    cour_management_commercial = cours(:cours_management_commercial)
-    salle_A1 = salles(:A1)
     @user_admin = User.create(
       email: 'pascal.durand@gmail.com',
       prénom: 'Pascal',
