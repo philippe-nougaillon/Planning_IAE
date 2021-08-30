@@ -64,6 +64,15 @@ class FormationsController < ApplicationController
   # GET /formations/1
   # GET /formations/1.json
   def show
+    @salles_habituelles = @formation.cours
+                                    .select('cours.id')
+                                    .group(:salle_id)
+                                    .count(:id)
+                                    .sort_by{|k, v| v}
+                                    .reverse
+                                    .collect{ |x| x.first ? Salle.find(x.first).try(:nom) : nil }
+                                    .select{ |x| !x.nil? }
+                                    .join(', ')
   end
 
   # GET /formations/new

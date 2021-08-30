@@ -79,11 +79,6 @@
       <small class="text-muted">Chargé(e) de formation</small><br>
       <%= @formation.try(:user).try(:email) %>
     </h3>
-
-    <h3>
-    <small class="text-muted">Salles habituelles</small><br>
-      <%= @formation.cours.select('cours.id').group(:salle_id).count(:id).sort_by{|k, v| v}.reverse.collect{ |x| Salle.find(x.first).nom }.first(5).join(', ') %>
-    </h3>
   </div>
 
   <div class="col-sm-4">
@@ -96,6 +91,7 @@
       <%= @formation.nomtauxtd %>
     </h3>
   </div>
+
   <div class="col-sm-3">
     <h3>
       <small class="text-muted">Nbr Etudiants</small>
@@ -104,6 +100,11 @@
       Estimé : <%= @formation.nbr_etudiants %>
       |
       Enregistré : <%= @formation.etudiants.size %>
+    </p>
+    <h3>
+    <small class="text-muted">Salles habituelles</small><br>
+      <%= @salles_habituelles %>
+    </h3>
   </div>
 </div>
 
