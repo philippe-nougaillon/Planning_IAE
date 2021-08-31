@@ -2,6 +2,6 @@ import $ from 'jquery'
 import 'select2/dist/css/select2.css'
 import 'select2'
 
-window.addEventListener('DOMContentLoaded', () => {
+$(document).on('turbolinks:load', function(){ 
   $('.select2').select2()
 })
