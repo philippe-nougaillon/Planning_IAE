@@ -7,18 +7,22 @@
   
   <div class="form-group">
     <%= label_tag "Formation" %>    
-    <%= select_tag :formation, options_for_select(@formations, params[:formation]), class: "custom-select", include_blank:true, onchange:'this.form.submit()' %>
+    <%= select_tag :formation, options_for_select(@formations, params[:formation]), 
+                    class: "select2", 
+                    include_blank:true, onchange:'this.form.submit()' %>
   </div>
 
-  <%= label_tag "Nom de l'intervenant" %>    
+  <%= label_tag "Intervenant" %>    
   <div class="input-group">
-    <%= text_field_tag :intervenant_nom, params[:intervenant_nom], class: "form-control", id: 'Intervenant' %>
+    <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
+                    class: "select2", 
+                    include_blank:true, onchange: 'this.form.submit()' %>
+
     <div class="input-group-append">
-      <%= submit_tag 'Filtrer', class: "btn btn-success" %>
-      <%= submit_tag 'RàZ', class: "btn btn-light" %>
+      <%= submit_tag 'Filtrer', class: "btn btn-sm btn-success" %>
+      <%= submit_tag 'RàZ', class: "btn btn-sm btn-light" %>
     </div>
   </div>
-
 <% end %>
 
 <% current_date = '' %>
