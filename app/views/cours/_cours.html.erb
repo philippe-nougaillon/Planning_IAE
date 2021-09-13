@@ -7,9 +7,11 @@
         </td>
     <% end %>
     <td>
-        <b><%= l(cours.debut, format: :heures_min) %></b> 
-        <br>
-        <%= l(cours.fin, format: :heures_min) %>
+        <%= link_to cours do %>
+            <b><%= l(cours.debut, format: :heures_min) %></b> 
+            <br>
+            <%= l(cours.fin, format: :heures_min) %>
+        <% end %>
     </td>
     <td>
         <%= number_with_precision(cours.duree, precision: 1) %> h

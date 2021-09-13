@@ -1,5 +1,5 @@
 <div class="pb-2 mt-4 mb-2 border-top">
-  <% if current_user.admin? %>
+  <% if current_user.admin? || current_user.reserver? %>
     <div class="btn-group float-right">
       <%= link_to edit_cour_path(@cour), class: 'btn btn-sm btn-outline-primary' do %>
         <%= fa_icon 'edit' %> Modifier
@@ -8,10 +8,6 @@
       <%= link_to(@cour, method: :delete, data:{confirm: 'Confirmez-vous la suppression définitive de ce cours ?'}, class: 'btn btn-sm btn-outline-primary' ) do %>
         <%= fa_icon 'trash-alt' %> Supprimer
       <% end %>
-
-      <a href="#audit" data-toggle="collapse" class='btn btn-sm btn-outline-primary'>
-        <%= fa_icon 'search' %> Audit
-      </a>
 
       <%= link_to cours_path, class: 'btn btn-sm btn-outline-primary' do %>
         <%= fa_icon 'list' %> Retour
@@ -25,18 +21,23 @@
 </h2>
 
 <h3>
-  <%= @cour.formation.try(:nom_promo) %> -> 
-  <%= @cour. nom_ou_ue %>
+  <span style="background-color:<%= @cour.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
+  <%= @cour.formation.try(:nom_promo) %>
 </h3>
 
-<p>
-  <strong>Fin:</strong>
-  <%= l(@cour.fin, format: :long) %>
-</p>
+<h4>
+  <%= @cour.nom_ou_ue %>
+</h4>
+<br>
 
 <p>
   <strong>Durée:</strong>
   <%= @cour.duree %>h
+</p>
+
+<p>
+  <strong>Fin:</strong>
+  <%= l(@cour.fin, format: :long) %>
 </p>
 
 <p>
@@ -45,19 +46,19 @@
 </p>
 
 <p>
-  <strong>Formation:</strong>
-  <%= link_to @cour.formation.try(:nom_promo), @cour.formation %>
-</p>
-
-<p>
-  <strong>Salle:</strong>
   <% if @cour.salle %>
-    <%= @cour.salle.nom %>
-    <% if @cour.manque_de_places? %>
-      <i title="Salle trop petite. Manque <%= @cour.formation.nbr_etudiants - @cour.salle.places %> place(s)">
-        <%= fa_icon 'exclamation-circle' %>
-      </i>
-    <% end %>
+    <h6>
+      <strong>Salle:</strong>
+      <span class="badge badge-pill badge-<%= @cour.style %>">
+        <%= @cour.salle.nom %>
+      </span>             
+
+      <% if @cour.formation.nbr_etudiants > @cour.salle.places %>
+        <i title="Manque <%= @cour.formation.nbr_etudiants - @cour.salle.places %> place.s">
+          <%= fa_icon 'exclamation-circle' %>
+        </i>
+      <% end %>
+    </h6>
   <% end %>
 </p>
 
