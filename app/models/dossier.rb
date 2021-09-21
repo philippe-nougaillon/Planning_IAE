@@ -81,6 +81,42 @@ class Dossier < ApplicationRecord
   def self.périodes
     ['2021/2022','2022/2023','2023/2024','2024/2025', '2025/2026']
   end
+
+  def self.xls_headers
+    %w{ Id Nom Prénom Période Etat Mémo Documents Date_création Date_MAJ }
+  end
+
+  def self.to_xls(dossiers)
+    require 'spreadsheet'    
+
+    Spreadsheet.client_encoding = 'UTF-8'
+
+    book = Spreadsheet::Workbook.new
+    sheet = book.create_worksheet name: 'Dossiers_Candidatures_CEV'
+    bold = Spreadsheet::Format.new :weight => :bold, :size => 11
+
+    sheet.row(0).concat self.xls_headers
+    sheet.row(0).default_format = bold
+
+    index = 1
+    dossiers.each do | dossier |
+      fields_to_export = [
+        dossier.id, 
+        dossier.intervenant.nom,
+        dossier.intervenant.prenom,
+        dossier.période,
+        dossier.workflow_state,
+        dossier.mémo,
+        dossier.documents.pluck(:nom, :workflow_state).join(', '),
+        dossier.created_at, 
+        dossier.updated_at
+      ]
+      sheet.row(index).replace fields_to_export
+      index += 1
+    end
+    return book
+
+  end
   
 private
 

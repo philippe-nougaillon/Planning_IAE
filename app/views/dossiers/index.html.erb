@@ -81,4 +81,7 @@
 </div>
 
 <%= will_paginate @dossiers, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+<br>
+<%= link_to 'Export XLS', url_for(params.permit(:nom, :période, :workflow_state).merge(format: :xls)) %>
+
 

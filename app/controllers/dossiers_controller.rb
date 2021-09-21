@@ -22,7 +22,20 @@ class DossiersController < ApplicationController
       @dossiers = @dossiers.where("dossiers.workflow_state = ?", params[:workflow_state].to_s.downcase)
     end
 
-    @dossiers = @dossiers.paginate(page: params[:page], per_page: 20)
+    respond_to do |format|
+      format.html do 
+        @dossiers = @dossiers.paginate(page: params[:page], per_page: 20)
+      end
+
+      format.xls do
+        book = Dossier.to_xls(@dossiers)
+        file_contents = StringIO.new
+        book.write file_contents # => Now file_contents contains the rendered file output
+        filename = 'Dossiers_Candidatures_CEV.xls'
+        send_data file_contents.string.force_encoding('binary'), filename: filename 
+      end
+    end
+
   end
 
   # GET /dossiers/1 or /dossiers/1.json
