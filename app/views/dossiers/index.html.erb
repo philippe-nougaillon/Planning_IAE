@@ -29,7 +29,7 @@
 
 
           <div class="col-sm-2">
-            <%= label_tag :workflow_state, "Statut" %>
+            <%= label_tag :workflow_state, "Etat" %>
             <%= select_tag :workflow_state, 
                                 options_for_select(Dossier.workflow_spec.states.keys.to_a, params[:workflow_state]), 
                                 include_blank: true,
@@ -48,7 +48,7 @@
     <tr>
       <th>Intervenant</th>
       <th>Période</th>
-      <th>Statut</th>
+      <th>Etat</th>
       <th>Création</th>
       <th>MàJ</th>
       <th colspan="3"></th>
@@ -77,6 +77,7 @@
 
 <div class="page_info">
   <%= page_entries_info @dossiers %>
+  <%= @dossiers.reorder(nil).select(:id).group(:workflow_state).count(:id) %>
 </div>
 
 <%= will_paginate @dossiers, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
