@@ -22,7 +22,20 @@ class DossiersController < ApplicationController
       @dossiers = @dossiers.where("dossiers.workflow_state = ?", params[:workflow_state].to_s.downcase)
     end
 
-    @dossiers = @dossiers.paginate(page: params[:page], per_page: 20)
+    respond_to do |format|
+      format.html do 
+        @dossiers = @dossiers.paginate(page: params[:page], per_page: 20)
+      end
+
+      format.xls do
+        book = Dossier.to_xls(@dossiers)
+        file_contents = StringIO.new
+        book.write file_contents # => Now file_contents contains the rendered file output
+        filename = 'Dossiers_Candidatures_CEV.xls'
+        send_data file_contents.string.force_encoding('binary'), filename: filename 
+      end
+    end
+
   end
 
   # GET /dossiers/1 or /dossiers/1.json
@@ -32,12 +45,15 @@ class DossiersController < ApplicationController
 
   # GET /dossiers/new
   def new
-    @dossier = Dossier.new
+    # Lister toutes les personnes ayant eu cours comme intervenant principal ou en binome
+    cours = Cour.where("DATE(cours.debut) BETWEEN '2021-09-01' AND '2021-12-31'")
+    intervenants_ids = cours.pluck(:intervenant_id) + cours.pluck(:intervenant_binome_id)
     @intervenants = Intervenant
-                        .where(status: 'CEV')
-                        .joins(:cours)
-                        .where("DATE(cours.debut) BETWEEN '2021-09-01' AND '2021-12-31'")
-                        .uniq
+                              .where(id: intervenants_ids.uniq)
+                              .where(status: 'CEV')
+                              .uniq
+
+    @dossier = Dossier.new
     3.times { @dossier.documents.build }
   end
 
