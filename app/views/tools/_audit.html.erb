@@ -15,6 +15,10 @@
     <%= audit.action.humanize %>
   </td>
   <td>
-    <%= sanitize prettify(audit).join('<br>') %>
+    <% unless audit.comment %>
+      <%= sanitize prettify(audit).join('<br>') %>
+    <% else %>
+      <%= audit.comment %>
+    <% end %>
   </td>
 </tr>
