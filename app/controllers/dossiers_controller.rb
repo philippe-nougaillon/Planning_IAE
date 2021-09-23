@@ -1,6 +1,6 @@
 class DossiersController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[ show deposer]
-  before_action :set_dossier, only: %i[ show edit update destroy envoyer deposer valider rejeter archiver ]
+  before_action :set_dossier, only: %i[ show edit update destroy envoyer deposer valider rejeter relancer archiver ]
 
   layout :determine_layout
 
@@ -130,6 +130,16 @@ class DossiersController < ApplicationController
     DossierMailer.with(dossier: @dossier).valider_email.deliver_later
 
     redirect_to @dossier, notice: "Dossier validé avec succès. L'intervenant va en être informé."
+  end
+
+  def relancer
+    # Passe le dossier à l'état 'Validé'
+    @dossier.relancer!
+
+    # Informe l'intervenant
+    DossierMailer.with(dossier: @dossier).dossier_email.deliver_later
+
+    redirect_to @dossier, notice: "Dossier relancé avec succès. L'intervenant va en être informé."
   end
 
   def rejeter

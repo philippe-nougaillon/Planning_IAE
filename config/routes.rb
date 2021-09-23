@@ -30,6 +30,7 @@ Rails.application.routes.draw do
       get :envoyer
       get :valider
       get :rejeter
+      get :relancer
       get :archiver
     end
   end

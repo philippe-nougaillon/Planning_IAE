@@ -40,15 +40,15 @@ class Dossier < ApplicationRecord
       event :déposer, transitions_to: DEPOSE
     end
 
-    state RELANCE1, meta: {style: 'badge-secondary'} do
+    state RELANCE1, meta: {style: 'badge-info'} do
       event :relancer, transitions_to: RELANCE2
     end
 
-    state RELANCE2, meta: {style: 'badge-secondary'} do
+    state RELANCE2, meta: {style: 'badge-info'} do
       event :relancer, transitions_to: RELANCE3
     end
     
-    state RELANCE3, meta: {style: 'badge-secondary'} do
+    state RELANCE3, meta: {style: 'badge-info'} do
       event :relancer, transitions_to: RELANCE1
     end
     
@@ -65,7 +65,7 @@ class Dossier < ApplicationRecord
       event :déposer, transitions_to: DEPOSE
     end
 
-    state ARCHIVE, meta: {style: 'badge-secondary'}
+    state ARCHIVE, meta: {style: 'badge-info'}
   end
 
   # pour que le changement se voit dans l'audit trail

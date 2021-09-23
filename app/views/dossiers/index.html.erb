@@ -60,7 +60,23 @@
       <tr>
         <td><%= dossier.intervenant.nom_prenom %></td>
         <td><%= dossier.période %></td>
-        <td><span class="badge <%= dossier.style %>"><%= dossier.workflow_state.humanize %></span>  </td>
+        <td>
+          <span class="badge <%= dossier.style %>">
+            <%= dossier.workflow_state.humanize %>
+          </span>
+          <% if dossier.envoyé? && (dossier.updated_at.to_date..Date.today).to_a.size >= 60 %>
+            <%= fa_icon 'exclamation-circle' %>
+          <% end %>
+          <% if dossier.workflow_state == 'relancé 1 fois' && (dossier.updated_at.to_date..Date.today).to_a.size >= 15 %>
+            <%= fa_icon 'exclamation-circle' %>
+          <% end %>
+          <% if dossier.workflow_state == 'relancé 2 fois' && (dossier.updated_at.to_date..Date.today).to_a.size >= 7 %>
+            <%= fa_icon 'exclamation-circle' %>
+          <% end %>
+          <% if dossier.workflow_state == 'relancé 3 fois' && (dossier.updated_at.to_date..Date.today).to_a.size >= 3 %>
+            <%= fa_icon 'exclamation-circle' %>
+          <% end %>
+        </td>
         <td><%= time_ago_in_words dossier.created_at %></td>
         <td><%= time_ago_in_words dossier.updated_at %></td>
         <td><%= link_to 'Voir', dossier %></td>
