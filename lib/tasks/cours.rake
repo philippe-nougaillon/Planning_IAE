@@ -65,6 +65,10 @@ namespace :cours do
 
         envoyes += 1 if envoyer_liste_cours_a_intervenant(args.draft, start_day, end_day, intervenant, cours, liste_des_gestionnaires, envoi_specs.id) 
 
+        # faire une pause pour ne pas dépasser la limite de 100mails/heure
+        puts "Pause !"
+        sleep 40
+
         puts "#-" * 50
       end 
     end
