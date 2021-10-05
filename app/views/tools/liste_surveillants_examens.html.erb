@@ -1,0 +1,57 @@
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h2>
+    <%= fa_icon 'users' %> Liste des surveillants d'examens
+    <br>
+    <small></small>
+  </h2>
+</div>
+<br>
+
+<%= form_tag(request.path, method: :get) do %>
+    <div class="row">
+        <div class="col-sm-3">
+            <%= label_tag "Du" %>    
+            <%= text_field_tag :start_date, params[:start_date], type: 'date', class: "form-control" %>
+        </div>
+
+        <div class="col-sm-3">
+            <%= label_tag "Au" %>    
+            <%= text_field_tag :end_date, params[:end_date], type: 'date', class: "form-control", onchange:'this.form.submit()' %>
+        </div>
+    </div>
+<% end %>
+<br>
+
+
+<table class="table">
+    <thead>
+        <th>Date</th>
+        <th>Durée</th>
+        <th>Formation</th>
+        <th>Surveillant</th>
+        <th>Cumul</th>
+    </thead>
+   
+    <% @examens.each do | exam | %>
+        <% surveillant = exam.commentaires.gsub('[', '').gsub(']', '') %>
+        <% durée = exam.duree + 1 %>
+        <% @cumuls[surveillant] ? @cumuls[surveillant] += durée : @cumuls[surveillant] = durée %>
+        <tr>
+            <td><%= l exam.debut, format: :long %></td>
+            <td><%= durée %>h</td>
+            <td><%= exam.formation.nom %></td>
+            <td><%= exam.commentaires.gsub('[', '').gsub(']', '') %></td>
+            <td><%= @cumuls[surveillant] %>h</td>
+        </tr>
+    <% end %>
+</table>
+<br>
+
+
+<h4>Total par surveillant</h4>
+
+<% @cumuls.keys.sort.each do | k | %>
+    <%= k %>
+    =
+    <%= @cumuls[k] %>h<br>
+<% end %>

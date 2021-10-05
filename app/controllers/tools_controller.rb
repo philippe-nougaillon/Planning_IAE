@@ -1072,5 +1072,26 @@ class ToolsController < ApplicationController
     end
                   
   end
+
+  def liste_surveillants_examens
+
+    # quitter si l'utilisateur actuel n'est pas parmi les utilisateurs autorisés
+    authorize :tool, :can_see_RHGroup_private_tool?
+
+    if params[:start_date].blank? || params[:end_date].blank?
+      params[:start_date] ||= Date.today.at_beginning_of_month.last_month
+      params[:end_date]   ||= Date.today.at_end_of_month.last_month
+    end
+    @start_date = params[:start_date]
+    @end_date = params[:end_date]
+      
+    @examens = Cour
+                .where(intervenant_id: 169)
+                .where("commentaires like '%[%'")
+                .where("debut between ? and ?", @start_date, @end_date)
+
+    @cumuls = {}
+    
+  end
   
 end
