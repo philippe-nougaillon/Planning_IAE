@@ -358,22 +358,30 @@ class CoursController < ApplicationController
             intervenant_B = cours_B.intervenant_id
             cours_A.update_columns(intervenant_id: intervenant_B)
             cours_B.update_columns(intervenant_id: intervenant_A)
-          elsif params[:intervertir_binomes]
+          end
+          
+          if params[:intervertir_binomes]
             intervenant_A = cours_A.intervenant_binome_id
             intervenant_B = cours_B.intervenant_binome_id
             cours_A.update_columns(intervenant_binome_id: intervenant_B)
             cours_B.update_columns(intervenant_binome_id: intervenant_A)
-          elsif params[:intervertir_intitulé]
+          end
+          
+          if params[:intervertir_intitulé]
             intitulé_A = cours_A.nom
             intitulé_B = cours_B.nom
             cours_A.update_columns(nom: intitulé_B)
             cours_B.update_columns(nom: intitulé_A)
-          elsif params[:intervertir_ue]
+          end
+          
+          if params[:intervertir_ue]
             ue_A = cours_A.ue
             ue_B = cours_B.ue
             cours_A.update_columns(ue: ue_B)
             cours_B.update_columns(ue: ue_A)
-          elsif params[:intervertir_salles]
+          end
+          
+          if params[:intervertir_salles]
             salle_A = cours_A.salle_id
             salle_B = cours_B.salle_id
             cours_A.update_columns(salle_id: salle_B)
