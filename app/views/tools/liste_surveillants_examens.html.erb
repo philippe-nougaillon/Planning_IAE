@@ -1,8 +1,9 @@
 <div class="pb-2 mt-4 mb-2 border-bottom">
   <h2>
-    <%= fa_icon 'list-alt' %> Liste des surveillants d'examens
+    <%= fa_icon 'list-alt' %> 
+    Liste des surveillants d'examens
     <br>
-    <small></small>
+    <small>Affiche les cours qui contiennent un commentaire comme '[NOM-SURVEILLANT Prénom]'</small>
   </h2>
 </div>
 <br>
@@ -21,16 +22,21 @@
     </div>
 <% end %>
 <br>
+<br>
 
-<table class="table table-striped table-hover">
+<table class="table table-sm table-striped table-hover">
     <thead>
-        <th>Date</th>
-        <th>Durée examen</th>
-        <th>Durée payée</th>
+        <th>Le</th>
         <th>Formation</th>
         <th>Surveillant</th>
+        <th>Durée examen</th>
+        <th>Durée payée</th>
         <th>Cumul durée payée</th>
     </thead>
+
+    <tfoot>
+        <tr><% 6.times do %><th></th><% end %></tr>
+    </tfoot>
    
     <% @examens.each do | exam | %>
         <% surveillant = exam.commentaires.gsub('[', '').gsub(']', '') %>
@@ -38,10 +44,10 @@
         <% @cumuls[surveillant] ? @cumuls[surveillant] += durée : @cumuls[surveillant] = durée %>
         <tr>
             <td><%= link_to l(exam.debut, format: :long), cour_path(exam.id) %></td>
-            <td><%= exam.duree %> h</td>
-            <td><%= durée %> h</td>
             <td><%= exam.formation.nom %></td>
             <td><b><%= exam.commentaires.gsub('[', '').gsub(']', '') %></b></td>
+            <td><%= exam.duree %> h</td>
+            <td><%= durée %> h</td>
             <td><b><%= @cumuls[surveillant] %> h</b></td>
         </tr>
     <% end %>
@@ -49,16 +55,19 @@
 <br>
 <br>
 
-<h4>Récapitulatif par surveillant du <%= l @start_date.to_date %> au <%= l @end_date.to_date %></h4>
-<table class="table table-sm table-hover">
+<h4>
+    Total par surveillant du <%= l @start_date.to_date %> au <%= l @end_date.to_date %>
+</h4>
+
+<table class="table table-sm table-hover table-bordered" style="width: 70%">
     <thead>
         <th>Nom</th>
-        <th>Durée payée totale</th>
+        <th>Total durée payée</th>
     </thead>
 
     <% @cumuls.keys.sort.each do | k | %>
         <tr>
-            <td><b><%= k %></b></td>
+            <td><%= k %></td>
             <td><%= @cumuls[k] %> h</td>
         </tr>
     <% end %>
