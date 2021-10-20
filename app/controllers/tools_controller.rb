@@ -1082,16 +1082,15 @@ class ToolsController < ApplicationController
       params[:start_date] ||= Date.today.at_beginning_of_month.last_month
       params[:end_date]   ||= Date.today.at_end_of_month.last_month
     end
+
     @start_date = params[:start_date]
     @end_date = params[:end_date]
-      
-    @examens = Cour
-                .where(intervenant_id: 169)
-                .where("commentaires like '%[%'")
-                .where("debut between ? and ?", @start_date, @end_date)
-
     @cumuls = {}
-    
+    @examens = Cour
+                  .where(intervenant_id: 169)
+                  .where("commentaires like '%[%'")
+                  .where("debut between ? and ?", @start_date, @end_date)
+                  .includes(:formation)
   end
   
 end
