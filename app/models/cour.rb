@@ -139,6 +139,10 @@ class Cour < ApplicationRecord
     self.intervenant.nom_prenom
   end
 
+  def intervenant_binome_json
+    self.intervenant_binome.try(:nom_prenom)
+  end
+
   def salle_json
     self.salle.nom if self.salle
   end

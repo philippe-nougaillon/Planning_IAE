@@ -108,6 +108,11 @@ Rails.application.routes.draw do
         end
       end
     end 
+
+    namespace :v4 do 
+      resources :cours
+    end 
+
   end 
 
   root 'cours#index'
