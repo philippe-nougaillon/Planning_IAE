@@ -69,6 +69,7 @@ Rails.application.routes.draw do
     get :notifier_intervenants
     get :creation_cours
     get :audit_cours
+    get :liste_surveillants_examens
 
     post :import_do
     post :creation_cours_do
