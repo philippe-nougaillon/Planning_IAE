@@ -66,6 +66,12 @@
   <strong>Etat:</strong>
   <span class="label <%= @cour.style %>"><%= @cour.etat.humanize %></span>
 </p>
+
+<p>
+  <strong>Commentaires:</strong>
+  <%= @cour.commentaires %>
+</p>
+
 <br>
 
 <% if @cour.audits.any? %>
