@@ -103,3 +103,6 @@ gem 'aws-sdk-s3', require: false
 
 # SitemapGenerator is the easiest way to generate Sitemaps in Ruby. 
 gem 'sitemap_generator'
+
+# Soft deletes for ActiveRecord done right.
+gem 'discard', '~> 1.2'

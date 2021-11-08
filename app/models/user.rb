@@ -1,6 +1,7 @@
 # Encoding: UTF-8
 
 class User < ApplicationRecord
+  include Discard::Model
   
   audited
   

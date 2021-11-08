@@ -111,6 +111,8 @@ GEM
       warden (~> 1.2.3)
     devise-i18n (1.10.0)
       devise (>= 4.8.0)
+    discard (1.2.0)
+      activerecord (>= 4.2, < 7)
     erubi (1.10.0)
     exception_notification (4.4.3)
       actionmailer (>= 4.0, < 7)
@@ -297,6 +299,7 @@ DEPENDENCIES
   capybara (>= 2.15)
   devise (>= 4.7.1)
   devise-i18n
+  discard (~> 1.2)
   exception_notification
   font_awesome5_rails
   friendly_id (~> 5.2.4)

@@ -3,6 +3,7 @@
     <%= l(audit.created_at, format: :perso) %>
   </td>
   <td>
+    #<%= audit.user_id %>
     <%= audit.try(:user).try(:email) %>
   </td>
   <td>

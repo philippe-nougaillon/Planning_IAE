@@ -31,6 +31,15 @@
             Peut administrer ?
           </label>
         </div>
+
+        <div class="col-sm-2">
+            <br>
+            <label>
+              <%= check_box_tag :discarded, 1, params[:discarded], onchange: 'this.form.submit()' %>
+              Que les révoqués ?
+            </label>
+        </div>
+
       </div>
     </div>
   <% end %>
