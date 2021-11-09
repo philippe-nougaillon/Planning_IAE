@@ -15,11 +15,11 @@
     </td>
     <td>
         <%= number_with_precision(cours.duree, precision: 1) %> h
-        <% if (pct = cours.progress_bar_pct2) && (cours.debut.to_date == Date.today) %>
+        <% if cours.debut.to_date == Date.today %>
             <div class="progress mt-1" style="width: 100%">
                 <div class="progress-bar bg-warning" 
                     role="progressbar" aria-valuemin="0" aria-valuemax="100" 
-                    style="width: <%= pct %>%; opacity: 0.5;">
+                    style="width: <%= cours.progress_bar_pct3 %>%; opacity: 0.5;">
                 </div>
             </div>
         <% end %>
