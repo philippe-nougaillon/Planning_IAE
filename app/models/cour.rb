@@ -233,6 +233,12 @@ class Cour < ApplicationRecord
   end
 
 
+  def progress_bar_pct3
+    # calcul le % de réalisation du cours
+    now = ApplicationController.helpers.time_in_paris_selon_la_saison
+    pct = ((now.to_f - self.debut.in_time_zone('Paris').to_f) / (self.fin.in_time_zone('Paris').to_f - self.debut.in_time_zone('Paris').to_f) * 100).to_i
+  end
+
   def range
     # retourne l'étendue d'un cours sous la forme d'une suite d'heures. Ex: 8 9 pour un cours de 8 à 10h
     range = []
