@@ -15,6 +15,14 @@
     </td>
     <td>
         <%= number_with_precision(cours.duree, precision: 1) %> h
+        <% if (pct = cours.progress_bar_pct2) && (cours.debut.to_date == Date.today) %>
+            <div class="progress mt-1" style="width: 100%">
+                <div class="progress-bar bg-warning" 
+                    role="progressbar" aria-valuemin="0" aria-valuemax="100" 
+                    style="width: <%= pct %>%; opacity: 0.5;">
+                </div>
+            </div>
+        <% end %>
     </td>
     <td>
         <span style="background-color:<%= cours_formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
@@ -32,7 +40,9 @@
         <% end %>
     </td>
     <td>
-        <%= link_to_if user_signed_in?, cours.try(:ue), cours_path(ue: cours.ue) %>
+        <% if cours.ue %>
+            <%= link_to cours.try(:ue), cours_path(ue: cours.ue) %>
+        <% end %>
     </td>
     <td>
         <%= cours.nom_ou_ue %>

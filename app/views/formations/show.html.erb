@@ -1,229 +1,232 @@
-<div class="pb-2 mt-4 mb-2 border-top">
+<div class="card shadow-sm p-3 mt-3">
+
   <% if current_user.admin? %>
-    <div class="btn-group float-right">
-      <%= link_to edit_formation_path(@formation), class: 'btn btn-sm btn-outline-primary' do %>
-        <%= fa_icon 'edit' %> Modifier
-      <% end %>
+    <div>
+      <div class="btn-group float-right">
+        <%= link_to edit_formation_path(@formation), class: 'btn btn-sm btn-outline-primary' do %>
+          <%= fa_icon 'edit' %> Modifier
+        <% end %>
 
-      <a href="#audit" data-toggle="collapse" class='btn btn-sm btn-outline-primary'>
-        <%= fa_icon 'search' %> Audit
-      </a>
+        <a href="#audit" data-toggle="collapse" class='btn btn-sm btn-outline-primary'>
+          <%= fa_icon 'search' %> Audit
+        </a>
 
-      <%= link_to formations_path, class: 'btn btn-sm btn-outline-primary' do %>
-        <%= fa_icon 'list' %> Retour
-      <% end %>
+        <%= link_to formations_path, class: 'btn btn-sm btn-outline-primary' do %>
+          <%= fa_icon 'list' %> Retour
+        <% end %>
+      </div>
     </div>
   <% end %>
-</div>
+  <br>
 
-<div class="row">
-  <div class="col-sm-2">
-    <h2>
+  <div class="row">
+    <div class="col-sm-1">
+      <h2>
+        <span style="opacity: 80%;color:<%= @formation.color %>">
+          <%= fa_icon 'briefcase 2x' %>
+        </span>
+      </h2>
+    </div>    
+
+    <div class="col-sm-6">
+      <h3>
+        <small class="text-muted">Nom</small><br>
+        <%= @formation.nom %>
+      </h3>
+      
+      <% if @formation.archive %>
+        <p><mark>FORMATION ARCHIVEE !</mark></p>
+        <br>
+      <% end %>
+
+      <% if @formation.apprentissage %>
+        <p><mark>Apprentissage</mark></p>
+      <% end %>
+      
+      <% if @formation.hors_catalogue %>
+        <p><mark>Hors catalogue</mark></p>
+      <% end %>
+
+      <% if @formation.hss? %>
+        <p><mark>Hors états de services</mark></p>
+      <% end %>
+
       <br>
-      <%= fa_icon 'briefcase 3x' %>
-    </h2>
-  </div>    
 
-  <div class="col-sm-6">
-    <h2>
-      <small class="text-muted">Nom</small><br>
-      <%= @formation.nom %>
-    </h2>
-    
-    <% if @formation.archive %>
-      <p><mark>FORMATION ARCHIVEE !</mark></p>
-      <br>
-    <% end %>
+      <h3>
+        <small class="text-muted">Promo</small><br>
+        <%= @formation.promo %>
+      </h3>
+    </div>
 
-    <% if @formation.apprentissage %>
-      <p><mark>Apprentissage</mark></p>
-    <% end %>
-    
-    <% if @formation.hors_catalogue %>
-      <p><mark>Hors catalogue</mark></p>
-    <% end %>
-
-    <% if @formation.hss? %>
-      <p><mark>Hors états de services</mark></p>
-    <% end %>
-
-    <br>
-
-    <h3>
-      <small class="text-muted">Promo</small><br>
-      <%= @formation.promo %>
-    </h3>
+    <div class="col-sm-4">
+      <h3>
+        <small class="text-muted">Abrégé</small><br>
+        <%= @formation.try(:abrg) %>
+      </h3>
+      <br> 
+      <h3>
+        <small class="text-muted">Chargé(e) de formation</small><br>
+        <%= @formation.try(:user).try(:email) %>
+      </h3>
+    </div>
   </div>
+  <hr>
 
-  <div class="col-sm-4">
-    <h2>
-      <small class="text-muted">Abrégé</small><br>
-      <%= @formation.try(:abrg) %>
-    </h2>
-    <br> 
-    <h3>
-      <small class="text-muted">Couleur</small><br>
-      <span style="background-color:<%= @formation.color %>;padding-left: 30px;margin-left: 5px"> </span>
-    </h3>
-  </div>
-</div>
+  <div class="row">
+    <div class="col-sm-3">
+      <h3>
+        <small class="text-muted">Diplôme</small><br>
+      </h3>
+      <p>
+        <%= @formation.diplome %>
+      </p>
+    </div>
 
-<div class="row">
-  <div class="col-sm-5">
-    <h3>
-      <small class="text-muted">Diplôme</small><br>
-      <%= @formation.diplome %>
-    </h3>
+    <div class="col-sm-4">
+      <h3>
+        <small class="text-muted">Code Analytique</small><br>
+      </h3>
+      <p>
+        <%= @formation.code_analytique %>
+      </p>
 
-    <h3>
-      <small class="text-muted">Chargé(e) de formation</small><br>
-      <%= @formation.try(:user).try(:email) %>
-    </h3>
-  </div>
-
-  <div class="col-sm-4">
-    <h3>
-      <small class="text-muted">Code Analytique</small><br>
-      <%= @formation.code_analytique %>
-    </h3>
-    <h3>
-      <small class="text-muted">Taux Horaire</small><br>
+      <h3>
+        <small class="text-muted">Taux Horaire</small><br>
+      </h3>
       <%= @formation.nomtauxtd %>
-    </h3>
-  </div>
+    </div>
 
-  <div class="col-sm-3">
-    <h3>
-      <small class="text-muted">Nbr Etudiants</small>
-    </h3>
-    <p>
-      Estimé : <%= @formation.nbr_etudiants %>
-      |
-      Enregistré : <%= @formation.etudiants.size %>
-    </p>
-    <h3>
-    <small class="text-muted">Salles occupées</small><br>
+    <div class="col-sm-5">
+      <h3>
+        <small class="text-muted">Nbr Etudiants</small>
+      </h3>
+      <p>
+        Estimé : <%= @formation.nbr_etudiants %>
+        |
+        Enregistré : <%= @formation.etudiants.size %>
+      </p>
+      <h3>
+        <small class="text-muted">Salles occupées</small><br>
+      </h3>
       <%= @salles_habituelles %>
+    </div>
+  </div>
+
+  <% if @formation.unites.any? %>
+    <h3>
+      <small class="text-muted">Unités d'enseignements</small>
     </h3>
-  </div>
-</div>
-
-
-<% if @formation.unites.any? %>
-  <h3>
-    <small class="text-muted">Unités d'enseignements</small>
-  </h3>
-  
-  <div class="table-responsive">
-    <table class="table table-striped table-hover table-sm">
-      <thead>
-        <tr>
-          <th>Code</th>
-          <th>Intitulé</th>
-          <th>Cours</th>
-          <th>Heures</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <% total_ue = total = 0.0 %>
-        <% @formation.unites.each do | unite | %>
+    
+    <div class="table-responsive">
+      <table class="table table-striped table-hover table-sm">
+        <thead>
           <tr>
-            <% cours = @formation.cours.where(ue: unite.num) %>
-            <td><%= link_to unite.num, cours_path(formation_id: @formation, ue: unite.num) %></td>
-            <td><%= unite.nom %></td>
-            <td><%= link_to cours.count, cours_path(formation_id: @formation, ue: unite.num, filter: 'all') %></td>
-            <td><%= total = cours.sum(:duree) %></td>
-            <% total_ue += total %>
+            <th>Code</th>
+            <th>Intitulé</th>
+            <th>Cours</th>
+            <th>Heures</th>
           </tr>
-        <% end %>
-      </tbody>
+        </thead>
 
-      <tfoot>
-        <tr>
-          <th></th><th></th><th></th>
-          <th><%= total_ue %></th>
-        </tr>
-      </tfoot>  
-    </table>
-  </div>
-<% end %>
+        <tbody>
+          <% total_ue = total = 0.0 %>
+          <% @formation.unites.each do | unite | %>
+            <tr>
+              <% cours = @formation.cours.where(ue: unite.num) %>
+              <td><%= link_to unite.num, cours_path(formation_id: @formation, ue: unite.num) %></td>
+              <td><%= unite.nom %></td>
+              <td><%= link_to cours.count, cours_path(formation_id: @formation, ue: unite.num, filter: 'all') %></td>
+              <td><%= total = cours.sum(:duree) %></td>
+              <% total_ue += total %>
+            </tr>
+          <% end %>
+        </tbody>
 
-<% if @formation.etudiants.any? %>
-  <h3>
-    <small class="text-muted">Etudiants</small>
-  </h3>
-  
-  <div class="table-responsive">
-    <table class="table table-striped table-hover table-sm">
-      <thead>
-        <tr>
-          <th>Nom</th>
-          <th>Prénom</th>
-          <th>Email</th>
-          <th>Mobile</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <% @formation.etudiants.each do | etudiant | %>
+        <tfoot>
           <tr>
-            <td><%= etudiant.nom %></td>
-            <td><%= etudiant.prénom %></td>
-            <td><%= etudiant.email %></td>
-            <td><%= etudiant.mobile %></td>
+            <th></th><th></th><th></th>
+            <th><%= total_ue %></th>
           </tr>
-        <% end %>
-      </tbody>
+        </tfoot>  
+      </table>
+    </div>
+  <% end %>
 
-      <tfoot>
-        <tr>
-          <th></th><th></th><th></th><th></th>
-        </tr>
-      </tfoot>  
-    </table>
-  </div>
-<% end %>
+  <% if @formation.etudiants.any? %>
+    <h3>
+      <small class="text-muted">Etudiants</small>
+    </h3>
+    
+    <div class="table-responsive">
+      <table class="table table-striped table-hover table-sm">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Email</th>
+            <th>Mobile</th>
+          </tr>
+        </thead>
 
-<% if @formation.vacations.any? %>
-  <h2>
-    <small class="text-muted">Vacations</small>
-  </h2>
+        <tbody>
+          <% @formation.etudiants.each do | etudiant | %>
+            <tr>
+              <td><%= etudiant.nom %></td>
+              <td><%= etudiant.prénom %></td>
+              <td><%= etudiant.email %></td>
+              <td><%= etudiant.mobile %></td>
+            </tr>
+          <% end %>
+        </tbody>
 
-  <table class="table table-striped table-hover table-sm">
-    <thead>
-      <th>Date</th>
-      <th>Formation</th>
-      <th>Activité</th>
-      <th>Intervenant</th>
-      <th>Qté</th>
-      <th>Forfait HTD</th>
-      <th>Commentaires</th>
-    </thead>
+        <tfoot>
+          <tr>
+            <th></th><th></th><th></th><th></th>
+          </tr>
+        </tfoot>  
+      </table>
+    </div>
+  <% end %>
 
-    <% @formation.vacations.each do |vacation| %>
-      <%= render vacation %>
-    <% end %>
-  </table>
-<% end %>
+  <% if @formation.vacations.any? %>
+    <h3>
+      <small class="text-muted">Vacations</small>
+    </h3>
 
-<hr>
-<br>
-<div id="audit" class="collapse">
-  <% if @formation.audits.any? %>
-    <h4>Audit des modifications</h4>
-    <table class="table table-bordered table-hover table-condensed">
+    <table class="table table-striped table-hover table-sm">
       <thead>
         <th>Date</th>
-        <th>Utilisateur</th>            
-        <th>Type</th>
-        <th>Record_id</th>
-        <th>Action</th>
-        <th>Modifications</th>
+        <th>Formation</th>
+        <th>Activité</th>
+        <th>Intervenant</th>
+        <th>Qté</th>
+        <th>Forfait HTD</th>
+        <th>Commentaires</th>
       </thead>
 
-      <%= render partial: 'tools/audit', collection: @formation.audits %>
-
+      <% @formation.vacations.each do |vacation| %>
+        <%= render vacation %>
+      <% end %>
     </table>
   <% end %>
-</div> 
+
+  <div id="audit" class="collapse">
+    <% if @formation.audits.any? %>
+      <h4>Audit des modifications</h4>
+      <table class="table table-bordered table-hover table-condensed">
+        <thead>
+          <th>Date</th>
+          <th>Utilisateur</th>            
+          <th>Type</th>
+          <th>Record_id</th>
+          <th>Action</th>
+          <th>Modifications</th>
+        </thead>
+
+        <%= render partial: 'tools/audit', collection: @formation.audits %>
+
+      </table>
+    <% end %>
+  </div> 
+</div>
