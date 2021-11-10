@@ -46,6 +46,10 @@ class Formation < ApplicationRecord
 		"#{self.nom} (#{self.nbr_etudiants} ET.)" 
 	end
 
+	def nom_abrg_nbr_etudiants
+		"#{self.abrg} (#{self.nbr_etudiants} ET.)" 
+	end
+
 	def nom_eotp
 		self.code_analytique.blank? ? self.nom : "#{self.nom} -> #{self.code_analytique}"
 	end
