@@ -14,7 +14,7 @@
         <% end %>
     </td>
     <td>
-        <%= number_with_precision(cours.duree, precision: 1) %> h
+        <%= number_with_precision(cours.duree, precision: 1, strip_insignificant_zeros: true) %> h
         <% if cours.debut.to_date == Date.today %>
             <div class="progress mt-1" style="width: 100%">
                 <div class="progress-bar bg-warning" 

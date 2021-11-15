@@ -1041,9 +1041,11 @@ class ToolsController < ApplicationController
     # entre deux dates
     # créés par un utilisateur autre que Thierry (#41)
     
-    params[:start_date] ||= '2021-09-01'
+    params[:start_date] ||= Date.today
+    #params[:start_date] ||= '2021-09-01'
     params[:end_date] ||= '2022-07-01'
-    params[:tri] ||= 'date_création'
+    params[:tri] ||= 'date_cours'
+    #params[:tri] ||= 'date_création'
 
     unless params[:start_date].blank? && params[:end_date].blank? 
       @date_début = params[:start_date]
@@ -1052,7 +1054,6 @@ class ToolsController < ApplicationController
 
     # ids des cours créés par utilisateur autre que Thierry (#41)
     id_cours = Audited::Audit.where(auditable_type: 'Cour')
-                             .where(action: 'create')
                              .where.not(user_id: 41)
                              .pluck(:auditable_id)
 
