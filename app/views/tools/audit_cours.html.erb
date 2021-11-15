@@ -22,19 +22,20 @@
             <div class="col-sm-3">
                 <p>Trier par</p>
 
-                 <div class="form-check-inline">
-                    <label class="form-check-label">
-                        <%= radio_button_tag :tri, :date_création, params[:tri] == 'date_création' , class: "form-check-input", onchange:'this.form.submit()' %>
-                        Date de création
-                    </label>
-                </div>
-
                 <div class="form-check-inline">
                     <label class="form-check-label">
                         <%= radio_button_tag :tri, :date_cours, params[:tri] == 'date_cours', class: "form-check-input", onchange:'this.form.submit()' %>
                         Date du cours
                     </label>
                 </div>
+
+                <div class="form-check-inline">
+                    <label class="form-check-label">
+                        <%= radio_button_tag :tri, :date_création, params[:tri] == 'date_création' , class: "form-check-input", onchange:'this.form.submit()' %>
+                        Date de création
+                    </label>
+                </div>
+
             </div>
 
         </div>
@@ -64,8 +65,8 @@
             </td>
             <td>
                 <h5>
-                    <% color = 'warning' if (cours.debut.to_date - Date.today) <= 5 %>
-                    <% color = 'danger' if cours.debut.to_date == Date.today %>
+                    <% color = 'warning' if (cours.debut.to_date - Date.today) <= 21 %>
+                    <% color = 'danger' if (cours.debut.to_date - Date.today) <= 7 %>
                     <span class="badge badge-pill badge-<%= color %>">
                         <b><%= l cours.debut.to_date %></b>
                     </span>
