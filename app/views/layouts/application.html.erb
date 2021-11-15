@@ -66,6 +66,14 @@
             <% if current_user.isRHGroupMember? %>
               <%= navbar_nav_item('dossiers', 'folder', dossiers_path) %>
             <% end %>
+            <% if current_user.id == 41 %>
+              <li class="nav-item">
+                <%= link_to tools_audit_cours_path, class: 'nav-link text-dark' do %>
+                  <%= fa_icon 'search' %>
+                  Audit des cours
+                <% end %>
+              </li>  
+            <% end %>
           <% end %>
         </ul>
 

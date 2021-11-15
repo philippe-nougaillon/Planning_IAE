@@ -43,7 +43,8 @@
 
 <table class="table table-hover table-sm">
     <thead class="shadow-sm">
-        <tr>
+        <tr>    
+            <th>Semaine</th>
             <th>Date</th>
             <th>Heure</th>
             <th>Formation</th>
@@ -58,8 +59,17 @@
 
     <% @cours.each do | cours | %>
         <tr class="shadow-sm">
+            <td class="text-center">
+                <%= cours.debut.to_date.strftime('%-V') %>
+            </td>
             <td>
-                <b><%= l cours.debut.to_date %></b>
+                <h5>
+                    <% color = 'warning' if (cours.debut.to_date - Date.today) <= 5 %>
+                    <% color = 'danger' if cours.debut.to_date == Date.today %>
+                    <span class="badge badge-pill badge-<%= color %>">
+                        <b><%= l cours.debut.to_date %></b>
+                    </span>
+                </h5>
             </td>
             <td>
                 <b><%= l(cours.debut, format: :heures_min) %></b> 
@@ -83,31 +93,7 @@
                 <%= cours.nom_ou_ue %>
             </td>
             <td style="white-space: nowrap;">
-                <% if cours.salle %>
-                    <h5>
-                        <span class="badge badge-pill badge-<%= cours.style %>">
-                            <%= cours.salle.nom %>
-                        </span>             
-                    </h5>
-
-                    <% if cours.formation.nbr_etudiants > cours.salle.places %>
-                        <i title="Manque <%= cours.formation.nbr_etudiants - cours.salle.places %> place.s">
-                            <%= fa_icon 'exclamation-circle' %>
-                        </i>
-                    <% end %>
-                <% else %>
-                    <% if cours.confirmé? %>
-                        <i title="Pas de salle réservée !">
-                            <%= fa_icon 'exclamation-circle' %>
-                        </i>
-                    <% else %>
-                        <h5>
-                            <span class="badge badge-pill badge-<%= cours.style %>">
-                                <%= cours.etat.humanize %>
-                            </span>
-                        </h5>
-                    <% end %>
-                <% end %>
+                <%= cours.etat.humanize %>
 
                 <% unless cours.commentaires.blank? %>
                     <%= fa_icon 'comment-dots' %>         
@@ -115,7 +101,7 @@
                 <% end %>
             </td>
 
-            <td>                
+            <td style="white-space: nowrap;">                
                 <%= time_ago_in_words cours.audits.first.created_at %>
             </td>
 
