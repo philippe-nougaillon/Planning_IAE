@@ -71,6 +71,10 @@
                 <%= link_to tools_audit_cours_path, class: 'nav-link text-dark' do %>
                   <%= fa_icon 'search' %>
                   Audit des cours
+                  <% aplanifier = Cour.cours_a_planifier %>
+                  <% if aplanifier > 0 %>
+                    <span class="badge badge-danger"><%= aplanifier %></span>
+                  <% end %>
                 <% end %>
               </li>  
             <% end %>

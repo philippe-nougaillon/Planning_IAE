@@ -54,18 +54,21 @@
             <th>Etat</th>
             <th>Depuis</th>
             <th>Par</th>
-            <th />
+            <th></th>
         </tr>
     </thead>
 
     <% @cours.each do | cours | %>
         <tr class="shadow-sm">
             <td class="text-center">
-                <%= cours.debut.to_date.strftime('%-V') %>
+                <% week_number = cours.debut.to_date.strftime('%-V') %>
+                <%= link_to cours_url(semaine: week_number, view: 'calendar_rooms'), target: '_blank' do %>
+                    <%= week_number %>
+                <% end %>
             </td>
             <td>
                 <h5>
-                    <% color = 'warning' if (cours.debut.to_date - Date.today) <= 21 %>
+                    <% color = 'warning' if (cours.debut.to_date - Date.today) <= 30 %>
                     <% color = 'danger' if (cours.debut.to_date - Date.today) <= 7 %>
                     <span class="badge badge-pill badge-<%= color %>">
                         <b><%= l cours.debut.to_date %></b>
