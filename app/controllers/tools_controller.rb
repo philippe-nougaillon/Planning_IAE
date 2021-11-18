@@ -1090,5 +1090,12 @@ class ToolsController < ApplicationController
                   .where("debut between ? and ?", @start_date, @end_date)
                   .includes(:formation)
   end
+
+  def rechercher
+    unless params[:search].blank?
+      @results = PgSearch.multisearch("%#{ params[:search] }%")
+      #@results = @results.page(params[:page]).per(12)
+    end
+  end
   
 end

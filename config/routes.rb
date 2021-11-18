@@ -70,6 +70,7 @@ Rails.application.routes.draw do
     get :creation_cours
     get :audit_cours
     get :liste_surveillants_examens
+    get :rechercher
 
     post :import_do
     post :creation_cours_do

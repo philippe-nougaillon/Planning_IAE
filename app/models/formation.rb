@@ -1,5 +1,7 @@
 class Formation < ApplicationRecord
-	
+	include PgSearch::Model
+	multisearchable against: [:nom, :abrg]
+
 	audited
 	
 	has_many :users

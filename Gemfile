@@ -103,3 +103,6 @@ gem 'aws-sdk-s3', require: false
 
 # SitemapGenerator is the easiest way to generate Sitemaps in Ruby. 
 gem 'sitemap_generator'
+
+# PgSearch builds named scopes that take advantage of PostgreSQL's full text search.
+gem 'pg_search'

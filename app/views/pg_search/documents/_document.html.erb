@@ -1,0 +1,28 @@
+<div class="shadow-sm">
+    <div class="row">
+        <div class="col-sm-1">
+            <p class="">
+                <% case result.searchable_type when 'Cour' %> 
+                    <%= fa_icon 'calendar-day 2x' %>
+                    <% when 'Formation' %><%= fa_icon 'briefcase 2x' %>
+                    <% when 'Intervenant' %><%= fa_icon 'chalkboard-teacher 2x' %>
+                <% end %>
+            </p>
+        </div>
+        <div class="col">
+            <p class="">
+                <%= link_to result.content, 
+                            url_for(controller: result.searchable_type.pluralize.downcase, 
+                                    action: 'show', 
+                                    id: result.searchable_id) %>
+            </p>
+        </div>
+        <% if current_user.try(:admin?) %>
+            <%= link_to url_for(controller: result.searchable_type.pluralize.downcase, 
+                                action: 'show', 
+                                id: result.searchable_id) do %>
+                <%= fa_icon 'search-plus' %>
+            <% end %>
+        <% end %>
+    </div>
+</div>

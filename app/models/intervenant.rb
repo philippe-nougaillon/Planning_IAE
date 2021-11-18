@@ -1,9 +1,11 @@
 # ENCODING: UTF-8
 
 class Intervenant < ApplicationRecord
+	include PgSearch::Model
+	multisearchable against: [:nom, :prenom, :titre1, :status]
 
 	audited
-
+	
 	has_many :cours
 	has_many :formations, through: :cours
 	has_many :responsabilites

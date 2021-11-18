@@ -1,6 +1,8 @@
 # Encoding: utf-8
 
 class Cour < ApplicationRecord
+	include PgSearch::Model
+	multisearchable against: [:formation_nom, :intervenant_nom, :nom_ou_ue]
 
   audited
 
@@ -306,6 +308,14 @@ class Cour < ApplicationRecord
     return book
   end
 
+  # PGSearch Attributs
+  def formation_nom
+    self.formation.try(:nom)
+  end
+
+  def intervenant_nom
+    self.intervenant.try(:nom_prenom)
+  end
 
   def self.generate_ical(cours)
     require 'icalendar'
