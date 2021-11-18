@@ -1053,13 +1053,10 @@ class ToolsController < ApplicationController
     end
 
     # ids des cours créés par utilisateur autre que Thierry (#41)
-    id_cours = Audited::Audit.where(auditable_type: 'Cour')
-                             .where.not(user_id: 41)
-                             .pluck(:auditable_id)
-
+    id_cours = Audited::Audit.where(auditable_type: 'Cour').where.not(user_id: 41).pluck(:auditable_id).uniq
 
     # vérifie que la date de début de cours est dans la période observée
-    @cours = Cour.where(id: id_cours)
+    @cours = Cour.where("id IN (?)", id_cours)
                  .planifié
                  .where("cours.debut BETWEEN ? AND ?", @date_début, @date_fin)
 
