@@ -2,7 +2,7 @@
 
 class Intervenant < ApplicationRecord
 	include PgSearch::Model
-	multisearchable against: [:nom, :prenom, :titre1, :status]
+	multisearchable against: [:nom, :prenom, :titre1, :nom_du_status]
 
 	audited
 	
@@ -70,6 +70,10 @@ class Intervenant < ApplicationRecord
 
 	def nom_prenom_etat_dossier
 		self.prenom.blank? ? self.nom.upcase : "#{self.nom} #{self.prenom} -> #{self.dossiers.any? ? self.dossiers.last.workflow_state.humanize : nil }" 
+	end
+
+	def nom_du_status
+		self.status
 	end
 
 	def total_cours

@@ -29,6 +29,7 @@
       <%= page_entries_info @results %>
     </div>
     <%= will_paginate @results, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+    <br>
   <% else %>
     <p class="title is-4 has-text-centered p-6">
       Aucun résultat trouvé...

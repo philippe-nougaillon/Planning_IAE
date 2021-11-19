@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   resources :fermetures
   resources :etudiants
   resources :documents
+  resources :unites
 
   resources :cours do
     collection do
