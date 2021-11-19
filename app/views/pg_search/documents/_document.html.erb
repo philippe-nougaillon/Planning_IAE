@@ -1,27 +1,25 @@
-<div class="shadow-sm">
-    <div class="row">
-        <div class="col-sm-2">
-            <% case result.searchable_type when 'Cour' %> 
-                    <%= fa_icon 'calendar-day' %>
-                    <%= l(Cour.find(result.searchable_id).debut.to_date, format: :default) %>
-                <% when 'Formation' %>
-                    <span style="color:<%= Formation.unscoped.find(result.searchable_id).color %>;">
-                        <%= fa_icon 'briefcase' %>
-                    </span>
-                <% when 'Intervenant' %>
-                    <%= fa_icon 'chalkboard-teacher' %>
-                <% when 'Unite' %>
-                    <%= fa_icon 'award' %>
-            <% end %>
-        </div>
+<tr>
+    <td style="white-space: nowrap;">
+        <% case result.searchable_type when 'Cour' %> 
+                <%= fa_icon 'calendar-day' %>
+                <%= l(Cour.find(result.searchable_id).debut.to_date, format: :default) %>
+            <% when 'Formation' %>
+                <span style="color:<%= Formation.unscoped.find(result.searchable_id).color %>;">
+                    <%= fa_icon 'briefcase' %>
+                </span>
+            <% when 'Intervenant' %>
+                <%= fa_icon 'chalkboard-teacher' %>
+            <% when 'Unite' %>
+                <%= fa_icon 'award', title: "Unité d'enseignement" %>
+        <% end %>
+    </td>
 
-        <div class="col">
-            <%= link_to result.content, 
-                                url_for(controller: result.searchable_type.pluralize.downcase, 
-                                        action: 'show', 
-                                        id: result.searchable_id),
-                                        target: '_blank' %>
+    <td>
+        <%= link_to result.content, 
+                            url_for(controller: result.searchable_type.pluralize.downcase, 
+                                    action: 'show', 
+                                    id: result.searchable_id),
+                                    target: '_blank' %>
 
-        </div>
-    </div>
-</div>
+    </td>
+</tr>

@@ -23,7 +23,9 @@
 
 <% if defined?(@results) %>
   <% if @results.any? %>
-    <%= render partial: @results, as: :result %>
+    <table class="table table-hover table-sm">
+      <%= render partial: @results, as: :result %>
+    </table>
     <br>
     <div class="page_info">
       <%= page_entries_info @results %>

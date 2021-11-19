@@ -1,6 +1,7 @@
 class Unite < ApplicationRecord
 	include PgSearch::Model
-	multisearchable against: [:nom, :num, :nom_formation]
+	multisearchable against: [:nom, :num, :nom_formation],
+                  if: lambda { |record| record.formation }
 
   belongs_to :formation
 
