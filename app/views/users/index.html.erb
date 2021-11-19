@@ -36,7 +36,7 @@
             <br>
             <label>
               <%= check_box_tag :discarded, 1, params[:discarded], onchange: 'this.form.submit()' %>
-              Que les révoqués ?
+              Désactivés ?
             </label>
         </div>
 
@@ -76,8 +76,10 @@
             <%= link_to edit_user_path(user), class: "btn btn-default" do %>
               <%= fa_icon 'edit' %>
             <% end %>
-            <%= link_to(user, method: :delete, data:{confirm: 'Confirmez-vous ?'}, class: "btn btn-default") do %>
-              <%= fa_icon 'trash-alt' %>
+            <% unless user.discarded? %>
+              <%= link_to(user, method: :delete, data:{confirm: 'Confirmez-vous la désactivation de cet utilisateur ?'}, class: "btn btn-default") do %>
+                <%= fa_icon 'ban' %>
+              <% end %>
             <% end %>
           </td>
         </tr>

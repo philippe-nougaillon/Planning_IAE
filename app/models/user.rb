@@ -32,4 +32,9 @@ class User < ApplicationRecord
     "#{self.nom.upcase if self.nom} #{self.prénom.upcase if self.prénom}"
   end 
 
+  # wish for discarded users to be unable to login and stop their session
+  def active_for_authentication?
+    super && !discarded?
+  end
+
 end

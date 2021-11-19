@@ -95,7 +95,7 @@ class UsersController < ApplicationController
     authorize User
     @user.discard
     respond_to do |format|
-      format.html { redirect_to users_url, notice: 'Utilisateur supprimé !' }
+      format.html { redirect_to users_url, notice: 'Utilisateur désactivé !' }
       format.json { head :no_content }
     end
   end
