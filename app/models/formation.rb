@@ -1,6 +1,6 @@
 class Formation < ApplicationRecord
 	include PgSearch::Model
-	multisearchable against: [:nom, :abrg]
+	multisearchable against: [:nom]
 
 	audited
 	

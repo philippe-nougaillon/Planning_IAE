@@ -35,7 +35,7 @@
   
     <div class="col">
       <h3>
-        <span style="background-color:<%= @cour.formation.color %>;padding-left: 5px;margin-right: 5px;"></span>
+        <span style="background-color:<%= @cour.formation.try(:color) %>;padding-left: 5px;margin-right: 5px;"></span>
         <%= @cour.formation.try(:nom_promo) %>
       </h3>
     </div>
@@ -80,7 +80,7 @@
             <%= @cour.salle.nom %>
           </span>             
 
-          <% if @cour.formation.nbr_etudiants > @cour.salle.places %>
+          <% if @cour.formation.try(:nbr_etudiants) && (@cour.formation.try(:nbr_etudiants) > @cour.salle.places) %>
             <span class="badge" title="Manque <%= @cour.formation.nbr_etudiants - @cour.salle.places %> place.s">
               <%= fa_icon 'exclamation-circle' %>
             </span>

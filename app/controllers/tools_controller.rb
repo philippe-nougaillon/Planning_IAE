@@ -1094,7 +1094,7 @@ class ToolsController < ApplicationController
   def rechercher
     unless params[:search].blank?
       @results = PgSearch.multisearch("%#{ params[:search] }%")
-      #@results = @results.page(params[:page]).per(12)
+      @results = @results.paginate(page: params[:page])
     end
   end
   
