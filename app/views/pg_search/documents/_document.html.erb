@@ -1,7 +1,9 @@
 <tr>
     <td style="white-space: nowrap;">
         <% case result.searchable_type when 'Cour' %> 
-                <%= fa_icon 'calendar-day' %>
+                <span style="color:<%= Formation.unscoped.find(Cour.find(result.searchable_id).formation_id).color %>;">
+                    <%= fa_icon 'calendar-day' %>
+                </span>
                 <%= l(Cour.find(result.searchable_id).debut.to_date, format: :default) %>
             <% when 'Formation' %>
                 <span style="color:<%= Formation.unscoped.find(result.searchable_id).color %>;">
