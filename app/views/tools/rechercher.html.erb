@@ -7,7 +7,7 @@
     <div class="form-group">
       <div class="row">
         <div class="col-sm-4">
-          <%= label_tag :nom, "Entrez un terme à rechercher dans l'intitulé des :" %>    
+          <%= label_tag :nom, "Entrez un terme à rechercher dans le nom des :" %>    
           <div class="input-group">
             <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
             <span class="input-group-btn">
@@ -16,16 +16,20 @@
           </div>
         </div>  
         <div class="col-sm-1">
-          <%= check_box_tag :search_cours, '1', params[:search_cours] == '1' %> Cours
-        </div>    
-        <div class="col-sm-2">
-          <%= check_box_tag :search_formations, '1', params[:search_formations] == '1' %> Formations
+          Cours<br>
+          <%= check_box_tag :search_cours, '1', params[:search_cours] == '1' %> 
         </div>    
         <div class="col-sm-1">
-          <%= check_box_tag :search_ue, '1', params[:search_ue] == '1' %> Ue
+          Formations
+          <%= check_box_tag :search_formations, '1', params[:search_formations] == '1' %>
         </div>    
-        <div class="col-sm-2">
-          <%= check_box_tag :search_intervenants, '1', params[:search_intervenants] == '1' %> Intervenants
+        <div class="col-sm-1">
+          UE<br>
+          <%= check_box_tag :search_ue, '1', params[:search_ue] == '1' %>
+        </div>    
+        <div class="col-sm-1">
+          Intervenants
+          <%= check_box_tag :search_intervenants, '1', params[:search_intervenants] == '1' %>
         </div>    
       </div>
     </div>  
@@ -40,7 +44,7 @@
         <%= render partial: @results, as: :result %>
       </tbody>
       <tfoot>
-        <tr><th></th><th></th></tr>
+        <tr><th></th></tr>
       </tfoot>
     </table>
     <div class="page_info">

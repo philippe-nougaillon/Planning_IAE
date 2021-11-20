@@ -7,16 +7,13 @@
                 <%= l(Cour.find(result.searchable_id).debut.to_date, format: :default) %>
             <% when 'Formation' %>
                 <span style="color:<%= Formation.unscoped.find(result.searchable_id).color %>;">
-                    <%= fa_icon 'briefcase' %>
+                    <%= fa_icon 'briefcase', title: "Formation" %>
                 </span>
             <% when 'Intervenant' %>
-                <%= fa_icon 'chalkboard-teacher' %>
+                <%= fa_icon 'chalkboard-teacher', title: "Intervenant" %>
             <% when 'Unite' %>
                 <%= fa_icon 'award', title: "Unité d'enseignement" %>
         <% end %>
-    </td>
-
-    <td>
         <%= link_to result.content, 
                             url_for(controller: result.searchable_type.pluralize.downcase, 
                                     action: 'show', 
