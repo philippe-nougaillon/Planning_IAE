@@ -7,14 +7,26 @@
     <div class="form-group">
       <div class="row">
         <div class="col-sm-4">
-          <%= label_tag :nom, "Entrez un texte à rechercher" %>    
+          <%= label_tag :nom, "Entrez un terme à rechercher dans l'intitulé des :" %>    
           <div class="input-group">
             <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
             <span class="input-group-btn">
               <%= submit_tag 'Go', class: "btn btn-sm btn-success" %>
             </span>
           </div>
-        </div>      
+        </div>  
+        <div class="col-sm-1">
+          <%= check_box_tag :search_cours, '1', params[:search_cours] == '1' %> Cours
+        </div>    
+        <div class="col-sm-2">
+          <%= check_box_tag :search_formations, '1', params[:search_formations] == '1' %> Formations
+        </div>    
+        <div class="col-sm-1">
+          <%= check_box_tag :search_ue, '1', params[:search_ue] == '1' %> Ue
+        </div>    
+        <div class="col-sm-2">
+          <%= check_box_tag :search_intervenants, '1', params[:search_intervenants] == '1' %> Intervenants
+        </div>    
       </div>
     </div>  
   <% end %>
@@ -23,10 +35,14 @@
 
 <% if defined?(@results) %>
   <% if @results.any? %>
-    <table class="table table-hover table-sm">
-      <%= render partial: @results, as: :result %>
+    <table class="table table-hover table-striped">
+      <tbody>
+        <%= render partial: @results, as: :result %>
+      </tbody>
+      <tfoot>
+        <tr><th></th><th></th></tr>
+      </tfoot>
     </table>
-    <br>
     <div class="page_info">
       <%= page_entries_info @results %>
     </div>
