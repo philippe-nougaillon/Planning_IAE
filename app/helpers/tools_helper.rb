@@ -55,7 +55,11 @@ module ToolsHelper
                 end
             when 'Etat'
                 if audit.audited_changes['etat'].class.name == 'Array'
-                    pretty_changes << "Etat modifié de '#{ Cour.etats.keys[c.last.first].humanize if c.last.first }' à '#{ Cour.etats.keys[c.last.last].humanize if c.last.last }'"
+                    begin
+                        pretty_changes << "Etat modifié de '#{ Cour.etats.keys[c.last.first].humanize if c.last.first }' à '#{ Cour.etats.keys[c.last.last].humanize if c.last.last }'"
+                    rescue => e
+                        pretty_changes << "/!\\ PB avec les données à convertir !"
+                    end
                 elsif audit.audited_changes['etat'].class.name == 'Integer'
                     pretty_changes << "Etat initialisé à '#{ Cour.etats.keys[c.last].humanize }'"
                 else

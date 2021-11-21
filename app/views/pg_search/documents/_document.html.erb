@@ -1,0 +1,24 @@
+<tr>
+    <td style="white-space: nowrap;">
+        <% case result.searchable_type when 'Cour' %> 
+                <span style="color:<%= Formation.unscoped.find(Cour.find(result.searchable_id).formation_id).color %>;">
+                    <%= fa_icon 'calendar-day' %>
+                </span>
+                <%= l(Cour.find(result.searchable_id).debut.to_date, format: :default) %>
+            <% when 'Formation' %>
+                <span style="color:<%= Formation.unscoped.find(result.searchable_id).color %>;">
+                    <%= fa_icon 'briefcase', title: "Formation" %>
+                </span>
+            <% when 'Intervenant' %>
+                <%= fa_icon 'chalkboard-teacher', title: "Intervenant" %>
+            <% when 'Unite' %>
+                <%= fa_icon 'award', title: "Unité d'enseignement" %>
+        <% end %>
+        <%= link_to result.content, 
+                            url_for(controller: result.searchable_type.pluralize.downcase, 
+                                    action: 'show', 
+                                    id: result.searchable_id),
+                                    target: '_blank' %>
+
+    </td>
+</tr>
