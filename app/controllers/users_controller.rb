@@ -11,7 +11,11 @@ class UsersController < ApplicationController
     params[:column] ||= session[:column]
     params[:direction] ||= session[:direction]
 
-    @users = User.all
+    @users = User.kept
+
+    unless params[:discarded].blank?
+      @users = User.discarded      
+    end
 
     unless params[:search].blank?
       s = "%#{params[:search]}%".downcase
@@ -89,9 +93,9 @@ class UsersController < ApplicationController
   # DELETE /users/1.json
   def destroy
     authorize User
-    @user.destroy
+    @user.discard
     respond_to do |format|
-      format.html { redirect_to users_url, notice: 'Utilisateur supprimé !' }
+      format.html { redirect_to users_url, notice: 'Utilisateur désactivé !' }
       format.json { head :no_content }
     end
   end

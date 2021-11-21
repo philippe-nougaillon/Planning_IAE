@@ -106,3 +106,6 @@ gem 'sitemap_generator'
 
 # PgSearch builds named scopes that take advantage of PostgreSQL's full text search.
 gem 'pg_search'
+
+# Soft deletes for ActiveRecord done right.
+gem 'discard', '~> 1.2'
