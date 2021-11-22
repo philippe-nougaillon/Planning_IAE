@@ -10,6 +10,7 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user!, except: [:index_slide, :index, :occupation]
   before_action :detect_device_format
   before_action :set_layout_variables
+  before_action :prepare_exception_notifier
 
   helper_method :sort_column, :sort_direction
 
@@ -37,6 +38,12 @@ class ApplicationController < ActionController::Base
     def user_not_authorized
       flash[:error] = "You are not authorized to perform this action."
       redirect_to(request.referrer || root_path)
+    end
+
+    def prepare_exception_notifier
+      request.env["exception_notifier.exception_data"] = {
+        current_user: current_user
+      }
     end
 
 end
