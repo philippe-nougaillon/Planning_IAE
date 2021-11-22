@@ -6,6 +6,9 @@
     <td>
         <span class="badge <%= envoi_log.style %>"><%= envoi_log.workflow_state.humanize %></span>
     </td>
+    <td>
+        <%= "#{envoi_log.cible} #{envoi_log.cible_id}" %>
+    </td>
     <td><%= "Il y a #{time_ago_in_words(envoi_log.date_exécution)}" if envoi_log.date_exécution %></td>
     <td>
         <%= link_to envoi_log, class: "btn btn-sm btn-link" do %>

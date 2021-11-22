@@ -72,6 +72,7 @@ Rails.application.routes.draw do
     get :audit_cours
     get :liste_surveillants_examens
     get :rechercher
+    get :rappel_des_cours
 
     post :import_do
     post :creation_cours_do
@@ -86,6 +87,8 @@ Rails.application.routes.draw do
     post :taux_occupation_salles_do
     post :nouvelle_saison_create
     post :notifier_intervenants_do
+    post :rappel_des_cours_do
+
   end
 
   get 'guide/index'

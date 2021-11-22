@@ -1115,5 +1115,32 @@ class ToolsController < ApplicationController
       params[:search_intervenants] ||= '1'
     end
   end
+
+  def rappel_des_cours
+  end
+
+  def rappel_des_cours_do
+    unless params[:intervenant_id].blank? && params[:formation_id].blank?
+      @envoi_log = EnvoiLog.new
+      @envoi_log.date_prochain = DateTime.now
+      unless params[:intervenant_id].blank?
+        @envoi_log.cible = "Intervenant"
+        @envoi_log.cible_id = params[:intervenant_id]
+      else
+        @envoi_log.cible = "Formation"
+        @envoi_log.cible_id = params[:formation_id]
+      end
+
+      # Lancer & marquer la date d'exécution 
+      @envoi_log.workflow_state = "exécuté"
+      @envoi_log.date_exécution = DateTime.now
+      @envoi_log.save
+
+      # placer le job dans la file d'attente
+      EnvoyerNotificationsJob.perform_later(@envoi_log.id)
+      
+      redirect_to envoi_logs_path, notice: "Envoi ajouté à la file d'attente"
+    end
+  end
   
 end

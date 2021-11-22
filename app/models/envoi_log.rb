@@ -24,7 +24,6 @@ class EnvoiLog < ApplicationRecord
         end
 
         state :exécuté, meta: { style: 'badge-primary' }
-
         state :échoué, meta: { style: 'badge-danger' }
     end
 
