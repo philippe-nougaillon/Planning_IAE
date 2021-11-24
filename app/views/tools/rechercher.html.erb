@@ -1,0 +1,60 @@
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h3><%= fa_icon 'search' %> Rechercher</h3>
+</div>
+
+<div class="container-fluid p-3 shadow-sm shadow-sm">
+  <%= form_tag tools_rechercher_path, method: :get do %>
+    <div class="form-group">
+      <div class="row">
+        <div class="col-sm-4">
+          <%= label_tag :nom, "Entrez un terme à rechercher dans le nom des :" %>    
+          <div class="input-group">
+            <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
+            <span class="input-group-btn">
+              <%= submit_tag 'Go', class: "btn btn-sm btn-success" %>
+            </span>
+          </div>
+        </div>  
+        <div class="col-sm-1">
+          Cours<br>
+          <%= check_box_tag :search_cours, '1', params[:search_cours] == '1' %> 
+        </div>    
+        <div class="col-sm-1">
+          Formations
+          <%= check_box_tag :search_formations, '1', params[:search_formations] == '1' %>
+        </div>    
+        <div class="col-sm-1">
+          UE<br>
+          <%= check_box_tag :search_ue, '1', params[:search_ue] == '1' %>
+        </div>    
+        <div class="col-sm-1">
+          Intervenants
+          <%= check_box_tag :search_intervenants, '1', params[:search_intervenants] == '1' %>
+        </div>    
+      </div>
+    </div>  
+  <% end %>
+</div>
+<br>
+
+<% if defined?(@results) %>
+  <% if @results.any? %>
+    <table class="table table-hover table-striped">
+      <tbody>
+        <%= render partial: @results, as: :result %>
+      </tbody>
+      <tfoot>
+        <tr><th></th></tr>
+      </tfoot>
+    </table>
+    <div class="page_info">
+      <%= page_entries_info @results %>
+    </div>
+    <%= will_paginate @results, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+    <br>
+  <% else %>
+    <p class="title is-4 has-text-centered p-6">
+      Aucun résultat trouvé...
+    </p>
+  <% end %>
+<% end %>

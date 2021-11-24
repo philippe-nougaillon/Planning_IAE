@@ -30,19 +30,27 @@ namespace :cours do
 
     envoyes = 0
 
-    if envoi_specs.cible == 'Testeurs'
+    case envoi_specs.cible
+    when 'Testeurs'
       # id des intervenants tests
       intervenants = Intervenant.where("UPPER(nom) LIKE '%NOUGAILLON%' OR UPPER(nom) LIKE '%FITSCH%'")
       puts "Intervenants TEST = #{ intervenants.pluck(:nom) }" 
+    when 'Intervenant'
+      intervenants = Intervenant.where(id: envoi_specs.cible_id)
+    when 'Formation'
+      intervenants = Formation.find(envoi_specs.cible_id).intervenants
     else
-      intervenants = Intervenant.all
+      intervenants = Intervenant.where(doublon: false).or(Intervenant.where(doublon: nil))
     end
 
     intervenants.each do | intervenant |
       cours = Cour.where("debut BETWEEN (?) AND (?)", start_day, end_day)
                   .where(etat: Cour.etats.values_at(:planifié, :confirmé))
-                  .where.not(intervenant_id: 445) # Intervenant fictif 'A CONFIRMER' dont on ne veut pas ici
                   .where("intervenant_id = ? OR intervenant_binome_id = ?", intervenant.id, intervenant.id)
+
+      if envoi_specs.cible == 'Formation'
+        cours = cours.where(formation_id: envoi_specs.cible_id) 
+      end
 
       if cours.any?
         puts "#{intervenant.nom_prenom} (##{intervenant.id})" 

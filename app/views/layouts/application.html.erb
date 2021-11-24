@@ -68,11 +68,11 @@
               <%= navbar_nav_item('dossiers', 'folder', dossiers_path) %>
             <% end %>
 
-            <% if [1,6,41].include?(current_user.id) %>
+            <% if [6,41].include?(current_user.id) %>
               <li class="nav-item">
                 <%= link_to tools_audit_cours_path, class: 'nav-link text-dark' do %>
                   <%= fa_icon 'history' %>
-                  Audit des cours
+                  Audit
                   <% aplanifier = Cour.cours_a_planifier %>
                   <% if aplanifier > 0 %>
                     <span class="badge badge-danger"><%= aplanifier %></span>
@@ -80,6 +80,13 @@
                 <% end %>
               </li>  
             <% end %>
+
+            <li class="nav-item">
+              <%= link_to tools_rechercher_path, class: 'nav-link text-dark pl-3', title: "Rechercher" do %>
+                <%= fa_icon 'search' %>
+              <% end %>
+            </li>
+
           <% end %>
         </ul>
 

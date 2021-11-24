@@ -1,9 +1,11 @@
 # ENCODING: UTF-8
 
 class Intervenant < ApplicationRecord
+	include PgSearch::Model
+	multisearchable against: [:nom, :prenom, :titre1, :nom_du_status, :email]
 
 	audited
-
+	
 	has_many :cours
 	has_many :formations, through: :cours
 	has_many :responsabilites
@@ -17,8 +19,10 @@ class Intervenant < ApplicationRecord
 	has_many :vacations
 	has_many :dossiers
 
-	validates :nom, :email, :prenom, :status, presence: true
-	validates :email, format: { with: URI::MailTo::EMAIL_REGEXP } 
+	validates :nom, :prenom, :status, presence: true
+	validates :email, presence: true, format: Devise.email_regexp
+	#validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP } 
+
 	validates_uniqueness_of :email, case_sensitive: false
 	
   	enum status: [:CEV, :Permanent, :PR, :MCF, :MCF_HDR, :PAST, :PRAG, :Admin, :CEV_HSS]
@@ -68,6 +72,10 @@ class Intervenant < ApplicationRecord
 
 	def nom_prenom_etat_dossier
 		self.prenom.blank? ? self.nom.upcase : "#{self.nom} #{self.prenom} -> #{self.dossiers.any? ? self.dossiers.last.workflow_state.humanize : nil }" 
+	end
+
+	def nom_du_status
+		self.status
 	end
 
 	def total_cours

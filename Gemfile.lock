@@ -111,6 +111,8 @@ GEM
       warden (~> 1.2.3)
     devise-i18n (1.10.0)
       devise (>= 4.8.0)
+    discard (1.2.0)
+      activerecord (>= 4.2, < 7)
     erubi (1.10.0)
     exception_notification (4.4.3)
       actionmailer (>= 4.0, < 7)
@@ -152,6 +154,9 @@ GEM
     orm_adapter (0.5.0)
     pdf-core (0.9.0)
     pg (1.2.3)
+    pg_search (2.3.5)
+      activerecord (>= 5.2)
+      activesupport (>= 5.2)
     prawn (2.4.0)
       pdf-core (~> 0.9.0)
       ttfunk (~> 1.7)
@@ -297,6 +302,7 @@ DEPENDENCIES
   capybara (>= 2.15)
   devise (>= 4.7.1)
   devise-i18n
+  discard (~> 1.2)
   exception_notification
   font_awesome5_rails
   friendly_id (~> 5.2.4)
@@ -304,6 +310,7 @@ DEPENDENCIES
   jbuilder (~> 2.7)
   listen (~> 3.2)
   pg
+  pg_search
   prawn (~> 2.2)
   prawn-table (~> 0.2)
   puma (~> 4.1)

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_02_174148) do
+ActiveRecord::Schema.define(version: 2021_11_22_133341) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -127,6 +127,7 @@ ActiveRecord::Schema.define(version: 2021_04_02_174148) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "date_exécution"
+    t.integer "cible_id"
   end
 
   create_table "etudiants", id: :serial, force: :cascade do |t|
@@ -244,6 +245,15 @@ ActiveRecord::Schema.define(version: 2021_04_02_174148) do
     t.boolean "notifier"
   end
 
+  create_table "pg_search_documents", force: :cascade do |t|
+    t.text "content"
+    t.string "searchable_type"
+    t.bigint "searchable_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable"
+  end
+
   create_table "responsabilites", id: :serial, force: :cascade do |t|
     t.integer "intervenant_id"
     t.string "titre"
@@ -295,6 +305,8 @@ ActiveRecord::Schema.define(version: 2021_04_02_174148) do
     t.string "prénom"
     t.string "mobile"
     t.boolean "reserver"
+    t.datetime "discarded_at"
+    t.index ["discarded_at"], name: "index_users_on_discarded_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["formation_id"], name: "index_users_on_formation_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

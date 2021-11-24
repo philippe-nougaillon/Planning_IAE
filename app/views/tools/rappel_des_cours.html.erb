@@ -1,0 +1,45 @@
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h3><%= fa_icon 'bell' %> Rappel des cours</h3>
+</div>
+<br>
+
+<%= form_tag({action: "rappel_des_cours_do", method: :post}, multipart: true) do %>
+  <div>
+    <h4>
+        Envoyer le rappel des cours du mois à venir à un intervenant
+        <br>
+        <small>et bientôt rappel des cours à tous les intervenants d'une formation...</small>
+    </h4>
+    <br>
+  </div>
+  
+  <div class="row">
+    <div class="col-sm-4">
+      <%= label_tag "Intervenant" %>    
+      <%= select_tag :intervenant_id, 
+            options_from_collection_for_select(@intervenants, :id, :nom_prenom, params[:intervenant_id]), 
+              class:"form-control select2", include_blank: true %>
+      <br>
+      <%= label_tag "Formation" %>    
+      <%= select_tag :formation_id, 
+            options_from_collection_for_select(@formations, :id, :nom, params[:formation_id]), 
+              class:"form-control select2", include_blank: true %>
+      <br>
+    </div>
+  </div>
+  <br>
+  
+  <div class="field">
+    <b>Confirmez-vous l'envoi ?</b> <br>
+    <%= label :send, "Oui", :value => "true" %>
+    <%= radio_button_tag :send, true %>
+    <%= label :send, "Non", :value => "false" %>
+    <%= radio_button_tag :send, false, :checked => true %>
+  </div>
+  <br>
+  
+  <div class="actions">
+    <%= submit_tag "Envoyer le rappel", class: "btn btn-success" %>
+  </div>
+<% end %>
+<br>

@@ -68,8 +68,25 @@
     <br>
     IAE Paris
     <br><br>
+ 
     <small>
         <%= link_to "Plan d'accès au campus Biopark", image_path("Plan_d_acces_Campus_BioPark_-_IAE_Paris.pdf") %>
     </small>
     <br>
+    <small>
+        Exporter le planning au format : 
+        <%= link_to cours_url(intervenant_id: @intervenant.id, format: :ics) do %>
+            iCal
+        <% end %>
+        |
+        <%= link_to cours_url(intervenant_id: @intervenant.id, format: :pdf) do %>
+            PDF
+        <% end %>
+        |
+        <%= link_to cours_url(intervenant_id: @intervenant.id, format: :xls) do %>
+            XLS
+        <% end %>
+    </small>
+<br>
+
 </p>
