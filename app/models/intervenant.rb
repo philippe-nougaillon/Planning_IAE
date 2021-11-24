@@ -19,8 +19,10 @@ class Intervenant < ApplicationRecord
 	has_many :vacations
 	has_many :dossiers
 
-	validates :nom, :email, :prenom, :status, presence: true
-	validates :email, format: { with: URI::MailTo::EMAIL_REGEXP } 
+	validates :nom, :prenom, :status, presence: true
+	validates :email, presence: true, format: Devise.email_regexp
+	#validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP } 
+
 	validates_uniqueness_of :email, case_sensitive: false
 	
   	enum status: [:CEV, :Permanent, :PR, :MCF, :MCF_HDR, :PAST, :PRAG, :Admin, :CEV_HSS]
