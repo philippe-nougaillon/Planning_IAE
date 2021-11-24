@@ -2,7 +2,7 @@
 
 class Intervenant < ApplicationRecord
 	include PgSearch::Model
-	multisearchable against: [:nom, :prenom, :titre1, :nom_du_status]
+	multisearchable against: [:nom, :prenom, :titre1, :nom_du_status, :email]
 
 	audited
 	
