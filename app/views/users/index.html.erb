@@ -77,9 +77,11 @@
               <%= fa_icon 'edit' %>
             <% end %>
             <% unless user.discarded? %>
-              <%= link_to(user, method: :delete, data:{confirm: 'Confirmez-vous la désactivation de cet utilisateur ?'}, class: "btn btn-default") do %>
-                <%= fa_icon 'ban' %>
+              <%= link_to(user, method: :delete, data:{confirm: 'Confirmez-vous la désactivation de cet utilisateur ?'}, class: "btn btn-default", title: "Désactiver cet utilisateur") do %>
+                <%= fa_icon 'trash' %>
               <% end %>
+            <% else %>
+              <%= fa_icon 'ban', title:"Cet utilisateur ne peut plus se connecter" %>
             <% end %>
           </td>
         </tr>
