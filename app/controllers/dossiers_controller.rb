@@ -46,7 +46,7 @@ class DossiersController < ApplicationController
   # GET /dossiers/new
   def new
     # Lister toutes les personnes ayant eu cours comme intervenant principal ou en binome
-    cours = Cour.where("DATE(cours.debut) BETWEEN '2021-09-01' AND '2021-12-31'")
+    cours = Cour.where("DATE(cours.debut) BETWEEN '2022-01-01' AND '2022-08-31'")
     intervenants_ids = cours.pluck(:intervenant_id) + cours.pluck(:intervenant_binome_id)
     @intervenants = Intervenant
                               .where(id: intervenants_ids.uniq)
