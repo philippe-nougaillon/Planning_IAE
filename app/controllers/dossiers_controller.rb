@@ -48,16 +48,19 @@ class DossiersController < ApplicationController
     # Lister toutes les personnes ayant eu cours comme intervenant principal ou en binome
     début_période = '2021-09-01'
     fin_période = '2022-08-31'
-    cours = Cour.where("DATE(cours.debut) BETWEEN ? AND ?", début_période, fin_période)
-    intervenants_ids = cours.pluck(:intervenant_id) + cours.pluck(:intervenant_binome_id)
+
+    # on garde les id des intervenants ayant eu cours sur la période
+    intervenants_ids = Cour.where("DATE(cours.debut) BETWEEN ? AND ?", début_période, fin_période).pluck(:intervenant_id)
+    # on y ajoute les intervenants ayants fait les cours comme binomes
+    intervenants_ids += Cour.where("DATE(cours.debut) BETWEEN ? AND ?", début_période, fin_période).pluck(:intervenant_binome_id)
+    # on ajoute les intervenants ayants fait des vacations
+    intervenants_ids += Intervenant.where(id: Vacation.where("DATE(vacations.date) BETWEEN ? AND ?", début_période, fin_période).pluck(:intervenant_id))
+
     @intervenants = Intervenant
-                              .where(id: intervenants_ids.uniq)
-                              .where(status: 'CEV')
-                              .uniq
-
-    # on ajoute les vacations en fin de liste
-    @intervenants = @intervenants + Intervenant.where(id: Vacation.where("DATE(vacations.date) BETWEEN ? AND ?", début_période, fin_période).pluck(:intervenant_id).uniq)
-
+                          .where("id IN(?)", intervenants_ids.uniq)
+                          .where(status: 'CEV')
+                          .uniq
+    
     @dossier = Dossier.new
     3.times { @dossier.documents.build }
   end
