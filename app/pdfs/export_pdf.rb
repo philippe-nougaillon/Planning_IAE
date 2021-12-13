@@ -288,7 +288,7 @@ class ExportPdf
                                     exam.formation.nom_promo,
                                     'Cout',
                                     (exam.formation.apprentissage ? '101PAIE' : '102PAIE'),
-                                    exam.formation.code_analytique_avec_indice(exam),
+                                    exam.formation.code_analytique_avec_indice(exam).gsub('HCO','VAC'),
                                     durée 
                                 ]]
                         end
