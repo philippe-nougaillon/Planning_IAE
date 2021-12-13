@@ -1085,10 +1085,34 @@ class ToolsController < ApplicationController
     @end_date = params[:end_date]
     @cumuls = {}
     @examens = Cour
-                  .where(intervenant_id: 169)
+                  .where("intervenant_id = ? OR intervenant_binome_id = ?", 169, 169)
                   .where("commentaires like '%[%'")
                   .where("debut between ? and ?", @start_date, @end_date)
                   .includes(:formation)
+
+    respond_to do |format|
+      format.html
+  
+      format.xls do
+        book = Cour.generate_etats_services_xls(@cours, @intervenants, @start_date, @end_date)
+        file_contents = StringIO.new
+        book.write file_contents # => Now file_contents contains the rendered file output
+        filename = "Export_Cours.xls"
+        send_data file_contents.string.force_encoding('binary'), filename: filename 
+      end
+
+      format.pdf do
+        filename = "Vacations_administratives_#{Date.today.to_s}"
+        pdf = ExportPdf.new
+        pdf.export_vacations_administratives(@examens, @start_date, @end_date, params[:surveillant])
+
+        send_data pdf.render,
+                  filename: filename.concat('.pdf'),
+                  type: 'application/pdf',
+                  disposition: 'inline'	
+      end
+    end
+
   end
 
   def rechercher
