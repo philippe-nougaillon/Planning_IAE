@@ -249,4 +249,93 @@ class ExportPdf
         
     end
 
+    def export_vacations_administratives(examens, start_date, end_date, surveillant)
+        image "#{@image_path}/logo@100.png", :height => 40, :position => :center
+        move_down @margin_down
+
+        font "Helvetica"
+        text "Vacations administratives", size: 18
+
+        font_size 10
+        text "Arrêté du 27/09/2021"
+        move_down @margin_down
+
+        text surveillant
+        text "Surveillant Examen"
+        text "Du #{I18n.l(start_date.to_date)} au #{I18n.l(end_date.to_date)}"
+
+        move_down @margin_down
+        #text "Affaire suivie par : Thémoline"
+
+        # Tableau récap par code OTP
+        data = [ ['N°', 'Date', 'Formation', 'Centre de coût', 'Destination financière', 'EOTP', 'Total heures' ]]    
+
+        font_size 7
+ 
+        cumul_durée = 0
+        index = 0
+ 
+        examens.each do | exam |
+            exam.commentaires.split('[').each do |item|
+                unless item.blank? 
+                    surveillant_item = item.gsub(']', '').delete("\r\n\\")
+                    if surveillant_item == surveillant
+                        index += 1
+                        durée = exam.duree + 1 
+                        cumul_durée += durée
+                        data += [[ index,
+                                    I18n.l(exam.debut, format: :long),
+                                    exam.formation.nom_promo,
+                                    'Cout',
+                                    (exam.formation.apprentissage ? '101PAIE' : '102PAIE'),
+                                    exam.formation.code_analytique_avec_indice(exam).gsub('HCO','VAC'),
+                                    durée 
+                                ]]
+                        end
+                end
+            end
+        end
+
+        data += [[nil, nil,nil, nil,nil, "Total heures :", "<b>#{ cumul_durée }</b>" ]]
+
+        taux_horaire = 10.48
+        data += [[nil, nil,
+                    "Taux horaire en vigueur au 01/01/2021 :", 
+                    "#{ taux_horaire } €",
+                    nil,
+                    "<b>Total brut :</b>",
+                    "<b>#{ cumul_durée * taux_horaire } €</b>"]]
+
+        # Corps de table
+        table data, 
+            header: true, 
+            column_widths: {0 => 20, 1 => 120, 2=> 150,5 => 100, 6 => 40},
+            row_colors: ["F0F0F0", "FFFFFF"] do 
+                column(6).style(:align => :right)
+                cells.style(inline_format: true, border_width: 1, border_color: 'C0C0C0')
+            end
+    
+        move_down @margin_down
+
+        # FOOTER
+        font "Helvetica"
+        font_size 10
+
+        text "Fait à Paris le #{I18n.l(Date.today)}", style: :italic
+        move_down @margin_down
+
+        y_position = cursor
+        bounding_box([0, y_position], :width => 250, :height => 100) do
+            text "Eric LAMARQUE"
+            text "Directeur de l'IAE de Paris", size: 8
+        end
+        bounding_box([250, y_position], :width => 250) do
+            text "Rédhallah BETTAHAR"
+            text "Responsable de service", size: 8 
+        end    
+
+    end
+
+
+
 end

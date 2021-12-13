@@ -60,7 +60,7 @@
           <% end %>  
 
           <% formation = Formation.unscoped.find(meeting.formation_id) %>
-          <div class="shadow-sm p-2 mb-2 bg-white" style="height:<%= 80 + (10 * meeting.duree) %>px; border-left:6px; border-left-style:solid; border-left-color:<%= formation.color %>; padding-left:5px;">
+          <div class="shadow p-2 mb-2 bg-white" style="height:<%= 100 + (10 * meeting.duree) %>px; border-left:6px; border-left-style:solid; border-left-color:<%= formation.color %>; padding-left:5px;">
             <%= link_to meeting do %>
               <b><%= l(meeting.debut, format: :heures_min) %></b>  
               - <%= l(meeting.fin, format: :heures_min) %>
@@ -74,6 +74,8 @@
                 <%= link_to_if user_signed_in?, formation.nom, meeting, class:"text-dark" %>
               <% end %>
             </b>
+            <br>
+            <small><%= meeting.intervenant.nom_prenom %></small>
 
           </div>
         <% end %>
