@@ -1083,6 +1083,7 @@ class ToolsController < ApplicationController
 
     @start_date = params[:start_date]
     @end_date = params[:end_date]
+    surveillant = params[:surveillant]
     @cumuls = {}
     @examens = Cour
                   .where("intervenant_id = ? OR intervenant_binome_id = ?", 169, 169)
@@ -1102,9 +1103,9 @@ class ToolsController < ApplicationController
       end
 
       format.pdf do
-        filename = "Vacations_administratives_#{Date.today.to_s}"
+        filename = "Vacations_administratives_#{ surveillant }_du_#{ @start_date }_au_#{ @end_date }"
         pdf = ExportPdf.new
-        pdf.export_vacations_administratives(@examens, @start_date, @end_date, params[:surveillant])
+        pdf.export_vacations_administratives(@examens, @start_date, @end_date, surveillant)
 
         send_data pdf.render,
                   filename: filename.concat('.pdf'),
