@@ -2,6 +2,9 @@
 
 class User < ApplicationRecord
   include Discard::Model
+
+  include PgSearch::Model
+	multisearchable against: [:nom, :email]
   
   audited
   

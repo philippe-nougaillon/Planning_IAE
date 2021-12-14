@@ -1131,12 +1131,17 @@ class ToolsController < ApplicationController
       unless params[:search_intervenants]
         @results = @results.where.not(searchable_type: 'Intervenant')
       end
+      unless params[:search_users]
+        @results = @results.where.not(searchable_type: 'User')
+      end
+
       @results = @results.paginate(page: params[:page])
     else
       params[:search_cours] ||= '1'
       params[:search_formations] ||= '1'
       params[:search_ue] ||= '1'
       params[:search_intervenants] ||= '1'
+      params[:search_users] ||= '1'
     end
   end
 

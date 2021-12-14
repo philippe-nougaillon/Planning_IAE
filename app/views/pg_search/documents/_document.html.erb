@@ -13,6 +13,8 @@
                 <%= fa_icon 'chalkboard-teacher', title: "Intervenant" %>
             <% when 'Unite' %>
                 <%= fa_icon 'award', title: "Unité d'enseignement" %>
+            <% when 'User' %>
+                <%= fa_icon 'user', title: "Utilisateur" %>
         <% end %>
         <%= link_to result.content, 
                             url_for(controller: result.searchable_type.pluralize.downcase, 
