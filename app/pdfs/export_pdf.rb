@@ -286,8 +286,8 @@ class ExportPdf
                         data += [[ index,
                                     I18n.l(exam.debut, format: :long),
                                     exam.formation.nom_promo,
-                                    'Cout',
-                                    (exam.formation.apprentissage ? '101PAIE' : '102PAIE'),
+                                    '7322GRH',
+                                    (exam.formation.diplome.upcase == 'LICENCE' ? '101PAIE' : '102PAIE'),
                                     exam.formation.code_analytique_avec_indice(exam).gsub('HCO','VAC'),
                                     durée 
                                 ]]
@@ -300,7 +300,7 @@ class ExportPdf
 
         taux_horaire = 10.48
         data += [[nil, nil,
-                    "Taux horaire en vigueur au 01/01/2021 :", 
+                    "Taux horaire en vigueur au 01/10/2021 :", 
                     "#{ taux_horaire } €",
                     nil,
                     "<b>Total brut :</b>",

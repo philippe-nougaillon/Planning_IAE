@@ -15,21 +15,25 @@
             </span>
           </div>
         </div>  
-        <div class="col-sm-1">
+        <div class="col-lg-1">
           Cours<br>
           <%= check_box_tag :search_cours, '1', params[:search_cours] == '1' %> 
         </div>    
-        <div class="col-sm-1">
+        <div class="col-lg-1">
           Formations
           <%= check_box_tag :search_formations, '1', params[:search_formations] == '1' %>
         </div>    
-        <div class="col-sm-1">
+        <div class="col-lg-1">
           UE<br>
           <%= check_box_tag :search_ue, '1', params[:search_ue] == '1' %>
         </div>    
-        <div class="col-sm-1">
+        <div class="col-lg-1">
           Intervenants
           <%= check_box_tag :search_intervenants, '1', params[:search_intervenants] == '1' %>
+        </div>    
+        <div class="col-lg-1">
+          Utilisateurs
+          <%= check_box_tag :search_users, '1', params[:search_users] == '1' %>
         </div>    
       </div>
     </div>  

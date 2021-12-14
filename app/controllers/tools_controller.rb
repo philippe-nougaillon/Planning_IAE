@@ -1083,6 +1083,7 @@ class ToolsController < ApplicationController
 
     @start_date = params[:start_date]
     @end_date = params[:end_date]
+    surveillant = params[:surveillant]
     @cumuls = {}
     @examens = Cour
                   .where("intervenant_id = ? OR intervenant_binome_id = ?", 169, 169)
@@ -1102,9 +1103,9 @@ class ToolsController < ApplicationController
       end
 
       format.pdf do
-        filename = "Vacations_administratives_#{Date.today.to_s}"
+        filename = "Vacations_administratives_#{ surveillant }_du_#{ @start_date }_au_#{ @end_date }"
         pdf = ExportPdf.new
-        pdf.export_vacations_administratives(@examens, @start_date, @end_date, params[:surveillant])
+        pdf.export_vacations_administratives(@examens, @start_date, @end_date, surveillant)
 
         send_data pdf.render,
                   filename: filename.concat('.pdf'),
@@ -1131,12 +1132,17 @@ class ToolsController < ApplicationController
       unless params[:search_intervenants]
         @results = @results.where.not(searchable_type: 'Intervenant')
       end
+      unless params[:search_users]
+        @results = @results.where.not(searchable_type: 'User')
+      end
+
       @results = @results.paginate(page: params[:page])
     else
       params[:search_cours] ||= '1'
       params[:search_formations] ||= '1'
       params[:search_ue] ||= '1'
       params[:search_intervenants] ||= '1'
+      params[:search_users] ||= '1'
     end
   end
 
