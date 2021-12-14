@@ -55,7 +55,7 @@
                 </span>             
             </h5>
 
-            <% if cours_formation.nbr_etudiants > cours.salle.places && user_signed_in? %>
+            <% if cours_formation.nbr_etudiants > cours.salle.places && cours.salle.bloc != 'Z' && user_signed_in? %>
                 <i title="Manque <%= cours_formation.nbr_etudiants - cours.salle.places %> place.s">
                     <%= fa_icon 'exclamation-circle' %>
                 </i>
