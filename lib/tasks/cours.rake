@@ -38,7 +38,7 @@ namespace :cours do
     when 'Intervenant'
       intervenants = Intervenant.where(id: envoi_specs.cible_id)
     when 'Formation'
-      intervenants = Formation.find(envoi_specs.cible_id).intervenants
+      #intervenants = Formation.find(envoi_specs.cible_id).intervenants
     else
       intervenants = Intervenant.where(doublon: false).or(Intervenant.where(doublon: nil))
     end
@@ -73,9 +73,12 @@ namespace :cours do
 
         envoyes += 1 if envoyer_liste_cours_a_intervenant(args.draft, start_day, end_day, intervenant, cours, liste_des_gestionnaires, envoi_specs.id) 
 
-        # faire une pause pour ne pas dépasser la limite de 100mails/heure
         puts "Pause !"
-        sleep 40
+        # faire une grande pause de 40 secondes pour ne pas dépasser la limite de 100mails/heure imposée par la période de probation
+        # sleep 40
+
+        # Faire une petite pause pour ne pas être pris pour un spammeur
+        sleep 7
 
         puts "#-" * 50
       end 
