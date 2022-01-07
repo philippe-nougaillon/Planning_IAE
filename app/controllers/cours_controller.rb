@@ -219,15 +219,14 @@ class CoursController < ApplicationController
       @planning_date = @now 
     end
 
-    #@planning_date = DateTime.now + 2.hours
+    # @planning_date = DateTime.now + 5.hours
 
     @tous_les_cours = Cour.where(etat: Cour.etats.values_at(:planifié, :confirmé))
                           .where("DATE(fin) = ? AND fin > ?", @planning_date.to_date, @planning_date.to_s(:db))
                           .reorder(:debut, :fin)
                           .pluck(:id)
 
-    @cours_count = @tous_les_cours.count
-    @cours = []
+    @cours_count = @tous_les_cours.size
 
     unless @cours_count.zero?
       #if request.variant.include?(:desktop)
@@ -246,7 +245,6 @@ class CoursController < ApplicationController
         end
 
         #@cours = @tous_les_cours.offset(per_page * @current_page_slide).limit(per_page)
-
         #@cours = @tous_les_cours.paginate(page: session[:page_slide], per_page: per_page)
 
         @cours = @tous_les_cours.slice(per_page * @current_page_slide, per_page)

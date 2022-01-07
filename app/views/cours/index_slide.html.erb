@@ -10,7 +10,7 @@
     </thead>
 
     <tbody>
-      <% if @cours.any? %>
+      <% if @cours %>
         <% @cours.each do | cours_id | %>
           <% cours = Cour.find(cours_id) %>
           <tr class="shadow-sm" style="height:110px">
