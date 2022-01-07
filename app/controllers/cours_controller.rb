@@ -224,12 +224,12 @@ class CoursController < ApplicationController
                  .includes(:formation, :intervenant, :salle) 
                  .order(:debut)
 
-    @cours_count = @cours.size
+    @cours_count = @cours.count
 
     unless @cours_count.zero?
       if request.variant.include?(:desktop) and !params[:planning_date]
-        # effectuer une rotation de x pages de 6 cours 
-        per_page = 8
+        # effectuer une rotation de x pages de 7 cours 
+        per_page = 7
         @max_page_slide = (@cours_count / per_page)
         @max_page_slide += 1 unless @cours_count.%(per_page).zero?
 
