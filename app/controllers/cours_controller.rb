@@ -227,6 +227,7 @@ class CoursController < ApplicationController
                           .pluck(:id)
 
     @cours_count = @tous_les_cours.count
+    @cours = []
 
     unless @cours_count.zero?
       #if request.variant.include?(:desktop)
