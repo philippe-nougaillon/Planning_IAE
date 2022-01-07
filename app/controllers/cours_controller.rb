@@ -219,14 +219,12 @@ class CoursController < ApplicationController
       @planning_date = @now 
     end
 
-    #@planning_date = DateTime.now - 6.hours
+    #@planning_date = DateTime.now + 2.hours
 
     @tous_les_cours = Cour.where(etat: Cour.etats.values_at(:planifié, :confirmé))
                           .where("DATE(fin) = ? AND fin > ?", @planning_date.to_date, @planning_date.to_s(:db))
                           .reorder(:debut, :fin)
                           .pluck(:id)
-
-    #raise
 
     @cours_count = @tous_les_cours.count
 
@@ -234,7 +232,7 @@ class CoursController < ApplicationController
       #if request.variant.include?(:desktop)
         # effectuer une rotation de x pages de 7 cours 
 
-        per_page = 8
+        per_page = 7
         @max_page_slide = (@cours_count / per_page)
         #@max_page_slide += 1 unless @cours_count.%(per_page).zero?
 
