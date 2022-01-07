@@ -219,29 +219,40 @@ class CoursController < ApplicationController
       @planning_date = @now 
     end
 
-    @cours = Cour.where(etat: Cour.etats.values_at(:planifié, :confirmé))
-                 .where("DATE(fin) = ? AND fin > ?", @planning_date.to_date, @planning_date.to_s(:db))
-                 .includes(:formation, :intervenant, :salle) 
-                 .order(:debut)
+    #@planning_date = DateTime.now - 6.hours
 
-    @cours_count = @cours.count
+    @tous_les_cours = Cour.where(etat: Cour.etats.values_at(:planifié, :confirmé))
+                          .where("DATE(fin) = ? AND fin > ?", @planning_date.to_date, @planning_date.to_s(:db))
+                          .reorder(:debut, :fin)
+                          .pluck(:id)
+
+    #raise
+
+    @cours_count = @tous_les_cours.count
 
     unless @cours_count.zero?
-      if request.variant.include?(:desktop) and !params[:planning_date]
+      #if request.variant.include?(:desktop)
         # effectuer une rotation de x pages de 7 cours 
-        per_page = 7
+
+        per_page = 8
         @max_page_slide = (@cours_count / per_page)
-        @max_page_slide += 1 unless @cours_count.%(per_page).zero?
+        #@max_page_slide += 1 unless @cours_count.%(per_page).zero?
 
-        current_page_slide = session[:page_slide].to_i
+        @current_page_slide = session[:page_slide].to_i
 
-        if current_page_slide < @max_page_slide
-          session[:page_slide] = current_page_slide + 1
+        if @current_page_slide < @max_page_slide
+          session[:page_slide] = @current_page_slide + 1
         else
-          session[:page_slide] = 1
+          session[:page_slide] = 0
         end
-        @cours = @cours.paginate(page: session[:page_slide], per_page: per_page)
-      end
+
+        #@cours = @tous_les_cours.offset(per_page * @current_page_slide).limit(per_page)
+
+        #@cours = @tous_les_cours.paginate(page: session[:page_slide], per_page: per_page)
+
+        @cours = @tous_les_cours.slice(per_page * @current_page_slide, per_page)
+
+      #end
     else
       # Affiche un papier peint si pas de cours à afficher
       require 'net/http'
