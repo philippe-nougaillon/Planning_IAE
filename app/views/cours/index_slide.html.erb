@@ -90,3 +90,9 @@
   </h1>
 <% end %>
 <br><br>
+
+<script type="text/javascript">    
+    setInterval(function() {
+        window.location.reload();
+    }, <%= @cours_count.zero? ? 60*60000 : 0.2*60000 %>); 
+</script>
