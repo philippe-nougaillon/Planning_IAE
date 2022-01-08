@@ -19,7 +19,7 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-expand-sm fixed-top shadow-sm p-4 mb-4 bg-white">
+    <nav class="navbar navbar-expand-sm shadow-sm p-4 mb-4 bg-white">
     
       <div class="text-center w-100">
         <%= link_to image_tag('logo_iae@195.png', alt: 'logo IAE'), root_url, class: 'navbar-brand float-left', style: 'width: 0px;' %>
@@ -29,9 +29,8 @@
       </div>
 
     </nav>
-    <br><br><br>
 
-    <div class="container-fluid pt-5">
+    <div class="container-fluid">
       <%= yield %>
     </div>
   </body>

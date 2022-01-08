@@ -8,19 +8,80 @@
         <th>Salle</th>
       </tr>
     </thead>
+
     <tbody>
-      <%= render partial: 'slide', 
-                  collection: @cours, 
-                  as: :cours 
-      %>
+      <% if @cours %>
+        <% @cours.each do | cours_id | %>
+          <% cours = Cour.find(cours_id) %>
+          <tr class="shadow-sm" style="height:110px">
+
+            <td class="align-middle">
+              <h3 class="text-dark">
+                <%= l(cours.debut, format: :heures_min) %>
+                <small>
+                  - <%= l(cours.fin, format: :heures_min) %>
+                </small>
+              </h3>
+
+              <div class="progress">
+                <div class="progress-bar bg-dark" 
+                    style="opacity:0.3; width: <%= cours.progress_bar_pct2 %>%;">
+                </div>
+              </div>
+            </td>
+            
+            <td>
+              <h3 class="text-primary">
+                <span style="background-color:<%= cours.try(:formation).try(:color) %>;padding-left: 15px;"></span>
+                
+                <span style="margin-left: 15px;">
+                  <%= cours.try(:formation).try(:nom_promo) %>
+                </span>
+                
+                <br>
+                
+                <span style="background-color:<%= cours.try(:formation).try(:color) %>;padding-left: 15px;"></span>
+                
+                <br>
+
+                <span style="background-color:<%= cours.try(:formation).try(:color) %>;padding-left: 15px;"></span>
+
+                <span class="text-secondary" style="margin-left: 15px;">
+                  <i><%= cours.nom_ou_ue %></i>
+                </span>
+
+              </h3>
+            </td>
+
+            <td class="align-middle">
+              <h3 class="text-secondary">
+                <%= cours.try(:intervenant).try(:nom_prenom) %>
+                <% if cours.intervenant_binome_id %>
+                    / <%= cours.try(:intervenant_binome).try(:nom_prenom) %>
+                <% end %>
+              </h3>
+            </td>
+            
+            <td class="align-middle" style="width:150px">
+              <span class="btn btn-lg btn-<%= cours.style %>">
+                <h3><%= cours.try(:salle).try(:nom) %></h3>
+              </span>
+            </td>
+
+          </tr>
+        <% end %>
+      <% end %>
     </tbody>
   </table>
 
   <span class="navbar-text">
+    <%= @planning_date.to_s(:db) %> 
+    |
     <% if @max_page_slide %> 
-      Page <%= session[:page_slide] %> sur <%= @max_page_slide %>
+      Page <%= @current_page_slide + 1 %> sur <%= @max_page_slide + 1 %>
     <% end %>
     | <%= @cours_count %> Cours au total
+
   </span>
 
 <% else %>

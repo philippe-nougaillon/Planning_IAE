@@ -219,29 +219,32 @@ class CoursController < ApplicationController
       @planning_date = @now 
     end
 
-    @cours = Cour.where(etat: Cour.etats.values_at(:planifié, :confirmé))
-                 .where("DATE(fin) = ? AND fin > ?", @planning_date.to_date, @planning_date.to_s(:db))
-                 .includes(:formation, :intervenant, :salle) 
-                 .order(:debut)
+    @tous_les_cours = Cour.where(etat: Cour.etats.values_at(:planifié, :confirmé))
+                          .where("DATE(fin) = ? AND fin > ?", @planning_date.to_date, @planning_date.to_s(:db))
+                          .reorder(:debut, :fin)
+                          .pluck(:id)
 
-    @cours_count = @cours.size
+    @cours_count = @tous_les_cours.size
 
     unless @cours_count.zero?
-      if request.variant.include?(:desktop) and !params[:planning_date]
-        # effectuer une rotation de x pages de 6 cours 
-        per_page = 8
-        @max_page_slide = (@cours_count / per_page)
+      #if request.variant.include?(:desktop)
+        # effectuer une rotation de x pages de 7 cours 
+
+        per_page = 7
+        @max_page_slide = (@cours_count / per_page) - 1
         @max_page_slide += 1 unless @cours_count.%(per_page).zero?
 
-        current_page_slide = session[:page_slide].to_i
+        @current_page_slide = session[:page_slide].to_i
 
-        if current_page_slide < @max_page_slide
-          session[:page_slide] = current_page_slide + 1
+        if @current_page_slide < @max_page_slide
+          session[:page_slide] = @current_page_slide + 1
         else
-          session[:page_slide] = 1
+          session[:page_slide] = 0
         end
-        @cours = @cours.paginate(page: session[:page_slide], per_page: per_page)
-      end
+
+        @cours = @tous_les_cours.slice(per_page * @current_page_slide, per_page)
+
+      #end
     else
       # Affiche un papier peint si pas de cours à afficher
       require 'net/http'
