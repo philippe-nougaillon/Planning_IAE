@@ -60,7 +60,7 @@
           <% end %>  
 
           <% formation = Formation.unscoped.find(meeting.formation_id) %>
-          <div class="shadow p-2 mb-2 bg-white" style="height:<%= 100 + (10 * meeting.duree) %>px; border-left:6px; border-left-style:solid; border-left-color:<%= formation.color %>; padding-left:5px;">
+          <div class="shadow p-2 mb-2 bg-white" style="height:<%= 120 + (10 * meeting.duree) %>px; border-left:6px; border-left-style:solid; border-left-color:<%= formation.color %>; padding-left:5px;">
             <%= link_to meeting do %>
               <b><%= l(meeting.debut, format: :heures_min) %></b>  
               - <%= l(meeting.fin, format: :heures_min) %>
@@ -82,6 +82,12 @@
             <% if formation.nbr_etudiants > meeting.salle.places && meeting.salle.bloc != 'Z' && user_signed_in? %>
               <i title="Manque <%= formation.nbr_etudiants - meeting.salle.places %> place.s">
                 <%= fa_icon 'exclamation-circle' %>
+              </i>
+            <% end %>
+
+             <% if user_signed_in? && !meeting.commentaires.blank? %>
+              <i title="<%= meeting.commentaires %>" >
+                <%= fa_icon 'comment-dots' %>         
               </i>
             <% end %>
 
