@@ -12,17 +12,15 @@
                     include_blank:true, onchange:'this.form.submit()' %>
   </div>
 
-  <%= label_tag "Intervenant" %>    
-  <div class="input-group">
+  <div class="form-group">
+    <%= label_tag "Intervenant" %>    
     <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
-                    class: "select2", 
-                    include_blank:true, onchange: 'this.form.submit()' %>
-
-    <div class="input-group-append">
-      <%= submit_tag 'Filtrer', class: "btn btn-sm btn-success" %>
-      <%= submit_tag 'RàZ', class: "btn btn-sm btn-light" %>
-    </div>
+                      class: "select2", 
+                      include_blank:true, onchange: 'this.form.submit()' %>
   </div>
+
+  <%= submit_tag 'Filtrer', class: "btn btn-success" %>
+  <%= submit_tag 'R à Z', class: "btn btn-light" %>
 <% end %>
 
 <% current_date = '' %>
