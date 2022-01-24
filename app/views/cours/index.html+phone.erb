@@ -8,19 +8,25 @@
   <div class="form-group">
     <%= label_tag "Formation" %>    
     <%= select_tag :formation, options_for_select(@formations, params[:formation]), 
-                    class: "select2", 
-                    include_blank:true, onchange:'this.form.submit()' %>
+                    class: "select2",
+                    include_blank: true, onchange: 'this.form.submit()' %>
   </div>
 
   <div class="form-group">
     <%= label_tag "Intervenant" %>    
     <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
-                      class: "select2", 
-                      include_blank:true, onchange: 'this.form.submit()' %>
+                      class: "select2",
+                      include_blank: true, onchange:'this.form.submit()' %>
   </div>
 
-  <%= submit_tag 'Filtrer', class: "btn btn-success" %>
-  <%= submit_tag 'RàZ', class: "btn btn-light" %>
+  <%= button_tag name: 'commit', value: 'Filtrer', class: "btn btn-success" do %>
+    <i class="fas fa-filter"></i> 
+    Filtrer
+  <% end %>
+  <%= button_tag name: 'commit', value: 'RàZ', class: "btn btn-light" do %>
+    <i class="fas fa-times"></i> 
+    Voir tous
+  <% end %>
 <% end %>
 
 <% current_date = '' %>
