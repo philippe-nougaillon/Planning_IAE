@@ -40,7 +40,8 @@ namespace :cours do
     when 'Formation'
       #intervenants = Formation.find(envoi_specs.cible_id).intervenants
     else
-      intervenants = Intervenant.where(doublon: false).or(Intervenant.where(doublon: nil))
+      # TODO: Enlever le filtre nom > 'O'
+      intervenants = Intervenant.where("intervenants.nom > 'O%'").where(doublon: false).or(Intervenant.where(doublon: nil))
     end
 
     intervenants.each do | intervenant |
