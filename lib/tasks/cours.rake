@@ -75,10 +75,10 @@ namespace :cours do
 
         puts "Pause !"
         # faire une grande pause de 40 secondes pour ne pas dépasser la limite de 100mails/heure imposée par la période de probation
-        # sleep 40
+        sleep 37
 
         # Faire une petite pause pour ne pas être pris pour un spammeur
-        sleep 7
+        #sleep 7
 
         puts "#-" * 50
       end 
