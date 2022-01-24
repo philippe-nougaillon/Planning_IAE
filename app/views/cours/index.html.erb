@@ -33,10 +33,13 @@
           <%= label_tag "Intervenant" %>    
           <div class="input-group">
             <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
-                            class: "form-control form-control-sm select2", 
+                            class: "form-control form-control-sm select2-sm", 
                             include_blank:true, onchange: 'this.form.submit()' %>
             <span class="input-group-btn">
-              <%= submit_tag 'RàZ', class:"btn btn-sm btn-default", title: "Remise à zéro des filtres" %>
+              <%= button_tag name: 'commit', value: 'RàZ', class: "btn btn-sm btn-light ml-1", title: "Remise à zéro des filtres" do %>
+                <i class="fas fa-times"></i> 
+                RàZ
+              <% end %>
             </span>
           </div>
         </div>
