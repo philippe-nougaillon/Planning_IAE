@@ -5,56 +5,97 @@
             Cours
             </td>
             <td>
-                <%= l(Cour.find(result.searchable_id).debut.to_date, format: :default) %>
-                <span style="background-color:<%= Formation.unscoped.find(Cour.find(result.searchable_id).formation_id).color %>;padding-left: 5px;margin-right: 5px;"></span>
-                <%= Formation.unscoped.find(Cour.find(result.searchable_id).formation_id).nom %>
-                |
-                <%= Cour.find(result.searchable_id).intervenant.nom_prenom %>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm">
+                            <%= l(Cour.find(result.searchable_id).debut.to_date, format: :default) %>
+                        </div>
+                        <div class="col-sm">
+                            <span style="background-color:<%= Formation.unscoped.find(Cour.find(result.searchable_id).formation_id).color %>;padding-left: 5px;margin-right: 5px;"></span>
+                            <%= Formation.unscoped.find(Cour.find(result.searchable_id).formation_id).nom %>
+                        </div>
+                        <div class="col-sm">
+                            <%= Cour.find(result.searchable_id).intervenant.nom_prenom %>
+                        </div>
+                    </div>
+                </div>
             </td>
             <% when 'Formation' %>
                 <%= fa_icon 'briefcase', title: "Formation" %>
                 Formation
                 </td>
                 <td>
-                    <span style="background-color:<%= Formation.unscoped.find(result.searchable_id).color %>;padding-left: 5px;margin-right: 5px;"></span>
-                    <%= Formation.unscoped.find(result.searchable_id).nom %>
-                    |
-                    <%= Formation.unscoped.find(result.searchable_id).domaine %>
-                    |
-                    <%= Formation.unscoped.find(result.searchable_id).promo %>
-                    |
-                    <%= Formation.unscoped.find(result.searchable_id).diplome %>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm">
+                                <span style="background-color:<%= Formation.unscoped.find(result.searchable_id).color %>;padding-left: 5px;margin-right: 5px;"></span>
+                                <%= Formation.unscoped.find(result.searchable_id).nom %>
+                            </div>
+                            <div class="col-sm">
+                                <%= Formation.unscoped.find(result.searchable_id).domaine %>
+                            </div>
+                            <div class="col-sm">
+                                <%= Formation.unscoped.find(result.searchable_id).promo %>
+                            </div>
+                            <div class="col-sm">
+                                <%= Formation.unscoped.find(result.searchable_id).diplome %>
+                            </div>
+                        </div>
+                    </div>
                 </td>
             <% when 'Intervenant' %>
                 <%= fa_icon 'chalkboard-teacher', title: "Intervenant" %>
                 Intervenant
                 </td>
                 <td>
-                    <%= Intervenant.find(result.searchable_id).nom_prenom %>
-                    |
-                    <%= Intervenant.find(result.searchable_id).email %>
-                    |
-                    <%= Intervenant.find(result.searchable_id).status %>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm">
+                                <%= Intervenant.find(result.searchable_id).nom_prenom %>
+                            </div>
+                            <div class="col-sm">
+                                <%= Intervenant.find(result.searchable_id).email %>
+                            </div>
+                            <div class="col-sm">
+                                <%= Intervenant.find(result.searchable_id).status %>
+                            </div>
+                        </div>
+                    </div>
                 </td>
             <% when 'Unite' %>
                 <%= fa_icon 'award', title: "Unité d'enseignement" %>
                 U.E.
                 </td>
                 <td>
-                    <%= Unite.find(result.searchable_id).num %>
-                    |
-                    <%= Unite.find(result.searchable_id).nom %>
-                    |
-                    <%= Formation.unscoped.find(Unite.find(result.searchable_id).formation_id).nom %>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm">
+                                <%= Unite.find(result.searchable_id).num %>
+                            </div>
+                            <div class="col-sm">
+                                <%= Unite.find(result.searchable_id).nom %>
+                            </div>
+                            <div class="col-sm">
+                                <%= Formation.unscoped.find(Unite.find(result.searchable_id).formation_id).nom %>
+                            </div>
+                        </div>
+                    </div>
                 </td>
             <% when 'User' %>
                 <%= fa_icon 'user', title: "Utilisateur" %>
                 Utilisateur
                 </td>
                 <td>
-                    <%= User.find(result.searchable_id).nom_et_prénom %>
-                    |
-                    <%= User.find(result.searchable_id).email %>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm">
+                                <%= User.find(result.searchable_id).nom_et_prénom %>
+                            </div>
+                            <div class="col-sm">
+                                <%= User.find(result.searchable_id).email %>
+                            </div>
+                        </div>
+                    </div>
                 </td>
         <% end %>
     <td style="white-space: nowrap;">
@@ -65,9 +106,9 @@
     </td>
     <td>
         <%= link_to fa_icon('eye'),
-                                        url_for(controller: result.searchable_type.pluralize.downcase, 
-                                                action: 'show', 
-                                                id: result.searchable_id),
-                                                target: '_blank' %>
+                    url_for(controller: result.searchable_type.pluralize.downcase, 
+                            action: 'show', 
+                            id: result.searchable_id),
+                            target: '_blank' %>
     </td>
 </tr>
