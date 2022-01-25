@@ -81,12 +81,6 @@
               </li>  
             <% end %>
 
-            <li class="nav-item">
-              <%= link_to tools_rechercher_path, class: 'nav-link text-dark pl-3', title: "Rechercher" do %>
-                <%= fa_icon 'search' %>
-              <% end %>
-            </li>
-
           <% end %>
         </ul>
 
@@ -95,6 +89,8 @@
             <span class="nav-link">
               <%= current_user.username %>
             </span>
+            
+            <%= navbar_nav_item('chercher', 'search', tools_rechercher_path) %>
             <%= navbar_nav_item('outils', 'wrench', tools_index_path) if (current_user.admin? || current_user.reserver?) %>
             <%= navbar_nav_item('guide', 'info-circle', guide_index_path) %>
             
