@@ -5,97 +5,57 @@
             Cours
             </td>
             <td>
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm">
-                            <%= l(Cour.find(result.searchable_id).debut.to_date, format: :default) %>
-                        </div>
-                        <div class="col-sm">
-                            <span style="background-color:<%= Formation.unscoped.find(Cour.find(result.searchable_id).formation_id).color %>;padding-left: 5px;margin-right: 5px;"></span>
-                            <%= Formation.unscoped.find(Cour.find(result.searchable_id).formation_id).nom %>
-                        </div>
-                        <div class="col-sm">
-                            <%= Cour.find(result.searchable_id).intervenant.nom_prenom %>
-                        </div>
-                    </div>
-                </div>
+                <%= l(Cour.find(result.searchable_id).debut.to_date, format: :default) %>
+                <p class="mx-3 d-inline">|</p>
+                <span style="background-color:<%= Formation.unscoped.find(Cour.find(result.searchable_id).formation_id).color %>;padding-left: 5px;margin-right: 5px;"></span>
+                <%= Formation.unscoped.find(Cour.find(result.searchable_id).formation_id).nom %>
+                <p class="mx-3 d-inline">|</p>
+                <%= Cour.find(result.searchable_id).intervenant.nom_prenom %>
             </td>
             <% when 'Formation' %>
                 <%= fa_icon 'briefcase', title: "Formation" %>
                 Formation
                 </td>
                 <td>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-sm">
-                                <span style="background-color:<%= Formation.unscoped.find(result.searchable_id).color %>;padding-left: 5px;margin-right: 5px;"></span>
-                                <%= Formation.unscoped.find(result.searchable_id).nom %>
-                            </div>
-                            <div class="col-sm">
-                                <%= Formation.unscoped.find(result.searchable_id).domaine %>
-                            </div>
-                            <div class="col-sm">
-                                <%= Formation.unscoped.find(result.searchable_id).promo %>
-                            </div>
-                            <div class="col-sm">
-                                <%= Formation.unscoped.find(result.searchable_id).diplome %>
-                            </div>
-                        </div>
-                    </div>
+                    <span style="background-color:<%= Formation.unscoped.find(result.searchable_id).color %>;padding-left: 5px;margin-right: 5px;"></span>
+                    <%= Formation.unscoped.find(result.searchable_id).nom %>
+                    <p class="mx-3 d-inline">|</p> 
+                    <%= Formation.unscoped.find(result.searchable_id).domaine %>
+                    <p class="mx-3 d-inline">|</p>  
+                    <%= Formation.unscoped.find(result.searchable_id).promo %>
+                    <p class="mx-3 d-inline">|</p>   
+                    <%= Formation.unscoped.find(result.searchable_id).diplome %>
                 </td>
             <% when 'Intervenant' %>
                 <%= fa_icon 'chalkboard-teacher', title: "Intervenant" %>
                 Intervenant
                 </td>
                 <td>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-sm">
-                                <%= Intervenant.find(result.searchable_id).nom_prenom %>
-                            </div>
-                            <div class="col-sm">
-                                <%= Intervenant.find(result.searchable_id).email %>
-                            </div>
-                            <div class="col-sm">
-                                <%= Intervenant.find(result.searchable_id).status %>
-                            </div>
-                        </div>
-                    </div>
+                    <%= Intervenant.find(result.searchable_id).nom_prenom %>
+                    <p class="mx-3 d-inline">|</p>
+                    <%= Intervenant.find(result.searchable_id).email %>
+                    <p class="mx-3 d-inline">|</p>
+                    <%= Intervenant.find(result.searchable_id).status %>
                 </td>
             <% when 'Unite' %>
                 <%= fa_icon 'award', title: "Unité d'enseignement" %>
                 U.E.
                 </td>
                 <td>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-sm">
-                                <%= Unite.find(result.searchable_id).num %>
-                            </div>
-                            <div class="col-sm">
-                                <%= Unite.find(result.searchable_id).nom %>
-                            </div>
-                            <div class="col-sm">
-                                <%= Formation.unscoped.find(Unite.find(result.searchable_id).formation_id).nom %>
-                            </div>
-                        </div>
-                    </div>
+                    <%= Unite.find(result.searchable_id).num %>
+                    <p class="mx-3 d-inline">|</p>
+                    <%= Unite.find(result.searchable_id).nom %>
+                    <p class="mx-3 d-inline">|</p>
+                    <%= Formation.unscoped.find(Unite.find(result.searchable_id).formation_id).nom %>
                 </td>
             <% when 'User' %>
                 <%= fa_icon 'user', title: "Utilisateur" %>
                 Utilisateur
                 </td>
                 <td>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-sm">
-                                <%= User.find(result.searchable_id).nom_et_prénom %>
-                            </div>
-                            <div class="col-sm">
-                                <%= User.find(result.searchable_id).email %>
-                            </div>
-                        </div>
-                    </div>
+                    <%= User.find(result.searchable_id).nom_et_prénom %>
+                    <p class="mx-3 d-inline">|</p>
+                    <%= User.find(result.searchable_id).email %>
                 </td>
         <% end %>
     <td style="white-space: nowrap;">
