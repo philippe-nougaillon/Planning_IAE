@@ -4,6 +4,20 @@ class InvitsController < ApplicationController
   # GET /invits or /invits.json
   def index
     @invits = Invit.all
+
+    unless params[:formation].blank?
+      @invits = @invits.joins(:formation).where("formations.id = ?", params[:formation])
+    end
+
+    unless params[:intervenant].blank?
+      @invits = @invits.where(intervenant_id: params[:intervenant])
+    end
+   
+    unless params[:workflow_state].blank?
+      @invits = @invits.where("invits.workflow_state = ?", params[:workflow_state].to_s.downcase)
+    end
+
+    @invits = @invits.paginate(page: params[:page], per_page: 20)
   end
 
   # GET /invits/1 or /invits/1.json

@@ -7,6 +7,11 @@ class Invit < ApplicationRecord
   belongs_to :cour
   belongs_to :intervenant
 
+  has_one :formation, through: :cour
+  
+  default_scope { order('updated_at DESC') }                              
+                              
+  # WORKFLOW
   NOUVEAU = 'nouveau'
   ENVOYE  = 'envoyé'
   RELANCE1= 'relancé 1 fois'
@@ -59,6 +64,5 @@ class Invit < ApplicationRecord
   def style
     self.current_state.meta[:style]
   end
-
 
 end
