@@ -6,7 +6,7 @@
             </td>
             <td>
                 <%= l(Cour.find(result.searchable_id).debut.to_date, format: :default) %>
-                <span style="background-color:<%= Cour.find(result.searchable_id).formation.color %>;padding-left: 5px;margin-right: 5px;"></span>
+                <span style="background-color:<%= Formation.unscoped.find(Cour.find(result.searchable_id).formation_id).color %>;padding-left: 5px;margin-right: 5px;"></span>
                 <%= Cour.find(result.searchable_id).formation.nom %>
                 |
                 <%= Cour.find(result.searchable_id).intervenant.nom_prenom %>
@@ -45,7 +45,7 @@
                     |
                     <%= Unite.find(result.searchable_id).nom %>
                     |
-                    <%= Unite.find(result.searchable_id).formation.nom %>
+                    <%= Formation.unscoped.find(Unite.find(result.searchable_id).formation_id).nom %>
                 </td>
             <% when 'User' %>
                 <%= fa_icon 'user', title: "Utilisateur" %>
