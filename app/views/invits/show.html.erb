@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Cour:</strong>
+  <%= @invit.cour_id %>
+</p>
+
+<p>
+  <strong>Intervenant:</strong>
+  <%= @invit.intervenant_id %>
+</p>
+
+<p>
+  <strong>Msg:</strong>
+  <%= @invit.msg %>
+</p>
+
+<p>
+  <strong>Workflow state:</strong>
+  <%= @invit.workflow_state %>
+</p>
+
+<%= link_to 'Edit', edit_invit_path(@invit) %> |
+<%= link_to 'Back', invits_path %>

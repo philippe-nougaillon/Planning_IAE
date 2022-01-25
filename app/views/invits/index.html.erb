@@ -1,0 +1,33 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Invits</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Cour</th>
+      <th>Intervenant</th>
+      <th>Msg</th>
+      <th>Workflow state</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @invits.each do |invit| %>
+      <tr>
+        <td><%= invit.cour_id %></td>
+        <td><%= invit.intervenant_id %></td>
+        <td><%= invit.msg %></td>
+        <td><%= invit.workflow_state %></td>
+        <td><%= link_to 'Show', invit %></td>
+        <td><%= link_to 'Edit', edit_invit_path(invit) %></td>
+        <td><%= link_to 'Destroy', invit, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Invit', new_invit_path %>

@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   
+  resources :invits
   devise_for :users
 
   resources :formations
