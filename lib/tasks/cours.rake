@@ -40,6 +40,8 @@ namespace :cours do
     when 'Formation'
       #intervenants = Formation.find(envoi_specs.cible_id).intervenants
     else
+      # commencer à partir des intervenants dont le nom commence par 'O'
+      #intervenants = Intervenant.where("intervenants.nom > 'O%'").where(doublon: false).or(Intervenant.where("intervenants.nom > 'O%'").where(doublon: nil))
       intervenants = Intervenant.where(doublon: false).or(Intervenant.where(doublon: nil))
     end
 
@@ -75,10 +77,10 @@ namespace :cours do
 
         puts "Pause !"
         # faire une grande pause de 40 secondes pour ne pas dépasser la limite de 100mails/heure imposée par la période de probation
-        # sleep 40
+        sleep 37
 
         # Faire une petite pause pour ne pas être pris pour un spammeur
-        sleep 7
+        #sleep 7
 
         puts "#-" * 50
       end 
