@@ -8,14 +8,14 @@
   <div class="form-group">
     <%= label_tag "Formation" %>    
     <%= select_tag :formation, options_for_select(@formations, params[:formation]), 
-                    class: "select2",
+                    class: "select2-w100",
                     include_blank: true, onchange: 'this.form.submit()' %>
   </div>
 
   <div class="form-group">
     <%= label_tag "Intervenant" %>    
     <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
-                      class: "select2",
+                      class: "select2-w100",
                       include_blank: true, onchange:'this.form.submit()' %>
   </div>
 
