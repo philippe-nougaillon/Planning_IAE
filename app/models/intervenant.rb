@@ -4,6 +4,9 @@ class Intervenant < ApplicationRecord
 	include PgSearch::Model
 	multisearchable against: [:nom, :prenom, :titre1, :nom_du_status, :email]
 
+	extend FriendlyId
+	friendly_id :slug_candidates, use: :slugged
+    
 	audited
 	
 	has_many :cours
@@ -140,5 +143,10 @@ private
 			IntervenantMailer.notifier_srh(self).deliver_later
 		end
 	end
+
+    # only one candidate for an nice id; one random UDID
+    def slug_candidates
+      [SecureRandom.uuid]
+    end
 
 end
