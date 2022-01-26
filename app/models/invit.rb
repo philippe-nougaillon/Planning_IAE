@@ -9,7 +9,7 @@ class Invit < ApplicationRecord
 
   has_one :formation, through: :cour
   
-  default_scope { order('updated_at DESC') }                              
+  default_scope { order('invits.updated_at DESC') }                              
                               
   # WORKFLOW
   NOUVEAU = 'nouveau'
