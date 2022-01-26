@@ -18,6 +18,7 @@ class Intervenant < ApplicationRecord
 
 	has_many :vacations
 	has_many :dossiers
+	has_many :invits
 
 	validates :nom, :prenom, :status, presence: true
 	validates :email, presence: true, format: Devise.email_regexp

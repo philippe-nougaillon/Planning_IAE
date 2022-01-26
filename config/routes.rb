@@ -1,9 +1,14 @@
 Rails.application.routes.draw do
   
+  resources :invits
   devise_for :users
 
   resources :formations
-  resources :intervenants
+  resources :intervenants do
+    member do
+      get :invitations
+    end
+  end
   resources :users
   resources :fermetures
   resources :etudiants

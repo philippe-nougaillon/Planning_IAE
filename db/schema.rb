@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_21_093547) do
+ActiveRecord::Schema.define(version: 2022_01_25_150533) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -245,6 +245,28 @@ ActiveRecord::Schema.define(version: 2022_01_21_093547) do
     t.boolean "notifier"
   end
 
+  create_table "invitations", force: :cascade do |t|
+    t.bigint "cour_id", null: false
+    t.bigint "intervenant_id", null: false
+    t.string "msg"
+    t.string "workflow_state"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["cour_id"], name: "index_invitations_on_cour_id"
+    t.index ["intervenant_id"], name: "index_invitations_on_intervenant_id"
+  end
+
+  create_table "invits", force: :cascade do |t|
+    t.bigint "cour_id", null: false
+    t.bigint "intervenant_id", null: false
+    t.string "msg"
+    t.string "workflow_state"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["cour_id"], name: "index_invits_on_cour_id"
+    t.index ["intervenant_id"], name: "index_invits_on_intervenant_id"
+  end
+
   create_table "pg_search_documents", force: :cascade do |t|
     t.text "content"
     t.string "searchable_type"
@@ -330,4 +352,8 @@ ActiveRecord::Schema.define(version: 2022_01_21_093547) do
 
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "documents", "dossiers"
+  add_foreign_key "invitations", "cours"
+  add_foreign_key "invitations", "intervenants"
+  add_foreign_key "invits", "cours"
+  add_foreign_key "invits", "intervenants"
 end

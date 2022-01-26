@@ -11,6 +11,8 @@ class Cour < ApplicationRecord
   belongs_to :intervenant_binome, class_name: :Intervenant, foreign_key: :intervenant_binome_id, optional: true 
   belongs_to :salle, optional: true
 
+  has_many :invits
+
   validates :debut, :formation_id, :intervenant_id, :duree, presence: true
   validate :check_chevauchement_intervenant
   validate :check_chevauchement, if: Proc.new { |cours| cours.salle_id }
@@ -46,7 +48,7 @@ class Cour < ApplicationRecord
   end
 
   def self.actions_admin
-    ["Changer de salle", "Changer d'état", "Changer de date", "Intervertir", "Exporter vers Excel", "Exporter vers iCalendar", "Exporter en PDF", "Supprimer"]
+    ["Changer de salle", "Changer d'état", "Changer de date", "Intervertir", "Exporter vers Excel", "Exporter vers iCalendar", "Exporter en PDF", "Inviter", "Supprimer"]
   end
   
   def self.etendue_horaire
