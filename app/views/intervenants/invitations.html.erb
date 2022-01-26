@@ -10,7 +10,7 @@
         <div class="col-sm-5">
           <%= label_tag :formation %>
           <%= select_tag :formation, 
-                              options_from_collection_for_select(Formation.all, :id, :nom_promo, params[:formation]), 
+                              options_from_collection_for_select(@formations, :id, :nom_promo, params[:formation]), 
                               include_blank: true,
                               class: 'form-control form-control-sm select2', 
                               onchange: 'this.form.submit()' %>

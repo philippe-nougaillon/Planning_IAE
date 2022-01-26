@@ -51,6 +51,7 @@ class IntervenantsController < ApplicationController
       @invits = @invits.where("invits.workflow_state = ?", params[:workflow_state].to_s.downcase)
     end
 
+    @formations = Formation.where(id: @invits.joins(:formation).pluck("formations.id").uniq)
     @invits = @invits.paginate(page: params[:page], per_page: 20)
   end
 
@@ -125,7 +126,7 @@ class IntervenantsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_intervenant
-      @intervenant = Intervenant.find(params[:id])
+      @intervenant = Intervenant.friendly.find(params[:id])
     end
 
     def sortable_columns

@@ -17,6 +17,8 @@ class InvitsController < ApplicationController
       @invits = @invits.where("invits.workflow_state = ?", params[:workflow_state].to_s.downcase)
     end
 
+    @formations = Formation.where(id: @invits.joins(:formation).pluck("formations.id").uniq)
+    @intervenants = Intervenant.where(id: @invits.pluck(:intervenant_id).uniq)
     @invits = @invits.paginate(page: params[:page], per_page: 20)
   end
 
