@@ -5,70 +5,69 @@
             Cours
             </td>
             <td>
-                <%= l(Cour.find(result.searchable_id).debut.to_date, format: :default) %>
-                <p class="mx-3 d-inline">|</p>
+                <% cours = Cour.find(result.searchable_id) %>
+                <%= l(cours.debut, format: :long) %>
+                <br>
                 <span style="background-color:<%= Formation.unscoped.find(Cour.find(result.searchable_id).formation_id).color %>;padding-left: 5px;margin-right: 5px;"></span>
-                <%= Formation.unscoped.find(Cour.find(result.searchable_id).formation_id).nom %>
-                <p class="mx-3 d-inline">|</p>
-                <%= Cour.find(result.searchable_id).intervenant.nom_prenom %>
+                <%= Formation.unscoped.find(cours.formation_id).nom %>
+                <p class="mx-2 d-inline">|</p>
+                <%= cours.intervenant.nom_prenom %>
             </td>
             <% when 'Formation' %>
                 <%= fa_icon 'briefcase', title: "Formation" %>
                 Formation
                 </td>
                 <td>
-                    <span style="background-color:<%= Formation.unscoped.find(result.searchable_id).color %>;padding-left: 5px;margin-right: 5px;"></span>
-                    <%= Formation.unscoped.find(result.searchable_id).nom %>
-                    <p class="mx-3 d-inline">|</p> 
-                    <%= Formation.unscoped.find(result.searchable_id).domaine %>
-                    <p class="mx-3 d-inline">|</p>  
-                    <%= Formation.unscoped.find(result.searchable_id).promo %>
-                    <p class="mx-3 d-inline">|</p>   
-                    <%= Formation.unscoped.find(result.searchable_id).diplome %>
+                    <% formation = Formation.unscoped.find(result.searchable_id) %>
+                    <span style="background-color:<%= formation.color %>;padding-left: 5px;margin-right: 5px;"></span>
+                    <%= [formation.nom, formation.domaine, formation.promo, formation.diplome].reject(&:blank?).join('  |  ') %>
                 </td>
             <% when 'Intervenant' %>
                 <%= fa_icon 'chalkboard-teacher', title: "Intervenant" %>
                 Intervenant
                 </td>
                 <td>
-                    <%= Intervenant.find(result.searchable_id).nom_prenom %>
-                    <p class="mx-3 d-inline">|</p>
-                    <%= Intervenant.find(result.searchable_id).email %>
-                    <p class="mx-3 d-inline">|</p>
-                    <%= Intervenant.find(result.searchable_id).status %>
+                    <% intervenant = Intervenant.find(result.searchable_id) %>
+                    <%= intervenant.nom_prenom %>
+                    <p class="mx-2 d-inline">|</p>
+                    <%= intervenant.email %>
+                    <p class="mx-2 d-inline">|</p>
+                    <%= intervenant.status %>
                 </td>
             <% when 'Unite' %>
                 <%= fa_icon 'award', title: "Unité d'enseignement" %>
                 U.E.
                 </td>
                 <td>
-                    <%= Unite.find(result.searchable_id).num %>
-                    <p class="mx-3 d-inline">|</p>
-                    <%= Unite.find(result.searchable_id).nom %>
-                    <p class="mx-3 d-inline">|</p>
-                    <%= Formation.unscoped.find(Unite.find(result.searchable_id).formation_id).nom %>
+                    <% unite = Unite.find(result.searchable_id) %>
+                    <%= unite.num %>
+                    <p class="mx-2 d-inline">|</p>
+                    <%= unite.nom %>
+                    <p class="mx-2 d-inline">|</p>
+                    <%= Formation.unscoped.find(unite.formation_id).nom %>
                 </td>
             <% when 'User' %>
                 <%= fa_icon 'user', title: "Utilisateur" %>
                 Utilisateur
                 </td>
                 <td>
-                    <%= User.find(result.searchable_id).nom_et_prénom %>
-                    <p class="mx-3 d-inline">|</p>
-                    <%= User.find(result.searchable_id).email %>
+                    <% user = User.find(result.searchable_id)%>
+                    <%= user.nom_et_prénom %>
+                    <p class="mx-2 d-inline">|</p>
+                    <%= user.email %>
                 </td>
         <% end %>
-    <td style="white-space: nowrap;">
-        <p>
-            Il y a
-            <%= time_ago_in_words result.updated_at %>
-        </p>
-    </td>
     <td>
         <%= link_to fa_icon('eye'),
                     url_for(controller: result.searchable_type.pluralize.downcase, 
                             action: 'show', 
                             id: result.searchable_id),
                             target: '_blank' %>
+    </td>
+    <td style="white-space: nowrap;">
+        <p>
+            il y a
+            <%= time_ago_in_words result.updated_at %>
+        </p>
     </td>
 </tr>
