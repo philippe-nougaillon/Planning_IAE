@@ -1,7 +1,8 @@
 # ENCODING: UTF-8
 
 class IntervenantsController < ApplicationController
-  before_action :set_intervenant, only: [:show, :edit, :update, :destroy]
+  skip_before_action :authenticate_user!, only: %i[ invitations ]
+  before_action :set_intervenant, only: [:show, :invitations, :edit, :update, :destroy]
 
   # check if logged and admin  
   # before_filter do 
@@ -37,6 +38,20 @@ class IntervenantsController < ApplicationController
     @intervenants = @intervenants
                       .reorder("#{sort_column} #{sort_direction}")  
                       .paginate(page: params[:page], per_page: 10)
+  end
+
+  def invitations
+    @invits = @intervenant.invits
+
+    unless params[:formation].blank?
+      @invits = @invits.joins(:formation).where("formations.id = ?", params[:formation])
+    end
+   
+    unless params[:workflow_state].blank?
+      @invits = @invits.where("invits.workflow_state = ?", params[:workflow_state].to_s.downcase)
+    end
+
+    @invits = @invits.paginate(page: params[:page], per_page: 20)
   end
 
   # GET /intervenants/1

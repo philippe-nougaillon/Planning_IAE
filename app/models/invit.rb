@@ -19,7 +19,8 @@ class Invit < ApplicationRecord
   RELANCE3= 'relancé 3 fois'
   VALIDE  = 'validé'
   REJETE  = 'non_conforme'
-  TRAITE  = 'traité'
+  CONFIRME= 'confirmé'
+  ARCHIVE = 'archive'
 
   workflow do
     state NOUVEAU, meta: {style: 'badge-info'} do
@@ -45,14 +46,18 @@ class Invit < ApplicationRecord
     end
     
     state VALIDE, meta: {style: 'badge-success'} do
-      event :archiver, transitions_to: TRAITE
+      event :confirmer, transitions_to: CONFIRME
     end
 
     state REJETE, meta: {style: 'badge-danger'} do
-      event :déposer, transitions_to: TRAITE
+      event :archiver, transitions_to: ARCHIVE
     end
 
-    state TRAITE, meta: {style: 'badge-info'}
+    state CONFIRME, meta: {style: 'badge-warning'} do
+      event :archiver, transitions_to: ARCHIVE
+    end
+
+    state ARCHIVE, meta: {style: 'badge-info'}
   end
 
   # pour que le changement se voit dans l'audit trail

@@ -1,0 +1,82 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Invitations</h1>
+
+<div class="container-fluid p-3 shadow-sm">
+  <%= form_tag request.path, method: :get do %>
+    <div class="form-group">
+      <div class="row">
+
+        <div class="col-sm-5">
+          <%= label_tag :formation %>
+          <%= select_tag :formation, 
+                              options_from_collection_for_select(Formation.all, :id, :nom_promo, params[:formation]), 
+                              include_blank: true,
+                              class: 'form-control form-control-sm select2', 
+                              onchange: 'this.form.submit()' %>
+        </div>
+
+        <div class="col-sm-2">
+          <%= label_tag :workflow_state, "Etat" %>
+          <%= select_tag :workflow_state, 
+                              options_for_select(Invit.workflow_spec.states.keys.to_a, params[:workflow_state]), 
+                              include_blank: true,
+                              class: 'form-control form-control-sm', 
+                              onchange: 'this.form.submit()' %>
+        </div>
+        
+      </div>
+    </div>  
+  <% end %>
+</div>
+<br>
+
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Formation</th>
+      <th>Message</th>
+      <th>Etat</th>
+      <th>MàJ</th>
+      <th colspan="2"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @invits.each do |invit| %>
+      <tr>
+        <td><%= l(invit.cour.debut, format: :long) %></td>
+        <td>
+          <span style="background-color:<%= invit.cour.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
+            <%= invit.cour.formation.nom %>
+          </span>
+        </td>
+        <td><%= invit.msg %></td>
+        <td>
+          <span class="badge <%= invit.style %>">
+            <%= invit.workflow_state.humanize %>
+          </span>
+        </td>
+        <td>il y a <%= time_ago_in_words invit.updated_at %></td>
+        <td><%= link_to 'Voir', invit %></td>
+        <td><%= link_to '[X]', invit, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+
+  <tfoot>
+    <tr><th colspan=7></th></tr>
+  </tfoot>
+
+</table>
+
+<br>
+<div class="page_info">
+  <%= page_entries_info @invits %>
+  <%= @invits.reorder(nil).select(:id).group(:workflow_state).count(:id) %>
+</div>
+
+<%= will_paginate @invits, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+<br>
