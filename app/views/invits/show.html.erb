@@ -1,24 +1,38 @@
-<p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Cour:</strong>
-  <%= @invit.cour_id %>
-</p>
+<div class="card shadow-sm p-3 mt-3">
+  <i class="fas fa-calendar-check"></i>
+  <p>
+    <strong>Date:</strong>
+    <%= l(@invit.cour.debut, format: :long) %>
+  </p>
 
-<p>
-  <strong>Intervenant:</strong>
-  <%= @invit.intervenant_id %>
-</p>
+  <p>
+    <strong>Formation:</strong>
+    <span style="background-color:<%= @invit.cour.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
+      <%= @invit.cour.formation.nom %>
+    </span>
+  </p>
 
-<p>
-  <strong>Msg:</strong>
-  <%= @invit.msg %>
-</p>
+  <p>
+    <strong>Message:</strong>
+    <%= @invit.msg %>
+  </p>
 
-<p>
-  <strong>Workflow state:</strong>
-  <%= @invit.workflow_state %>
-</p>
+</div>
 
-<%= link_to 'Edit', edit_invit_path(@invit) %> |
+<span class="badge <%= @invit.style %>">
+  <%= @invit.workflow_state.humanize %>
+</span>
+<%= button_to 'Valider', valider_invitation_path(@invit), class: 'badge badge-success', title: 'Valider l\'invitaion', disabled: !@invit.can_valider? %>
+<%
+=begin %>
+
+<%= button_to 'Complet', complet_adhesion_path(@adhesion), class: 'button is-warning is-outlined', title: "Passer à l'état 'Complet'. Le dossier est complet et les pièces jointes sont valides.", disabled: !@adhesion.can_complet? %>
+  <%= button_to 'Valider', valider_adhesion_path(@adhesion), class: 'button is-success is-outlined', data: { confirm: "Êtes-vous certain(e) de vouloir créer la maison, le contact à partir de cette demande d'adhésion et de notifier le demandeur ?" }, title: 'Créer la maison et les contacts', disabled: !@adhesion.can_valider? %>
+  <%= button_to 'Résilier', resilier_adhesion_path(@adhesion), class: 'button is-danger is-outlined', title: "Passer à l'état 'Résiliée'. La maison n'apparaîtra plus dans comme membre.", disabled: !@adhesion.can_résilier? %>
+  <%= button_to 'Archiver', archiver_adhesion_path(@adhesion), class: 'button is-info is-outlined', title: "Passer à l'état 'Archivée'. La maison n'est plus visible ???", disabled: !@adhesion.can_archiver? %>
+  <%= button_to 'Renouveler', renouveler_adhesion_path(@adhesion), class: 'button is-primary is-outlined', title: "Passer à l'état 'Renouvelée'.", disabled: !@adhesion.can_renouveler? %>
+<%
+=end %>
+
 <%= link_to 'Back', invits_path %>
