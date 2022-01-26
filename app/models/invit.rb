@@ -18,7 +18,7 @@ class Invit < ApplicationRecord
   RELANCE2= 'relancé 2 fois'
   RELANCE3= 'relancé 3 fois'
   VALIDE  = 'validé'
-  REJETE  = 'non_conforme'
+  REJETE  = 'rejeté'
   CONFIRME= 'confirmé'
   ARCHIVE = 'archive'
 
