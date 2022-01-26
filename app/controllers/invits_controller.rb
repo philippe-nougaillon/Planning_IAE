@@ -1,5 +1,5 @@
 class InvitsController < ApplicationController
-  before_action :set_invit, only: %i[ show edit update destroy ]
+  before_action :set_invit, only: %i[ show edit update destroy envoyer relancer valider rejeter confirmer archiver ]
 
   # GET /invits or /invits.json
   def index
@@ -71,6 +71,55 @@ class InvitsController < ApplicationController
       format.json { head :no_content }
     end
   end
+  
+  # 
+  # WORKFLOW
+  # 
+  # NOUVEAU = 'nouveau'
+  # ENVOYE  = 'envoyé'
+  # RELANCE1= 'relancé 1 fois'
+  # RELANCE2= 'relancé 2 fois'
+  # RELANCE3= 'relancé 3 fois'
+  # VALIDE  = 'validé'
+  # REJETE  = 'rejeté'
+  # CONFIRME= 'confirmé'
+  # ARCHIVE = 'archive'
+
+  def envoyer
+    @invit.envoyer!
+    #Mailer.with(dossier: @dossier).dossier_email.deliver_later
+    redirect_to invits_path, notice: "Un email va être envoyé à l'intervenant"
+  end
+
+  def valider
+    @invit.valider!
+    #Mailer.with(dossier: @dossier).valider_email.deliver_later
+
+    redirect_to invits_path, notice: "Invitation validée avec succès. L'intervenant va en être informé."
+  end
+
+  def relancer
+    @invit.relancer!
+    #Mailer.with(dossier: @dossier).dossier_email.deliver_later
+    redirect_to invits_path, notice: "Invitation relancée avec succès. L'intervenant va en être informé."
+  end
+
+  def rejeter
+    @dossier.rejeter!
+    # Mailer.with(dossier: @dossier).rejeter_email.deliver_later
+    redirect_to invits_path, notice: "Invitation rejetée. L'intervenant va en être informé."
+  end
+
+  def confirmer
+    @invit.confirmer!
+    redirect_to invits_path, notice: 'Invitation confirmée'
+  end
+
+  def archiver
+    @invit.archiver!
+    redirect_to invits_path, notice: 'Invitation archivée'
+  end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.
