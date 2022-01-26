@@ -16,11 +16,11 @@
 
   <div class="row">
     <div class="col-sm-5">
-      <%= f.text_field :nom %>
+      <%= f.text_field :nom, label: '*Nom' %>
 
       <div class="row">
         <div class="col">
-          <%= f.text_field :abrg, label: 'Abr.' %>
+          <%= f.text_field :abrg, label: '*Abr.' %>
         </div>
         <div class="col">
           <%= f.color_field :color, label: 'Couleur' %>
@@ -72,14 +72,13 @@
     </div>
 
     <div class="col-sm-6">
-      <%= f.collection_select :user_id, User.where.not(nom: nil).order(:nom), :id, :nom_et_prénom, {include_blank: true, label:"Gestionnaire de formation"} %>
-      
+      <%= f.collection_select :user_id, User.where.not(nom: nil).order(:nom), :id, :nom_et_prénom, {include_blank: true, label:"*Gestionnaire de formation (User)"} %>
       <div class="row">
         <div class="col">
           <%= f.number_field :nbr_etudiants, label: "Nombre d'étudiants prévus" %>
         </div>  
         <div class="col">
-          <%= f.number_field :nbr_heures, label: "Nombre d'heures prévues" %>
+          <%= f.number_field :nbr_heures, label: "*Nombre d'heures prévues" %>
         </div>  
       </div>  
 
