@@ -1,7 +1,17 @@
 Rails.application.routes.draw do
   
-  resources :invits
   devise_for :users
+
+  resources :invits, only: [:index, :show] do
+    member do
+      get :envoyer 
+      get :relancer 
+      get :valider 
+      get :rejeter 
+      get :confirmer 
+      get :archiver
+    end
+  end
 
   resources :formations
   resources :intervenants do
