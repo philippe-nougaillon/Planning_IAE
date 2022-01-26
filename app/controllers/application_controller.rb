@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
       @ctrl = params[:controller]
       @action = params[:action]
       @sitename ||= request.subdomains.any? ? request.subdomains(0).first.upcase : 'IAE-Planning DEV'
-      @sitename.concat(' v4.6.b')
+      @sitename.concat(' v4.6.c')
 
       if current_user
         @cours_params = {}
@@ -36,7 +36,7 @@ class ApplicationController < ActionController::Base
     end
 
     def user_not_authorized
-      flash[:error] = "You are not authorized to perform this action."
+      flash[:error] = "Vous n'êtes pas autorisé à effectuer cette action."
       redirect_to(request.referrer || root_path)
     end
 

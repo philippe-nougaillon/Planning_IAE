@@ -1,54 +1,69 @@
 <div class="pb-2 mt-4 mb-2 border-bottom">
-  <h3><%= fa_icon 'search' %> Rechercher</h3>
+  <h3><%= fa_icon 'search-plus' %> Chercher</h3>
 </div>
 
 <div class="container-fluid p-3 shadow-sm shadow-sm">
   <%= form_tag tools_rechercher_path, method: :get do %>
     <div class="form-group">
-      <div class="row">
-        <div class="col-sm-4">
+      <div class="row align-items-end">
+        <div class="col-sm-3">
           <%= label_tag :nom, "Entrez un terme à rechercher" %>    
           <div class="input-group">
             <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
             <span class="input-group-btn">
-              <%= submit_tag 'Go', class: "btn btn-sm btn-success" %>
+              <%= button_tag name: 'commit', value: 'Go', class: "btn btn-sm btn-success ml-1" do %>
+                <%= fa_icon 'search-plus' %>
+              <% end %>
+              
             </span>
           </div>
-        </div>  
-        <div class="col-lg-1">
-          Cours<br>
-          <%= check_box_tag :search_cours, '1', params[:search_cours] == '1' %> 
-        </div>    
-        <div class="col-lg-1">
-          Formations
+        </div>
+        
+        <div class="col">
+          <strong class="mr-3">
+            Inclure :
+          </strong>
+          <%= check_box_tag :search_cours, '1', params[:search_cours] == '1' %>
+          <%= label_tag "Cours" %>
+        </div>
+        <div class="col">
           <%= check_box_tag :search_formations, '1', params[:search_formations] == '1' %>
-        </div>    
-        <div class="col-lg-1">
-          UE<br>
-          <%= check_box_tag :search_ue, '1', params[:search_ue] == '1' %>
-        </div>    
-        <div class="col-lg-1">
-          Intervenants
+          <%= label_tag "Formations" %>
+        </div>
+        <div class="col">
           <%= check_box_tag :search_intervenants, '1', params[:search_intervenants] == '1' %>
-        </div>    
-        <div class="col-lg-1">
-          Utilisateurs
+          <%= label_tag "Intervenants" %>
+        </div>
+        <div class="col">
           <%= check_box_tag :search_users, '1', params[:search_users] == '1' %>
-        </div>    
+          <%= label_tag "Utilisateurs" %>
+        </div>
+        <div class="col-1">
+          <%= check_box_tag :search_ue, '1', params[:search_ue] == '1' %>
+          <%= label_tag :ue, "U.E." %>
+        </div>
       </div>
-    </div>  
+    </div>
   <% end %>
 </div>
 <br>
 
 <% if defined?(@results) %>
   <% if @results.any? %>
-    <table class="table table-hover table-striped">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Contenu</th>
+          <th>Voir</th>
+          <th>MÀJ</th>
+        </tr>
+      </thead>
       <tbody>
         <%= render partial: @results, as: :result %>
       </tbody>
       <tfoot>
-        <tr><th></th></tr>
+        <tr><th colspan=4></th></tr>
       </tfoot>
     </table>
     <div class="page_info">

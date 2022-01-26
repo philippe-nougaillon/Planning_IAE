@@ -132,7 +132,7 @@ module ToolsHelper
                 end
             else 
                 if salle_id.class.name == 'Integer' 
-                    salle_after = Salle.find(salle_id).nom 
+                    salle_after = Salle.with_discarded.find(salle_id).nom 
                 else 
                     salle_after = salle_id 
                 end
