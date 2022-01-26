@@ -95,19 +95,19 @@ class InvitsController < ApplicationController
     @invit.valider!
     #Mailer.with(dossier: @dossier).valider_email.deliver_later
 
-    redirect_to invits_path, notice: "Invitation validée avec succès. L'intervenant va en être informé."
+    redirect_to invits_path, notice: "Invitation validée avec succès."
   end
 
   def relancer
     @invit.relancer!
     #Mailer.with(dossier: @dossier).dossier_email.deliver_later
-    redirect_to invits_path, notice: "Invitation relancée avec succès. L'intervenant va en être informé."
+    redirect_to invits_path, notice: "Invitation relancée avec succès."
   end
 
   def rejeter
     @dossier.rejeter!
     # Mailer.with(dossier: @dossier).rejeter_email.deliver_later
-    redirect_to invits_path, notice: "Invitation rejetée. L'intervenant va en être informé."
+    redirect_to invits_path, notice: "Invitation rejetée."
   end
 
   def confirmer
