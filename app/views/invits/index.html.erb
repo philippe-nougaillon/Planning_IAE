@@ -66,7 +66,7 @@
           </span>
         </td>
         <td><%= invit.intervenant.nom_prenom %></td>
-        <td><%= invit.msg %></td>
+        <td><%= truncate(invit.msg, length: 50) %></td>
         <td>
           <span class="badge <%= invit.style %>">
             <%= invit.workflow_state.humanize %>

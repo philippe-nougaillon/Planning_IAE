@@ -20,8 +20,9 @@
       </p>
 
       <p>
-        <strong>Message:</strong>
-        <%= @invit.msg %>
+        <strong>Message</strong>
+        <br>
+        <%= simple_format @invit.msg %>
       </p>
     </div>
     <div class="col">
@@ -80,9 +81,9 @@
   </div>
 
 </div>
-
-<%= link_to_if @invit.can_envoyer?, 'Envoyer', envoyer_invit_path(@invit), class: 'btn btn-sm btn-primary' %> |
-<%= link_to_if @invit.can_relancer?, 'Relancer', envoyer_invit_path(@invit), class: 'btn btn-sm btn-primary' %> |
+<% if user_signed_in? %>
+  <%= link_to_if @invit.can_relancer?, 'Relancer', envoyer_invit_path(@invit), class: 'btn btn-sm btn-primary' %> |
+<% end %>
 <%= link_to_if @invit.can_valider?, 'Valider', valider_invit_path(@invit), class: 'btn btn-sm btn-success' %> |
 <%= link_to_if @invit.can_rejeter?, 'Rejeter', rejeter_invit_path(@invit), class: 'btn btn-sm btn-danger' %> |
 <%= link_to_if @invit.can_confirmer?, 'Confirmer', confirmer_invit_path(@invit), class: 'btn btn-sm btn-primary' %> |

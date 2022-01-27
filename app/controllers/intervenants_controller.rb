@@ -46,13 +46,13 @@ class IntervenantsController < ApplicationController
     unless params[:formation].blank?
       @invits = @invits.joins(:formation).where("formations.id = ?", params[:formation])
     end
-   
+
     unless params[:workflow_state].blank?
       @invits = @invits.where("invits.workflow_state = ?", params[:workflow_state].to_s.downcase)
     end
 
     @formations = Formation.where(id: @invits.joins(:formation).pluck("formations.id").uniq)
-    @invits = @invits.paginate(page: params[:page], per_page: 20)
+    @invits = @invits.joins(:cour).reorder('cours.debut').paginate(page: params[:page], per_page: 20)
   end
 
   # GET /intervenants/1

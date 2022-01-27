@@ -140,7 +140,8 @@
                       class: "form-control select2" %>
       <br><br>
       <%= label_tag "Message" %>
-      <%= text_area_tag :message_invitation %>
+      <br>
+      <%= text_area_tag :message_invitation,nil, rows: 5, cols:80 %>
       <br><br>
     </div>
 
@@ -154,7 +155,7 @@
     </div>
   <% end %>
 
-  <div class="row">
+  <div class="row mb-5">
     <div class="col-sm-12">
       <%= submit_tag 'Appliquer', class:"btn btn-primary" %>
       <%= link_to 'Annuler', root_url, class:"btn btn-light" %>
