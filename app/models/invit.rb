@@ -12,7 +12,7 @@ class Invit < ApplicationRecord
   default_scope { order('invits.updated_at DESC') }                              
                               
   # WORKFLOW
-  NOUVEAU = 'nouveau'
+  # NOUVEAU = 'nouveau'
   ENVOYE  = 'envoyé'
   RELANCE1= 'relancé 1 fois'
   RELANCE2= 'relancé 2 fois'
@@ -23,9 +23,9 @@ class Invit < ApplicationRecord
   ARCHIVE = 'archive'
 
   workflow do
-    state NOUVEAU, meta: {style: 'badge-info'} do
-      event :envoyer, transitions_to: ENVOYE
-    end
+    # state NOUVEAU, meta: {style: 'badge-info'} do
+    #   event :envoyer, transitions_to: ENVOYE
+    # end
 
     state ENVOYE, meta: {style: 'badge-primary'} do
       event :relancer, transitions_to: RELANCE1
