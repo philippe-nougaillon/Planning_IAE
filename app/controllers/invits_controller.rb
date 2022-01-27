@@ -1,4 +1,5 @@
 class InvitsController < ApplicationController
+  skip_before_action :authenticate_user!, only: %i[ show ]
   before_action :set_invit, only: %i[ show edit update destroy envoyer relancer valider rejeter confirmer archiver ]
 
   # GET /invits or /invits.json
@@ -12,7 +13,7 @@ class InvitsController < ApplicationController
     unless params[:intervenant].blank?
       @invits = @invits.where(intervenant_id: params[:intervenant])
     end
-   
+
     unless params[:workflow_state].blank?
       @invits = @invits.where("invits.workflow_state = ?", params[:workflow_state].to_s.downcase)
     end
@@ -24,6 +25,8 @@ class InvitsController < ApplicationController
 
   # GET /invits/1 or /invits/1.json
   def show
+    @jour = @invit.cour.debut.to_date
+    @cours = @invit.intervenant.cours.where("DATE(cours.debut) = ?", @jour)
   end
 
   # GET /invits/new
@@ -105,7 +108,7 @@ class InvitsController < ApplicationController
   end
 
   def rejeter
-    @dossier.rejeter!
+    @invit.rejeter!
     # Mailer.with(dossier: @dossier).rejeter_email.deliver_later
     redirect_to invits_path, notice: "Invitation rejetée."
   end

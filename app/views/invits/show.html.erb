@@ -1,38 +1,95 @@
-
-<div class="card shadow-sm p-3 mt-3">
+<h3 class="my-5">
   <i class="fas fa-calendar-check"></i>
-  <p>
-    <strong>Date:</strong>
-    <%= l(@invit.cour.debut, format: :long) %>
-  </p>
+  Proposition de cours
+</h3>
+<div class="card shadow-sm p-3 my-3">
+  <div class="row">
+    <div class="col-5">
+      <p>
+        <span style="background-color:<%= @invit.cour.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
+          <%= @invit.cour.formation.nom %>
+        </span>
+      </p>
+      <p>
+        <strong>Date:</strong>
+        <%= l(@invit.cour.debut, format: :long) %>
+      </p>
+      <p>
+        <strong>Durée:</strong>
+        <%= number_with_precision(@invit.cour.duree, precision: 1, strip_insignificant_zeros: true) %> h
+      </p>
 
-  <p>
-    <strong>Formation:</strong>
-    <span style="background-color:<%= @invit.cour.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
-      <%= @invit.cour.formation.nom %>
-    </span>
-  </p>
-
-  <p>
-    <strong>Message:</strong>
-    <%= @invit.msg %>
-  </p>
+      <p>
+        <strong>Message:</strong>
+        <%= @invit.msg %>
+      </p>
+    </div>
+    <div class="col">
+      <p>
+        Vos cours du <b><%= l(@jour, format: :long).humanize %></b> 
+      </p>
+      <table class="table table-condensed">
+        <thead>
+          <tr>
+            <th>Heure</th>
+            <th>Durée</th>
+            <th>Formation</th>
+            <th>Binôme</th>
+            <th>Cours</th>
+            <th>Salle</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @cours.each do |c| %>
+            <tr>
+              <td>
+                <%= link_to c do %>
+                  <b><%= l(c.debut, format: :heures_min) %></b> 
+                  <br>
+                  <%= l(c.fin, format: :heures_min) %>
+                <% end %>
+              </td>
+              <td>
+                <%= number_with_precision(c.duree, precision: 1, strip_insignificant_zeros: true) %> h
+              </td>
+              <td>
+                <span style="background-color:<%= c.formation.try(:color) %>;padding-left: 5px;margin-right: 5px;"></span>
+                <%= c.formation.try(:nom_promo) %>
+              </td>
+              <td>
+                <% if c.intervenant_binome %>
+                  <%= link_to c.intervenant_binome.nom_prenom, c.intervenant_binome %>
+                <% end %>
+              </td>
+              <td>
+                <%= c.nom_ou_ue %>
+              </td>
+              <td>
+                <span class="badge badge-pill badge-<%= c.style %>">
+                  <%= c.salle.nom %>
+                </span>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+        <tfoot>
+          <tr><th colspan=5></th></tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
 
 </div>
 
-<span class="badge <%= @invit.style %>">
-  <%= @invit.workflow_state.humanize %>
-</span>
-<%= button_to 'Valider', valider_invitation_path(@invit), class: 'badge badge-success', title: 'Valider l\'invitaion', disabled: !@invit.can_valider? %>
-<%
-=begin %>
+<%= link_to_if @invit.can_envoyer?, 'Envoyer', envoyer_invit_path(@invit), class: 'btn btn-sm btn-primary' %> |
+<%= link_to_if @invit.can_relancer?, 'Relancer', envoyer_invit_path(@invit), class: 'btn btn-sm btn-primary' %> |
+<%= link_to_if @invit.can_valider?, 'Valider', valider_invit_path(@invit), class: 'btn btn-sm btn-success' %> |
+<%= link_to_if @invit.can_rejeter?, 'Rejeter', rejeter_invit_path(@invit), class: 'btn btn-sm btn-danger' %> |
+<%= link_to_if @invit.can_confirmer?, 'Confirmer', confirmer_invit_path(@invit), class: 'btn btn-sm btn-primary' %> |
+<%= link_to_if @invit.can_archiver?, 'Archiver', archiver_invit_path(@invit), class: 'btn btn-sm btn-info' %>
 
-<%= button_to 'Complet', complet_adhesion_path(@adhesion), class: 'button is-warning is-outlined', title: "Passer à l'état 'Complet'. Le dossier est complet et les pièces jointes sont valides.", disabled: !@adhesion.can_complet? %>
-  <%= button_to 'Valider', valider_adhesion_path(@adhesion), class: 'button is-success is-outlined', data: { confirm: "Êtes-vous certain(e) de vouloir créer la maison, le contact à partir de cette demande d'adhésion et de notifier le demandeur ?" }, title: 'Créer la maison et les contacts', disabled: !@adhesion.can_valider? %>
-  <%= button_to 'Résilier', resilier_adhesion_path(@adhesion), class: 'button is-danger is-outlined', title: "Passer à l'état 'Résiliée'. La maison n'apparaîtra plus dans comme membre.", disabled: !@adhesion.can_résilier? %>
-  <%= button_to 'Archiver', archiver_adhesion_path(@adhesion), class: 'button is-info is-outlined', title: "Passer à l'état 'Archivée'. La maison n'est plus visible ???", disabled: !@adhesion.can_archiver? %>
-  <%= button_to 'Renouveler', renouveler_adhesion_path(@adhesion), class: 'button is-primary is-outlined', title: "Passer à l'état 'Renouvelée'.", disabled: !@adhesion.can_renouveler? %>
-<%
-=end %>
+<br>
+<br>
 
-<%= link_to 'Back', invits_path %>
+<%= link_to 'Retour', invits_path if user_signed_in? %>
+<%= link_to 'Retour', invitations_intervenant_path(@invit.intervenant) unless user_signed_in? %>
