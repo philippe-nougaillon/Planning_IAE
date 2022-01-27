@@ -24,6 +24,24 @@
         <br>
         <%= simple_format @invit.msg %>
       </p>
+
+
+      <% if @invit.can_valider? || @invit.can_rejeter? %>
+        <% unless user_signed_in? %>
+          <%= form_tag validation_invit_path(@invit), method: :post do %>
+            <%= text_area_tag :reponse, nil, rows:5, cols: 25 %>
+            <br>
+            <%= submit_tag "Valider", class: "btn btn-sm btn-success"%>
+            <%= submit_tag "Rejeter", class: "btn btn-sm btn-danger"%>
+          <% end %>
+        <% end %>
+      <% else %>
+        <p>
+          <strong>Réponse</strong>
+          <br>
+          <%= simple_format @invit.reponse %>
+        </p>
+      <% end %>
     </div>
     <div class="col">
       <p>
@@ -83,14 +101,14 @@
 </div>
 <% if user_signed_in? %>
   <%= link_to_if @invit.can_relancer?, 'Relancer', envoyer_invit_path(@invit), class: 'btn btn-sm btn-primary' %> |
+  <%= link_to_if @invit.can_valider?, 'Valider', valider_invit_path(@invit), class: 'btn btn-sm btn-success' %> |
+  <%= link_to_if @invit.can_rejeter?, 'Rejeter', rejeter_invit_path(@invit), class: 'btn btn-sm btn-danger' %> |
+  <%= link_to_if @invit.can_confirmer?, 'Confirmer', confirmer_invit_path(@invit), class: 'btn btn-sm btn-primary' %> |
+  <%= link_to_if @invit.can_archiver?, 'Archiver', archiver_invit_path(@invit), class: 'btn btn-sm btn-info' %>
+
+  <br>
+  <br>
+  <%= link_to 'Retour', invits_path if user_signed_in? %>
 <% end %>
-<%= link_to_if @invit.can_valider?, 'Valider', valider_invit_path(@invit), class: 'btn btn-sm btn-success' %> |
-<%= link_to_if @invit.can_rejeter?, 'Rejeter', rejeter_invit_path(@invit), class: 'btn btn-sm btn-danger' %> |
-<%= link_to_if @invit.can_confirmer?, 'Confirmer', confirmer_invit_path(@invit), class: 'btn btn-sm btn-primary' %> |
-<%= link_to_if @invit.can_archiver?, 'Archiver', archiver_invit_path(@invit), class: 'btn btn-sm btn-info' %>
 
-<br>
-<br>
-
-<%= link_to 'Retour', invits_path if user_signed_in? %>
 <%= link_to 'Retour', invitations_intervenant_path(@invit.intervenant) unless user_signed_in? %>

@@ -1,6 +1,6 @@
 class InvitsController < ApplicationController
-  skip_before_action :authenticate_user!, only: %i[ show valider rejeter]
-  before_action :set_invit, only: %i[ show edit update destroy envoyer relancer valider rejeter confirmer archiver ]
+  skip_before_action :authenticate_user!, only: %i[ show validation]
+  before_action :set_invit, only: %i[ show edit update destroy envoyer relancer valider rejeter confirmer archiver validation]
 
   # GET /invits or /invits.json
   def index
@@ -123,6 +123,19 @@ class InvitsController < ApplicationController
   def archiver
     @invit.archiver!
     redirect_to invits_path, notice: 'Invitation archivée'
+  end
+
+  def validation
+    case params[:commit]
+    when 'Valider'
+      @invit.valider!
+      flash[:notice] = "Invitation validée."
+    when 'Rejeter'
+      @invit.rejeter!
+      flash[:notice] = "Invitation rejetée."
+    end
+    @invit.update(reponse: params[:reponse])
+    redirect_to invitations_intervenant_path(@invit.intervenant)
   end
 
 

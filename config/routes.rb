@@ -10,6 +10,7 @@ Rails.application.routes.draw do
       get :rejeter 
       get :confirmer 
       get :archiver
+      post :validation
     end
   end
 
