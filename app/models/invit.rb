@@ -35,14 +35,20 @@ class Invit < ApplicationRecord
 
     state RELANCE1, meta: {style: 'badge-info'} do
       event :relancer, transitions_to: RELANCE2
+      event :valider, transitions_to: VALIDE
+      event :rejeter, transitions_to: REJETE
     end
 
     state RELANCE2, meta: {style: 'badge-info'} do
       event :relancer, transitions_to: RELANCE3
+      event :valider, transitions_to: VALIDE
+      event :rejeter, transitions_to: REJETE
     end
     
     state RELANCE3, meta: {style: 'badge-info'} do
       event :relancer, transitions_to: RELANCE1
+      event :valider, transitions_to: VALIDE
+      event :rejeter, transitions_to: REJETE
     end
     
     state VALIDE, meta: {style: 'badge-success'} do
