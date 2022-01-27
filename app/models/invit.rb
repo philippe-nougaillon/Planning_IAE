@@ -14,9 +14,9 @@ class Invit < ApplicationRecord
   # WORKFLOW
   # NOUVEAU = 'nouveau'
   ENVOYE  = 'envoyé'
-  RELANCE1= 'relancé 1 fois'
-  RELANCE2= 'relancé 2 fois'
-  RELANCE3= 'relancé 3 fois'
+  RELANCE1= 'relance1'
+  RELANCE2= 'relance2'
+  RELANCE3= 'relance3'
   VALIDE  = 'validé'
   REJETE  = 'rejeté'
   CONFIRME= 'confirmé'
@@ -35,14 +35,20 @@ class Invit < ApplicationRecord
 
     state RELANCE1, meta: {style: 'badge-info'} do
       event :relancer, transitions_to: RELANCE2
+      event :valider, transitions_to: VALIDE
+      event :rejeter, transitions_to: REJETE
     end
 
     state RELANCE2, meta: {style: 'badge-info'} do
       event :relancer, transitions_to: RELANCE3
+      event :valider, transitions_to: VALIDE
+      event :rejeter, transitions_to: REJETE
     end
     
     state RELANCE3, meta: {style: 'badge-info'} do
       event :relancer, transitions_to: RELANCE1
+      event :valider, transitions_to: VALIDE
+      event :rejeter, transitions_to: REJETE
     end
     
     state VALIDE, meta: {style: 'badge-success'} do
