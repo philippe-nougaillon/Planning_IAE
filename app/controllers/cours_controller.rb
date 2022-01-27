@@ -351,13 +351,16 @@ class CoursController < ApplicationController
         end
 
       when 'Inviter'
+        intervenant_ids = params[:intervenant_ids]
         @cours.each do |c|
-          params[:intervenant_ids].each do | id |
-            invit = c.invits.create(intervenant_id: id, msg: params[:message_invitation])
-            # envoyer les invitations
+          intervenant_ids.each do | id |
+            c.invits.create!(intervenant_id: id, msg: params[:message_invitation])
           end
         end
-
+        intervenant_ids.each do | id |
+          InvitMailer.with(invit: Invit.last).envoyer_invitation.deliver_now
+        end
+        
       when 'Intervertir'
         # il faut 2 cours
         if params[:cours_id].keys.count == 2

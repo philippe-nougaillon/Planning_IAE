@@ -1,5 +1,5 @@
 class InvitsController < ApplicationController
-  skip_before_action :authenticate_user!, only: %i[ show ]
+  skip_before_action :authenticate_user!, only: %i[ show valider rejeter]
   before_action :set_invit, only: %i[ show edit update destroy envoyer relancer valider rejeter confirmer archiver ]
 
   # GET /invits or /invits.json
@@ -98,7 +98,7 @@ class InvitsController < ApplicationController
     @invit.valider!
     #Mailer.with(dossier: @dossier).valider_email.deliver_later
 
-    redirect_to invits_path, notice: "Invitation validée avec succès."
+    redirect_to invitations_intervenant_path(@invit.intervenant), notice: "Invitation validée avec succès."
   end
 
   def relancer
@@ -110,12 +110,14 @@ class InvitsController < ApplicationController
   def rejeter
     @invit.rejeter!
     # Mailer.with(dossier: @dossier).rejeter_email.deliver_later
-    redirect_to invits_path, notice: "Invitation rejetée."
+    redirect_to invitations_intervenant_path(@invit.intervenant), notice: "Invitation rejetée."
   end
 
   def confirmer
     @invit.confirmer!
-    redirect_to invits_path, notice: 'Invitation confirmée'
+    @invit.cour.update(intervenant: @invit.intervenant)
+    InvitMailer.with(invit: @invit).confirmation_invitation.deliver_now
+    redirect_to invits_path, notice: 'Invitation confirmée. Intervenant affecté.'
   end
 
   def archiver
