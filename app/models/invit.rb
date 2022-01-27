@@ -14,9 +14,9 @@ class Invit < ApplicationRecord
   # WORKFLOW
   NOUVEAU = 'nouveau'
   ENVOYE  = 'envoyé'
-  RELANCE1= 'relancé 1 fois'
-  RELANCE2= 'relancé 2 fois'
-  RELANCE3= 'relancé 3 fois'
+  RELANCE1= 'relance1'
+  RELANCE2= 'relance2'
+  RELANCE3= 'relance3'
   VALIDE  = 'validé'
   REJETE  = 'rejeté'
   CONFIRME= 'confirmé'
