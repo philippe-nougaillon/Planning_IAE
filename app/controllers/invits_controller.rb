@@ -68,7 +68,7 @@ class InvitsController < ApplicationController
 
   # DELETE /invits/1 or /invits/1.json
   def destroy
-    @invit.destroy
+    #@invit.destroy
     respond_to do |format|
       format.html { redirect_to invits_url, notice: "Invit was successfully destroyed." }
       format.json { head :no_content }
