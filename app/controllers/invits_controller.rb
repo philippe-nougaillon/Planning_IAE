@@ -96,8 +96,7 @@ class InvitsController < ApplicationController
 
   def valider
     @invit.valider!
-    #Mailer.with(dossier: @dossier).valider_email.deliver_later
-
+    InvitMailer.with(invit: @invit).validation_invitation.deliver_now
     redirect_to invitations_intervenant_path(@invit.intervenant), notice: "Invitation validée avec succès."
   end
 
@@ -109,7 +108,7 @@ class InvitsController < ApplicationController
 
   def rejeter
     @invit.rejeter!
-    # Mailer.with(dossier: @dossier).rejeter_email.deliver_later
+    InvitMailer.with(invit: @invit).rejet_invitation.deliver_now
     redirect_to invitations_intervenant_path(@invit.intervenant), notice: "Invitation rejetée."
   end
 
@@ -126,15 +125,17 @@ class InvitsController < ApplicationController
   end
 
   def validation
+    @invit.update(reponse: params[:reponse])
     case params[:commit]
     when 'Valider'
       @invit.valider!
+      InvitMailer.with(invit: @invit).validation_invitation.deliver_now
       flash[:notice] = "Invitation validée."
     when 'Rejeter'
       @invit.rejeter!
+      InvitMailer.with(invit: @invit).rejet_invitation.deliver_now
       flash[:notice] = "Invitation rejetée."
     end
-    @invit.update(reponse: params[:reponse])
     redirect_to invitations_intervenant_path(@invit.intervenant)
   end
 

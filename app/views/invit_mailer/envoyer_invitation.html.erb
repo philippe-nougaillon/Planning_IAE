@@ -1,9 +1,12 @@
 <p>
+  Bonjour <%= @invit.intervenant.prenom %> <%= @invit.intervenant.nom  %>,
+  <br>
+  <br>
+  Vous avez reçu une invitation pour un/des cours :
   <%= simple_format @invit.msg %>
-</p>
-<br>
-
-<p>
-  <%= link_to 'Cliquez ici', invitations_intervenant_url(@invit.intervenant) %>
-  pour voir votre liste des invitations
+  <br>
+  <br>
+  Cliquez 
+  <%= link_to 'ici', invitations_intervenant_url(@invit.intervenant) %>
+  pour voir votre liste des invitations.
 </p>

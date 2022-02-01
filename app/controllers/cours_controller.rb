@@ -358,7 +358,7 @@ class CoursController < ApplicationController
           end
         end
         intervenant_ids.each do | id |
-          InvitMailer.with(invit: Invit.last).envoyer_invitation.deliver_now
+          InvitMailer.with(invit: Invit.first).envoyer_invitation.deliver_now
         end
         
       when 'Intervertir'
