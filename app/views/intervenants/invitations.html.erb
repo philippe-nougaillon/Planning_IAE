@@ -1,7 +1,10 @@
-<h1 class="mt-3">
+<h3 class="mt-5 mb-5">
   <i class="fas fa-calendar-check"></i>
-  Invitations de <%= @invits.last.intervenant.nom_prenom %>
-</h1>
+  Invitations à l'attention de <%= @invits.last.intervenant.nom_prenom %>
+  <div class="small mt-2">
+    Propositions de créneaux horaires à valider 
+  </div>
+</h3>
 
 <div class="container-fluid p-3 shadow-sm">
   <%= form_tag request.path, method: :get do %>
@@ -32,14 +35,13 @@
 </div>
 <br>
 
-
-<table class="table table-hover">
+<table class="table table-hover table-striped">
   <thead>
     <tr>
       <th>Date</th>
       <th>Formation</th>
-      <th>Message</th>
       <th>État</th>
+      <th>Message</th>
       <th>MàJ</th>
       <th colspan="2"></th>
     </tr>
@@ -54,12 +56,12 @@
             <%= invit.cour.formation.nom %>
           </span>
         </td>
-        <td><%= truncate(invit.msg, length: 50) %></td>
         <td>
           <span class="badge <%= invit.style %>">
             <%= invit.workflow_state.humanize %>
           </span>
         </td>
+        <td><%= truncate(invit.msg, length: 50) %></td>
         <td>il y a <%= time_ago_in_words invit.updated_at %></td>
         <td><%= link_to 'Voir', invit %></td>
         <td><%= link_to '[X]', invit, method: :delete, data: { confirm: 'Are you sure?' } %></td>
