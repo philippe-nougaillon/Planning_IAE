@@ -4,6 +4,8 @@ class InvitsController < ApplicationController
 
   # GET /invits or /invits.json
   def index
+    authorize Invit
+
     @invits = Invit.all
 
     unless params[:formation].blank?
