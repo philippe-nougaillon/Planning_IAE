@@ -1,103 +1,126 @@
 <h3 class="my-5">
   <%= fa_icon 'calendar-check' %>
-  Proposition de cours
+  Proposition de créneau horaire
 </h3>
 <div class="card shadow-sm p-3 my-3">
   <div class="row">
-    <div class="col-5">
+    <div class="col">
       <p>
-        <span style="background-color:<%= @invit.cour.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
-          <%= @invit.cour.formation.nom %>
-        </span>
+        <strong>
+          <%= l(@invit.cour.debut, format: :long).humanize %>
+        </strong>
       </p>
-      <p>
-        <strong>Date:</strong>
-        <%= l(@invit.cour.debut, format: :long) %>
-      </p>
+
       <p>
         <strong>Durée:</strong>
         <%= number_with_precision(@invit.cour.duree, precision: 1, strip_insignificant_zeros: true) %> h
       </p>
 
       <p>
-        <strong>Message</strong>
-        <br>
-        <%= simple_format @invit.msg %>
+        <span style="background-color:<%= @invit.cour.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
+          <%= @invit.cour.formation.nom %>
+        </span>
       </p>
 
+      <% if current_user %>
+        <p>
+          <%= @invit.intervenant.nom_prenom %>
+        </p>
+      <% end %>
 
-      <% if @invit.can_valider? || @invit.can_rejeter? %>
-        <% unless user_signed_in? %>
-          <%= form_tag validation_invit_path(@invit), method: :post do %>
-            <%= text_area_tag :reponse, nil, rows:5, cols: 25 %>
-            <br>
-            <%= submit_tag "Valider", class: "btn btn-sm btn-success"%>
-            <%= submit_tag "Rejeter", class: "btn btn-sm btn-danger"%>
-          <% end %>
-        <% end %>
+    </div>
+    <div class="col">
+      <h5>
+        Vos cours du <%= l(@jour, format: :long).humanize %>
+      </h5>
+      <% if @cours.any? %>
+        <table class="table table-condensed">
+          <thead>
+            <tr>
+              <th>Heure</th>
+              <th>Durée</th>
+              <th>Formation</th>
+              <th>Binôme</th>
+              <th>Cours</th>
+              <th>Salle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @cours.each do |c| %>
+              <tr>
+                <td>
+                  <%= link_to c do %>
+                    <b><%= l(c.debut, format: :heures_min) %></b> 
+                    <br>
+                    <%= l(c.fin, format: :heures_min) %>
+                  <% end %>
+                </td>
+                <td>
+                  <%= number_with_precision(c.duree, precision: 1, strip_insignificant_zeros: true) %> h
+                </td>
+                <td>
+                  <span style="background-color:<%= c.formation.try(:color) %>;padding-left: 5px;margin-right: 5px;"></span>
+                  <%= c.formation.try(:nom_promo) %>
+                </td>
+                <td>
+                  <% if c.intervenant_binome %>
+                    <%= link_to c.intervenant_binome.nom_prenom, c.intervenant_binome %>
+                  <% end %>
+                </td>
+                <td>
+                  <%= c.nom_ou_ue %>
+                </td>
+                <td>
+                  <span class="badge badge-pill badge-<%= c.style %>">
+                    <%= c.salle.nom %>
+                  </span>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+          <tfoot>
+            <tr><th colspan=5></th></tr>
+          </tfoot>
+        </table>
       <% else %>
         <p>
-          <strong>Réponse</strong>
-          <br>
-          <%= simple_format @invit.reponse %>
+          Aucun cours à l'horizon... 
         </p>
       <% end %>
     </div>
-    <div class="col">
-      <p>
-        Vos cours du <b><%= l(@jour, format: :long).humanize %></b> 
-      </p>
-      <table class="table table-condensed">
-        <thead>
-          <tr>
-            <th>Heure</th>
-            <th>Durée</th>
-            <th>Formation</th>
-            <th>Binôme</th>
-            <th>Cours</th>
-            <th>Salle</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @cours.each do |c| %>
-            <tr>
-              <td>
-                <%= link_to c do %>
-                  <b><%= l(c.debut, format: :heures_min) %></b> 
-                  <br>
-                  <%= l(c.fin, format: :heures_min) %>
-                <% end %>
-              </td>
-              <td>
-                <%= number_with_precision(c.duree, precision: 1, strip_insignificant_zeros: true) %> h
-              </td>
-              <td>
-                <span style="background-color:<%= c.formation.try(:color) %>;padding-left: 5px;margin-right: 5px;"></span>
-                <%= c.formation.try(:nom_promo) %>
-              </td>
-              <td>
-                <% if c.intervenant_binome %>
-                  <%= link_to c.intervenant_binome.nom_prenom, c.intervenant_binome %>
-                <% end %>
-              </td>
-              <td>
-                <%= c.nom_ou_ue %>
-              </td>
-              <td>
-                <span class="badge badge-pill badge-<%= c.style %>">
-                  <%= c.salle.nom %>
-                </span>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-        <tfoot>
-          <tr><th colspan=5></th></tr>
-        </tfoot>
-      </table>
-    </div>
   </div>
 
+  <div class="row">
+    <div class="col">
+      <p>
+        <strong>Message</strong>
+        <br>
+        <div class="jumbotron">
+          <%= simple_format @invit.msg %>
+        </div>
+      </p>
+    </div>
+
+    <div class="col">
+      <p>
+        <strong>Votre réponse</strong>
+        <br>
+        <% if @invit.can_valider? || @invit.can_rejeter? %>
+          <% unless user_signed_in? %>
+            <%= form_tag validation_invit_path(@invit), method: :post do %>
+              <%= text_area_tag :reponse, nil, rows: 5, cols: 55 %>
+              <br>
+              <%= submit_tag "Valider", class: "btn btn-outline-success"%>
+              <%= submit_tag "Rejeter", class: "btn btn-outline-danger"%>
+            <% end %>
+          <% end %>
+        <% else %>
+          <%= simple_format @invit.reponse %>
+        <% end %>
+      </p>
+    </div>
+
+  </div>
 </div>
 <% if user_signed_in? %>
   <%= link_to_if @invit.can_relancer?, 'Relancer', envoyer_invit_path(@invit), class: 'btn btn-sm btn-primary' %> |

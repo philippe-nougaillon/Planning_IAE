@@ -6,12 +6,12 @@
     </span>
   </td>
   <td><%= invit.intervenant.nom_prenom %></td>
-  <td><%= truncate(invit.reponse, length: 50) %></td>
   <td>
     <span class="badge <%= invit.style %>">
       <%= invit.workflow_state.humanize %>
     </span>
   </td>
+  <td><%= truncate(invit.reponse, length: 50) %></td>
   <td>il y a <%= time_ago_in_words invit.updated_at %></td>
   <td><%= link_to 'Voir', invit %></td>
   <td><%= link_to '[X]', invit, method: :delete, data: { confirm: 'Are you sure?' } %></td>

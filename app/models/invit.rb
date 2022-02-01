@@ -2,6 +2,9 @@ class Invit < ApplicationRecord
   include Workflow
   include WorkflowActiverecord
 
+  extend FriendlyId
+	friendly_id :slug_candidates, use: :slugged
+
   audited
 
   belongs_to :cour
@@ -12,21 +15,16 @@ class Invit < ApplicationRecord
   default_scope { order('invits.updated_at DESC') }                              
                               
   # WORKFLOW
-  # NOUVEAU = 'nouveau'
-  ENVOYE  = 'envoyé'
+  ENVOYE  = 'envoyée'
   RELANCE1= 'relance1'
   RELANCE2= 'relance2'
   RELANCE3= 'relance3'
-  VALIDE  = 'validé'
-  REJETE  = 'rejeté'
-  CONFIRME= 'confirmé'
-  ARCHIVE = 'archive'
+  VALIDE  = 'validée'
+  REJETE  = 'rejetée'
+  CONFIRME= 'confirmée'
+  ARCHIVE = 'archivée'
 
   workflow do
-    # state NOUVEAU, meta: {style: 'badge-info'} do
-    #   event :envoyer, transitions_to: ENVOYE
-    # end
-
     state ENVOYE, meta: {style: 'badge-primary'} do
       event :relancer, transitions_to: RELANCE1
       event :valider, transitions_to: VALIDE
@@ -74,6 +72,12 @@ class Invit < ApplicationRecord
   
   def style
     self.current_state.meta[:style]
+  end
+
+private
+  # only one candidate for an nice id; one random UDID
+  def slug_candidates
+    [SecureRandom.uuid]
   end
 
 end
