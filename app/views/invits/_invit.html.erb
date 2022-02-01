@@ -1,0 +1,18 @@
+<tr>
+  <td><%= l(invit.cour.debut, format: :long) %></td>
+  <td>
+    <span style="background-color:<%= invit.cour.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
+      <%= invit.cour.formation.nom %>
+    </span>
+  </td>
+  <td><%= invit.intervenant.nom_prenom %></td>
+  <td><%= truncate(invit.reponse, length: 50) %></td>
+  <td>
+    <span class="badge <%= invit.style %>">
+      <%= invit.workflow_state.humanize %>
+    </span>
+  </td>
+  <td>il y a <%= time_ago_in_words invit.updated_at %></td>
+  <td><%= link_to 'Voir', invit %></td>
+  <td><%= link_to '[X]', invit, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+</tr>
