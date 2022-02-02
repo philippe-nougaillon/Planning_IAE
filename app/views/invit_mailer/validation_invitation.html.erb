@@ -1,7 +1,11 @@
 <p>
   Bonjour,
-  <br>
-  L'invitation a bien été validée.
-  <br>
-  <%= @invit.try(:reponse) %>
+  <br><br>
+  L'invitation a été validée.
+  <br><br>
+  <% unless @invit.reponse.blank? %>
+    Réponse :
+    <br><br>
+    <%= @invit.reponse %>
+  <% end %>
 </p>

@@ -1,19 +1,53 @@
+@mixin for-size($size)
+  @if $size == phone-only
+    @media (max-width: 599px) { @content; }
+  @else if $size == tablet-portrait-up
+    @media (min-width: 600px) { @content; }
+  @else if $size == tablet-landscape-up
+    @media (min-width: 900px) { @content; }
+  @else if $size == desktop-up
+    @media (min-width: 1200px) { @content; }
+  @else if $size == big-desktop-up
+    @media (min-width: 1800px) { @content; }
+
 body
-  padding: 0
   background: #f7f7f7
-  text-align: center
 
-.email-table
-  width: 538px
-  padding: 20px
-  background: #fff
-  margin: 40px auto
-  text-align: left
-  font-family: 'Helvetica Neue'
+#main-container
+  display: flex
+  align-items: center
+  justify-content: center
 
-h1
-  font-size: 20px
+#container
+  float: left
+  display: flex
+  align-items: center
+  justify-content: center
+  flex-direction: column
+  margin: 10px 25%
+  border: solid
+  border-width: thin
+  border-color: #cccccc
+  border-radius: 8px
+  padding: 1.25rem
 
-p
-  margin-top: 0
-  font-size: 15px
+#yield
+  display: flex
+  align-items: center
+  justify-content: center
+  flex-direction: column
+
+p, hr
+  width: 100%
+
+hr
+  margin-top: 30px
+  border: 1px solid #ccc
+
+input
+  font-size: 16px
+  color: white
+  background-color: royalblue
+  border: none
+  border-radius: 5px
+  padding: 10px

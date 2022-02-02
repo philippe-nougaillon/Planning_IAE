@@ -1,12 +1,9 @@
 <p>
   Bonjour <%= @invit.intervenant.prenom_nom %>,
-  <br>
-  <br>
-  Vous avez reçu une invitation pour un/des cours :
-  <%= simple_format @invit.msg %>
-  <br>
-  <br>
-  Cliquez 
-  <%= link_to 'ici', invitations_intervenant_url(@invit.intervenant) %>
-  pour voir votre liste des invitations.
+  <br><br>
+  Vous avez reçu une invitation (proposition de créneaux horaires) pour un ou plusieurs cours.
+  <br><br>
+  <%= @invit.msg %>
+  <br><br>
 </p>
+<%= button_to 'Voir mes invitations', invitations_intervenant_url(@invit.intervenant) %>

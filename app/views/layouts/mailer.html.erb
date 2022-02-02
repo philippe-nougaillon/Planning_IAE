@@ -1,40 +1,20 @@
 <!DOCTYPE html>
 <html lang="fr">
-    <head>
-        <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <style type="text/css">
-          .center {
-            margin-left: 10%;
-            margin-right: 10%;
-          }
-        </style>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <%= stylesheet_link_tag "mailer" %>
+  </head>
 
-        <%= stylesheet_link_tag "mailer" %>
-
-    </head>
-  
-    <body>
-      <table class="center">
-        <thead >
-          <tr>
-            <th>
-              <%= image_tag '/Images/logo@100.png' %>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <table>
-                <div style="font-family: sans-serif;">
-                  <%= yield %>
-                </div>
-              </table>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </body>
+  <body>
+    <div id="main-container">
+      <div id="container">
+        <%= image_tag 'logo_iae@195.png', id: "logo" %>
+        <hr>
+        <div id="yield" style="font-family: sans-serif;">
+          <%= yield %>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>
-    
