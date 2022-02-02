@@ -7,13 +7,11 @@
   </head>
 
   <body>
-    <div id="main-container">
-      <div id="container">
-        <%= image_tag 'logo_iae@195.png', id: "logo" %>
-        <hr>
-        <div id="yield" style="font-family: sans-serif;">
-          <%= yield %>
-        </div>
+    <div class="container">
+      <%= image_tag 'logo_iae@195.png' %>
+      <hr>
+      <div>
+        <%= yield %>
       </div>
     </div>
   </body>
