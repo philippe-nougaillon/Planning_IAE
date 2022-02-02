@@ -1,4 +1,9 @@
 <tr>
+  <td>
+      <span data-action="click->action#click">
+          <%= check_box_tag "[invits_id][#{invit.id}]", 'yes', false, data: {"target":"action.source"} %>
+      </span>
+  </td>
   <td><%= link_to l(invit.cour.debut, format: :long), invit %></td>
   <td>
     <span style="background-color:<%= invit.cour.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>

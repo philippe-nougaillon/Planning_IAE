@@ -77,19 +77,39 @@ class InvitsController < ApplicationController
     end
   end
   
+  def action
+    return unless params[:invits_id]
+
+    invits = Invit.where(id: params[:invits_id].keys)
+    count = 0
+
+    case params[:action_name]
+    when "Relancer"
+      invits.each do |invit|
+        if invit.can_relancer? 
+          invit.relancer! 
+          count += 1
+        end
+      end
+    when "Confirmer"
+    when "Archiver"
+      invits.each do |invit| 
+        if invit.can_archiver?
+          invit.archiver!
+          count += 1
+        end 
+      end
+    end
+    flash[:notice] = "#{count} invitation.s modifiée.s"  
+
+    redirect_to invits_url
+  end
+
+
   # 
   # WORKFLOW
   # 
-  # NOUVEAU = 'nouveau'
-  # ENVOYE  = 'envoyé'
-  # RELANCE1= 'relancé 1 fois'
-  # RELANCE2= 'relancé 2 fois'
-  # RELANCE3= 'relancé 3 fois'
-  # VALIDE  = 'validé'
-  # REJETE  = 'rejeté'
-  # CONFIRME= 'confirmé'
-  # ARCHIVE = 'archive'
-
+  
   # def envoyer
   #   @invit.envoyer!
   #   redirect_to invits_path, notice: "Un email va être envoyé à l'intervenant"

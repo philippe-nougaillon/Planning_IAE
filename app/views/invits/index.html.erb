@@ -42,29 +42,40 @@
 </div>
 <br>
 
-<table class="table table-hover">
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>Formation</th>
-      <th>Cours</th>
-      <th>Intervenant</th>
-      <th>État</th>
-      <th>Réponse</th>
-      <th>MàJ</th>
-      <th colspan="2"></th>
-    </tr>
-  </thead>
+<%= form_tag action_invits_path, name: 'action' do %>
+  <div data-controller="action">
 
-  <tbody>
-    <%= render @invits %>
-  </tbody>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Date</th>
+          <th>Formation</th>
+          <th>Cours</th>
+          <th>Intervenant</th>
+          <th>État</th>
+          <th>Réponse</th>
+          <th>MàJ</th>
+          <th colspan="2"></th>
+        </tr>
+      </thead>
 
-  <tfoot>
-    <tr><th colspan=8></th></tr>
-  </tfoot>
+      <tbody>
+        <%= render @invits %>
+      </tbody>
 
-</table>
+      <tfoot>
+        <tr><th colspan=9></th></tr>
+      </tfoot>
+    </table>
+    <div data-target="action.selector">  
+      <%= select_tag :action_name, options_for_select(["Relancer","Confirmer","Archiver"]), 
+                      include_blank: true, 
+                      onchange: 'this.form.submit()', 
+                      class: "form-control form-control-sm col-sm-3 mb-3" %>
+    </div>
+  </div>
+<% end %>
 
 <div class="page_info">
   <%= page_entries_info @invits %>
