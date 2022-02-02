@@ -2,7 +2,7 @@
   <%= fa_icon 'calendar-check' %>
   Proposition de créneau horaire
 </h3>
-<div class="card shadow-sm p-4 my-3">
+<div class="container card shadow-sm p-3 my-3">
   <div class="row">
     <div class="col">
       <p>
@@ -22,7 +22,7 @@
         (<%= number_with_precision(@invit.cour.duree, precision: 1, strip_insignificant_zeros: true) %> h)
       </p>
 
-      <% if current_user %>
+      <% if user_signed_in? %>
         <p>
           <%= @invit.intervenant.nom_prenom %>
         </p>
@@ -95,7 +95,7 @@
       <p>
         <strong>Message</strong>
         <br>
-        <div class="jumbotron">
+        <div class="jumbotron bg-light">
           <%= simple_format @invit.msg %>
         </div>
       </p>
@@ -103,31 +103,63 @@
 
     <div class="col">
       <p>
-        <strong>Votre réponse</strong>
-        <br>
         <% if @invit.can_valider? || @invit.can_rejeter? %>
-          <% unless user_signed_in? %>
-            <%= form_tag validation_invit_path(@invit), method: :post do %>
-              <%= text_area_tag :reponse, nil, rows: 5, cols: 55 %>
-              <br>
-              <%= submit_tag "Valider", class: "btn btn-outline-success"%>
-              <%= submit_tag "Rejeter", class: "btn btn-outline-danger"%>
-            <% end %>
+          <strong>Votre réponse</strong>
+          <br>
+          <%= form_tag validation_invit_path(@invit), method: :post do %>
+            <%= text_area_tag :reponse, nil, rows: 5, cols: 55 %>
+            <br>
+            <%= submit_tag "Valider", disabled: user_signed_in?, class: "btn btn-outline-success" %>
+            <%= submit_tag "Rejeter", disabled: user_signed_in?, class: "btn btn-outline-danger" %>
           <% end %>
         <% else %>
-          <%= simple_format @invit.reponse %>
+          <strong>Réponse</strong>
+          <br>
+          <div class="jumbotron bg-light">
+            <%= simple_format @invit.reponse %>
+          </div>
         <% end %>
       </p>
     </div>
+
   </div>
 </div>
 <% if user_signed_in? %>
-  <%= link_to_if @invit.can_relancer?, 'Relancer', envoyer_invit_path(@invit), class: 'btn btn-sm btn-primary' %> |
-  <%= link_to_if @invit.can_valider?, 'Valider', valider_invit_path(@invit), class: 'btn btn-sm btn-success' %> |
-  <%= link_to_if @invit.can_rejeter?, 'Rejeter', rejeter_invit_path(@invit), class: 'btn btn-sm btn-danger' %> |
-  <%= link_to_if @invit.can_confirmer?, 'Confirmer', confirmer_invit_path(@invit), class: 'btn btn-sm btn-primary' %> |
-  <%= link_to_if @invit.can_archiver?, 'Archiver', archiver_invit_path(@invit), class: 'btn btn-sm btn-info' %>
-
+  Etat :
+  <span class="badge <%= @invit.style %>">
+    <%= @invit.workflow_state.humanize %>
+  </span>
+  | 
+  Actions :
+  <%= link_to_if @invit.can_relancer?, 
+      'Relancer', 
+      relancer_invit_path(@invit), 
+      class: "btn btn-sm " + Invit.workflow_spec.states[:relance1].meta[:style] 
+  %> 
+  |
+  <%= link_to_if @invit.can_valider?, 
+      'Valider', 
+      valider_invit_path(@invit), 
+      class: "btn btn-sm " + Invit.workflow_spec.states[:validée].meta[:style] 
+  %> 
+  |
+  <%= link_to_if @invit.can_rejeter?, 
+      'Rejeter', 
+      rejeter_invit_path(@invit), 
+      class: "btn btn-sm " + Invit.workflow_spec.states[:rejetée].meta[:style] 
+  %> 
+  |
+  <%= link_to_if @invit.can_confirmer?, 
+      'Confirmer', 
+      confirmer_invit_path(@invit), 
+      class: "btn btn-sm " + Invit.workflow_spec.states[:confirmée].meta[:style] 
+  %> 
+  |
+  <%= link_to_if @invit.can_archiver?, 
+      'Archiver', 
+      archiver_invit_path(@invit), 
+      class: "btn btn-sm " + Invit.workflow_spec.states[:archivée].meta[:style] 
+  %>
   <br>
   <br>
   <%= link_to 'Retour', invits_path if user_signed_in? %>

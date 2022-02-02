@@ -66,7 +66,6 @@
 
 </table>
 
-<br>
 <div class="page_info">
   <%= page_entries_info @invits %>
   <%= @invits.reorder(nil).select(:id).group(:workflow_state).count(:id) %>
