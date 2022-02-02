@@ -49,7 +49,7 @@ class Invit < ApplicationRecord
       event :rejeter, transitions_to: REJETE
     end
     
-    state VALIDE, meta: {style: 'badge-success'} do
+    state VALIDE, meta: {style: 'badge-warning'} do
       event :confirmer, transitions_to: CONFIRME
     end
 
@@ -57,11 +57,11 @@ class Invit < ApplicationRecord
       event :archiver, transitions_to: ARCHIVE
     end
 
-    state CONFIRME, meta: {style: 'badge-warning'} do
+    state CONFIRME, meta: {style: 'badge-success'} do
       event :archiver, transitions_to: ARCHIVE
     end
 
-    state ARCHIVE, meta: {style: 'badge-info'}
+    state ARCHIVE, meta: {style: 'badge-secondary'}
   end
 
   # pour que le changement se voit dans l'audit trail

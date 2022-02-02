@@ -1,9 +1,11 @@
 class InvitsController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[ show validation]
-  before_action :set_invit, only: %i[ show edit update destroy envoyer relancer valider rejeter confirmer archiver validation]
+  before_action :set_invit, only: %i[ show edit update destroy relancer valider rejeter confirmer archiver validation]
 
   # GET /invits or /invits.json
   def index
+    authorize Invit
+
     @invits = Invit.all
 
     unless params[:formation].blank?
@@ -88,22 +90,21 @@ class InvitsController < ApplicationController
   # CONFIRME= 'confirmé'
   # ARCHIVE = 'archive'
 
-  def envoyer
-    @invit.envoyer!
-    #Mailer.with(dossier: @dossier).dossier_email.deliver_later
-    redirect_to invits_path, notice: "Un email va être envoyé à l'intervenant"
+  # def envoyer
+  #   @invit.envoyer!
+  #   redirect_to invits_path, notice: "Un email va être envoyé à l'intervenant"
+  # end
+
+  def relancer
+    @invit.relancer!
+    InvitMailer.with(invit: @invit).envoyer_invitation.deliver_now
+    redirect_to invits_path, notice: "Invitation relancée avec succès."
   end
 
   def valider
     @invit.valider!
     InvitMailer.with(invit: @invit).validation_invitation.deliver_now
     redirect_to invitations_intervenant_path(@invit.intervenant), notice: "Invitation validée avec succès."
-  end
-
-  def relancer
-    @invit.relancer!
-    #Mailer.with(dossier: @dossier).dossier_email.deliver_later
-    redirect_to invits_path, notice: "Invitation relancée avec succès."
   end
 
   def rejeter
