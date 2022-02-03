@@ -40,11 +40,11 @@
     <tr>
       <th>Date</th>
       <th>Formation</th>
-      <th>Cours</th>
+      <th>U.E.</th>
       <th>État</th>
       <th>Message</th>
       <th>MàJ</th>
-      <th colspan="2"></th>
+      <th colspan="4"></th>
     </tr>
   </thead>
 
@@ -57,7 +57,7 @@
             <%= invit.cour.formation.nom %>
           </span>
         </td>
-        <td><%= invit.cour.nom_ou_ue %></td>
+        <td><%= Unite.find(invit.ue).num_nom if invit.ue %></td>
         <td>
           <span class="badge <%= invit.style %>">
             <%= invit.workflow_state.humanize %>
@@ -65,13 +65,15 @@
         </td>
         <td><%= truncate(invit.msg, length: 50) %></td>
         <td>il y a <%= time_ago_in_words invit.updated_at %></td>
+        <td><%= link_to "Dispo" %></td>
+        <td><%= link_to "Pas_dispo" %></td>
         <td><%= link_to 'Voir', invit %></td>
       </tr>
     <% end %>
   </tbody>
 
   <tfoot>
-    <tr><th colspan=8></th></tr>
+    <tr><th colspan=10></th></tr>
   </tfoot>
 
 </table>

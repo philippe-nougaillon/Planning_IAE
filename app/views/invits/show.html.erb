@@ -18,29 +18,35 @@
       </p>
 
       <p>
-        <%= @invit.cour.nom_ou_ue %> 
-        (<%= number_with_precision(@invit.cour.duree, precision: 1, strip_insignificant_zeros: true) %> h)
+        <strong>Durée :</strong>
+        <%= number_with_precision(@invit.cour.duree, precision: 1, strip_insignificant_zeros: true) %>h
       </p>
 
       <% if user_signed_in? %>
         <p>
+          <strong>Proposé à :</strong>
           <%= @invit.intervenant.nom_prenom %>
         </p>
       <% end %>
-
+      <p>
+        <strong>U.E. :</strong>
+        <%= Unite.find(@invit.ue).num_nom if @invit.ue %>
+      </p>
+      <p>
+        <strong>Intitulé :</strong>
+        <%= @invit.nom %>
+      </p>
     </div>
     <div class="col">
       <h5>
-        Vos autres cours à L’IAE le <%= l(@jour, format: :long).humanize %>
+        Vos autres cours à L’IAE le <%= l(@jour, format: :long) %>
       </h5>
       <% if @cours.any? %>
-        <table class="table table-condensed">
+        <table class="table">
           <thead>
             <tr>
               <th>Heure</th>
-              <th>Durée</th>
               <th>Formation</th>
-              <th>Binôme</th>
               <th>Cours</th>
               <th>Salle</th>
             </tr>
@@ -50,22 +56,14 @@
               <tr>
                 <td>
                   <%= link_to c do %>
-                    <b><%= l(c.debut, format: :heures_min) %></b> 
-                    <br>
+                    <%= l(c.debut, format: :heures_min) %>
+                    -
                     <%= l(c.fin, format: :heures_min) %>
                   <% end %>
                 </td>
                 <td>
-                  <%= number_with_precision(c.duree, precision: 1, strip_insignificant_zeros: true) %> h
-                </td>
-                <td>
                   <span style="background-color:<%= c.formation.try(:color) %>;padding-left: 5px;margin-right: 5px;"></span>
                   <%= c.formation.try(:nom_promo) %>
-                </td>
-                <td>
-                  <% if c.intervenant_binome %>
-                    <%= link_to c.intervenant_binome.nom_prenom, c.intervenant_binome %>
-                  <% end %>
                 </td>
                 <td>
                   <%= c.nom_ou_ue %>
@@ -79,7 +77,7 @@
             <% end %>
           </tbody>
           <tfoot>
-            <tr><th colspan=5></th></tr>
+            <tr><th colspan=4></th></tr>
           </tfoot>
         </table>
       <% else %>

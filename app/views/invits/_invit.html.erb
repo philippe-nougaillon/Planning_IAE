@@ -10,7 +10,7 @@
       <%= invit.cour.formation.abrg %>
     </span>
   </td>
-  <td><%= invit.cour.nom_ou_ue %></td>
+  <td><%= Unite.find(invit.ue).num_nom if invit.ue %></td>
   <td><%= invit.intervenant.nom_prenom %></td>
   <td>
     <span class="badge <%= invit.style %>">
