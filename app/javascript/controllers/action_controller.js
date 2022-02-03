@@ -4,7 +4,8 @@ export default class extends Controller {
     static targets = [ 'source', 'selector' ]
 
     initialize() {
-        this.selectorTarget.style.visibility = 'hidden';
+        //this.selectorTarget.style.visibility = 'hidden';
+        this.selectorTarget.style.display = 'none';
     }
 
     connect() {
@@ -18,12 +19,14 @@ export default class extends Controller {
           return value.checked;
         } 
  
-        // console.log(`Clicks = ${enabled.length}`)
+        //console.log(`Clicks = ${enabled.length}`)
         
         if (enabled.length == 0 ) {
-            this.selectorTarget.style.visibility = 'hidden';
+            //this.selectorTarget.style.visibility = 'hidden';
+            this.selectorTarget.style.display = 'none';
         } else {
-            this.selectorTarget.style.visibility = 'visible';
+            //this.selectorTarget.style.visibility = 'visible';
+            this.selectorTarget.style.display = 'block';
         }
     }
 }

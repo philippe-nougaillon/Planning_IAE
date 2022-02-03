@@ -12,6 +12,9 @@ Rails.application.routes.draw do
       get :archiver
       post :validation
     end
+    collection do
+      post :action
+    end
   end
 
   resources :formations
