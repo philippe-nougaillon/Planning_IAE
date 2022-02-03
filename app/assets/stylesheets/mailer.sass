@@ -15,20 +15,21 @@ body
   font-family: sans-serif
 
 .container
-  margin: 10px 250px
   border: solid
   border-width: thin
   border-color: #cccccc
   border-radius: 8px
   padding: 1.25rem
   @include for-size(phone-only)
-    margin: 10px !important
+    margin: 10px
   @include for-size(tablet-portrait-up)
-    margin: 10px 30px !important
+    margin: 10px 30px
   @include for-size(tablet-landscape-up)
-    margin: 10px 100px !important
+    margin: 10px 100px
+  @include for-size(desktop-up)
+    margin: 10px 250px
   @include for-size(big-desktop-up)
-    margin: 10px 400px !important
+    margin: 10px 400px
 
 hr
   margin-top: 30px

@@ -19,8 +19,8 @@ class Invit < ApplicationRecord
   RELANCE1= 'relance1'
   RELANCE2= 'relance2'
   RELANCE3= 'relance3'
-  VALIDE  = 'validée'
-  REJETE  = 'rejetée'
+  VALIDE  = 'disponible'
+  REJETE  = 'pas_disponible'
   CONFIRME= 'confirmée'
   ARCHIVE = 'archivée'
 
@@ -29,6 +29,7 @@ class Invit < ApplicationRecord
       event :relancer, transitions_to: RELANCE1
       event :valider, transitions_to: VALIDE
       event :rejeter, transitions_to: REJETE
+      event :archiver, transitions_to: ARCHIVE
     end
 
     state RELANCE1, meta: {style: 'badge-info'} do

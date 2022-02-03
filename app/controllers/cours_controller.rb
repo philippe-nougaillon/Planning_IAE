@@ -351,15 +351,18 @@ class CoursController < ApplicationController
         end
 
       when 'Inviter'
-        intervenant_ids = params[:intervenant_ids]
-        @cours.each do |c|
-          intervenant_ids.each do | id |
-            c.invits.create!(intervenant_id: id, msg: params[:message_invitation])
+        invit = params[:invit]
+        @cours.each do |cour|
+          (0..2).each do |i|
+            intervenant_id = invit[:intervenant].values.to_a[i]
+            unless intervenant_id.blank?
+              cour.invits.create!(intervenant_id: intervenant_id.to_i, msg: params[:message_invitation], ue: invit[:ue].values.to_a[i], nom: invit[:nom].values.to_a[i])
+            end
           end
         end
-        intervenant_ids.each do | id |
-          InvitMailer.with(invit: Invit.first).envoyer_invitation.deliver_now
-        end
+        # intervenant_ids.each do | id |
+        #   InvitMailer.with(invit: Invit.first).envoyer_invitation.deliver_now
+        # end
         
       when 'Intervertir'
         # il faut 2 cours

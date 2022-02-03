@@ -131,19 +131,79 @@
       </div>
     <% end %>
   <% elsif params[:action_name] == "Inviter" %>
-    <div class="col-sm-8">
-      <%= label_tag :intervenant_ids, "Intervenant(s) à inviter. Une proposition par cours et par intervenant va être créé et envoyée" %>    
-      <%= select_tag :intervenant_ids, 
+  <p>
+    Intervenant(s) à inviter. Une proposition par cours et par intervenant va être créé et envoyée
+  </p>
+  <div class="row">
+    <div class="col-3">
+      <%= label_tag :intervenant %>
+      <%= select_tag 'invit[intervenant][1]', 
                       options_from_collection_for_select(Intervenant.where.not(doublon:true), :id, :nom_prenom, params[:intervenant_ids]), 
-                      include_blank: true, 
-                      multiple: true,
+                      include_blank: true,
                       class: "form-control select2" %>
-      <br><br>
-      <%= label_tag "Message" %>
-      <br>
-      <%= text_area_tag :message_invitation,nil, rows: 5, cols:80 %>
-      <br><br>
     </div>
+    <div class="col-5">
+      <%= label_tag :ue, "U.E." %>
+      <br>
+      <%= select_tag 'invit[ue][1]', 
+                      options_from_collection_for_select(@cours.first.formation.unites, :id, :num_nom, params[:ue]), 
+                      include_blank: true,
+                      class: "form-control select2" %>
+    </div>
+    <div class="col-4">
+      <%= label_tag :nom %>
+      <br>
+      <%= text_field_tag 'invit[nom][1]', nil, style: 'width: 100%' %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-3">
+      <%= label_tag :intervenant %>
+      <%= select_tag 'invit[intervenant][2]', 
+                      options_from_collection_for_select(Intervenant.where.not(doublon:true), :id, :nom_prenom, params[:intervenant_ids]), 
+                      include_blank: true,
+                      class: "form-control select2" %>
+    </div>
+    <div class="col-5">
+      <%= label_tag :ue, "U.E." %>
+      <br>
+      <%= select_tag 'invit[ue][2]', 
+                      options_from_collection_for_select(@cours.first.formation.unites, :id, :num_nom, params[:ue]), 
+                      include_blank: true,
+                      class: "form-control select2" %>
+    </div>
+    <div class="col-4">
+      <%= label_tag :nom %>
+      <br>
+      <%= text_field_tag 'invit[nom][2]', nil, style: 'width: 100%' %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-3">
+      <%= label_tag :intervenant %>
+      <%= select_tag 'invit[intervenant][3]', 
+                      options_from_collection_for_select(Intervenant.where.not(doublon:true), :id, :nom_prenom, params[:intervenant_ids]), 
+                      include_blank: true,
+                      class: "form-control select2" %>
+    </div>
+    <div class="col-5">
+      <%= label_tag :ue, "U.E." %>
+      <br>
+      <%= select_tag 'invit[ue][3]', 
+                      options_from_collection_for_select(@cours.first.formation.unites, :id, :num_nom, params[:ue]), 
+                      include_blank: true,
+                      class: "form-control select2" %>
+    </div>
+    <div class="col-4">
+      <%= label_tag :nom %>
+      <br>
+      <%= text_field_tag 'invit[nom][3]', nil, style: 'width: 100%' %>
+    </div>
+  </div>
+  <%= label_tag "Message" %>
+  <br>
+  <%= text_area_tag :message_invitation,nil, rows: 5, cols:80 %>
+  <br><br>
 
   <% elsif params[:action_name] == "Supprimer" %>
     <div class="col-sm-8">

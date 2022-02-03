@@ -31,7 +31,7 @@
     </div>
     <div class="col">
       <h5>
-        Vos cours du <%= l(@jour, format: :long).humanize %>
+        Vos autres cours à L’IAE le <%= l(@jour, format: :long).humanize %>
       </h5>
       <% if @cours.any? %>
         <table class="table table-condensed">
@@ -109,8 +109,8 @@
           <%= form_tag validation_invit_path(@invit), method: :post do %>
             <%= text_area_tag :reponse, nil, rows: 5, cols: 55 %>
             <br>
-            <%= submit_tag "Valider", disabled: user_signed_in?, class: "btn btn-outline-success" %>
-            <%= submit_tag "Rejeter", disabled: user_signed_in?, class: "btn btn-outline-danger" %>
+            <%= submit_tag "Disponible", disabled: user_signed_in?, class: "btn btn-outline-success" %>
+            <%= submit_tag "Pas disponible", disabled: user_signed_in?, class: "btn btn-outline-danger" %>
           <% end %>
         <% else %>
           <strong>Réponse</strong>
@@ -138,15 +138,15 @@
   %> 
   |
   <%= link_to_if @invit.can_valider?, 
-      'Valider', 
+      'Disponible', 
       valider_invit_path(@invit), 
-      class: "btn btn-sm " + Invit.workflow_spec.states[:validée].meta[:style] 
+      class: "btn btn-sm " + Invit.workflow_spec.states[:disponible].meta[:style] 
   %> 
   |
   <%= link_to_if @invit.can_rejeter?, 
-      'Rejeter', 
+      'Pas disponible', 
       rejeter_invit_path(@invit), 
-      class: "btn btn-sm " + Invit.workflow_spec.states[:rejetée].meta[:style] 
+      class: "btn btn-sm " + Invit.workflow_spec.states[:pas_disponible].meta[:style] 
   %> 
   |
   <%= link_to_if @invit.can_confirmer?, 

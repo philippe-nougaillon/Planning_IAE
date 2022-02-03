@@ -116,6 +116,10 @@ class InvitsController < ApplicationController
   def confirmer
     @invit.confirmer!
     @invit.cour.update(intervenant: @invit.intervenant)
+    #passer toutes les invits du même cours en archivé
+    Invit.where(cour_id: @invit.cour_id).where.not(id: @invit.id).each do |invit|
+      invit.archiver!
+    end
     InvitMailer.with(invit: @invit).confirmation_invitation.deliver_now
     redirect_to invits_path, notice: 'Invitation confirmée. Intervenant affecté.'
   end
@@ -128,11 +132,11 @@ class InvitsController < ApplicationController
   def validation
     @invit.update(reponse: params[:reponse])
     case params[:commit]
-    when 'Valider'
+    when 'Disponible'
       @invit.valider!
       InvitMailer.with(invit: @invit).validation_invitation.deliver_now
       flash[:notice] = "Invitation validée."
-    when 'Rejeter'
+    when 'Pas disponible'
       @invit.rejeter!
       InvitMailer.with(invit: @invit).rejet_invitation.deliver_now
       flash[:notice] = "Invitation rejetée."
