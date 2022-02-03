@@ -36,18 +36,21 @@ class Invit < ApplicationRecord
       event :relancer, transitions_to: RELANCE2
       event :valider, transitions_to: VALIDE
       event :rejeter, transitions_to: REJETE
+      event :archiver, transitions_to: ARCHIVE
     end
 
     state RELANCE2, meta: {style: 'badge-info'} do
       event :relancer, transitions_to: RELANCE3
       event :valider, transitions_to: VALIDE
       event :rejeter, transitions_to: REJETE
+      event :archiver, transitions_to: ARCHIVE
     end
     
     state RELANCE3, meta: {style: 'badge-info'} do
       event :relancer, transitions_to: RELANCE1
       event :valider, transitions_to: VALIDE
       event :rejeter, transitions_to: REJETE
+      event :archiver, transitions_to: ARCHIVE
     end
     
     state VALIDE, meta: {style: 'badge-warning'} do

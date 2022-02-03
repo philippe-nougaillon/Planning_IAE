@@ -10,14 +10,14 @@
       <%= invit.cour.formation.abrg %>
     </span>
   </td>
-  <td><%= Unite.find(invit.ue).num_nom if invit.ue %></td>
+  <td><%= truncate(Unite.find(invit.ue).num_nom, length: 40) if invit.ue %></td>
   <td><%= invit.intervenant.nom_prenom %></td>
   <td>
     <span class="badge <%= invit.style %>">
       <%= invit.workflow_state.humanize %>
     </span>
   </td>
-  <td><%= truncate(invit.reponse, length: 50) %></td>
+  <td><%= truncate(invit.reponse, length: 40) %></td>
   <td>il y a <%= time_ago_in_words invit.updated_at %></td>
   <td><%= link_to 'Voir', invit %></td>
 </tr>

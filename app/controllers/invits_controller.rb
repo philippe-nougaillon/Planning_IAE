@@ -135,7 +135,7 @@ class InvitsController < ApplicationController
 
   def confirmer
     @invit.confirmer!
-    @invit.cour.update(intervenant: @invit.intervenant)
+    @invit.cour.update(intervenant: @invit.intervenant, ue: Unite.find(@invit.ue).nom, nom: @invit.nom)
     #passer toutes les invits du même cours en archivé
     Invit.where(cour_id: @invit.cour_id).where.not(id: @invit.id).each do |invit|
       invit.archiver!

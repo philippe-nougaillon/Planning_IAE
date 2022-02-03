@@ -247,6 +247,17 @@ ActiveRecord::Schema.define(version: 2022_02_03_145608) do
     t.index ["slug"], name: "index_intervenants_on_slug", unique: true
   end
 
+  create_table "invitations", force: :cascade do |t|
+    t.bigint "cour_id", null: false
+    t.bigint "intervenant_id", null: false
+    t.string "msg"
+    t.string "workflow_state"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["cour_id"], name: "index_invitations_on_cour_id"
+    t.index ["intervenant_id"], name: "index_invitations_on_intervenant_id"
+  end
+
   create_table "invits", force: :cascade do |t|
     t.bigint "cour_id", null: false
     t.bigint "intervenant_id", null: false
@@ -348,6 +359,8 @@ ActiveRecord::Schema.define(version: 2022_02_03_145608) do
 
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "documents", "dossiers"
+  add_foreign_key "invitations", "cours"
+  add_foreign_key "invitations", "intervenants"
   add_foreign_key "invits", "cours"
   add_foreign_key "invits", "intervenants"
 end
