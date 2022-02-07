@@ -7,6 +7,7 @@ class InvitsController < ApplicationController
     authorize Invit
 
     @invits = Invit.all
+    params[:sort_by] ||= 'MàJ'
 
     unless params[:formation].blank?
       @invits = @invits.joins(:formation).where("formations.id = ?", params[:formation])
@@ -18,6 +19,11 @@ class InvitsController < ApplicationController
 
     unless params[:workflow_state].blank?
       @invits = @invits.where("invits.workflow_state = ?", params[:workflow_state].to_s.downcase)
+    end
+
+    unless params[:sort_by].blank?
+      @invits = @invits.order(:updated_at) if params[:sort_by] == 'MàJ'
+      @invits = @invits.joins(:cour).reorder('cours.debut') if params[:sort_by] == 'Date'
     end
 
     @formations = Formation.where(id: @invits.joins(:formation).pluck("formations.id").uniq)

@@ -8,7 +8,7 @@
     <div class="form-group">
       <div class="row">
 
-        <div class="col-sm-5">
+        <div class="col-sm-4">
           <%= label_tag :formation %>
           <%= select_tag :formation, 
                               options_from_collection_for_select(@formations, :id, :nom_promo, params[:formation]), 
@@ -17,7 +17,7 @@
                               onchange: 'this.form.submit()' %>
         </div>
 
-        <div class="col-sm-5">
+        <div class="col-sm-4">
           <%= label_tag :intervenant %>
           <%= select_tag :intervenant, 
                               options_from_collection_for_select(@intervenants, :id, :nom_prenom, params[:intervenant]), 
@@ -34,6 +34,13 @@
                               include_blank: true,
                               class: 'form-control form-control-sm', 
                               onchange: 'this.form.submit()' %>
+        </div>
+
+        <div class="col-sm-2">
+          <%= label_tag :workflow_state, "Triées par" %>
+          <br>
+          <%= radio_button_tag :sort_by, 'MàJ', params[:sort_by] == 'MàJ', onchange: 'this.form.submit()' %> MàJ
+          <%= radio_button_tag :sort_by, 'Date', params[:sort_by] == 'Date', onchange: 'this.form.submit()' %> Date
         </div>
         
       </div>
