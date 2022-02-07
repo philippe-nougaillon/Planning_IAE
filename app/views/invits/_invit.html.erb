@@ -4,7 +4,13 @@
           <%= check_box_tag "[invits_id][#{invit.id}]", 'yes', false, data: {"target":"action.source"} %>
       </span>
   </td>
-  <td style="white-space: nowrap;"><%= link_to l(invit.cour.debut, format: :long), invit %></td>
+  <td style="white-space: nowrap;">
+    <%= link_to invit do %>
+      <b><%= l(invit.cour.debut, format: :heures_min) %></b> 
+      <br>
+      <%= l(invit.cour.fin, format: :heures_min) %>
+    <% end %>
+  </td>
   <td>
     <span style="background-color:<%= invit.cour.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
       <%= invit.cour.formation.abrg %>

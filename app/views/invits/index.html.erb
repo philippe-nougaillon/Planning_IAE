@@ -26,7 +26,6 @@
                               onchange: 'this.form.submit()' %>
         </div>
 
-
         <div class="col-sm-2">
           <%= label_tag :workflow_state, "Etat" %>
           <%= select_tag :workflow_state, 
@@ -73,7 +72,20 @@
       </thead>
 
       <tbody>
-        <%= render @invits %>
+        <%= current_date = '' %>
+        <% @invits.each do | invit | %>
+          <% if invit.cour.debut.to_date != current_date %>
+            <tr class="shadow-sm bg-light">
+              <th colspan=9>
+                <%= fa_icon 'calendar-day' %>
+                <b><%= l(invit.cour.debut.to_date, format: :long).humanize %></b> 
+              </th>
+            </tr>
+            <% current_date = invit.cour.debut.to_date %>
+          <% end %>  
+
+          <%= render partial: 'invits/invit', locals:{ invit: invit, current_date: current_date } %>
+        <% end %>
       </tbody>
 
       <tfoot>

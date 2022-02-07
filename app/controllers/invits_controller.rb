@@ -6,7 +6,7 @@ class InvitsController < ApplicationController
   def index
     authorize Invit
 
-    params[:sort_by] ||= 'MàJ'
+    params[:sort_by] ||= 'Date'
     @invits = Invit.where.not("invits.workflow_state = 'archivée'") 
 
     unless params[:formation].blank?
