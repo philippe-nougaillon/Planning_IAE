@@ -49,9 +49,26 @@
   </thead>
 
   <tbody>
+    <%= current_date = '' %>
     <% @invits.each do |invit| %>
+      <% if invit.cour.debut.to_date != current_date %>
+        <tr class="shadow-sm bg-light">
+          <th colspan=9>
+            <%= fa_icon 'calendar-day' %>
+            <b><%= l(invit.cour.debut.to_date, format: :long).humanize %></b> 
+          </th>
+        </tr>
+        <% current_date = invit.cour.debut.to_date %>
+      <% end %>  
+
       <tr>
-        <td><%= link_to l(invit.cour.debut, format: :long), invit %></td>
+        <td>
+          <%= link_to invit do %>
+            <b><%= l(invit.cour.debut, format: :heures_min) %></b> 
+            <br>
+            <%= l(invit.cour.fin, format: :heures_min) %>
+          <% end %>
+        </td>
         <td>
           <span style="background-color:<%= invit.cour.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
             <%= invit.cour.formation.nom %>
@@ -63,7 +80,7 @@
             <%= invit.workflow_state.humanize %>
           </span>
         </td>
-        <td><%= truncate(invit.msg, length: 50) %></td>
+        <td><span title="<%= invit.msg %>"><%= truncate(invit.msg, length: 20) %></span></td>
         <td>il y a <%= time_ago_in_words invit.updated_at %></td>
         <td><%= link_to_if invit.can_valider?, "Dispo", valider_invit_path(invit) %></td>
         <td><%= link_to_if invit.can_rejeter?,  "Pas_dispo", rejeter_invit_path(invit) %></td>
