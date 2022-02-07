@@ -6,8 +6,8 @@ class InvitsController < ApplicationController
   def index
     authorize Invit
 
-    @invits = Invit.all
     params[:sort_by] ||= 'MàJ'
+    @invits = Invit.where.not("invits.workflow_state = 'archivée'") 
 
     unless params[:formation].blank?
       @invits = @invits.joins(:formation).where("formations.id = ?", params[:formation])
@@ -24,6 +24,10 @@ class InvitsController < ApplicationController
     unless params[:sort_by].blank?
       @invits = @invits.order(:updated_at) if params[:sort_by] == 'MàJ'
       @invits = @invits.joins(:cour).reorder('cours.debut') if params[:sort_by] == 'Date'
+    end
+
+    unless params[:archive].blank?
+      @invits = Invit.where("invits.workflow_state = 'archivée'")   
     end
 
     @formations = Formation.where(id: @invits.joins(:formation).pluck("formations.id").uniq)
