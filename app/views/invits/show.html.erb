@@ -30,7 +30,7 @@
       <% end %>
       <p>
         <strong>U.E. :</strong>
-        <%= Unite.find(@invit.ue).num_nom if @invit.ue %>
+        <%= Unite.find(@invit.ue).num_nom unless @invit.ue.blank? %>
       </p>
       <p>
         <strong>Intitulé :</strong>
@@ -127,7 +127,7 @@
   <span class="badge <%= @invit.style %>">
     <%= @invit.workflow_state.humanize %>
   </span>
-  | 
+  |-->> 
   Actions :
   <%= link_to_if @invit.can_relancer?, 
       'Relancer', 
@@ -164,3 +164,5 @@
 <% end %>
 
 <%= link_to 'Retour', invitations_intervenant_path(@invit.intervenant) unless user_signed_in? %>
+<br>
+<br>
