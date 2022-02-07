@@ -1,4 +1,4 @@
-<h3 class="my-5">
+<h3 class="my-4">
   <%= fa_icon 'calendar-check' %>
   Proposition de créneau horaire
 </h3>
@@ -105,7 +105,7 @@
           <strong>Votre réponse</strong>
           <br>
           <%= form_tag validation_invit_path(@invit), method: :post do %>
-            <%= text_area_tag :reponse, nil, rows: 5, cols: 55 %>
+            <%= text_area_tag :reponse, nil, rows: 5, cols: 55, disabled: user_signed_in? %>
             <br>
             <%= submit_tag "Disponible", disabled: user_signed_in?, class: "btn btn-outline-success" %>
             <%= submit_tag "Pas disponible", disabled: user_signed_in?, class: "btn btn-outline-danger" %>
@@ -122,6 +122,7 @@
 
   </div>
 </div>
+
 <% if user_signed_in? %>
   Etat :
   <span class="badge <%= @invit.style %>">

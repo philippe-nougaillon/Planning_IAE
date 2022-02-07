@@ -4,7 +4,7 @@
           <%= check_box_tag "[invits_id][#{invit.id}]", 'yes', false, data: {"target":"action.source"} %>
       </span>
   </td>
-  <td><%= link_to l(invit.cour.debut, format: :long), invit %></td>
+  <td style="white-space: nowrap;"><%= link_to l(invit.cour.debut, format: :long), invit %></td>
   <td>
     <span style="background-color:<%= invit.cour.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
       <%= invit.cour.formation.abrg %>
@@ -17,7 +17,7 @@
       <%= invit.workflow_state.humanize %>
     </span>
   </td>
-  <td><%= truncate(invit.reponse, length: 40) %></td>
-  <td>il y a <%= time_ago_in_words invit.updated_at %></td>
+  <td><span title="<%= invit.reponse %>"><%= truncate(invit.reponse, length: 20) %></span></td>
+  <td><%= time_ago_in_words invit.updated_at %></td>
   <td><%= link_to 'Voir', invit %></td>
 </tr>

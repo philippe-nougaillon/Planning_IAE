@@ -39,8 +39,8 @@
         <div class="col-sm-2">
           <%= label_tag :workflow_state, "Triées par" %>
           <br>
-          <%= radio_button_tag :sort_by, 'MàJ', params[:sort_by] == 'MàJ', onchange: 'this.form.submit()' %> MàJ
           <%= radio_button_tag :sort_by, 'Date', params[:sort_by] == 'Date', onchange: 'this.form.submit()' %> Date
+          <%= radio_button_tag :sort_by, 'MàJ', params[:sort_by] == 'MàJ', onchange: 'this.form.submit()' %> MàJ
         </div>
         
       </div>
@@ -62,7 +62,7 @@
           <th>Intervenant</th>
           <th>État</th>
           <th>Réponse</th>
-          <th>MàJ</th>
+          <th>MàJ il y a </th>
           <th colspan="2"></th>
         </tr>
       </thead>
