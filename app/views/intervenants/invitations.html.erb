@@ -57,7 +57,7 @@
             <%= invit.cour.formation.nom %>
           </span>
         </td>
-        <td><%= Unite.find(invit.ue).num_nom if invit.ue %></td>
+        <td><%= Unite.find(invit.ue).num_nom unless invit.ue.blank? %></td>
         <td>
           <span class="badge <%= invit.style %>">
             <%= invit.workflow_state.humanize %>
@@ -65,8 +65,8 @@
         </td>
         <td><%= truncate(invit.msg, length: 50) %></td>
         <td>il y a <%= time_ago_in_words invit.updated_at %></td>
-        <td><%= link_to "Dispo" %></td>
-        <td><%= link_to "Pas_dispo" %></td>
+        <td><%= link_to_if invit.can_valider?, "Dispo", valider_invit_path(invit) %></td>
+        <td><%= link_to_if invit.can_rejeter?,  "Pas_dispo", rejeter_invit_path(invit) %></td>
         <td><%= link_to 'Voir', invit %></td>
       </tr>
     <% end %>

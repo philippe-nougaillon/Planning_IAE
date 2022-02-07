@@ -124,13 +124,13 @@ class InvitsController < ApplicationController
   def valider
     @invit.valider!
     InvitMailer.with(invit: @invit).validation_invitation.deliver_now
-    redirect_to invitations_intervenant_path(@invit.intervenant), notice: "Invitation validée avec succès."
+    redirect_to invitations_intervenant_path(@invit.intervenant), notice: "Invitation mise à jour avec succès."
   end
 
   def rejeter
     @invit.rejeter!
     InvitMailer.with(invit: @invit).rejet_invitation.deliver_now
-    redirect_to invitations_intervenant_path(@invit.intervenant), notice: "Invitation rejetée."
+    redirect_to invitations_intervenant_path(@invit.intervenant), notice: "Invitation mise à jour avec succès."
   end
 
   def confirmer
@@ -155,11 +155,11 @@ class InvitsController < ApplicationController
     when 'Disponible'
       @invit.valider!
       InvitMailer.with(invit: @invit).validation_invitation.deliver_now
-      flash[:notice] = "Invitation validée."
+      flash[:notice] = "Invitation mise à jour avec succès."
     when 'Pas disponible'
       @invit.rejeter!
       InvitMailer.with(invit: @invit).rejet_invitation.deliver_now
-      flash[:notice] = "Invitation rejetée."
+      flash[:notice] = "Invitation mise à jour avec succès."
     end
     redirect_to invitations_intervenant_path(@invit.intervenant)
   end
