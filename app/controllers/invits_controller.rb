@@ -17,6 +17,10 @@ class InvitsController < ApplicationController
       @invits = @invits.where(intervenant_id: params[:intervenant])
     end
 
+    unless params[:start_date].blank?
+      @invits = @invits.joins(:cour).where("DATE(cours.debut) >= ?", params[:start_date])
+    end
+
     unless params[:workflow_state].blank?
       @invits = @invits.where("invits.workflow_state = ?", params[:workflow_state].to_s.downcase)
     end

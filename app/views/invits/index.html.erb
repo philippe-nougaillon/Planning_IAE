@@ -17,13 +17,18 @@
                               onchange: 'this.form.submit()' %>
         </div>
 
-        <div class="col-sm-3">
+        <div class="col-sm-2">
           <%= label_tag :intervenant %>
           <%= select_tag :intervenant, 
                               options_from_collection_for_select(@intervenants, :id, :nom_prenom, params[:intervenant]), 
                               include_blank: true,
                               class: 'form-control form-control-sm select2', 
                               onchange: 'this.form.submit()' %>
+        </div>
+
+        <div class="col-sm-2">
+          <%= label_tag "A partir du" %>    
+          <%= text_field_tag :start_date, params[:start_date], type:'date', onchange:'this.form.submit()', class:"form-control form-control-sm" %>
         </div>
 
         <div class="col-sm-2">
@@ -42,9 +47,9 @@
           <%= radio_button_tag :sort_by, 'MàJ', params[:sort_by] == 'MàJ', onchange: 'this.form.submit()' %> MàJ
         </div>
 
-        <div class="col-sm-2">
+        <div class="col-sm-1">
+          Archivées?
           <%= check_box_tag :archive, '1', params[:archive] == '1', onchange: 'this.form.submit()' %>
-          Archivées ?
         </div>
 
       </div>
