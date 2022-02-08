@@ -82,9 +82,9 @@
         </td>
         <td><span title="<%= invit.msg %>"><%= truncate(invit.msg, length: 20) %></span></td>
         <td>il y a <%= time_ago_in_words invit.updated_at %></td>
-        <td><%= link_to_if invit.can_valider?, "Dispo", valider_invit_path(invit) %></td>
-        <td><%= link_to_if invit.can_rejeter?,  "Pas_dispo", rejeter_invit_path(invit) %></td>
-        <td><%= link_to 'Voir', invit %></td>
+        <td><%= link_to_if invit.can_valider?, "Disponible", valider_invit_path(invit), class: 'btn btn-sm btn-outline-success' %></td>
+        <td style="white-space: nowrap;"><%= link_to_if invit.can_rejeter?,  "Pas disponible", rejeter_invit_path(invit), class: 'btn btn-sm btn-outline-danger' %></td>
+        <td><%= link_to 'Détails', invit %></td>
       </tr>
     <% end %>
   </tbody>
@@ -92,10 +92,8 @@
   <tfoot>
     <tr><th colspan=10></th></tr>
   </tfoot>
-
 </table>
 
-<br>
 <div class="page_info">
   <%= page_entries_info @invits %>
   <%= @invits.reorder(nil).select(:id).group(:workflow_state).count(:id) %>

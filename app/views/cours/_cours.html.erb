@@ -38,6 +38,15 @@
             <br>
             <%= link_to cours.intervenant_binome.nom_prenom, cours.intervenant_binome %>
         <% end %>
+
+        <% if user_signed_in? %>
+            <% unless cours.invits.count.zero? %>
+                <% if cours.invits.first.audits.first.user_id == current_user.id %>
+                    <br>Invits: <%= cours.invits.reorder(nil).select(:id).group(:workflow_state).count(:id) %>
+                    <%= link_to 'voir', invits_path(formation: cours.formation.id) %>
+                <% end %>
+            <% end %>
+        <% end %>
     </td>
     <td>
         <% if cours.ue %>

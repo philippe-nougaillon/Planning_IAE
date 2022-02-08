@@ -168,7 +168,7 @@
       <%= label_tag :ue, "U.E." %>
       <br>
       <%= select_tag 'invit[ue][2]', 
-                      options_from_collection_for_select(@cours.first.formation.unites, :id, :num_nom, params[:ue]), 
+                      options_from_collection_for_select(@cours.first.formation.unites.order(:num), :id, :num_nom, params[:ue]), 
                       include_blank: true,
                       class: "form-control select2" %>
     </div>
@@ -190,7 +190,7 @@
       <%= label_tag :ue, "U.E." %>
       <br>
       <%= select_tag 'invit[ue][3]', 
-                      options_from_collection_for_select(@cours.first.formation.unites, :id, :num_nom, params[:ue]), 
+                      options_from_collection_for_select(@cours.first.formation.unites.order(:num), :id, :num_nom, params[:ue]), 
                       include_blank: true,
                       class: "form-control select2" %>
     </div>

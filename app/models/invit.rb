@@ -53,7 +53,7 @@ class Invit < ApplicationRecord
       event :archiver, transitions_to: ARCHIVE
     end
     
-    state VALIDE, meta: {style: 'badge-warning'} do
+    state VALIDE, meta: {style: 'badge-success'} do
       event :confirmer, transitions_to: CONFIRME
       event :archiver, transitions_to: ARCHIVE
     end
@@ -63,7 +63,7 @@ class Invit < ApplicationRecord
       event :archiver, transitions_to: ARCHIVE
     end
 
-    state CONFIRME, meta: {style: 'badge-success'} do
+    state CONFIRME, meta: {style: 'badge-warning'} do
       event :archiver, transitions_to: ARCHIVE
     end
 
