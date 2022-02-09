@@ -32,7 +32,7 @@
         </div>
 
         <div class="col-sm-2">
-          <%= label_tag :workflow_state, "Etat" %>
+          <%= label_tag :workflow_state, "État" %>
           <%= select_tag :workflow_state, 
                               options_for_select(Invit.workflow_spec.states.keys.to_a, params[:workflow_state]), 
                               include_blank: true,
@@ -70,7 +70,7 @@
           <th>U.E.</th>
           <th>Intervenant</th>
           <th>État</th>
-          <th>Réponse</th>
+          <th></th>
           <th>MàJ il y a </th>
           <th colspan="2"></th>
         </tr>

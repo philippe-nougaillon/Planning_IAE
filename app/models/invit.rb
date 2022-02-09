@@ -22,31 +22,31 @@ class Invit < ApplicationRecord
   VALIDE  = 'disponible'
   REJETE  = 'pas_disponible'
   CONFIRME= 'confirmée'
-  ARCHIVE = 'archivée'
+  ARCHIVE = 'non_retenue'
 
   workflow do
-    state ENVOYE, meta: {style: 'badge-primary'} do
+    state ENVOYE, meta: {style: 'badge-warning'} do
       event :relancer, transitions_to: RELANCE1
       event :valider, transitions_to: VALIDE
       event :rejeter, transitions_to: REJETE
       event :archiver, transitions_to: ARCHIVE
     end
 
-    state RELANCE1, meta: {style: 'badge-info'} do
+    state RELANCE1, meta: {style: 'badge-warning'} do
       event :relancer, transitions_to: RELANCE2
       event :valider, transitions_to: VALIDE
       event :rejeter, transitions_to: REJETE
       event :archiver, transitions_to: ARCHIVE
     end
 
-    state RELANCE2, meta: {style: 'badge-info'} do
+    state RELANCE2, meta: {style: 'badge-warning'} do
       event :relancer, transitions_to: RELANCE3
       event :valider, transitions_to: VALIDE
       event :rejeter, transitions_to: REJETE
       event :archiver, transitions_to: ARCHIVE
     end
     
-    state RELANCE3, meta: {style: 'badge-info'} do
+    state RELANCE3, meta: {style: 'badge-warning'} do
       event :relancer, transitions_to: RELANCE1
       event :valider, transitions_to: VALIDE
       event :rejeter, transitions_to: REJETE
@@ -63,7 +63,7 @@ class Invit < ApplicationRecord
       event :archiver, transitions_to: ARCHIVE
     end
 
-    state CONFIRME, meta: {style: 'badge-warning'} do
+    state CONFIRME, meta: {style: 'badge-primary'} do
       event :archiver, transitions_to: ARCHIVE
     end
 

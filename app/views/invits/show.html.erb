@@ -105,7 +105,7 @@
           <strong>Votre réponse</strong>
           <br>
           <%= form_tag validation_invit_path(@invit), method: :post do %>
-            <%= text_area_tag :reponse, nil, rows: 5, cols: 55, disabled: user_signed_in? %>
+            <%= text_area_tag :reponse, @invit.reponse, rows: 5, cols: 55, disabled: user_signed_in? %>
             <br>
             <%= submit_tag "Disponible", disabled: user_signed_in?, class: "btn btn-outline-success" %>
             <%= submit_tag "Pas disponible", disabled: user_signed_in?, class: "btn btn-outline-danger" %>
@@ -157,7 +157,7 @@
   <%= link_to_if @invit.can_archiver?, 
       'Archiver', 
       archiver_invit_path(@invit), 
-      class: "btn btn-sm " + Invit.workflow_spec.states[:archivée].meta[:style] 
+      class: "btn btn-sm " + Invit.workflow_spec.states[:non_retenue].meta[:style] 
   %>
   <br>
   <br>

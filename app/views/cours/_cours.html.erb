@@ -39,12 +39,11 @@
             <%= link_to cours.intervenant_binome.nom_prenom, cours.intervenant_binome %>
         <% end %>
 
-        <% if user_signed_in? %>
-            <% unless cours.invits.count.zero? %>
-                <% if cours.invits.first.audits.first.user_id == current_user.id %>
-                    <br>Invits: <%= cours.invits.reorder(nil).select(:id).group(:workflow_state).count(:id) %>
-                    <%= link_to 'voir', invits_path(formation: cours.formation.id, start_date: cours.debut.to_date) %>
-                <% end %>
+        <% if user_signed_in? && current_user.admin? %>
+            <% unless cours.invits.where.not(workflow_state: 'non_retenue').count.zero? || cours.invits.where.not(workflow_state: 'confirmée').count.zero? %>
+                <br>
+                <%= fa_icon 'calendar-check' %>
+                <%= link_to 'Invitations en cours', invits_path(formation: cours.formation.id, start_date: cours.debut.to_date) %>
             <% end %>
         <% end %>
     </td>
