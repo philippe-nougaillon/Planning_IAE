@@ -141,8 +141,11 @@ class InvitsController < ApplicationController
 
   def valider
     @invit.valider!
-    #InvitMailer.with(invit: @invit).validation_invitation.deliver_now
-    redirect_to invitations_intervenant_path(@invit.intervenant), notice: "Invitation mise à jour avec succès."
+    if user_signed_in?
+      redirect_to invits_path, notice: "Invitation mise à jour avec succès"
+    else
+      redirect_to invitations_intervenant_path(@invit.intervenant), notice: "Invitation mise à jour avec succès."
+    end
   end
 
   def rejeter
@@ -153,7 +156,7 @@ class InvitsController < ApplicationController
 
   def confirmer
     @invit.confirmer!
-    @invit.cour.update(intervenant: @invit.intervenant, ue: Unite.find(@invit.ue).num, nom: @invit.nom)
+    @invit.cour.update(intervenant: @invit.intervenant, ue: (!@invit.ue.blank? ? Unite.find(@invit.ue).num : nil), nom: @invit.nom)
     #passer toutes les invits du même cours en archivé
     Invit.where(cour_id: @invit.cour_id).where.not(id: @invit.id).each do |invit|
       invit.archiver!

@@ -20,4 +20,9 @@ class InvitMailer < ApplicationMailer
     @invit = params[:invit]
     mail(to: @invit.intervenant.email, subject:"[PLANNING] Confirmation du cours")
   end
+
+  def informer_intervenant
+    @intervenant = Intervenant.find(params[:intervenant_id])
+    mail(to: @intervenant.email, subject: "[PLANNING] Cours confirmés")
+  end
 end

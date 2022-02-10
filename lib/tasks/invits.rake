@@ -23,4 +23,17 @@ namespace :invits do
         puts "-- Traitement terminé --"
         puts "#{invitations.size} invitations(s) traitée(s)"
     end
+
+    desc "Informer des cours confirmés"
+    task :informer_intervenants, [:enregistrer] => :environment do |task, args|
+        # s'il y a eu des confirmations ce jours
+        if Invit.with_confirmée_state.where("DATE(updated_at) = ?", Date.today).any?
+            # envoyer à chaque intervenants la liste des cours confirmés
+            Invit.with_confirmée_state.where("DATE(updated_at) = ?", Date.today).pluck(:intervenant_id).uniq.each do | id |
+                InvitMailer.with(intervenant_id: id).informer_intervenant.deliver_now
+            end
+        end    
+    end
+
+
 end

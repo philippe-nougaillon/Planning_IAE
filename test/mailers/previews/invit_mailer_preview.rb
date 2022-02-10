@@ -15,4 +15,9 @@ class InvitMailerPreview < ActionMailer::Preview
   def confirmation_invitation
     InvitMailer.with(invit: Invit.first).confirmation_invitation
   end
+
+  def informer_intervenant
+    InvitMailer.with(intervenant_id: Invit.first.intervenant.id).informer_intervenant
+  end
+
 end
