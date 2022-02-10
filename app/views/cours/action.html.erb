@@ -132,7 +132,7 @@
     <% end %>
   <% elsif params[:action_name] == "Inviter" %>
   <p>
-    <b>Intervenant(s) à inviter. Une proposition par cours et par intervenant va être créée et envoyée</b>
+    <b>Intervenant(s) à inviter. Une proposition par cours et par intervenant sera créée et envoyée.</b>
   </p>
   <div class="row">
     <div class="col-3">
@@ -200,10 +200,43 @@
       <%= text_field_tag 'invit[nom][3]', nil, style: 'width: 100%' %>
     </div>
   </div>
+  <div class="row">
+    <div class="col-3">
+      <%= label_tag :intervenant %>
+      <%= select_tag 'invit[intervenant][4]', 
+                      options_from_collection_for_select(Intervenant.where.not(doublon:true), :id, :nom_prenom, params[:intervenant_ids]), 
+                      include_blank: true,
+                      class: "form-control select2" %>
+    </div>
+    <div class="col-5">
+      <%= label_tag :ue, "U.E." %>
+      <br>
+      <%= select_tag 'invit[ue][4]', 
+                      options_from_collection_for_select(@cours.first.formation.unites.order(:num), :id, :num_nom, params[:ue]), 
+                      include_blank: true,
+                      class: "form-control select2" %>
+    </div>
+    <div class="col-4">
+      <%= label_tag :nom %>
+      <br>
+      <%= text_field_tag 'invit[nom][4]', nil, style: 'width: 100%' %>
+    </div>
+  </div>
+  <br>
   <%= label_tag "Message" %>
   <br>
   <%= text_area_tag :message_invitation,nil, rows: 5, cols:80 %>
-  <br><br>
+  <br>
+  <% if Invit.where(cour_id: @cours.pluck(:id)).where.not("workflow_state = 'non_retenu' OR  workflow_state = 'confirmée'").any? %>
+    <p>
+      <br>
+      <b>Attention ! Il y a des invitations en cours...</b>
+      <br>
+      <%= hidden_field_tag :invits, true %>
+      <%= check_box_tag :confirmation, 'yes' %> Je sais ce que je fais (enfin je crois) !
+    </p>
+  <% end %>
+  <br>
 
   <% elsif params[:action_name] == "Supprimer" %>
     <div class="col-sm-8">

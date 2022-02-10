@@ -351,15 +351,19 @@ class CoursController < ApplicationController
         end
 
       when 'Inviter'
-        invit = params[:invit]
-        (0..2).each do |i|
-          intervenant_id = invit[:intervenant].values.to_a[i]
-          unless intervenant_id.blank?
-            @cours.each do |cour|
-              cour.invits.create!(intervenant_id: intervenant_id.to_i, msg: params[:message_invitation], ue: invit[:ue].values.to_a[i], nom: invit[:nom].values.to_a[i])
+        if (params[:invits].present? && params[:confirmation] == 'yes') || !params[:invits].present?
+          invit = params[:invit]
+          (0..3).each do |i|
+            intervenant_id = invit[:intervenant].values.to_a[i]
+            unless intervenant_id.blank?
+              @cours.each do |cour|
+                cour.invits.create!(intervenant_id: intervenant_id.to_i, msg: params[:message_invitation], ue: invit[:ue].values.to_a[i], nom: invit[:nom].values.to_a[i])
+              end
+              InvitMailer.with(invit: Invit.first).envoyer_invitation.deliver_now
             end
-            InvitMailer.with(invit: Invit.first).envoyer_invitation.deliver_now
           end
+        else
+          flash[:error] = "Action annulée"
         end
         
       when 'Intervertir'
