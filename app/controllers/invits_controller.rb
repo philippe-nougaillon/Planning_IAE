@@ -34,6 +34,10 @@ class InvitsController < ApplicationController
       @invits = Invit.where("invits.workflow_state = 'non_retenue'")   
     end
 
+    unless params[:cours_id].blank?
+      @invits = @invits.where(cour_id: params[:cours_id].to_i)
+    end
+
     @formations = Formation.where(id: @invits.joins(:formation).pluck("formations.id").uniq)
     @intervenants = Intervenant.where(id: @invits.pluck(:intervenant_id).uniq)
     @invits = @invits.paginate(page: params[:page], per_page: 20)
@@ -149,7 +153,7 @@ class InvitsController < ApplicationController
 
   def confirmer
     @invit.confirmer!
-    @invit.cour.update(intervenant: @invit.intervenant, ue: Unite.find(@invit.ue).nom, nom: @invit.nom)
+    @invit.cour.update(intervenant: @invit.intervenant, ue: Unite.find(@invit.ue).num, nom: @invit.nom)
     #passer toutes les invits du même cours en archivé
     Invit.where(cour_id: @invit.cour_id).where.not(id: @invit.id).each do |invit|
       invit.archiver!
