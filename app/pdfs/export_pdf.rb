@@ -257,7 +257,7 @@ class ExportPdf
         text "Vacations administratives", size: 18
 
         font_size 10
-        text "Arrêté du 27/09/2021"
+        text "Décret n° 2021-1741 du 22 décembre 2021 portant relèvement du salaire minimum de croissance"
         move_down @margin_down
 
         text surveillant
@@ -284,7 +284,7 @@ class ExportPdf
                         durée = exam.duree + 1 
                         cumul_durée += durée
                         data += [[ index,
-                                    I18n.l(exam.debut, format: :long),
+                                    I18n.l(exam.debut.to_date, format: :long) + ' ' + I18n.l(exam.debut, format: :heures_min) + '-' + I18n.l(exam.fin, format: :heures_min),
                                     exam.formation.nom_promo,
                                     '7322GRH',
                                     (exam.formation.diplome.upcase == 'LICENCE' ? '101PAIE' : '102PAIE'),
@@ -298,9 +298,9 @@ class ExportPdf
 
         data += [[nil, nil,nil, nil,nil, "Total heures :", "<b>#{ cumul_durée }</b>" ]]
 
-        taux_horaire = 10.48
+        taux_horaire = 10.57
         data += [[nil, nil,
-                    "Taux horaire en vigueur au 01/10/2021 :", 
+                    "Taux horaire en vigueur au 01/01/2022 :", 
                     "#{ taux_horaire } €",
                     nil,
                     "<b>Total brut :</b>",
@@ -327,10 +327,10 @@ class ExportPdf
         y_position = cursor
         bounding_box([0, y_position], :width => 250, :height => 100) do
             text "Eric LAMARQUE"
-            text "Directeur de l'IAE de Paris", size: 8
+            text "Directeur de l'IAE Paris", size: 8
         end
         bounding_box([250, y_position], :width => 250) do
-            text "Rédhallah BETTAHAR"
+            text "Barbara FITSCH-MOURAS"
             text "Responsable de service", size: 8 
         end    
 
