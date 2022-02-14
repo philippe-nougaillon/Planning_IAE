@@ -20,4 +20,8 @@ class InvitMailerPreview < ActionMailer::Preview
     InvitMailer.with(intervenant_id: Invit.first.intervenant.id).informer_intervenant
   end
 
+  def informer_gestionnaire
+    InvitMailer.with(gestionnaire_id: 7).informer_gestionnaire
+  end
+
 end

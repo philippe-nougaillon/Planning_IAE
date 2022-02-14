@@ -74,7 +74,11 @@
             <%= invit.cour.formation.nom %>
           </span>
         </td>
-        <td><%= Unite.find(invit.ue).num_nom unless invit.ue.blank? %></td>
+        <td>
+          <%= Unite.find(invit.ue).num unless invit.ue.blank? %>
+          :
+          <%= invit.nom unless invit.nom.blank? %>
+        </td>
         <td>
           <span class="badge <%= invit.style %>">
             <%= invit.workflow_state.humanize %>

@@ -25,4 +25,10 @@ class InvitMailer < ApplicationMailer
     @intervenant = Intervenant.find(params[:intervenant_id])
     mail(to: @intervenant.email, subject: "[PLANNING] Cours confirmés")
   end
+
+  def informer_gestionnaire
+    @gestionnaire = User.find(params[:gestionnaire_id])
+    mail(to: @gestionnaire.email, subject: "[PLANNING] Vous avez de nouvelles invitations à traiter")
+  end
+
 end

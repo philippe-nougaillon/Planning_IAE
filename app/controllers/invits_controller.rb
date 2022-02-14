@@ -1,12 +1,12 @@
 class InvitsController < ApplicationController
-  skip_before_action :authenticate_user!, only: %i[show valider rejeter]
+  skip_before_action :authenticate_user!, only: %i[show validation valider rejeter]
   before_action :set_invit, only: %i[ show edit update destroy relancer valider rejeter confirmer archiver validation]
 
   # GET /invits or /invits.json
   def index
     authorize Invit
 
-    params[:sort_by] ||= 'Date'
+    params[:sort_by] ||= 'MàJ'
     @invits = Invit.where.not("invits.workflow_state = 'non_retenue'") 
 
     unless params[:formation].blank?
