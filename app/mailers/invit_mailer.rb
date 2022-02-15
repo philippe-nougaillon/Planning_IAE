@@ -3,27 +3,27 @@ class InvitMailer < ApplicationMailer
 
   def envoyer_invitation
     @invit = params[:invit]
-    mail(to: @invit.intervenant.email, subject:"[PLANNING] Invitation à un/des nouveaux cours")
+    mail(to: @invit.intervenant.email, subject:"[PLANNING] Proposition de créneaux pour placer vos cours à l’IAE Paris-Sorbonne")
   end
 
-  def validation_invitation
-    @invit = params[:invit]
-    mail(to: @invit.intervenant.email, subject:"[PLANNING] Validation du cours")
-  end
+  # def validation_invitation
+  #   @invit = params[:invit]
+  #   mail(to: @invit.intervenant.email, subject:"[PLANNING] Validation du cours")
+  # end
 
-  def rejet_invitation
-    @invit = params[:invit]
-    mail(to: @invit.intervenant.email, subject:"[PLANNING] Rejet du cours")
-  end
+  # def rejet_invitation
+  #   @invit = params[:invit]
+  #   mail(to: @invit.intervenant.email, subject:"[PLANNING] Rejet du cours")
+  # end
 
-  def confirmation_invitation
-    @invit = params[:invit]
-    mail(to: @invit.intervenant.email, subject:"[PLANNING] Confirmation du cours")
-  end
+  # def confirmation_invitation
+  #   @invit = params[:invit]
+  #   mail(to: @invit.intervenant.email, subject:"[PLANNING] Confirmation du cours")
+  # end
 
   def informer_intervenant
     @intervenant = Intervenant.find(params[:intervenant_id])
-    mail(to: @intervenant.email, subject: "[PLANNING] Cours confirmés")
+    mail(to: @intervenant.email, subject: "[PLANNING] Cours confirmés à l’IAE Paris-Sorbonne")
   end
 
   def informer_gestionnaire
