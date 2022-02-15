@@ -54,7 +54,7 @@
       <% if invit.cour.debut.to_date != current_date %>
         <tr class="shadow-sm bg-light">
           <th colspan=9>
-            <%= fa_icon 'calendar-day' %>
+            <%= fa_icon 'calendar-check' %>
             <b><%= l(invit.cour.debut.to_date, format: :long).humanize %></b> 
           </th>
         </tr>
