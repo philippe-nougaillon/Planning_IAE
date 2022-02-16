@@ -28,7 +28,7 @@ class InvitMailer < ApplicationMailer
 
   def informer_gestionnaire
     @gestionnaire = User.find(params[:gestionnaire_id])
-    mail(to: @gestionnaire.email, subject: "[PLANNING] Vous avez de nouvelles invitations à traiter")
+    mail(to: @gestionnaire.email, subject: "[PLANNING] Vous avez de nouvelles réponses à traiter")
   end
 
 end
