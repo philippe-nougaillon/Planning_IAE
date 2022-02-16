@@ -685,7 +685,7 @@ class Cour < ApplicationRecord
     end
 
     def check_invits_en_cours
-      if self.invits.where.not("workflow_state = 'non_retenu' OR  workflow_state = 'confirmée'").any? && self.intervenant != 445
+      if self.invits.where.not("workflow_state = 'non_retenue' OR  workflow_state = 'confirmée'").any? && self.intervenant != 445
         errors.add(:cours, 'a des invitations en cours !')
       end
     end

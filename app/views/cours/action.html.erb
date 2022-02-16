@@ -229,7 +229,7 @@
   <br>
   <%= text_area_tag :message_invitation,nil, rows: 5, cols:80 %>
   <br>
-  <% if Invit.where(cour_id: @cours.pluck(:id)).where.not("workflow_state = 'non_retenu' OR  workflow_state = 'confirmée'").any? %>
+  <% if Invit.where(cour_id: @cours.pluck(:id)).where.not("workflow_state = 'non_retenue' OR  workflow_state = 'confirmée'").any? %>
     <p>
       <br>
       <b>Attention ! Il y a des invitations en cours...</b>

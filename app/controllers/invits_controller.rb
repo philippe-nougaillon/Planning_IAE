@@ -150,19 +150,36 @@ class InvitsController < ApplicationController
 
   def rejeter
     @invit.rejeter!
-    #InvitMailer.with(invit: @invit).rejet_invitation.deliver_now
     redirect_to invitations_intervenant_path(@invit.intervenant), notice: "Invitation mise à jour avec succès."
   end
 
   def confirmer
-    @invit.confirmer!
-    @invit.cour.update(intervenant: @invit.intervenant, ue: (!@invit.ue.blank? ? Unite.find(@invit.ue).num : nil), nom: @invit.nom)
-    #passer toutes les invits du même cours en archivé
-    Invit.where(cour_id: @invit.cour_id).where.not(id: @invit.id).each do |invit|
-      invit.archiver!
+
+    # attribuer le cours
+    cours = @invit.cour
+    cours.intervenant = @invit.intervenant
+    cours.ue  = (!@invit.ue.blank? ? Unite.find(@invit.ue).num : nil)
+    cours.nom = @invit.nom
+    cours.valid?
+    if cours.errors.full_messages == ["Cours a des invitations en cours !"]
+      @invit.confirmer!
+      puts '[DEBUG] Confirmé'
+  
+      # fermer les invitations en cours avant d'attribuer le cours
+      Invit.where(cour_id: @invit.cour_id).where.not(id: @invit.id).each do |invit|
+        invit.archiver!
+      end
+      puts '[DEBUG] Archivés'
+
+      # Force l'enregistrement du nouvel intervenant
+      cours.save(validate: false)
+      puts "{DEBUG] Intervenant enregistré"
+  
+      flash[:notice] = "Invitation confirmée. Intervenant affecté."
+    else
+      flash[:error] = "L'intervenant n'a pas pu être modifié. #{ cours.errors.full_messages }"
     end
-    #InvitMailer.with(invit: @invit).confirmation_invitation.deliver_now
-    redirect_to invits_path, notice: 'Invitation confirmée. Intervenant affecté.'
+    redirect_to invits_path
   end
 
   def validation
@@ -170,11 +187,9 @@ class InvitsController < ApplicationController
     case params[:commit]
     when 'Disponible'
       @invit.valider!
-      #InvitMailer.with(invit: @invit).validation_invitation.deliver_now
       flash[:notice] = "Invitation mise à jour avec succès."
     when 'Pas disponible'
       @invit.rejeter!
-      #InvitMailer.with(invit: @invit).rejet_invitation.deliver_now
       flash[:notice] = "Invitation mise à jour avec succès."
     end
     redirect_to invitations_intervenant_path(@invit.intervenant)
