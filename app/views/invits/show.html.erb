@@ -82,7 +82,7 @@
         </table>
       <% else %>
         <p>
-          Aucun cours à l'horizon... 
+          Vous n'avez pas encore de cours programmés ce jour là... 
         </p>
       <% end %>
     </div>
@@ -91,7 +91,7 @@
   <div class="row">
     <div class="col">
       <p>
-        <strong>Message</strong>
+        <strong>Message du gestionnaire de formation</strong>
         <br>
         <div class="jumbotron bg-light">
           <%= simple_format @invit.msg %>
@@ -111,7 +111,7 @@
             <%= submit_tag "Pas disponible", disabled: user_signed_in?, class: "btn btn-outline-danger" %>
           <% end %>
         <% else %>
-          <strong>Réponse</strong>
+          <strong>Réponse de l'enseignant</strong>
           <br>
           <div class="jumbotron bg-light">
             <%= simple_format @invit.reponse %>
