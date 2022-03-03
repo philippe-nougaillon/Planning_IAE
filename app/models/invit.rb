@@ -66,7 +66,9 @@ class Invit < ApplicationRecord
       event :archiver, transitions_to: ARCHIVE
     end
 
-    state ARCHIVE, meta: {style: 'badge-secondary'}
+    state ARCHIVE, meta: {style: 'badge-secondary'} do
+      event :archiver, transitions_to: ARCHIVE
+    end
   end
 
   # pour que le changement se voit dans l'audit trail

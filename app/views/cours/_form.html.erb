@@ -62,7 +62,7 @@
                             { include_blank: true, label: "Intervenant en binôme" }, 
                             class: "select2" %>
     
-    <%= f.text_field :ue, placeholder: "UE#", label: "UE" %>
+    <%= f.number_field :code_ue, placeholder: "UE#", label: "Code UE" %>
     <%= f.text_field :nom, placeholder: "Nom du cours (si vide; sera remplacé par le nom de l'UE)" %>
 
     <%= f.form_group do %>

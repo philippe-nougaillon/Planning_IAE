@@ -17,7 +17,7 @@
     </span>
   </td>
   <td>
-    <%= Unite.find(invit.ue).num unless invit.ue.blank? %>
+    <%= Unite.find(invit.ue).num_nom if invit.ue %>
     :
     <%= invit.nom unless invit.nom.blank? %>
   </td>

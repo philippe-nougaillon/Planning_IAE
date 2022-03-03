@@ -158,7 +158,7 @@ class InvitsController < ApplicationController
     # attribuer le cours
     cours = @invit.cour
     cours.intervenant = @invit.intervenant
-    cours.ue  = (!@invit.ue.blank? ? Unite.find(@invit.ue).num : nil)
+    cours.code_ue = (@invit.ue ? Unite.find(@invit.ue).code : nil)
     cours.nom = @invit.nom
     cours.valid?
     if cours.errors.full_messages == ["Cours a des invitations en cours !"]

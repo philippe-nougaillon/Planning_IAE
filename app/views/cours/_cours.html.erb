@@ -48,8 +48,8 @@
         <% end %>
     </td>
     <td>
-        <% if cours.ue %>
-            <%= link_to cours.try(:ue), cours_path(ue: cours.ue) %>
+        <% if cours.code_ue %>
+            <%= link_to "##{ cours.code_ue }", cours_path(ue: cours.code_ue) %>
         <% end %>
     </td>
     <td>

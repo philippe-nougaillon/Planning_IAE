@@ -119,7 +119,7 @@ class CoursController < ApplicationController
     end
 
     unless params[:ue].blank?
-      @cours = @cours.where(ue:params[:ue])
+      @cours = @cours.where(code_ue:params[:ue])
     end
 
     unless params[:ids].blank?
@@ -589,7 +589,7 @@ class CoursController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def cour_params
       params.require(:cour).permit(:debut, :fin, :formation_id, :intervenant_id, 
-                                    :salle_id, :ue, :nom, :etat, :duree,
+                                    :salle_id, :code_ue, :nom, :etat, :duree,
                                     :intervenant_binome_id, :hors_service_statutaire,
                                     :commentaires, :elearning)
     end

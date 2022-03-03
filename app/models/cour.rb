@@ -105,8 +105,8 @@ class Cour < ApplicationRecord
   def nom_ou_ue
     begin
       if self.nom.blank?        
-        unless self.ue.blank?
-          if ue = self.formation.unites.find_by(num:self.ue.upcase)
+        if self.code_ue
+          if ue = self.formation.unites.find_by(code: self.code_ue)
             ue.num_nom
           end        
         end  
