@@ -68,6 +68,7 @@ class Invit < ApplicationRecord
 
     state ARCHIVE, meta: {style: 'badge-secondary'} do
       event :archiver, transitions_to: ARCHIVE
+      event :relancer, transitions_to: RELANCE1
     end
   end
 

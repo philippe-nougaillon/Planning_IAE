@@ -162,6 +162,28 @@
   <br>
   <br>
   <%= link_to 'Retour', invits_path if user_signed_in? %>
+  <br>
+
+  <div id="audit">
+    <br>
+    <% if @invit.audits.any? %>
+      <h4>Audit des modifications</h4>
+      <table class="table table-bordered table-hover table-condensed">
+        <thead>
+          <th>Date</th>
+          <th>Utilisateur</th>            
+          <th>Type</th>
+          <th>Record_id</th>
+          <th>Action</th>
+          <th>Modifications</th>
+        </thead>
+
+        <%= render partial: 'tools/audit', collection: @invit.audits %>
+
+      </table>
+    <% end %>
+  </div> 
+
 <% end %>
 
 <%= link_to 'Retour', invitations_intervenant_path(@invit.intervenant) unless user_signed_in? %>

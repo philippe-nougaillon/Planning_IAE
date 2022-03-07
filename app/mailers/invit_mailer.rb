@@ -3,7 +3,8 @@ class InvitMailer < ApplicationMailer
 
   def envoyer_invitation
     @invit = params[:invit]
-    mail(to: @invit.intervenant.email, subject:"[PLANNING] Proposition de créneaux pour placer vos cours à l’IAE Paris-Sorbonne")
+    mail(to: @invit.intervenant.email, 
+         subject:"[PLANNING] Proposition de créneaux pour placer vos cours #{ @invit.cour.formation.nom } à l’IAE Paris-Sorbonne")
   end
 
   # def validation_invitation

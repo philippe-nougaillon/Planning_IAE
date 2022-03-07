@@ -24,7 +24,7 @@
 
         <div class="col-sm-2">
           <%= label_tag :ue, "U.E." %>   
-          <%= select_tag :ue, options_for_select(@les_ue, params[:ue]), 
+          <%= select_tag :ue, options_for_select((0..20), params[:ue]), 
                           class: "form-control form-control-sm select2", 
                           include_blank:true, onchange: 'this.form.submit()' %>
         </div>

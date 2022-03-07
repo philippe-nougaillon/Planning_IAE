@@ -119,7 +119,7 @@ class CoursController < ApplicationController
     end
 
     unless params[:ue].blank?
-      @cours = @cours.where(code_ue:params[:ue])
+      @cours = @cours.where(code_ue: params[:ue])
     end
 
     unless params[:ids].blank?
@@ -351,17 +351,26 @@ class CoursController < ApplicationController
         end
 
       when 'Inviter'
-        if (params[:invits].present? && params[:confirmation] == 'yes') || !params[:invits].present?
+        invits_créées = 0
+        if (params[:invits_en_cours].present? && params[:confirmation] == 'yes') || !params[:invits_en_cours].present?
           invit = params[:invit]
           (0..3).each do |i|
             intervenant_id = invit[:intervenant].values.to_a[i]
             unless intervenant_id.blank?
               @cours.each do |cour|
-                cour.invits.create!(intervenant_id: intervenant_id.to_i, msg: params[:message_invitation], ue: invit[:ue].values.to_a[i], nom: invit[:nom].values.to_a[i])
+                cour.invits.create!(user_id: current_user.id,
+                                    intervenant_id: intervenant_id.to_i, 
+                                    msg: params[:message_invitation], 
+                                    ue: invit[:ue].values.to_a[i], 
+                                    nom: invit[:nom].values.to_a[i])
+                invits_créées += 1
               end
               InvitMailer.with(invit: Invit.first).envoyer_invitation.deliver_now
             end
           end
+        end  
+        if invits_créées > 0
+          @message_complémentaire = "#{ invits_créées } invitation.s créée.s avec succès"        
         else
           flash[:error] = "Action annulée"
         end
@@ -438,7 +447,7 @@ class CoursController < ApplicationController
     respond_to do |format|
       format.html do
         unless flash[:error]
-          flash[:notice] = "Action '#{action_name}' appliquée à #{params.permit![:cours_id].keys.size} cours."
+          flash[:notice] = "Action '#{action_name}' appliquée à #{params.permit![:cours_id].keys.size} cours. #{ @message_complémentaire if @message_complémentaire }"
         end
         redirect_to cours_path
       end

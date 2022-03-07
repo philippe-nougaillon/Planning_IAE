@@ -7,7 +7,9 @@ class InvitsController < ApplicationController
     authorize Invit
 
     params[:sort_by] ||= 'MàJ'
-    @invits = Invit.where.not("invits.workflow_state = 'non_retenue'") 
+    @invits = Invit
+                .where(user_id: current_user.id)
+                .where.not("invits.workflow_state = 'non_retenue'") 
 
     unless params[:formation].blank?
       @invits = @invits.joins(:formation).where("formations.id = ?", params[:formation])

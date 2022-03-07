@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_22_145126) do
+ActiveRecord::Schema.define(version: 2022_03_07_120030) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -270,9 +270,11 @@ ActiveRecord::Schema.define(version: 2022_02_22_145126) do
     t.string "slug"
     t.string "nom"
     t.integer "ue"
+    t.bigint "user_id", null: false
     t.index ["cour_id"], name: "index_invits_on_cour_id"
     t.index ["intervenant_id"], name: "index_invits_on_intervenant_id"
     t.index ["slug"], name: "index_invits_on_slug", unique: true
+    t.index ["user_id"], name: "index_invits_on_user_id"
   end
 
   create_table "pg_search_documents", force: :cascade do |t|
@@ -367,4 +369,5 @@ ActiveRecord::Schema.define(version: 2022_02_22_145126) do
   add_foreign_key "invitations", "intervenants"
   add_foreign_key "invits", "cours"
   add_foreign_key "invits", "intervenants"
+  add_foreign_key "invits", "users"
 end
