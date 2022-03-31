@@ -21,6 +21,10 @@ class CourPolicy < ApplicationPolicy
     show?
   end
 
+  def action_do?
+    action?
+  end
+
   def new?
     show?
   end
