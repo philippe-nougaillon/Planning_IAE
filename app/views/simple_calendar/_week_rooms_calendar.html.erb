@@ -25,7 +25,7 @@
           <% week.each do |day| %>
             <% unless day.sunday? %>
               <% day_style_class = 'shadow-sm alert-warning' if day == Date.today %>
-              <% day_style_class = 'day_off' if Fermeture.find_by(date: day) %>
+              <% day_style_class = 'shadow-sm alert-danger' if Fermeture.find_by(date: day) %>
               
               <%= content_tag :td, class: day_style_class do %>
                 <% block.call day, sorted_events.fetch(day, []) %>

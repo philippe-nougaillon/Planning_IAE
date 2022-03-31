@@ -24,11 +24,12 @@ class User < ApplicationRecord
   end
 
   def isRHGroupMember?
-      ['philippe.nougaillon@gmail.com',
-        'cunha.iae@univ-paris1.fr',
-        'fitsch-mouras.iae@univ-paris1.fr',
-        'denis.iae@univ-paris1.fr'
-      ].include?(self.email)
+    ['philippe.nougaillon@gmail.com',
+      'cunha.iae@univ-paris1.fr',
+      'fitsch-mouras.iae@univ-paris1.fr',
+      'denis.iae@univ-paris1.fr',
+      'laval.iae@univ-paris1.fr'
+    ].include?(self.email)
   end
 
   def nom_et_prénom
