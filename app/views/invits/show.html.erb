@@ -1,4 +1,4 @@
-<h3 class="my-5">
+<h3 class="my-4">
   <%= fa_icon 'calendar-check' %>
   Proposition de créneau horaire
 </h3>
@@ -30,7 +30,7 @@
       <% end %>
       <p>
         <strong>U.E. :</strong>
-        <%= Unite.find(@invit.ue).num_nom if @invit.ue %>
+        <%= Unite.find(@invit.ue).num_nom unless @invit.ue.blank? %>
       </p>
       <p>
         <strong>Intitulé :</strong>
@@ -82,7 +82,7 @@
         </table>
       <% else %>
         <p>
-          Aucun cours à l'horizon... 
+          Vous n'avez pas encore de cours programmés ce jour là... 
         </p>
       <% end %>
     </div>
@@ -91,7 +91,7 @@
   <div class="row">
     <div class="col">
       <p>
-        <strong>Message</strong>
+        <strong>Message du gestionnaire de formation</strong>
         <br>
         <div class="jumbotron bg-light">
           <%= simple_format @invit.msg %>
@@ -105,13 +105,13 @@
           <strong>Votre réponse</strong>
           <br>
           <%= form_tag validation_invit_path(@invit), method: :post do %>
-            <%= text_area_tag :reponse, nil, rows: 5, cols: 55 %>
+            <%= text_area_tag :reponse, @invit.reponse, rows: 5, cols: 55, disabled: user_signed_in? %>
             <br>
             <%= submit_tag "Disponible", disabled: user_signed_in?, class: "btn btn-outline-success" %>
             <%= submit_tag "Pas disponible", disabled: user_signed_in?, class: "btn btn-outline-danger" %>
           <% end %>
         <% else %>
-          <strong>Réponse</strong>
+          <strong>Réponse de l'enseignant</strong>
           <br>
           <div class="jumbotron bg-light">
             <%= simple_format @invit.reponse %>
@@ -122,12 +122,13 @@
 
   </div>
 </div>
+
 <% if user_signed_in? %>
   Etat :
   <span class="badge <%= @invit.style %>">
     <%= @invit.workflow_state.humanize %>
   </span>
-  | 
+  |-->> 
   Actions :
   <%= link_to_if @invit.can_relancer?, 
       'Relancer', 
@@ -156,11 +157,35 @@
   <%= link_to_if @invit.can_archiver?, 
       'Archiver', 
       archiver_invit_path(@invit), 
-      class: "btn btn-sm " + Invit.workflow_spec.states[:archivée].meta[:style] 
+      class: "btn btn-sm " + Invit.workflow_spec.states[:non_retenue].meta[:style] 
   %>
   <br>
   <br>
   <%= link_to 'Retour', invits_path if user_signed_in? %>
+  <br>
+
+  <div id="audit">
+    <br>
+    <% if @invit.audits.any? %>
+      <h4>Audit des modifications</h4>
+      <table class="table table-bordered table-hover table-condensed">
+        <thead>
+          <th>Date</th>
+          <th>Utilisateur</th>            
+          <th>Type</th>
+          <th>Record_id</th>
+          <th>Action</th>
+          <th>Modifications</th>
+        </thead>
+
+        <%= render partial: 'tools/audit', collection: @invit.audits %>
+
+      </table>
+    <% end %>
+  </div> 
+
 <% end %>
 
 <%= link_to 'Retour', invitations_intervenant_path(@invit.intervenant) unless user_signed_in? %>
+<br>
+<br>

@@ -42,7 +42,7 @@ class IntervenantsController < ApplicationController
   end
 
   def invitations
-    @invits = @intervenant.invits
+    @invits = @intervenant.invits.where.not(workflow_state: 'non_retenue')
 
     unless params[:formation].blank?
       @invits = @invits.joins(:formation).where("formations.id = ?", params[:formation])

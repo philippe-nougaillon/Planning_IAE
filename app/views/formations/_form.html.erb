@@ -110,12 +110,18 @@
 
     <%= f.fields_for :unites do |ue| %>
       <div class="row shadow-sm">
-        <div class="col-sm-3">
-          <%= ue.text_field :num, placeholder:"UE# ex:UE3", label:"Code" %>
+        <div class="col-sm-1">
+          <%= ue.number_field :code %>
         </div>  
-        <div class="col-sm-7">
+        <div class="col-sm-6">
           <%= ue.text_field :nom %>
         </div>
+        <div class="col-sm-1">
+          <%= ue.number_field :séances %>
+        </div>  
+        <div class="col-sm-2">
+          <%= ue.number_field :heures %>
+        </div>  
         <div class="col-sm-2">
           <br>
           <%= ue.check_box :_destroy, label:"Supprimer ?" %>

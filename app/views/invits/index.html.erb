@@ -8,7 +8,7 @@
     <div class="form-group">
       <div class="row">
 
-        <div class="col-sm-5">
+        <div class="col-sm-3">
           <%= label_tag :formation %>
           <%= select_tag :formation, 
                               options_from_collection_for_select(@formations, :id, :nom_promo, params[:formation]), 
@@ -17,7 +17,7 @@
                               onchange: 'this.form.submit()' %>
         </div>
 
-        <div class="col-sm-5">
+        <div class="col-sm-2">
           <%= label_tag :intervenant %>
           <%= select_tag :intervenant, 
                               options_from_collection_for_select(@intervenants, :id, :nom_prenom, params[:intervenant]), 
@@ -26,16 +26,32 @@
                               onchange: 'this.form.submit()' %>
         </div>
 
+        <div class="col-sm-2">
+          <%= label_tag "A partir du" %>    
+          <%= text_field_tag :start_date, params[:start_date], type:'date', onchange:'this.form.submit()', class:"form-control form-control-sm" %>
+        </div>
 
         <div class="col-sm-2">
-          <%= label_tag :workflow_state, "Etat" %>
+          <%= label_tag :workflow_state, "État" %>
           <%= select_tag :workflow_state, 
                               options_for_select(Invit.workflow_spec.states.keys.to_a, params[:workflow_state]), 
                               include_blank: true,
                               class: 'form-control form-control-sm', 
                               onchange: 'this.form.submit()' %>
         </div>
-        
+
+        <div class="col-sm-2">
+          <%= label_tag :workflow_state, "Triées par" %>
+          <br>
+          <%= radio_button_tag :sort_by, 'Date', params[:sort_by] == 'Date', onchange: 'this.form.submit()' %> Date
+          <%= radio_button_tag :sort_by, 'MàJ', params[:sort_by] == 'MàJ', onchange: 'this.form.submit()' %> MàJ
+        </div>
+
+        <div class="col-sm-1">
+          Archivées?
+          <%= check_box_tag :archive, '1', params[:archive] == '1', onchange: 'this.form.submit()' %>
+        </div>
+
       </div>
     </div>  
   <% end %>
@@ -54,14 +70,27 @@
           <th>U.E.</th>
           <th>Intervenant</th>
           <th>État</th>
-          <th>Réponse</th>
+          <th></th>
           <th>MàJ</th>
           <th colspan="2"></th>
         </tr>
       </thead>
 
       <tbody>
-        <%= render @invits %>
+        <%= current_date = '' %>
+        <% @invits.each do | invit | %>
+          <% if invit.cour.debut.to_date != current_date %>
+            <tr class="shadow-sm bg-light">
+              <th colspan=9>
+                <%= fa_icon 'calendar-check' %>
+                <b><%= l(invit.cour.debut.to_date, format: :long).humanize %></b> 
+              </th>
+            </tr>
+            <% current_date = invit.cour.debut.to_date %>
+          <% end %>  
+
+          <%= render partial: 'invits/invit', locals:{ invit: invit, current_date: current_date } %>
+        <% end %>
       </tbody>
 
       <tfoot>

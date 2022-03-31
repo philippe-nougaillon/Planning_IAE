@@ -18,6 +18,7 @@ class Cour < ApplicationRecord
   validate :check_chevauchement, if: Proc.new { |cours| cours.salle_id }
   validate :jour_fermeture
   validate :reservation_dates_must_make_sense
+  validate :check_invits_en_cours
 
   before_validation :update_date_fin
   before_validation :sunday_morning_praise_the_dawning
@@ -104,8 +105,8 @@ class Cour < ApplicationRecord
   def nom_ou_ue
     begin
       if self.nom.blank?        
-        unless self.ue.blank?
-          if ue = self.formation.unites.find_by(num:self.ue.upcase)
+        if self.code_ue
+          if ue = self.formation.unites.find_by(code: self.code_ue)
             ue.num_nom
           end        
         end  
@@ -681,5 +682,11 @@ class Cour < ApplicationRecord
           self.salle_id = nil
           errors.add(:cours, 'état changé & salle libérée ')
       end   
+    end
+
+    def check_invits_en_cours
+      if self.invits.where.not("workflow_state = 'non_retenue' OR  workflow_state = 'confirmée'").any? && self.intervenant != 445
+        errors.add(:cours, 'a des invitations en cours !')
+      end
     end
 end

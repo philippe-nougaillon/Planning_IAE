@@ -21,7 +21,7 @@
         </div>
 
         <div class="col-sm-2">
-          <%= label_tag :workflow_state, "Etat" %>
+          <%= label_tag :workflow_state, "État" %>
           <%= select_tag :workflow_state, 
                               options_for_select(Invit.workflow_spec.states.keys.to_a, params[:workflow_state]), 
                               include_blank: true,
@@ -49,25 +49,54 @@
   </thead>
 
   <tbody>
+    <%= current_date = '' %>
     <% @invits.each do |invit| %>
+      <% if invit.cour.debut.to_date != current_date %>
+        <tr class="shadow-sm bg-light">
+          <th colspan=9>
+            <%= fa_icon 'calendar-check' %>
+            <b><%= l(invit.cour.debut.to_date, format: :long).humanize %></b> 
+          </th>
+        </tr>
+        <% current_date = invit.cour.debut.to_date %>
+      <% end %>  
+
       <tr>
-        <td><%= link_to l(invit.cour.debut, format: :long), invit %></td>
+        <td>
+          <%= link_to invit do %>
+            <b><%= l(invit.cour.debut, format: :heures_min) %></b> 
+            <br>
+            <%= l(invit.cour.fin, format: :heures_min) %>
+          <% end %>
+        </td>
         <td>
           <span style="background-color:<%= invit.cour.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
             <%= invit.cour.formation.nom %>
           </span>
         </td>
-        <td><%= Unite.find(invit.ue).num_nom if invit.ue %></td>
+        <td>
+          <%= Unite.find(invit.ue).num unless invit.ue.blank? %>
+          :
+          <%= invit.nom unless invit.nom.blank? %>
+        </td>
         <td>
           <span class="badge <%= invit.style %>">
             <%= invit.workflow_state.humanize %>
           </span>
         </td>
-        <td><%= truncate(invit.msg, length: 50) %></td>
+        <td><span title="<%= invit.msg %>"><%= truncate(invit.msg, length: 20) %></span></td>
         <td>il y a <%= time_ago_in_words invit.updated_at %></td>
-        <td><%= link_to "Dispo" %></td>
-        <td><%= link_to "Pas_dispo" %></td>
-        <td><%= link_to 'Voir', invit %></td>
+        <td>
+          <% if invit.can_valider? %>
+            <%= link_to "Je suis disponible", valider_invit_path(invit), class: 'btn btn-sm btn-outline-success' %>
+          <% end %>
+        </td>
+        <td style="white-space: nowrap;">
+          <% if invit.can_rejeter? %>
+            <%= link_to "Je ne suis pas disponible", rejeter_invit_path(invit), class: 'btn btn-sm btn-outline-danger' %>
+          <% end %>
+        </td>
+        <td><%= link_to 'Commentaires', invit %></td>
       </tr>
     <% end %>
   </tbody>
@@ -75,13 +104,10 @@
   <tfoot>
     <tr><th colspan=10></th></tr>
   </tfoot>
-
 </table>
 
-<br>
 <div class="page_info">
   <%= page_entries_info @invits %>
-  <%= @invits.reorder(nil).select(:id).group(:workflow_state).count(:id) %>
 </div>
 
 <%= will_paginate @invits, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>

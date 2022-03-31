@@ -9,7 +9,7 @@ class Formation < ApplicationRecord
 	has_many :intervenants, through: :cours
 	has_many :unites
 	accepts_nested_attributes_for :unites, allow_destroy:true, 
-									reject_if: lambda {|attributes| attributes['num'].blank?}
+									reject_if: lambda {|attributes| attributes['code'].blank?}
 	has_many :etudiants
 	accepts_nested_attributes_for :etudiants, allow_destroy:true, 
 									reject_if: lambda {|attributes| attributes['nom'].blank?}

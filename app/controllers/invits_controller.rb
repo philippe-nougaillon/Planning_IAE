@@ -1,12 +1,15 @@
 class InvitsController < ApplicationController
-  skip_before_action :authenticate_user!, only: %i[ show validation]
+  skip_before_action :authenticate_user!, only: %i[show validation valider rejeter]
   before_action :set_invit, only: %i[ show edit update destroy relancer valider rejeter confirmer archiver validation]
   before_action :is_user_authorized
 
   # GET /invits or /invits.json
   def index
 
-    @invits = Invit.all
+    params[:sort_by] ||= 'MàJ'
+    @invits = Invit
+                .where(user_id: current_user.id)
+                .where.not("invits.workflow_state = 'non_retenue'") 
 
     unless params[:formation].blank?
       @invits = @invits.joins(:formation).where("formations.id = ?", params[:formation])
@@ -16,8 +19,25 @@ class InvitsController < ApplicationController
       @invits = @invits.where(intervenant_id: params[:intervenant])
     end
 
+    unless params[:start_date].blank?
+      @invits = @invits.joins(:cour).where("DATE(cours.debut) >= ?", params[:start_date])
+    end
+
     unless params[:workflow_state].blank?
       @invits = @invits.where("invits.workflow_state = ?", params[:workflow_state].to_s.downcase)
+    end
+
+    unless params[:sort_by].blank?
+      @invits = @invits.order(:updated_at) if params[:sort_by] == 'MàJ'
+      @invits = @invits.joins(:cour).reorder('cours.debut') if params[:sort_by] == 'Date'
+    end
+
+    unless params[:archive].blank?
+      @invits = Invit.where("invits.workflow_state = 'non_retenue'")   
+    end
+
+    unless params[:cours_id].blank?
+      @invits = @invits.where(cour_id: params[:cours_id].to_i)
     end
 
     @formations = Formation.where(id: @invits.joins(:formation).pluck("formations.id").uniq)
@@ -123,30 +143,45 @@ class InvitsController < ApplicationController
 
   def valider
     @invit.valider!
-    InvitMailer.with(invit: @invit).validation_invitation.deliver_now
-    redirect_to invitations_intervenant_path(@invit.intervenant), notice: "Invitation validée avec succès."
+    if user_signed_in?
+      redirect_to invits_path, notice: "Invitation mise à jour avec succès"
+    else
+      redirect_to invitations_intervenant_path(@invit.intervenant), notice: "Invitation mise à jour avec succès."
+    end
   end
 
   def rejeter
     @invit.rejeter!
-    InvitMailer.with(invit: @invit).rejet_invitation.deliver_now
-    redirect_to invitations_intervenant_path(@invit.intervenant), notice: "Invitation rejetée."
+    redirect_to invitations_intervenant_path(@invit.intervenant), notice: "Invitation mise à jour avec succès."
   end
 
   def confirmer
-    @invit.confirmer!
-    @invit.cour.update(intervenant: @invit.intervenant)
-    #passer toutes les invits du même cours en archivé
-    Invit.where(cour_id: @invit.cour_id).where.not(id: @invit.id).each do |invit|
-      invit.archiver!
-    end
-    InvitMailer.with(invit: @invit).confirmation_invitation.deliver_now
-    redirect_to invits_path, notice: 'Invitation confirmée. Intervenant affecté.'
-  end
 
-  def archiver
-    @invit.archiver!
-    redirect_to invits_path, notice: 'Invitation archivée'
+    # attribuer le cours
+    cours = @invit.cour
+    cours.intervenant = @invit.intervenant
+    cours.code_ue = (@invit.ue ? Unite.find(@invit.ue).code : nil)
+    cours.nom = @invit.nom
+    cours.valid?
+    if cours.errors.full_messages == ["Cours a des invitations en cours !"]
+      @invit.confirmer!
+      puts '[DEBUG] Confirmé'
+  
+      # fermer les invitations en cours avant d'attribuer le cours
+      Invit.where(cour_id: @invit.cour_id).where.not(id: @invit.id).each do |invit|
+        invit.archiver!
+      end
+      puts '[DEBUG] Archivés'
+
+      # Force l'enregistrement du nouvel intervenant
+      cours.save(validate: false)
+      puts "{DEBUG] Intervenant enregistré"
+  
+      flash[:notice] = "Invitation confirmée. Intervenant affecté."
+    else
+      flash[:error] = "L'intervenant n'a pas pu être modifié. #{ cours.errors.full_messages }"
+    end
+    redirect_to invits_path
   end
 
   def validation
@@ -154,16 +189,18 @@ class InvitsController < ApplicationController
     case params[:commit]
     when 'Disponible'
       @invit.valider!
-      InvitMailer.with(invit: @invit).validation_invitation.deliver_now
-      flash[:notice] = "Invitation validée."
+      flash[:notice] = "Invitation mise à jour avec succès."
     when 'Pas disponible'
       @invit.rejeter!
-      InvitMailer.with(invit: @invit).rejet_invitation.deliver_now
-      flash[:notice] = "Invitation rejetée."
+      flash[:notice] = "Invitation mise à jour avec succès."
     end
     redirect_to invitations_intervenant_path(@invit.intervenant)
   end
 
+  def archiver
+    @invit.archiver!
+    redirect_to invits_path, notice: 'Invitation archivée'
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

@@ -91,6 +91,7 @@ ActiveRecord::Schema.define(version: 2022_03_31_082922) do
     t.boolean "hors_service_statutaire"
     t.string "commentaires"
     t.boolean "elearning"
+    t.integer "code_ue"
     t.index ["debut"], name: "index_cours_on_debut"
     t.index ["etat"], name: "index_cours_on_etat"
     t.index ["formation_id"], name: "index_cours_on_formation_id"
@@ -256,11 +257,13 @@ ActiveRecord::Schema.define(version: 2022_03_31_082922) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "reponse"
     t.string "slug"
-    t.string "ue"
     t.string "nom"
+    t.integer "ue"
+    t.bigint "user_id", null: false
     t.index ["cour_id"], name: "index_invits_on_cour_id"
     t.index ["intervenant_id"], name: "index_invits_on_intervenant_id"
     t.index ["slug"], name: "index_invits_on_slug", unique: true
+    t.index ["user_id"], name: "index_invits_on_user_id"
   end
 
   create_table "pg_search_documents", force: :cascade do |t|
@@ -302,6 +305,9 @@ ActiveRecord::Schema.define(version: 2022_03_31_082922) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "num"
+    t.integer "code"
+    t.integer "séances", default: 0
+    t.integer "heures", default: 0
     t.index ["formation_id"], name: "index_unites_on_formation_id"
     t.index ["num"], name: "index_unites_on_num"
   end
@@ -351,4 +357,5 @@ ActiveRecord::Schema.define(version: 2022_03_31_082922) do
   add_foreign_key "documents", "dossiers"
   add_foreign_key "invits", "cours"
   add_foreign_key "invits", "intervenants"
+  add_foreign_key "invits", "users"
 end

@@ -22,47 +22,54 @@ class Invit < ApplicationRecord
   VALIDE  = 'disponible'
   REJETE  = 'pas_disponible'
   CONFIRME= 'confirmée'
-  ARCHIVE = 'archivée'
+  ARCHIVE = 'non_retenue'
 
   workflow do
-    state ENVOYE, meta: {style: 'badge-primary'} do
+    state ENVOYE, meta: {style: 'badge-warning'} do
       event :relancer, transitions_to: RELANCE1
       event :valider, transitions_to: VALIDE
       event :rejeter, transitions_to: REJETE
       event :archiver, transitions_to: ARCHIVE
     end
 
-    state RELANCE1, meta: {style: 'badge-info'} do
+    state RELANCE1, meta: {style: 'badge-warning'} do
       event :relancer, transitions_to: RELANCE2
       event :valider, transitions_to: VALIDE
       event :rejeter, transitions_to: REJETE
+      event :archiver, transitions_to: ARCHIVE
     end
 
-    state RELANCE2, meta: {style: 'badge-info'} do
+    state RELANCE2, meta: {style: 'badge-warning'} do
       event :relancer, transitions_to: RELANCE3
       event :valider, transitions_to: VALIDE
       event :rejeter, transitions_to: REJETE
+      event :archiver, transitions_to: ARCHIVE
     end
     
-    state RELANCE3, meta: {style: 'badge-info'} do
+    state RELANCE3, meta: {style: 'badge-warning'} do
       event :relancer, transitions_to: RELANCE1
       event :valider, transitions_to: VALIDE
       event :rejeter, transitions_to: REJETE
+      event :archiver, transitions_to: ARCHIVE
     end
     
-    state VALIDE, meta: {style: 'badge-warning'} do
+    state VALIDE, meta: {style: 'badge-success'} do
       event :confirmer, transitions_to: CONFIRME
+      event :archiver, transitions_to: ARCHIVE
     end
 
     state REJETE, meta: {style: 'badge-danger'} do
       event :archiver, transitions_to: ARCHIVE
     end
 
-    state CONFIRME, meta: {style: 'badge-success'} do
+    state CONFIRME, meta: {style: 'badge-primary'} do
       event :archiver, transitions_to: ARCHIVE
     end
 
-    state ARCHIVE, meta: {style: 'badge-secondary'}
+    state ARCHIVE, meta: {style: 'badge-secondary'} do
+      event :archiver, transitions_to: ARCHIVE
+      event :relancer, transitions_to: RELANCE1
+    end
   end
 
   # pour que le changement se voit dans l'audit trail
