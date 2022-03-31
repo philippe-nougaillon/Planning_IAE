@@ -1,5 +1,6 @@
 class EnvoiLogsController < ApplicationController
   before_action :set_envoi_log, only: [:show, :tester, :suspendre, :activer, :edit, :update, :destroy]
+  before_action :is_user_authorized
 
   # GET /envoi_logs
   # GET /envoi_logs.json
@@ -102,5 +103,9 @@ class EnvoiLogsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def envoi_log_params
       params.require(:envoi_log).permit(:date_prochain, :workflow_state, :cible, :msg)
+    end
+
+    def is_user_authorized
+      authorize EnvoiLog
     end
 end
