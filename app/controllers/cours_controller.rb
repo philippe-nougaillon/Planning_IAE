@@ -2,7 +2,8 @@
 
 class CoursController < ApplicationController
   before_action :set_cour, only: [:show, :edit, :update, :destroy]
-  
+  before_action :is_user_authorized
+
   layout :define_layout
 
   def define_layout
@@ -597,5 +598,9 @@ class CoursController < ApplicationController
         1  
       end 
     end 
+
+    def is_user_authorized
+      authorize Cour
+    end
 
   end

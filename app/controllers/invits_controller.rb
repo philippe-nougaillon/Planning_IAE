@@ -1,10 +1,10 @@
 class InvitsController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[ show validation]
   before_action :set_invit, only: %i[ show edit update destroy relancer valider rejeter confirmer archiver validation]
+  before_action :is_user_authorized
 
   # GET /invits or /invits.json
   def index
-    authorize Invit
 
     @invits = Invit.all
 
@@ -174,5 +174,9 @@ class InvitsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def invit_params
       params.require(:invit).permit(:cour_id, :intervenant_id, :msg, :workflow_state)
+    end
+
+    def is_user_authorized
+      authorize Invit
     end
 end

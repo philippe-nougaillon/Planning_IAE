@@ -60,11 +60,13 @@
           <% if user_signed_in? %>
             <%= navbar_nav_item('cours', 'calendar-alt', cours_path, 'Planning') %>
             <%= navbar_nav_item('salles', 'chalkboard', occupation_salles_path) %>
-            <%= navbar_nav_item('formations', 'briefcase', formations_path) %>
-            <%= navbar_nav_item('intervenants', 'chalkboard-teacher', intervenants_path) %>
-            <%= navbar_nav_item('etudiants', 'graduation-cap', etudiants_path) %>
-
-            <% if current_user.isRHGroupMember? %>
+            <% if policy(current_user).left_navbar? %>
+              <%= navbar_nav_item('formations', 'briefcase', formations_path) %>
+              <%= navbar_nav_item('intervenants', 'chalkboard-teacher', intervenants_path) %>
+              <%= navbar_nav_item('etudiants', 'graduation-cap', etudiants_path) %>
+            <% end %>
+            
+            <% if current_user.rh? %>
               <%= navbar_nav_item('dossiers', 'folder', dossiers_path) %>
             <% end %>
 
@@ -89,7 +91,7 @@
             <span class="nav-link">
               <%= current_user.username %>
             </span>
-            <% if User.roles[current_user.role] >= 2 %>
+            <% if policy(current_user).right_navbar? %>
               <%= navbar_nav_item('chercher', 'search-plus', tools_rechercher_path) %>
               <%= navbar_nav_item('outils', 'wrench', tools_index_path) %>
               <%= navbar_nav_item('guide', 'info-circle', guide_index_path) %>

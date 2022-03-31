@@ -21,28 +21,36 @@ class ToolPolicy < ApplicationPolicy
     user.isRHGroupMember?
   end
 
-  def show?
-    index?
+  def audits?
+    user.admin?
   end
 
-  def new?
-    index?
+  def nouvelle_saison?
+    user.admin?
   end
 
-  def create?
-    index?
+  def rappel_des_cours?
+    user.admin?
   end
 
-  def edit?
-    index?
+  def envoi_logs?
+    user.admin?
   end
 
-  def update?
-    index?
+  def audit_cours?
+    user.admin?
   end
 
-  def destroy?
-    index?
+  def fermetures?
+    user.admin?
+  end
+
+  def invits?
+    user.admin?
+  end
+
+  def rechercher?
+    User.roles[user.role] >= 3
   end
 
 end

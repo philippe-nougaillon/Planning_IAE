@@ -5,8 +5,10 @@ class ToolsController < ApplicationController
 
   require 'capture_stdout'
 
+  before_action :is_user_authorized
+
   def index
-    authorize :tool, :index?
+
   end
 
   def import_do
@@ -254,17 +256,15 @@ class ToolsController < ApplicationController
     else
       flash[:error] = "Manque le fichier source pour pouvoir lancer l'importation !"
       redirect_to action: 'import'
-    end  
+    end
 
   end
 
   def import_utilisateurs
-    authorize :tool, :import_utilisateurs?
+    
   end
 
   def import_utilisateurs_do
-    authorize :tool, :import_utilisateurs?
-    
     if params[:upload]
     	
       # Enregistre le fichier localement
@@ -435,19 +435,17 @@ class ToolsController < ApplicationController
     else
       flash[:error] = "Manque le fichier source pour pouvoir lancer l'importation !"
       redirect_to action: 'import'
-    end  
+    end
 
   end
 
   def swap_intervenant
-    authorize :tool, :swap_intervenant?
+    
   end
 
   def swap_intervenant_do
-    authorize :tool, :swap_intervenant?
-    
     unless params[:intervenant_from_id].blank? and params[:intervenant_to_id].blank?
-    	
+      
       # capture output
       @stream = capture_stdout do
         @importes = @errors = 0	
@@ -1175,5 +1173,10 @@ class ToolsController < ApplicationController
       end
     end
   end
+
+  def is_user_authorized
+    authorize :tool
+  end
+
   
 end

@@ -70,7 +70,7 @@
       <%= f.check_box :elearning, label: "eLearning ?" %>
     <% end %>
 
-    <% if current_user.admin? || current_user.reserver? %>
+    <% if policy(current_user).peut_réserver? %>
       <% unless @cour.new_record? %>
         <%= f.select(:etat, Cour.etats.keys.to_a, { include_blank: true }) %>
       <% end %>

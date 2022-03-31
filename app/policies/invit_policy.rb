@@ -6,12 +6,58 @@ class InvitPolicy < ApplicationPolicy
   end
 
   def index?
-    user
+    user.admin?
+  end
+
+  def show?
+    index?
   end
 
   def new?
-    user
+    index?
   end
 
+  def create?
+    index?
+  end
+
+  def edit?
+    index?
+  end
+
+  def update?
+    index?
+  end
+
+  def destroy?
+    index?
+  end
+
+  def action?
+    index?
+  end
+
+  def relancer?
+    index?
+  end
+
+  def valider?
+    index?
+  end
+
+  def rejeter?
+    index?
+  end
+
+  def confirmer?
+    index?
+  end
+
+  def archiver?
+    index?
+  end
+
+  def validation?
+    index?
+  end
 end
-  
