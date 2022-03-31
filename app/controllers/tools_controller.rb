@@ -8,7 +8,6 @@ class ToolsController < ApplicationController
   before_action :is_user_authorized
 
   def index
-
   end
 
   def import_do
@@ -175,7 +174,7 @@ class ToolsController < ApplicationController
 
   def import_intervenants_do
     if params[:upload]
-    	
+      
       # Enregistre le fichier localement (format = Date + nom du fichier)
       filename = I18n.l(Time.now, format: :long) + ' - ' + params[:upload].original_filename
 
@@ -245,7 +244,7 @@ class ToolsController < ApplicationController
       
       log.update(etat: _etat, nbr_lignes: @importes + @errors, lignes_importees: @importes)
       log.update(message: (params[:save] == 'true' ? "Importation" : "Simulation") )
- 
+
       if @errors > 0
         log.update(message: log.message + " | #{@errors} lignes rejetées !")
       end   
@@ -261,12 +260,11 @@ class ToolsController < ApplicationController
   end
 
   def import_utilisateurs
-    
   end
 
   def import_utilisateurs_do
     if params[:upload]
-    	
+      
       # Enregistre le fichier localement
       file_with_path = Rails.root.join('public', params[:upload].original_filename)
       File.open(file_with_path, 'wb') do |file|
@@ -440,7 +438,6 @@ class ToolsController < ApplicationController
   end
 
   def swap_intervenant
-    
   end
 
   def swap_intervenant_do
@@ -483,17 +480,17 @@ class ToolsController < ApplicationController
                          	 params[:cours]["start_date(2i)"].to_i,
                          	 params[:cours]["start_date(3i)"].to_i)
 
-	  @end_date = Date.civil(params[:cours]["end_date(1i)"].to_i,
-                           params[:cours]["end_date(2i)"].to_i,
+    @end_date = Date.civil(params[:cours]["end_date(1i)"].to_i,
+                         	 params[:cours]["end_date(2i)"].to_i,
                            params[:cours]["end_date(3i)"].to_i)
 
     # Calcul le nombre de jours à traiter dans la période à traiter
-  	@ndays = (@end_date - @start_date).to_i + 1 
-	  salle_id = params[:salle_id]
+    @ndays = (@end_date - @start_date).to_i + 1 
+    salle_id = params[:salle_id]
     nom_cours = params[:nom]
     semaines = params[:semaines]
 
-  	@cours_créés = @erreurs = 0
+    @cours_créés = @erreurs = 0
 
     @stream = capture_stdout do
       current_date = @start_date
@@ -587,7 +584,7 @@ class ToolsController < ApplicationController
   end
 
   def export_do
-	  cours = Cour.includes(:formation, :intervenant, :salle, :audits).order(:debut)
+    cours = Cour.includes(:formation, :intervenant, :salle, :audits).order(:debut)
 
     unless params[:start_date].blank? and params[:end_date].blank? 
       @start_date = Date.parse(params[:start_date])

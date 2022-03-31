@@ -32,4 +32,5 @@ class SallePolicy < ApplicationPolicy
   def destroy?
     index?
   end
+
 end
