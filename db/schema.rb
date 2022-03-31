@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_03_145608) do
+ActiveRecord::Schema.define(version: 2022_03_31_082922) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -326,6 +326,7 @@ ActiveRecord::Schema.define(version: 2022_02_03_145608) do
     t.string "mobile"
     t.boolean "reserver"
     t.datetime "discarded_at"
+    t.integer "role", default: 0
     t.index ["discarded_at"], name: "index_users_on_discarded_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["formation_id"], name: "index_users_on_formation_id"

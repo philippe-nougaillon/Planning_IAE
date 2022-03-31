@@ -34,12 +34,8 @@
 	<%= @user.mobile %>
 </p>
 <p>
-	<strong>Peut réserver une salle ?:</strong> 
-	<%= @user.reserver? ? "Oui" : "Non" %>
-</p>
-<p>
-	<strong>Peut administrer l'application ?:</strong> 
-	<%= @user.admin? ? "Oui" : "Non" %>
+	<strong>Rôle:</strong>
+	<%= @user.role.humanize %>
 </p>
 <br>
 

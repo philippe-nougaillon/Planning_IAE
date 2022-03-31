@@ -6,11 +6,31 @@ class EtudiantPolicy < ApplicationPolicy
     end
   
     def index?
-      user
+      User.roles[user.role] >= 2
     end
-
+  
+    def show?
+      index?
+    end
+  
     def new?
-      user
+      index?
     end
-
-end
+  
+    def create?
+      index?
+    end
+  
+    def edit?
+      index?
+    end
+  
+    def update?
+      index?
+    end
+  
+    def destroy?
+      index?
+    end
+  
+  end

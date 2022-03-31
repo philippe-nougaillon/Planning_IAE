@@ -3,6 +3,7 @@
 class IntervenantsController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[ invitations ]
   before_action :set_intervenant, only: [:show, :invitations, :edit, :update, :destroy]
+  before_action :is_user_authorized
 
   # check if logged and admin  
   # before_filter do 
@@ -147,6 +148,10 @@ class IntervenantsController < ApplicationController
        :téléphone_fixe, :téléphone_mobile, :bureau, :photo, :status, :remise_dossier_srh, :adresse, :cp, :ville, :doublon,
        :nbr_heures_statutaire, :date_naissance, :memo, :notifier,
        responsabilites_attributes: [:id, :debut, :fin, :titre, :formation_id, :heures, :commentaires, :_destroy])
+    end
+
+    def is_user_authorized
+      authorize Intervenant
     end
 
 end

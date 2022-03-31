@@ -36,12 +36,14 @@
 				<%= link_to "Taux d'occupation salles", tools_taux_occupation_salles_path %>
 			</li>
 			<br>
-			<br>
-			<li>
-				<%= fa_icon 'list-alt' %>
-				<%= link_to "Etats de services", tools_etats_services_path %>
-			</li>
-			<br>
+			<% if User.roles[current_user.role] == 4 %>
+				<br>
+				<li>
+					<%= fa_icon 'list-alt' %>
+					<%= link_to "Etats de services", tools_etats_services_path %>
+				</li>
+				<br>
+			<% end %>
 			<li>
 				<%= fa_icon 'list-alt' %>
 				<%= link_to "Liste des surveillances d'examens", tools_liste_surveillants_examens_path %>

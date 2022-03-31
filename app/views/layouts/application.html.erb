@@ -57,9 +57,9 @@
 
       <div class="container-fluid">
         <ul class="navbar-nav">
-          <%= navbar_nav_item('cours', 'calendar-alt', cours_path, 'Planning') %>
-          <%= navbar_nav_item('salles', 'chalkboard', occupation_salles_path) %>
           <% if user_signed_in? %>
+            <%= navbar_nav_item('cours', 'calendar-alt', cours_path, 'Planning') %>
+            <%= navbar_nav_item('salles', 'chalkboard', occupation_salles_path) %>
             <%= navbar_nav_item('formations', 'briefcase', formations_path) %>
             <%= navbar_nav_item('intervenants', 'chalkboard-teacher', intervenants_path) %>
             <%= navbar_nav_item('etudiants', 'graduation-cap', etudiants_path) %>
@@ -89,16 +89,17 @@
             <span class="nav-link">
               <%= current_user.username %>
             </span>
-            
-            <%= navbar_nav_item('chercher', 'search-plus', tools_rechercher_path) %>
-            <%= navbar_nav_item('outils', 'wrench', tools_index_path) if (current_user.admin? || current_user.reserver?) %>
-            <%= navbar_nav_item('guide', 'info-circle', guide_index_path) %>
-            
+            <% if User.roles[current_user.role] >= 2 %>
+              <%= navbar_nav_item('chercher', 'search-plus', tools_rechercher_path) %>
+              <%= navbar_nav_item('outils', 'wrench', tools_index_path) %>
+              <%= navbar_nav_item('guide', 'info-circle', guide_index_path) %>
+            <% end %>
+
             <li class="nav-item">
               <%= link_to destroy_user_session_path, method: :delete, title: "Fermer la session de #{current_user.email}", class: "nav-link text-secondary" do %><i class="fas fa-fw fa-sign-out-alt"></i></span> Déconnexion<% end %> 
             </li>
+
           <% else %>
-            <%= navbar_nav_item('guide', 'info-circle',  guide_index_path) %>
             <%= navbar_nav_item('Se connecter', 'sign-in-alt', new_user_session_path) %>
           <% end %>
         </ul>
