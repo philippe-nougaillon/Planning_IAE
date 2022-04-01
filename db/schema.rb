@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_21_093547) do
+ActiveRecord::Schema.define(version: 2022_04_01_103939) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -91,6 +91,7 @@ ActiveRecord::Schema.define(version: 2022_01_21_093547) do
     t.boolean "hors_service_statutaire"
     t.string "commentaires"
     t.boolean "elearning"
+    t.integer "code_ue"
     t.index ["debut"], name: "index_cours_on_debut"
     t.index ["etat"], name: "index_cours_on_etat"
     t.index ["formation_id"], name: "index_cours_on_formation_id"
@@ -243,6 +244,35 @@ ActiveRecord::Schema.define(version: 2022_01_21_093547) do
     t.date "date_naissance"
     t.string "memo"
     t.boolean "notifier"
+    t.string "slug"
+    t.index ["slug"], name: "index_intervenants_on_slug", unique: true
+  end
+
+  create_table "invits", force: :cascade do |t|
+    t.bigint "cour_id", null: false
+    t.bigint "intervenant_id", null: false
+    t.string "msg"
+    t.string "workflow_state"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "reponse"
+    t.string "slug"
+    t.string "nom"
+    t.integer "ue"
+    t.bigint "user_id", null: false
+    t.index ["cour_id"], name: "index_invits_on_cour_id"
+    t.index ["intervenant_id"], name: "index_invits_on_intervenant_id"
+    t.index ["slug"], name: "index_invits_on_slug", unique: true
+    t.index ["user_id"], name: "index_invits_on_user_id"
+  end
+
+  create_table "ouvertures", force: :cascade do |t|
+    t.string "bloc", null: false
+    t.integer "jour", null: false
+    t.time "début", null: false
+    t.time "fin", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "pg_search_documents", force: :cascade do |t|
@@ -284,6 +314,9 @@ ActiveRecord::Schema.define(version: 2022_01_21_093547) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "num"
+    t.integer "code"
+    t.integer "séances", default: 0
+    t.integer "heures", default: 0
     t.index ["formation_id"], name: "index_unites_on_formation_id"
     t.index ["num"], name: "index_unites_on_num"
   end
@@ -308,6 +341,7 @@ ActiveRecord::Schema.define(version: 2022_01_21_093547) do
     t.string "mobile"
     t.boolean "reserver"
     t.datetime "discarded_at"
+    t.integer "role", default: 0
     t.index ["discarded_at"], name: "index_users_on_discarded_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["formation_id"], name: "index_users_on_formation_id"
@@ -330,4 +364,7 @@ ActiveRecord::Schema.define(version: 2022_01_21_093547) do
 
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "documents", "dossiers"
+  add_foreign_key "invits", "cours"
+  add_foreign_key "invits", "intervenants"
+  add_foreign_key "invits", "users"
 end

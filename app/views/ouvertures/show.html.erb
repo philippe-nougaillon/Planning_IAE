@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Bloc:</strong>
+  <%= @ouverture.bloc %>
+</p>
+
+<p>
+  <strong>Jour:</strong>
+  <%= @ouverture.jour %>
+</p>
+
+<p>
+  <strong>Début:</strong>
+  <%= @ouverture.début %>
+</p>
+
+<p>
+  <strong>Fin:</strong>
+  <%= @ouverture.fin %>
+</p>
+
+<%= link_to 'Voir', edit_ouverture_path(@ouverture) %> |
+<%= link_to 'Retour', ouvertures_path %>

@@ -16,6 +16,7 @@ class Cour < ApplicationRecord
   validate :check_chevauchement, if: Proc.new { |cours| cours.salle_id }
   validate :jour_fermeture
   validate :reservation_dates_must_make_sense
+  validate :jour_ouverture
 
   before_validation :update_date_fin
   before_validation :sunday_morning_praise_the_dawning
@@ -679,5 +680,12 @@ class Cour < ApplicationRecord
           self.salle_id = nil
           errors.add(:cours, 'état changé & salle libérée ')
       end   
+    end
+
+    def jour_ouverture
+      horaire = Ouverture.where(jour: self.debut.to_date.wday).find_by(bloc: self.salle.bloc)
+      unless (self.debut.hour >= horaire.début.hour) && (self.fin.hour <= horaire.fin.hour)
+        errors.add(:cours, 'en dehors des horaires d\'ouverture')
+      end
     end
 end
