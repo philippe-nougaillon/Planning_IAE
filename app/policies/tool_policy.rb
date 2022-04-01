@@ -6,15 +6,75 @@ class ToolPolicy < ApplicationPolicy
   end
 
   def index?
-    User.roles[user.role] >= 2
+    user.role_number >= 2
+  end
+
+  def rechercher?
+    user.role_number >= 3
+  end
+
+  def import_do?
+    user.role_number >= 2
+  end
+
+  def import_intervenants?
+    user.role_number >= 2
+  end
+
+  def import_intervenants_do?
+    import_intervenants?
   end
 
   def import_utilisateurs?
     user.admin?
   end
+
+  def import_utilisateurs_do?
+    import_utilisateurs?
+  end
+
+  def import_etudiants?
+    user.role_number >= 2
+  end
+
+  def import_etudiants_do?
+    import_etudiants?
+  end
   
   def swap_intervenant?
     user.admin?
+  end
+
+  def swap_intervenant_do?
+    swap_intervenant?
+  end
+
+  def creation_cours?
+    user.role_number >= 2
+  end
+
+  def creation_cours_do?
+    creation_cours?
+  end
+
+  def export?
+    user.role_number >= 2
+  end
+
+  def export_do?
+    export?
+  end
+
+  def export_intervenants?
+    user.role_number >= 2
+  end
+
+  def export_intervenants?
+    export_intervenants?
+  end
+
+  def export_intervenants?
+    user.role_number >= 2
   end
 
   def can_see_RHGroup_private_tool?
@@ -47,10 +107,6 @@ class ToolPolicy < ApplicationPolicy
 
   def invits?
     user.admin?
-  end
-
-  def rechercher?
-    User.roles[user.role] >= 3
   end
 
 end

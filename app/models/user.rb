@@ -50,4 +50,8 @@ class User < ApplicationRecord
     super && !discarded?
   end
 
+  def role_number
+    User.roles[self.role]
+  end
+
 end
