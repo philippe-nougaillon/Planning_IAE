@@ -572,7 +572,7 @@ class Cour < ApplicationRecord
     # vérifie que la date de début de cours est dans la période observée
     Cour.where("id IN (?)", Audited::Audit.where(auditable_type: 'Cour').where.not(user_id: 41).pluck(:auditable_id).uniq)
         .planifié
-        .where("cours.debut BETWEEN ? AND ?", Date.today, Date.today + 8.days)
+        .where("cours.debut BETWEEN ? AND ?", Date.today, Date.today + 30.days)
         .count
   end
 
