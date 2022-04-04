@@ -65,10 +65,10 @@
         <%= @formation.try(:abrg) %>
       </h3>
       <br> 
-      <h3>
+      <h4>
         <small class="text-muted">Gestionnaire de formation</small><br>
         <%= @formation.try(:user).try(:email) %>
-      </h3>
+      </h4>
     </div>
   </div>
   <hr>
@@ -81,6 +81,11 @@
       <p>
         <%= @formation.diplome %>
       </p>
+
+      <h3>
+        <small class="text-muted">Heures prévues</small><br>
+      </h3>
+      <%= @formation.nbr_heures %>
     </div>
 
     <div class="col-sm-4">
@@ -124,29 +129,47 @@
           <tr>
             <th>Code</th>
             <th>Intitulé</th>
-            <th>Cours</th>
-            <th>Heures</th>
+            <th>Séances prévues</th>
+            <th>Séances réalisées</th>
+            <th>Heures prévues</th>
+            <th>Heures réalisées</th>
+            <th></th>
           </tr>
         </thead>
 
         <tbody>
-          <% total_ue = total = 0.0 %>
+          <% total_ue_prévu = total_prévu = 0.0 %>
+          <% total_ue_réalisé = total_réalisé = 0.0 %>
           <% @formation.unites.each do | unite | %>
             <tr>
-              <% cours = @formation.cours.where(ue: unite.num) %>
-              <td><%= link_to unite.num, cours_path(formation_id: @formation, ue: unite.num) %></td>
+              <% cours = @formation.cours.where(code_ue: unite.code) %>
+              <td style="text-align: right;"><%= link_to unite.code, cours_path(formation_id: @formation, ue: unite.num) %></td>
               <td><%= unite.nom %></td>
-              <td><%= link_to cours.count, cours_path(formation_id: @formation, ue: unite.num, filter: 'all') %></td>
-              <td><%= total = cours.sum(:duree) %></td>
-              <% total_ue += total %>
+              <td style="text-align: right;"><%= unite.séances %></td>
+              <td style="text-align: right;"><%= link_to cours.count, cours_path(formation_id: @formation, ue: unite.num, filter: 'all') %></td>
+              <td style="text-align: right;">
+                <%= total_prévu = unite.heures %> h
+              </td>
+              <td style="text-align: right;">
+                <%= total_réalisé = cours.sum(:duree) %> h
+              </td>
+              <td>
+                <% if total_réalisé > 0 && unite.heures > 0 %>
+                  (<%= (total_réalisé * 100) / unite.heures %>%)
+                <% end %>
+              </td>
+              <% total_ue_prévu += total_prévu %>
+              <% total_ue_réalisé += total_réalisé %>
             </tr>
           <% end %>
         </tbody>
 
         <tfoot>
           <tr>
-            <th></th><th></th><th></th>
-            <th><%= total_ue %></th>
+            <th colspan=4></th>
+            <th style="text-align: right;"><%= total_ue_prévu %> h</th>
+            <th style="text-align: right;"><%= total_ue_réalisé %> h</th>
+            <th></th>
           </tr>
         </tfoot>  
       </table>

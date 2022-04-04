@@ -1,28 +1,28 @@
 class DossierPolicy < ApplicationPolicy
-    class Scope < Scope
-      def resolve
-        scope
-      end
+  class Scope < Scope
+    def resolve
+      scope
     end
-  
-    def index?
-      user && user.isRHGroupMember?
-    end
+  end
 
-    def new?
-      index?
-    end
+  def index?
+    user.rh?
+  end
 
-    def audits?
-      new?
-    end
+  def new?
+    index?
+  end
 
-    def déposer?
-      !new?
-    end
+  def audits?
+    new?
+  end
 
-    def show?
-      #record.can_déposer? || user
-    end
+  def déposer?
+    !new?
+  end
+
+  def show?
+    #record.can_déposer? || user
+  end
 
 end

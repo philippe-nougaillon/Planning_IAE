@@ -96,7 +96,7 @@
       <% @formations.each_with_index do |formation, index| %>
         <%= link_to formation.nom, 
                     cours_path(formation_id: formation, 
-                                intervenant_id: @intervenant, 
+                                intervenant_id: @intervenant.id, 
                                 intervenant: @intervenant.nom_prenom,
                                 filter: 'all') %><%= ',' if index != @formations.size - 1 %>
       <% end %>

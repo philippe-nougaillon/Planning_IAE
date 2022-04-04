@@ -6,30 +6,43 @@ class UserPolicy < ApplicationPolicy
   end
 
   def index?
-    user
+    user.admin?
   end
 
   def show?
-    user.admin?
+    index?
   end
 
   def new?
-    user.admin?
+    index?
   end
 
   def create?
-    user.admin?
+    index?
   end
 
   def edit?
-    user.admin?
+    index?
   end
 
   def update?
-    user.admin?
+    index?
   end
 
   def destroy?
-    user.admin?
+    index?
   end
+
+  def left_navbar?
+    User.roles[user.role] >= 2
+  end
+
+  def right_navbar?
+    User.roles[user.role] >= 2
+  end
+
+  def peut_réserver?
+    User.roles[user.role] >= 2
+  end
+
 end

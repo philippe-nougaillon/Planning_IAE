@@ -2,6 +2,7 @@
 
 class FermeturesController < ApplicationController
   before_action :set_fermeture, only: [:show, :edit, :update, :destroy]
+  before_action :is_user_authorized
 
   # GET /fermetures
   # GET /fermetures.json
@@ -141,5 +142,9 @@ class FermeturesController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def fermeture_params
       params.require(:fermeture).permit(:date, :nom)
+    end
+
+    def is_user_authorized
+      authorize Fermeture
     end
 end

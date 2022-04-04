@@ -52,6 +52,7 @@
         <th><%= sort_link 'users.nom', 'Nom' %></th>
         <th>Prénom</th>
         <th><%= sort_link 'users.email', 'Courriel' %></th>
+        <th>Rôle</th>
         <th>Réserver salle ?</th>
         <th>Administrer ?</th>
         <th></th>
@@ -70,6 +71,7 @@
           <td><%= link_to user.nom, user %></td>
           <td><%= user.prénom %></td>
           <td><%= user.email %></td>
+          <td><%= user.role.humanize %></td>
           <td><%= user.reserver? ? "Oui" : '' %></td>
           <td><%= user.admin? ? "Oui" : '' %></td>
           <td>

@@ -2,7 +2,8 @@
 
 class CoursController < ApplicationController
   before_action :set_cour, only: [:show, :edit, :update, :destroy]
-  
+  before_action :is_user_authorized
+
   layout :define_layout
 
   def define_layout
@@ -119,7 +120,7 @@ class CoursController < ApplicationController
     end
 
     unless params[:ue].blank?
-      @cours = @cours.where(ue:params[:ue])
+      @cours = @cours.where(code_ue: params[:ue])
     end
 
     unless params[:ids].blank?
@@ -350,6 +351,31 @@ class CoursController < ApplicationController
           c.save
         end
 
+      when 'Inviter'
+        invits_créées = 0
+        if (params[:invits_en_cours].present? && params[:confirmation] == 'yes') || !params[:invits_en_cours].present?
+          invit = params[:invit]
+          (0..3).each do |i|
+            intervenant_id = invit[:intervenant].values.to_a[i]
+            unless intervenant_id.blank?
+              @cours.each do |cour|
+                cour.invits.create!(user_id: current_user.id,
+                                    intervenant_id: intervenant_id.to_i, 
+                                    msg: params[:message_invitation], 
+                                    ue: invit[:ue].values.to_a[i], 
+                                    nom: invit[:nom].values.to_a[i])
+                invits_créées += 1
+              end
+              InvitMailer.with(invit: Invit.first).envoyer_invitation.deliver_now
+            end
+          end
+        end  
+        if invits_créées > 0
+          @message_complémentaire = "#{ invits_créées } invitation.s créée.s avec succès"        
+        else
+          flash[:error] = "Action annulée"
+        end
+        
       when 'Intervertir'
         # il faut 2 cours
         if params[:cours_id].keys.count == 2
@@ -422,7 +448,7 @@ class CoursController < ApplicationController
     respond_to do |format|
       format.html do
         unless flash[:error]
-          flash[:notice] = "Action '#{action_name}' appliquée à #{params.permit![:cours_id].keys.size} cours."
+          flash[:notice] = "Action '#{action_name}' appliquée à #{params.permit![:cours_id].keys.size} cours. #{ @message_complémentaire if @message_complémentaire }"
         end
         redirect_to cours_path
       end
@@ -573,7 +599,7 @@ class CoursController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def cour_params
       params.require(:cour).permit(:debut, :fin, :formation_id, :intervenant_id, 
-                                    :salle_id, :ue, :nom, :etat, :duree,
+                                    :salle_id, :code_ue, :nom, :etat, :duree,
                                     :intervenant_binome_id, :hors_service_statutaire,
                                     :commentaires, :elearning)
     end
@@ -585,5 +611,9 @@ class CoursController < ApplicationController
         1  
       end 
     end 
+
+    def is_user_authorized
+      authorize Cour
+    end
 
   end

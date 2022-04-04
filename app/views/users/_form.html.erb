@@ -7,11 +7,12 @@
         <%= f.text_field :prénom %>
         <%= f.text_field :email %>
         <%= f.text_field :mobile %>
-        <%= f.password_field :password %>
-        <%= f.password_field :password_confirmation %>
-        <%= f.check_box :reserver, label:"Peut réserver une salle ?" %>
-        <%= f.check_box :admin, label:"Peut administrer l'application ?" %>
-        <br>
+        <%= f.select :role, options_for_select(User.roles.keys), label: "Rôle" %>
+
+        <% if @user.new_record? %>
+          <%= f.password_field :password %>
+          <%= f.password_field :password_confirmation %>
+        <% end %>
         
         <%= f.submit class: "btn btn-primary" %>
       </div>

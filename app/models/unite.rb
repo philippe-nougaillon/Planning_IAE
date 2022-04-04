@@ -5,8 +5,12 @@ class Unite < ApplicationRecord
 
   belongs_to :formation
 
+  def num_ue
+  	"UE:#{ self.code }"
+  end	
+
   def num_nom
-  	self.num + ":" + self.nom
+  	"UE:#{ self.code } #{ self.nom }"
   end	
 
   def nom_formation

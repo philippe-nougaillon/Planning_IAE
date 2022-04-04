@@ -6,7 +6,7 @@ class ToolPolicy < ApplicationPolicy
   end
 
   def index?
-    user && (user.admin? || user.reserver?)
+    User.roles[user.role] >= 2
   end
 
   def import_utilisateurs?
@@ -20,5 +20,37 @@ class ToolPolicy < ApplicationPolicy
   def can_see_RHGroup_private_tool?
     user.isRHGroupMember?
   end
+
+  def audits?
+    user.admin?
+  end
+
+  def nouvelle_saison?
+    user.admin?
+  end
+
+  def rappel_des_cours?
+    user.admin?
+  end
+
+  def envoi_logs?
+    user.admin?
+  end
+
+  def audit_cours?
+    user.admin?
+  end
+
+  def fermetures?
+    user.admin?
+  end
+
+  def invits?
+    user.admin?
+  end
+
+  def rechercher?
+    User.roles[user.role] >= 3
+  end
+
 end
-    
