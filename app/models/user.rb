@@ -17,12 +17,18 @@ class User < ApplicationRecord
 
   validates :nom, :prénom, presence: true    
 
-  enum role: {étudiant: 0, intervenant: 1, gestionnaire: 2, administratif: 3, rh: 4, administrateur: 5}
+  enum role: {étudiant: 0, 
+              intervenant: 1, 
+              enseignant: 2, 
+              accueil: 3, 
+              rh: 4, 
+              gestionnaire: 5,
+              administrateur: 6 }
 
   default_scope { order(:nom) } 
 
   def admin?
-    self.role == "administrateur"
+    self.role == 'administrateur'
   end
 
   def reserver?

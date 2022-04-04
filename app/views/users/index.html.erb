@@ -16,11 +16,22 @@
           <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class:"form-control" %>
         </div>
 
-        <div class="col-sm-3">
+        <div class="col-sm-2">
+          <%= label_tag :role, "Rôle" %>
+          <%= select_tag :role, 
+                  options_for_select(User.roles, 
+                  params[:role]), 
+                  include_blank:true,
+                  class: 'form-control form-control-sm', 
+                  onchange: 'this.form.submit()' 
+          %>          
+        </div>
+
+        <div class="col-sm-2">
           <br>
           <label>
             <%= check_box_tag :reserver, 1, params[:reserver], onchange:'this.form.submit()' %>
-            Peut réserver une salle ?
+            Peut réserver ?
           </label>
         </div>
         

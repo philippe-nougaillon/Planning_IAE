@@ -29,6 +29,10 @@ class UsersController < ApplicationController
       @users = @users.where(reserver:true)
     end
 
+    unless params[:role].blank?
+      @users = @users.where(role: params[:role])
+    end
+
     session[:column] = params[:column]
     session[:direction] = params[:direction]
 
