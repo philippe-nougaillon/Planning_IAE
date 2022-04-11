@@ -6,7 +6,7 @@ class EtudiantPolicy < ApplicationPolicy
   end
 
   def index?
-    User.roles[user.role] >= 2
+    user.role_number >= 2
   end
 
   def show?

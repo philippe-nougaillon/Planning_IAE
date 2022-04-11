@@ -53,11 +53,12 @@ class InvitPolicy < ApplicationPolicy
     index?
   end
 
+  def validation?
+    index?
+  end
+
   def archiver?
     index?
   end
 
-  def validation?
-    index?
-  end
 end

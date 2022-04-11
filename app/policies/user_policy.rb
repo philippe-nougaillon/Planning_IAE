@@ -34,15 +34,15 @@ class UserPolicy < ApplicationPolicy
   end
 
   def left_navbar?
-    User.roles[user.role] >= 2
+    user.role_number >= 2
   end
 
   def right_navbar?
-    User.roles[user.role] >= 2
+    user.role_number >= 2
   end
 
   def peut_réserver?
-    User.roles[user.role] >= 2
+    user.role_number >= 2
   end
 
 end

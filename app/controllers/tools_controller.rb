@@ -1171,9 +1171,11 @@ class ToolsController < ApplicationController
     end
   end
 
-  def is_user_authorized
-    authorize :tool
-  end
+  private
+
+    def is_user_authorized
+      authorize :tool
+    end
 
   
 end
