@@ -1,12 +1,16 @@
 class DocumentPolicy < ApplicationPolicy
-    class Scope < Scope
-      def resolve
-        scope
-      end
+  class Scope < Scope
+    def resolve
+      scope
     end
-  
-    def index?
-      user
-    end
+  end
+
+  def create?
+    user.admin?
+  end
+
+  def destroy?
+    user.admin?
+  end
 
 end

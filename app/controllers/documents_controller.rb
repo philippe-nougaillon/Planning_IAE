@@ -1,6 +1,7 @@
 class DocumentsController < ApplicationController
     before_action :set_document, only: [:destroy]
     skip_before_action :authenticate_user!, only: %i[ create destroy]
+    before_action :is_user_authorized
 
     # POST /dossiers
     def create
@@ -34,6 +35,10 @@ private
     # Only allow a list of trusted parameters through.
     def document_params
         params.require(:document).permit(:dossier_id, :nom, :fichier)
+    end
+
+    def is_user_authorized
+      authorize Document
     end
 
 end

@@ -2,11 +2,11 @@
 
 class EtudiantsController < ApplicationController
   before_action :set_etudiant, only: [:show, :edit, :update, :destroy]
+  before_action :is_user_authorized
 
   # GET /etudiants
   # GET /etudiants.json
   def index
-    authorize Etudiant
 
     params[:column] ||= session[:column]
     params[:direction_etudiants] ||= session[:direction_etudiants]
@@ -114,5 +114,8 @@ class EtudiantsController < ApplicationController
                     :num_apogée, :poste_occupé, :nom_entreprise, :adresse_entreprise, :cp_entreprise, :ville_entreprise,
                     :workflow_state)
     end
-    
+
+    def is_user_authorized
+      authorize Etudiant
+    end
 end

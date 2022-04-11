@@ -1,0 +1,191 @@
+<h3 class="my-4">
+  <%= fa_icon 'calendar-check' %>
+  Proposition de créneau horaire
+</h3>
+<div class="container card shadow-sm p-3 my-3">
+  <div class="row">
+    <div class="col">
+      <p>
+        <strong>
+          <%= l(@invit.cour.debut, format: :long).humanize %>
+        </strong>
+      </p>
+
+      <p>
+        <span style="background-color:<%= @invit.cour.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
+          <%= @invit.cour.formation.nom %>
+        </span>
+      </p>
+
+      <p>
+        <strong>Durée :</strong>
+        <%= number_with_precision(@invit.cour.duree, precision: 1, strip_insignificant_zeros: true) %>h
+      </p>
+
+      <% if user_signed_in? %>
+        <p>
+          <strong>Proposé à :</strong>
+          <%= @invit.intervenant.nom_prenom %>
+        </p>
+      <% end %>
+      <p>
+        <strong>U.E. :</strong>
+        <%= Unite.find(@invit.ue).num_nom unless @invit.ue.blank? %>
+      </p>
+      <p>
+        <strong>Intitulé :</strong>
+        <%= @invit.nom %>
+      </p>
+    </div>
+    <div class="col">
+      <h5>
+        Vos autres cours à L’IAE le <%= l(@jour, format: :long) %>
+      </h5>
+      <% if @cours.any? %>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Heure</th>
+              <th>Formation</th>
+              <th>Cours</th>
+              <th>Salle</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @cours.each do |c| %>
+              <tr>
+                <td>
+                  <%= link_to c do %>
+                    <%= l(c.debut, format: :heures_min) %>
+                    -
+                    <%= l(c.fin, format: :heures_min) %>
+                  <% end %>
+                </td>
+                <td>
+                  <span style="background-color:<%= c.formation.try(:color) %>;padding-left: 5px;margin-right: 5px;"></span>
+                  <%= c.formation.try(:nom_promo) %>
+                </td>
+                <td>
+                  <%= c.nom_ou_ue %>
+                </td>
+                <td>
+                  <span class="badge badge-pill badge-<%= c.style %>">
+                    <%= c.salle.nom %>
+                  </span>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+          <tfoot>
+            <tr><th colspan=4></th></tr>
+          </tfoot>
+        </table>
+      <% else %>
+        <p>
+          Vous n'avez pas encore de cours programmés ce jour là... 
+        </p>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <p>
+        <strong>Message du gestionnaire de formation</strong>
+        <br>
+        <div class="jumbotron bg-light">
+          <%= simple_format @invit.msg %>
+        </div>
+      </p>
+    </div>
+
+    <div class="col">
+      <p>
+        <% if @invit.can_valider? || @invit.can_rejeter? %>
+          <strong>Votre réponse</strong>
+          <br>
+          <%= form_tag validation_invit_path(@invit), method: :post do %>
+            <%= text_area_tag :reponse, @invit.reponse, rows: 5, cols: 55, disabled: user_signed_in? %>
+            <br>
+            <%= submit_tag "Disponible", disabled: user_signed_in?, class: "btn btn-outline-success" %>
+            <%= submit_tag "Pas disponible", disabled: user_signed_in?, class: "btn btn-outline-danger" %>
+          <% end %>
+        <% else %>
+          <strong>Réponse de l'enseignant</strong>
+          <br>
+          <div class="jumbotron bg-light">
+            <%= simple_format @invit.reponse %>
+          </div>
+        <% end %>
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<% if user_signed_in? %>
+  Etat :
+  <span class="badge <%= @invit.style %>">
+    <%= @invit.workflow_state.humanize %>
+  </span>
+  |-->> 
+  Actions :
+  <%= link_to_if @invit.can_relancer?, 
+      'Relancer', 
+      relancer_invit_path(@invit), 
+      class: "btn btn-sm " + Invit.workflow_spec.states[:relance1].meta[:style] 
+  %> 
+  |
+  <%= link_to_if @invit.can_valider?, 
+      'Disponible', 
+      valider_invit_path(@invit), 
+      class: "btn btn-sm " + Invit.workflow_spec.states[:disponible].meta[:style] 
+  %> 
+  |
+  <%= link_to_if @invit.can_rejeter?, 
+      'Pas disponible', 
+      rejeter_invit_path(@invit), 
+      class: "btn btn-sm " + Invit.workflow_spec.states[:pas_disponible].meta[:style] 
+  %> 
+  |
+  <%= link_to_if @invit.can_confirmer?, 
+      'Confirmer', 
+      confirmer_invit_path(@invit), 
+      class: "btn btn-sm " + Invit.workflow_spec.states[:confirmée].meta[:style] 
+  %> 
+  |
+  <%= link_to_if @invit.can_archiver?, 
+      'Archiver', 
+      archiver_invit_path(@invit), 
+      class: "btn btn-sm " + Invit.workflow_spec.states[:non_retenue].meta[:style] 
+  %>
+  <br>
+  <br>
+  <%= link_to 'Retour', invits_path if user_signed_in? %>
+  <br>
+
+  <div id="audit">
+    <br>
+    <% if @invit.audits.any? %>
+      <h4>Audit des modifications</h4>
+      <table class="table table-bordered table-hover table-condensed">
+        <thead>
+          <th>Date</th>
+          <th>Utilisateur</th>            
+          <th>Type</th>
+          <th>Record_id</th>
+          <th>Action</th>
+          <th>Modifications</th>
+        </thead>
+
+        <%= render partial: 'tools/audit', collection: @invit.audits %>
+
+      </table>
+    <% end %>
+  </div> 
+
+<% end %>
+
+<%= link_to 'Retour', invitations_intervenant_path(@invit.intervenant) unless user_signed_in? %>
+<br>
+<br>

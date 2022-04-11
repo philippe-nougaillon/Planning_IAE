@@ -24,7 +24,7 @@
 
         <div class="col-sm-2">
           <%= label_tag :ue, "U.E." %>   
-          <%= select_tag :ue, options_for_select(@les_ue, params[:ue]), 
+          <%= select_tag :ue, options_for_select((0..20), params[:ue]), 
                           class: "form-control form-control-sm select2", 
                           include_blank:true, onchange: 'this.form.submit()' %>
         </div>
@@ -107,11 +107,11 @@
   <% if @cours.size > 0 %>
     
     <%= form_tag action_cours_path, name: 'action' do %>
-      <div data-controller="<%= "check-all action" if user_signed_in? %>">
+      <div data-controller="check-all action">
         <table class="table table-hover">
           <thead class="shadow-sm">
             <tr>
-              <% if user_signed_in? %>
+              <% if policy(Cour).action? %>
                 <th>
                   <span data-action="click->action#click">
                     <input type="checkbox" data-target="check-all.all action.source">
@@ -124,7 +124,7 @@
               <th>Intervenant</th>
               <th colspan="2">UE/Intitulé du cours</th>
               <th>Salle</th>
-              <% if user_signed_in? %>
+              <% if policy(Cour).action? %>
                 <th></th>
               <% end %>
             </tr>
@@ -136,8 +136,8 @@
 
               <% if cours.debut.to_date != current_date %>
                 <tr class="shadow-sm bg-light">
-                  <% if user_signed_in? %><th></th><% end %>
-                  <th colspan=<%= user_signed_in? ? '9' : '8' %>>
+                  <% if policy(Cour).action? %><th></th><% end %>
+                  <th colspan=<%= policy(Cour).action? ? '9' : '8' %>>
                     <%= fa_icon 'calendar-day' %>
                     <b><%= l(cours.debut.to_date, format: :long).humanize %></b> 
                   </th>
@@ -153,7 +153,7 @@
 
           <tfoot>
             <tr>
-              <% if user_signed_in? %>
+              <% if policy(Cour).action? %>
                 <th></th>
               <% end %>
               <th></th>
@@ -177,7 +177,7 @@
             <% end %>
           </div>
           <div class="col">
-            <% if user_signed_in? %>
+            <% if policy(Cour).action? %>
               <div data-target="action.selector">  
                 <span class="align-bottom">
                   Choisir une action à exécuter sur les cours sélectionnés

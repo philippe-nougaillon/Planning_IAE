@@ -3,8 +3,27 @@ Rails.application.routes.draw do
   resources :ouvertures
   devise_for :users
 
+  resources :invits, only: [:index, :show] do
+    member do
+      get :envoyer 
+      get :relancer 
+      get :valider 
+      get :rejeter 
+      get :confirmer 
+      get :archiver
+      post :validation
+    end
+    collection do
+      post :action
+    end
+  end
+
   resources :formations
-  resources :intervenants
+  resources :intervenants do
+    member do
+      get :invitations
+    end
+  end
   resources :users
   resources :fermetures
   resources :etudiants

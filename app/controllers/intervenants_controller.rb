@@ -1,7 +1,9 @@
 # ENCODING: UTF-8
 
 class IntervenantsController < ApplicationController
-  before_action :set_intervenant, only: [:show, :edit, :update, :destroy]
+  skip_before_action :authenticate_user!, only: %i[ invitations ]
+  before_action :set_intervenant, only: [:show, :invitations, :edit, :update, :destroy]
+  before_action :is_user_authorized
 
   # check if logged and admin  
   # before_filter do 
@@ -11,7 +13,6 @@ class IntervenantsController < ApplicationController
   # GET /intervenants
   # GET /intervenants.json
   def index
-    authorize Intervenant
     
     params[:column] ||= session[:column]
     params[:direction] ||= session[:direction]
@@ -37,6 +38,21 @@ class IntervenantsController < ApplicationController
     @intervenants = @intervenants
                       .reorder("#{sort_column} #{sort_direction}")  
                       .paginate(page: params[:page], per_page: 10)
+  end
+
+  def invitations
+    @invits = @intervenant.invits.where.not(workflow_state: 'non_retenue')
+
+    unless params[:formation].blank?
+      @invits = @invits.joins(:formation).where("formations.id = ?", params[:formation])
+    end
+
+    unless params[:workflow_state].blank?
+      @invits = @invits.where("invits.workflow_state = ?", params[:workflow_state].to_s.downcase)
+    end
+
+    @formations = Formation.where(id: @invits.joins(:formation).pluck("formations.id").uniq)
+    @invits = @invits.joins(:cour).reorder('cours.debut').paginate(page: params[:page], per_page: 20)
   end
 
   # GET /intervenants/1
@@ -110,7 +126,7 @@ class IntervenantsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_intervenant
-      @intervenant = Intervenant.find(params[:id])
+      @intervenant = Intervenant.friendly.find(params[:id])
     end
 
     def sortable_columns
@@ -131,6 +147,10 @@ class IntervenantsController < ApplicationController
        :téléphone_fixe, :téléphone_mobile, :bureau, :photo, :status, :remise_dossier_srh, :adresse, :cp, :ville, :doublon,
        :nbr_heures_statutaire, :date_naissance, :memo, :notifier,
        responsabilites_attributes: [:id, :debut, :fin, :titre, :formation_id, :heures, :commentaires, :_destroy])
+    end
+
+    def is_user_authorized
+      authorize Intervenant
     end
 
 end

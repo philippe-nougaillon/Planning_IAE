@@ -1,16 +1,36 @@
 class FormationPolicy < ApplicationPolicy
-    class Scope < Scope
-      def resolve
-        scope
-      end
+  class Scope < Scope
+    def resolve
+      scope
     end
-  
-    def index?
-      user
-    end
+  end
 
-    def new?
-      user
-    end
+  def index?
+    user.role_number >= 2
+  end
+
+  def show?
+    index?
+  end
+
+  def new?
+    index?
+  end
+
+  def create?
+    new?
+  end
+
+  def edit?
+    index?
+  end
+
+  def update?
+    edit?
+  end
+
+  def destroy?
+    index?
+  end
 
 end

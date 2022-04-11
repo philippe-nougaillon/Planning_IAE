@@ -11,12 +11,15 @@ class Cour < ApplicationRecord
   belongs_to :intervenant_binome, class_name: :Intervenant, foreign_key: :intervenant_binome_id, optional: true 
   belongs_to :salle, optional: true
 
+  has_many :invits
+
   validates :debut, :formation_id, :intervenant_id, :duree, presence: true
   validate :check_chevauchement_intervenant
   validate :check_chevauchement, if: Proc.new { |cours| cours.salle_id }
   validate :jour_fermeture
   validate :reservation_dates_must_make_sense
   validate :jour_ouverture
+  validate :check_invits_en_cours
 
   before_validation :update_date_fin
   before_validation :sunday_morning_praise_the_dawning
@@ -47,7 +50,7 @@ class Cour < ApplicationRecord
   end
 
   def self.actions_admin
-    ["Changer de salle", "Changer d'état", "Changer de date", "Intervertir", "Exporter vers Excel", "Exporter vers iCalendar", "Exporter en PDF", "Supprimer"]
+    ["Changer de salle", "Changer d'état", "Changer de date", "Intervertir", "Exporter vers Excel", "Exporter vers iCalendar", "Exporter en PDF", "Inviter", "Supprimer"]
   end
   
   def self.etendue_horaire
@@ -103,8 +106,8 @@ class Cour < ApplicationRecord
   def nom_ou_ue
     begin
       if self.nom.blank?        
-        unless self.ue.blank?
-          if ue = self.formation.unites.find_by(num:self.ue.upcase)
+        if self.code_ue
+          if ue = self.formation.unites.find_by(code: self.code_ue)
             ue.num_nom
           end        
         end  
@@ -570,7 +573,7 @@ class Cour < ApplicationRecord
     # vérifie que la date de début de cours est dans la période observée
     Cour.where("id IN (?)", Audited::Audit.where(auditable_type: 'Cour').where.not(user_id: 41).pluck(:auditable_id).uniq)
         .planifié
-        .where("cours.debut BETWEEN ? AND ?", Date.today, Date.today + 8.days)
+        .where("cours.debut BETWEEN ? AND ?", Date.today, Date.today + 30.days)
         .count
   end
 
@@ -692,6 +695,12 @@ class Cour < ApplicationRecord
         end
       else
         errors.add(:cours, 'impossible à valider : problème avec les horaires d\'ouverture !')
+      end
+    end
+  
+    def check_invits_en_cours
+      if self.invits.where.not("workflow_state = 'non_retenue' OR  workflow_state = 'confirmée'").any? && self.intervenant != 445
+        errors.add(:cours, 'a des invitations en cours !')
       end
     end
 end

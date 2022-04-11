@@ -109,3 +109,6 @@ gem 'pg_search'
 
 # Soft deletes for ActiveRecord done right.
 gem 'discard', '~> 1.2'
+
+# CSS styled emails without the hassle.
+gem 'premailer-rails'

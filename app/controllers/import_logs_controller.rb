@@ -1,11 +1,10 @@
 class ImportLogsController < ApplicationController
   before_action :set_import_log, only: [:show, :edit, :update, :destroy]
+  before_action :is_user_authorized
 
   # GET /import_logs
   # GET /import_logs.json
   def index
-    authorize ImportLog
-    
     @import_logs = ImportLog.includes(:user).order(:id).reverse_order
   end
 
@@ -39,5 +38,9 @@ class ImportLogsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def import_log_params
       params.require(:import_log).permit(:type, :etat, :nbr_lignes, :lignes_importees, :fichier, :message)
+    end
+
+    def is_user_authorized
+      authorize ImportLog
     end
 end

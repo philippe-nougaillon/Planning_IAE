@@ -1,0 +1,11 @@
+<p>
+  Bonjour,
+  <br><br>
+  L'invitation a été validée.
+  <br><br>
+  <% unless @invit.reponse.blank? %>
+    Réponse :
+    <br><br>
+    <%= @invit.reponse %>
+  <% end %>
+</p>

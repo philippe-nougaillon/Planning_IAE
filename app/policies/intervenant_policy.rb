@@ -6,12 +6,31 @@ class IntervenantPolicy < ApplicationPolicy
   end
 
   def index?
-    user
+    user.role_number >= 2
+  end
+
+  def show?
+    index?
   end
 
   def new?
-    user
+    index?
+  end
+
+  def create?
+    new?
+  end
+
+  def edit?
+    index?
+  end
+
+  def update?
+    edit?
+  end
+
+  def destroy?
+    index?
   end
 
 end
-  

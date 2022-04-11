@@ -1,0 +1,17 @@
+<p>
+  Le cours suivant vous a été attribué.
+  <br><br>
+  <span style="background-color:<%= @invit.cour.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
+    <%= @invit.cour.formation.nom %>
+  </span>
+  <br><br>
+  <strong>Date:</strong>
+  <%= l(@invit.cour.debut, format: :long) %>
+  <br><br>
+  <strong>Durée:</strong>
+  <%= number_with_precision(@invit.cour.duree, precision: 1, strip_insignificant_zeros: true) %> h
+  <br><br>
+  <strong>UE/Intitulé:</strong>
+  <%= @invit.cour.nom_ou_ue %>
+</p>
+

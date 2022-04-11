@@ -5,8 +5,12 @@ class ToolsController < ApplicationController
 
   require 'capture_stdout'
 
+  before_action :is_user_authorized
+
   def index
-    authorize :tool, :index?
+  end
+
+  def import
   end
 
   def import_do
@@ -173,7 +177,7 @@ class ToolsController < ApplicationController
 
   def import_intervenants_do
     if params[:upload]
-    	
+      
       # Enregistre le fichier localement (format = Date + nom du fichier)
       filename = I18n.l(Time.now, format: :long) + ' - ' + params[:upload].original_filename
 
@@ -243,7 +247,7 @@ class ToolsController < ApplicationController
       
       log.update(etat: _etat, nbr_lignes: @importes + @errors, lignes_importees: @importes)
       log.update(message: (params[:save] == 'true' ? "Importation" : "Simulation") )
- 
+
       if @errors > 0
         log.update(message: log.message + " | #{@errors} lignes rejetées !")
       end   
@@ -254,19 +258,16 @@ class ToolsController < ApplicationController
     else
       flash[:error] = "Manque le fichier source pour pouvoir lancer l'importation !"
       redirect_to action: 'import'
-    end  
+    end
 
   end
 
   def import_utilisateurs
-    authorize :tool, :import_utilisateurs?
   end
 
   def import_utilisateurs_do
-    authorize :tool, :import_utilisateurs?
-    
     if params[:upload]
-    	
+      
       # Enregistre le fichier localement
       file_with_path = Rails.root.join('public', params[:upload].original_filename)
       File.open(file_with_path, 'wb') do |file|
@@ -435,19 +436,16 @@ class ToolsController < ApplicationController
     else
       flash[:error] = "Manque le fichier source pour pouvoir lancer l'importation !"
       redirect_to action: 'import'
-    end  
+    end
 
   end
 
   def swap_intervenant
-    authorize :tool, :swap_intervenant?
   end
 
   def swap_intervenant_do
-    authorize :tool, :swap_intervenant?
-    
     unless params[:intervenant_from_id].blank? and params[:intervenant_to_id].blank?
-    	
+      
       # capture output
       @stream = capture_stdout do
         @importes = @errors = 0	
@@ -485,17 +483,17 @@ class ToolsController < ApplicationController
                          	 params[:cours]["start_date(2i)"].to_i,
                          	 params[:cours]["start_date(3i)"].to_i)
 
-	  @end_date = Date.civil(params[:cours]["end_date(1i)"].to_i,
-                           params[:cours]["end_date(2i)"].to_i,
+    @end_date = Date.civil(params[:cours]["end_date(1i)"].to_i,
+                         	 params[:cours]["end_date(2i)"].to_i,
                            params[:cours]["end_date(3i)"].to_i)
 
     # Calcul le nombre de jours à traiter dans la période à traiter
-  	@ndays = (@end_date - @start_date).to_i + 1 
-	  salle_id = params[:salle_id]
+    @ndays = (@end_date - @start_date).to_i + 1 
+    salle_id = params[:salle_id]
     nom_cours = params[:nom]
     semaines = params[:semaines]
 
-  	@cours_créés = @erreurs = 0
+    @cours_créés = @erreurs = 0
 
     @stream = capture_stdout do
       current_date = @start_date
@@ -589,7 +587,7 @@ class ToolsController < ApplicationController
   end
 
   def export_do
-	  cours = Cour.includes(:formation, :intervenant, :salle, :audits).order(:debut)
+    cours = Cour.includes(:formation, :intervenant, :salle, :audits).order(:debut)
 
     unless params[:start_date].blank? and params[:end_date].blank? 
       @start_date = Date.parse(params[:start_date])
@@ -665,9 +663,6 @@ class ToolsController < ApplicationController
   end
 
   def etats_services
-
-    # quitter si l'utilisateur actuel n'est pas parmi les utilisateurs autorisés
-    authorize :tool, :can_see_RHGroup_private_tool?
 
     @intervenants ||= []
 
@@ -1073,9 +1068,6 @@ class ToolsController < ApplicationController
 
   def liste_surveillants_examens
 
-    # quitter si l'utilisateur actuel n'est pas parmi les utilisateurs autorisés
-    authorize :tool, :can_see_RHGroup_private_tool?
-
     if params[:start_date].blank? || params[:end_date].blank?
       params[:start_date] ||= Date.today.at_beginning_of_month.last_month
       params[:end_date]   ||= Date.today.at_end_of_month.last_month
@@ -1175,5 +1167,12 @@ class ToolsController < ApplicationController
       end
     end
   end
+
+  private
+
+    def is_user_authorized
+      authorize :tool
+    end
+
   
 end

@@ -1,0 +1,35 @@
+<tr>
+  <td>
+      <span data-action="click->action#click">
+          <%= check_box_tag "[invits_id][#{invit.id}]", 'yes', false, data: {"target":"action.source"} %>
+      </span>
+  </td>
+  <td>
+    <%= link_to invit do %>
+      <b><%= l(invit.cour.debut, format: :heures_min) %></b> 
+      <br>
+      <%= l(invit.cour.fin, format: :heures_min) %>
+    <% end %>
+  </td>
+  <td>
+    <span style="background-color:<%= invit.cour.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
+      <%= invit.cour.formation.nom %>
+    </span>
+  </td>
+  <td>
+    <%= Unite.find(invit.ue).num_nom if invit.ue %>
+    :
+    <%= invit.nom unless invit.nom.blank? %>
+  </td>
+  <td><%= invit.intervenant.nom_prenom %></td>
+  <td>
+    <span class="badge <%= invit.style %>">
+      <%= invit.workflow_state.humanize %>
+    </span>
+  </td>
+  <td>
+    <%= fa_icon('comment-alt', title: invit.reponse) unless invit.reponse.blank? %>
+  </td>
+  <td><%= time_ago_in_words invit.updated_at %></td>
+  <td><%= link_to 'Voir', invit %></td>
+</tr>
