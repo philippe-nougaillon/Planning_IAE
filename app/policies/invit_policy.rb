@@ -42,11 +42,11 @@ class InvitPolicy < ApplicationPolicy
   end
 
   def valider?
-    relancer?
+    user.role_number >= 1
   end
 
   def rejeter?
-    relancer?
+    valider?
   end
 
   def confirmer?

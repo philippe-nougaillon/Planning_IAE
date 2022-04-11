@@ -2,7 +2,7 @@
 
 class SallesController < ApplicationController
   before_action :set_salle, only: [:show, :edit, :update, :destroy]
-  before_action :is_user_authorized, except: %i[ occupation libres ]
+  before_action :is_user_authorized, except: %i[ libres ]
 
   # GET /salles
   # GET /salles.json

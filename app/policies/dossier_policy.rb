@@ -34,7 +34,7 @@ class DossierPolicy < ApplicationPolicy
   end
 
   def audits?
-    new?
+    user.rh? || user.admin?
   end
 
   def déposer?
@@ -46,7 +46,7 @@ class DossierPolicy < ApplicationPolicy
   end
 
   def envoyer?
-    user.rh?
+    user.rh? || user.admin?
   end
 
   def valider?

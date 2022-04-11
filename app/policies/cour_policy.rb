@@ -18,7 +18,7 @@ class CourPolicy < ApplicationPolicy
   end
 
   def planning?
-    user.role_number >= 3
+    true
   end
 
   def action?

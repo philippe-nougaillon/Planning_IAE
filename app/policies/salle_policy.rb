@@ -38,7 +38,7 @@ class SallePolicy < ApplicationPolicy
   end
 
   def libres?
-    user.role_number >= 1
+    true
   end
 
 end
