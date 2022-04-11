@@ -1,5 +1,7 @@
 <div class="d-flex flex-column vh-100 justify-content-center align-items-center">
-  <%= image_tag "logo@2000.png", style: "width: 100%; max-width: 500px;" %>
+  <% unless request.variant.include?(:phone) %>
+    <%= image_tag "logo@2000.png", style: "width: 100%; max-width: 500px;" %>
+  <% end %>
   <div class="border border-dark rounded shadow w-100 p-5" style="max-width: 500px">
     <%= bootstrap_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
       <h1 class="text-center border-bottom mb-3 pb-3">
