@@ -1,5 +1,6 @@
 class OuverturesController < ApplicationController
   before_action :set_ouverture, only: %i[ show edit update destroy ]
+  before_action :is_user_authorized
 
   # GET /ouvertures or /ouvertures.json
   def index
@@ -65,5 +66,9 @@ class OuverturesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def ouverture_params
       params.require(:ouverture).permit(:bloc, :jour, :début, :fin)
+    end
+
+    def is_user_authorized
+      authorize Ouverture
     end
 end

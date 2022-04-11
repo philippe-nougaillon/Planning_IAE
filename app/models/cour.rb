@@ -683,9 +683,15 @@ class Cour < ApplicationRecord
     end
 
     def jour_ouverture
-      horaire = Ouverture.where(jour: self.debut.to_date.wday).find_by(bloc: self.salle.bloc)
-      unless (self.debut.hour >= horaire.début.hour) && (self.fin.hour <= horaire.fin.hour)
-        errors.add(:cours, 'en dehors des horaires d\'ouverture')
+      if horaire = Ouverture.where(jour: self.debut.to_date.wday).find_by(bloc: self.salle.bloc)
+        unless ((self.debut.hour >= horaire.début.hour) && 
+          (self.fin.hour <= horaire.fin.hour) && 
+          (self.debut.hour < horaire.fin.hour) && 
+          (self.fin.hour > horaire.début.hour))
+          errors.add(:cours, 'en dehors des horaires d\'ouverture')
+        end
+      else
+        errors.add(:cours, 'impossible à valider : problème avec les horaires d\'ouverture !')
       end
     end
 end
