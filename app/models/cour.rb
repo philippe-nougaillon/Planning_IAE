@@ -18,6 +18,7 @@ class Cour < ApplicationRecord
   validate :check_chevauchement, if: Proc.new { |cours| cours.salle_id }
   validate :jour_fermeture
   validate :reservation_dates_must_make_sense
+  validate :jour_ouverture
   validate :check_invits_en_cours
 
   before_validation :update_date_fin
@@ -684,6 +685,19 @@ class Cour < ApplicationRecord
       end   
     end
 
+    def jour_ouverture
+      if horaire = Ouverture.where(jour: self.debut.to_date.wday).find_by(bloc: self.salle.bloc)
+        unless ((self.debut.hour >= horaire.début.hour) && 
+          (self.fin.hour <= horaire.fin.hour) && 
+          (self.debut.hour < horaire.fin.hour) && 
+          (self.fin.hour > horaire.début.hour))
+          errors.add(:cours, 'en dehors des horaires d\'ouverture')
+        end
+      else
+        errors.add(:cours, 'impossible à valider : problème avec les horaires d\'ouverture !')
+      end
+    end
+  
     def check_invits_en_cours
       if self.invits.where.not("workflow_state = 'non_retenue' OR  workflow_state = 'confirmée'").any? && self.intervenant != 445
         errors.add(:cours, 'a des invitations en cours !')

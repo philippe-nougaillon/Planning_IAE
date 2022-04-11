@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   
+  resources :ouvertures
   devise_for :users
 
   resources :invits, only: [:index, :show] do

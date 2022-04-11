@@ -1,0 +1,42 @@
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h3>
+    <%= fa_icon 'business-time' %>
+    Horaires d'ouverture
+  </h3>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-sm table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>Bloc</th>
+        <th>Jour</th>
+        <th>Début</th>
+        <th>Fin</th>
+        <th colspan="3"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @ouvertures.each do |ouverture| %>
+        <tr>
+          <td><b><%= ouverture.bloc %></b></td>
+          <td><%= ouverture.jour.humanize %></td>
+          <td><%= ouverture.début.strftime("%Hh%M") %></td>
+          <td><%= ouverture.fin.strftime("%Hh%M") %></td>
+          <td>
+            <%= link_to edit_ouverture_path(ouverture), class: 'btn btn-default' do %>
+              <%= fa_icon 'edit' %>
+            <% end %>
+            <%= link_to(ouverture, method: :delete, data: {confirm: 'Confirmez-vous ?'}, class: 'btn btn-default') do %>
+              <%= fa_icon 'trash' %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+<br>
+
+<%= link_to 'Nouvelle Ouverture', new_ouverture_path %>
