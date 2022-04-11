@@ -1,4 +1,4 @@
-class ImportLogPolicy < ApplicationPolicy
+class UnitePolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
       scope
@@ -10,10 +10,6 @@ class ImportLogPolicy < ApplicationPolicy
   end
 
   def show?
-    index?
-  end
-
-  def download_imported_file?
     index?
   end
 

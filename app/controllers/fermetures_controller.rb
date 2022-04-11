@@ -7,7 +7,6 @@ class FermeturesController < ApplicationController
   # GET /fermetures
   # GET /fermetures.json
   def index
-    authorize Fermeture
 
     params[:futur] ||= 'oui'
     params[:paginate] ||= 'pages'

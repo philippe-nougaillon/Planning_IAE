@@ -10,6 +10,9 @@ class ToolsController < ApplicationController
   def index
   end
 
+  def import
+  end
+
   def import_do
     if params[:upload]
       
@@ -661,9 +664,6 @@ class ToolsController < ApplicationController
 
   def etats_services
 
-    # quitter si l'utilisateur actuel n'est pas parmi les utilisateurs autorisés
-    authorize :tool, :can_see_RHGroup_private_tool?
-
     @intervenants ||= []
 
     unless params[:start_date].blank? || params[:end_date].blank?
@@ -1067,9 +1067,6 @@ class ToolsController < ApplicationController
   end
 
   def liste_surveillants_examens
-
-    # quitter si l'utilisateur actuel n'est pas parmi les utilisateurs autorisés
-    authorize :tool, :can_see_RHGroup_private_tool?
 
     if params[:start_date].blank? || params[:end_date].blank?
       params[:start_date] ||= Date.today.at_beginning_of_month.last_month

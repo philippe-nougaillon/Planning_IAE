@@ -6,7 +6,7 @@ class InvitPolicy < ApplicationPolicy
   end
 
   def index?
-    user.admin?
+    user.role_number >= 5
   end
 
   def show?
@@ -18,7 +18,7 @@ class InvitPolicy < ApplicationPolicy
   end
 
   def create?
-    index?
+    new?
   end
 
   def edit?
@@ -26,7 +26,7 @@ class InvitPolicy < ApplicationPolicy
   end
 
   def update?
-    index?
+    edit?
   end
 
   def destroy?
@@ -42,23 +42,23 @@ class InvitPolicy < ApplicationPolicy
   end
 
   def valider?
-    index?
+    relancer?
   end
 
   def rejeter?
-    index?
+    relancer?
   end
 
   def confirmer?
-    index?
+    relancer?
   end
 
   def validation?
-    index?
+    relancer?
   end
 
   def archiver?
-    index?
+    relancer?
   end
 
 end

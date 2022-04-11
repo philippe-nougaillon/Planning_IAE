@@ -5,8 +5,12 @@ class DocumentPolicy < ApplicationPolicy
     end
   end
 
-  def index?
-    user
+  def create?
+    user.admin?
+  end
+
+  def destroy?
+    user.admin?
   end
 
 end

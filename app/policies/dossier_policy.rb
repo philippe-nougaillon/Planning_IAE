@@ -6,7 +6,7 @@ class DossierPolicy < ApplicationPolicy
   end
 
   def index?
-    user.rh?
+    user.rh? || user.admin?
   end
 
   def show?
@@ -14,7 +14,7 @@ class DossierPolicy < ApplicationPolicy
   end
 
   def new?
-    index?
+    user.rh? || user.admin?
   end
 
   def edit?
@@ -38,11 +38,31 @@ class DossierPolicy < ApplicationPolicy
   end
 
   def déposer?
-    !new?
+    true
   end
 
   def show?
-    #record.can_déposer? || user
+    true
+  end
+
+  def envoyer?
+    user.rh?
+  end
+
+  def valider?
+    envoyer?
+  end
+
+  def rejeter?
+    envoyer?
+  end
+
+  def relancer?
+    envoyer?
+  end
+
+  def archiver?
+    envoyer?
   end
 
 end

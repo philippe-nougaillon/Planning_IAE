@@ -18,7 +18,7 @@ class EtudiantPolicy < ApplicationPolicy
   end
 
   def create?
-    index?
+    new?
   end
 
   def edit?
@@ -26,7 +26,7 @@ class EtudiantPolicy < ApplicationPolicy
   end
 
   def update?
-    index?
+    edit?
   end
 
   def destroy?

@@ -13,7 +13,6 @@ class IntervenantsController < ApplicationController
   # GET /intervenants
   # GET /intervenants.json
   def index
-    authorize Intervenant
     
     params[:column] ||= session[:column]
     params[:direction] ||= session[:direction]

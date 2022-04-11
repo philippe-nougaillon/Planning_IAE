@@ -17,8 +17,12 @@ class CourPolicy < ApplicationPolicy
     user.role_number >= 2
   end
 
+  def planning?
+    user.role_number >= 3
+  end
+
   def action?
-    show?
+    user.role_number >= 3
   end
 
   def action_do?
@@ -26,7 +30,7 @@ class CourPolicy < ApplicationPolicy
   end
 
   def new?
-    show?
+    user.role_number >= 2
   end
 
   def create?
@@ -34,7 +38,7 @@ class CourPolicy < ApplicationPolicy
   end
 
   def edit?
-    create?
+    user.role_number >= 2
   end
 
   def update?

@@ -33,4 +33,16 @@ class EnvoiLogPolicy < ApplicationPolicy
     index?
   end
 
+  def activer?
+    index?
+  end
+
+  def tester?
+    index?
+  end
+
+  def suspendre?
+    index?
+  end
+
 end

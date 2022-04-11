@@ -18,7 +18,7 @@ class SallePolicy < ApplicationPolicy
   end
 
   def create?
-    index?
+    new?
   end
 
   def edit?
@@ -26,11 +26,19 @@ class SallePolicy < ApplicationPolicy
   end
 
   def update?
-    index?
+    edit?
   end
 
   def destroy?
     index?
+  end
+
+  def occupation?
+    user.role_number >= 1
+  end
+
+  def libres?
+    user.role_number >= 1
   end
 
 end
