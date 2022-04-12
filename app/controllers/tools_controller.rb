@@ -267,65 +267,6 @@ class ToolsController < ApplicationController
 
   def import_utilisateurs_do
     if params[:upload]
-      
-      # Enregistre le fichier localement
-      file_with_path = Rails.root.join('public', params[:upload].original_filename)
-      File.open(file_with_path, 'wb') do |file|
-          file.write(params[:upload].read)
-      end
-
-      # capture output
-      @stream = capture_stdout do
-        @importes = @errors = 0	
-
-        index = 0
-
-        CSV.foreach(file_with_path, headers:true, col_sep:';', quote_char:'"', encoding:'UTF-8') do |row|
-          index += 1
-
-          generated_password = Devise.friendly_token.first(12)
-          user = User.new(email:row['email'], nom:row['nom'].strip, prénom:row['prénom'].strip, mobile:row['mobile'], 
-                  password:generated_password, formation_id:params[:formation_id])
-
-          user.admin = true if row['admin?'] == 'admin'
-           
-          if user.valid? 
-            user.save if params[:save] == 'true'
-            UserMailer.welcome_email(user.id, generated_password).deliver_later if params[:save] == 'true'
-            
-            @importes += 1
-          else
-            puts "Ligne ##{index}"
-            puts "!! user INVALIDE !! Erreur => #{user.errors.messages} | Source: #{row}"
-            puts
-            # puts user.changes
-            @errors += 1
-          end
-          puts "- -" * 40
-          puts
-        end
-        puts "----------- Les modifications n'ont pas été enregistrées ! ---------------" unless params[:save] == 'true'
-        puts
-
-        puts "=" * 40
-        puts "Lignes importées: #{@importes} | Lignes ignorées: #{@errors}"
-        puts "=" * 40
-      end
-
-      # save output            
-      #@now = DateTime.now.to_s
-      #File.open("public/Documents/Import_logements-#{@now}.txt", "w") { |file| file.write @out }
-    else
-      flash[:error] = "Manque le fichier source ou la formation pour pouvoir lancer l'importation !"
-      redirect_to action: 'import_utilisateurs'
-    end  
-  end
-
-  def import_utilisateurs_roles
-  end
-
-  def import_utilisateurs_roles_do
-    if params[:upload]
 
       unless params[:role].blank?
         role = params[:role]
@@ -411,7 +352,7 @@ class ToolsController < ApplicationController
     else
       flash[:error] = "Manque le fichier source pour pouvoir lancer l'importation !"
       redirect_to action: 'import_utilisateurs_roles'
-    end
+    end 
   end
 
   def import_etudiants

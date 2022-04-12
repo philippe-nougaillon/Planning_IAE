@@ -75,7 +75,6 @@ Rails.application.routes.draw do
     get :import
     get :import_intervenants
     get :import_utilisateurs
-    get :import_utilisateurs_roles
     get :import_etudiants
     get :export
     get :export_intervenants
@@ -98,7 +97,6 @@ Rails.application.routes.draw do
     post :creation_cours_do
     post :import_intervenants_do
     post :import_utilisateurs_do
-    post :import_utilisateurs_roles_do
     post :import_etudiants_do
     post :export_do
     post :export_intervenants_do
