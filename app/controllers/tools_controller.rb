@@ -321,6 +321,99 @@ class ToolsController < ApplicationController
     end  
   end
 
+  def import_utilisateurs_roles
+  end
+
+  def import_utilisateurs_roles_do
+    if params[:upload]
+
+      unless params[:role].blank?
+        role = params[:role]
+      else
+        role = nil
+      end
+
+      # Enregistre le fichier localement (format = Date + nom du fichier)
+      filename = I18n.l(Time.now, format: :long) + ' - ' + params[:upload].original_filename
+
+      file_with_path = Rails.root.join('public', filename)
+      File.open(file_with_path, 'wb') do |file|
+        file.write(params[:upload].read)
+      end
+
+      log = ImportLog.new(model_type: 'Users', fichier: filename, user_id: current_user.id)
+
+      @importes = @errors = 0 
+      index = 1
+
+      # IMPORT XLS
+      Spreadsheet.client_encoding = 'UTF-8'
+      book = Spreadsheet.open file_with_path
+      sheet1 = book.worksheet 0
+      headers = User.xls_headers
+
+      # each(x) : où x = nombre de lignes à éviter
+      sheet1.each(2) do |row|
+        index += 1
+        next unless row[0]
+
+        generated_password = Devise.friendly_token.first(12)
+        user = User
+                  .where("lower(nom) = ? AND lower(prénom) = ?", 
+                    row[headers.index 'nom'].try(:strip).try(:downcase), 
+                    row[headers.index 'prénom'].try(:strip).try(:downcase)
+                  )
+                  .first_or_initialize
+
+        user.nom = row[headers.index 'nom'].try(:strip).try(:upcase) 
+        user.prénom = row[headers.index 'prénom'].try(:strip)
+        user.email = row[headers.index 'email']
+        user.mobile = row[headers.index 'mobile']
+        user.password = generated_password
+        user.role = role
+
+        # MAJ existant ? si l'id est égal à 0 => c'est une création
+        msg = "USER #{user.new_record? ? 'NEW' : 'UPDATE'} => id:#{user.id} changes:#{user.changes}"
+
+        if user.valid? 
+          user.save if params[:save] == 'true'
+          UserMailer.welcome_email(user.id, generated_password).deliver_later if params[:save] == 'true'
+          _etat = ImportLogLine.etats[:succès]
+          @importes += 1
+        else
+          msg << " || ERREURS: " + user.errors.messages.map{|m| "#{m.first} => #{m.last}"}.join(',')
+          _etat =  ImportLogLine.etats[:echec]
+          @errors += 1
+        end
+        log.import_log_lines.build(etat: _etat, num_ligne: index, message: msg)
+      end
+
+      _etat = if @errors.zero?
+        ImportLog.etats[:succès] 
+      else 
+        if @errors < @importes 
+          ImportLog.etats[:warning]
+        else
+          ImportLog.etats[:echec]
+        end
+      end   
+      
+      log.update(etat: _etat, nbr_lignes: @importes + @errors, lignes_importees: @importes)
+      log.update(message: (params[:save] == 'true' ? "Importation" : "Simulation") )
+
+      if @errors > 0
+        log.update(message: log.message + " | #{@errors} lignes rejetées !")
+      end
+      log.save
+      
+      flash[:notice] = "L'importation a bien été exécutée"
+      redirect_to import_logs_path
+    else
+      flash[:error] = "Manque le fichier source pour pouvoir lancer l'importation !"
+      redirect_to action: 'import_utilisateurs_roles'
+    end
+  end
+
   def import_etudiants
   end
 

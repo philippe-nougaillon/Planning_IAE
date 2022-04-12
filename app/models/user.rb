@@ -60,4 +60,8 @@ class User < ApplicationRecord
     User.roles[self.role]
   end
 
+  def self.xls_headers
+    [ 'nom','prénom','email', 'mobile' ]
+  end
+
 end

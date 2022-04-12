@@ -33,6 +33,14 @@ class ToolPolicy < ApplicationPolicy
     import_utilisateurs?
   end
 
+  def import_utilisateurs_roles?
+    user.admin?
+  end
+
+  def import_utilisateurs_roles_do?
+    import_utilisateurs_roles?
+  end
+
   def import_etudiants?
     user.role_number >= 4
   end

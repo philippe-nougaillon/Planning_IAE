@@ -1,0 +1,45 @@
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h3><%= fa_icon 'download' %> Import des utilisateurs avec rôles</h3>
+</div>
+<br>
+
+<%= form_tag({action: "import_utilisateurs_roles_do", method: :post}, multipart: true) do %>
+  <div>
+    <h3>Cette fonction permet l'importation des utilisateurs avec ajout des rôles à partir d'un fichier Excel</h3>
+    <ul>
+        <li>Le fichier source peut avoir les colonnes suivantes: <b>email;nom;prénom;mobile</b></li>
+        <li>Ce fichier doit être au format Excel</li>
+    </ul>
+    <b><i>Chaque nouvel utilisateur sera averti de la création de son compte par l'envoi d'un email contenant son mot de passe</i></b> 
+  </div>
+  <br>
+  
+  <div class="row">
+    <div class="col-sm-4">
+      <%= label :role, "Rôle" %>
+      <%= select_tag :role, 
+            options_for_select(User.roles.keys), class:"form-control" %>
+      <br>
+      <div class="field">
+        <%= label :filename, "Fichier source" %>
+        <%= file_field_tag 'upload', accept: 'application/vnd.ms-excel', class: 'form-control pb-5 pt-3' %>
+      </div>
+    </div>
+  </div>
+  <br>
+  
+  <div class="field">
+    <b>Enregistrer les changements ?</b> <br>
+    <%= label :save, "Oui", :value => "true" %>
+    <%= radio_button_tag :save, true %>
+    <%= label :save, "Non", :value => "false" %>
+    <%= radio_button_tag :save, false, :checked => true %>
+    <i>Choisissez 'Non' pour tester votre import car <b>il est irréversible !</b></i><br />
+  </div>
+  <br>
+  
+  <div class="actions">
+    <%= submit_tag "Lancer l'import", class: "btn btn-success" %>
+  </div>
+<% end %>
+<br>
