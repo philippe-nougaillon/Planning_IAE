@@ -317,8 +317,10 @@ class ToolsController < ApplicationController
         msg = "USER #{user.new_record? ? 'NEW' : 'UPDATE'} => id:#{user.id} changes:#{user.changes}"
 
         if user.valid? 
-          user.save if params[:save] == 'true'
-          UserMailer.welcome_email(user.id, generated_password).deliver_later if params[:save] == 'true'
+          if params[:save] == 'true'
+            user.save
+            UserMailer.welcome_email(user.id, generated_password).deliver_now
+          end
           _etat = ImportLogLine.etats[:succès]
           @importes += 1
         else

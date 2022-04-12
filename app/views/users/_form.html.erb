@@ -7,7 +7,7 @@
         <%= f.text_field :prénom %>
         <%= f.text_field :email %>
         <%= f.text_field :mobile %>
-        <%= f.select :role, options_for_select(User.roles.keys), label: "Rôle" %>
+        <%= f.select :role, options_for_select(User.roles.keys, @user.role), label: "Rôle" %>
 
         <% if @user.new_record? %>
           <%= f.password_field :password %>
