@@ -1,0 +1,26 @@
+<p id="notice"><%= notice %></p>
+
+<%= bootstrap_form_with(model: ouverture) do |form| %>
+  <% if ouverture.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(ouverture.errors.count, "error") %> empêche cette ouverture d'être enregistré :</h2>
+
+      <ul>
+        <% ouverture.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="col-sm-4">
+    <%= form.select :bloc, options_for_select(['A','B','D']) %>
+    <%= form.select :jour, options_for_select(Ouverture.jours.keys) %>
+    <%= form.text_field :début, type: 'time', value: (ouverture.new_record? ? '08:00' : ouverture.début.strftime("%H:%M")) %>
+    <%= form.text_field :fin, type: 'time', value: (ouverture.new_record? ? '20:00' : ouverture.fin.strftime("%H:%M")) %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
