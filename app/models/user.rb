@@ -15,7 +15,7 @@ class User < ApplicationRecord
 
   belongs_to :formation, optional: true   
 
-  validates :nom, :prénom, presence: true    
+  validates :nom, :prénom, :role, presence: true    
 
   enum role: {étudiant: 0, 
               intervenant: 1, 
@@ -61,7 +61,7 @@ class User < ApplicationRecord
   end
 
   def self.xls_headers
-    [ 'nom','prénom','email', 'mobile' ]
+    [ 'nom','prénom','email', 'mobile', 'rôle' ]
   end
 
 end

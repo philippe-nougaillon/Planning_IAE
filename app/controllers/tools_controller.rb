@@ -306,20 +306,23 @@ class ToolsController < ApplicationController
                   )
                   .first_or_initialize
 
+        new_record = user.new_record?
+        
         user.nom = row[headers.index 'nom'].try(:strip).try(:upcase) 
         user.prénom = row[headers.index 'prénom'].try(:strip)
         user.email = row[headers.index 'email']
         user.mobile = row[headers.index 'mobile']
-        user.password = generated_password
-        user.role = role
+        user.password = generated_password if new_record
+        # role = "étudiant" si tout est nil blank ou false
+        user.role = role ? role : row[headers.index 'rôle'] || user.role
 
         # MAJ existant ? si l'id est égal à 0 => c'est une création
-        msg = "USER #{user.new_record? ? 'NEW' : 'UPDATE'} => id:#{user.id} changes:#{user.changes}"
+        msg = "USER #{new_record ? 'NEW' : 'UPDATE'} => id:#{user.id} changes:#{user.changes}"
 
         if user.valid? 
           if params[:save] == 'true'
             user.save
-            UserMailer.welcome_email(user.id, generated_password).deliver_now
+            UserMailer.welcome_email(user.id, generated_password).deliver_now if new_record
           end
           _etat = ImportLogLine.etats[:succès]
           @importes += 1

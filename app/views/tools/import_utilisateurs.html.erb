@@ -5,10 +5,14 @@
 
 <%= form_tag({action: "import_utilisateurs_do", method: :post}, multipart: true) do %>
   <div>
-    <h3>Cette fonction permet l'importation des utilisateurs avec ajout des rôles à partir d'un fichier Excel</h3>
+    <h3>Cette fonction permet l'importation des utilisateurs à partir d'un fichier Excel</h3>
     <ul>
-        <li>Le fichier source peut avoir les colonnes suivantes: <b>email;nom;prénom;mobile</b></li>
-        <li>Ce fichier doit être au format Excel</li>
+        <li>Le fichier source peut avoir les colonnes suivantes: <%= User.xls_headers.join(', ') %></li>
+        <li>Les champs obligatoires sont : <strong>nom, prénom, rôle</strong></li>
+        <li>Ce fichier doit être au format Excel (.xls : 1997-2004, et non .xlsx)</li>
+        <li>Le champ Rôle a la priorité sur la colonne rôle du tableau Excel.
+        <br>
+        Si les deux sont vides : <ol><li>le rôle ne changera pas si l'utilisateur en a déjà un</li><li> ou causera une erreur si ce dernier n'en a pas</li></ol></li>
     </ul>
     <b><i>Chaque nouvel utilisateur sera averti de la création de son compte par l'envoi d'un email contenant son mot de passe</i></b> 
   </div>
@@ -18,10 +22,10 @@
     <div class="col-sm-4">
       <%= label :role, "Rôle" %>
       <%= select_tag :role, 
-            options_for_select(User.roles.keys), class:"form-control" %>
+            options_for_select(User.roles.keys), class:"form-control", include_blank: true %>
       <br>
       <div class="field">
-        <%= label :filename, "Fichier source" %>
+        <%= label :filename, "Fichier .xls" %>
         <%= file_field_tag 'upload', accept: 'application/vnd.ms-excel', class: 'form-control pb-5 pt-3' %>
       </div>
     </div>
