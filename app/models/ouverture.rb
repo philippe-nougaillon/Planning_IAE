@@ -6,4 +6,8 @@ class Ouverture < ApplicationRecord
   default_scope {order(:bloc, :jour)}
 
   validates :jour, uniqueness: { scope: :bloc }
+
+  def horaires
+    "#{ self.début.strftime("%Hh%M") }-#{ self.fin.strftime("%Hh%M") }"
+  end
 end

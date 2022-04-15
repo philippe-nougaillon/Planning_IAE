@@ -14,8 +14,8 @@
   <% end %>
 
   <div class="col-sm-4">
-    <%= form.select :bloc, options_for_select(['A','B','D']) %>
-    <%= form.select :jour, options_for_select(Ouverture.jours.keys) %>
+    <%= form.select :bloc, options_for_select(['A','B','D'], ouverture.bloc) %>
+    <%= form.select :jour, options_for_select(Ouverture.jours.keys, ouverture.jour) %>
     <%= form.text_field :début, type: 'time', value: (ouverture.new_record? ? '08:00' : ouverture.début.strftime("%H:%M")) %>
     <%= form.text_field :fin, type: 'time', value: (ouverture.new_record? ? '20:00' : ouverture.fin.strftime("%H:%M")) %>
   </div>
