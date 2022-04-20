@@ -9,9 +9,8 @@ module Api
 			def index
 				@cours = Cour.where("DATE(debut) >= ?", params[:d]).order(:debut, :fin)
 				unless params[:search].blank?
-					s = params[:search].upcase
 					@cours = @cours.joins(:formation, :intervenant)
-									.where("formations.nom LIKE ? OR intervenants.nom LIKE ?", "%#{ s }%", "%#{ s }%")					
+									.where("formations.nom LIKE :search OR intervenants.nom LIKE :search", {search: "%#{params[:search]}%".upcase})
 				else
 					@cours = @cours.paginate(page: params[:page], per_page: 30)
 				end
