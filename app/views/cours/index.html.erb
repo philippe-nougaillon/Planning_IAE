@@ -182,17 +182,8 @@
                 <span class="align-bottom">
                   Choisir une action à exécuter sur les cours sélectionnés
                 </span>
-            
-                <% if current_user.admin? %>
-                  <% actions = Cour.actions_admin %>
-                <% elsif current_user.reserver? %>
-                  <% actions = Cour.actions_peut_reserver %>
-                <% else %>
-                  <% actions = Cour.actions %>
-                <% end %>
-
+                <% actions = Cour.actions(current_user.role_number) %>
                 <%= select_tag "action_name", options_for_select(actions), include_blank:true, class:"form-control", onchange:'this.form.submit()' %>
-
               </div>
             <% else %>
               <% if params[:formation].present? || params[:intervenant].present? %>

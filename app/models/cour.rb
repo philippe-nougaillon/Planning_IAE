@@ -41,18 +41,17 @@ class Cour < ApplicationRecord
     ]
   end
   
-  def self.actions
-    ["Exporter vers Excel", "Exporter vers iCalendar", "Exporter en PDF", "Supprimer"]
+  def self.actions(role_number)
+    actions = ["Exporter vers Excel", "Exporter vers iCalendar", "Exporter en PDF", "Supprimer"]
+    if role_number >= 3
+      actions << ["Changer de salle", "Changer d'intervenant", "Intervertir"]
+    end
+    if role_number >= 5
+      actions << ["Changer d'état", "Changer de date", "Inviter"]
+    end
+    return actions.flatten.sort
   end
 
-  def self.actions_peut_reserver
-    ["Changer de salle", "Changer d'intervenant", "Intervertir"] + self.actions 
-  end
-
-  def self.actions_admin
-    ["Changer de salle", "Changer d'état", "Changer de date", "Intervertir", "Exporter vers Excel", "Exporter vers iCalendar", "Exporter en PDF", "Inviter", "Supprimer"]
-  end
-  
   def self.etendue_horaire
     [8,9,10,11,12,13,14,15,16,17,18,19,20,21,22]
   end
