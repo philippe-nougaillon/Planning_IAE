@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.7.5'
+ruby '2.7.6'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 6.1.5'
@@ -66,7 +66,7 @@ gem 'bootstrap_form', '~> 4.5'
 gem 'simple_calendar', '2.3.0'
 gem 'devise', '>= 4.7.1'
 gem 'devise-i18n'
-gem 'audited'
+gem 'audited', '~> 4.0'
 gem 'capture_stdout'
 gem 'will_paginate'
 gem 'will_paginate-bootstrap4'
