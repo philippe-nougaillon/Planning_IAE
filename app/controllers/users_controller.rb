@@ -17,8 +17,7 @@ class UsersController < ApplicationController
     end
 
     unless params[:search].blank?
-      s = "%#{params[:search]}%".downcase
-      @users = @users.where("LOWER(nom) like ? or LOWER(prénom) like ? or LOWER(email) like ?", s, s, s)
+      @users = @users.where("LOWER(nom) like :search or LOWER(prénom) like :search or LOWER(email) like :search", {search: "%#{params[:search]}%".downcase})
     end
 
     unless params[:admin].blank?

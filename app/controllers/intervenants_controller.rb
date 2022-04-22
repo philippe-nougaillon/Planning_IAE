@@ -20,8 +20,7 @@ class IntervenantsController < ApplicationController
     @intervenants = Intervenant.all
 
     unless params[:nom].blank?
-      s = "%#{params[:nom]}%".downcase
-      @intervenants = @intervenants.where("LOWER(nom) like ? or LOWER(prenom) like ?", s, s)
+      @intervenants = @intervenants.where("LOWER(nom) like :search or LOWER(prenom) like :search", {search: "%#{params[:nom]}%".downcase})
     end
 
     unless params[:doublon].blank?
