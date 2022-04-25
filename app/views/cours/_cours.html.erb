@@ -48,14 +48,6 @@
                     <%= link_to 'Invitations en cours', invits_path(cours_id: cours.id) %>
                 <% end %>
             <% end %>
-        <% else %>
-            <div style="color: transparent;text-shadow: 0 0 8px #000;">
-                <%= cours.intervenant.nom_prenom %>
-                <% if binome = cours.intervenant_binome %>
-                    <br>
-                    <%= binome.nom_prenom %>
-                <% end %>
-            </div>
         <% end %>
     </td>
     <td>
@@ -73,11 +65,12 @@
                     <%= cours.salle.nom %>
                 </span>             
             </h5>
-
-            <% if cours_formation.nbr_etudiants > cours.salle.places && cours.salle.bloc != 'Z' %>
-                <i title="Manque <%= cours_formation.nbr_etudiants - cours.salle.places %> place.s">
-                    <%= fa_icon 'exclamation-circle' %>
-                </i>
+            <% if user_signed_in? %>
+                <% if cours_formation.nbr_etudiants > cours.salle.places && cours.salle.bloc != 'Z' %>
+                    <i title="Manque <%= cours_formation.nbr_etudiants - cours.salle.places %> place.s">
+                        <%= fa_icon 'exclamation-circle' %>
+                    </i>
+                <% end %>
             <% end %>
         <% else %>
             <% if cours.confirmé? %>
