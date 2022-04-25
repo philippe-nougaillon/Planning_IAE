@@ -50,7 +50,6 @@
   </head>
 
   <body>
-    <% if user_signed_in? %>
     <nav class="navbar navbar-expand navbar-light shadow-sm">
       <a class="navbar-brand" href="/" aria-label="logo">
         <%= image_tag("logo_iae@195.png", height: 40, alt: 'logo IAE') %>
@@ -109,7 +108,6 @@
         
       </div>
     </nav>
-    <% end %>
 
     <div class="container">
       <% flash.each do |name, msg| %>
