@@ -27,6 +27,10 @@ class Cour < ApplicationRecord
   before_save :change_etat_si_salle
   before_save :annuler_salle_si_cours_est_annulé
 
+  after_commit {
+    CoursNonPlanifie.refresh
+  }
+
   enum etat: [:planifié, :à_réserver, :confirmé, :reporté, :annulé, :réalisé]
   
   def self.styles
@@ -567,14 +571,14 @@ class Cour < ApplicationRecord
     return book 
   end
 
-  def self.cours_a_planifier
-    # ids des cours créés par utilisateur autre que Thierry (#41)
-    # vérifie que la date de début de cours est dans la période observée
-    Cour.where("id IN (?)", Audited::Audit.where(auditable_type: 'Cour').where.not(user_id: 41).pluck(:auditable_id).uniq)
-        .planifié
-        .where("cours.debut BETWEEN ? AND ?", Date.today, Date.today + 30.days)
-        .count
-  end
+  # def self.cours_a_planifier
+  #   # ids des cours créés par utilisateur autre que Thierry (#41)
+  #   # vérifie que la date de début de cours est dans la période observée
+  #   Cour.where("id IN (?)", Audited::Audit.where(auditable_type: 'Cour').where.not(user_id: 41).pluck(:auditable_id).uniq)
+  #       .planifié
+  #       .where("cours.debut BETWEEN ? AND ?", Date.today, Date.today + 30.days)
+  #       .count
+  # end
 
   private
     def update_date_fin

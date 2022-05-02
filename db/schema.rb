@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_04_112326) do
+ActiveRecord::Schema.define(version: 2022_05_02_131521) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -97,6 +97,21 @@ ActiveRecord::Schema.define(version: 2022_04_04_112326) do
     t.index ["formation_id"], name: "index_cours_on_formation_id"
     t.index ["intervenant_id"], name: "index_cours_on_intervenant_id"
     t.index ["salle_id"], name: "index_cours_on_salle_id"
+  end
+
+  create_table "delayed_jobs", force: :cascade do |t|
+    t.integer "priority", default: 0, null: false
+    t.integer "attempts", default: 0, null: false
+    t.text "handler", null: false
+    t.text "last_error"
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string "locked_by"
+    t.string "queue"
+    t.datetime "created_at", precision: 6
+    t.datetime "updated_at", precision: 6
+    t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
   create_table "documents", force: :cascade do |t|
@@ -248,6 +263,17 @@ ActiveRecord::Schema.define(version: 2022_04_04_112326) do
     t.index ["slug"], name: "index_intervenants_on_slug", unique: true
   end
 
+  create_table "invitations", force: :cascade do |t|
+    t.bigint "cour_id", null: false
+    t.bigint "intervenant_id", null: false
+    t.string "msg"
+    t.string "workflow_state"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["cour_id"], name: "index_invitations_on_cour_id"
+    t.index ["intervenant_id"], name: "index_invitations_on_intervenant_id"
+  end
+
   create_table "invits", force: :cascade do |t|
     t.bigint "cour_id", null: false
     t.bigint "intervenant_id", null: false
@@ -364,7 +390,24 @@ ActiveRecord::Schema.define(version: 2022_04_04_112326) do
 
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "documents", "dossiers"
+  add_foreign_key "invitations", "cours"
+  add_foreign_key "invitations", "intervenants"
   add_foreign_key "invits", "cours"
   add_foreign_key "invits", "intervenants"
   add_foreign_key "invits", "users"
+
+  create_view "\"cours_non_planifiés\"", sql_definition: <<-SQL
+      SELECT count(*) AS count
+     FROM cours
+    WHERE ((cours.id IN ( SELECT audits.auditable_id
+             FROM audits
+            WHERE (((audits.auditable_type)::text = 'Cour'::text) AND (audits.user_id <> 41)))) AND (cours.etat = 0) AND ((cours.debut >= now()) AND (cours.debut <= (now() + 'P30D'::interval))));
+  SQL
+  create_view "cours_non_planifies", materialized: true, sql_definition: <<-SQL
+      SELECT cours.id
+     FROM cours
+    WHERE ((cours.id IN ( SELECT audits.auditable_id
+             FROM audits
+            WHERE (((audits.auditable_type)::text = 'Cour'::text) AND (audits.user_id <> 41)))) AND (cours.etat = 0) AND ((cours.debut >= now()) AND (cours.debut <= (now() + 'P30D'::interval))));
+  SQL
 end
