@@ -118,3 +118,5 @@ gem 'discard', '~> 1.2'
 
 # CSS styled emails without the hassle.
 gem 'premailer-rails'
+
+gem "scenic", "~> 1.6"
