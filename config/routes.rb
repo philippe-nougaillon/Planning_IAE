@@ -81,7 +81,9 @@ Rails.application.routes.draw do
     get :import_etudiants
     get :export
     get :export_intervenants
+    get :export_utilisateurs
     get :export_etudiants
+    get :export_formations
 
     get :swap_intervenant
     get :etats_services
@@ -103,7 +105,9 @@ Rails.application.routes.draw do
     post :import_etudiants_do
     post :export_do
     post :export_intervenants_do
+    post :export_utilisateurs_do
     post :export_etudiants_do
+    post :export_formations_do
     post :swap_intervenant_do
     post :taux_occupation_jours_do
     post :taux_occupation_salles_do

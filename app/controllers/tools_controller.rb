@@ -684,7 +684,27 @@ class ToolsController < ApplicationController
     send_data file_contents.string.force_encoding('binary'), filename: filename 
   end
 
+  def export_utilisateurs
+  end
+
+  def export_utilisateurs_do
+    if params[:desactives]
+      users = User.all 
+    else
+      users = User.kept
+    end
+
+    book = UsersToXls.new(users).call
+    file_contents = StringIO.new
+    book.write file_contents # => Now file_contents contains the rendered file output
+    filename = "Export_Utilisateurs_#{Date.today.to_s}.xls"
+    send_data file_contents.string.force_encoding('binary'), filename: filename 
+  end
+
   def etudiants
+  end
+
+  def export_etudiants
   end
 
   def export_etudiants_do
@@ -698,6 +718,21 @@ class ToolsController < ApplicationController
     file_contents = StringIO.new
     book.write file_contents # => Now file_contents contains the rendered file output
     filename = "Export_Etudiants_#{Date.today.to_s}.xls"
+    send_data file_contents.string.force_encoding('binary'), filename: filename 
+  end
+
+  def export_formations
+  end
+
+  def export_formations_do
+    formations = Formation.all
+
+    formations = formations.where(archive: false) unless params[:archive]
+
+    book = FormationsToXls.new(formations).call
+    file_contents = StringIO.new
+    book.write file_contents # => Now file_contents contains the rendered file output
+    filename = "Export_Formations_#{Date.today.to_s}.xls"
     send_data file_contents.string.force_encoding('binary'), filename: filename 
   end
 

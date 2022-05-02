@@ -73,12 +73,32 @@ class ToolPolicy < ApplicationPolicy
     export_intervenants?
   end
 
+  def export_utilisateurs?
+    user.admin?
+  end
+
+  def export_utilisateurs_do?
+    export_utilisateurs?
+  end
+
   def etudiants?
     user.admin?
   end
 
-  def export_etudiants_do?
+  def export_etudiants?
     user.admin?
+  end
+
+  def export_etudiants_do?
+    export_etudiants?
+  end
+
+  def export_formations?
+    user.role_number >= 5
+  end
+
+  def export_formations_do?
+    export_formations?
   end
 
   def etats_services?
