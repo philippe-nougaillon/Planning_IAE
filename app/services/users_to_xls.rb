@@ -15,8 +15,9 @@ class UsersToXls < ApplicationService
 
     headers = ["id", "nom", "prénom", "email", 
                 "role",
-                "formation_id",
                 "mobile",
+                "formation_id",
+                "désactivé?",
                 "created_at", "updated_at"]
 
     sheet.row(0).concat headers
@@ -30,8 +31,9 @@ class UsersToXls < ApplicationService
           user.prénom,
           user.email,
           user.role,
-          user.formation_id,
           user.mobile,
+          user.formation_id,
+          user.discarded?,
           user.created_at, 
           user.updated_at
         ]
