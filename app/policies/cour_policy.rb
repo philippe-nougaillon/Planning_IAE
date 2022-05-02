@@ -6,7 +6,7 @@ class CourPolicy < ApplicationPolicy
   end
 
   def index?
-    user
+    true
   end
 
   def index_slide?
@@ -22,7 +22,7 @@ class CourPolicy < ApplicationPolicy
   end
 
   def action?
-    user.role_number >= 3
+    user && user.role_number >= 3
   end
 
   def action_do?
@@ -30,7 +30,7 @@ class CourPolicy < ApplicationPolicy
   end
 
   def new?
-    user.role_number >= 2
+    user && user.role_number >= 2
   end
 
   def create?
@@ -38,7 +38,7 @@ class CourPolicy < ApplicationPolicy
   end
 
   def edit?
-    user.role_number >= 2
+    user && user.role_number >= 2
   end
 
   def update?

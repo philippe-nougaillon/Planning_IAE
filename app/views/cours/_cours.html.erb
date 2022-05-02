@@ -33,17 +33,20 @@
         <% end %>
     </td>
     <td>
-        <%= link_to cours.intervenant.nom_prenom, cours.intervenant %>
-        <% if cours.intervenant_binome %>
-            <br>
-            <%= link_to cours.intervenant_binome.nom_prenom, cours.intervenant_binome %>
-        <% end %>
+        <% if user_signed_in? %>
+            <%= link_to cours.intervenant.nom_prenom, cours.intervenant %>
 
-        <% if user_signed_in? && current_user.admin? %>
-            <% unless cours.invits.where.not("workflow_state = 'non_retenue' OR workflow_state = 'confirmée'").count.zero? %>
+            <% if binome = cours.intervenant_binome %>
                 <br>
-                <%= fa_icon 'calendar-check' %>
-                <%= link_to 'Invitations en cours', invits_path(cours_id: cours.id) %>
+                <%= link_to binome.nom_prenom, cours.intervenant_binome %>
+            <% end %>
+    
+            <% if current_user.admin? %>
+                <% unless cours.invits.where.not("workflow_state = 'non_retenue' OR workflow_state = 'confirmée'").count.zero? %>
+                    <br>
+                    <%= fa_icon 'calendar-check' %>
+                    <%= link_to 'Invitations en cours', invits_path(cours_id: cours.id) %>
+                <% end %>
             <% end %>
         <% end %>
     </td>
@@ -62,11 +65,12 @@
                     <%= cours.salle.nom %>
                 </span>             
             </h5>
-
-            <% if cours_formation.nbr_etudiants > cours.salle.places && cours.salle.bloc != 'Z' %>
-                <i title="Manque <%= cours_formation.nbr_etudiants - cours.salle.places %> place.s">
-                    <%= fa_icon 'exclamation-circle' %>
-                </i>
+            <% if user_signed_in? %>
+                <% if cours_formation.nbr_etudiants > cours.salle.places && cours.salle.bloc != 'Z' %>
+                    <i title="Manque <%= cours_formation.nbr_etudiants - cours.salle.places %> place.s">
+                        <%= fa_icon 'exclamation-circle' %>
+                    </i>
+                <% end %>
             <% end %>
         <% else %>
             <% if cours.confirmé? %>

@@ -15,11 +15,13 @@
         <br>
       <% end %> 
 
-      <%= link_to_if user_signed_in?, meeting.intervenant.nom_prenom, 
-                  url_for(params
-                      .permit(:formation, :ue, :intervenant, :semaine, :start_date, :etat, :filter, :view)
-                      .merge(intervenant_id:meeting.intervenant_id)) %>
-      <br>
+      <% if user_signed_in? %>
+        <%= link_to_if user_signed_in?, meeting.intervenant.nom_prenom, 
+                    url_for(params
+                        .permit(:formation, :ue, :intervenant, :semaine, :start_date, :etat, :filter, :view)
+                        .merge(intervenant_id:meeting.intervenant_id)) %>
+        <br>
+      <% end %>
 
       <%= meeting.nom_ou_ue %>
       <hr>
