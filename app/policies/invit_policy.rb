@@ -6,7 +6,7 @@ class InvitPolicy < ApplicationPolicy
   end
 
   def index?
-    user.role_number >= 5
+    user && user.role_number >= 5
   end
 
   def show?
@@ -42,7 +42,7 @@ class InvitPolicy < ApplicationPolicy
   end
 
   def valider?
-    user.role_number >= 1
+    user && user.role_number >= 1
   end
 
   def rejeter?
