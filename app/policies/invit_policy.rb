@@ -42,7 +42,7 @@ class InvitPolicy < ApplicationPolicy
   end
 
   def valider?
-    user && user.role_number >= 1
+    true
   end
 
   def rejeter?
