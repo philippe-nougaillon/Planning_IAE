@@ -287,7 +287,7 @@ class Cour < ApplicationRecord
             c.formation_id, formation.nom_promo, formation.code_analytique, 
             c.intervenant_id, c.intervenant.nom_prenom,
             c.intervenant_binome.try(:nom_prenom), 
-            c.ue, c.nom, 
+            c.code_ue, c.nom, 
             c.etat, (c.salle ? c.salle.nom : nil), 
             c.duree,
             (c.elearning ? "OUI" : nil), 

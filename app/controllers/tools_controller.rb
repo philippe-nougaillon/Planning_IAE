@@ -117,7 +117,7 @@ class ToolsController < ApplicationController
           cours.intervenant_binome = binome
           cours.formation = formation
           cours.elearning = elearning
-          cours.ue = row[headers.index 'UE'] ? row[headers.index 'UE'].gsub(' ','') : ""
+          cours.code_ue = row[headers.index 'UE']
           cours.nom = row[headers.index 'Intitulé']
           cours.hors_service_statutaire = true if row[headers.index 'HSS?'].try(:upcase) == 'OUI'
 
