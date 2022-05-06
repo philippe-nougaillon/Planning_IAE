@@ -33,4 +33,8 @@ class IntervenantPolicy < ApplicationPolicy
     user.role_number >= 4
   end
 
+  def invitations?
+    true
+  end
+
 end
