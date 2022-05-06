@@ -10,7 +10,7 @@ class InvitPolicy < ApplicationPolicy
   end
 
   def show?
-    index?
+    true
   end
 
   def new?
@@ -46,7 +46,7 @@ class InvitPolicy < ApplicationPolicy
   end
 
   def rejeter?
-    valider?
+    true?
   end
 
   def confirmer?
@@ -54,7 +54,7 @@ class InvitPolicy < ApplicationPolicy
   end
 
   def validation?
-    relancer?
+    true
   end
 
   def archiver?
