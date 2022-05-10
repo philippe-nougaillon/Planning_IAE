@@ -24,14 +24,12 @@
   </b>
   <br>
 
- <% if user_signed_in? %>
-    <%= cours.try(:intervenant).try(:nom_prenom) %>
-    <br>
+  <%= cours.try(:intervenant).try(:nom_prenom) %>
+  <br>
 
-    <% if binome = cours.intervenant_binome %>
-      <%= binome.nom_prenom %>
-      <br>
-    <% end %>
+  <% if binome = cours.intervenant_binome %>
+    <%= binome.nom_prenom %>
+    <br>
   <% end %>
 
   <% if cours.url? && cours.elearning? %>
