@@ -46,7 +46,7 @@ class InvitPolicy < ApplicationPolicy
   end
 
   def rejeter?
-    true?
+    true
   end
 
   def confirmer?
