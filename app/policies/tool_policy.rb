@@ -6,7 +6,7 @@ class ToolPolicy < ApplicationPolicy
   end
 
   def index?
-    user.role_number >= 4
+    user && user.role_number >= 4
   end
 
   def import?
