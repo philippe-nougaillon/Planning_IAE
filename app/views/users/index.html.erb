@@ -16,11 +16,22 @@
           <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class:"form-control" %>
         </div>
 
-        <div class="col-sm-3">
+        <div class="col-sm-2">
+          <%= label_tag :role, "Rôle" %>
+          <%= select_tag :role, 
+                  options_for_select(User.roles, 
+                  params[:role]), 
+                  include_blank:true,
+                  class: 'form-control form-control-sm', 
+                  onchange: 'this.form.submit()' 
+          %>          
+        </div>
+
+        <div class="col-sm-2">
           <br>
           <label>
             <%= check_box_tag :reserver, 1, params[:reserver], onchange:'this.form.submit()' %>
-            Peut réserver une salle ?
+            Peut réserver ?
           </label>
         </div>
         
@@ -52,6 +63,7 @@
         <th><%= sort_link 'users.nom', 'Nom' %></th>
         <th>Prénom</th>
         <th><%= sort_link 'users.email', 'Courriel' %></th>
+        <th>Rôle</th>
         <th>Réserver salle ?</th>
         <th>Administrer ?</th>
         <th></th>
@@ -70,6 +82,7 @@
           <td><%= link_to user.nom, user %></td>
           <td><%= user.prénom %></td>
           <td><%= user.email %></td>
+          <td><%= user.role.humanize %></td>
           <td><%= user.reserver? ? "Oui" : '' %></td>
           <td><%= user.admin? ? "Oui" : '' %></td>
           <td>

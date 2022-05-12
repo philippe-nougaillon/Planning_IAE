@@ -15,30 +15,53 @@ class User < ApplicationRecord
 
   belongs_to :formation, optional: true   
 
-  validates :nom, :prénom, presence: true    
+  validates :nom, :prénom, :role, presence: true    
+
+  enum role: {étudiant: 0, 
+              intervenant: 1, 
+              enseignant: 2, 
+              accueil: 3, 
+              rh: 4, 
+              gestionnaire: 5,
+              administrateur: 6 }
 
   default_scope { order(:nom) } 
 
+  def admin?
+    self.role == 'administrateur'
+  end
+
+  def reserver?
+    false
+  end
+
   def username 
-  	"#{self.email.split('@').first} #{self.admin? ? "(admin)" : '' }"
+    "#{self.email.split('@').first} (#{self.role})"
   end
 
   def isRHGroupMember?
-    ['philippe.nougaillon@gmail.com',
-      'cunha.iae@univ-paris1.fr',
-      'fitsch-mouras.iae@univ-paris1.fr',
-      'denis.iae@univ-paris1.fr',
-      'laval.iae@univ-paris1.fr'
-    ].include?(self.email)
+    self.rh?
   end
 
   def nom_et_prénom
     "#{self.nom.upcase if self.nom} #{self.prénom.upcase if self.prénom}"
   end 
 
+  def prénom_et_nom
+		"#{self.try(:prénom)} #{self.try(:nom)}" 
+  end
+
   # wish for discarded users to be unable to login and stop their session
   def active_for_authentication?
     super && !discarded?
+  end
+
+  def role_number
+    User.roles[self.role]
+  end
+
+  def self.xls_headers
+    [ 'nom','prénom','email', 'mobile', 'rôle' ]
   end
 
 end

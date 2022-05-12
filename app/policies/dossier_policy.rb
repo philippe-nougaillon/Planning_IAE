@@ -1,28 +1,68 @@
 class DossierPolicy < ApplicationPolicy
-    class Scope < Scope
-      def resolve
-        scope
-      end
+  class Scope < Scope
+    def resolve
+      scope
     end
-  
-    def index?
-      user && user.isRHGroupMember?
-    end
+  end
 
-    def new?
-      index?
-    end
+  def index?
+    user.rh? || user.admin?
+  end
 
-    def audits?
-      new?
-    end
+  def show?
+    index?
+  end
 
-    def déposer?
-      !new?
-    end
+  def new?
+    user.rh? || user.admin?
+  end
 
-    def show?
-      #record.can_déposer? || user
-    end
+  def edit?
+    index?
+  end
+
+  def create?
+    index?
+  end
+
+  def update?
+    index?
+  end
+
+  def destroy?
+    index?
+  end
+
+  def audits?
+    user.rh? || user.admin?
+  end
+
+  def déposer?
+    true
+  end
+
+  def show?
+    true
+  end
+
+  def envoyer?
+    user.rh? || user.admin?
+  end
+
+  def valider?
+    envoyer?
+  end
+
+  def rejeter?
+    envoyer?
+  end
+
+  def relancer?
+    envoyer?
+  end
+
+  def archiver?
+    envoyer?
+  end
 
 end

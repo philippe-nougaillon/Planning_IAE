@@ -24,7 +24,7 @@
                     <b><%= I18n.l(c.debut, format: :heures_min) %></b>
                     - <%= I18n.l(c.fin, format: :heures_min) %>
                 </td>
-                <td><b><%= c.try(:formation).try(:nom) %></b></td>
+                <td><%= c.try(:formation).try(:nom) %></td>
                 <td><%= c.nom_ou_ue %></td>
                 <td><%= c.try(:salle).try(:nom) %></td>
             </tr>
@@ -68,7 +68,6 @@
     <br>
     IAE Paris
     <br><br>
- 
     <small>
         <%= link_to "Plan d'accès au campus Biopark", image_path("Plan_d_acces_Campus_BioPark_-_IAE_Paris.pdf") %>
     </small>
@@ -87,6 +86,4 @@
             XLS
         <% end %>
     </small>
-<br>
-
 </p>

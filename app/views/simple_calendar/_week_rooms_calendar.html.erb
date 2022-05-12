@@ -4,7 +4,19 @@
       <tr>
         <th></th>
         <% date_range.slice(0, 6).each do |day| %>
-          <th style="width: 160px;"><%= l(day, format: :short) %></th>
+          <th style="width: 160px;">
+            <%= l(day, format: :short) %>
+            <br>
+            <% if @salle %>
+              <% if Ouverture.where(bloc: @salle.bloc, jour: day.wday).any? %>
+                <% if ouverture = Ouverture.where(jour: day.wday).find_by(bloc: @salle.bloc) %>
+                  <small style="color: green">
+                    <%= ouverture.horaires %>
+                  </small>
+                <% end %>
+              <% end %>
+            <% end %>
+          </th>
         <% end %>
       </tr>
     </thead>
@@ -16,6 +28,8 @@
             <% if @salle %>
               <h4 id=<%= @salle.nom %> style="text-align: center;vertical-align: middle;">
                 <%= @salle.nom %>
+                <br>
+                <small>(<%= @salle.places %>)</small>
               </h4>
             <% else %>
               <span>A RESERVER</span>

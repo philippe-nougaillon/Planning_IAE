@@ -27,8 +27,8 @@
   <%= cours.try(:intervenant).try(:nom_prenom) %>
   <br>
 
-  <% if cours.intervenant_binome %>
-    <%= cours.intervenant_binome.nom_prenom %>
+  <% if binome = cours.intervenant_binome %>
+    <%= binome.nom_prenom %>
     <br>
   <% end %>
 

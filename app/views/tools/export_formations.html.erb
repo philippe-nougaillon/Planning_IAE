@@ -1,0 +1,21 @@
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h3><%= fa_icon 'inbox' %> Export des formations </h3>
+</div>
+<br>
+
+<div>
+  <h3>Cette fonction permet la création d'une feuille Excel contenant toutes les formations</h3>
+</div>
+
+<%= form_tag({action: "export_formations_do", method: :post}) do %>
+
+  <div class="form-group">
+    <%= check_box_tag :archive, class: 'form-control' %>
+    <%= label_tag :archive, "Ajouter les archivés ?" %>
+  </div>
+
+  <div class="actions">
+    <%= submit_tag "Exporter", class: "btn btn-success" %>
+  </div>
+
+<% end %>

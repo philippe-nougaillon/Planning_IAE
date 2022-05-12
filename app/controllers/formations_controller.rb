@@ -2,19 +2,12 @@
 
 class FormationsController < ApplicationController
   before_action :set_formation, only: [:show, :edit, :update, :destroy]
-
-  # check if logged and admin  
-  # before_filter except: :show do 
-  #   redirect_to new_user_session_path unless current_user && current_user.admin?
-  # end
+  before_action :is_user_authorized
 
   # GET /formations
   # GET /formations.json
   def index
-    authorize Formation
-
     params[:nom] ||= session[:nom]  # ???? 
- 
     params[:catalogue] ||= 'yes'
     params[:paginate] ||= 'pages'
     params[:column] ||= session[:column]
@@ -27,8 +20,7 @@ class FormationsController < ApplicationController
     end
 
     unless params[:nom].blank?
-      s = "%#{params[:nom]}%".downcase
-      @formations = @formations.where("LOWER(nom) like ? OR LOWER(abrg) like ? OR LOWER(code_analytique) like ?", s, s, s)
+      @formations = @formations.where("LOWER(nom) like :search OR LOWER(abrg) like :search OR LOWER(code_analytique) like :search", {search: "%#{params[:nom]}%".downcase})
     end
 
     unless params[:apprentissage].blank?
@@ -153,8 +145,12 @@ class FormationsController < ApplicationController
       params.require(:formation)
             .permit(:nom, :promo, :diplome, :domaine, :apprentissage, :memo, :nbr_etudiants, :nbr_heures, 
                     :abrg, :user_id, :color, :Forfait_HETD, :hors_catalogue, :nomtauxtd, :code_analytique, :catalogue, :archive, :hss, :courriel,
-                    unites_attributes: [:id, :num, :nom, :_destroy],
+                    unites_attributes: [:id, :code, :nom, :séances, :heures, :destroy],
                     etudiants_attributes: [:id, :nom, :prénom, :email, :mobile, :_destroy],
                     vacations_attributes: [:id, :date, :intervenant_id, :titre, :qte, :forfaithtd, :commentaires, :_destroy])
+    end
+
+    def is_user_authorized
+      authorize Formation
     end
 end

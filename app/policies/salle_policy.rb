@@ -6,31 +6,39 @@ class SallePolicy < ApplicationPolicy
   end
 
   def index?
-    user
+    user.admin?
   end
 
   def show?
-    user.admin?
+    index?
   end
 
   def new?
-    user.admin?
+    index?
   end
 
   def create?
-    user.admin?
+    new?
   end
 
   def edit?
-    user.admin?
+    index?
   end
 
   def update?
-    user.admin?
+    edit?
   end
 
   def destroy?
-    user.admin?
+    index?
   end
+
+  def occupation?
+    user && user.role_number >= 1
+  end
+
+  def libres?
+    true
+  end
+
 end
-  

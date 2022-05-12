@@ -1,5 +1,5 @@
 <tr class="shadow-sm">
-    <% if user_signed_in? %>
+    <% if policy(Cour).action? %>
         <td>
             <span data-action="click->action#click">
                 <%= check_box_tag "[cours_id][#{cours.id}]", 'yes', false, data: {"target":"action.source"} %>
@@ -26,7 +26,7 @@
     </td>
     <td>
         <span style="background-color:<%= cours_formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
-        <% if user_signed_in? %>
+        <% if policy(Cour).action? %>
             <%= link_to cours_formation.nom_nbr_etudiants, cours_formation %>
         <% else %>
             <%= link_to cours_formation.nom, cours_formation %>
@@ -34,14 +34,23 @@
     </td>
     <td>
         <%= link_to cours.intervenant.nom_prenom, cours.intervenant %>
-        <% if cours.intervenant_binome %>
+
+        <% if binome = cours.intervenant_binome %>
             <br>
-            <%= link_to cours.intervenant_binome.nom_prenom, cours.intervenant_binome %>
+            <%= link_to binome.nom_prenom, cours.intervenant_binome %>
+        <% end %>
+
+        <% if user_signed_in? && current_user.admin? %>
+            <% unless cours.invits.where.not("workflow_state = 'non_retenue' OR workflow_state = 'confirmée'").count.zero? %>
+                <br>
+                <%= fa_icon 'calendar-check' %>
+                <%= link_to 'Invitations en cours', invits_path(cours_id: cours.id) %>
+            <% end %>
         <% end %>
     </td>
     <td>
-        <% if cours.ue %>
-            <%= link_to cours.try(:ue), cours_path(ue: cours.ue) %>
+        <% if cours.code_ue %>
+            <%= link_to "##{ cours.code_ue }", cours_path(ue: cours.code_ue) %>
         <% end %>
     </td>
     <td>
@@ -54,14 +63,15 @@
                     <%= cours.salle.nom %>
                 </span>             
             </h5>
-
-            <% if cours_formation.nbr_etudiants > cours.salle.places && cours.salle.bloc != 'Z' && user_signed_in? %>
-                <i title="Manque <%= cours_formation.nbr_etudiants - cours.salle.places %> place.s">
-                    <%= fa_icon 'exclamation-circle' %>
-                </i>
+            <% if user_signed_in? %>
+                <% if cours_formation.nbr_etudiants > cours.salle.places && cours.salle.bloc != 'Z' %>
+                    <i title="Manque <%= cours_formation.nbr_etudiants - cours.salle.places %> place.s">
+                        <%= fa_icon 'exclamation-circle' %>
+                    </i>
+                <% end %>
             <% end %>
         <% else %>
-            <% if cours.confirmé? && user_signed_in? %>
+            <% if cours.confirmé? %>
                 <i title="Pas de salle réservée !">
                     <%= fa_icon 'exclamation-circle' %>
                 </i>
@@ -74,14 +84,14 @@
             <% end %>
         <% end %>
 
-        <% if user_signed_in? && !cours.commentaires.blank? %>
+        <% if policy(Cour).edit? && !cours.commentaires.blank? %>
             <i title="<%= cours.commentaires %>" >
                 <%= fa_icon 'comment-dots' %>         
             </i>
         <% end %>
     </td>
 
-    <% if user_signed_in? %>
+    <% if policy(Cour).edit? %>
         <td>
             <%= link_to edit_cour_path(cours, from: params[:from]), class: "btn btn-sm btn-outline-light text-dark" do %>
                 <%= fa_icon 'edit '%>

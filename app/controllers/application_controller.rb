@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
+  #before_action :authenticate_user!, except: [:index_slide]
   before_action :authenticate_user!, except: [:index_slide, :index, :occupation]
   before_action :detect_device_format
   before_action :set_layout_variables
@@ -19,7 +20,7 @@ class ApplicationController < ActionController::Base
       @ctrl = params[:controller]
       @action = params[:action]
       @sitename ||= request.subdomains.any? ? request.subdomains(0).first.upcase : 'IAE-Planning DEV'
-      @sitename.concat(' v4.6.c')
+      @sitename.concat(' v4.8.c')
 
       if current_user
         @cours_params = {}

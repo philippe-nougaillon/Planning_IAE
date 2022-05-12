@@ -5,8 +5,12 @@ class ToolsController < ApplicationController
 
   require 'capture_stdout'
 
+  before_action :is_user_authorized
+
   def index
-    authorize :tool, :index?
+  end
+
+  def import
   end
 
   def import_do
@@ -113,7 +117,7 @@ class ToolsController < ApplicationController
           cours.intervenant_binome = binome
           cours.formation = formation
           cours.elearning = elearning
-          cours.ue = row[headers.index 'UE'] ? row[headers.index 'UE'].gsub(' ','') : ""
+          cours.code_ue = row[headers.index 'UE']
           cours.nom = row[headers.index 'Intitulé']
           cours.hors_service_statutaire = true if row[headers.index 'HSS?'].try(:upcase) == 'OUI'
 
@@ -173,7 +177,7 @@ class ToolsController < ApplicationController
 
   def import_intervenants_do
     if params[:upload]
-    	
+      
       # Enregistre le fichier localement (format = Date + nom du fichier)
       filename = I18n.l(Time.now, format: :long) + ' - ' + params[:upload].original_filename
 
@@ -243,7 +247,7 @@ class ToolsController < ApplicationController
       
       log.update(etat: _etat, nbr_lignes: @importes + @errors, lignes_importees: @importes)
       log.update(message: (params[:save] == 'true' ? "Importation" : "Simulation") )
- 
+
       if @errors > 0
         log.update(message: log.message + " | #{@errors} lignes rejetées !")
       end   
@@ -254,70 +258,106 @@ class ToolsController < ApplicationController
     else
       flash[:error] = "Manque le fichier source pour pouvoir lancer l'importation !"
       redirect_to action: 'import'
-    end  
+    end
 
   end
 
   def import_utilisateurs
-    authorize :tool, :import_utilisateurs?
   end
 
   def import_utilisateurs_do
-    authorize :tool, :import_utilisateurs?
-    
     if params[:upload]
-    	
-      # Enregistre le fichier localement
-      file_with_path = Rails.root.join('public', params[:upload].original_filename)
+
+      unless params[:role].blank?
+        role = params[:role]
+      else
+        role = nil
+      end
+
+      # Enregistre le fichier localement (format = Date + nom du fichier)
+      filename = I18n.l(Time.now, format: :long) + ' - ' + params[:upload].original_filename
+
+      file_with_path = Rails.root.join('public', filename)
       File.open(file_with_path, 'wb') do |file|
-          file.write(params[:upload].read)
+        file.write(params[:upload].read)
       end
 
-      # capture output
-      @stream = capture_stdout do
-        @importes = @errors = 0	
+      log = ImportLog.new(model_type: 'Users', fichier: filename, user_id: current_user.id)
 
-        index = 0
+      @importes = @errors = 0 
+      index = 1
 
-        CSV.foreach(file_with_path, headers:true, col_sep:';', quote_char:'"', encoding:'UTF-8') do |row|
-          index += 1
+      # IMPORT XLS
+      Spreadsheet.client_encoding = 'UTF-8'
+      book = Spreadsheet.open file_with_path
+      sheet1 = book.worksheet 0
+      headers = User.xls_headers
 
-          generated_password = Devise.friendly_token.first(12)
-          user = User.new(email:row['email'], nom:row['nom'].strip, prénom:row['prénom'].strip, mobile:row['mobile'], 
-                  password:generated_password, formation_id:params[:formation_id])
+      # each(x) : où x = nombre de lignes à éviter
+      sheet1.each(2) do |row|
+        index += 1
+        next unless row[0]
 
-          user.admin = true if row['admin?'] == 'admin'
-           
-          if user.valid? 
-            user.save if params[:save] == 'true'
-            UserMailer.welcome_email(user.id, generated_password).deliver_later if params[:save] == 'true'
-            
-            @importes += 1
-          else
-            puts "Ligne ##{index}"
-            puts "!! user INVALIDE !! Erreur => #{user.errors.messages} | Source: #{row}"
-            puts
-            # puts user.changes
-            @errors += 1
+        generated_password = Devise.friendly_token.first(12)
+        user = User
+                  .where("lower(nom) = ? AND lower(prénom) = ?", 
+                    row[headers.index 'nom'].try(:strip).try(:downcase), 
+                    row[headers.index 'prénom'].try(:strip).try(:downcase)
+                  )
+                  .first_or_initialize
+
+        new_record = user.new_record?
+        
+        user.nom = row[headers.index 'nom'].try(:strip).try(:upcase) 
+        user.prénom = row[headers.index 'prénom'].try(:strip)
+        user.email = row[headers.index 'email']
+        user.mobile = row[headers.index 'mobile']
+        user.password = generated_password if new_record
+        # role = "étudiant" si tout est nil blank ou false
+        user.role = role ? role : row[headers.index 'rôle'] || user.role
+
+        # MAJ existant ? si l'id est égal à 0 => c'est une création
+        msg = "USER #{new_record ? 'NEW' : 'UPDATE'} => id:#{user.id} changes:#{user.changes}"
+
+        if user.valid? 
+          if params[:save] == 'true'
+            user.save
+            UserMailer.welcome_email(user.id, generated_password).deliver_now if new_record
           end
-          puts "- -" * 40
-          puts
+          _etat = ImportLogLine.etats[:succès]
+          @importes += 1
+        else
+          msg << " || ERREURS: " + user.errors.messages.map{|m| "#{m.first} => #{m.last}"}.join(',')
+          _etat =  ImportLogLine.etats[:echec]
+          @errors += 1
         end
-        puts "----------- Les modifications n'ont pas été enregistrées ! ---------------" unless params[:save] == 'true'
-        puts
-
-        puts "=" * 40
-        puts "Lignes importées: #{@importes} | Lignes ignorées: #{@errors}"
-        puts "=" * 40
+        log.import_log_lines.build(etat: _etat, num_ligne: index, message: msg)
       end
 
-      # save output            
-      #@now = DateTime.now.to_s
-      #File.open("public/Documents/Import_logements-#{@now}.txt", "w") { |file| file.write @out }
+      _etat = if @errors.zero?
+        ImportLog.etats[:succès] 
+      else 
+        if @errors < @importes 
+          ImportLog.etats[:warning]
+        else
+          ImportLog.etats[:echec]
+        end
+      end   
+      
+      log.update(etat: _etat, nbr_lignes: @importes + @errors, lignes_importees: @importes)
+      log.update(message: (params[:save] == 'true' ? "Importation" : "Simulation") )
+
+      if @errors > 0
+        log.update(message: log.message + " | #{@errors} lignes rejetées !")
+      end
+      log.save
+      
+      flash[:notice] = "L'importation a bien été exécutée"
+      redirect_to import_logs_path
     else
-      flash[:error] = "Manque le fichier source ou la formation pour pouvoir lancer l'importation !"
-      redirect_to action: 'import_utilisateurs'
-    end  
+      flash[:error] = "Manque le fichier source pour pouvoir lancer l'importation !"
+      redirect_to action: 'import_utilisateurs_roles'
+    end 
   end
 
   def import_etudiants
@@ -435,19 +475,16 @@ class ToolsController < ApplicationController
     else
       flash[:error] = "Manque le fichier source pour pouvoir lancer l'importation !"
       redirect_to action: 'import'
-    end  
+    end
 
   end
 
   def swap_intervenant
-    authorize :tool, :swap_intervenant?
   end
 
   def swap_intervenant_do
-    authorize :tool, :swap_intervenant?
-    
     unless params[:intervenant_from_id].blank? and params[:intervenant_to_id].blank?
-    	
+      
       # capture output
       @stream = capture_stdout do
         @importes = @errors = 0	
@@ -485,17 +522,17 @@ class ToolsController < ApplicationController
                          	 params[:cours]["start_date(2i)"].to_i,
                          	 params[:cours]["start_date(3i)"].to_i)
 
-	  @end_date = Date.civil(params[:cours]["end_date(1i)"].to_i,
-                           params[:cours]["end_date(2i)"].to_i,
+    @end_date = Date.civil(params[:cours]["end_date(1i)"].to_i,
+                         	 params[:cours]["end_date(2i)"].to_i,
                            params[:cours]["end_date(3i)"].to_i)
 
     # Calcul le nombre de jours à traiter dans la période à traiter
-  	@ndays = (@end_date - @start_date).to_i + 1 
-	  salle_id = params[:salle_id]
+    @ndays = (@end_date - @start_date).to_i + 1 
+    salle_id = params[:salle_id]
     nom_cours = params[:nom]
     semaines = params[:semaines]
 
-  	@cours_créés = @erreurs = 0
+    @cours_créés = @erreurs = 0
 
     @stream = capture_stdout do
       current_date = @start_date
@@ -589,7 +626,7 @@ class ToolsController < ApplicationController
   end
 
   def export_do
-	  cours = Cour.includes(:formation, :intervenant, :salle, :audits).order(:debut)
+    cours = Cour.includes(:formation, :intervenant, :salle, :audits).order(:debut)
 
     unless params[:start_date].blank? and params[:end_date].blank? 
       @start_date = Date.parse(params[:start_date])
@@ -647,7 +684,27 @@ class ToolsController < ApplicationController
     send_data file_contents.string.force_encoding('binary'), filename: filename 
   end
 
+  def export_utilisateurs
+  end
+
+  def export_utilisateurs_do
+    if params[:desactives]
+      users = User.all 
+    else
+      users = User.kept
+    end
+
+    book = UsersToXls.new(users).call
+    file_contents = StringIO.new
+    book.write file_contents # => Now file_contents contains the rendered file output
+    filename = "Export_Utilisateurs_#{Date.today.to_s}.xls"
+    send_data file_contents.string.force_encoding('binary'), filename: filename 
+  end
+
   def etudiants
+  end
+
+  def export_etudiants
   end
 
   def export_etudiants_do
@@ -664,10 +721,22 @@ class ToolsController < ApplicationController
     send_data file_contents.string.force_encoding('binary'), filename: filename 
   end
 
-  def etats_services
+  def export_formations
+  end
 
-    # quitter si l'utilisateur actuel n'est pas parmi les utilisateurs autorisés
-    authorize :tool, :can_see_RHGroup_private_tool?
+  def export_formations_do
+    formations = Formation.all
+
+    formations = formations.where(archive: false) unless params[:archive]
+
+    book = FormationsToXls.new(formations).call
+    file_contents = StringIO.new
+    book.write file_contents # => Now file_contents contains the rendered file output
+    filename = "Export_Formations_#{Date.today.to_s}.xls"
+    send_data file_contents.string.force_encoding('binary'), filename: filename 
+  end
+
+  def etats_services
 
     @intervenants ||= []
 
@@ -1073,9 +1142,6 @@ class ToolsController < ApplicationController
 
   def liste_surveillants_examens
 
-    # quitter si l'utilisateur actuel n'est pas parmi les utilisateurs autorisés
-    authorize :tool, :can_see_RHGroup_private_tool?
-
     if params[:start_date].blank? || params[:end_date].blank?
       params[:start_date] ||= Date.today.at_beginning_of_month.last_month
       params[:end_date]   ||= Date.today.at_end_of_month.last_month
@@ -1175,5 +1241,12 @@ class ToolsController < ApplicationController
       end
     end
   end
+
+  private
+
+    def is_user_authorized
+      authorize :tool
+    end
+
   
 end

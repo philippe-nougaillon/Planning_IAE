@@ -1,0 +1,37 @@
+<%= form_with(model: invit) do |form| %>
+  <% if invit.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(invit.errors.count, "error") %> prohibited this invit from being saved:</h2>
+
+      <ul>
+        <% invit.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :cour_id %>
+    <%= form.text_field :cour_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :intervenant_id %>
+    <%= form.text_field :intervenant_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :msg %>
+    <%= form.text_field :msg %>
+  </div>
+
+  <div class="field">
+    <%= form.label :workflow_state %>
+    <%= form.text_field :workflow_state %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

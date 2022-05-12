@@ -2,12 +2,11 @@
 
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy]
+  before_action :is_user_authorized
   
   # GET /users
   # GET /users.json
   def index
-    authorize User
-
     params[:column] ||= session[:column]
     params[:direction] ||= session[:direction]
 
@@ -18,8 +17,7 @@ class UsersController < ApplicationController
     end
 
     unless params[:search].blank?
-      s = "%#{params[:search]}%".downcase
-      @users = @users.where("LOWER(nom) like ? or LOWER(prénom) like ? or LOWER(email) like ?", s, s, s)
+      @users = @users.where("LOWER(nom) like :search or LOWER(prénom) like :search or LOWER(email) like :search", {search: "%#{params[:search]}%".downcase})
     end
 
     unless params[:admin].blank?
@@ -28,6 +26,10 @@ class UsersController < ApplicationController
 
     unless params[:reserver].blank?
       @users = @users.where(reserver:true)
+    end
+
+    unless params[:role].blank?
+      @users = @users.where(role: params[:role])
     end
 
     session[:column] = params[:column]
@@ -41,26 +43,22 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
-    authorize User
     @audits = Audited.audit_class.where(user_id:@user.id).order("id DESC")
     @audits = @audits.paginate(page:params[:page], per_page:20)
   end
 
   # GET /users/new
   def new
-    authorize User
     @user = User.new
   end
 
   # GET /users/1/edit
   def edit
-    authorize User
   end
 
   # POST /users
   # POST /users.json
   def create
-    authorize User
     @user = User.new(user_params)
 
     respond_to do |format|
@@ -77,7 +75,6 @@ class UsersController < ApplicationController
   # PATCH/PUT /users/1
   # PATCH/PUT /users/1.json
   def update
-    authorize User
     respond_to do |format|
       if @user.update(user_params)
         format.html { redirect_to @user, notice: 'Utilisateur modifié avec succès' }
@@ -92,7 +89,6 @@ class UsersController < ApplicationController
   # DELETE /users/1
   # DELETE /users/1.json
   def destroy
-    authorize User
     @user.discard
     respond_to do |format|
       format.html { redirect_to users_url, notice: 'Utilisateur désactivé !' }
@@ -120,6 +116,10 @@ class UsersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def user_params
-      params.require(:user).permit(:email, :nom, :prénom, :mobile, :admin, :formation_id, :password, :password_confirmation, :reserver)
+      params.require(:user).permit(:email, :nom, :prénom, :mobile, :admin, :formation_id, :password, :password_confirmation, :reserver, :role)
+    end
+
+    def is_user_authorized
+      authorize User
     end
 end

@@ -37,15 +37,27 @@
 			</li>
 			<br>
 			<br>
-			<li>
-				<%= fa_icon 'list-alt' %>
-				<%= link_to "Etats de services", tools_etats_services_path %>
-			</li>
-			<br>
-			<li>
-				<%= fa_icon 'list-alt' %>
-				<%= link_to "Liste des surveillances d'examens", tools_liste_surveillants_examens_path %>
-			</li>
+			<% if current_user.rh? || current_user.admin? %>
+				<li>
+					<%= fa_icon 'list-alt' %>
+					<%= link_to "Etats de services", tools_etats_services_path %>
+				</li>
+				<br>
+				<li>
+					<%= fa_icon 'list-alt' %>
+					<%= link_to "Liste des surveillances d'examens", tools_liste_surveillants_examens_path %>
+				</li>
+				<br>
+				<br>
+			<% end %>
+
+			<% if current_user.role_number >= 5 %>
+				<li>
+					<%= fa_icon 'calendar-check' %>
+					<%= link_to 'Invitations', invits_path %>
+				</li>
+			<% end %>
+
 		</ul>
 	</div>
 	
@@ -92,6 +104,12 @@
 				<%= link_to "Export d'étudiants", tools_export_etudiants_path %>
 			</li>
 			<br>
+
+			<li>
+				<%= fa_icon 'upload' %>
+				<%= link_to "Export des formations", tools_export_formations_path %>
+			</li>
+			<br>
 		</ul>
 	</div>
 
@@ -107,6 +125,12 @@
 				<li>
 					<%= fa_icon 'download' %>
 					<%= link_to "Import des utilisateurs", tools_import_utilisateurs_path %>
+				</li>
+				<br>
+
+				<li>
+					<%= fa_icon 'upload' %>
+					<%= link_to "Export des utilisateurs", tools_export_utilisateurs_path %>
 				</li>
 				<br>
 
@@ -157,6 +181,13 @@
 					<%= fa_icon 'umbrella-beach' %>
 					<%= link_to "Jours de fermeture", fermetures_path %>
 				</li>
+				<br>
+
+				<li>
+					<%= fa_icon 'business-time' %>
+					<%= link_to "Horaires d'ouverture", ouvertures_path %>
+				</li>
+
 			</ul>
 		</div>
 	<% end %>

@@ -1,6 +1,7 @@
 class DossiersController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[ show deposer]
   before_action :set_dossier, only: %i[ show edit update destroy envoyer deposer valider rejeter relancer archiver ]
+  before_action :is_user_authorized
 
   layout :determine_layout
 
@@ -197,5 +198,9 @@ private
 
     def determine_layout
       'public' unless user_signed_in?
+    end
+
+    def is_user_authorized
+      authorize Dossier
     end
 end

@@ -11,17 +11,25 @@ class Cour < ApplicationRecord
   belongs_to :intervenant_binome, class_name: :Intervenant, foreign_key: :intervenant_binome_id, optional: true 
   belongs_to :salle, optional: true
 
+  has_many :invits
+
   validates :debut, :formation_id, :intervenant_id, :duree, presence: true
   validate :check_chevauchement_intervenant
   validate :check_chevauchement, if: Proc.new { |cours| cours.salle_id }
   validate :jour_fermeture
   validate :reservation_dates_must_make_sense
+  validate :jour_ouverture
+  validate :check_invits_en_cours
 
   before_validation :update_date_fin
   before_validation :sunday_morning_praise_the_dawning
 
   before_save :change_etat_si_salle
   before_save :annuler_salle_si_cours_est_annulé
+
+  after_commit {
+    CoursNonPlanifie.refresh
+  }
 
   enum etat: [:planifié, :à_réserver, :confirmé, :reporté, :annulé, :réalisé]
   
@@ -37,18 +45,17 @@ class Cour < ApplicationRecord
     ]
   end
   
-  def self.actions
-    ["Exporter vers Excel", "Exporter vers iCalendar", "Exporter en PDF", "Supprimer"]
+  def self.actions(role_number)
+    actions = ["Exporter vers Excel", "Exporter vers iCalendar", "Exporter en PDF", "Supprimer"]
+    if role_number >= 3
+      actions << ["Changer de salle", "Changer d'intervenant", "Intervertir"]
+    end
+    if role_number >= 5
+      actions << ["Changer d'état", "Changer de date", "Inviter"]
+    end
+    return actions.flatten.sort
   end
 
-  def self.actions_peut_reserver
-    ["Changer de salle", "Changer d'intervenant", "Intervertir"] + self.actions 
-  end
-
-  def self.actions_admin
-    ["Changer de salle", "Changer d'état", "Changer de date", "Intervertir", "Exporter vers Excel", "Exporter vers iCalendar", "Exporter en PDF", "Supprimer"]
-  end
-  
   def self.etendue_horaire
     [8,9,10,11,12,13,14,15,16,17,18,19,20,21,22]
   end
@@ -102,8 +109,8 @@ class Cour < ApplicationRecord
   def nom_ou_ue
     begin
       if self.nom.blank?        
-        unless self.ue.blank?
-          if ue = self.formation.unites.find_by(num:self.ue.upcase)
+        if self.code_ue
+          if ue = self.formation.unites.find_by(code: self.code_ue)
             ue.num_nom
           end        
         end  
@@ -280,7 +287,7 @@ class Cour < ApplicationRecord
             c.formation_id, formation.nom_promo, formation.code_analytique, 
             c.intervenant_id, c.intervenant.nom_prenom,
             c.intervenant_binome.try(:nom_prenom), 
-            c.ue, c.nom, 
+            c.code_ue, c.nom, 
             c.etat, (c.salle ? c.salle.nom : nil), 
             c.duree,
             (c.elearning ? "OUI" : nil), 
@@ -564,14 +571,14 @@ class Cour < ApplicationRecord
     return book 
   end
 
-  def self.cours_a_planifier
-    # ids des cours créés par utilisateur autre que Thierry (#41)
-    # vérifie que la date de début de cours est dans la période observée
-    Cour.where("id IN (?)", Audited::Audit.where(auditable_type: 'Cour').where.not(user_id: 41).pluck(:auditable_id).uniq)
-        .planifié
-        .where("cours.debut BETWEEN ? AND ?", Date.today, Date.today + 8.days)
-        .count
-  end
+  # def self.cours_a_planifier
+  #   # ids des cours créés par utilisateur autre que Thierry (#41)
+  #   # vérifie que la date de début de cours est dans la période observée
+  #   Cour.where("id IN (?)", Audited::Audit.where(auditable_type: 'Cour').where.not(user_id: 41).pluck(:auditable_id).uniq)
+  #       .planifié
+  #       .where("cours.debut BETWEEN ? AND ?", Date.today, Date.today + 30.days)
+  #       .count
+  # end
 
   private
     def update_date_fin
@@ -679,5 +686,24 @@ class Cour < ApplicationRecord
           self.salle_id = nil
           errors.add(:cours, 'état changé & salle libérée ')
       end   
+    end
+
+    def jour_ouverture
+      if horaire = Ouverture.where(jour: self.debut.to_date.wday).find_by(bloc: self.salle.bloc)
+        unless ((self.debut.hour >= horaire.début.hour) && 
+          (self.fin.hour <= horaire.fin.hour) && 
+          (self.debut.hour < horaire.fin.hour) && 
+          (self.fin.hour > horaire.début.hour))
+          errors.add(:cours, 'en dehors des horaires d\'ouverture')
+        end
+      else
+        errors.add(:cours, 'impossible à valider : problème avec les horaires d\'ouverture !')
+      end
+    end
+  
+    def check_invits_en_cours
+      if self.invits.where.not("workflow_state = 'non_retenue' OR  workflow_state = 'confirmée'").any? && self.intervenant != 445
+        errors.add(:cours, 'a des invitations en cours !')
+      end
     end
 end

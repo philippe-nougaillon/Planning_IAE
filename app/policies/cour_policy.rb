@@ -5,8 +5,44 @@ class CourPolicy < ApplicationPolicy
     end
   end
 
+  def index?
+    true
+  end
+
+  def index_slide?
+    true
+  end
+
+  def show?
+    user.role_number >= 2
+  end
+
+  def planning?
+    true
+  end
+
+  def action?
+    user && user.role_number >= 3
+  end
+
+  def action_do?
+    action?
+  end
+
   def new?
-    user
+    user && user.role_number >= 2
+  end
+
+  def create?
+    new?
+  end
+
+  def edit?
+    user && user.role_number >= 2
+  end
+
+  def update?
+    edit?
   end
 
   def destroy?
@@ -18,4 +54,5 @@ class CourPolicy < ApplicationPolicy
     (record.formation.user == user) || 
     (user.admin?) 
   end
+
 end

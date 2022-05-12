@@ -75,9 +75,10 @@
               <% end %>
             </b>
             <br>
-
-            <small><%= meeting.intervenant.nom_prenom %></small>
-            <br>
+            <% if user_signed_in? %>
+              <small><%= meeting.intervenant.nom_prenom %></small>
+              <br>
+            <% end %>
 
             <% if formation.nbr_etudiants > meeting.salle.places && meeting.salle.bloc != 'Z' && user_signed_in? %>
               <i title="Manque <%= formation.nbr_etudiants - meeting.salle.places %> place.s">

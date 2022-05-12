@@ -1,10 +1,10 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.7.5'
+ruby '2.7.6'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.1.4.1'
+gem 'rails', '~> 6.1.5'
 
 gem 'pg'
 
@@ -41,6 +41,12 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+
+  # Preview mail in the browser instead of sending.
+  gem 'letter_opener'
+  # A web interface for browsing Ruby on Rails sent emails
+  gem 'letter_opener_web'
+
 end
 
 group :test do
@@ -60,7 +66,7 @@ gem 'bootstrap_form', '~> 4.5'
 gem 'simple_calendar', '2.3.0'
 gem 'devise', '>= 4.7.1'
 gem 'devise-i18n'
-gem 'audited'
+gem 'audited', '~> 4.0'
 gem 'capture_stdout'
 gem 'will_paginate'
 gem 'will_paginate-bootstrap4'
@@ -109,3 +115,8 @@ gem 'pg_search'
 
 # Soft deletes for ActiveRecord done right.
 gem 'discard', '~> 1.2'
+
+# CSS styled emails without the hassle.
+gem 'premailer-rails'
+
+gem "scenic", "~> 1.6"
