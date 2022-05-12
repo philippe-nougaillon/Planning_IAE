@@ -118,11 +118,11 @@ Rails.application.configure do
   }
   ActionMailer::Base.delivery_method = :smtp
 
-  #config.action_mailer.default_url_options = { host: 'planning-iae.herokuapp.com', protocol: 'https' }
-  #config.action_mailer.asset_host = 'https://planning-iae.herokuapp.com'
+  config.action_mailer.default_url_options = { host: 'planning-iae.herokuapp.com', protocol: 'https' }
+  config.action_mailer.asset_host = 'https://planning-iae.herokuapp.com'
 
-  config.action_mailer.default_url_options = { host: 'planning4-testing.herokuapp.com', protocol: 'https' }
-  config.action_mailer.asset_host = 'https://planning4-testing.herokuapp.com/'
+  #config.action_mailer.default_url_options = { host: 'planning4-testing.herokuapp.com', protocol: 'https' }
+  #config.action_mailer.asset_host = 'https://planning4-testing.herokuapp.com/'
   
   # set the session cookie to expire automatically 12.hours after creation
   config.session_store :cookie_store, expire_after: 12.hours
