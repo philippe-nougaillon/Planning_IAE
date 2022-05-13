@@ -4,7 +4,7 @@ class Cour < ApplicationRecord
 	include PgSearch::Model
 	multisearchable against: [:nom_ou_ue, :formation_nom, :intervenant_nom]
 
-  audited
+  audited except: :code_ue
 
   belongs_to :formation
   belongs_to :intervenant
@@ -27,9 +27,10 @@ class Cour < ApplicationRecord
   before_save :change_etat_si_salle
   before_save :annuler_salle_si_cours_est_annulé
 
-  after_commit {
-    CoursNonPlanifie.refresh
-  }
+  # Mettre à jour les SCENIC VIEWS
+  # after_commit {
+  #   CoursNonPlanifie.refresh
+  # }
 
   enum etat: [:planifié, :à_réserver, :confirmé, :reporté, :annulé, :réalisé]
   
