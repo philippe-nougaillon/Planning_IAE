@@ -34,7 +34,7 @@ class DossierPolicy < ApplicationPolicy
   end
 
   def audits?
-    user.rh? || user.admin?
+    user && (user.rh? || user.admin?)
   end
 
   def déposer?
