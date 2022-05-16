@@ -6,7 +6,7 @@ class DocumentPolicy < ApplicationPolicy
   end
 
   def create?
-    user.admin?
+    true
   end
 
   def destroy?
