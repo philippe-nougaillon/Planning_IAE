@@ -2,7 +2,7 @@
 
 class CoursController < ApplicationController
   before_action :set_cour, only: [:show, :edit, :update, :destroy]
-  before_action :is_user_authorized
+  before_action :is_user_authorized, except: [:destroy]
 
   layout :define_layout
 
@@ -583,6 +583,8 @@ class CoursController < ApplicationController
   # DELETE /cours/1
   # DELETE /cours/1.json
   def destroy
+    authorize @cour
+
     @cour.destroy
     respond_to do |format|
       format.html { redirect_to cours_url, notice: 'Cours supprimé.' }
