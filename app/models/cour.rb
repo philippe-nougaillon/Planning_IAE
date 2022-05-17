@@ -18,7 +18,7 @@ class Cour < ApplicationRecord
   validate :check_chevauchement, if: Proc.new { |cours| cours.salle_id }
   validate :jour_fermeture
   validate :reservation_dates_must_make_sense
-  validate :jour_ouverture
+  validate :jour_ouverture, if: Proc.new { |cours| cours.salle.bloc != 'Z' }
   validate :check_invits_en_cours
 
   before_validation :update_date_fin

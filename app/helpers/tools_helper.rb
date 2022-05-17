@@ -19,10 +19,12 @@ module ToolsHelper
                 when 'Integer'
                     pretty_changes << "#{key} initialisée à '#{Formation.unscoped.find(ids).nom}'"
                 when 'Array'
-                    if ids.last 
+                    if ids.first && ids.last 
                         pretty_changes << "#{key} changée de '#{Formation.unscoped.find(ids.first).nom}' à '#{Formation.unscoped.find(ids.last).nom}'"
-                    else
+                    elsif ids.first 
                         pretty_changes << "#{key} changée de '#{Formation.unscoped.find(ids.first).nom}' à 'nil'"
+                    else
+                        pretty_changes << "#{key} changée de 'nil' à '#{Formation.unscoped.find(ids.last).nom}'"
                     end
                 end 
             when 'Intervenant'
