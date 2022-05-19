@@ -24,8 +24,7 @@
             </div>
         <% end %>
     </td>
-    <td>
-        <span style="background-color:<%= cours_formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
+    <td style="border-left: .3rem solid <%= cours_formation.color %>">
         <% if policy(Cour).action? %>
             <%= link_to cours_formation.nom_nbr_etudiants, cours_formation %>
         <% else %>
