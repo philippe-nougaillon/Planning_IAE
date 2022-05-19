@@ -13,7 +13,7 @@
   </div>
 
   <div class="form-group">
-    <%= label_tag "Intervenant" %>    
+    <%= label_tag "Intervenant" %>
     <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
                       class: "select2-w100",
                       include_blank: true, onchange:'this.form.submit()' %>
@@ -23,9 +23,11 @@
     <i class="fas fa-filter"></i> 
     Filtrer
   <% end %>
-  <%= button_tag name: 'commit', value: 'RàZ', class: "btn btn-light" do %>
-    <i class="fas fa-times"></i> 
-    Voir tous
+  <% if params.values.count(nil) < 5 %>
+    <%= button_tag name: 'commit', value: 'RàZ', class: "btn btn-light" do %>
+      <i class="fas fa-times"></i> 
+      Voir tous
+    <% end %>
   <% end %>
 <% end %>
 
@@ -33,9 +35,9 @@
 <% @cours.each do | cours | %>
   <% _date_cours = cours.debut.to_date %>
   <% if _date_cours != current_date %>
-    <div class="text-primary mt-4">
+    <div class="shadow-sm bg-light mt-3 py-2">
       <%= fa_icon 'calendar-day' %>
-      <%= l(_date_cours, format: :long).humanize %>
+      <b><%= l(_date_cours, format: :long).humanize %></b>
     </div>
     <% current_date = _date_cours %>
   <% end %>  

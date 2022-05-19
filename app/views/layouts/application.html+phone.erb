@@ -59,6 +59,13 @@
                 <ul class="navbar-nav">
                     <%= navbar_nav_item('cours', 'calendar-alt', cours_path) %>
                     <%= navbar_nav_item('salles', 'chalkboard', occupation_salles_path) %>
+                    <% if user_signed_in? %>
+                        <li class="nav-item">
+                            <%= link_to destroy_user_session_path, method: :delete, class: "nav-link text-dark" do %><i class="fas fa-fw fa-sign-out-alt"></i></span> Déconnexion<% end %> 
+                        </li>
+                    <% else %>
+                        <%= navbar_nav_item('Se connecter', 'sign-in-alt', new_user_session_path) %>
+                    <% end %>
                 </ul>
             </div>
         </nav>
