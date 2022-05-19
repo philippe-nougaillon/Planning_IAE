@@ -228,25 +228,23 @@ class CoursController < ApplicationController
     @cours_count = @tous_les_cours.size
 
     unless @cours_count.zero?
-      #if request.variant.include?(:desktop)
-        # effectuer une rotation de x pages de 7 cours 
+      # effectuer une rotation de x pages de 7 cours 
 
-        per_page = 7
-        @max_page_slide = (@cours_count / per_page) - 1
-        @max_page_slide += 1 unless @cours_count.%(per_page).zero?
+      per_page = 7
+      @max_page_slide = (@cours_count / per_page) - 1
+      @max_page_slide += 1 unless @cours_count.%(per_page).zero?
 
-        @current_page_slide = session[:page_slide].to_i
+      @current_page_slide = session[:page_slide].to_i
 
-        if @current_page_slide < @max_page_slide
-          session[:page_slide] = @current_page_slide + 1
-        else
-          session[:page_slide] = 0
-        end
+      if @current_page_slide < @max_page_slide
+        session[:page_slide] = @current_page_slide + 1
+      else
+        session[:page_slide] = 0
+      end
 
-        @cours_ids = @tous_les_cours.slice(per_page * @current_page_slide, per_page)
-        @les_cours_à_afficher = Cour.includes(:formation, :intervenant, :salle).where(id: @cours_ids).reorder(:debut, :fin)
+      @cours_ids = @tous_les_cours.slice(per_page * @current_page_slide, per_page)
+      @les_cours_à_afficher = Cour.includes(:formation, :intervenant, :salle).where(id: @cours_ids).reorder(:debut, :fin)
 
-      #end
     else
       # Affiche un papier peint si pas de cours à afficher
       require 'net/http'
