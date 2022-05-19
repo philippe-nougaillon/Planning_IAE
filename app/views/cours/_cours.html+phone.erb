@@ -1,4 +1,4 @@
-<div class="shadow-sm p-3">
+<div class="shadow-sm p-3" style="border-left: .3rem solid <%= cours_formation.color %>">
   <div class="row">
     
     <div class="col">
@@ -16,8 +16,6 @@
       <% end %>
     </div>
   </div>
-
-  <span style="background-color:<%= cours_formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
 
   <b>
     <%= cours.try(:formation).try(:nom) %>

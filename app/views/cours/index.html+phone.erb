@@ -33,9 +33,9 @@
 <% @cours.each do | cours | %>
   <% _date_cours = cours.debut.to_date %>
   <% if _date_cours != current_date %>
-    <div class="text-primary mt-4">
+    <div class="shadow-sm bg-light mt-3 py-2">
       <%= fa_icon 'calendar-day' %>
-      <%= l(_date_cours, format: :long).humanize %>
+      <b><%= l(_date_cours, format: :long).humanize %></b>
     </div>
     <% current_date = _date_cours %>
   <% end %>  
