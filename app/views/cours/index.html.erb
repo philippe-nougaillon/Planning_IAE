@@ -36,12 +36,14 @@
                             class: "form-control form-control-sm select2", 
                             include_blank:true,
                             onchange: 'this.form.submit()' %>
-            <span class="input-group-btn">
-              <%= button_tag name: 'commit', value: 'RàZ', class: "btn btn-sm btn-light ml-1", title: "Remise à zéro des filtres" do %>
-                <i class="fas fa-times"></i> 
-                RàZ
-              <% end %>
-            </span>
+            <% if params.values.count(nil) < 5 %>
+              <span class="input-group-btn">
+                <%= button_tag name: 'commit', value: 'RàZ', class: "btn btn-sm btn-light ml-1", title: "Remise à zéro des filtres" do %>
+                  <i class="fas fa-times"></i> 
+                  RàZ
+                <% end %>
+              </span>
+            <% end %>
           </div>
         </div>
       </div>
