@@ -288,7 +288,7 @@ class ExportPdf
                                     exam.formation.nom_promo,
                                     '7322GRH',
                                     (exam.formation.diplome.upcase == 'LICENCE' ? '101PAIE' : '102PAIE'),
-                                    exam.formation.code_analytique_avec_indice(exam).gsub('HCO','VAC'),
+                                    exam.formation.code_analytique.gsub('HCO','VAC').gsub('?', Date.today.year.to_s.last(1)),
                                     durée 
                                 ]]
                         end
