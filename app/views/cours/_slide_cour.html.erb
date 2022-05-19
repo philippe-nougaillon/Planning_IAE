@@ -1,0 +1,51 @@
+<tr class="shadow-sm" style="height:110px">
+
+  <td class="align-middle">
+    <h3 class="text-dark">
+      <%= l(le_cours.debut, format: :heures_min) %>
+      <small>
+        - <%= l(le_cours.fin, format: :heures_min) %>
+      </small>
+    </h3>
+
+    <div class="progress">
+      <div class="progress-bar bg-dark" 
+          style="opacity:0.3; width: <%= le_cours.progress_bar_pct2 %>%;">
+      </div>
+    </div>
+  </td>
+  
+  <td style="border-left: 1rem solid <%= le_cours.formation.color %>">
+    <div>
+      <h3 class="text-primary">
+        
+        <span style="margin-left: 15px;">
+          <%= le_cours.formation.try(:nom_promo) %>
+        </span>
+
+        <br><br>
+        
+        <span class="text-secondary" style="margin-left: 15px;">
+          <i><%= le_cours.nom_ou_ue %></i>
+        </span>
+
+      </h3>
+    </div>
+  </td>
+
+  <td class="align-middle">
+    <h3 class="text-secondary">
+      <%= le_cours.intervenant.nom_prenom %>
+      <% if le_cours.intervenant_binome_id %>
+          / <%= le_cours.intervenant_binome.nom_prenom %>
+      <% end %>
+    </h3>
+  </td>
+  
+  <td class="align-middle" style="width:200px">
+    <span class="badge badge-pill badge-<%= le_cours.style %> p-3">
+      <h3 style="margin: 0"><%= le_cours.salle.nom %></h3>
+    </span>
+  </td>
+
+</tr>

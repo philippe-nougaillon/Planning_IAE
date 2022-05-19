@@ -243,7 +243,8 @@ class CoursController < ApplicationController
           session[:page_slide] = 0
         end
 
-        @cours = @tous_les_cours.slice(per_page * @current_page_slide, per_page)
+        @cours_ids = @tous_les_cours.slice(per_page * @current_page_slide, per_page)
+        @les_cours_à_afficher = Cour.includes(:formation, :intervenant, :salle).where(id: @cours_ids).reorder(:debut, :fin)
 
       #end
     else
