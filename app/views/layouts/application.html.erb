@@ -98,7 +98,7 @@
             <% end %>
 
             <li class="nav-item">
-              <%= link_to destroy_user_session_path, method: :delete, title: "Fermer la session de #{current_user.email}", class: "nav-link text-secondary" do %><i class="fas fa-fw fa-sign-out-alt"></i></span> Déconnexion<% end %> 
+              <%= link_to destroy_user_session_path, method: :delete, title: "Fermer la session de #{current_user.email}", class: "nav-link text-dark" do %><i class="fas fa-fw fa-sign-out-alt"></i></span> Déconnexion<% end %> 
             </li>
 
           <% else %>
