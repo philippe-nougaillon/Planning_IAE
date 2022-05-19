@@ -6,7 +6,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def index?
-    user.admin?
+    user && user.admin?
   end
 
   def show?
