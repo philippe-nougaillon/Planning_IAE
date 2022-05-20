@@ -69,5 +69,13 @@ class Formation < ApplicationRecord
 		}
 	end
 
+	def positive_color
+		if self.color == '#000000'
+			'#FBFBFB'
+		else
+			self.color
+		end
+	end
+
 end
 

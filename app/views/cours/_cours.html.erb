@@ -24,11 +24,11 @@
             </div>
         <% end %>
     </td>
-    <td style="border-left: .3rem solid <%= cours_formation.color %>">
+    <td style="border-left: .3rem solid <%= cours.formation.positive_color %>">
         <% if policy(Cour).action? %>
-            <%= link_to cours_formation.nom_nbr_etudiants, cours_formation %>
+            <%= link_to cours.formation.nom_nbr_etudiants, cours.formation %>
         <% else %>
-            <%= link_to cours_formation.nom, cours_formation %>
+            <%= link_to cours.formation.nom, cours.formation %>
         <% end %>
     </td>
     <td>
@@ -63,8 +63,8 @@
                 </span>             
             </h5>
             <% if user_signed_in? %>
-                <% if cours_formation.nbr_etudiants > cours.salle.places && cours.salle.bloc != 'Z' %>
-                    <i title="Manque <%= cours_formation.nbr_etudiants - cours.salle.places %> place.s">
+                <% if cours.formation.nbr_etudiants > cours.salle.places && cours.salle.bloc != 'Z' %>
+                    <i title="Manque <%= cours.formation.nbr_etudiants - cours.salle.places %> place.s">
                         <%= fa_icon 'exclamation-circle' %>
                     </i>
                 <% end %>
