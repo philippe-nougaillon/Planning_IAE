@@ -33,6 +33,9 @@ class Cour < ApplicationRecord
 
   enum etat: [:planifié, :à_réserver, :confirmé, :reporté, :annulé, :réalisé]
   
+
+  self.per_page = 20
+
   def self.styles
     ['info', 'warning', 'success', 'danger', 'danger', 'default']
   end

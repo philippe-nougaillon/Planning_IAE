@@ -142,13 +142,12 @@ class CoursController < ApplicationController
     @all_cours = @cours
 
     if (params[:view] == 'list' and params[:paginate] == 'pages' and request.variant.include?(:desktop)) 
-      @cours = @cours.paginate(page: clean_page(params[:page]), per_page:20)
+      @cours = @cours.paginate(page: clean_page(params[:page]))
     end
 
     if request.variant.include?(:phone)
-      @cours = @cours.includes(:formation, :intervenant, :salle).paginate(page: params[:page], per_page: 15)
+      @cours = @cours.includes(:formation, :intervenant, :salle).paginate(page: params[:page])
       @formations = Formation.select(:nom).where(hors_catalogue: false).pluck(:nom)
-      #@intervenants = Intervenant.where("intervenants.doublon = ? OR intervenants.doublon is null", false)
     end
 
     if params[:view] == "calendar_rooms"
@@ -156,7 +155,6 @@ class CoursController < ApplicationController
     end
 
     @week_numbers =  ((Date.today.cweek.to_s..'52').to_a << ('1'..(Date.today.cweek - 1).to_s).to_a).flatten
-    @les_ue = 15.times.map{|i| 'UE' + i.to_s}
 
     session[:formation] = params[:formation]
     session[:intervenant] = params[:intervenant]

@@ -42,8 +42,8 @@
     <% current_date = _date_cours %>
   <% end %>  
 
-  <%= render partial: 'cours', 
-             locals: { cours: cours, cours_formation: Formation.unscoped.find(cours.formation_id) } %>
+  <%= render partial: 'cours', locals: { cours: cours } %>
+
 <% end %>
 <br>
 
