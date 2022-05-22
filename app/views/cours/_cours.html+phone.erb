@@ -1,4 +1,4 @@
-<div class="shadow-sm p-3" style="border-left: .3rem solid <%= cours.formation.positive_color %>">
+<div class="shadow-sm p-3" style="border-left: .3rem solid <%= cours.try(:formation).try(:positive_color) %>">
   <div class="row">
     
     <div class="col">
