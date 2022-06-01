@@ -51,7 +51,7 @@ class CourPolicy < ApplicationPolicy
     # - le gestionnaire de formation 
     # - un admin
     (record.audits.first.user == user) || 
-    (record.formation.user == user) || 
+    (record.formation.try(:user) == user) || 
     (user.admin?) 
   end
 
