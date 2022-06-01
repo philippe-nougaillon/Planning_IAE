@@ -1,22 +1,22 @@
 <div class="card shadow-sm p-3 mt-3">
-
-  <% if current_user.admin? || current_user.reserver? %>
-    <div>
-      <div class="btn-group float-right">
+  <div>
+    <div class="btn-group float-right">
+      <% if policy(@cour).edit? %>
         <%= link_to edit_cour_path(@cour), class: 'btn btn-sm btn-outline-primary' do %>
           <%= fa_icon 'edit' %> Modifier
         <% end %>
-
+      <% end %>
+      <% if policy(@cour).destroy? %>
         <%= link_to(@cour, method: :delete, data:{confirm: 'Confirmez-vous la suppression définitive de ce cours ?'}, class: 'btn btn-sm btn-outline-primary' ) do %>
           <%= fa_icon 'trash-alt' %> Supprimer
         <% end %>
+      <% end %>
 
-        <%= link_to cours_path, class: 'btn btn-sm btn-outline-primary' do %>
-          <%= fa_icon 'list' %> Retour
-        <% end %>
-      </div>
+      <%= link_to cours_path, class: 'btn btn-sm btn-outline-primary' do %>
+        <%= fa_icon 'list' %> Retour
+      <% end %>
     </div>
-  <% end %>
+  </div>
 
   <div class="row mt-3">
     <div class="col-sm-1">
