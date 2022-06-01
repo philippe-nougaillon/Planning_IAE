@@ -37,7 +37,7 @@ class DossierPolicy < ApplicationPolicy
     user && (user.rh? || user.admin?)
   end
 
-  def déposer?
+  def deposer?
     true
   end
 
