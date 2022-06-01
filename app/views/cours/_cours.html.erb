@@ -24,11 +24,11 @@
             </div>
         <% end %>
     </td>
-    <td style="border-left: .3rem solid <%= cours.try(:formation).try(:positive_color) %>">
+    <td style="border-left: .3rem solid <%= cours.formation.try(:positive_color) %>">
         <% if policy(Cour).action? %>
-            <%= link_to cours.formation.nom_nbr_etudiants, cours.formation %>
+            <%= link_to cours.formation.try(:nom_nbr_etudiants), cours.formation %>
         <% else %>
-            <%= link_to cours.formation.nom, cours.formation %>
+            <%= link_to cours.formation.try(:nom), cours.formation %>
         <% end %>
     </td>
     <td>
@@ -60,10 +60,10 @@
             <h5>
                 <span class="badge badge-pill badge-<%= cours.style %>">
                     <%= cours.salle.nom %>
-                </span>             
+                </span>
             </h5>
             <% if user_signed_in? %>
-                <% if cours.formation.nbr_etudiants > cours.salle.places && cours.salle.bloc != 'Z' %>
+                <% if cours.formation && (cours.formation.nbr_etudiants > cours.salle.places) && cours.salle.bloc != 'Z' %>
                     <i title="Manque <%= cours.formation.nbr_etudiants - cours.salle.places %> place.s">
                         <%= fa_icon 'exclamation-circle' %>
                     </i>
