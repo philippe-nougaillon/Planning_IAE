@@ -42,14 +42,17 @@ class Dossier < ApplicationRecord
 
     state RELANCE1, meta: {style: 'badge-info'} do
       event :relancer, transitions_to: RELANCE2
+      event :déposer, transitions_to: DEPOSE
     end
 
     state RELANCE2, meta: {style: 'badge-info'} do
       event :relancer, transitions_to: RELANCE3
+      event :déposer, transitions_to: DEPOSE
     end
     
     state RELANCE3, meta: {style: 'badge-info'} do
       event :relancer, transitions_to: RELANCE1
+      event :déposer, transitions_to: DEPOSE
     end
     
     state DEPOSE, meta: {style: 'badge-warning'} do
