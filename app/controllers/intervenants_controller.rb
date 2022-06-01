@@ -74,6 +74,7 @@ class IntervenantsController < ApplicationController
   def new
     @intervenant = Intervenant.new
     @intervenant.notifier = true
+    @intervenant.doublon = false
     10.times { @intervenant.responsabilites.build }
   end
 
