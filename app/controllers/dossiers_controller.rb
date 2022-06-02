@@ -176,7 +176,7 @@ class DossiersController < ApplicationController
       if doc.validé?
         doc.fichier.purge
         doc.archiver!
-      elsif doc.rejeté?
+      elsif doc.non_conforme?
         doc.destroy
       end
     end
