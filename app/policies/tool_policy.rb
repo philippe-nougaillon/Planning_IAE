@@ -101,6 +101,14 @@ class ToolPolicy < ApplicationPolicy
     export_formations?
   end
 
+  def export_vacations?
+    user.rh? || user.admin?
+  end
+
+  def export_vacations_do?
+    export_vacations?
+  end
+
   def etats_services?
     user.rh? || user.admin?
   end
