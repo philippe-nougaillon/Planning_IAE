@@ -50,7 +50,7 @@ class VacationsToXls < ApplicationService
           vacation.formation.nom,
           vacation.id,
           vacation.date,
-          vacation.intervenant.nom_prenom,
+          vacation.try(:intervenant).nom_prenom,
           vacation.titre,
           vacation.qte,
           vacation.forfaithtd,
