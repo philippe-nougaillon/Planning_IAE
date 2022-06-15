@@ -1,0 +1,26 @@
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h3><%= fa_icon 'upload' %> Export des vacations </h3>
+</div>
+<br>
+
+<div>
+  <h3 class="mb-4">Cette fonction génère une feuille Excel des vacations d'une ou de toutes les formations</h3>
+</div>
+
+<%= form_tag({action: "export_vacations_do", method: :post}) do %>
+
+  <div class="row">
+    <div class="col-sm-4">
+      <%= label_tag "Formation" %>    
+      <%= select_tag :formation_id, 
+            options_from_collection_for_select(Formation.joins(:vacations).uniq, :id, :nom, params[:formation_id]), 
+              class:"form-control select2", include_blank: true %>
+    </div>
+  </div>
+  <br>
+
+  <div class="actions">
+    <%= submit_tag "Exporter", class: "btn btn-success" %>
+  </div>
+
+<% end %>

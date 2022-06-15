@@ -736,6 +736,23 @@ class ToolsController < ApplicationController
     send_data file_contents.string.force_encoding('binary'), filename: filename 
   end
 
+  def export_vacations
+  end
+
+  def export_vacations_do
+    vacations = Vacation.all
+
+    unless params[:formation_id].blank?
+      vacations = vacations.where(formation_id: params[:formation_id])
+    end
+
+    book = VacationsToXls.new(vacations.includes(:formation, :intervenant)).call
+    file_contents = StringIO.new
+    book.write file_contents # => Now file_contents contains the rendered file output
+    filename = "Export_Vacations_#{Date.today.to_s}.xls"
+    send_data file_contents.string.force_encoding('binary'), filename: filename
+  end
+
   def etats_services
 
     @intervenants ||= []
