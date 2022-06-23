@@ -1,6 +1,6 @@
 <div class="pb-2 mt-4 mb-2 border-top">
   <div class="btn-group float-right">
-    <% if current_user.admin? %>
+    <% if policy(@salle).edit? %>
       <%= link_to edit_salle_path(@salle), class: 'btn btn-sm btn-outline-primary' do %>
         <%= fa_icon 'edit' %> Modifier
       <% end %>
