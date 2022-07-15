@@ -70,7 +70,7 @@
                 </td>
                 <td>
                   <span class="badge badge-pill badge-<%= c.style %>">
-                    <%= c.salle.nom %>
+                    <%= c.try(:salle).nom %>
                   </span>
                 </td>
               </tr>
