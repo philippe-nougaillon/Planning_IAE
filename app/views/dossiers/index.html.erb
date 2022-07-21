@@ -36,6 +36,12 @@
                                 class: 'form-control form-control-sm', 
                                 onchange: 'this.form.submit()' %>
           </div>
+
+          <div class="col-sm-3 mt-2">
+            <br>
+            <%= check_box_tag :archive, nil, params[:archive], onchange: 'this.form.submit()' %>
+            <%= label_tag :archive, "Inclure les dossiers archivés ?" %>
+          </div>
           
         </div>
       </div>  
