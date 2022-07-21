@@ -69,9 +69,11 @@
                   <%= c.nom_ou_ue %>
                 </td>
                 <td>
-                  <span class="badge badge-pill badge-<%= c.style %>">
-                    <%= c.salle.nom %>
-                  </span>
+                  <% if c.salle %>
+                    <span class="badge badge-pill badge-<%= c.style %>">
+                      <%= c.salle.nom %>
+                    </span>
+                  <% end %>
                 </td>
               </tr>
             <% end %>
