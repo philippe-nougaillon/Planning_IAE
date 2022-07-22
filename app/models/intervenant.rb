@@ -75,7 +75,7 @@ class Intervenant < ApplicationRecord
 	end
 
 	def nom_prenom_etat_dossier
-		self.prenom.blank? ? self.nom.upcase : "#{self.nom} #{self.prenom} -> #{self.dossiers.any? ? self.dossiers.last.workflow_state.humanize : nil }" 
+		self.prenom.blank? ? self.nom.upcase : "#{self.nom} #{self.prenom} -> #{self.dossiers.where.not(workflow_state: 'archivé').any? ? self.dossiers.last.workflow_state.humanize : nil }" 
 	end
 
 	def nom_du_status

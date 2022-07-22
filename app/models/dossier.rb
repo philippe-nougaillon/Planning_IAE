@@ -68,7 +68,7 @@ class Dossier < ApplicationRecord
       event :déposer, transitions_to: DEPOSE
     end
 
-    state ARCHIVE, meta: {style: 'badge-info'}
+    state ARCHIVE, meta: {style: 'badge-dark'}
   end
 
   # pour que le changement se voit dans l'audit trail
