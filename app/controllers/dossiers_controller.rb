@@ -9,8 +9,13 @@ class DossiersController < ApplicationController
   def index
     authorize Dossier
 
-    @dossiers = Dossier.all
+    if params[:archive].blank?
+      @dossiers = Dossier.where.not(workflow_state: "archivé")
+    else
+      @dossiers = Dossier.all
+    end
 
+    
     unless params[:nom].blank?
       @dossiers = @dossiers.joins(:intervenant).where("intervenants.nom ILIKE ?", "%#{params[:nom].upcase}%")
     end 
@@ -47,8 +52,8 @@ class DossiersController < ApplicationController
   # GET /dossiers/new
   def new
     # Lister toutes les personnes ayant eu cours comme intervenant principal ou en binome
-    début_période = '2021-09-01'
-    fin_période = '2022-08-31'
+    début_période = '2022-09-01'
+    fin_période = '2023-08-31'
 
     # on garde les id des intervenants ayant eu cours sur la période
     intervenants_ids = Cour.where("DATE(cours.debut) BETWEEN ? AND ?", début_période, fin_période).pluck(:intervenant_id)
