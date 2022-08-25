@@ -6,7 +6,7 @@ class ImportLogPolicy < ApplicationPolicy
   end
 
   def index?
-    user.admin?
+    user.role_number >= 4
   end
 
   def show?
