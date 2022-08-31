@@ -9,12 +9,13 @@ class DossiersController < ApplicationController
   def index
     authorize Dossier
 
+    params[:période] ||= '2022/2023' 
+
     if params[:archive].blank?
       @dossiers = Dossier.where.not(workflow_state: "archivé")
     else
       @dossiers = Dossier.all
     end
-
     
     unless params[:nom].blank?
       @dossiers = @dossiers.joins(:intervenant).where("intervenants.nom ILIKE ?", "%#{params[:nom].upcase}%")
@@ -68,6 +69,7 @@ class DossiersController < ApplicationController
                           .uniq
     
     @dossier = Dossier.new
+    @dossier.période = '2022/2023'
     3.times { @dossier.documents.build }
   end
 

@@ -4,8 +4,10 @@
       <%= fa_icon 'plus-circle' %> Dossier
     <% end %>
   <% end %>
-  <h3><%= fa_icon 'folder' %> Liste des dossiers de candidature 
-</h3>
+  <h3>
+    <%= fa_icon 'folder' %> 
+    Liste des dossiers de candidature 
+  </h3>
 </div>
 
 <div class="container-fluid p-3 shadow-sm">
@@ -26,7 +28,6 @@
                                 class: 'form-control form-control-sm', 
                                 onchange: 'this.form.submit()' %>
           </div>
-
 
           <div class="col-sm-2">
             <%= label_tag :workflow_state, "Etat" %>
