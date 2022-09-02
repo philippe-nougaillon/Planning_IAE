@@ -10,6 +10,7 @@ class DossiersController < ApplicationController
     authorize Dossier
 
     params[:période] ||= '2022/2023' 
+    params[:order_by]||= 'updated_at'
 
     if params[:archive].blank?
       @dossiers = Dossier.where.not(workflow_state: "archivé")
@@ -28,6 +29,8 @@ class DossiersController < ApplicationController
     unless params[:workflow_state].blank?
       @dossiers = @dossiers.where("dossiers.workflow_state = ?", params[:workflow_state].to_s.downcase)
     end
+
+    @dossiers = @dossiers.includes(:intervenant).order(params[:order_by])
 
     respond_to do |format|
       format.html do 
@@ -53,6 +56,7 @@ class DossiersController < ApplicationController
   # GET /dossiers/new
   def new
     # Lister toutes les personnes ayant eu cours comme intervenant principal ou en binome
+    période = '2022/2023'
     début_période = '2022-09-01'
     fin_période = '2023-08-31'
 
@@ -69,7 +73,7 @@ class DossiersController < ApplicationController
                           .uniq
     
     @dossier = Dossier.new
-    @dossier.période = '2022/2023'
+    @dossier.période = période
     3.times { @dossier.documents.build }
   end
 

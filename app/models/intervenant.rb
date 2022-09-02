@@ -29,7 +29,7 @@ class Intervenant < ApplicationRecord
 
 	validates_uniqueness_of :email, case_sensitive: false
 	
-  	enum status: [:CEV, :Permanent, :PR, :MCF, :MCF_HDR, :PAST, :PRAG, :Admin, :CEV_HSS]
+  enum status: [:CEV, :Permanent, :PR, :MCF, :MCF_HDR, :PAST, :PRAG, :Admin, :CEV_HSS]
 
 	default_scope { order(:nom, :prenom) } 
 
@@ -66,16 +66,13 @@ class Intervenant < ApplicationRecord
         "Coordination d'une UE (hors MAE)"]
     end
 	
-	def nom_prenom
+
+		def nom_prenom
 		self.prenom.blank? ? self.nom.upcase : "#{self.nom} #{self.prenom}" 
 	end
 
 	def prenom_nom
 		"#{self.try(:prenom)} #{self.nom}" 
-	end
-
-	def nom_prenom_etat_dossier
-		self.prenom.blank? ? self.nom.upcase : "#{self.nom} #{self.prenom} -> #{self.dossiers.where.not(workflow_state: 'archivé').any? ? self.dossiers.last.workflow_state.humanize : nil }" 
 	end
 
 	def nom_du_status

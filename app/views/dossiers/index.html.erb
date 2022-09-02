@@ -15,11 +15,6 @@
       <div class="form-group">
         <div class="row">
 
-          <div class="col-sm-3">
-            <%= label_tag :nom, "Nom" %>    
-            <%= text_field_tag :nom, params[:nom], include_blank:true, onchange:'this.form.submit()', class: 'form-control form-control-sm' %>
-          </div>
-
           <div class="col-sm-2">
             <%= label_tag :période, "Période" %>
             <%= select_tag :période, 
@@ -27,6 +22,11 @@
                                 include_blank: true,
                                 class: 'form-control form-control-sm', 
                                 onchange: 'this.form.submit()' %>
+          </div>
+
+          <div class="col-sm-3">
+            <%= label_tag :nom, "Nom" %>    
+            <%= text_field_tag :nom, params[:nom], include_blank:true, onchange:'this.form.submit()', class: 'form-control form-control-sm' %>
           </div>
 
           <div class="col-sm-2">
@@ -38,10 +38,19 @@
                                 onchange: 'this.form.submit()' %>
           </div>
 
+          <div class="col-sm-2">
+            <%= label_tag "Trier par " %>
+            <br> 
+            <%= radio_button_tag :order_by, 'dossiers.updated_at', (params[:order_by]=='dossiers.updated_at'), onchange:'this.form.submit()' %>
+            Date MàJ 
+            <%= radio_button_tag :order_by, 'intervenants.nom', (params[:order_by]=='intervenants.nom'), onchange:'this.form.submit()' %>
+            Nom 
+          </div>
+
           <div class="col-sm-3 mt-2">
             <br>
             <%= check_box_tag :archive, nil, params[:archive], onchange: 'this.form.submit()' %>
-            <%= label_tag :archive, "Inclure les dossiers archivés ?" %>
+            <%= label_tag :archive, "Inclure les archivés ?" %>
           </div>
           
         </div>
@@ -53,8 +62,8 @@
 <table class="table table-hover table-striped">
   <thead>
     <tr>
-      <th>Intervenant</th>
       <th>Période</th>
+      <th>Intervenant</th>
       <th>Etat</th>
       <th>Création</th>
       <th>MàJ</th>
@@ -65,8 +74,8 @@
   <tbody>
     <% @dossiers.each do |dossier| %>
       <tr>
-        <td><%= dossier.intervenant.nom_prenom %></td>
         <td><%= dossier.période %></td>
+        <td><%= dossier.intervenant.nom_prenom %></td>
         <td>
           <span class="badge <%= dossier.style %>">
             <%= dossier.workflow_state.humanize %>

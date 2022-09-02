@@ -16,7 +16,7 @@ class Dossier < ApplicationRecord
                                 allow_destroy:true, 
                                 reject_if: lambda {|attributes| attributes['nom'].blank? }
 
-  default_scope { order('updated_at DESC') }                              
+  default_scope { order('dossiers.updated_at DESC') }                              
                               
   # WORKFLOW
 
