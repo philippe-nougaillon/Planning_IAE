@@ -9,12 +9,14 @@ class DossiersController < ApplicationController
   def index
     authorize Dossier
 
+    params[:période] ||= '2022/2023' 
+    params[:order_by]||= 'dossiers.updated_at'
+
     if params[:archive].blank?
       @dossiers = Dossier.where.not(workflow_state: "archivé")
     else
       @dossiers = Dossier.all
     end
-
     
     unless params[:nom].blank?
       @dossiers = @dossiers.joins(:intervenant).where("intervenants.nom ILIKE ?", "%#{params[:nom].upcase}%")
@@ -26,6 +28,10 @@ class DossiersController < ApplicationController
 
     unless params[:workflow_state].blank?
       @dossiers = @dossiers.where("dossiers.workflow_state = ?", params[:workflow_state].to_s.downcase)
+    end
+
+    if params[:order_by] == 'intervenants.nom'
+      @dossiers = @dossiers.joins(:intervenant).reorder(params[:order_by])
     end
 
     respond_to do |format|
@@ -52,6 +58,7 @@ class DossiersController < ApplicationController
   # GET /dossiers/new
   def new
     # Lister toutes les personnes ayant eu cours comme intervenant principal ou en binome
+    période = '2022/2023'
     début_période = '2022-09-01'
     fin_période = '2023-08-31'
 
@@ -62,12 +69,16 @@ class DossiersController < ApplicationController
     # on ajoute les intervenants ayants fait des vacations
     intervenants_ids += Intervenant.where(id: Vacation.where("DATE(vacations.date) BETWEEN ? AND ?", début_période, fin_période).pluck(:intervenant_id))
 
+    intervenants_avec_dossiers_sur_période = Dossier.where(période: période).pluck(:intervenant_id)
+
     @intervenants = Intervenant
                           .where("id IN(?)", intervenants_ids.uniq)
                           .where(status: 'CEV')
+                          .where.not("id IN(?)", intervenants_avec_dossiers_sur_période)
                           .uniq
     
     @dossier = Dossier.new
+    @dossier.période = période
     3.times { @dossier.documents.build }
   end
 

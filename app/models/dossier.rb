@@ -16,7 +16,7 @@ class Dossier < ApplicationRecord
                                 allow_destroy:true, 
                                 reject_if: lambda {|attributes| attributes['nom'].blank? }
 
-  default_scope { order('updated_at DESC') }                              
+  default_scope { order('dossiers.updated_at DESC') }                              
                               
   # WORKFLOW
 
@@ -82,7 +82,7 @@ class Dossier < ApplicationRecord
   end
 
   def self.périodes
-    ['2022/2023','2023/2024','2024/2025', '2025/2026']
+    ['2021/2022','2022/2023','2023/2024','2024/2025', '2025/2026']
   end
 
   def self.xls_headers
