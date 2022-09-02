@@ -10,7 +10,7 @@ class DossiersController < ApplicationController
     authorize Dossier
 
     params[:période] ||= '2022/2023' 
-    params[:order_by]||= 'updated_at'
+    params[:order_by]||= 'dossiers.updated_at'
 
     if params[:archive].blank?
       @dossiers = Dossier.where.not(workflow_state: "archivé")
@@ -30,7 +30,7 @@ class DossiersController < ApplicationController
       @dossiers = @dossiers.where("dossiers.workflow_state = ?", params[:workflow_state].to_s.downcase)
     end
 
-    @dossiers = @dossiers.includes(:intervenant).order(params[:order_by])
+    @dossiers = @dossiers.joins(:intervenant).order(params[:order_by])
 
     respond_to do |format|
       format.html do 
@@ -67,9 +67,12 @@ class DossiersController < ApplicationController
     # on ajoute les intervenants ayants fait des vacations
     intervenants_ids += Intervenant.where(id: Vacation.where("DATE(vacations.date) BETWEEN ? AND ?", début_période, fin_période).pluck(:intervenant_id))
 
+    intervenants_avec_dossiers_sur_période = Dossier.where(période: période).pluck(:intervenant_id)
+
     @intervenants = Intervenant
                           .where("id IN(?)", intervenants_ids.uniq)
                           .where(status: 'CEV')
+                          .where.not("id IN(?)", intervenants_avec_dossiers_sur_période)
                           .uniq
     
     @dossier = Dossier.new
