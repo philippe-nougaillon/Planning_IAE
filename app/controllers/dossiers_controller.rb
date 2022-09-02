@@ -30,7 +30,9 @@ class DossiersController < ApplicationController
       @dossiers = @dossiers.where("dossiers.workflow_state = ?", params[:workflow_state].to_s.downcase)
     end
 
-    @dossiers = @dossiers.joins(:intervenant).order(params[:order_by])
+    if params[:order_by] == 'intervenants.nom'
+      @dossiers = @dossiers.joins(:intervenant).reorder(params[:order_by])
+    end
 
     respond_to do |format|
       format.html do 
