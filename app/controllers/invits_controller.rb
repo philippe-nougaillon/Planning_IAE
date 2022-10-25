@@ -119,6 +119,11 @@ class InvitsController < ApplicationController
           count += 1
         end 
       end
+    when "Supprimer"
+      invits.each do |invit| 
+        invit.destroy
+        count += 1
+      end
     end
     flash[:notice] = "#{count} invitation.s modifiée.s"  
 

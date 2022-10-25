@@ -97,11 +97,11 @@
         <tr><th colspan=9></th></tr>
       </tfoot>
     </table>
-    <div data-target="action.selector">  
-      <%= select_tag :action_name, options_for_select(["Relancer","Confirmer","Archiver"]), 
-                      include_blank: true, 
-                      onchange: 'this.form.submit()', 
-                      class: "form-control form-control-sm col-sm-3 mb-3" %>
+    <div data-target="action.selector">
+        <%= select_tag :action_name, options_for_select(["Relancer","Confirmer","Archiver","Supprimer"]), 
+                        include_blank: true,
+                        class: "form-control form-control-sm col-sm-3 mb-3 d-inline" %>
+        <%= submit_tag "Valider", class:'btn btn-danger btn-sm ml-3' %>
     </div>
   </div>
 <% end %>
