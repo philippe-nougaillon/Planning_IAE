@@ -6,7 +6,7 @@ class DossierPolicy < ApplicationPolicy
   end
 
   def index?
-    user.rh? || user.admin?
+    user && (user.rh? || user.admin?)
   end
 
   def show?

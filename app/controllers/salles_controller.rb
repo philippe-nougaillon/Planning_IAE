@@ -155,10 +155,11 @@ class SallesController < ApplicationController
   # Afficher les salles disponibles en JSON
   def libres
     salles_dispos_ids = []
+    cours = nil
 
-    unless params[:id].blank?
+    if !(params[:id].blank?)
       cours = Cour.find(params[:id])
-    else
+    elsif !(params[:date].blank? || params[:duree].blank? || params[:formation_id].blank? || params[:intervenant_id].blank?)
       cours = Cour.new(debut: DateTime.parse(params[:date]), 
                         duree: params[:duree], 
                         formation_id: params[:formation_id], 
@@ -166,11 +167,14 @@ class SallesController < ApplicationController
                         salle_id: Salle.first.id)
     end
 
-    Salle.all.each do |s|
-      cours.salle = s 
-      if cours.valid?
-        salles_dispos_ids << s.id
-      end 
+    if cours
+      # Test chaque salle pour voir les disponibilités (cours.valid? == true)
+      Salle.all.each do |s|
+        cours.salle = s 
+        if cours.valid?
+          salles_dispos_ids << s.id
+        end 
+      end
     end
 
     #logger.debug salles_dispos_ids
