@@ -1171,6 +1171,7 @@ class ToolsController < ApplicationController
     @examens = Cour
                   .where("intervenant_id = ? OR intervenant_binome_id = ?", 169, 169)
                   .or(Cour.where("intervenant_id = ? OR intervenant_binome_id = ?", 1166, 1166))
+                  .or(Cour.where("intervenant_id = ? OR intervenant_binome_id = ?", 522, 522))
                   .where("commentaires like '%[%'")
                   .where("debut between ? and ?", @start_date, @end_date.to_date + 1.day)
                   .includes(:formation)
