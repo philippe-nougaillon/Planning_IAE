@@ -6,6 +6,6 @@ class GuidePolicy < ApplicationPolicy
   end
 
   def index?
-    user.role_number >= 2
+    user && user.role_number >= 2
   end
 end
