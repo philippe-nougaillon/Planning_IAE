@@ -28,5 +28,7 @@ module Planning
     
     config.active_job.queue_adapter = :sucker_punch
 
+    # pour fixer Psych::DisallowedClass in Devise::SessionsController#create (Tried to load unspecified class: ActiveSupport::TimeWithZone):
+    config.active_record.use_yaml_unsafe_load = true
   end
 end
