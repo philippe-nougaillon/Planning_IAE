@@ -29,10 +29,10 @@ module ApplicationHelper
 
     def time_in_paris_selon_la_saison
         # Heure d'hiver
-        # DateTime.now.in_time_zone('Europe/Paris') + 1.hours
+        DateTime.now.in_time_zone('Europe/Paris') + 1.hours
 
         # Heure d'été
-        DateTime.now.in_time_zone('Europe/Paris') + 2.hours
+        #DateTime.now.in_time_zone('Europe/Paris') + 2.hours
     end
 
 end
