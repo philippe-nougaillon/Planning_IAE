@@ -210,7 +210,7 @@ class InvitsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_invit
-      @invit = Invit.friendly.find(params[:id])
+      @invit = Invit.find_by(slug: params[:id])
     end
 
     # Only allow a list of trusted parameters through.
