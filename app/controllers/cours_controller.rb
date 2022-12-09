@@ -418,15 +418,22 @@ class CoursController < ApplicationController
         end
 
       when "Supprimer" 
-        if !params[:delete].blank?      
-          @cours.each do |c|
-            if policy(c).destroy?
-              c.destroy
-            else 
-              flash[:error] = "Vous ne pouvez pas supprimer ce cours (##{c.id}) ! Opération annulée"
-              next
+        if (params[:invits_en_cours].present? && params[:confirmation] == 'yes') || !params[:invits_en_cours].present?
+          if !params[:delete].blank?
+            @cours.each do |c|
+              if policy(c).destroy?
+                c.invits.destroy_all
+                c.destroy
+              else 
+                flash[:error] = "Vous ne pouvez pas supprimer ce cours (##{c.id}) ! Opération annulée"
+                next
+              end
             end
+          else
+            flash[:error] = "Suppression annulée"
           end
+        else
+          flash[:error] = "Suppression annulée"
         end
       when "Exporter vers Excel"
         request.format = 'xls'

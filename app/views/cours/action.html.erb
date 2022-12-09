@@ -244,9 +244,20 @@
     <div class="col-sm-8">
       <%= label_tag "Confirmation :" %><br>
       <%= check_box_tag :delete %> Suppression définitive de tous les cours sélectionnés ?
-      <br><br>
+      <br>
+
       <i>Notez que les cours ne peuvent être supprimés que par leur créateur, le gestionnaire ou un administrateur</i>
       <br><br>
+
+      <% if Invit.where(cour_id: @cours.pluck(:id)).any? %>
+        <p>
+          <strong>Attention ! Il y a des invitations liées à ce.s cours </strong>
+          <br>
+          <%= hidden_field_tag :invits_en_cours, true %>
+          <%= check_box_tag :confirmation, 'yes' %> Supprimer les invitations liées ?
+        </p>
+      <% end %>
+
     </div>
   <% end %>
 
