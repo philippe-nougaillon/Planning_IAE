@@ -51,11 +51,18 @@
       <%= @intervenant.titre1 %>
       <%= @intervenant.titre2 %>
 
-      <h3>
+      <h3 class="mt-2">
         <small class="text-muted">Statut</small><br>
       </h3>
       <%= @intervenant.try(:status) %>
-    </div>  
+
+      <% if @intervenant.année_entrée %>
+        <h3 class="mt-2">
+          <small class="text-muted">Ancienneté</small><br>
+        </h3>
+        <%= Date.today.year - @intervenant.année_entrée %>
+      <% end %>
+    </div>
 
     <div class="col-sm-5">
       <h3>
@@ -70,7 +77,7 @@
       </h3>
       <%= @intervenant.téléphone_mobile %>
 
-      <h3>
+      <h3 class="mt-2">
         <small class="text-muted">Salles habituelles</small><br>
       </h3>
       <%= @salles_habituelles %>
