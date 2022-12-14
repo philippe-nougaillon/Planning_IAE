@@ -45,8 +45,12 @@
           <%= f.select :status, Intervenant.statuses.keys.to_a, {include_blank: true, label: 'Statut'} %>
         </div>
 
-        <div class="col">
+        <div class="col-5">
           <%= f.number_field :nbr_heures_statutaire, label:"Nombre heures statutaires" %>
+        </div>
+
+        <div class="col">
+          <%= f.number_field :année_entrée, label:"Année d'entrée" %>
         </div>
       </div>
 

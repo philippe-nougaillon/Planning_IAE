@@ -75,6 +75,7 @@ class IntervenantsController < ApplicationController
     @intervenant = Intervenant.new
     @intervenant.notifier = true
     @intervenant.doublon = false
+    @intervenant.année_entrée = Date.today.year
     10.times { @intervenant.responsabilites.build }
   end
 
@@ -145,7 +146,7 @@ class IntervenantsController < ApplicationController
     def intervenant_params
       params.require(:intervenant).permit(:nom, :prenom, :email, :linkedin_url, :titre1, :titre2, :spécialité,
        :téléphone_fixe, :téléphone_mobile, :bureau, :photo, :status, :remise_dossier_srh, :adresse, :cp, :ville, :doublon,
-       :nbr_heures_statutaire, :date_naissance, :memo, :notifier,
+       :nbr_heures_statutaire, :date_naissance, :memo, :notifier, :année_entrée,
        responsabilites_attributes: [:id, :debut, :fin, :titre, :formation_id, :heures, :commentaires, :_destroy])
     end
 
