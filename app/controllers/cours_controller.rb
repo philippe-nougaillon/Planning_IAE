@@ -363,7 +363,8 @@ class CoursController < ApplicationController
                                     nom: invit[:nom].values.to_a[i])
                 invits_créées += 1
               end
-              InvitMailer.with(invit: Invit.first).envoyer_invitation.deliver_now
+              mailer_response = InvitMailer.with(invit: Invit.first).envoyer_invitation.deliver_now
+              MailLog.create(message_id:mailer_response.message_id, to:Invit.first.intervenant.email, subject: "Invitation.")
             end
           end
         end  

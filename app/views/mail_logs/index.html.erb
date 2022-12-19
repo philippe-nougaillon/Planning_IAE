@@ -2,13 +2,33 @@
 
 <h1>Mail Logs</h1>
 
+<div class="container-fluid p-3 shadow-sm">
+  <%= form_tag request.path, method: :get do %>
+    <div class="form-group">
+      <div class="row">
+
+        <div class="col-sm-5">
+          <%= label_tag :to, "Destinataire" %>
+          <div class="input-group">
+            <%= text_field_tag :to, params[:to], include_blank:true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
+            <span class="input-group-btn">
+                <%= submit_tag 'Filtrer', class:"btn btn-sm btn-success" %>
+            </span>
+          </div> 
+        </div>
+        
+      </div>
+    </div>
+  <% end %>
+</div>
+
 <table class="table">
   <thead>
     <tr>
-      <th>À</th>
-      <th>Sujet</th>
-      <th>MÀJ</th>
-      <th>Status</th>
+      <th><%= sortable :to do %>Destinataire<% end %></th>
+      <th><%= sortable :subject do %>Sujet<% end %></th>
+      <th><%= sortable :created_at, default: true do %>Il y a<% end %></th>
+      <th>Statut</th>
       <th colspan="2"></th>
     </tr>
   </thead>
@@ -18,7 +38,7 @@
       <tr>
         <td><%= mail_log.to %></td>
         <td><%= mail_log.subject %></td>
-        <td>Il y a <%= time_ago_in_words mail_log.created_at %></td>
+        <td><%= time_ago_in_words mail_log.created_at %></td>
         <td>
           <% if status = @result["items"].find{|item| item["message"]["headers"]["message-id"] == mail_log.message_id } %>
             <span class="text-danger">KO</span>
@@ -28,7 +48,6 @@
           <% end %>
         </td>
         <td><%= link_to 'Voir', mail_log %></td>
-        <td><%= link_to '[X]', mail_log, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>

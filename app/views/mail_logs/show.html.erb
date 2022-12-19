@@ -1,16 +1,17 @@
 <p id="notice"><%= notice %></p>
 
 <p>
-  Il y a <%= time_ago_in_words @mail_log.created_at %>
+  <strong>Il y a :</strong>
+  <%= time_ago_in_words @mail_log.created_at %>
 </p>
 
 <p>
-  <strong>À:</strong>
+  <strong>Destinataire :</strong>
   <%= @mail_log.to %>
 </p>
 
 <p>
-  <strong>Sujet:</strong>
+  <strong>Sujet :</strong>
   <%= @mail_log.subject %>
 </p>
 
@@ -20,7 +21,7 @@
 </p>
 
 <p>
-  <strong>Id:</strong>
+  <strong>Id :</strong>
   <%= @mail_log.message_id %>
 </p>
 

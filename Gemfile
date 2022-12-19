@@ -123,3 +123,5 @@ gem 'premailer-rails'
 gem "scenic", "~> 1.6"
 
 gem "mailgun-ruby", "~> 1.2"
+
+gem "sortable-for-rails", "~> 1.2"
