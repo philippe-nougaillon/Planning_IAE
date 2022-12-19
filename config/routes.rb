@@ -72,6 +72,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :mail_logs, only: %i[ index show destroy ]
+
   namespace :tools do
     get :index
 

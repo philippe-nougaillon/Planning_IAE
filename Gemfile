@@ -32,6 +32,7 @@ gem 'bootsnap', '>= 1.4.2', require: false
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'dotenv-rails'
 end
 
 group :development do
@@ -120,3 +121,5 @@ gem 'discard', '~> 1.2'
 gem 'premailer-rails'
 
 gem "scenic", "~> 1.6"
+
+gem "mailgun-ruby", "~> 1.2"

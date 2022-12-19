@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Mail Logs</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>À</th>
+      <th>Sujet</th>
+      <th>MÀJ</th>
+      <th>Status</th>
+      <th colspan="2"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @mail_logs.each do |mail_log| %>
+      <tr>
+        <td><%= mail_log.to %></td>
+        <td><%= mail_log.subject %></td>
+        <td>Il y a <%= time_ago_in_words mail_log.created_at %></td>
+        <td>
+          <% if status = @result["items"].find{|item| item["message"]["headers"]["message-id"] == mail_log.message_id } %>
+            <span class="text-danger">KO</span>
+
+          <% else %>
+            <span class="text-success">OK</span>
+          <% end %>
+        </td>
+        <td><%= link_to 'Voir', mail_log %></td>
+        <td><%= link_to '[X]', mail_log, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
