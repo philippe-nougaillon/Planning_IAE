@@ -1,5 +1,6 @@
 class MailLogsController < ApplicationController
   before_action :set_mail_log, only: %i[ show destroy ]
+  before_action :is_user_authorized
 
   # GET /mail_logs or /mail_logs.json
   def index
@@ -42,5 +43,9 @@ class MailLogsController < ApplicationController
     
     def sort_direction
       %w[asc desc].include?(params[:direction]) ? params[:direction] : 'desc'
+    end
+
+    def is_user_authorized
+      authorize MailLog
     end
 end
