@@ -32,7 +32,7 @@ class EnvoiLogsController < ApplicationController
     new_envoi_log.msg = @envoi_log.msg
     new_envoi_log.save
 
-    redirect_to envoi_logs_url, notice: "Job placé dans la file d'attente pour exécution immédiate"
+    redirect_to envoi_logs_path, notice: "Job placé dans la file d'attente pour exécution immédiate"
   end
 
   def suspendre
