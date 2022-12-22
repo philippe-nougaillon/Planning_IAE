@@ -52,3 +52,9 @@
     <% end %>
   </tbody>
 </table>
+
+<div class="page_info">
+    <%= page_entries_info @mail_logs %>
+  </div>
+
+  <%= will_paginate @mail_logs, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
