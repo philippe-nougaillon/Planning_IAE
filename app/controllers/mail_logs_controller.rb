@@ -16,7 +16,7 @@ class MailLogsController < ApplicationController
 
     @mail_logs = @mail_logs.reorder('mail_logs.'+ sort_column + ' ' + sort_direction)
 
-    # @mail_logs = @mail_logs.page(params[:page]).per(20)
+    @mail_logs = @mail_logs.paginate(page: params[:page], per_page: 20)
   end
 
   # GET /mail_logs/1 or /mail_logs/1.json
