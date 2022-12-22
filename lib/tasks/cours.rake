@@ -80,7 +80,7 @@ namespace :cours do
         # sleep 37
 
         # Faire une petite pause pour ne pas être pris pour un spammeur
-        #sleep 7
+        sleep 5
 
         puts "#-" * 50
       end 
