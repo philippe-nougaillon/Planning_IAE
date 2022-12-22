@@ -4,33 +4,34 @@
     L'IAE Paris-Sorbonne a le plaisir de vous transmettre le récapitulatif de vos cours programmés du <%=l @debut %> au <%=l @fin %>
 </p>
 <br>
-
-<table style="border: 1px solid lightgrey;" cellpadding=5 cellspacing=5>
-    <thead>
-        <tr>
-            <th colspan=2>Date</th>
-            <th>Formation</th>
-            <th>Intitulé du cours</th>
-            <th>Salle</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% @cours.each_with_index do | c, index | %>
-            <tr style="<%= index.even? ? 'background-color: #f2f2f2;' : nil %>" >
-                <td>
-                    <b><%= I18n.l(c.debut.to_date, format: :day) %> <%= I18n.l(c.debut.to_date) %></b>
-                </td>
-                <td>
-                    <b><%= I18n.l(c.debut, format: :heures_min) %></b>
-                    - <%= I18n.l(c.fin, format: :heures_min) %>
-                </td>
-                <td><%= c.try(:formation).try(:nom) %></td>
-                <td><%= c.nom_ou_ue %></td>
-                <td><%= c.try(:salle).try(:nom) %></td>
+<div style="overflow-x: auto;">
+    <table style="border: 1px solid lightgrey;" cellpadding=5 cellspacing=5>
+        <thead>
+            <tr>
+                <th colspan=2>Date</th>
+                <th>Formation</th>
+                <th>Intitulé du cours</th>
+                <th>Salle</th>
             </tr>
-        <% end %>
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            <% @cours.each_with_index do | c, index | %>
+                <tr style="<%= index.even? ? 'background-color: #f2f2f2;' : nil %>" >
+                    <td>
+                        <b><%= I18n.l(c.debut.to_date, format: :day) %> <%= I18n.l(c.debut.to_date) %></b>
+                    </td>
+                    <td>
+                        <b><%= I18n.l(c.debut, format: :heures_min) %></b>
+                        - <%= I18n.l(c.fin, format: :heures_min) %>
+                    </td>
+                    <td><%= c.try(:formation).try(:nom) %></td>
+                    <td><%= c.nom_ou_ue %></td>
+                    <td><%= c.try(:salle).try(:nom) %></td>
+                </tr>
+            <% end %>
+        </tbody>
+    </table>
+</div>
 
 <p>
     <b>
@@ -41,18 +42,20 @@
 </p>
 
 <% if @gestionnaires.any? %>
-    <table style="border: 1px solid lightgrey;" cellpadding=5 cellspacing=5>
-        <tbody>
-            <% @gestionnaires.each do | formation, email | %>
-                <% unless email.blank? %>
-                    <tr>
-                        <td style="border: 1px solid lightgrey;"><%= formation %></td>
-                        <td><%= email %></td>
-                    </tr>
+    <div style="overflow-x: auto;">
+        <table style="border: 1px solid lightgrey;" cellpadding=5 cellspacing=5>
+            <tbody>
+                <% @gestionnaires.each do | formation, email | %>
+                    <% unless email.blank? %>
+                        <tr>
+                            <td style="border: 1px solid lightgrey;"><%= formation %></td>
+                            <td><%= email %></td>
+                        </tr>
+                    <% end %>
                 <% end %>
-            <% end %>
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
     <br>
 <% end %>
 
