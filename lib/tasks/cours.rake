@@ -33,7 +33,7 @@ namespace :cours do
     case envoi_specs.cible
     when 'Testeurs'
       # id des intervenants tests
-      intervenants = Intervenant.where("UPPER(nom) LIKE '%NOUGAILLON%' OR UPPER(nom) LIKE '%FITSCH%'")
+      intervenants = Intervenant.where("UPPER(nom) LIKE '%NOUGAILLON%' OR UPPER(nom) LIKE '%FITSCH%' OR UPPER(nom) LIKE '%DACQUET%'")
       puts "Intervenants TEST = #{ intervenants.pluck(:nom) }" 
     when 'Intervenant'
       intervenants = Intervenant.where(id: envoi_specs.cible_id)
@@ -75,9 +75,9 @@ namespace :cours do
 
         envoyes += 1 if envoyer_liste_cours_a_intervenant(args.draft, start_day, end_day, intervenant, cours, liste_des_gestionnaires, envoi_specs.id) 
 
-        puts "Pause !"
-        # faire une grande pause de 40 secondes pour ne pas dépasser la limite de 100mails/heure imposée par la période de probation
-        sleep 37
+        # puts "Pause !"
+        # # faire une grande pause de 40 secondes pour ne pas dépasser la limite de 100mails/heure imposée par la période de probation
+        # sleep 37
 
         # Faire une petite pause pour ne pas être pris pour un spammeur
         #sleep 7
@@ -94,9 +94,10 @@ namespace :cours do
     if !intervenant.email.blank? && intervenant.email != '?'
       puts "OK => Planning envoyé à: #{intervenant.email}"
 
-      IntervenantMailer
-          .notifier_cours(debut, fin, intervenant, cours, gestionnaires, envoi_log_id)
-          .deliver_now
+      mailer_response = IntervenantMailer
+                                        .notifier_cours(debut, fin, intervenant, cours, gestionnaires, envoi_log_id)
+                                        .deliver_now
+      MailLog.create(message_id: mailer_response.message_id, to: intervenant.email, subject: "Rappel des cours")
 
       return true
     else
