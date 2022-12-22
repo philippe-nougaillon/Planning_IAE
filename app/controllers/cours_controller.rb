@@ -363,7 +363,8 @@ class CoursController < ApplicationController
                                     nom: invit[:nom].values.to_a[i])
                 invits_créées += 1
               end
-              InvitMailer.with(invit: Invit.first).envoyer_invitation.deliver_now
+              mailer_response = InvitMailer.with(invit: Invit.first).envoyer_invitation.deliver_now
+              MailLog.create(message_id:mailer_response.message_id, to:Invit.first.intervenant.email, subject: "Invitation")
             end
           end
         end  
@@ -442,7 +443,7 @@ class CoursController < ApplicationController
         @calendar = Cour.generate_ical(@cours)
         request.format = 'ics'
 
-      when "Exporter en PDF"
+      when "Exporter en PDF", "Feuille émargement PDF"
         request.format = 'pdf'
 
     end 
@@ -477,13 +478,25 @@ class CoursController < ApplicationController
       end
 
       format.pdf do
-        pdf = ExportPdf.new
-        pdf.export_liste_des_cours(@cours, true)
-
-        send_data pdf.render,
-            filename: filename.concat('.pdf'),
+        case action_name
+        when "Exporter en PDF"
+          pdf = ExportPdf.new
+          pdf.export_liste_des_cours(@cours, true)
+          
+          send_data pdf.render,
+          filename: filename.concat('.pdf'),
             type: 'application/pdf',
-            disposition: 'inline'	
+            disposition: 'inline'
+        when "Feuille émargement PDF"
+          filename = "Feuille_émargement_#{Date.today.to_s}"
+          pdf = ExportPdf.new
+          pdf.generate_feuille_emargement(@cours)
+          
+          send_data pdf.render,
+          filename: filename.concat('.pdf'),
+            type: 'application/pdf',
+            disposition: 'inline'
+        end
       end
 
     end
