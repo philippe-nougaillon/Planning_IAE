@@ -1128,8 +1128,7 @@ class ToolsController < ApplicationController
     # créés par un utilisateur autre que Thierry (#41)
     
     params[:start_date] ||= Date.today
-    #params[:start_date] ||= '2021-09-01'
-    params[:end_date] ||= '2022-07-01'
+    params[:end_date] ||= Date.today + 6.months
     params[:tri] ||= 'date_cours'
     #params[:tri] ||= 'date_création'
 

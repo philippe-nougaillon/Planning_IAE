@@ -337,67 +337,69 @@ class ExportPdf
     end
 
     def generate_feuille_emargement(cours)
-        cour = cours.first
+        cours.each_with_index do |cour, index|
 
-        font_size 14
+            font_size 14
 
-        y_position = cursor
-        bounding_box([0, y_position], :width => 270) do
-            image "#{@image_path}/logo@100.png", :width => 250
-        end
-        bounding_box([270, y_position], :width => 270) do
-            move_down @margin_down
-            text cour.formation.nom, style: :bold, align: :right
-            text "Cycle en apprentissage 2022-2023", align: :right
-        end
-
-        move_down @margin_down * 3
-        text "EMARGEMENT", size: 16, style: :bold, align: :center
-
-        font_size 12
-
-        move_down @margin_down * 2
-        y_position = cursor
-        bounding_box([0, y_position], :width => 250, :height => 100) do
-            text "Date : #{I18n.l(cour.debut.to_date)}", style: :bold
-        end
-        bounding_box([250, y_position], :width => 250) do
-            
-            text "Horaire : #{I18n.l(cour.debut, format: :heures_min)} - #{I18n.l(cour.fin, format: :heures_min)}", style: :bold
-
-        end
-        move_down @margin_down
-        text "Enseignant : #{cour.intervenant.nom_prenom}", style: :bold
-        move_down @margin_down
-        text "UE : #{cour.code_ue}", style: :bold
-        move_down @margin_down
-        text "Signature :", style: :bold
-        
-
-        data = [ ['NOM Prénom', 'SIGNATURE', 'NOM Prénom', 'SIGNATURE'] ]
-
-        array = cour.formation.etudiants.order(:nom, :prénom).pluck(:id)
-        (0..array.length - 1).step(2).each do |index|
-            etudiant = Etudiant.find(array[index])
-            if index < array.length - 1
-                next_etudiant = Etudiant.find(array[index + 1])
+            y_position = cursor
+            bounding_box([0, y_position], :width => 270) do
+                image "#{@image_path}/logo@100.png", :width => 250
             end
-            data += [ [
-                "<b>#{etudiant.nom.upcase}</b> #{etudiant.prénom.humanize}",
-                nil,
-                next_etudiant ? "<b>#{next_etudiant.nom.upcase}</b> #{next_etudiant.prénom.humanize}" : nil,
-                nil
-            ]
-            ]
+            bounding_box([270, y_position], :width => 270) do
+                move_down @margin_down
+                text cour.formation.nom, style: :bold, align: :right
+            end
+
+            move_down @margin_down * 3
+            text "EMARGEMENT", size: 16, style: :bold, align: :center
+
+            font_size 12
+
+            move_down @margin_down * 2
+            y_position = cursor
+            bounding_box([0, y_position], :width => 250, :height => 100) do
+                text "Date : #{I18n.l(cour.debut.to_date)}", style: :bold
+            end
+            bounding_box([250, y_position], :width => 250) do
+                
+                text "Horaire : #{I18n.l(cour.debut, format: :heures_min)} - #{I18n.l(cour.fin, format: :heures_min)}", style: :bold
+
+            end
+            move_down @margin_down
+            text "Enseignant : #{cour.intervenant.nom_prenom}", style: :bold
+            move_down @margin_down
+            text "UE : #{cour.code_ue}", style: :bold
+            move_down @margin_down
+            text "Signature :", style: :bold
+            
+
+            data = [ ['NOM Prénom', 'SIGNATURE', 'NOM Prénom', 'SIGNATURE'] ]
+
+            array = cour.formation.etudiants.order(:nom, :prénom).pluck(:id)
+            (0..array.length - 1).step(2).each do |index|
+                etudiant = Etudiant.find(array[index])
+                if index < array.length - 1
+                    next_etudiant = Etudiant.find(array[index + 1])
+                end
+                data += [ [
+                    "<b>#{etudiant.nom.upcase}</b> #{etudiant.prénom.humanize}",
+                    nil,
+                    next_etudiant ? "<b>#{next_etudiant.nom.upcase}</b> #{next_etudiant.prénom.humanize}" : nil,
+                    nil
+                ]
+                ]
+            end
+
+            move_down @margin_down * 2
+
+            font_size 10
+            table(data, 
+                header: true, 
+                column_widths: [150, 120, 150, 120],
+                cell_style: { :inline_format => true, height: 35 })
+
+            start_new_page unless index == cours.size - 1
         end
-
-        move_down @margin_down * 2
-
-        font_size 10
-        table(data, 
-            header: true, 
-            column_widths: [150, 120, 150, 120],
-            cell_style: { :inline_format => true, height: 35 })
     end
 
 

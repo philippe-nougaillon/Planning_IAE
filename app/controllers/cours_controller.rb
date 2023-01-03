@@ -488,14 +488,11 @@ class CoursController < ApplicationController
             type: 'application/pdf',
             disposition: 'inline'
         when "Feuille émargement PDF"
-          filename = "Feuille_émargement_#{Date.today.to_s}"
+          filename = "Feuille_émargement_#{ Date.today }.pdf"
           pdf = ExportPdf.new
           pdf.generate_feuille_emargement(@cours)
-          
-          send_data pdf.render,
-          filename: filename.concat('.pdf'),
-            type: 'application/pdf',
-            disposition: 'inline'
+
+          send_data pdf.render, filename: filename, type: 'application/pdf'
         end
       end
 

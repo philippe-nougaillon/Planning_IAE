@@ -49,6 +49,7 @@ namespace :cours do
       cours = Cour.where("debut BETWEEN (?) AND (?)", start_day, end_day)
                   .where(etat: Cour.etats.values_at(:planifié, :confirmé))
                   .where("intervenant_id = ? OR intervenant_binome_id = ?", intervenant.id, intervenant.id)
+                  .order(:debut)
 
       if envoi_specs.cible == 'Formation'
         cours = cours.where(formation_id: envoi_specs.cible_id) 
