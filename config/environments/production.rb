@@ -127,7 +127,6 @@ Rails.application.configure do
 
 
   config.action_mailer.default_url_options = { host: 'planning-iae.herokuapp.com', protocol: 'https' }
-  config.action_controller.default_url_options = { host: 'planning-iae.herokuapp.com', protocol: 'https' }
   config.action_mailer.asset_host = 'https://planning-iae.herokuapp.com'
 
   #config.action_mailer.default_url_options = { host: 'planning4-testing.herokuapp.com', protocol: 'https' }
