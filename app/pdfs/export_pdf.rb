@@ -368,7 +368,7 @@ class ExportPdf
             move_down @margin_down
             text "Enseignant : #{cour.intervenant.nom_prenom}", style: :bold
             move_down @margin_down
-            text "UE : #{cour.code_ue}", style: :bold
+            text "UE : #{cour.code_ue} - #{cour.nom_ou_ue}", style: :bold
             move_down @margin_down
             text "Signature :", style: :bold
             
