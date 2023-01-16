@@ -1,7 +1,7 @@
 <div class="pb-2 mt-4 mb-2 border-bottom">
-  <h3><%= fa_icon 'history' %> Cours récemment planifiés, à confirmer</h3>
-  <p class="">
-    Affiche les cours 'Planifiés' créés par un utilisateur autre que le gestionnaire des salles (Th.D-#41)
+  <h3><%= fa_icon 'calendar-check' %> Liste des cours "à booker" </h3>
+  <p>
+    Liste des cours récemment planifiés (sans salle) et à confirmer.
   </p>
 </div>
 
@@ -61,9 +61,8 @@
     <% @cours.each do | cours | %>
         <tr class="shadow-sm">
             <td class="text-center">
-                <% week_number = cours.debut.to_date.strftime('%-V') %>
-                <%= link_to cours_url(semaine: week_number, view: 'calendar_rooms'), target: '_blank' do %>
-                    <%= week_number %>
+                <%= link_to cours_url(start_date: cours.debut.to_date.beginning_of_week, view: 'calendar_rooms'), target: '_blank' do %>
+                    <%= cours.debut.to_date.strftime('%-V') %>
                 <% end %>
             </td>
             <td>
