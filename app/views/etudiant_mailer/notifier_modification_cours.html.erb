@@ -5,13 +5,19 @@ Votre cours
 <br>
 initialement prévu le 
 <b><%= l(@cours.debut, format: :long) %></b>
-vient d'être modifié : 
-<ul>
-  <li>
-    <%= sanitize ApplicationController.helpers.prettify(@cours.audits.last).join('</li><li>') %>
-  </li>
-</ul>
+<% if @cours.etat == "annulé" %>
+  vient d'être <b>ANNULÉ</b>.
+<% else %>
+  vient d'être modifié : 
+  <ul>
+    <li>
+      <%= sanitize ApplicationController.helpers.prettify(@cours.audits.last).join('</li><li>') %>
+    </li>
+  </ul>
 
+<% end %>
+
+<br><br>
 <%= link_to "Voir ce cours dans le planning", root_url(ids: @cours.id) %>
 
 <br><br>
