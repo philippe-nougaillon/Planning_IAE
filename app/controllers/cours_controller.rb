@@ -364,7 +364,7 @@ class CoursController < ApplicationController
                 invits_créées += 1
               end
               mailer_response = InvitMailer.with(invit: Invit.first).envoyer_invitation.deliver_now
-              MailLog.create(message_id:mailer_response.message_id, to:Invit.first.intervenant.email, subject: "Invitation")
+              MailLog.create(user_id: current_user.id, message_id:mailer_response.message_id, to:Invit.first.intervenant.email, subject: "Invitation")
             end
           end
         end  
@@ -571,7 +571,7 @@ class CoursController < ApplicationController
           # notifier les étudiants des changements ?
           if params[:notifier]
             @cour.formation.etudiants.each do | etudiant |
-              NotifierEtudiantsJob.perform_later(etudiant, @cour)
+              NotifierEtudiantsJob.perform_later(etudiant, @cour, current_user.id)
             end
           end
     

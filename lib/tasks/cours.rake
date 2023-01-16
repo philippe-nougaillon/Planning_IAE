@@ -98,7 +98,7 @@ namespace :cours do
       mailer_response = IntervenantMailer
                                         .notifier_cours(debut, fin, intervenant, cours, gestionnaires, envoi_log_id)
                                         .deliver_now
-      MailLog.create(message_id: mailer_response.message_id, to: intervenant.email, subject: "Rappel des cours")
+      MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: intervenant.email, subject: "Rappel des cours")
 
       return true
     else
