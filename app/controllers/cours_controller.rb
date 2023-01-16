@@ -582,7 +582,7 @@ class CoursController < ApplicationController
             if params[:from] == 'occupation'
               redirect_to occupation_salles_path, notice: "Cours ##{@cour.id} ajouté avec succès."
             else
-              redirect_to cours_url, notice: 'Cours modifié avec succès.'
+              redirect_to cours_path, notice: 'Cours modifié avec succès.'
             end
           end
         end
