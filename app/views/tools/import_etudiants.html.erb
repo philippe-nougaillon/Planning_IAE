@@ -5,7 +5,7 @@
 
 <%= form_tag({action: "import_etudiants_do", method: :post}, multipart: true) do %>
   <div>
-    <h3>Cette fonction permet l'importation d'une liste d'étudiants à partir d'une feuille Excel</h3>
+    <h3>Cette fonction permet l'importation / màj d'une liste d'étudiants à partir d'une feuille Excel(.xls)</h3>
     <br>
     <p>Les champs attendus sont :</p>
     <%= Etudiant.xls_headers.join(', ') %>
@@ -21,7 +21,7 @@
       <%= label_tag "Formation" %>    
       <%= select_tag :formation_id, 
             options_from_collection_for_select(Formation.all, :id, :nom, params[:formation_id]), 
-              class:"form-control select2", include_blank: true %>
+              class:"form-control select2", include_blank: true, required: true %>
       <br>
       <div class="field">
         <%= label :filename, "Fichier source" %>

@@ -9,6 +9,7 @@ class Etudiant < ApplicationRecord
   validates :nom, :prénom, :civilité, presence: true
   # validates :nom, uniqueness: {scope: [:formation_id]}
   validates :email, presence: true
+  validates :email, uniqueness: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP } 
   
   belongs_to :formation
@@ -22,16 +23,17 @@ class Etudiant < ApplicationRecord
   end
 
   def self.xls_headers
-    [ 'id','Statut',
-      'Civilité', 'NOM', 'NOM marital', 'Prénom', 'Date de naissance', 
-      'Lieu de naissance', 'Pays de la ville de naissance', 'Nationalité',
-      'Mail', 'Adresse', 'CP', 'Ville', 'Téléphone',
-      'Dernier établmt fréquenté', 'Dernier diplôme obtenu', 'Catégorie "Science" diplôme', 
-      'Numéro Sécurité sociale',
-      'Numéro Apogée étudiant', 'Poste occupé', 
-      'Nom Entreprise', 'Adresse entreprise', 'CP entreprise', 'Ville entreprise',
-      'Formation_ID','Formation','created_at', 'updated_at'  
-    ]
+    # [ 'id','Statut',
+    #   'Civilité', 'NOM', 'NOM marital', 'Prénom', 'Date de naissance', 
+    #   'Lieu de naissance', 'Pays de la ville de naissance', 'Nationalité',
+    #   'Mail', 'Adresse', 'CP', 'Ville', 'Téléphone',
+    #   'Dernier établmt fréquenté', 'Dernier diplôme obtenu', 'Catégorie "Science" diplôme', 
+    #   'Numéro Sécurité sociale',
+    #   'Numéro Apogée étudiant', 'Poste occupé', 
+    #   'Nom Entreprise', 'Adresse entreprise', 'CP entreprise', 'Ville entreprise',
+    #   'Formation_ID','Formation','created_at', 'updated_at'  
+    # ]
+    [ 'NOM', 'Prénom', 'Civilité', 'Mail', 'Mobile']
   end
 
 	def self.generate_xls(etudiants)

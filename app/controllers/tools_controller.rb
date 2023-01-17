@@ -398,44 +398,38 @@ class ToolsController < ApplicationController
 
         next unless row[0]
 
-        if row[headers.index 'Date de naissance']  
-          date_de_naissance = Date.parse(row[headers.index 'Date de naissance'].to_s)
-        else
-          date_de_naissance = nil
-        end
-
         etudiant = Etudiant
-                        .where("lower(nom) = ? AND lower(prénom) = ? AND date_de_naissance = ?", 
+                        .where("lower(nom) = ? AND lower(prénom) = ? AND lower(email) = ?", 
                           row[headers.index 'NOM'].try(:strip).try(:downcase), 
                           row[headers.index 'Prénom'].try(:strip).try(:downcase),
-                          date_de_naissance)
+                          row[headers.index 'Mail'].try(:strip).try(:downcase))
                         .first_or_initialize
 
         etudiant.formation_id = formation_id
         etudiant.workflow_state = workflow_state
         etudiant.civilité = row[headers.index 'Civilité'].try(:strip)
         etudiant.nom = row[headers.index 'NOM'].try(:strip).try(:upcase) 
-        etudiant.nom_marital = row[headers.index 'NOM marital'].try(:strip).try(:upcase)
+        # etudiant.nom_marital = row[headers.index 'NOM marital'].try(:strip).try(:upcase)
         etudiant.prénom = row[headers.index 'Prénom'].try(:strip)
         etudiant.email = row[headers.index 'Mail']
-        etudiant.mobile = row[headers.index 'Téléphone']
-        etudiant.date_de_naissance = date_de_naissance
-        etudiant.lieu_naissance = row[headers.index 'Lieu de naissance']
-        etudiant.pays_naissance = row[headers.index 'Pays de la ville de naissance'] 
-        etudiant.nationalité = row[headers.index 'Nationalité']
-        etudiant.adresse = row[headers.index 'Adresse']
-        etudiant.cp = row[headers.index 'CP']
-        etudiant.ville = row[headers.index 'Ville']
-        etudiant.dernier_ets = row[headers.index 'Dernier établmt fréquenté']
-        etudiant.dernier_diplôme = row[headers.index 'Dernier diplôme obtenu']
-        etudiant.cat_diplôme = row[headers.index 'Catégorie "Science" diplôme']
-        etudiant.num_sécu = row[headers.index 'Numéro Sécurité sociale']
-        etudiant.num_apogée = row[headers.index 'Numéro Apogée étudiant']
-        etudiant.poste_occupé = row[headers.index 'Poste occupé']
-        etudiant.nom_entreprise = row[headers.index 'Nom Entreprise']
-        etudiant.adresse_entreprise = row[headers.index 'Adresse entreprise']
-        etudiant.cp_entreprise = row[headers.index 'CP entreprise']
-        etudiant.ville_entreprise = row[headers.index 'Ville entreprise']
+        etudiant.mobile = row[headers.index 'Mobile']
+        # etudiant.date_de_naissance = date_de_naissance
+        # etudiant.lieu_naissance = row[headers.index 'Lieu de naissance']
+        # etudiant.pays_naissance = row[headers.index 'Pays de la ville de naissance'] 
+        # etudiant.nationalité = row[headers.index 'Nationalité']
+        # etudiant.adresse = row[headers.index 'Adresse']
+        # etudiant.cp = row[headers.index 'CP']
+        # etudiant.ville = row[headers.index 'Ville']
+        # etudiant.dernier_ets = row[headers.index 'Dernier établmt fréquenté']
+        # etudiant.dernier_diplôme = row[headers.index 'Dernier diplôme obtenu']
+        # etudiant.cat_diplôme = row[headers.index 'Catégorie "Science" diplôme']
+        # etudiant.num_sécu = row[headers.index 'Numéro Sécurité sociale']
+        # etudiant.num_apogée = row[headers.index 'Numéro Apogée étudiant']
+        # etudiant.poste_occupé = row[headers.index 'Poste occupé']
+        # etudiant.nom_entreprise = row[headers.index 'Nom Entreprise']
+        # etudiant.adresse_entreprise = row[headers.index 'Adresse entreprise']
+        # etudiant.cp_entreprise = row[headers.index 'CP entreprise']
+        # etudiant.ville_entreprise = row[headers.index 'Ville entreprise']
  
         # MAJ existant ? si l'id est égal à 0 => c'est une création
         msg = "ETUDIANT #{etudiant.new_record? ? 'NEW' : 'UPDATE'} => id:#{etudiant.id} changes:#{etudiant.changes}"
