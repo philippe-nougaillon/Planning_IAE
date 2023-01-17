@@ -1,0 +1,39 @@
+<div class="pb-2 mt-4 mb-2">
+  <% if policy(Alert).new? %>
+    <%= link_to new_alert_path(debut: DateTime.now, fin: DateTime.now), class: 'btn text-primary float-right' do %>
+      <%= fa_icon 'plus-circle' %> Alerte
+    <% end %>
+  <% end %>
+  <h3><%= fa_icon 'exclamation' %> Liste des Alertes</h3>
+</div>
+
+<table class="table table-hover table-sm">
+  <thead>
+    <tr>
+      <th><%= sortable :debut do %>Début d'affichage<% end %></th>
+      <th><%= sortable :fin do %>Fin d'affichage<% end %></th>
+      <th><%= sortable :message %></th>
+      <th><%= sortable :etat do %>Style<% end %></th>
+      <th colspan="2"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @alerts.each do |alert| %>
+      <tr>
+        <td><%= l alert.debut %></td>
+        <td><%= l alert.fin %></td>
+        <td><%= alert.message %></td>
+        <td><%= alert.etat.humanize %></td>
+        <td><%= link_to 'Voir', alert %></td>
+        <td><%= link_to '[X]', alert, method: :delete, data: { confirm: 'Certain.e ?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<% if @alert %>
+  <footer class="fixed-bottom bg-<%= @alert.etat == "warning" ? 'warning text-black' : @alert.etat + ' text-white' %> text-lg mb-0 p-2">
+    <h3 class="mb-0"><%= truncate(@alert.message, length: 110) %></h3>
+  </footer>
+<% end %>

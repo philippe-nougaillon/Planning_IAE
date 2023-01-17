@@ -66,7 +66,7 @@ class InvitsController < ApplicationController
 
     respond_to do |format|
       if @invit.save
-        format.html { redirect_to @invit, notice: "Invit was successfully created." }
+        format.html { redirect_to @invit, notice: "L'invitation a bien été créée." }
         format.json { render :show, status: :created, location: @invit }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -79,7 +79,7 @@ class InvitsController < ApplicationController
   def update
     respond_to do |format|
       if @invit.update(invit_params)
-        format.html { redirect_to @invit, notice: "Invit was successfully updated." }
+        format.html { redirect_to @invit, notice: "L'invitation a bien été modifiée." }
         format.json { render :show, status: :ok, location: @invit }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -92,7 +92,7 @@ class InvitsController < ApplicationController
   def destroy
     #@invit.destroy
     respond_to do |format|
-      format.html { redirect_to invits_url, notice: "Invit was successfully destroyed." }
+      format.html { redirect_to invits_url, notice: "L'invitation a bien été supprimée." }
       format.json { head :no_content }
     end
   end

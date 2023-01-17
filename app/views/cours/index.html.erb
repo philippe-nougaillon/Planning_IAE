@@ -1,3 +1,15 @@
+<% if @alert && !user_signed_in? %>
+  <%= content_tag :div, 
+      class: "alert mt-3 alert-#{@alert.etat} alert-dismissable",
+      role: "alert" do %>
+    <button type="button" class="close" data-dismiss="alert" aria-label="bouton du menu">
+      <span aria-hidden="true">&times;</span>
+      <span class="sr-only">Close</span>
+    </button>
+    <%= @alert.message %>
+  <% end %>
+<% end %>
+
 <div class="pb-2 mt-4 mb-2 border-bottom">
   <% if policy(Cour).new? %>
 
