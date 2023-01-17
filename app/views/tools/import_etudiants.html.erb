@@ -40,6 +40,11 @@
     <i>Choisissez 'Non' pour tester votre import car <b>il est irréversible !</b></i><br />
   </div>
   <br>
+
+  <div class="field">
+    <%= check_box_tag :notify %> <b>Créer un compte d'accès et en informer les étudiants ?</b>
+  </div>
+  <br>
   
   <div class="actions">
     <%= submit_tag "Lancer l'import", class: "btn btn-success" %>

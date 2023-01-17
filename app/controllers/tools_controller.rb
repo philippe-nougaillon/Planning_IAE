@@ -435,7 +435,19 @@ class ToolsController < ApplicationController
         msg = "ETUDIANT #{etudiant.new_record? ? 'NEW' : 'UPDATE'} => id:#{etudiant.id} changes:#{etudiant.changes}"
 
         if etudiant.valid? 
-          etudiant.save if params[:save] == 'true'
+          if etudiant.new_record? && params[:notify] && params[:save]
+            etudiant.save
+            # Création du compte d'accès (user) et envoi du mail de bienvenue
+            user = User.new(nom: etudiant.nom, prénom: etudiant.prénom, email: etudiant.email, mobile: etudiant.mobile, password: SecureRandom.hex(10))
+            if user.valid?
+              user.save
+              mailer_response = EtudiantMailer.welcome_student(user).deliver_now
+              MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: etudiant.email, subject: "Nouvel accès étudiant")
+            end
+          else
+            # Mise à jour des étudiants existants
+            etudiant.save if params[:save] == 'true'
+          end
         else
           msg << " || ERREURS: " + etudiant.errors.messages.map{|m| "#{m.first} => #{m.last}"}.join(',')
         end

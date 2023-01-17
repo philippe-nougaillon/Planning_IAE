@@ -13,4 +13,15 @@ class EtudiantMailer < ApplicationMailer
         end
     end
 
+    def welcome_student(user)
+        @user = user
+        mail(
+            to: @user.email,
+            subject:"[PLANNING IAE Paris] Bienvenue !").tap do |message|
+                message.mailgun_options = {
+                    "tag" => [@user.nom, @user.prénom, "nouvel accès étudiant"]
+                }
+        end
+    end
+
 end
