@@ -603,7 +603,7 @@ class CoursController < ApplicationController
 
     @cour.destroy
     respond_to do |format|
-      format.html { redirect_to cours_url, notice: 'Cours supprimé.' }
+      format.html { redirect_to cours_path, notice: 'Cours supprimé.' }
       format.json { head :no_content }
     end
   end

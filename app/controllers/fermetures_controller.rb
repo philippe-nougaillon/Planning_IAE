@@ -86,7 +86,7 @@ class FermeturesController < ApplicationController
           end
         end
     
-        format.html { redirect_to fermetures_url, notice: 'Jour(s) de fermeture ajouté(s)' }
+        format.html { redirect_to fermetures_path, notice: 'Jour(s) de fermeture ajouté(s)' }
         format.json { render :show, status: :created, location: @fermeture }
       else
         format.html { render :new }
@@ -100,7 +100,7 @@ class FermeturesController < ApplicationController
   def update
     respond_to do |format|
       if @fermeture.update(fermeture_params)
-        format.html { redirect_to fermetures_url, notice: 'Jour de fermeture modifié' }
+        format.html { redirect_to fermetures_path, notice: 'Jour de fermeture modifié' }
         format.json { render :show, status: :ok, location: @fermeture }
       else
         format.html { render :edit }
@@ -115,7 +115,7 @@ class FermeturesController < ApplicationController
     date_debut = @fermeture.date
     @fermeture.destroy
     respond_to do |format|
-      format.html { redirect_to fermetures_url(date_debut: date_debut, date_fin: date_debut + 1.year, paginate: 'all'), notice: 'Jour de fermeture supprimé' }
+      format.html { redirect_to fermetures_path(date_debut: date_debut, date_fin: date_debut + 1.year, paginate: 'all'), notice: 'Jour de fermeture supprimé' }
       format.json { head :no_content }
     end
   end
