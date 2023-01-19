@@ -91,7 +91,7 @@ class UsersController < ApplicationController
   def destroy
     @user.discard
     respond_to do |format|
-      format.html { redirect_to users_url, notice: 'Utilisateur désactivé !' }
+      format.html { redirect_to users_path, notice: 'Utilisateur désactivé !' }
       format.json { head :no_content }
     end
   end

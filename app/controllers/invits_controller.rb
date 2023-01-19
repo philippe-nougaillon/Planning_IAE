@@ -92,7 +92,7 @@ class InvitsController < ApplicationController
   def destroy
     #@invit.destroy
     respond_to do |format|
-      format.html { redirect_to invits_url, notice: "L'invitation a bien été supprimée." }
+      format.html { redirect_to invits_path, notice: "L'invitation a bien été supprimée." }
       format.json { head :no_content }
     end
   end
@@ -127,7 +127,7 @@ class InvitsController < ApplicationController
     end
     flash[:notice] = "#{count} invitation.s modifiée.s"  
 
-    redirect_to invits_url
+    redirect_to invits_path
   end
 
 

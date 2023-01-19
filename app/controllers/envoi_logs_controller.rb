@@ -37,12 +37,12 @@ class EnvoiLogsController < ApplicationController
 
   def suspendre
     @envoi_log.suspendre!
-    redirect_to envoi_logs_url, notice: "Job suspendu..."
+    redirect_to envoi_logs_path, notice: "Job suspendu..."
   end
 
   def activer
     @envoi_log.activer!
-    redirect_to envoi_logs_url, notice: "Job prêt !"
+    redirect_to envoi_logs_path, notice: "Job prêt !"
   end
 
   # GET /envoi_logs/new
@@ -89,7 +89,7 @@ class EnvoiLogsController < ApplicationController
   def destroy
     @envoi_log.destroy
     respond_to do |format|
-      format.html { redirect_to envoi_logs_url, notice: 'Planification supprimée.' }
+      format.html { redirect_to envoi_logs_path, notice: 'Planification supprimée.' }
       format.json { head :no_content }
     end
   end

@@ -58,7 +58,7 @@ class AlertsController < ApplicationController
   def destroy
     @alert.destroy
     respond_to do |format|
-      format.html { redirect_to alerts_url, notice: "L'alerte a bien été supprimée." }
+      format.html { redirect_to alerts_path, notice: "L'alerte a bien été supprimée." }
       format.json { head :no_content }
     end
   end
