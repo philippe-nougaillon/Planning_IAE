@@ -5,7 +5,7 @@ class AlertsController < ApplicationController
   # GET /alerts or /alerts.json
   def index
     @alerts = Alert.all
-    @alert = Alert.where("NOW() BETWEEN alerts.debut AND alerts.fin").first
+    @alert = Alert.visibles.first
 
     @alerts = @alerts.reorder('alerts.'+ sort_column + ' ' + sort_direction)
   end

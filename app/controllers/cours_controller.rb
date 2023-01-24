@@ -69,7 +69,7 @@ class CoursController < ApplicationController
   
     case params[:view]
       when 'list'
-        @alert = Alert.where("NOW() BETWEEN alerts.debut AND alerts.fin").first
+        @alert = Alert.visibles.first
         unless params[:filter] == 'all'
           unless params[:semaine].blank?
             @cours = @cours.where("cours.debut BETWEEN DATE(?) AND DATE(?)", @date, @date + 7.day)
@@ -244,7 +244,7 @@ class CoursController < ApplicationController
       @cours_ids = @tous_les_cours.slice(per_page * @current_page_slide, per_page)
       @les_cours_à_afficher = Cour.includes(:formation, :intervenant, :salle).where(id: @cours_ids).reorder(:debut, :fin)
 
-      @alert = Alert.where("NOW() BETWEEN alerts.debut AND alerts.fin").first
+      @alert = Alert.visibles.first
     else
       # Affiche un papier peint si pas de cours à afficher
       require 'net/http'

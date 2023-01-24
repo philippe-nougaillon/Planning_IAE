@@ -1,17 +1,21 @@
 <div class="pb-2 mt-4 mb-2">
   <% if policy(Alert).new? %>
-    <%= link_to new_alert_path(debut: DateTime.now, fin: DateTime.now), class: 'btn text-primary float-right' do %>
+    <%= link_to new_alert_path(debut: Time.now, fin: Time.now), class: 'btn text-primary float-right' do %>
       <%= fa_icon 'plus-circle' %> Alerte
     <% end %>
   <% end %>
   <h3><%= fa_icon 'exclamation' %> Liste des Alertes</h3>
 </div>
 
+<h5>Pour afficher un message sur le planning (écran + mobile + PC), il faut planifier sa visibilité en entrant une date de début et de fin d'affichage.</h5>
+<p class="text-danger my-4 font-weight-bold">ATTENTION ! Pour le serveur, il est actuellement <%= Time.now.utc %></p>
+
 <table class="table table-hover table-sm">
   <thead>
     <tr>
       <th><%= sortable :debut do %>Début d'affichage<% end %></th>
       <th><%= sortable :fin do %>Fin d'affichage<% end %></th>
+      <th>Visible?</th>
       <th><%= sortable :message %></th>
       <th><%= sortable :etat do %>Style<% end %></th>
       <th colspan="2"></th>
@@ -21,8 +25,9 @@
   <tbody>
     <% @alerts.each do |alert| %>
       <tr>
-        <td><%= l alert.debut %></td>
-        <td><%= l alert.fin %></td>
+        <td><%= l(alert.debut, format: :long) %></td>
+        <td><%= l(alert.fin, format: :long) %></td>
+        <td><%= 'OUI' if alert.visible? %></td>
         <td><%= alert.message %></td>
         <td><%= alert.etat.humanize %></td>
         <td><%= link_to 'Voir', alert %></td>
