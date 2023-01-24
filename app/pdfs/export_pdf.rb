@@ -373,7 +373,7 @@ class ExportPdf
             text "Signature :", style: :bold
             
 
-            data = [ ['NOM Prénom', 'SIGNATURE', 'NOM Prénom', 'SIGNATURE'] ]
+            data = [ ['<i>NOM Prénom</i>', '<i>SIGNATURE</i>', '<i>NOM Prénom</i>', '<i>SIGNATURE</i>'] ]
 
             array = cour.formation.etudiants.order(:nom, :prénom).pluck(:id)
             (0..array.length - 1).step(2).each do |index|
