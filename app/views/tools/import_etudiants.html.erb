@@ -7,11 +7,12 @@
   <div>
     <h3>Cette fonction permet l'importation / màj d'une liste d'étudiants à partir d'une feuille Excel(.xls)</h3>
     <br>
-    <p>Les champs attendus sont :</p>
-    <%= Etudiant.xls_headers.join(', ') %>
-    <br><br>
+    <p>
+      Les champs attendus sont :
+      <%= Etudiant.xls_headers.join(', ') %>
+    </p>
     <p>Les champs obligatoires sont :
-      <strong>NOM, Prénom, Civilité, Mail</strong>
+      <strong>Civilité, NOM, Prénom, Mail</strong>
     </p>
   </div>
   <br>
