@@ -317,6 +317,13 @@ class CoursController < ApplicationController
           c.save
           ## envoyer de mail par défaut (after_validation:true) sauf si envoyer email pas coché
           #c.save(validate:params[:email].present?)
+
+          # notifier les étudiants des changements ?
+          if params[:notifier]
+            c.formation.etudiants.each do | etudiant |
+              NotifierEtudiantsJob.perform_later(etudiant, c, current_user.id)
+            end
+          end
         end
 
       when "Changer de date"

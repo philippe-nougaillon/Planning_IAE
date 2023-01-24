@@ -6,7 +6,7 @@ class EtudiantMailer < ApplicationMailer
         @cours = le_cours
         mail(
             to: @etudiant.email,
-            subject:"[PLANNING IAE Paris] Votre cours du #{le_cours.debut.to_date} a changé !").tap do |message|
+            subject:"[PLANNING IAE Paris] Votre cours du #{l(le_cours.debut.to_date, format: :long)} a changé !").tap do |message|
                 message.mailgun_options = {
                     "tag" => [@etudiant.nom, @etudiant.prénom, "cours modifié"]
                 }
