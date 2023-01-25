@@ -28,3 +28,35 @@ Avec toutes nos excuses pour ce désagrément.
 Bien cordialement,
 <br>
 IAE Paris.
+
+<hr style="margin: 10px 0;">
+
+Dear <%= @etudiant.prénom.humanize %>,
+<br><br>
+
+Your session <b><%= "#{@cours.nom_ou_ue} - #{@cours.formation.nom}" %></b>
+<br>
+initially planned on <b><%= @cours.debut.to_date %> at <%= @cours.debut.strftime("%H:%M") %></b>
+<% if @cours.etat == "annulé" %>
+  has just been <b>CANCELLED</b>.
+<% else %>
+  has just been updated:
+  <ul>
+    <li>
+      <%= sanitize ApplicationController.helpers.prettify(@cours.audits.last).join('</li><li>') %>
+    </li>
+  </ul>
+
+<% end %>
+
+<br><br>
+<%= link_to "Your session in the schedule", root_url(ids: @cours.id) %>
+<br><br>
+
+Your program administrator is doing his best to reschedule.
+<br>
+With our deepest apologies,
+<br><br>
+Best,
+<br>
+IAE Paris
