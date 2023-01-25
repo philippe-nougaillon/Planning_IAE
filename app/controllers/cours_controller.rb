@@ -69,6 +69,7 @@ class CoursController < ApplicationController
   
     case params[:view]
       when 'list'
+        @alert = Alert.visibles.first
         unless params[:filter] == 'all'
           unless params[:semaine].blank?
             @cours = @cours.where("cours.debut BETWEEN DATE(?) AND DATE(?)", @date, @date + 7.day)
@@ -243,6 +244,7 @@ class CoursController < ApplicationController
       @cours_ids = @tous_les_cours.slice(per_page * @current_page_slide, per_page)
       @les_cours_à_afficher = Cour.includes(:formation, :intervenant, :salle).where(id: @cours_ids).reorder(:debut, :fin)
 
+      @alert = Alert.visibles.first
     else
       # Affiche un papier peint si pas de cours à afficher
       require 'net/http'
@@ -315,6 +317,13 @@ class CoursController < ApplicationController
           c.save
           ## envoyer de mail par défaut (after_validation:true) sauf si envoyer email pas coché
           #c.save(validate:params[:email].present?)
+
+          # notifier les étudiants des changements ?
+          if params[:notifier]
+            c.formation.etudiants.each do | etudiant |
+              NotifierEtudiantsJob.perform_later(etudiant, c, current_user.id)
+            end
+          end
         end
 
       when "Changer de date"
@@ -364,7 +373,7 @@ class CoursController < ApplicationController
                 invits_créées += 1
               end
               mailer_response = InvitMailer.with(invit: Invit.first).envoyer_invitation.deliver_now
-              MailLog.create(message_id:mailer_response.message_id, to:Invit.first.intervenant.email, subject: "Invitation")
+              MailLog.create(user_id: current_user.id, message_id:mailer_response.message_id, to:Invit.first.intervenant.email, subject: "Invitation")
             end
           end
         end  
@@ -488,14 +497,11 @@ class CoursController < ApplicationController
             type: 'application/pdf',
             disposition: 'inline'
         when "Feuille émargement PDF"
-          filename = "Feuille_émargement_#{Date.today.to_s}"
+          filename = "Feuille_émargement_#{ Date.today }.pdf"
           pdf = ExportPdf.new
           pdf.generate_feuille_emargement(@cours)
-          
-          send_data pdf.render,
-          filename: filename.concat('.pdf'),
-            type: 'application/pdf',
-            disposition: 'inline'
+
+          send_data pdf.render, filename: filename, type: 'application/pdf'
         end
       end
 
@@ -574,7 +580,7 @@ class CoursController < ApplicationController
           # notifier les étudiants des changements ?
           if params[:notifier]
             @cour.formation.etudiants.each do | etudiant |
-              NotifierEtudiantsJob.perform_later(etudiant, @cour)
+              NotifierEtudiantsJob.perform_later(etudiant, @cour, current_user.id)
             end
           end
     
@@ -585,7 +591,7 @@ class CoursController < ApplicationController
             if params[:from] == 'occupation'
               redirect_to occupation_salles_path, notice: "Cours ##{@cour.id} ajouté avec succès."
             else
-              redirect_to cours_url, notice: 'Cours modifié avec succès.'
+              redirect_to cours_path, notice: 'Cours modifié avec succès.'
             end
           end
         end
@@ -604,7 +610,7 @@ class CoursController < ApplicationController
 
     @cour.destroy
     respond_to do |format|
-      format.html { redirect_to cours_url, notice: 'Cours supprimé.' }
+      format.html { redirect_to cours_path, notice: 'Cours supprimé.' }
       format.json { head :no_content }
     end
   end

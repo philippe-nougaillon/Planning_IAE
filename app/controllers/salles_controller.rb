@@ -147,7 +147,7 @@ class SallesController < ApplicationController
   def destroy
     @salle.destroy
     respond_to do |format|
-      format.html { redirect_to salles_url, notice: 'Salle supprimé.' }
+      format.html { redirect_to salles_path, notice: 'Salle supprimé.' }
       format.json { head :no_content }
     end
   end

@@ -1,0 +1,52 @@
+<div class="pb-2 mt-4 mb-2">
+  <% if policy(Alert).new? %>
+    <%= link_to new_alert_path(debut: Time.now, fin: Time.now), class: 'btn text-primary float-right' do %>
+      <%= fa_icon 'plus-circle' %> Alerte
+    <% end %>
+  <% end %>
+  <h3><%= fa_icon 'exclamation' %> Liste des Alertes</h3>
+</div>
+
+<h5 class="mb-4">
+  Pour afficher un message sur le planning (écran / mobile / PC), il faut planifier sa visibilité en entrant une date et heure de début et de fin d'affichage.
+  <span class="text-warning font-weight-light">Attention, sur le serveur il est actuellement <%= l(Time.now.utc, format: "%Hh%M") %></span>
+</h5>
+
+<table class="table table-bordered table-striped table-hover table-sm">
+  <thead>
+    <tr>
+      <th><%= sortable :debut do %>Début d'affichage<% end %></th>
+      <th><%= sortable :fin do %>Fin d'affichage<% end %></th>
+      <th>Visible?</th>
+      <th><%= sortable :message do %>Message<% end %></th>
+      <th><%= sortable :etat do %>Style<% end %></th>
+      <th colspan="2"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @alerts.each do |alert| %>
+      <tr>
+        <td><%= l(alert.debut, format: :short) %></td>
+        <td><%= l(alert.fin, format: :short) %></td>
+        <td><%= 'OUI' if alert.visible? %></td>
+        <td><%= alert.message %></td>
+        <td><%= alert.etat.humanize %></td>
+        <td><%= link_to 'Voir', alert %></td>
+        <td><%= link_to '[X]', alert, method: :delete, data: { confirm: 'Certain.e ?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+  <tfoot>
+    <th colspan=7></th>
+  </tfoot>
+</table>
+
+<% if @alert %>
+  <footer class="fixed-bottom">
+    <h5>Aperçu de l'alerte visible :</h5>
+    <div class="bg-<%= @alert.etat == "warning" ? 'warning text-black' : @alert.etat + ' text-white' %> text-lg mb-0 p-2">
+      <h3 class="mb-0"><%= truncate(@alert.message, length: 110) %></h3>
+    </div>
+  </footer>
+<% end %>

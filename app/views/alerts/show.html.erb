@@ -1,0 +1,27 @@
+<p>
+  <strong>Début d'affichage :</strong>
+  <%= l @alert.debut %>
+</p>
+
+<p>
+  <strong>Fin d'affichage :</strong>
+  <%= l @alert.fin %>
+</p>
+
+<p>
+  <strong>Visible ? :</strong>
+  <%= 'OUI' if @alert.visible? %>
+</p>
+
+<p>
+  <strong>Message :</strong>
+  <%= @alert.message %>
+</p>
+
+<p>
+  <strong>Style :</strong>
+  <%= @alert.etat.humanize %>
+</p>
+
+<%= link_to 'Modifier', edit_alert_path(@alert) %> |
+<%= link_to 'Retour', alerts_path %>

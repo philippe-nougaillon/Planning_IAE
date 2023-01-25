@@ -21,7 +21,7 @@ class DocumentsController < ApplicationController
         @dossier= @document.dossier
         @document.destroy
         respond_to do |format|
-            format.html { redirect_to dossier_url(@dossier), notice: 'Document supprimé avec succès' }
+            format.html { redirect_to dossier_path(@dossier), notice: 'Document supprimé avec succès' }
             format.json { head :no_content }
         end
     end

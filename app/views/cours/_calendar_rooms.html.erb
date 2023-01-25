@@ -1,6 +1,6 @@
 <%= calendar partial: 'simple_calendar/week_rooms_calendar', 
               start_date_param: :calendar_rooms_starts_at,
-              events: @cours.where(salle_id: nil), 
+              events: @cours.planifié.where(salle_id: nil), 
               salle_id: 0, 
               number_of_days: 6 do |date, meetings| %>
 

@@ -1,9 +1,9 @@
 Rails.application.routes.draw do
-
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
 
-  resources :ouvertures
-  devise_for :users
+  devise_for :users, controllers: {
+    registrations: 'users/registrations'
+  }
 
   resources :invits, only: [:index, :show] do
     member do
@@ -150,6 +150,9 @@ Rails.application.routes.draw do
     end 
 
   end 
+
+  resources :alerts
+  resources :ouvertures
 
   root 'cours#index'
 

@@ -5,13 +5,14 @@
 
 <%= form_tag({action: "import_etudiants_do", method: :post}, multipart: true) do %>
   <div>
-    <h3>Cette fonction permet l'importation d'une liste d'étudiants à partir d'une feuille Excel</h3>
+    <h3>Cette fonction permet l'importation / màj d'une liste d'étudiants à partir d'une feuille Excel(.xls)</h3>
     <br>
-    <p>Les champs attendus sont :</p>
-    <%= Etudiant.xls_headers.join(', ') %>
-    <br><br>
+    <p>
+      Les champs attendus sont :
+      <%= Etudiant.xls_headers.join(', ') %>
+    </p>
     <p>Les champs obligatoires sont :
-      <strong>NOM, Prénom, Civilité, Mail</strong>
+      <strong>Civilité, NOM, Prénom, Mail</strong>
     </p>
   </div>
   <br>
@@ -21,7 +22,7 @@
       <%= label_tag "Formation" %>    
       <%= select_tag :formation_id, 
             options_from_collection_for_select(Formation.all, :id, :nom, params[:formation_id]), 
-              class:"form-control select2", include_blank: true %>
+              class:"form-control select2", include_blank: true, required: true %>
       <br>
       <div class="field">
         <%= label :filename, "Fichier source" %>
@@ -38,6 +39,11 @@
     <%= label :save, "Non", :value => "false" %>
     <%= radio_button_tag :save, false, :checked => true %>
     <i>Choisissez 'Non' pour tester votre import car <b>il est irréversible !</b></i><br />
+  </div>
+  <br>
+
+  <div class="field">
+    <%= check_box_tag :notify %> <b>Créer un compte d'accès et en informer les étudiants ?</b>
   </div>
   <br>
   

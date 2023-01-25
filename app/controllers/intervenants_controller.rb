@@ -119,7 +119,7 @@ class IntervenantsController < ApplicationController
   def destroy
     @intervenant.destroy
     respond_to do |format|
-      format.html { redirect_to intervenants_url, notice: 'Intervenant supprimé.' }
+      format.html { redirect_to intervenants_path, notice: 'Intervenant supprimé.' }
       format.json { head :no_content }
     end
   end

@@ -73,8 +73,8 @@
             <% if [1,6,41].include?(current_user.id) %>
               <li class="nav-item">
                 <%= link_to tools_audit_cours_path, class: 'nav-link text-dark' do %>
-                  <%= fa_icon 'history' %>
-                  Audit
+                  <%= fa_icon 'calendar-check' %>
+                  À booker
                   <% aplanifier = CoursNonPlanifie.count %>
                   <% if aplanifier > 0 %>
                     <span class="badge badge-danger"><%= aplanifier %></span>

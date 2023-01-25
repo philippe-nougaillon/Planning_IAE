@@ -52,7 +52,7 @@ class OuverturesController < ApplicationController
   def destroy
     @ouverture.destroy
     respond_to do |format|
-      format.html { redirect_to ouvertures_url, notice: "L'ouverture supprimée avec succès." }
+      format.html { redirect_to ouvertures_path, notice: "L'ouverture supprimée avec succès." }
       format.json { head :no_content }
     end
   end

@@ -67,9 +67,14 @@
     <% end %>
 
   <% elsif params[:action_name] == "Changer d'état" %>
-    <div class="col-sm-2">
-      <%= label_tag "Nouvel état" %>    
-      <%= select_tag :etat, options_for_select(Cour.etats, params[:etat]), class:"form-control" %>
+    <div class="d-flex align-items-end mb-4" style="gap: 1rem;">
+      <div>
+        <%= label_tag "Nouvel état" %>    
+        <%= select_tag :etat, options_for_select(Cour.etats, params[:etat]), class:"form-control" %>
+      </div>
+      <div>
+        <%= check_box_tag :notifier %> Notifier les étudiants ?
+      </div>
     </div>
 
   <% elsif params[:action_name] == "Changer de date" %>

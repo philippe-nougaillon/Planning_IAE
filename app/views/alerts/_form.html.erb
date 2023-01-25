@@ -1,0 +1,41 @@
+<%= bootstrap_form_with(model: alert) do |form| %>
+  <% if alert.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(alert.errors.count, "error") %> empêche cette alerte d'être enregistré :</h2>
+
+      <ul>
+        <% alert.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.text_field :debut, 
+                            value: @alert.debut.strftime("%Y-%m-%dT%H:%M"), 
+                            type: "datetime-local", 
+                            label: "Début d'affichage",
+                            required: true %>
+  </div>
+
+  <div class="field">
+    <%= form.text_field :fin, 
+                            value: @alert.fin.strftime("%Y-%m-%dT%H:%M"), 
+                            type: "datetime-local", 
+                            label: "Fin d'affichage",
+                            required: true %>
+  </div>
+
+  <div class="field">
+    <%= form.text_field :message, required: true %>
+  </div>
+
+  <div class="field">
+    <%= form.select(:etat, Alert.etats.keys.to_a, label: "Style") %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

@@ -117,7 +117,7 @@ class FormationsController < ApplicationController
   def destroy
     @formation.destroy
     respond_to do |format|
-      format.html { redirect_to formations_url, notice: 'Formation supprimée.' }
+      format.html { redirect_to formations_path, notice: 'Formation supprimée.' }
       format.json { head :no_content }
     end
   end

@@ -12,15 +12,22 @@ class ApplicationController < ActionController::Base
   before_action :detect_device_format
   before_action :set_layout_variables
   before_action :prepare_exception_notifier
+  before_action :configure_permitted_parameters, if: :devise_controller?
 
   helper_method :sort_column, :sort_direction
+
+  protected
+
+    def configure_permitted_parameters
+      devise_parameter_sanitizer.permit(:sign_up) { |u| u.permit(:nom, :prénom, :email, :password, :password_confirmation)}
+    end
 
   private
     def set_layout_variables
       @ctrl = params[:controller]
       @action = params[:action]
       @sitename ||= request.subdomains.any? ? request.subdomains(0).first.upcase : 'IAE-Planning DEV'
-      @sitename.concat(' v4.10')
+      @sitename.concat(' v4.12')
 
       if current_user
         @cours_params = {}

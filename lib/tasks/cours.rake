@@ -49,6 +49,7 @@ namespace :cours do
       cours = Cour.where("debut BETWEEN (?) AND (?)", start_day, end_day)
                   .where(etat: Cour.etats.values_at(:planifié, :confirmé))
                   .where("intervenant_id = ? OR intervenant_binome_id = ?", intervenant.id, intervenant.id)
+                  .order(:debut)
 
       if envoi_specs.cible == 'Formation'
         cours = cours.where(formation_id: envoi_specs.cible_id) 
@@ -97,7 +98,7 @@ namespace :cours do
       mailer_response = IntervenantMailer
                                         .notifier_cours(debut, fin, intervenant, cours, gestionnaires, envoi_log_id)
                                         .deliver_now
-      MailLog.create(message_id: mailer_response.message_id, to: intervenant.email, subject: "Rappel des cours")
+      MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: intervenant.email, subject: "Rappel des cours")
 
       return true
     else

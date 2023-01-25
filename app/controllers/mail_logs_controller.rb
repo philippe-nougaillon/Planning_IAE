@@ -6,7 +6,7 @@ class MailLogsController < ApplicationController
   def index
     mg_client = Mailgun::Client.new ENV["MAILGUN_API_KEY"], 'api.eu.mailgun.net'
     domain = ENV["MAILGUN_DOMAIN"]
-    @result = mg_client.get("#{domain}/events", {:event => 'failed'}).to_h
+    @results = mg_client.get("#{domain}/events", {:event => 'failed'}).to_h
 
     @mail_logs = MailLog.all
 
