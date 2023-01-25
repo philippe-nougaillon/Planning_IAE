@@ -14,6 +14,8 @@ class Etudiant < ApplicationRecord
   
   belongs_to :formation
 
+  before_destroy :delete_user
+
   workflow do
     state :prospect
     state :candidat
@@ -88,6 +90,12 @@ class Etudiant < ApplicationRecord
 		end
 	
 		return book
+  end
+
+  def delete_user
+    if u = User.find_by(email: self.email)
+      u.destroy
+    end
   end
   
 end
