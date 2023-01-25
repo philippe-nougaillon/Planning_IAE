@@ -1,16 +1,12 @@
 <tr>
     <td><b><%= link_to etudiant.nom, etudiant %></b></td>
     <td><%= etudiant.prénom %></td>
-    <td><%= l(etudiant.date_de_naissance) if etudiant.date_de_naissance %></td>
-    <td><%= etudiant.workflow_state %></td>
+    <td><%= etudiant.civilité %></td>
     <td>
         <% if etudiant.formation_id %>
             <% formation = Formation.unscoped.find(etudiant.formation_id) %>
             <%= link_to formation.nom, formation %>
         <% end %>
-    </td>
-    <td>
-        <%= etudiant.nom_entreprise %>
     </td>
     <td>
         <%= time_ago_in_words etudiant.updated_at %>

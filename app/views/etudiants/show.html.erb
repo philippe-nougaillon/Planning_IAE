@@ -1,4 +1,4 @@
-<div class="pb-2 mt-4 mb-2 border-top">
+<div class="pb-2 mt-4 mb-3 border-top">
   <div class="btn-group float-right">
     <%= link_to edit_etudiant_path(@etudiant), class: 'btn btn-sm btn-outline-primary' do %>
       <%= fa_icon 'edit' %> Modifier
@@ -20,138 +20,47 @@
       <br>
       <%= fa_icon 'graduation-cap 3x' %>
     </h2>
-  </div>  
+  </div>
 
   <div class="col-sm-6">
-    <h2>
+    <h3>
+      <small class="text-muted">Civilité</small><br>
+      <%= @etudiant.civilité %>
+    </h3>
+    <h1>
       <small class="text-muted">Nom</small><br>
       <%= @etudiant.nom %>
-    </h2>
+    </h1>
     <h3>
       <small class="text-muted">Prénom</small><br>
       <%= @etudiant.prénom %>
     </h3>
+    <h3>
+      <small class="text-muted">Email</small><br>
+      <%= @etudiant.email %>
+    </h3>
 
     <h3>
+      <small class="text-muted">Mobile</small><br>
+      <%= @etudiant.mobile %>
+    </h3>
+
+  </div>
+
+  <div class="col-sm-4">
+        <h3>
       <small class="text-muted">Formation</small><br>
       <% if @etudiant.formation_id %>
           <% formation = Formation.unscoped.find(@etudiant.formation_id) %>
           <%= link_to formation.nom, formation %>
       <% end %>
     </h3>
-
-  </div>
-
-  <div class="col-sm-4">
     <h3>
-      <small class="text-muted">Nom Marital</small><br>
-      <%= @etudiant.nom_marital %>
+      <small class="text-muted">Statut</small><br>
+      <%= @etudiant.workflow_state %>
     </h3>
     <br> 
-    <h3>
-      <small class="text-muted">Civilité</small><br>
-      <%= @etudiant.civilité %>
-    </h3>
-    <h3>
-      <small class="text-muted">Date de Naissance</small><br>
-      <%= l(@etudiant.date_de_naissance) if @etudiant.date_de_naissance %>
-    </h3>
   </div>
-</div>
-
-<div class="row">
-
-  <div class="col">
-    <h3>
-      <small class="text-muted">Email</small><br>
-      <%= @etudiant.email %>
-    </h3>
-  </div>
-
-  <div class="col">
-    <h3>
-      <small class="text-muted">Mobile</small><br>
-      <%= @etudiant.mobile %>
-    </h3>
-  </div>
-</div>
-
-<br>
-
-<div class="card">
-
-  <div class="card-header">
-    Informations complémentaires
-  </div>
-
-  <div class="card-body">
-
-    <div class="row">
-
-      <div class="col">
-        <dl class="dl-horizontal">
-          <dt>Lieu de Naissance:</dt>
-          <dd><%= @etudiant.lieu_naissance %></dd>
-
-          <dt>Pays de Naissance:</dt>
-          <dd><%= @etudiant.pays_naissance %></dd>
-
-          <dt>Nationalité:</dt>
-          <dd><%= @etudiant.nationalité %></dd>
-
-          <dt>Adresse:</dt>
-          <dd><%= @etudiant.adresse %></dd>
-
-          <dt>Code postal:</dt>
-          <dd><%= @etudiant.cp %></dd>
-
-          <dt>Ville:</dt>
-          <dd><%= @etudiant.ville %></dd>
-
-          <dt>Dernier établissement fréquenté:</dt>
-          <dd><%= @etudiant.dernier_ets %></dd>
-
-          <dt>Dernier diplôme obtenu:</dt>
-          <dd><%= @etudiant.dernier_diplôme %></dd>
-
-          <dt>Catégorie du diplôme:</dt>
-          <dd><%= @etudiant.cat_diplôme %></dd>
-
-          <dt>Numéro Sécurité Sociale:</dt>
-          <dd><%= @etudiant.num_sécu %></dd>
-        </dl>
-      </div >
-
-      <div class="col">
-        <dl class="dl-horizontal">
-
-          <dt>Statut:</dt>
-          <dd><%= @etudiant.workflow_state.try(:humanize) %></dd>
-
-          <dt>Numéro APOGEE:</dt>
-          <dd><%= @etudiant.num_apogée %></dd>
-
-          <dt>Poste Occupé:</dt>
-          <dd><%= @etudiant.poste_occupé %></dd>
-
-          <dt>Entreprise:</dt>
-          <dd><%= @etudiant.nom_entreprise %></dd>
-
-          <dt>Adresse:</dt>
-          <dd><%= @etudiant.adresse_entreprise %></dd>
-
-          <dt>CP:</dt>
-          <dd><%= @etudiant.cp_entreprise %></dd>
-
-          <dt>Ville:</dt>
-          <dd><%= @etudiant.ville_entreprise %></dd>
-        </dl>
-      </div>
-
-    </div>
-
-  </div>
-
 </div>
 
 <div id="audit" class="collapse">
@@ -162,7 +71,7 @@
   <table class="table table-bordered table-hover table-condensed">
     <thead>
       <th>Date</th>
-      <th>Utilisateur</th>            
+      <th>Utilisateur</th>
       <th>Type</th>
       <th>Record_id</th>
       <th>Action</th>

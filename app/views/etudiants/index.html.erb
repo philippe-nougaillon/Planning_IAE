@@ -12,22 +12,13 @@
       <div class="form-group">
         <div class="row">
 
-          <div class="col-sm-3">
-            <%= label_tag :nom, "Nom/Entreprise" %>    
-            <%= text_field_tag :nom, params[:nom], include_blank:true, onchange:'this.form.submit()', class: 'form-control form-control-sm' %>
-          </div>
-
-          <div class="col-sm-2">
-            <%= label_tag :workflow_state, "Statut" %>
-            <%= select_tag :workflow_state, 
-                                options_for_select(Etudiant.workflow_spec.states.keys.to_a, params[:workflow_state]), 
-                                include_blank: true,
-                                class: 'form-control form-control-sm', 
-                                onchange: 'this.form.submit()' %>
+          <div class="col-sm-4">
+            <%= label_tag :search, "Nom/Prénom/Email" %>
+            <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class: 'form-control form-control-sm' %>
           </div>
 
           <div class="col-sm-6">
-            <%= label_tag "Formation" %>    
+            <%= label_tag "Formation" %>
             <div class="input-group">
               <%= select_tag :formation_id, 
                                   options_from_collection_for_select(Formation.unscoped.all, :id, :nom, params[:formation_id]), 
@@ -53,10 +44,8 @@
       <tr>
         <th><%= sort_link 'etudiants.nom', 'Nom' %></th>
         <th>Prénom</th>
-        <th><%= sort_link 'etudiants.date_de_naissance', 'Né(e) le' %></th>
-        <th><%= sort_link 'etudiants.workflow_state', 'Statut' %></th>
+        <th><%= sort_link 'etudiants.civilité', 'Civilité' %></th>
         <th>Formation</th>
-        <th><%= sort_link 'etudiants.nom_entreprise', 'Entreprise' %></th>
         <th><%= sort_link 'etudiants.updated_at', 'MàJ il y a' %></th>
         <th colspan="2"></th>
       </tr>
