@@ -1,6 +1,10 @@
 <h1>Mail Logs</h1>
 <p>Historique des envois de mails vers MailGun, et la réponse obtenue. (Statut consultable 5 jours)</p>
 
+<% if @results && @results['items'].size.positive? %>
+  <p class="text-danger">Il y a actuellement <%= @results['items'].count %> envois en statut 'KO'</p>
+<% end %>
+
 <div class="container-fluid p-3 shadow-sm">
   <%= form_tag request.path, method: :get do %>
     <div class="form-group">
@@ -43,7 +47,7 @@
           <td><%= time_ago_in_words mail_log.created_at %></td>
           <td>
             <% if mail_log.created_at > 5.days.ago %>
-              <% if status = @result["items"].find{|item| item["message"]["headers"]["message-id"] == mail_log.message_id } %>
+              <% if status = @results["items"].find{|item| item["message"]["headers"]["message-id"] == mail_log.message_id } %>
                 <span class="text-danger">KO</span>
 
               <% else %>
