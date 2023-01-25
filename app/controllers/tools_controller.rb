@@ -1262,6 +1262,9 @@ class ToolsController < ApplicationController
         # placer le job dans la file d'attente
         EnvoyerNotificationsJob.perform_later(@envoi_log.id)
         redirect_to envoi_logs_path, notice: "Envoi ajouté à la file d'attente"
+
+      else
+        redirect_to root_path, alert: "Opération annulée"
       end
     end
   end
