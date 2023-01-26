@@ -13,12 +13,8 @@ class EtudiantsController < ApplicationController
 
     @etudiants = Etudiant.all
 
-    unless params[:nom].blank?
-      @etudiants = @etudiants.where("LOWER(nom) like :search OR LOWER(nom_entreprise) like :search", {search: "%#{params[:nom]}%".downcase})
-    end
-
-    unless params[:workflow_state].blank?
-      @etudiants = @etudiants.where("etudiants.workflow_state = ?", params[:workflow_state].to_s.downcase)
+    unless params[:search].blank?
+      @etudiants = @etudiants.where("LOWER(nom) like :search OR LOWER(prénom) like :search OR LOWER(email) like :search", {search: "%#{params[:search]}%".downcase})
     end
 
     unless params[:formation_id].blank?
@@ -40,6 +36,7 @@ class EtudiantsController < ApplicationController
   # GET /etudiants/new
   def new
     @etudiant = Etudiant.new
+    @etudiant.workflow_state = "étudiant"
   end
 
   # GET /etudiants/1/edit
@@ -53,7 +50,16 @@ class EtudiantsController < ApplicationController
 
     respond_to do |format|
       if @etudiant.save
-        format.html { redirect_to @etudiant, notice: 'Etudiant créé avec succès.' }
+        if params[:notify]
+          # Création du compte d'accès (user) et envoi du mail de bienvenue
+          user = User.new(nom: @etudiant.nom, prénom: @etudiant.prénom, email: @etudiant.email, mobile: @etudiant.mobile, password: SecureRandom.hex(10))
+          if user.valid?
+            user.save
+            mailer_response = EtudiantMailer.welcome_student(user).deliver_now
+            MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: @etudiant.email, subject: "Nouvel accès étudiant")
+          end
+        end
+        format.html { redirect_to @etudiant, notice: "Etudiant créé avec succès. #{'Accès créé, étudiant informé' if params[:notify] }" }
         format.json { render :show, status: :created, location: @etudiant }
       else
         format.html { render :new }
