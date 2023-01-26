@@ -343,19 +343,19 @@ class ExportPdf
 
             y_position = cursor
             bounding_box([0, y_position], :width => 270) do
-                image "#{@image_path}/logo@100.png", :width => 250
+                image "#{@image_path}/logo@100.png", :width => 200
             end
             bounding_box([270, y_position], :width => 270) do
                 move_down @margin_down
                 text cour.formation.nom, style: :bold, align: :right
             end
 
-            move_down @margin_down * 3
+            move_down @margin_down * 2
             text "EMARGEMENT", size: 16, style: :bold, align: :center
 
             font_size 12
 
-            move_down @margin_down * 2
+            move_down @margin_down
             y_position = cursor
             bounding_box([0, y_position], :width => 250, :height => 100) do
                 text "Date : #{I18n.l(cour.debut.to_date)}", style: :bold
@@ -371,7 +371,8 @@ class ExportPdf
             text "UE : #{cour.code_ue} - #{cour.nom_ou_ue}", style: :bold
             move_down @margin_down
             text "Signature :", style: :bold
-            
+            move_down @margin_down
+            text "IMPORTANT : les données collectées par cette feuille d’émargement sont de nature à permettre la justification des heures effectuées dans le cadre de la formation.", size: 10, align: :center
 
             data = [ ['<i>NOM Prénom</i>', '<i>SIGNATURE</i>', '<i>NOM Prénom</i>', '<i>SIGNATURE</i>'] ]
 
@@ -390,7 +391,7 @@ class ExportPdf
                 ]
             end
 
-            move_down @margin_down * 2
+            move_down @margin_down
 
             font_size 10
             table(data, 
