@@ -257,7 +257,7 @@ class ExportPdf
         text "Vacations administratives", size: 18
 
         font_size 10
-        text "Arrêté du 22 juillet 2022 relatif au relèvement du salaire minimum de croissance"
+        text "Décret n° 2022-1608 du 22 décembre 2022 portant relèvement du salaire minimum de croissance"
         move_down @margin_down
 
         text surveillant
@@ -298,9 +298,9 @@ class ExportPdf
 
         data += [[nil, nil,nil, nil,nil, "Total heures :", "<b>#{ cumul_durée }</b>" ]]
 
-        taux_horaire = 11.07
+        taux_horaire = 11.27
         data += [[nil, nil,
-                    "Taux horaire en vigueur au 01/08/2022 :", 
+                    "Taux horaire en vigueur au 01/01/2023 :", 
                     "#{ taux_horaire } €",
                     nil,
                     "<b>Total brut :</b>",
