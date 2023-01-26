@@ -11,6 +11,10 @@
     </div>
   <% end %>
 
+  <h5 class="mb-4">
+    <span class="text-warning font-weight-light">Attention, sur le serveur il est actuellement <%= l(Time.now.utc, format: "%Hh%M") %></span>
+  </h5>
+
   <div class="field">
     <%= form.text_field :debut, 
                             value: @alert.debut.strftime("%Y-%m-%dT%H:%M"), 
