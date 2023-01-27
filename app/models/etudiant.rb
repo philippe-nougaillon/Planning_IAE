@@ -93,8 +93,8 @@ class Etudiant < ApplicationRecord
   end
 
   def delete_user
-    if u = User.find_by(email: self.email)
-      u.destroy
+    if u = User.étudiant.find_by(email: self.email)
+      u.discard
     end
   end
   
