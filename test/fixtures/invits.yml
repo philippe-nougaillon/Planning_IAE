@@ -5,9 +5,11 @@ one:
   intervenant: one
   msg: MyString
   workflow_state: MyString
+  user_id: 1
 
 two:
   cour: two
   intervenant: two
   msg: MyString
   workflow_state: MyString
+  user_id: 1
