@@ -7,6 +7,14 @@ class ExportPdf
     # end
 
     def initialize
+        super()
+        self.font_families.update("OpenSans" => {
+            :normal => Rails.root.join("vendor/assets/fonts/Open_Sans/static/OpenSans/OpenSans-Regular.ttf"),
+            :italic => Rails.root.join("vendor/assets/fonts/Open_Sans/static/OpenSans/OpenSans-Italic.ttf"),
+            :bold => Rails.root.join("vendor/assets/fonts/Open_Sans/static/OpenSans/OpenSans-Bold.ttf"),
+            :bold_italic => Rails.root.join("vendor/assets/fonts/Open_Sans/static/OpenSans/OpenSans-BoldItalic.ttf")
+        })
+
         @margin_down = 15
         @image_path =  "#{Rails.root}/app/assets/images/"
     end
@@ -337,6 +345,8 @@ class ExportPdf
     end
 
     def generate_feuille_emargement(cours)
+        font "OpenSans"
+
         cours.each_with_index do |cour, index|
 
             font_size 14

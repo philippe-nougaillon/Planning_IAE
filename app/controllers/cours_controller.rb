@@ -21,9 +21,14 @@ class CoursController < ApplicationController
     session[:filter] ||= 'upcoming'
     session[:paginate] ||= 'pages'
 
+    if current_user && current_user.intervenant?
+      params[:intervenant_id] = Intervenant.find_by(email: current_user.email).id
+    end
+
     if params[:commit] && params[:commit][0..2] == 'RàZ'
       session[:formation] = params[:formation] = nil
       session[:intervenant] = params[:intervenant] = nil
+      session[:intervenant_id] = params[:intervenant_id] = nil
       session[:intervenant_nom] = params[:intervenant_nom] = nil
       session[:ue] = params[:ue] = nil
       session[:semaine] = params[:semaine] = nil

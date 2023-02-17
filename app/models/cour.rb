@@ -206,7 +206,7 @@ class Cour < ApplicationRecord
     when 'TD'
       Cour.Tarif
     when 'CM'
-      64.26
+      64.29
     when '3xTD'
       128.58
     else
