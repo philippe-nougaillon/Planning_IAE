@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_01_17_105346) do
+ActiveRecord::Schema.define(version: 2023_03_07_131658) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
 
   create_table "action_text_rich_texts", force: :cascade do |t|
@@ -53,13 +54,21 @@ ActiveRecord::Schema.define(version: 2023_01_17_105346) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "agents", force: :cascade do |t|
+    t.string "nom"
+    t.string "prénom"
+    t.string "catégorie"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "alerts", force: :cascade do |t|
     t.datetime "debut"
     t.datetime "fin"
     t.string "message"
+    t.integer "etat"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.integer "etat"
   end
 
   create_table "audits", id: :serial, force: :cascade do |t|
