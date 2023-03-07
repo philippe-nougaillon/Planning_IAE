@@ -26,8 +26,9 @@ class Vacation < ApplicationRecord
       1,
       2,
       3,
+      4,
       7.5,
-      10	
+      10
     ]
   end
 
