@@ -307,6 +307,18 @@ class ExportPdf
         data += [[nil, nil,nil, nil,nil, "Total heures :", "<b>#{ cumul_durée }</b>" ]]
 
         taux_horaire = 11.27
+
+        if agent = Agent.find_by(nom: surveillant.split(' ').first, prénom: surveillant.split(' ').last)
+            taux_horaire = case agent.catégorie
+                            when "A"
+                                22.17
+                            when "B"
+                                14.41
+                            when "C"
+                                11.07
+                            end
+        end
+
         data += [[nil, nil,
                     "Taux horaire en vigueur au 01/01/2023 :", 
                     "#{ taux_horaire } €",
