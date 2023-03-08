@@ -39,7 +39,7 @@ class User < ApplicationRecord
     "
     #{self.email.split('@').first} 
     (#{self.role}) 
-    #{self.audits.last.audited_changes['last_sign_in_at'].first}
+    #{self.audits.last.audited_changes['current_sign_in_at'].first}
     "
   end
 
