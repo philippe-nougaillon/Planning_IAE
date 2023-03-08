@@ -36,7 +36,11 @@ class User < ApplicationRecord
   end
 
   def username 
-    "#{self.email.split('@').first} (#{self.role})"
+    "
+    #{self.email.split('@').first} 
+    (#{self.role}) 
+    #{self.audits.last.audited_changes['last_sign_in_at'].first}
+    "
   end
 
   def isRHGroupMember?
