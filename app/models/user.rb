@@ -45,7 +45,7 @@ class User < ApplicationRecord
   def current_sign_in_at
     "
     #{self.audits.last.audited_changes['current_sign_in_at'].first}
-    IP:#{self.audits.last.audited_changes['last_sign_in_ip'].first}
+    IP:#{self.audits.last.audited_changes['last_sign_in_ip'].first if self.audits.last.audited_changes['last_sign_in_ip']}
     "
   end
 
