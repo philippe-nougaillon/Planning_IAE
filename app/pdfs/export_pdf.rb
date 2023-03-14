@@ -260,7 +260,7 @@ class ExportPdf
     def export_vacations_administratives(examens, start_date, end_date, surveillant)
         taux_horaire = 11.27
 
-        if agent = Agent.find_by(nom: surveillant.split(' ').first, prénom: surveillant.split(' ').last)
+        if agent = Agent.find_by(nom: surveillant.split('-').first, prénom: surveillant.split('-').last)
             taux_horaire = case agent.catégorie
                             when "A"
                                 22.17

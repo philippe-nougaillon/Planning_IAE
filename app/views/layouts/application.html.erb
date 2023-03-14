@@ -86,9 +86,9 @@
           <% end %>
         </ul>
 
-        <ul class="navbar-nav navbar-right">
+        <ul class="navbar-nav navbar-right align-items-center">
           <% if user_signed_in? %>
-            <span class="nav-link">
+            <span class="nav-link mr-5">
               <%= current_user.username %>
               <% if current_page? root_path %>
                 <br>
