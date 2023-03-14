@@ -258,14 +258,37 @@ class ExportPdf
     end
 
     def export_vacations_administratives(examens, start_date, end_date, surveillant)
+        taux_horaire = 11.27
+
+        if agent = Agent.find_by(nom: surveillant.split(' ').first, prénom: surveillant.split(' ').last)
+            taux_horaire = case agent.catégorie
+                            when "A"
+                                22.17
+                            when "B"
+                                14.41
+                            when "C"
+                                11.07
+                            end
+        end
+
         image "#{@image_path}/logo@100.png", :height => 40, :position => :center
         move_down @margin_down
 
         font "Helvetica"
-        text "Vacations administratives", size: 18
+        if agent
+            text "Demande de paiement de vacations accessoires", size: 18
+        else
+            text "Vacations administratives", size: 18
+        end
 
         font_size 10
-        text "Décret n° 2022-1608 du 22 décembre 2022 portant relèvement du salaire minimum de croissance"
+
+        if agent
+            text "Décret n°2003-1009 du 16/10/2003 relatif aux vacations susceptibles d’être allouées aux personnels"
+            text "accomplissant des activités accessoires dans certains établissements d’enseignement supérieur"
+        else
+            text "Décret n° 2022-1608 du 22 décembre 2022 portant relèvement du salaire minimum de croissance"
+        end
         move_down @margin_down
 
         text surveillant
@@ -306,19 +329,6 @@ class ExportPdf
 
         data += [[nil, nil,nil, nil,nil, "Total heures :", "<b>#{ cumul_durée }</b>" ]]
 
-        taux_horaire = 11.27
-
-        if agent = Agent.find_by(nom: surveillant.split(' ').first, prénom: surveillant.split(' ').last)
-            taux_horaire = case agent.catégorie
-                            when "A"
-                                22.17
-                            when "B"
-                                14.41
-                            when "C"
-                                11.07
-                            end
-        end
-
         data += [[nil, nil,
                     "Taux horaire en vigueur au 01/01/2023 :", 
                     "#{ taux_horaire } €",
@@ -345,14 +355,28 @@ class ExportPdf
         move_down @margin_down
 
         y_position = cursor
-        bounding_box([0, y_position], :width => 250, :height => 100) do
-            text "Eric LAMARQUE"
-            text "Directeur de l'IAE Paris", size: 8
+        if agent
+            bounding_box([0, y_position], :width => 166, :height => 100) do
+                text "L'agent"
+            end
+            bounding_box([166, y_position], :width => 166) do
+                text "Le supérieur hiérarchique,"
+                text "pour accord"
+            end
+            bounding_box([333, y_position], :width => 166) do
+                text "Le responsable du service concerné"
+                text "par la vacation, pour accord"
+            end
+        else
+            bounding_box([0, y_position], :width => 250, :height => 100) do
+                text "Eric LAMARQUE"
+                text "Directeur de l'IAE Paris", size: 8
+            end
+            bounding_box([250, y_position], :width => 250) do
+                text "Barbara FITSCH-MOURAS"
+                text "Responsable de service", size: 8 
+            end
         end
-        bounding_box([250, y_position], :width => 250) do
-            text "Barbara FITSCH-MOURAS"
-            text "Responsable de service", size: 8 
-        end    
 
     end
 
