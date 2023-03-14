@@ -90,11 +90,15 @@
           <% if user_signed_in? %>
             <span class="nav-link">
               <%= current_user.username %>
+              <% if current_page? root_path %>
+                <br>
+                <%= current_user.current_sign_in_at %>
+              <% end %>
             </span>
             <% if policy(current_user).right_navbar? %>
-              <%= navbar_nav_item('chercher', 'search-plus', tools_rechercher_path) %>
-              <%= navbar_nav_item('outils', 'wrench', tools_index_path) %>
-              <%= navbar_nav_item('guide', 'info-circle', guide_index_path) %>
+              <%= navbar_nav_item('', 'wrench', tools_index_path) %>
+              <%= navbar_nav_item('', 'search-plus', tools_rechercher_path) %>
+              <%= navbar_nav_item('', 'info-circle', guide_index_path) %>
             <% end %>
 
             <li class="nav-item">

@@ -37,9 +37,15 @@ class User < ApplicationRecord
 
   def username 
     "
-    #{self.email.split('@').first} 
-    (#{self.role}) 
+    #{self.email.split('@').first}
+    (#{self.role})
+    "
+  end
+
+  def current_sign_in_at
+    "
     #{self.audits.last.audited_changes['current_sign_in_at'].first}
+    IP:#{self.audits.last.audited_changes['last_sign_in_ip'].first}
     "
   end
 
