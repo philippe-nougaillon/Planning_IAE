@@ -1,0 +1,14 @@
+<tr>
+    <td><%= agent.nom %></td>
+    <td><%= agent.prénom %></td>
+    <td><%= agent.catégorie %></td>
+    <td><%= time_ago_in_words(agent.created_at) %></td>
+    <td>
+        <%= link_to edit_agent_path(agent), class: "btn btn-default" do %>
+            <%= fa_icon 'edit' %>
+        <% end %>
+        <%= link_to(agent, method: :delete, data:{confirm: 'Confirmez-vous ?'}, class: "btn btn-default") do %>
+            <%= fa_icon 'trash-alt' %>
+        <% end %>
+    </td>
+</tr>

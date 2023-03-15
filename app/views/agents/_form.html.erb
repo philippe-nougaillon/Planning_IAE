@@ -1,0 +1,23 @@
+<%= bootstrap_form_for(@agent) do |f| %>
+  <% if @agent.errors.any? %>
+    <div class="alert alert-danger alert-dismissable" role="alert">
+      <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h3><%= t('activerecord.errors.template.header',
+                  model: Agent.model_name.human, count: @agent.errors.count) %></h3>
+      <ul>
+      <% @agent.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= f.text_field :nom, required: true %>
+  <%= f.text_field :prénom, required: true %>
+  <%= f.select :catégorie,
+                            options_for_select(%w{A B C}, @agent.catégorie), 
+                            {label: "Catégorie"}, 
+                            required: true %>
+
+  <%= f.submit class: "btn btn-primary" %>
+<% end %>

@@ -98,7 +98,7 @@ class SallesController < ApplicationController
                   .where(auditable_type: 'Cour')
                   .where("audited_changes like '%salle_id%'")
                   .order('id DESC')
-                  .limit(5000)
+                  .limit(10000)
 
   end
 

@@ -1,0 +1,12 @@
+<div class="pb-2 mt-4 mb-2 border-bottom">
+
+	<div class="buttons-group float-right">
+		<%= link_to agents_path, class: 'btn btn-default' do %>
+			<%= fa_icon 'list-alt', text: ' Retour' %>
+		<% end %>
+	</div>
+
+	<h3><%= fa_icon 'user-secret' %> Nouvel agent</h3>
+</div>
+
+<%= render 'form', agent: @agent %>
