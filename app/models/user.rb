@@ -42,9 +42,9 @@ class User < ApplicationRecord
     "
   end
 
-  def current_sign_in_at
+  def current_sign_in_at_with_ip
     "
-    #{self.audits.last.audited_changes['current_sign_in_at'].first}
+    #{self.audits.last.audited_changes['current_sign_in_at'].try(:first)}
     IP:#{self.audits.last.remote_address}
     "
   end
