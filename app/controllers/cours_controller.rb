@@ -22,7 +22,9 @@ class CoursController < ApplicationController
     session[:paginate] ||= 'pages'
 
     if current_user && current_user.intervenant?
-      params[:intervenant_id] = Intervenant.find_by(email: current_user.email).id
+      intervenant = Intervenant.find_by(email: current_user.email)
+      params[:intervenant_id] = intervenant.id
+      params[:intervenant] = intervenant.nom + " " + intervenant.prenom
     end
 
     if params[:commit] && params[:commit][0..2] == 'RàZ'
@@ -48,7 +50,7 @@ class CoursController < ApplicationController
     params[:view] ||= session[:view]
     params[:filter] ||= session[:filter]
     params[:paginate] ||= session[:paginate]
-    
+
     @cours = Cour.order(:debut)
 
     # Si N° de semaine, afficher le premier jour de la semaine choisie, sinon date du jour
