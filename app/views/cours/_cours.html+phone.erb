@@ -22,21 +22,25 @@
   </b>
   <br>
 
-  <%= cours.try(:intervenant).try(:nom_prenom) %>
-  <br>
-
-  <% if binome = cours.intervenant_binome %>
-    <%= binome.nom_prenom %>
+  <% if user_signed_in? %>
+    <%= cours.try(:intervenant).try(:nom_prenom) %>
     <br>
-  <% end %>
 
-  <% if cours.url? && cours.elearning? %>
-    <%= link_to cours.nom.split(' ').first, target:"_blank" do %>
-        <%= cours.nom.split(' ').last %>
-        <%= fa_icon 'link' %>
+    <% if binome = cours.intervenant_binome %>
+      <%= binome.nom_prenom %>
+      <br>
     <% end %>
-  <% else %>         
-    <i><%= cours.nom_ou_ue %></i>
+
+    <% if cours.url? && cours.elearning? %>
+      <%= link_to cours.nom.split(' ').first, target:"_blank" do %>
+          <%= cours.nom.split(' ').last %>
+          <%= fa_icon 'link' %>
+      <% end %>
+    <% else %>
+      <i><%= cours.nom_ou_ue %></i>
+    <% end %>
+  <% else %>
+    <i> <%= "UE ##{cours.code_ue}" if cours.code_ue %></i>
   <% end %>
 
   <% if cours.debut.to_date == Date.today %>

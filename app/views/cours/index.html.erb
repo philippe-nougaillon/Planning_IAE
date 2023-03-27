@@ -136,8 +136,9 @@
               <th>Heure</th>
               <th>Durée</th>
               <th>Formation</th>
-              <th>Intervenant</th>
-              <th colspan="2">UE/Intitulé du cours</th>
+              
+              <th><%= user_signed_in? ? "Intervenant" : "" %></th>
+              <th colspan="2"><%= user_signed_in? ? "UE/Intitulé du cours" : "UE" %></th>
               <th>Salle</th>
               <% if policy(Cour).action? %>
                 <th></th>
