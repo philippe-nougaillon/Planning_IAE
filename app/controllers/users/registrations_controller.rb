@@ -15,8 +15,13 @@ class Users::RegistrationsController < Devise::RegistrationsController
       super
       resource.update(role: "intervenant")
       flash[:notice] = "Bienvenue #{resource.prénom_et_nom} !"
+
+    elsif Etudiant.find_by(email: params[:user][:email])
+      super
+      resource.update(role: "étudiant")
+      flash[:notice] = "Bienvenue #{resource.prénom_et_nom} !"
     else
-      redirect_to root_path, alert: "Problème avec l'inscription, contactez votre gestionnaire de formation."
+      redirect_to root_path, alert: "Problème avec l'inscription, veuillez contacter votre gestionnaire de formation."
     end
   end
 
