@@ -135,13 +135,6 @@ class Intervenant < ApplicationRecord
 		return book
 	end
 
-private
-	def envoyer_mail
-		if self.status == 'CEV' and self.doublon == false 
-			IntervenantMailer.notifier_srh(self).deliver_later
-		end
-	end
-
 	def create_user_access
 		new_password = SecureRandom.hex(10)
 		# Création du compte d'accès (user) et envoi du mail de bienvenue
@@ -150,6 +143,13 @@ private
 			user.save
 			mailer_response = IntervenantMailer.with(user: user, password: new_password).welcome_intervenant.deliver_now
 			MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: user.email, subject: "Nouvel accès intervenant")
+		end
+	end
+
+	private
+	def envoyer_mail
+		if self.status == 'CEV' and self.doublon == false 
+			IntervenantMailer.notifier_srh(self).deliver_later
 		end
 	end
 

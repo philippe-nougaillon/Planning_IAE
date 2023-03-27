@@ -189,4 +189,12 @@ class ToolPolicy < ApplicationPolicy
     user.role_number >= 5
   end
 
+  def acces_intervenants?
+    user.admin?
+  end
+
+  def acces_intervenants_do?
+    acces_intervenants?
+  end
+
 end

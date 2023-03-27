@@ -1,0 +1,38 @@
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h3><%= fa_icon 'key' %> Liste des intervenants sans accès</h3>
+</div>
+
+<%= bootstrap_form_tag url: tools_acces_intervenants_do_path, method: :post do %>
+  <div class="table-responsive">
+    <table class="table table-hover table-striped table-bordered">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Status</th>
+          <th>Nom/Prénom</th>
+          <th>Email</th>
+          <th>Créé il y a</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @intervenants.each do |intervenant| %>
+          <tr>
+            <td>
+              <%= check_box_tag "[intervenants_id][#{intervenant.id}]", 'yes', false %>
+            </td>
+            <td><%= intervenant.status %></td>
+            <td><%= intervenant.nom_prenom %></td>
+            <td><%= intervenant.email %></td>
+            <td><%= time_ago_in_words intervenant.created_at %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <%= submit_tag "Créer les accès", class: "btn btn-warning" %>
+<% end %>
+
+<br>
+nombre d'intervenants sans accès : <%= @intervenants.count %>
