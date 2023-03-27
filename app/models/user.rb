@@ -38,7 +38,7 @@ class User < ApplicationRecord
   def username 
     "
     #{self.email.split('@').first}
-    (#{self.role})
+    (#{self.role.humanize})
     "
   end
 

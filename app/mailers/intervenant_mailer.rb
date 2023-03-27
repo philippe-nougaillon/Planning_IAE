@@ -25,4 +25,15 @@ class IntervenantMailer < ApplicationMailer
         mail(to: 'srh.iae@univ-paris1.fr', subject: "[PLANNING] Un nouvel intervenant nommé '#{intervenant.nom_prenom}' vient d'être créé")
     end
 
+    def welcome_intervenant
+        @user = params[:user]
+        @password = params[:password]
+        mail(to: @user.email,
+            subject:"[PLANNING IAE Paris] Bienvenue !").tap do |message|
+                message.mailgun_options = {
+                    "tag" => [@user.nom, @user.prénom, "nouvel accès intervenant"]
+                }
+        end
+    end
+
 end

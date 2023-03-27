@@ -11,4 +11,8 @@ class IntervenantMailerPreview < ActionMailer::Preview
                                         EnvoiLog.first.id)
     end
 
+    def welcome_intervenant
+        IntervenantMailer.with(user: User.find(1)).welcome_intervenant
+    end
+
 end
