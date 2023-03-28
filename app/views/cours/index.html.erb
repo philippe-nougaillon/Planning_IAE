@@ -40,25 +40,25 @@
                           class: "form-control form-control-sm select2", 
                           include_blank:true, onchange: 'this.form.submit()' %>
         </div>
-
-        <div class="col-sm-5">
-          <%= label_tag "Intervenant" %>    
-          <div class="input-group">
-            <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
-                            class: "form-control form-control-sm select2",
-                            include_blank:true,
-                            onchange: 'this.form.submit()',
-                            disabled: !user_signed_in? %>
-            <% if params.values.count(nil) < 5 || user_signed_in? %>
-              <span class="input-group-btn">
-                <%= button_tag name: 'commit', value: 'RàZ', class: "btn btn-sm btn-light ml-1", title: "Remise à zéro des filtres" do %>
-                  <i class="fas fa-times"></i> 
-                  RàZ
-                <% end %>
-              </span>
-            <% end %>
+        <% if user_signed_in? %>
+          <div class="col-sm-5">
+            <%= label_tag "Intervenant" %>
+            <div class="input-group">
+              <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
+                              class: "form-control form-control-sm select2",
+                              include_blank:true,
+                              onchange: 'this.form.submit()' %>
+              <% if params.values.count(nil) < 5 || user_signed_in? %>
+                <span class="input-group-btn">
+                  <%= button_tag name: 'commit', value: 'RàZ', class: "btn btn-sm btn-light ml-1", title: "Remise à zéro des filtres" do %>
+                    <i class="fas fa-times"></i> 
+                    RàZ
+                  <% end %>
+                </span>
+              <% end %>
+            </div>
           </div>
-        </div>
+        <% end %>
       </div>
       <br>
   

@@ -24,14 +24,15 @@
                     include_blank: true, onchange: 'this.form.submit()' %>
   </div>
 
-  <div class="form-group">
-    <%= label_tag "Intervenant" %>
-    <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
-                      class: "select2-w100",
-                      include_blank: true,
-                      onchange:'this.form.submit()',
-                      disabled: !user_signed_in? %>
-  </div>
+  <% if user_signed_in? %>
+    <div class="form-group">
+      <%= label_tag "Intervenant" %>
+      <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
+                        class: "select2-w100",
+                        include_blank: true,
+                        onchange:'this.form.submit()' %>
+    </div>
+  <% end %>
 
   <%= button_tag name: 'commit', value: 'Filtrer', class: "btn btn-success" do %>
     <i class="fas fa-filter"></i> 
