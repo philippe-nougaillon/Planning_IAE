@@ -1273,10 +1273,22 @@ class ToolsController < ApplicationController
     authorized_intervenants_email = User.intervenant.pluck(:email)
     @intervenants = Intervenant.where.not(email: authorized_intervenants_email)
     @intervenants = @intervenants.reorder(:status, :nom)
+
+    unless params[:search].blank?
+      @intervenants = @intervenants.where("LOWER(nom) like :search or LOWER(prenom) like :search or LOWER(email) like :search", {search: "%#{params[:search]}%".downcase})
+    end
+
+    unless params[:status].blank?
+      @intervenants = @intervenants.where("status = ?", params[:status])
+    end
+
+    @intervenants = @intervenants.paginate(page: params[:page], per_page: 20)
   end
 
   def acces_intervenants_do
     errors = 0
+    valids = 0
+
     intervenants = Intervenant.where(id: params[:intervenants_id].keys)
     intervenants.each do |intervenant|
       new_password = SecureRandom.hex(10)
@@ -1284,6 +1296,7 @@ class ToolsController < ApplicationController
       user = User.new(role: "intervenant", nom: intervenant.nom, prénom: intervenant.prenom, email: intervenant.email, mobile: intervenant.téléphone_mobile, password: new_password)
       if user.valid?
         user.save
+        valids += 1
         # mailer_response = IntervenantMailer.with(user: user, password: new_password).welcome_intervenant.deliver_now
         # MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: user.email, subject: "Nouvel accès intervenant")
       else
@@ -1293,7 +1306,7 @@ class ToolsController < ApplicationController
     if errors >= 1
       redirect_to tools_acces_intervenants_path, alert: "Nombre d'erreurs : #{errors}. Nombre de comptes créés : #{intervenants.count - errors}"
     else
-      redirect_to tools_acces_intervenants_path, notice: "Accès intervenants créés"
+      redirect_to tools_acces_intervenants_path, notice: "#{valids} accès intervenants créés"
     end
   end
 
