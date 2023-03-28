@@ -1282,7 +1282,7 @@ class ToolsController < ApplicationController
       @intervenants = @intervenants.where("status = ?", params[:status])
     end
 
-    @intervenants = @intervenants.paginate(page: params[:page], per_page: 20)
+    @intervenants = @intervenants.paginate(page: params[:page], per_page: 10)
   end
 
   def acces_intervenants_do
@@ -1297,14 +1297,14 @@ class ToolsController < ApplicationController
       if user.valid?
         user.save
         valids += 1
-        # mailer_response = IntervenantMailer.with(user: user, password: new_password).welcome_intervenant.deliver_now
-        # MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: user.email, subject: "Nouvel accès intervenant")
+        mailer_response = IntervenantMailer.with(user: user, password: new_password).welcome_intervenant.deliver_now
+        MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: user.email, subject: "Nouvel accès intervenant")
       else
         errors += 1
       end
     end
     if errors >= 1
-      redirect_to tools_acces_intervenants_path, alert: "Nombre d'erreurs : #{errors}. Nombre de comptes créés : #{intervenants.count - errors}"
+      redirect_to tools_acces_intervenants_path, alert: "Nombre d'erreurs : #{errors}. Nombre de comptes créés : #{valids}"
     else
       redirect_to tools_acces_intervenants_path, notice: "#{valids} accès intervenants créés"
     end
