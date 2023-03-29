@@ -1,6 +1,8 @@
 # ENCODING: UTF-8
 
 class CoursController < ApplicationController
+  include ApplicationHelper
+
   before_action :set_cour, only: [:show, :edit, :update, :destroy]
   before_action :is_user_authorized, except: [:destroy]
 
@@ -21,7 +23,7 @@ class CoursController < ApplicationController
     session[:filter] ||= 'upcoming'
     session[:paginate] ||= 'pages'
 
-    if current_user && current_user.intervenant?
+    if current_user && current_user.intervenant? && params.keys.count == 2
       intervenant = Intervenant.find_by(email: current_user.email)
       params[:intervenant_id] = intervenant.id
       params[:intervenant] = intervenant.nom + " " + intervenant.prenom
@@ -635,14 +637,6 @@ class CoursController < ApplicationController
                                     :intervenant_binome_id, :hors_service_statutaire,
                                     :commentaires, :elearning)
     end
-
-    def clean_page(page)
-      begin 
-        WillPaginate::PageNumber(page)
-      rescue WillPaginate::InvalidPage
-        1  
-      end 
-    end 
 
     def is_user_authorized
       authorize Cour

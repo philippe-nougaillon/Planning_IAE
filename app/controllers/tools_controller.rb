@@ -2,6 +2,7 @@
 
 class ToolsController < ApplicationController  
   include ActionView::Helpers::NumberHelper
+  include ApplicationHelper
 
   require 'capture_stdout'
 
@@ -1282,7 +1283,9 @@ class ToolsController < ApplicationController
       @intervenants = @intervenants.where("status = ?", params[:status])
     end
 
-    @intervenants = @intervenants.paginate(page: params[:page], per_page: 10)
+    if (params[:paginate] == 'pages')
+      @intervenants = @intervenants.paginate(page: params[:page], per_page: 10)
+    end
   end
 
   def acces_intervenants_do

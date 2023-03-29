@@ -48,7 +48,7 @@
                               class: "form-control form-control-sm select2",
                               include_blank:true,
                               onchange: 'this.form.submit()' %>
-              <% if params.values.count(nil) < 5 || user_signed_in? %>
+              <% if params.values.count(nil) < 5 %>
                 <span class="input-group-btn">
                   <%= button_tag name: 'commit', value: 'RàZ', class: "btn btn-sm btn-light ml-1", title: "Remise à zéro des filtres" do %>
                     <i class="fas fa-times"></i> 
@@ -61,7 +61,7 @@
         <% end %>
       </div>
       <br>
-  
+
       <div class="row">
         <div class="col-sm-1">
           <%= label_tag "Semaine" %>    

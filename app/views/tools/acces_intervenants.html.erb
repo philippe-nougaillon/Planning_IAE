@@ -24,6 +24,15 @@
           </div>
         </div>
 
+        <div class="col-sm-2">
+          <%= label_tag "Afficher" %>
+          <br> 
+          <%= radio_button_tag :paginate, "pages", (params[:paginate]=='pages'), onchange:'this.form.submit()' %>
+          Pages 
+          <%= radio_button_tag :paginate, "all", (params[:paginate]=='all'), onchange:'this.form.submit()' %>
+          Tout 
+        </div>
+
       </div>
     </div>
   <% end %>
@@ -65,8 +74,12 @@
   </div>
 
   <div class="page_info mb-3">
-    <%= page_entries_info @intervenants %>
-    <%= will_paginate @intervenants, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+    <% if params[:paginate] == 'pages' %>
+        <%= page_entries_info @intervenants %>
+        <%= will_paginate @intervenants, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+    <% else %>
+      Nombre d'intervenants : <%= @intervenants.count %>
+    <% end %>
   </div>
 
 
