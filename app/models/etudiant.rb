@@ -4,6 +4,9 @@ class Etudiant < ApplicationRecord
   include Workflow
   include WorkflowActiverecord
 
+  include PgSearch::Model
+	multisearchable against: [:nom, :email, :mobile]
+
   audited
   
   validates :nom, :prénom, :civilité, presence: true

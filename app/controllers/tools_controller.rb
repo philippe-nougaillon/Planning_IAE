@@ -1223,6 +1223,9 @@ class ToolsController < ApplicationController
       unless params[:search_intervenants]
         @results = @results.where.not(searchable_type: 'Intervenant')
       end
+      unless params[:search_etudiants]
+        @results = @results.where.not(searchable_type: 'Etudiant')
+      end
       unless params[:search_users]
         @results = @results.where.not(searchable_type: 'User')
       end
@@ -1233,6 +1236,7 @@ class ToolsController < ApplicationController
       params[:search_formations] ||= '1'
       params[:search_ue] ||= '1'
       params[:search_intervenants] ||= '1'
+      params[:search_etudiants] ||= '1'
       params[:search_users] ||= '1'
     end
   end
