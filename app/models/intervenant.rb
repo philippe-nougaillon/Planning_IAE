@@ -33,6 +33,7 @@ class Intervenant < ApplicationRecord
 
 	default_scope { order(:nom, :prenom) } 
 
+	before_create :nom_with_underscore
 	# after_create :envoyer_mail
 	after_create :create_user_access
 
@@ -156,5 +157,9 @@ class Intervenant < ApplicationRecord
 	# only one candidate for an nice id; one random UDID
 	def slug_candidates
 		[SecureRandom.uuid]
+	end
+
+	def nom_with_underscore
+		self.nom = self.nom.gsub(" ","_")
 	end
 end

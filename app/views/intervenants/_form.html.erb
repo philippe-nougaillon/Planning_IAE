@@ -14,9 +14,9 @@
 
   <div class="row">
     <div class="col-sm-5">
-      <%= f.text_field :nom %>
-      <%= f.text_field :prenom, label:"Prénom" %>
-      <%= f.text_field :email %>
+      <%= f.text_field :nom, required: true %>
+      <%= f.text_field :prenom, label:"Prénom", required: true %>
+      <%= f.text_field :email, required: true %>
       <div class="row">        
         <div class="col">
           <%= f.text_field :titre1, label:"Titre" %>
@@ -42,7 +42,7 @@
     <div class="col-sm-6">
       <div class="row">
         <div class="col">
-          <%= f.select :status, Intervenant.statuses.keys.to_a, {include_blank: true, label: 'Statut'} %>
+          <%= f.select :status, Intervenant.statuses.keys.to_a, {include_blank: true, label: 'Statut'}, required: true %>
         </div>
 
         <div class="col-5">
