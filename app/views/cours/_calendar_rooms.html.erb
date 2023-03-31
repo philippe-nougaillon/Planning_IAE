@@ -5,17 +5,19 @@
               number_of_days: 6 do |date, meetings| %>
 
   <% meetings.each do |meeting| %>
+    <div class="shadow-sm p-1 <%= meeting.formation.nbr_etudiants > 30 ? 'border-bottom border-danger' : '' %>" style="border-width: 5px !important;">
       <span class="badge badge-<%= meeting.style %>"><%= meeting.etat.humanize %></span><br>
-      <b><%= l(meeting.debut, format: :heures_min) %></b>  
+      <b><%= l(meeting.debut, format: :heures_min) %></b>
         - <%= l(meeting.fin, format: :heures_min) %>
       <br>
       <% if meeting.try(:formation).try(:abrg) %>
         <% if meeting.salle_id == nil %>
-          <%= link_to meeting.formation.abrg, edit_cour_path(meeting, from:'planning_salles'), title:meeting.nom %>
+          <%= link_to meeting.formation.nom_abrg_nbr_etudiants, edit_cour_path(meeting, from:'planning_salles'), title:meeting.nom %>
         <% end %>
       <% else %>
         <%= link_to_if user_signed_in?, meeting.try(:formation).try(:nom), meeting %>
       <% end %>
+    </div>
   <% end %>
 <% end %>
   
