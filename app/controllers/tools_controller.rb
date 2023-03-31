@@ -2,6 +2,7 @@
 
 class ToolsController < ApplicationController  
   include ActionView::Helpers::NumberHelper
+  include ApplicationHelper
 
   require 'capture_stdout'
 
@@ -555,7 +556,7 @@ class ToolsController < ApplicationController
         cours = []
 
         # création du cours type
-        new_cours = Cour.new(formation_id: params[:formation_id], intervenant_id: params[:intervenant_id], nom: nom_cours, ue: params[:ue], salle_id: salle_id)
+        new_cours = Cour.new(formation_id: params[:formation_id], intervenant_id: params[:intervenant_id], nom: nom_cours, code_ue: params[:code_ue], salle_id: salle_id)
 
         # cours du matin
         if params[:am]
@@ -1222,6 +1223,9 @@ class ToolsController < ApplicationController
       unless params[:search_intervenants]
         @results = @results.where.not(searchable_type: 'Intervenant')
       end
+      unless params[:search_etudiants]
+        @results = @results.where.not(searchable_type: 'Etudiant')
+      end
       unless params[:search_users]
         @results = @results.where.not(searchable_type: 'User')
       end
@@ -1232,6 +1236,7 @@ class ToolsController < ApplicationController
       params[:search_formations] ||= '1'
       params[:search_ue] ||= '1'
       params[:search_intervenants] ||= '1'
+      params[:search_etudiants] ||= '1'
       params[:search_users] ||= '1'
     end
   end
@@ -1266,6 +1271,49 @@ class ToolsController < ApplicationController
       else
         redirect_to root_path, alert: "Opération annulée"
       end
+    end
+  end
+
+  def acces_intervenants
+    authorized_intervenants_email = User.intervenant.pluck(:email)
+    @intervenants = Intervenant.where.not(email: authorized_intervenants_email)
+    @intervenants = @intervenants.reorder(:status, :nom)
+
+    unless params[:search].blank?
+      @intervenants = @intervenants.where("LOWER(nom) like :search or LOWER(prenom) like :search or LOWER(email) like :search", {search: "%#{params[:search]}%".downcase})
+    end
+
+    unless params[:status].blank?
+      @intervenants = @intervenants.where("status = ?", params[:status])
+    end
+
+    if (params[:paginate] == 'pages')
+      @intervenants = @intervenants.paginate(page: params[:page], per_page: 10)
+    end
+  end
+
+  def acces_intervenants_do
+    errors = 0
+    valids = 0
+
+    intervenants = Intervenant.where(id: params[:intervenants_id].keys)
+    intervenants.each do |intervenant|
+      new_password = SecureRandom.hex(10)
+      # Création du compte d'accès (user) et envoi du mail de bienvenue
+      user = User.new(role: "intervenant", nom: intervenant.nom, prénom: intervenant.prenom, email: intervenant.email, mobile: intervenant.téléphone_mobile, password: new_password)
+      if user.valid?
+        user.save
+        valids += 1
+        mailer_response = IntervenantMailer.with(user: user, password: new_password).welcome_intervenant.deliver_now
+        MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: user.email, subject: "Nouvel accès intervenant")
+      else
+        errors += 1
+      end
+    end
+    if errors >= 1
+      redirect_to tools_acces_intervenants_path, alert: "Nombre d'erreurs : #{errors}. Nombre de comptes créés : #{valids}"
+    else
+      redirect_to tools_acces_intervenants_path, notice: "#{valids} accès intervenants créés"
     end
   end
 

@@ -28,22 +28,6 @@
         </div>
 
         <div class="col-sm-2">
-          <br>
-          <label>
-            <%= check_box_tag :reserver, 1, params[:reserver], onchange:'this.form.submit()' %>
-            Peut réserver ?
-          </label>
-        </div>
-        
-        <div class="col-sm-2">
-          <br>
-          <label>
-            <%= check_box_tag :admin, 1, params[:admin], onchange:'this.form.submit()' %>
-            Peut administrer ?
-          </label>
-        </div>
-
-        <div class="col-sm-2">
             <br>
             <label>
               <%= check_box_tag :discarded, 1, params[:discarded], onchange: 'this.form.submit()' %>
@@ -64,15 +48,13 @@
         <th>Prénom</th>
         <th><%= sort_link 'users.email', 'Courriel' %></th>
         <th>Rôle</th>
-        <th>Réserver salle ?</th>
-        <th>Administrer ?</th>
         <th></th>
       </tr>
     </thead>
 
     <tfoot>
       <tr>
-        <th></th><th></th><th></th><th></th><th></th><th></th>
+        <th colspan=4></th>
       </tr>
     </tfoot>
 
@@ -83,8 +65,6 @@
           <td><%= user.prénom %></td>
           <td><%= user.email %></td>
           <td><%= user.role.humanize %></td>
-          <td><%= user.reserver? ? "Oui" : '' %></td>
-          <td><%= user.admin? ? "Oui" : '' %></td>
           <td>
             <%= link_to edit_user_path(user), class: "btn btn-default" do %>
               <%= fa_icon 'edit' %>

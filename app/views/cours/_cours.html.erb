@@ -32,11 +32,13 @@
         <% end %>
     </td>
     <td>
-        <%= link_to cours.intervenant.nom_prenom, cours.intervenant %>
+        <% if user_signed_in? %>
+            <%= link_to cours.intervenant.nom_prenom, cours.intervenant %>
 
-        <% if binome = cours.intervenant_binome %>
-            <br>
-            <%= link_to binome.nom_prenom, cours.intervenant_binome %>
+            <% if binome = cours.intervenant_binome %>
+                <br>
+                <%= link_to binome.nom_prenom, cours.intervenant_binome %>
+            <% end %>
         <% end %>
 
         <% if user_signed_in? && current_user.admin? %>
@@ -53,7 +55,9 @@
         <% end %>
     </td>
     <td>
-        <%= cours.nom_ou_ue %>
+        <% if user_signed_in? %>
+            <%= cours.nom_ou_ue %>
+        <% end %>
     </td>
     <td style="white-space: nowrap;">
         <% if cours.salle %>

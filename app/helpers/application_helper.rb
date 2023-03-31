@@ -35,4 +35,12 @@ module ApplicationHelper
         DateTime.now.in_time_zone('Europe/Paris') + 2.hours
     end
 
+    def clean_page(page)
+        begin
+            WillPaginate::PageNumber(page)
+        rescue WillPaginate::InvalidPage
+            1
+        end
+    end
+
 end

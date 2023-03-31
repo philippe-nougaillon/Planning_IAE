@@ -1,8 +1,8 @@
 <h1>Mail Logs</h1>
 <p>Historique des envois de mails vers MailGun, et la réponse obtenue. (Statut consultable 5 jours)</p>
 
-<% if @results && @results['items'].size.positive? %>
-  <p class="text-danger">Il y a actuellement <%= @results['items'].count %> envois en statut 'KO'</p>
+<% if @result_failed && @result_failed['items'].size.positive? %>
+  <p class="text-danger">Il y a actuellement <%= @result_failed['items'].count %> envois en statut 'KO'</p>
 <% end %>
 
 <div class="container-fluid p-3 shadow-sm">
@@ -34,6 +34,7 @@
         <th><%= sortable :subject do %>Sujet<% end %></th>
         <th><%= sortable :created_at, default: true do %>Il y a<% end %></th>
         <th>Statut</th>
+        <th>État</th>
         <th colspan="2"></th>
       </tr>
     </thead>
@@ -47,11 +48,18 @@
           <td><%= time_ago_in_words mail_log.created_at %></td>
           <td>
             <% if mail_log.created_at > 5.days.ago %>
-              <% if status = @results["items"].find{|item| item["message"]["headers"]["message-id"] == mail_log.message_id } %>
+              <% if status = @result_failed["items"].find{|item| item["message"]["headers"]["message-id"] == mail_log.message_id } %>
                 <span class="text-danger">KO</span>
 
               <% else %>
                 <span class="text-success">OK</span>
+              <% end %>
+            <% end %>
+          </td>
+          <td>
+            <% if mail_log.created_at > 5.days.ago %>
+              <% if status = @result_opened["items"].find{|item| item["message"]["headers"]["message-id"] == mail_log.message_id } %>
+                <span class="has-text-info">OUVERT</span>
               <% end %>
             <% end %>
           </td>
@@ -63,7 +71,7 @@
 </div>
 
 <div class="page_info">
-    <%= page_entries_info @mail_logs %>
-  </div>
+  <%= page_entries_info @mail_logs %>
+</div>
 
-  <%= will_paginate @mail_logs, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+<%= will_paginate @mail_logs, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>

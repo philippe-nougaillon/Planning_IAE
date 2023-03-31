@@ -385,6 +385,7 @@ class ExportPdf
 
         cours.each_with_index do |cour, index|
 
+
             font_size 14
 
             y_position = cursor
@@ -420,29 +421,42 @@ class ExportPdf
             move_down @margin_down
             text "IMPORTANT : les données collectées par cette feuille d’émargement sont de nature à permettre la justification des heures effectuées dans le cadre de la formation.", size: 10, align: :center
 
-            data = [ ['<i>NOM Prénom</i>', '<i>SIGNATURE</i>', '<i>NOM Prénom</i>', '<i>SIGNATURE</i>'] ]
-
             array = cour.formation.etudiants.order(:nom, :prénom).pluck(:id)
-            (0..array.length - 1).step(2).each do |index|
-                etudiant = Etudiant.find(array[index])
-                if index < array.length - 1
-                    next_etudiant = Etudiant.find(array[index + 1])
+
+            if examen = cour.intervenant.id == 169 # Si c'est un examen IAE
+                data = [ ['<i>NOM Prénom</i>', '<i>SIGNATURE Début épreuve</i>', '<i>SIGNATURE Fin épreuve</i>'] ]
+                (0..array.length - 1).each do |index|
+                    etudiant = Etudiant.find(array[index])
+                    data += [ [
+                        "<b>#{etudiant.nom.upcase}</b> #{etudiant.prénom.humanize}",
+                        nil,
+                        nil
+                    ]
+                    ]
                 end
-                data += [ [
-                    "<b>#{etudiant.nom.upcase}</b> #{etudiant.prénom.humanize}",
-                    nil,
-                    next_etudiant ? "<b>#{next_etudiant.nom.upcase}</b> #{next_etudiant.prénom.humanize}" : nil,
-                    nil
-                ]
-                ]
+            else
+                data = [ ['<i>NOM Prénom</i>', '<i>SIGNATURE</i>', '<i>NOM Prénom</i>', '<i>SIGNATURE</i>'] ]
+                (0..array.length - 1).step(2).each do |index|
+                    etudiant = Etudiant.find(array[index])
+                    if index < array.length - 1
+                        next_etudiant = Etudiant.find(array[index + 1])
+                    end
+                    data += [ [
+                        "<b>#{etudiant.nom.upcase}</b> #{etudiant.prénom.humanize}",
+                        nil,
+                        next_etudiant ? "<b>#{next_etudiant.nom.upcase}</b> #{next_etudiant.prénom.humanize}" : nil,
+                        nil
+                    ]
+                    ]
+                end
             end
 
             move_down @margin_down
 
             font_size 10
             table(data, 
-                header: true, 
-                column_widths: [150, 120, 150, 120],
+                header: true,
+                column_widths: examen ? [166, 166, 166] : [150, 120, 150, 120] ,
                 cell_style: { :inline_format => true, height: 35 })
 
             start_new_page unless index == cours.size - 1

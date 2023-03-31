@@ -36,6 +36,18 @@
                     <p class="mx-2 d-inline">|</p>
                     <%= intervenant.status %>
                 </td>
+            <% when 'Etudiant' %>
+                <%= fa_icon 'graduation-cap', title: "Étudiant" %>
+                Étudiant
+                </td>
+                <td>
+                    <% etudiant = Etudiant.find(result.searchable_id) %>
+                    <%= "#{etudiant.nom} #{etudiant.prénom}" %>
+                    <p class="mx-2 d-inline">|</p>
+                    <%= etudiant.email %>
+                    <p class="mx-2 d-inline">|</p>
+                    <%= etudiant.mobile %>
+                </td>
             <% when 'Unite' %>
                 <%= fa_icon 'award', title: "Unité d'enseignement" %>
                 U.E.

@@ -57,7 +57,7 @@ Rails.application.routes.draw do
       get :archiver
     end
   end
- 
+
   resources :import_logs do
     member do
       get :download_imported_file
@@ -100,6 +100,7 @@ Rails.application.routes.draw do
     get :liste_surveillants_examens
     get :rechercher
     get :rappel_des_cours
+    get :acces_intervenants
 
     post :import_do
     post :creation_cours_do
@@ -118,7 +119,7 @@ Rails.application.routes.draw do
     post :nouvelle_saison_create
     post :notifier_intervenants_do
     post :rappel_des_cours_do
-
+    post :acces_intervenants_do
   end
 
   get 'guide/index'

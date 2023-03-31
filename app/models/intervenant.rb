@@ -33,7 +33,9 @@ class Intervenant < ApplicationRecord
 
 	default_scope { order(:nom, :prenom) } 
 
-	after_create :envoyer_mail
+	before_create :nom_with_underscore
+	# after_create :envoyer_mail
+	after_create :create_user_access
 
 	def self.for_select
 		{
@@ -134,16 +136,30 @@ class Intervenant < ApplicationRecord
 		return book
 	end
 
-private
+	def create_user_access
+		new_password = SecureRandom.hex(10)
+		# Création du compte d'accès (user) et envoi du mail de bienvenue
+		user = User.new(role: "intervenant", nom: self.nom, prénom: self.prenom, email: self.email, mobile: self.téléphone_mobile, password: new_password)
+		if user.valid?
+			user.save
+			mailer_response = IntervenantMailer.with(user: user, password: new_password).welcome_intervenant.deliver_now
+			MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: user.email, subject: "Nouvel accès intervenant")
+		end
+	end
+
+	private
 	def envoyer_mail
 		if self.status == 'CEV' and self.doublon == false 
 			IntervenantMailer.notifier_srh(self).deliver_later
 		end
 	end
 
-    # only one candidate for an nice id; one random UDID
-    def slug_candidates
-      [SecureRandom.uuid]
-    end
+	# only one candidate for an nice id; one random UDID
+	def slug_candidates
+		[SecureRandom.uuid]
+	end
 
+	def nom_with_underscore
+		self.nom = self.nom.gsub(" ","_")
+	end
 end

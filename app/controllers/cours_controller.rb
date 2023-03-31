@@ -1,6 +1,8 @@
 # ENCODING: UTF-8
 
 class CoursController < ApplicationController
+  include ApplicationHelper
+
   before_action :set_cour, only: [:show, :edit, :update, :destroy]
   before_action :is_user_authorized, except: [:destroy]
 
@@ -21,8 +23,10 @@ class CoursController < ApplicationController
     session[:filter] ||= 'upcoming'
     session[:paginate] ||= 'pages'
 
-    if current_user && current_user.intervenant?
-      params[:intervenant_id] = Intervenant.find_by(email: current_user.email).id
+    if current_user && current_user.intervenant? && params.keys.count == 2
+      intervenant = Intervenant.find_by(email: current_user.email)
+      params[:intervenant_id] = intervenant.id
+      params[:intervenant] = intervenant.nom + " " + intervenant.prenom
     end
 
     if params[:commit] && params[:commit][0..2] == 'RàZ'
@@ -48,7 +52,7 @@ class CoursController < ApplicationController
     params[:view] ||= session[:view]
     params[:filter] ||= session[:filter]
     params[:paginate] ||= session[:paginate]
-    
+
     @cours = Cour.order(:debut)
 
     # Si N° de semaine, afficher le premier jour de la semaine choisie, sinon date du jour
@@ -633,14 +637,6 @@ class CoursController < ApplicationController
                                     :intervenant_binome_id, :hors_service_statutaire,
                                     :commentaires, :elearning)
     end
-
-    def clean_page(page)
-      begin 
-        WillPaginate::PageNumber(page)
-      rescue WillPaginate::InvalidPage
-        1  
-      end 
-    end 
 
     def is_user_authorized
       authorize Cour

@@ -1,0 +1,87 @@
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h3><%= fa_icon 'key' %> Liste des intervenants sans accès</h3>
+</div>
+
+<div class="container-fluid p-3 shadow-sm shadow-sm">
+  <%= form_tag request.path, method: :get do %>
+    <div class="form-group">
+      <div class="row">
+
+        <div class="col-sm-4">
+          <%= label_tag :search, "Nom/Prénom/Email" %>
+          <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
+        </div>
+
+        <div class="col-sm-3">
+          <%= label_tag :status, "Statut" %>
+          <div class="input-group">
+            <%= select_tag :status, options_for_select(Intervenant.statuses, 
+                  params[:status]), include_blank:true,
+                  class: 'form-control form-control-sm', onchange: 'this.form.submit()' %>
+            <span class="input-group-btn ml-5">
+              <%= submit_tag 'Filtrer', class: "btn btn-sm btn-success" %>
+            </span>
+          </div>
+        </div>
+
+        <div class="col-sm-2">
+          <%= label_tag "Afficher" %>
+          <br> 
+          <%= radio_button_tag :paginate, "pages", (params[:paginate]=='pages'), onchange:'this.form.submit()' %>
+          Pages 
+          <%= radio_button_tag :paginate, "all", (params[:paginate]=='all'), onchange:'this.form.submit()' %>
+          Tout 
+        </div>
+
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<%= bootstrap_form_tag url: tools_acces_intervenants_do_path, method: :post do %>
+  <div class="table-responsive" data-controller="check-all action">
+    <table class="table table-hover table-striped table-bordered">
+      <thead>
+        <tr>
+          <th>
+            <span data-action="click->action#click">
+              <input type="checkbox" data-target="check-all.all action.source">
+            </span>
+          </th>
+          <th>Status</th>
+          <th>Nom/Prénom</th>
+          <th>Email</th>
+          <th>Créé il y a</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @intervenants.each do |intervenant| %>
+          <tr>
+            <td>
+              <span data-action="click->action#click">
+                <%= check_box_tag "[intervenants_id][#{intervenant.id}]", 'yes', false, data: {"target":"action.source"} %>
+              </span>
+            </td>
+            <td><%= intervenant.status %></td>
+            <td><%= intervenant.nom_prenom %></td>
+            <td><%= intervenant.email %></td>
+            <td><%= time_ago_in_words intervenant.created_at %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="page_info mb-3">
+    <% if params[:paginate] == 'pages' %>
+        <%= page_entries_info @intervenants %>
+        <%= will_paginate @intervenants, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+    <% else %>
+      Nombre d'intervenants : <%= @intervenants.count %>
+    <% end %>
+  </div>
+
+
+  <%= submit_tag "Créer les accès", class: "btn btn-warning mb-5" %>
+<% end %>
