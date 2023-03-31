@@ -12,7 +12,7 @@ class IntervenantMailerPreview < ActionMailer::Preview
     end
 
     def welcome_intervenant
-        IntervenantMailer.with(user: User.find(1)).welcome_intervenant
+        IntervenantMailer.with(user: User.find(1), password: SecureRandom.hex(10)).welcome_intervenant
     end
 
 end
