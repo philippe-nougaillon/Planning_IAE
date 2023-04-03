@@ -11,13 +11,19 @@
       <div class="row">
 
         <div class="col-sm-5">
-          <%= label_tag :to, "Destinataire" %>
+          <%= label_tag :search, "Destinataire" %>
           <div class="input-group">
-            <%= text_field_tag :to, params[:to], include_blank:true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
+            <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
             <span class="input-group-btn">
                 <%= submit_tag 'Filtrer', class:"btn btn-sm btn-success" %>
             </span>
           </div> 
+        </div>
+
+        <div class="col-sm-3">
+          <%= label_tag :ko, "Afficher que les KO ?" %>
+          <br>
+          <%= check_box_tag :ko, 1, params[:ko], onchange:'this.form.submit()' %>
         </div>
         
       </div>
@@ -41,37 +47,21 @@
 
     <tbody>
       <% @mail_logs.each do |mail_log| %>
-        <tr>
-          <td><%= mail_log.user_id == 0 ? "Système" : User.find(mail_log.user_id).nom_et_prénom %></td>
-          <td><%= mail_log.to %></td>
-          <td><%= mail_log.subject %></td>
-          <td><%= time_ago_in_words mail_log.created_at %></td>
-          <td>
-            <% if mail_log.created_at > 5.days.ago %>
-              <% if status = @result_failed["items"].find{|item| item["message"]["headers"]["message-id"] == mail_log.message_id } %>
-                <span class="text-danger">KO</span>
+        <% status_ko = @result_failed["items"].find{|item| item["message"]["headers"]["message-id"] == mail_log.message_id } %>
 
-              <% else %>
-                <span class="text-success">OK</span>
-              <% end %>
-            <% end %>
-          </td>
-          <td>
-            <% if mail_log.created_at > 5.days.ago %>
-              <% if status = @result_opened["items"].find{|item| item["message"]["headers"]["message-id"] == mail_log.message_id } %>
-                <span class="has-text-info">OUVERT</span>
-              <% end %>
-            <% end %>
-          </td>
-          <td><%= link_to 'Voir', mail_log %></td>
-        </tr>
+        <% if params[:ko].blank? || (mail_log.created_at > 5.days.ago && status_ko) %>
+          <%= render partial: "mail_log", locals: {mail_log: mail_log, status_ko: status_ko} %>
+        <% end %>
+
       <% end %>
     </tbody>
   </table>
 </div>
 
-<div class="page_info">
-  <%= page_entries_info @mail_logs %>
-</div>
+<% if @mail_logs.respond_to?(:total_pages) %>
+  <div class="page_info">
+    <%= page_entries_info @mail_logs %>
+  </div>
 
-<%= will_paginate @mail_logs, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+  <%= will_paginate @mail_logs, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+<% end %>

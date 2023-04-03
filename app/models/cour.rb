@@ -3,7 +3,7 @@
 class Cour < ApplicationRecord
 	include PgSearch::Model
 
-  multisearchable against: [:nom_ou_ue, :formation_nom, :intervenant_nom]
+  multisearchable against: [:nom_ou_ue, :formation_nom, :intervenant_nom, :commentaires]
   audited
   
   belongs_to :formation

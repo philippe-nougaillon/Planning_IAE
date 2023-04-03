@@ -48,8 +48,8 @@
               <input type="checkbox" data-target="check-all.all action.source">
             </span>
           </th>
-          <th>Status</th>
           <th>Nom/Prénom</th>
+          <th>Status</th>
           <th>Email</th>
           <th>Créé il y a</th>
         </tr>
@@ -63,8 +63,8 @@
                 <%= check_box_tag "[intervenants_id][#{intervenant.id}]", 'yes', false, data: {"target":"action.source"} %>
               </span>
             </td>
-            <td><%= intervenant.status %></td>
             <td><%= intervenant.nom_prenom %></td>
+            <td><%= intervenant.status %></td>
             <td><%= intervenant.email %></td>
             <td><%= time_ago_in_words intervenant.created_at %></td>
           </tr>
