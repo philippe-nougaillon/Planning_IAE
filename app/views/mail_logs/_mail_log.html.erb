@@ -4,8 +4,7 @@
   <td><%= mail_log.subject %></td>
   <td><%= time_ago_in_words mail_log.created_at %></td>
   <td>
-    <!-- ce test peut être fait comme ça dû au test d'affichage du partial -->
-    <% if status_ko %> 
+    <% if mail_log.created_at > 5.days.ago && status_ko %>
       <span class="text-danger">KO</span>
     <% else %>
       <span class="text-success">OK</span>
