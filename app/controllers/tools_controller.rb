@@ -1275,9 +1275,9 @@ class ToolsController < ApplicationController
   end
 
   def acces_intervenants
+    params[:paginate] ||= 'pages'
     authorized_intervenants_email = User.intervenant.pluck(:email)
     @intervenants = Intervenant.where.not(email: authorized_intervenants_email)
-    @intervenants = @intervenants.reorder(:status, :nom)
 
     unless params[:search].blank?
       @intervenants = @intervenants.where("LOWER(nom) like :search or LOWER(prenom) like :search or LOWER(email) like :search", {search: "%#{params[:search]}%".downcase})
@@ -1287,7 +1287,7 @@ class ToolsController < ApplicationController
       @intervenants = @intervenants.where("status = ?", params[:status])
     end
 
-    if (params[:paginate] == 'pages')
+    if params[:paginate] == 'pages'
       @intervenants = @intervenants.paginate(page: params[:page], per_page: 10)
     end
   end
