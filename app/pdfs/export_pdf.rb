@@ -398,7 +398,7 @@ class ExportPdf
             end
 
             move_down @margin_down * 2
-            text "EMARGEMENT", size: 16, style: :bold, align: :center
+            text "ÉMARGEMENT", size: 16, style: :bold, align: :center
 
             font_size 12
 
@@ -424,7 +424,7 @@ class ExportPdf
             array = cour.formation.etudiants.order(:nom, :prénom).pluck(:id)
 
             if examen = cour.intervenant.id == 169 # Si c'est un examen IAE
-                data = [ ['<i>NOM Prénom</i>', '<i>SIGNATURE Début épreuve</i>', '<i>SIGNATURE Fin épreuve</i>'] ]
+                data = [ ['<i>NOM PRÉNOM</i>', '<i>SIGNATURE DÉBUT ÉPREUVE</i>', '<i>SIGNATURE REMISE COPIE</i>'] ]
                 (0..array.length - 1).each do |index|
                     etudiant = Etudiant.find(array[index])
                     data += [ [
@@ -435,7 +435,7 @@ class ExportPdf
                     ]
                 end
             else
-                data = [ ['<i>NOM Prénom</i>', '<i>SIGNATURE</i>', '<i>NOM Prénom</i>', '<i>SIGNATURE</i>'] ]
+                data = [ ['<i>NOM PRÉNOM</i>', '<i>SIGNATURE</i>', '<i>NOM PRÉNOM</i>', '<i>SIGNATURE</i>'] ]
                 (0..array.length - 1).step(2).each do |index|
                     etudiant = Etudiant.find(array[index])
                     if index < array.length - 1
