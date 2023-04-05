@@ -11,12 +11,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
-    if Intervenant.find_by(email: params[:user][:email])
+    if Intervenant.where("LOWER(intervenants.email) = ?", params[:user][:email].downcase).first
       super
       resource.update(role: "intervenant")
       flash[:notice] = "Bienvenue #{resource.prénom_et_nom} !"
 
-    elsif Etudiant.find_by(email: params[:user][:email])
+    elsif Etudiant.where("LOWER(etudiants.email) = ?", params[:user][:email].downcase).first
       super
       resource.update(role: "étudiant")
       flash[:notice] = "Bienvenue #{resource.prénom_et_nom} !"
