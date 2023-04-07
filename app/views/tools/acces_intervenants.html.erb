@@ -69,7 +69,7 @@
             <td><%= intervenant.email %></td>
             <td><%= time_ago_in_words intervenant.created_at %></td>
             <td>
-              <% if prochain_cours = intervenant.cours.confirmé.first.try(:debut).try(:to_date) %>
+              <% if prochain_cours = intervenant.cours.confirmé.where("cours.debut >= ?", DateTime.now).first.try(:debut).try(:to_date) %>
                 <%= l prochain_cours %>
               <% end %>
             </td>
