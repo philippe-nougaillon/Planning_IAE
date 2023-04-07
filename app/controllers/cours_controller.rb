@@ -23,10 +23,19 @@ class CoursController < ApplicationController
     session[:filter] ||= 'upcoming'
     session[:paginate] ||= 'pages'
 
-    if current_user && current_user.intervenant? && params.keys.count == 2
-      intervenant = Intervenant.where("LOWER(intervenants.email) = ?", current_user.email.downcase).first
-      params[:intervenant_id] = intervenant.id
-      params[:intervenant] = intervenant.nom + " " + intervenant.prenom
+    if current_user && params.keys.count == 2
+      if current_user.intervenant?
+        intervenant = Intervenant.where("LOWER(intervenants.email) = ?", current_user.email.downcase).first
+        params[:intervenant_id] = intervenant.id
+        params[:intervenant] = intervenant.nom + " " + intervenant.prenom
+      elsif current_user.étudiant?
+        formation = Etudiant
+                      .where("LOWER(etudiants.email) = ?", current_user.email.downcase)
+                      .first
+                      .formation
+        params[:formation_id] = formation.id
+        params[:formation] = formation.nom
+      end
     end
 
     if params[:commit] && params[:commit][0..2] == 'RàZ'
