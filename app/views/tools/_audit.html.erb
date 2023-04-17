@@ -6,6 +6,8 @@
     #<%= audit.user_id %>
     <%= audit.try(:user).try(:email) %>
     <br>
+    <%= audit.try(:user).try(:role) %>
+    <br>
     IP: <%= audit.remote_address %>
   </td>
   <td>
