@@ -6,7 +6,7 @@ class MailLogPolicy < ApplicationPolicy
   end
 
   def index?
-    user && user.role_number >= 5
+    user && user.role_number >= 3
   end
 
   def show?
