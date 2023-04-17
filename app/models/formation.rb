@@ -55,11 +55,12 @@ class Formation < ApplicationRecord
 	def code_analytique_avec_indice(cours)
 		code = self.code_analytique || ''
 		if code.last == '?'
-			indice = ((cours.debut.year - self.cours.first.debut.year) + 1).to_s
-			return code.gsub('?', indice)
+			indice = ((cours.debut.year - self.cours.first.debut.year) + 1)
+			# renvoie '_' si l'indice dépasse la limite de 3 années (cursus normal)
+			return code.gsub('?', indice <= 3 ? indice.to_s : '_')
 		else
 			return code
-		end	
+		end
 	end
 
 	def self.for_select
