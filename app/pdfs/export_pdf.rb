@@ -318,7 +318,7 @@ class ExportPdf
                                     I18n.l(exam.debut.to_date, format: :long) + ' ' + I18n.l(exam.debut, format: :heures_min) + '-' + I18n.l(exam.fin, format: :heures_min),
                                     exam.formation.nom_promo,
                                     '7322GRH',
-                                    (exam.formation.diplome.upcase == 'LICENCE' ? '101PAIE' : '102PAIE'),
+                                    (exam.formation.diplome.upcase == 'LICENCE' ? '101PAIE' : exam.intervenant.id == 1314 ? '115PAIE' : '102PAIE'),
                                     exam.formation.code_analytique_avec_indice(exam).gsub('HCO','VAC'),
                                     durée 
                                 ]]
