@@ -769,7 +769,7 @@ class ToolsController < ApplicationController
       @end_date = params[:end_date]
     else
       params[:start_date] ||= Date.today.at_beginning_of_month.last_month
-      params[:end_date]   ||= Date.today.at_end_of_month.last_month
+      params[:end_date]   ||= Date.today.last_month.at_end_of_month
     end
 
     unless params[:status].blank?
@@ -1167,7 +1167,7 @@ class ToolsController < ApplicationController
 
     if params[:start_date].blank? || params[:end_date].blank?
       params[:start_date] ||= Date.today.at_beginning_of_month.last_month
-      params[:end_date]   ||= Date.today.at_end_of_month.last_month
+      params[:end_date]   ||= Date.today.last_month.at_end_of_month
     end
 
     @start_date = params[:start_date]
