@@ -380,12 +380,10 @@ class ExportPdf
 
     end
 
-    def generate_feuille_emargement(cours)
+    def generate_feuille_emargement(cours, étudiants_id)
         font "OpenSans"
 
         cours.each_with_index do |cour, index|
-
-
             font_size 14
 
             y_position = cursor
@@ -421,7 +419,7 @@ class ExportPdf
             move_down @margin_down
             text "IMPORTANT : les données collectées par cette feuille d’émargement sont de nature à permettre la justification des heures effectuées dans le cadre de la formation.", size: 10, align: :center
 
-            array = cour.formation.etudiants.order(:nom, :prénom).pluck(:id)
+            array = étudiants_id || cour.formation.etudiants.order(:nom, :prénom).pluck(:id)
 
             if examen = cour.intervenant.id == 169 # Si c'est un examen IAE
                 data = [ ['<i>NOM PRÉNOM</i>', '<i>SIGNATURE DÉBUT ÉPREUVE</i>', '<i>SIGNATURE REMISE COPIE</i>'] ]

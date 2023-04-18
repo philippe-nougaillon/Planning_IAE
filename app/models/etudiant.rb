@@ -100,5 +100,8 @@ class Etudiant < ApplicationRecord
       u.discard
     end
   end
-  
+
+  def nom_prénom
+    self.nom + ' ' + self.prénom
+  end
 end
