@@ -380,7 +380,7 @@ class ExportPdf
 
     end
 
-    def generate_feuille_emargement(cours, étudiants_id)
+    def generate_feuille_emargement(cours, étudiants_id, table)
         font "OpenSans"
 
         cours.each_with_index do |cour, index|
@@ -421,15 +421,18 @@ class ExportPdf
 
             array = étudiants_id || cour.formation.etudiants.order(:nom, :prénom).pluck(:id)
 
-            if examen = cour.intervenant.id == 169 # Si c'est un examen IAE
-                data = [ ['<i>NOM PRÉNOM</i>', '<i>SIGNATURE DÉBUT ÉPREUVE</i>', '<i>SIGNATURE REMISE COPIE</i>'] ]
+            if examen = cour.examen?
+                if table
+                    data = [ ['<i>NOM PRÉNOM</i>', 'N° Table', '<i>SIGNATURE DÉBUT ÉPREUVE</i>', '<i>SIGNATURE REMISE COPIE</i>'] ]
+                else
+                    data = [ ['<i>NOM PRÉNOM</i>', '<i>SIGNATURE DÉBUT ÉPREUVE</i>', '<i>SIGNATURE REMISE COPIE</i>'] ]
+                end
                 (0..array.length - 1).each do |index|
                     etudiant = Etudiant.find(array[index])
                     data += [ [
                         "<b>#{etudiant.nom.upcase}</b> #{etudiant.prénom.humanize}",
-                        nil,
-                        nil
-                    ]
+                        Array.new(table ? 3 : 2)
+                    ].flatten
                     ]
                 end
             else
@@ -454,7 +457,7 @@ class ExportPdf
             font_size 10
             table(data, 
                 header: true,
-                column_widths: examen ? [166, 166, 166] : [150, 120, 150, 120] ,
+                column_widths: examen ? (table ? [160, 60, 160, 160] : [180,180,180]) : [150, 120, 150, 120] ,
                 cell_style: { :inline_format => true, height: 35 })
 
             start_new_page unless index == cours.size - 1

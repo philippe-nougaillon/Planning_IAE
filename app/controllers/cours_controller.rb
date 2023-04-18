@@ -517,7 +517,7 @@ class CoursController < ApplicationController
         when "Feuille émargement PDF"
           filename = "Feuille_émargement_#{ Date.today }.pdf"
           pdf = ExportPdf.new
-          pdf.generate_feuille_emargement(@cours, params[:etudiants_id].try(:keys))
+          pdf.generate_feuille_emargement(@cours, params[:etudiants_id].try(:keys), params[:table])
 
           send_data pdf.render, filename: filename, type: 'application/pdf'
         end

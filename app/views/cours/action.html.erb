@@ -264,7 +264,7 @@
       <% end %>
 
     </div>
-  <% elsif params[:action_name] == "Feuille émargement PDF" && @cours.count == 1 %>
+  <% elsif params[:action_name] == "Feuille émargement PDF" && @cours.count == 1 && @cours.first.examen? %>
     <h3>Sélectionnez les étudiants</h3>
     <br>
     <% @cours.each do |c| %>
