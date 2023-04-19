@@ -267,13 +267,21 @@
   <% elsif params[:action_name] == "Feuille émargement PDF" && @cours.count == 1 && @cours.first.examen? %>
     <h3>Sélectionnez les étudiants</h3>
     <br>
-    <% @cours.each do |c| %>
-      <% c.formation.etudiants.order(:nom, :prénom).each do |etudiant| %>
-        <%= check_box_tag "[etudiants_id][#{etudiant.id}]", true, true %>
-        <%= etudiant.nom_prénom %>
-        <br>
+    <div data-controller="check-all action">
+      <div data-action="click->action#click">
+        <input id="checkall" type="checkbox" data-target="check-all.all action.source">
+        <label for="checkall">Tous ?</label>
+      </div>
+      <% @cours.each do |c| %>
+        <% c.formation.etudiants.order(:nom, :prénom).each do |etudiant| %>
+          <span data-action="click->action#click">
+            <%= check_box_tag "[etudiants_id][#{etudiant.id}]", true, false, data: {"target":"action.source"} %>
+          </span>
+          <%= etudiant.nom_prénom %>
+          <br>
+        <% end %>
       <% end %>
-    <% end %>
+    </div>
     <div class="row my-4">
       <div class="col-sm-4">
         <%= check_box_tag :table %>
