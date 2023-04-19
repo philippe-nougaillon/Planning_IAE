@@ -14,7 +14,6 @@ class Vacation < ApplicationRecord
       "Tutorat apprenti",
       "VAE examen dossier/participation au jury",
       "Réunion pédagogique_jury de MAE",
-      "Entretiens de sélection",
       "Cours e-learning",
       "Étude préalable de dossier",
       "Entretien de sélection"
