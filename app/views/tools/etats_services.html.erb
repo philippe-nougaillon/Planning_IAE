@@ -6,7 +6,7 @@
 <h3>Récapitule les cours réalisés sur une période donnée, par intervenant</h3>
 <br>
 
-<%= form_tag(request.path, method: :get) do %>
+<%= form_tag request.path, method: :get, class: 'mb-5' do %>
     <div class="row">
 
         <div class="col-sm-2">
@@ -62,6 +62,6 @@
                 Export PDF
         <% end %>
     </div>
+    <hr>
 
 <% end %>
-<br><br>

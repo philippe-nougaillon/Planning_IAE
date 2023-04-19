@@ -22,7 +22,7 @@
                 <th>Code</th>
                 <th>Intitulé</th>
                 <th></th>
-                <th>Durée</th>
+                <th>Durée/Qté</th>
                 <th>CM/TD</th>
                 <th>Taux</th>
                 <th>HETD</th>
@@ -98,9 +98,13 @@
         </tr>
 
         <% @vacations.each_with_index do |vacation, index| %>
-            <% montant_vacation = ((Cour.Tarif * vacation.forfaithtd) * vacation.qte).round(2) %>
+            <% if vacation.forfaithtd > 0 %>
+                <% montant_vacation = ((Cour.Tarif * vacation.forfaithtd) * vacation.qte).round(2) %>
+                <% cumul_hetd += (vacation.qte * vacation.forfaithtd) %>
+            <% else %>
+                <% montant_vacation = vacation.tarif * vacation.qte %>
+            <% end %>
             <% cumul_vacations += montant_vacation %>
-            <% cumul_hetd += (vacation.qte * vacation.forfaithtd) %>
             <% formation = Formation.unscoped.find(vacation.formation_id) %> 
             <tr>
                 <td>V</td>
@@ -111,7 +115,12 @@
                 <td><%= vacation.titre %></td>
                 <td />
                 <td class="text-right"><%= vacation.qte %></td>
-                <td colspan="2">
+                <td />
+                <td class="text-right">
+                    <% if vacation.forfaithtd == 0 %>
+                        <%= vacation.tarif %> €
+                    <% end %>
+                </td>
                 <td class="text-right"><%= vacation.forfaithtd %></td>
                 <td class="text-right"><%= number_to_currency(montant_vacation) %></td>
                 <td class="text-right">

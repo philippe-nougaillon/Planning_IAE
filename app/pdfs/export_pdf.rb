@@ -318,7 +318,7 @@ class ExportPdf
                                     I18n.l(exam.debut.to_date, format: :long) + ' ' + I18n.l(exam.debut, format: :heures_min) + '-' + I18n.l(exam.fin, format: :heures_min),
                                     exam.formation.nom_promo,
                                     '7322GRH',
-                                    (exam.formation.diplome.upcase == 'LICENCE' ? '101PAIE' : '102PAIE'),
+                                    (exam.formation.diplome.upcase == 'LICENCE' ? '101PAIE' : exam.intervenant.id == 1314 ? '115PAIE' : '102PAIE'),
                                     exam.formation.code_analytique_avec_indice(exam).gsub('HCO','VAC'),
                                     durée 
                                 ]]
@@ -380,12 +380,10 @@ class ExportPdf
 
     end
 
-    def generate_feuille_emargement(cours)
+    def generate_feuille_emargement(cours, étudiants_id, table)
         font "OpenSans"
 
         cours.each_with_index do |cour, index|
-
-
             font_size 14
 
             y_position = cursor
@@ -421,17 +419,20 @@ class ExportPdf
             move_down @margin_down
             text "IMPORTANT : les données collectées par cette feuille d’émargement sont de nature à permettre la justification des heures effectuées dans le cadre de la formation.", size: 10, align: :center
 
-            array = cour.formation.etudiants.order(:nom, :prénom).pluck(:id)
+            array = étudiants_id || cour.formation.etudiants.order(:nom, :prénom).pluck(:id)
 
-            if examen = cour.intervenant.id == 169 # Si c'est un examen IAE
-                data = [ ['<i>NOM PRÉNOM</i>', '<i>SIGNATURE DÉBUT ÉPREUVE</i>', '<i>SIGNATURE REMISE COPIE</i>'] ]
+            if examen = cour.examen?
+                if table
+                    data = [ ['<i>NOM PRÉNOM</i>', 'N° Table', '<i>SIGNATURE DÉBUT ÉPREUVE</i>', '<i>SIGNATURE REMISE COPIE</i>'] ]
+                else
+                    data = [ ['<i>NOM PRÉNOM</i>', '<i>SIGNATURE DÉBUT ÉPREUVE</i>', '<i>SIGNATURE REMISE COPIE</i>'] ]
+                end
                 (0..array.length - 1).each do |index|
                     etudiant = Etudiant.find(array[index])
                     data += [ [
                         "<b>#{etudiant.nom.upcase}</b> #{etudiant.prénom.humanize}",
-                        nil,
-                        nil
-                    ]
+                        Array.new(table ? 3 : 2)
+                    ].flatten
                     ]
                 end
             else
@@ -456,7 +457,7 @@ class ExportPdf
             font_size 10
             table(data, 
                 header: true,
-                column_widths: examen ? [166, 166, 166] : [150, 120, 150, 120] ,
+                column_widths: examen ? (table ? [160, 60, 160, 160] : [180,180,180]) : [150, 120, 150, 120] ,
                 cell_style: { :inline_format => true, height: 35 })
 
             start_new_page unless index == cours.size - 1

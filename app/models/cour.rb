@@ -575,6 +575,11 @@ class Cour < ApplicationRecord
     return book 
   end
 
+  # Si c'est un examen IAE / examen rattrapage / Tiers-temps
+  def examen?
+    [169, 1166, 522].include?(self.intervenant.id)
+  end
+
   # def self.cours_a_planifier
   #   # ids des cours créés par utilisateur autre que Thierry (#41)
   #   # vérifie que la date de début de cours est dans la période observée
