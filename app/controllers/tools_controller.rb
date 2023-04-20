@@ -857,6 +857,10 @@ class ToolsController < ApplicationController
       @audits = @audits.where(action: params[:action_name])
     end
 
+    unless params[:role].blank?
+      @audits = @audits.where(user_id: User.where(role: params[:role]))
+    end
+
     unless params[:search].blank?
       @audits = @audits.where("LOWER(audited_changes) like ?", "%#{params[:search]}%".downcase)
     end
@@ -870,13 +874,13 @@ class ToolsController < ApplicationController
 
     @audits = @audits.includes(:user).paginate(page: params[:page], per_page: 20)
 
-    if params[:commit] == "Exporter"
-      book = CustomAudit.generate_xls(@audits)  
-      file_contents = StringIO.new
-      book.write file_contents # => Now file_contents contains the rendered file output
-      filename = "Export_Audits.xls"
-      send_data file_contents.string.force_encoding('binary'), filename: filename
-    end
+    # if params[:commit] == "Exporter"
+    #   book = CustomAudit.generate_xls(@audits)  
+    #   file_contents = StringIO.new
+    #   book.write file_contents # => Now file_contents contains the rendered file output
+    #   filename = "Export_Audits.xls"
+    #   send_data file_contents.string.force_encoding('binary'), filename: filename
+    # end
 
   end
 

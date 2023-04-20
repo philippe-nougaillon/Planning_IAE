@@ -42,7 +42,7 @@ class CustomAudit < Audited::Audit
                 audit.associated_type,
                 audit.user_id,
                 audit.user_type,
-                audit.user.email,
+                audit.user.try(:email),
                 audit.action,
                 audit.audited_changes.to_s,
                 audit.version,
