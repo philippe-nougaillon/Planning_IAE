@@ -259,7 +259,7 @@ class ExportPdf
 
     def export_vacations_administratives(examens, start_date, end_date, surveillant)
         taux_horaire = 11.27
-        is_vacataire = examens.first.intervenant_id == 1314
+        is_vacataire = false
 
         if agent = Agent.find_by(nom: surveillant.split('-').first, prénom: surveillant.split('-').last)
             taux_horaire = case agent.catégorie
@@ -312,6 +312,7 @@ class ExportPdf
                 unless item.blank? 
                     surveillant_item = item.gsub(']', '').delete("\r\n\\")
                     if surveillant_item == surveillant
+                        is_vacataire = (exam.intervenant_id == 1314)
                         index += 1
                         durée = exam.duree + 1 
                         cumul_durée += durée
