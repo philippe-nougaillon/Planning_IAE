@@ -293,14 +293,14 @@ class ExportPdf
         move_down @margin_down
 
         text surveillant
-        text is_vacataire ? "Vacataire" : "Surveillant Examen"
+        move_down @margin_down
         text "Du #{I18n.l(start_date.to_date)} au #{I18n.l(end_date.to_date)}"
 
         move_down @margin_down
         #text "Affaire suivie par : Thémoline"
 
         # Tableau récap par code OTP
-        data = [ ['N°', 'Date', 'Formation', 'Centre de coût', 'Destination financière', 'EOTP', 'Total heures' ]]    
+        data = [ ['N°', 'Date', 'Type', 'Formation', 'Centre de coût', 'Destination financière', 'EOTP', 'Total heures' ]]    
 
         font_size 7
  
@@ -318,6 +318,7 @@ class ExportPdf
                         cumul_durée += durée
                         data += [[ index,
                                     I18n.l(exam.debut.to_date, format: :long) + ' ' + I18n.l(exam.debut, format: :heures_min) + '-' + I18n.l(exam.fin, format: :heures_min),
+                                    is_vacataire ? "Vacataire" : "Surveillance Examen",
                                     exam.formation.nom_promo,
                                     '7322GRH',
                                     (exam.formation.diplome.upcase == 'LICENCE' ? '101PAIE' : exam.intervenant.id == 1314 ? '115PAIE' : '102PAIE'),
@@ -329,9 +330,9 @@ class ExportPdf
             end
         end
 
-        data += [[nil, nil,nil, nil,nil, "Total heures :", "<b>#{ cumul_durée }</b>" ]]
+        data += [[nil, nil, nil, nil, nil, nil, "Total heures :", "<b>#{ cumul_durée }</b>" ]]
 
-        data += [[nil, nil,
+        data += [[nil, nil, nil,
                     "Taux horaire en vigueur au 01/01/2023 :", 
                     "#{ taux_horaire } €",
                     nil,
@@ -341,7 +342,7 @@ class ExportPdf
         # Corps de table
         table data, 
             header: true, 
-            column_widths: {0 => 20, 1 => 120, 2=> 150,5 => 100, 6 => 40},
+            column_widths: {0 => 20, 1 => 110, 2 => 50, 3 => 135, 4 => 50, 5 => 50, 6 => 85, 7 => 40},
             row_colors: ["F0F0F0", "FFFFFF"] do 
                 column(6).style(:align => :right)
                 cells.style(inline_format: true, border_width: 1, border_color: 'C0C0C0')
