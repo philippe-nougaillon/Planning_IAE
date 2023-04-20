@@ -259,6 +259,7 @@ class ExportPdf
 
     def export_vacations_administratives(examens, start_date, end_date, surveillant)
         taux_horaire = 11.27
+        is_vacataire = examens.first.intervenant_id == 1314
 
         if agent = Agent.find_by(nom: surveillant.split('-').first, prénom: surveillant.split('-').last)
             taux_horaire = case agent.catégorie
@@ -292,7 +293,7 @@ class ExportPdf
         move_down @margin_down
 
         text surveillant
-        text "Surveillant Examen"
+        text is_vacataire ? "Vacataire" : "Surveillant Examen"
         text "Du #{I18n.l(start_date.to_date)} au #{I18n.l(end_date.to_date)}"
 
         move_down @margin_down
@@ -373,7 +374,7 @@ class ExportPdf
                 text "Directeur de l'IAE Paris", size: 8
             end
             bounding_box([250, y_position], :width => 250) do
-                text "Barbara FITSCH-MOURAS"
+                text is_vacataire ? "" : "Barbara FITSCH-MOURAS"
                 text "Responsable de service", size: 8 
             end
         end
