@@ -1183,13 +1183,13 @@ class ToolsController < ApplicationController
     respond_to do |format|
       format.html
   
-      format.xls do
-        book = Cour.generate_etats_services_xls(@cours, @intervenants, @start_date, @end_date)
-        file_contents = StringIO.new
-        book.write file_contents # => Now file_contents contains the rendered file output
-        filename = "Export_Cours.xls"
-        send_data file_contents.string.force_encoding('binary'), filename: filename 
-      end
+      # format.xls do
+      #   book = Cour.generate_etats_services_xls(@cours, @intervenants, @start_date, @end_date)
+      #   file_contents = StringIO.new
+      #   book.write file_contents # => Now file_contents contains the rendered file output
+      #   filename = "Export_Cours.xls"
+      #   send_data file_contents.string.force_encoding('binary'), filename: filename 
+      # end
 
       format.pdf do
         filename = "Vacations_administratives_#{ surveillant }_du_#{ @start_date }_au_#{ @end_date }"
