@@ -314,7 +314,7 @@ class ExportPdf
                     if surveillant_item == surveillant
                         is_vacataire = (exam.intervenant_id == 1314)
                         index += 1
-                        durée = exam.duree + 1 
+                        durée = exam.duree + (is_vacataire ? 0 : 1)
                         cumul_durée += durée
                         data += [[ index,
                                     I18n.l(exam.debut.to_date, format: :long) + ' ' + I18n.l(exam.debut, format: :heures_min) + '-' + I18n.l(exam.fin, format: :heures_min),

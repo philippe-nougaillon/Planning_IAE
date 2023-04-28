@@ -18,26 +18,32 @@
               </div>
 
               <div class="col-sm-2">
-                  <%= label_tag "Type" %>   
-                  <%= select_tag :type, 
-                        options_for_select(@types, params[:type]), include_blank:true, onchange:'this.form.submit()', class:"form-control" %>
+                <%= label_tag :role, "Rôle" %>
+                <%= select_tag :role,
+                      options_for_select(User.roles, params[:role]), include_blank:true, onchange:'this.form.submit()', class:"form-control" %>
               </div>
 
               <div class="col-sm-2">
-                  <%= label_tag "Action" %>   
-                  <%= select_tag :action_name, 
-                        options_for_select(@actions, params[:action_name]), include_blank:true, onchange:'this.form.submit()', class:"form-control" %>
+                <%= label_tag :type, "Type" %>
+                <%= select_tag :type,
+                      options_for_select(@types, params[:type]), include_blank:true, onchange:'this.form.submit()', class:"form-control" %>
               </div>
 
-              <div class="col-sm-4">
+              <div class="col-sm-2">
+                <%= label_tag :action_name, "Action" %>
+                <%= select_tag :action_name,
+                      options_for_select(@actions, params[:action_name]), include_blank:true, onchange:'this.form.submit()', class:"form-control" %>
+              </div>
+
+              <div class="col-sm-2">
                   <%= label_tag "Rechercher" %>
                   <div class="input-group">       
                     <%= text_field_tag :search, params[:search], class:"form-control" %>
                     <span class="input-group-btn">
-                      <%= submit_tag 'Filtrer', class:"btn btn-success" %>
+                      <%= submit_tag 'GO', class:"btn btn-success" %>
                     </span>
                     <span class="input-group-btn">
-                      <%= submit_tag 'Exporter', class:"btn btn-default" %>
+                      <%# submit_tag 'Exporter', class:"btn btn-default" %>
                     </span>
                   </div>
               </div>
