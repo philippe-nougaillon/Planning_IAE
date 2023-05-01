@@ -62,8 +62,9 @@ GEM
       zeitwerk (~> 2.3)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
-    audited (4.10.0)
-      activerecord (>= 4.2, < 6.2)
+    audited (5.3.3)
+      activerecord (>= 5.0, < 7.1)
+      request_store (~> 1.2)
     aws-eventstream (1.1.1)
     aws-partitions (1.470.0)
     aws-sdk-core (3.115.0)
@@ -99,7 +100,7 @@ GEM
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
     childprocess (3.0.0)
-    concurrent-ruby (1.1.10)
+    concurrent-ruby (1.2.2)
     crass (1.0.6)
     css_parser (1.9.0)
       addressable
@@ -135,7 +136,7 @@ GEM
     http-accept (1.7.0)
     http-cookie (1.0.5)
       domain_name (~> 0.5)
-    i18n (1.12.0)
+    i18n (1.13.0)
       concurrent-ruby (~> 1.0)
     icalendar (2.7.1)
       ice_cube (~> 0.16)
@@ -169,7 +170,7 @@ GEM
     mime-types-data (3.2022.0105)
     mini_mime (1.1.2)
     mini_portile2 (2.8.0)
-    minitest (5.16.3)
+    minitest (5.18.0)
     msgpack (1.4.2)
     netrc (0.11.0)
     nio4r (2.5.8)
@@ -238,6 +239,8 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     regexp_parser (2.1.1)
+    request_store (1.5.1)
+      rack (>= 1.4)
     responders (3.0.1)
       actionpack (>= 5.0)
       railties (>= 5.0)
@@ -298,7 +301,7 @@ GEM
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
-    tzinfo (2.0.5)
+    tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unf (0.1.4)
       unf_ext
@@ -333,13 +336,13 @@ GEM
     yaml_db (0.7.0)
       rails (>= 3.0)
       rake (>= 0.8.7)
-    zeitwerk (2.6.1)
+    zeitwerk (2.6.8)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  audited (~> 4.0)
+  audited (~> 5.3)
   aws-sdk-s3
   bootsnap (>= 1.4.2)
   bootstrap_form (~> 4.5)
