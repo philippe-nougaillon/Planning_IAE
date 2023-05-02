@@ -49,7 +49,7 @@
             <% exam.commentaires.split('[').each do |item| %>
                 <% unless item.blank? %>
                     <% surveillant = item.gsub(']', '').delete("\r\n\\") %>
-                    <% durée = exam.duree + 1 %>
+                    <% durée = exam.duree + ((exam.intervenant_id == 1314) ? 0 : 1) %>
                     <% @cumuls[surveillant] ? @cumuls[surveillant] += durée : @cumuls[surveillant] = durée %>
                     <tr>
                         <td><%= link_to l(exam.debut, format: :long), cour_path(exam.id) %></td>
