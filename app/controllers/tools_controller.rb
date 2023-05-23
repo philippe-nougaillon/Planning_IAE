@@ -577,7 +577,7 @@ class ToolsController < ApplicationController
         end
 
         # cours du soir
-        if params[:soir]
+        unless params[:soir_params].blank?
           c = new_cours.dup
           case params[:soir_params]
           when '1'
