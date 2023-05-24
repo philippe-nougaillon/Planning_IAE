@@ -124,10 +124,10 @@
       <%= yield %>
       
       <% if !(user_signed_in?) && current_page?("/users/sign_in") %>
-        <footer class="fixed-bottom d-flex justify-content-center text-white py-2" style="background-color: #12385a">
+        <footer class="fixed-bottom d-flex justify-content-center text-muted py-2 bg-light">
           <p class="mb-0">
             IAE Paris - Sorbonne Business School - Université Paris 1 Panthéon-Sorbonne © 2023 - Toute reproduction interdite -
-            <u><%= link_to "Mentions légales", mentions_legales_path, class:"text-white" %></u>
+            <u><%= link_to "Mentions légales", mentions_legales_path, class: 'text-muted' %></u>
           </p>
         </footer>
       <% end %>

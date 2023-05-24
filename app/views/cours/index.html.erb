@@ -192,7 +192,7 @@
               <%= will_paginate @cours, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
             <% end %>
           </div>
-          <div class="col">
+          <div class="col-4">
             <% if policy(Cour).action? %>
               <div data-target="action.selector">  
                 <span class="align-bottom">
@@ -202,7 +202,7 @@
                 <%= select_tag "action_name", options_for_select(actions), include_blank:true, class:"form-control", onchange:'this.form.submit()' %>
               </div>
             <% else %>
-              <% if params[:formation].present? || params[:intervenant].present? %>
+              <% if user_signed_in? && (params[:formation].present? || params[:intervenant].present?) %>
                 <span class="align-bottom">Exporter vers </span>
                 <%= link_to cours_url(format: :xls), class: 'btn btn-sm btn-success' do %>
                   <%= fa_icon 'file-excel' %>
@@ -214,16 +214,15 @@
                   Document PDF
                 <% end %>
 
-                <%= link_to url_for(params.permit!.merge(format: :ics)), class: 'btn btn-sm btn-primary' do %>
-                  <%= fa_icon 'calendar-day' %>
-                  Calendrier iCal
-                <% end %>
               <% end %>
             <% end %>
         </div>
       </div>
     <% end %>
 
+    <% if user_signed_in? && (params[:formation].present? || params[:intervenant].present?) %>
+      <%= render "sync-ical" %>
+    <% end %>
   <% else %>
     Aucun résultat à afficher... 
     <%= link_to "Effacer les filtres pour voir tous les cours", 
@@ -233,4 +232,3 @@
   <%= render partial: params[:view] %>
 <% end %>
 <br>
-
