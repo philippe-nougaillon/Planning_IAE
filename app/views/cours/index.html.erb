@@ -214,14 +214,17 @@
                   Document PDF
                 <% end %>
 
-                <%= link_to url_for(params.permit!.merge(format: :ics)), class: 'btn btn-sm btn-primary' do %>
-                  <%= fa_icon 'calendar-day' %>
-                  Calendrier iCal
-                <% end %>
               <% end %>
             <% end %>
         </div>
       </div>
+      <h4 class="mt-5">
+        Synchronisation du calendrier
+      </h4>
+      <p>
+        Ajouter et synchroniser avec votre calendrier personnel (Google Agenda, Apple Calendar, Outlook, ...)
+      </p>
+      <%= "#{root_url}#{url_for(params.permit!.merge(format: :ics))}" %>
     <% end %>
 
   <% else %>
