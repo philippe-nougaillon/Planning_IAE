@@ -156,6 +156,8 @@ Rails.application.routes.draw do
   resources :ouvertures
   resources :agents
 
+  get 'mentions_légales', to: 'pages#mentions_légales', as: :mentions_legales
+
   root 'cours#index'
 
 end

@@ -258,7 +258,7 @@ class ExportPdf
     end
 
     def export_vacations_administratives(examens, start_date, end_date, surveillant)
-        taux_horaire = 11.27
+        taux_horaire = 11.52
         is_vacataire = false
 
         if agent = Agent.find_by(nom: surveillant.split('-').first, prénom: surveillant.split('-').last)
@@ -288,7 +288,7 @@ class ExportPdf
             text "Décret n°2003-1009 du 16/10/2003 relatif aux vacations susceptibles d’être allouées aux personnels"
             text "accomplissant des activités accessoires dans certains établissements d’enseignement supérieur"
         else
-            text "Décret n° 2022-1608 du 22 décembre 2022 portant relèvement du salaire minimum de croissance"
+            text "Arrêté du 26 avril 2023 relatif au relèvement du salaire minimum de croissance"
         end
         move_down @margin_down
 
@@ -333,7 +333,7 @@ class ExportPdf
         data += [[nil, nil, nil, nil, nil, nil, "Total heures :", "<b>#{ cumul_durée }</b>" ]]
 
         data += [[nil, nil, nil,
-                    "Taux horaire en vigueur au 01/01/2023 :", 
+                    "Taux horaire en vigueur au 01/05/2023 :", 
                     "#{ taux_horaire } €",
                     nil,
                     "<b>Total brut :</b>",
