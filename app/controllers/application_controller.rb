@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   #before_action :authenticate_user!, except: [:index_slide]
-  before_action :authenticate_user!, except: [:index_slide, :index, :occupation]
+  before_action :authenticate_user!, except: [:index_slide, :index, :occupation, :mentions_légales]
   before_action :detect_device_format
   before_action :set_layout_variables
   before_action :prepare_exception_notifier
