@@ -1,0 +1,25 @@
+<h4 class="mt-5">
+  Synchronisation du calendrier
+</h4>
+<p>
+  Ajouter le lien ci-dessous à votre calendrier personnel (Google Agenda, Apple Calendar, Outlook, ...) pour que vos cours apparaissent automatiquement.
+</p>
+<div class="input-group mb-3">
+  <input type="text" class="form-control" value=<%= root_url + url_for(params.permit!.merge(format: :ics))%> id="calendar-clipboard">
+  <div class="input-group-append">
+    <span id="myTooltip" onclick="myFunction()" class="input-group-text" style="cursor: pointer;">
+      Copier
+    </span>
+  </div>
+</div>
+<script>
+  function myFunction() {
+    var copyText = document.getElementById("calendar-clipboard");
+    copyText.select();
+    copyText.setSelectionRange(0, 99999);
+    navigator.clipboard.writeText(copyText.value);
+    
+    var tooltip = document.getElementById("myTooltip");
+    tooltip.innerHTML = "Copié !";
+  }
+</script>
