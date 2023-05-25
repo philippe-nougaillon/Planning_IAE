@@ -24,6 +24,7 @@ Rails.application.routes.draw do
   resources :intervenants do
     member do
       get :invitations
+      get :calendrier
     end
   end
   resources :users

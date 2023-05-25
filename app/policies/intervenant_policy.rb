@@ -37,4 +37,8 @@ class IntervenantPolicy < ApplicationPolicy
     true
   end
 
+  def calendrier?
+    true
+  end
+
 end
