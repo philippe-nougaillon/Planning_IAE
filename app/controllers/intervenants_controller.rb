@@ -1,8 +1,8 @@
 # ENCODING: UTF-8
 
 class IntervenantsController < ApplicationController
-  skip_before_action :authenticate_user!, only: %i[ invitations ]
-  before_action :set_intervenant, only: [:show, :invitations, :edit, :update, :destroy]
+  skip_before_action :authenticate_user!, only: %i[ invitations calendrier ]
+  before_action :set_intervenant, only: [:show, :invitations, :edit, :update, :destroy, :calendrier]
   before_action :is_user_authorized
 
   # check if logged and admin  
@@ -121,6 +121,18 @@ class IntervenantsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to intervenants_path, notice: 'Intervenant supprimé.' }
       format.json { head :no_content }
+    end
+  end
+
+  def calendrier
+    respond_to do |format|
+      format.ics do
+        @calendar = Cour.generate_ical(@intervenant.cours)
+        filename = "Calendrier_#{@intervenant.nom}"
+        response.headers['Content-Disposition'] = 'attachment; filename="' + filename + '.ics"'
+        headers['Content-Type'] = "text/calendar; charset=UTF-8"
+        render plain: @calendar.to_ical
+      end
     end
   end
 

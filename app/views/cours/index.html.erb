@@ -220,8 +220,8 @@
       </div>
     <% end %>
 
-    <% if user_signed_in? && (params[:formation].present? || params[:intervenant].present?) %>
-      <%= render "sync-ical" %>
+    <% if user_signed_in? && (current_user.intervenant? || current_user.enseignant?) && params[:intervenant].present? %>
+      <%= render partial: "sync-ical", locals: {url: calendrier_intervenant_url(Intervenant.where("LOWER(intervenants.email) = ?", current_user.email.downcase).first.slug, format: :ics)} %>
     <% end %>
   <% else %>
     Aucun résultat à afficher... 
