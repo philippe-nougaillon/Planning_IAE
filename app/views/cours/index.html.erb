@@ -221,7 +221,7 @@
     <% end %>
 
     <% if user_signed_in? && (current_user.intervenant? || current_user.enseignant?) && params[:intervenant].present? %>
-      <%= render partial: "sync-ical", locals: {url: calendrier_intervenant_url(Intervenant.find_by(email: current_user.email).slug, format: :ics)} %>
+      <%= render partial: "sync-ical", locals: {url: calendrier_intervenant_url(Intervenant.where("LOWER(intervenants.email) = ?", current_user.email.downcase).first.slug, format: :ics)} %>
     <% end %>
   <% else %>
     Aucun résultat à afficher... 

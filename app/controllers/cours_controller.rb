@@ -24,7 +24,7 @@ class CoursController < ApplicationController
     session[:paginate] ||= 'pages'
 
     if current_user && params.keys.count == 2
-      if current_user.intervenant?
+      if (current_user.intervenant? || current_user.enseignant?)
         intervenant = Intervenant.where("LOWER(intervenants.email) = ?", current_user.email.downcase).first
         params[:intervenant_id] = intervenant.id
         params[:intervenant] = intervenant.nom + " " + intervenant.prenom
