@@ -39,7 +39,7 @@
               <%= cours.intervenant_binome.nom_prenom %>
             <% end %>
           </td>
-          <td><%= cours.ue %></td>
+          <td><%= cours.code_ue %></td>
           <td><%= cours.nom %></td>
           <td><span class="badge badge-<%= cours.style %>"><%= cours.etat.humanize %></span></td>
           <td><%= cours.try(:salle).try(:nom)  %></td>
