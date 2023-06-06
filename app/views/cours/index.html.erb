@@ -192,7 +192,7 @@
               <%= will_paginate @cours, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
             <% end %>
           </div>
-          <div class="col-4">
+          <div class="col">
             <% if policy(Cour).action? %>
               <div data-target="action.selector">  
                 <span class="align-bottom">
@@ -212,6 +212,11 @@
                 <%= link_to cours_url(format: :pdf), class: 'btn btn-sm btn-danger' do %>
                   <%= fa_icon 'file-pdf' %>
                   Document PDF
+                <% end %>
+
+                <%= link_to cours_url(format: :ics), class: 'btn btn-sm btn-info' do %>
+                  <%= fa_icon 'calendar' %>
+                  Calendrier
                 <% end %>
 
               <% end %>

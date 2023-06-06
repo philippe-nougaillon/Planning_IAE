@@ -429,10 +429,10 @@ class CoursController < ApplicationController
           end
           
           if params[:intervertir_ue]
-            ue_A = cours_A.ue
-            ue_B = cours_B.ue
-            cours_A.update_columns(ue: ue_B)
-            cours_B.update_columns(ue: ue_A)
+            code_ue_A = cours_A.code_ue
+            code_ue_B = cours_B.code_ue
+            cours_A.update_columns(code_ue: code_ue_B)
+            cours_B.update_columns(code_ue: code_ue_A)
           end
           
           if params[:intervertir_salles]
