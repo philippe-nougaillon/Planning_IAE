@@ -80,8 +80,12 @@
       <h3 class="mt-2">
         <small class="text-muted">Salles habituelles</small><br>
       </h3>
-      <%= @salles_habituelles %>
-
+      <% @salles_habituelles.each do |salle_id, count| %>
+        <% salle = Salle.find(salle_id) %>
+        <span class="badge badge-sm badge-pill badge-success" style="font-size: calc( .25rem + <%= [1.5, (count.fdiv(@average_count))].min %>rem);" title="Salle <%= salle.nom %> a été utilisée <%= count %> fois">
+          <%= salle.nom.first(2) %>
+        </span>
+      <% end %>
     </div>
   </div>
 
