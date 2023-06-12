@@ -12,13 +12,13 @@
   <div class="form-group">
     <div class="row">
       <div class="col-sm-2">
-        <%= label_tag "Intervenus du" %>    
-          <%= text_field_tag :date_debut, params[:date_debut], type: 'date', class: 'form-control' %>
+        <%= label_tag :date_debut, "Intervenus du" %>
+        <%= text_field_tag :date_debut, params[:date_debut], type: 'date', class: 'form-control', required: true %>
       </div>
 
       <div class="col-sm-2">
-        <%= label_tag "au" %>    
-          <%= text_field_tag :date_fin, params[:date_fin], type: 'date', class: 'form-control' %>
+        <%= label_tag :date_fin, "au" %>
+        <%= text_field_tag :date_fin, params[:date_fin], type: 'date', class: 'form-control', required: true %>
       </div>
 
       <div class="col-sm-3">
@@ -30,8 +30,8 @@
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-sm-2">    
+    <div class="row mt-3">
+      <div class="col-sm-2">
         <div class="actions">
           <%= submit_tag "Exporter", class: "btn btn-success" %>
         </div>
