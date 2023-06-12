@@ -57,14 +57,17 @@ class FormationsController < ApplicationController
   # GET /formations/1.json
   def show
     @salles_habituelles = @formation.cours
+                                    .joins(:salle)
+                                    .where("salles.bloc != 'Z'")
                                     .select('cours.id')
                                     .group(:salle_id)
                                     .count(:id)
                                     .sort_by{|k, v| v}
                                     .reverse
-                                    .collect{ |x| x.first ? "#{Salle.with_discarded.find(x.first).try(:nom)}x#{ x.last }" : nil }
-                                    .select{ |x| !x.nil? }
-                                    .join(', ')
+                                    .first(5)
+
+    @average_count = 0
+    @salles_habituelles.map{|x| @average_count += x.last.to_i / 5}
   end
 
   # GET /formations/new
