@@ -411,7 +411,11 @@ class Cour < ApplicationRecord
           end 
 
           @vacations.each do |vacation|
-            montant_vacation = ((Cour.Tarif * vacation.forfaithtd) * (vacation.qte || 0)).round(2)
+            if vacation.forfaithtd > 0
+              montant_vacation = ((Cour.Tarif * vacation.forfaithtd) * vacation.qte).round(2)
+            else
+              montant_vacation = vacation.tarif * vacation.qte
+            end
             fields_to_export = [
                   'V',
                   intervenant.nom_prenom,
@@ -520,8 +524,12 @@ class Cour < ApplicationRecord
       end 
 
       @vacations.each do |vacation|
-        montant_vacation = ((Cour.Tarif * vacation.forfaithtd) * (vacation.qte || 0)).round(2)
-        cumul_hetd += (vacation.qte * vacation.forfaithtd)
+        if vacation.forfaithtd > 0
+          montant_vacation = ((Cour.Tarif * vacation.forfaithtd) * vacation.qte).round(2)
+          cumul_hetd += (vacation.qte * vacation.forfaithtd)
+        else
+          montant_vacation = vacation.tarif * vacation.qte
+        end
         formation = Formation.unscoped.find(vacation.formation_id)
         
         fields_to_export = [

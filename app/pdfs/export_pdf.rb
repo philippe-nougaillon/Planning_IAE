@@ -1,5 +1,6 @@
 class ExportPdf
     include Prawn::View
+    include ActionView::Helpers::NumberHelper
   
     # Taille et orientation du document par défaut
     # def document
@@ -94,7 +95,7 @@ class ExportPdf
         text "Du #{I18n.l(start_date.to_date)} au #{I18n.l(end_date.to_date)}"
         move_down @margin_down
 
-        data = [ ['Code','Dest. fi.','Date','Heure','Formation','Intitulé','Durée','CM/TD','Taux','HETD','Montant €'] ]
+        data = [ ['Code','Dest. fi.','Date','Heure','Formation','Intitulé','Durée','CM/TD','Taux','HETD','Montant'] ]
 
         # Cours 
         cours_ids.flatten.each do |id|
@@ -124,7 +125,7 @@ class ExportPdf
                 formation.nomtauxtd,
                 c.taux_td,
                 c.HETD,
-                montant_service
+                number_to_currency(montant_service)
             ] ]
         end    
 
@@ -135,15 +136,19 @@ class ExportPdf
             cumul_duree,
             nil, nil,
             cumul_hetd,
-            "<b>#{cumul_tarif}</b>"
+            "<b>#{number_to_currency(cumul_tarif)}</b>"
         ] ]
 
 
         # Vacations
         vacations.each_with_index do | vacation, index |
-            montant_vacation = ((Cour.Tarif * vacation.forfaithtd) * vacation.qte).round(2)
+            if vacation.forfaithtd > 0
+                montant_vacation = ((Cour.Tarif * vacation.forfaithtd) * vacation.qte).round(2)
+                cumul_hetd += (vacation.qte * vacation.forfaithtd)
+            else
+                montant_vacation = vacation.tarif * vacation.qte
+            end
             cumul_vacations += montant_vacation
-            cumul_hetd += (vacation.qte * vacation.forfaithtd)
             formation = Formation.unscoped.find(vacation.formation_id) 
             
             data += [ [
@@ -156,14 +161,14 @@ class ExportPdf
                 vacation.qte,
                 nil, nil,
                 vacation.forfaithtd,
-                montant_vacation
+                number_to_currency(montant_vacation)
             ] ] 
     
             if index == vacations.size - 1
                 data += [ [
                     "<b><i>#{vacations.size} vacation.s au total</i></b>",
                     nil, nil, nil, nil, nil, nil, nil, nil, nil,  
-                    "<b>#{cumul_vacations}</b>"
+                    "<b>#{number_to_currency(cumul_vacations)}</b>"
                 ] ]
             end
         end
@@ -185,7 +190,7 @@ class ExportPdf
                 'TD', 
                 Cour.Tarif,
                 nil,
-                montant_responsabilite
+                number_to_currency(montant_responsabilite)
                 ] ]
 
             if index == responsabilites.size - 1
@@ -194,7 +199,7 @@ class ExportPdf
                     nil, nil, nil, nil, nil,
                     nil,
                     nil, nil, nil,
-                    "<b>#{ cumul_resps }</b>"
+                    "<b>#{ number_to_currency(cumul_resps) }</b>"
                     ] ]
             end
         end
@@ -208,7 +213,7 @@ class ExportPdf
             end
         end
 
-        data += [ ["<b><i>TOTAL </i></b>", nil, nil, nil, nil, s, nil, nil, nil, nil, "<b>#{cumul_resps + cumul_vacations + cumul_tarif}</b>"] ]
+        data += [ ["<b><i>TOTAL </i></b>", nil, nil, nil, nil, s, nil, nil, nil, nil, "<b>#{number_to_currency(cumul_resps + cumul_vacations + cumul_tarif)}</b>"] ]
 
         # Générer la Table
         font_size 7
