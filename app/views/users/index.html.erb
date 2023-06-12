@@ -22,7 +22,7 @@
                   options_for_select(User.roles, 
                   params[:role]), 
                   include_blank:true,
-                  class: 'form-control form-control-sm', 
+                  class: 'form-control', 
                   onchange: 'this.form.submit()' 
           %>          
         </div>
@@ -48,6 +48,8 @@
         <th>Prénom</th>
         <th><%= sort_link 'users.email', 'Courriel' %></th>
         <th>Rôle</th>
+        <th><%= sort_link 'users.current_sign_in_at', 'Connexion' %></th>
+        <th><%= sort_link 'users.sign_in_count', 'Nbr' %></th>
         <th></th>
       </tr>
     </thead>
@@ -65,6 +67,8 @@
           <td><%= user.prénom %></td>
           <td><%= user.email %></td>
           <td><%= user.role.humanize %></td>
+          <td><%= time_ago_in_words user.current_sign_in_at if user.current_sign_in_at %></td>
+          <td ><%= user.sign_in_count %></td>
           <td>
             <%= link_to edit_user_path(user), class: "btn btn-default" do %>
               <%= fa_icon 'edit' %>

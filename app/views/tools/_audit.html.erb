@@ -3,12 +3,17 @@
     <%= l(audit.created_at, format: :perso) %>
   </td>
   <td>
-    <%= audit.try(:user).try(:email) %>
-    (#<%= audit.user_id %>)
-    <br>
-    <%= audit.try(:user).try(:role).try(:humanize) %>
-    <br>
-    IP: <%= audit.remote_address %>
+    <% if audit.user_id %>
+      <% user = User.all.find( audit.user_id) %>
+      <%= user.email %>
+      (#<%= user.id %>)
+      <br>
+      <%= user.role.upcase %>
+      <br>
+      IP: <%= audit.remote_address %>
+    <% else %>
+      SYSTEM CONSOLE
+    <% end %>
   </td>
   <td>
     <%= audit.auditable_type %>
