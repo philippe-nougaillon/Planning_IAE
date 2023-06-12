@@ -146,13 +146,14 @@
             <% montant_responsabilite = (resp.heures * Cour.Tarif).round(2) %>
             <% cumul_resps += montant_responsabilite %>
             <% cumul_hetd += resp.heures %>
+            <% formation = Formation.unscoped.find(resp.formation_id) %>
 
             <tr>
                 <td>R</td>
                 <td><%= l resp.debut %></td>
                 <td />
-                <td><%= link_to resp.formation.nom, resp.formation, target:"_new" %></td>
-                <td><%= resp.formation.code_analytique %></td>
+                <td><%= link_to formation.nom, formation, target:"_new" %></td>
+                <td><%= formation.code_analytique %></td>
                 <td><%= resp.titre %></td>
                 <td />
                 <td class="text-right"><%= resp.heures %></td>
