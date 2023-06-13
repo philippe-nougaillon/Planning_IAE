@@ -107,7 +107,7 @@ class ExportPdf
                 montant_service = c.montant_service.round(2)
                 cumul_tarif += montant_service
                 formation = Formation.unscoped.find(c.formation_id)
-                eotp = formation.code_analytique_avec_indice(c)
+                eotp = formation.code_analytique_avec_indice(c.debut)
                 cumul_eotp.keys.include?(eotp) ? cumul_eotp[eotp] += montant_service : cumul_eotp[eotp] = montant_service
                 cumul_eotp_durée.keys.include?(eotp) ? cumul_eotp_durée[eotp] += c.duree : cumul_eotp_durée[eotp] = c.duree
             end
@@ -115,8 +115,8 @@ class ExportPdf
             formation = Formation.unscoped.find(c.formation_id)
 
             data += [ [
-                formation.code_analytique_avec_indice(c),
-                formation.code_analytique_avec_indice(c).include?('DISTR') ? "101PAIE" : "102PAIE",
+                formation.code_analytique_avec_indice(c.debut),
+                formation.code_analytique_avec_indice(c.debut).include?('DISTR') ? "101PAIE" : "102PAIE",
                 I18n.l(c.debut.to_date),
                 c.debut.strftime("%k:%M"),
                 formation.abrg,
@@ -181,7 +181,7 @@ class ExportPdf
 
             data += [ [
                 resp.formation.code_analytique,
-                resp.formation.code_analytique_avec_indice(resp).include?('DISTR') ? "101PAIE" : "102PAIE",
+                resp.formation.code_analytique_avec_indice(resp.debut).include?('DISTR') ? "101PAIE" : "102PAIE",
                 I18n.l(resp.debut),
                 nil,
                 resp.formation.nom,
@@ -327,7 +327,7 @@ class ExportPdf
                                     exam.formation.nom_promo,
                                     '7322GRH',
                                     (exam.formation.diplome.upcase == 'LICENCE' ? '101PAIE' : exam.intervenant.id == 1314 ? '115PAIE' : '102PAIE'),
-                                    exam.formation.code_analytique_avec_indice(exam).gsub('HCO','VAC'),
+                                    exam.formation.code_analytique_avec_indice(exam.debut).gsub('HCO','VAC'),
                                     durée 
                                 ]]
                         end
