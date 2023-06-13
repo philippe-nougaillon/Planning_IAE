@@ -116,7 +116,7 @@ class ExportPdf
 
             data += [ [
                 formation.code_analytique_avec_indice(c.debut),
-                formation.code_analytique_avec_indice(c.debut).include?('DISTR') ? "101PAIE" : "102PAIE",
+                formation.code_analytique.include?('DISTR') ? "101PAIE" : "102PAIE",
                 I18n.l(c.debut.to_date),
                 c.debut.strftime("%k:%M"),
                 formation.abrg,
@@ -152,7 +152,7 @@ class ExportPdf
             formation = Formation.unscoped.find(vacation.formation_id) 
             
             data += [ [
-                formation.code_analytique,
+                formation.code_analytique_avec_indice(vacation.date),
                 formation.code_analytique.include?('DISTR') ? "101PAIE" : "102PAIE",
                 I18n.l(vacation.date),
                 nil,
@@ -180,8 +180,8 @@ class ExportPdf
             cumul_hetd += resp.heures
 
             data += [ [
-                resp.formation.code_analytique,
-                resp.formation.code_analytique_avec_indice(resp.debut).include?('DISTR') ? "101PAIE" : "102PAIE",
+                resp.formation.code_analytique_avec_indice(resp.debut),
+                resp.formation.code_analytique.include?('DISTR') ? "101PAIE" : "102PAIE",
                 I18n.l(resp.debut),
                 nil,
                 resp.formation.nom,
