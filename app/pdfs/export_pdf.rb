@@ -472,5 +472,180 @@ class ExportPdf
         end
     end
 
+    def pochette_examen(cours, papier, calculatrice, outils)
+        font "OpenSans"
+        #orange : E68824
+        #bleu : 032E4D
+        # <font size='9'>
+        cours.each_with_index do |cour, index|
+            image "#{@image_path}/logo_iae_2.png", :height => 60
+
+            move_down @margin_down * 2
+
+            infos = [ ["<b><color rgb='E68824'>EMARGEMENT POUR SURVEILLANCE D’EXAMEN</color></b> \n <color rgb='032E4D'>(Exemplaire à conserver par le surveillant)</color>"] ]
+            table(infos, cell_style: {inline_format: true, border_color: "E68824", align: :center})
+
+            move_down @margin_down * 2
+
+            text "NOM – Prénom du \n surveillant :         #{cour.intervenant.nom_prenom}"
+
+            move_down @margin_down * 2
+
+            data = [ ["Date", "<b>#{I18n.l(cour.debut.to_date)}</b>"],
+                    ["Formation(s)","<b>#{cour.formation.nom}</b>"],
+                    ["Examen(s)","<b>UE#{cour.code_ue}</b>"],
+                    ["Horaires de surveillance   (nbre d’heures rémunérées)",
+                    "<b>#{cour.debut.strftime('%Hh%M')}-#{cour.fin.strftime('%Hh%M')} (#{((cour.fin - cour.debut) / 1.hour).truncate} heure.s)????</b>"],
+                    ["Taux horaire de vacation en vigueur au 01/05/2023","<b>11,52 €</b>"] ]
+
+            table(data, 
+                header: true, 
+                column_widths: [150, 350], 
+                row_colors: ["FFFFFF", "FFEAD5"],
+                cell_style: { inline_format: true},
+                position: :center)
+
+            move_down @margin_down * 3
+            data2 = [ ["Cadre réservé au \n<b>Surveillant</b>"], ["Date :  ……./………/2023 \n\n Signature : \n\n\n\n\n\n\n\n\n\n"]]
+                table(data2, 
+                    header: true, 
+                    column_widths: [300], 
+                    row_colors: ["FFFFFF", "FFEAD5"],
+                    cell_style: { inline_format: true, width: 300, align: :center, color: "032E4D"},
+                    position: :center)
+
+            start_new_page
+
+            image "#{@image_path}/logo_iae_2.png", :height => 60
+
+            move_down @margin_down * 4
+
+            infos = [ ["<b>EMARGEMENT POUR SURVEILLANCE D’EXAMEN</b> \n (Exemplaire à remettre à l’Administration)"] ]
+            table(infos, cell_style: {inline_format: true, border_color: "E68824", align: :center})
+
+            move_down @margin_down
+
+            text "NOM – Prénom du \n surveillant :         #{cour.intervenant.nom_prenom}"
+
+            move_down @margin_down
+
+            table(data, 
+                header: true, 
+                column_widths: [150, 350], 
+                row_colors: ["FFFFFF", "FFEAD5"],
+                cell_style: { inline_format: true},
+                position: :center)
+
+            move_down @margin_down * 3
+
+            data3 = [ ["Cadre réservé au \n<b>Surveillant</b>", "Cadre réservé à \n<b>l’Administration</b>"]]
+            data3 += [ ["\n\nDate :  ……./………/2023 \n\n Signature : \n\n\n\n\n\n\n", "\n\nSaisie dans l’Outil Planning le \n\n\n ……./………/2023 \n\n\n\n\n\n"] ]
+
+            move_down @margin_down
+            table(data3, 
+                header: true, 
+                column_widths: [250, 250],
+                row_colors: ["FFFFFF", "FFEAD5"],
+                cell_style: { inline_format: true, align: :center},
+                position: :center)
+
+            start_new_page
+
+            image "#{@image_path}/logo@100.png", :height => 60, position: :center
+
+            move_down @margin_down * 4
+            
+
+            infos = [ ["<b>PROCÈS-VERBAL DE DÉROULEMENT D’EXAMEN</b>"] ]
+            table(infos, cell_style: {inline_format: true, width: 540, border_color: "E68824", align: :center})
+
+            move_down @margin_down *2
+
+            text "UE#{cour.code_ue || "?"} #{cour.ue || "?????"}"
+
+            move_down @margin_down 
+
+            text "Pour tous problèmes importants durant l’examen, contacter le responsable(s) de l’UE :"
+            text "#{Intervenant.find_by(id: cour.intervenant_binome_id).prenom_nom} (tel: #{Intervenant.find_by(id: cour.intervenant_binome_id).téléphone_mobile})"
+
+            move_down @margin_down * 2
+
+            table([ ["•", "Formation : #{cour.formation.nom}"],
+                ["•", "Date : #{I18n.l(cour.debut.to_date)}"],
+                ["•", "Horaires : #{cour.debut}-#{cour.fin}"],
+                ["•", "Salle : #{cour.salle.nom}"] ],
+                cell_style: { borders: [] })
+                move_down @margin_down
+            table([ ["•", "Nombre d’étudiants inscrits : ???"],
+                    ["•", "Nombre de copies rendues : ...................................."] ],
+                    cell_style: { borders: [] })
+            move_down @margin_down 
+            table([ ["•", "Nom(s) du/des surveillant(s) : #{cour.commentaires.split('[').each do |item| item.gsub(']', '') unless item.blank? end}"] ],
+            cell_style: { borders: [] })
+
+            move_down @margin_down * 2
+
+            text " COMPTE-RENDU DU DÉROULEMENT DE L’EXAMEN", align: :center
+
+            text "R. A. S."
+            text " INCIDENT"
+            text "Dans ce dernier cas, indiquez ci-après les observations ou incidents constatés pendant l’examen :"
+
+            text "Signature(s) surveillant(es)"
+            text "Signature de l’étudiant impliqué \ndans l’incident, le cas échéant"
+
+            start_new_page
+
+            text "#{cour.formation.nom}", align: :center
+
+            move_down @margin_down * 2
+
+            text "Surveillant.e.s :"
+            text "#{cour.commentaires.split('[').each do |item| item.gsub(']', '') unless item.blank? end}"
+            move_down @margin_down
+            text "Examen UE#{cour.code_ue} #{cour.ue}"
+            text "Le #{I18n.l(cour.debut.to_date)}"
+            text "De #{cour.debut.strftime('%Hh%M')} à #{cour.fin.strftime('%Hh%M')}"
+            text "Salle #{cour.salle.nom}"
+
+            text " En fin d’épreuve, merci de remettre l’enveloppe contenant les copies à l’accueil."
+
+            start_new_page
+
+            image "#{@image_path}/logo_iae_2.png", :height => 60
+
+            move_down @margin_down * 4
+
+            text "#{cour.ue}"
+            text "Examen du #{I18n.l(cour.debut.to_date)}"
+
+            text "#{cour.formation.nom}"
+            text "#{'Formation en apprentissage' if cour.formation.apprentissage}"
+            text "Enseignant : #{Intervenant.find_by(id: cour.intervenant_binome_id).nom}"
+            text "Durée : #{((cour.fin - cour.debut) / 1.hour).truncate}h (#{(((cour.fin - cour.debut) / 1.hour).truncate) + 1}h pour le tiers temps)"
+
+            # TODO: à refaire
+            if papier
+                text "> Documents papier autorisés"
+            else
+                text "> Documents papier interdits"
+            end
+
+            if calculatrice
+                text "> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission autorisée"
+            else
+                text "> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission interdie"
+            end
+
+            if outils
+                text "> Les ordinateurs, tablettes et téléphones portables sont autorisés"
+            else
+                text "> Les ordinateurs, tablettes et téléphones portables sont interdits"
+            end
+
+            move_down @margin_down
+            text "Promotion #{cour.formation.nom}"
+        end
+    end
 
 end
