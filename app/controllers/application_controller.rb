@@ -27,7 +27,7 @@ class ApplicationController < ActionController::Base
       @ctrl = params[:controller]
       @action = params[:action]
       @sitename ||= request.subdomains.any? ? request.subdomains(0).first.upcase : 'IAE-Planning DEV'
-      @sitename.concat(' v4.18.c')
+      @sitename.concat(' v4.19')
 
       if current_user
         @cours_params = {}
