@@ -474,10 +474,9 @@ class ExportPdf
 
     def pochette_examen(cours, papier, calculatrice, outils)
         font "OpenSans"
-        #orange : E68824
-        #bleu : 032E4D
-        # <font size='9'>
+        
         cours.each_with_index do |cour, index|
+            surveillants = cour.commentaires.tr('[]', '').gsub(/[\r\n]/, ' ').split(' ').to_s.tr('\"[]', '').gsub(/[-]/, ' ')
             image "#{@image_path}/logo_iae_2.png", :height => 60
 
             move_down @margin_down * 2
@@ -486,31 +485,30 @@ class ExportPdf
             table(infos, cell_style: {inline_format: true, border_color: "E68824", align: :center})
 
             move_down @margin_down * 2
+            text "<color rgb='032E4D'>NOM – Prénom du surveillant : <b>#{surveillants}</b></color>", inline_format: true
 
-            text "NOM – Prénom du \n surveillant :         #{cour.intervenant.nom_prenom}"
 
             move_down @margin_down * 2
 
-            data = [ ["Date", "<b>#{I18n.l(cour.debut.to_date)}</b>"],
-                    ["Formation(s)","<b>#{cour.formation.nom}</b>"],
-                    ["Examen(s)","<b>UE#{cour.code_ue}</b>"],
-                    ["Horaires de surveillance   (nbre d’heures rémunérées)",
-                    "<b>#{cour.debut.strftime('%Hh%M')}-#{cour.fin.strftime('%Hh%M')} (#{((cour.fin - cour.debut) / 1.hour).truncate} heure.s)????</b>"],
-                    ["Taux horaire de vacation en vigueur au 01/05/2023","<b>11,52 €</b>"] ]
+            data = [ ["<color rgb='032E4D'>Date</color>", "<color rgb='032E4D'><b>#{I18n.l(cour.debut.to_date)}</b></color>"],
+                    ["<color rgb='032E4D'>Formation(s)</color>","<color rgb='032E4D'><b>#{cour.formation.nom}</b></color>"],
+                    ["<color rgb='032E4D'>Examen(s)</color>","<color rgb='032E4D'><b>UE#{cour.code_ue || '?'}</b></color>"],
+                    ["<color rgb='032E4D'>Horaires de surveillance   (nbre d’heures rémunérées)</color>",
+                    "<color rgb='032E4D'><b>#{cour.debut.strftime('%Hh%M')}-#{cour.fin.strftime('%Hh%M')} (#{((cour.fin - cour.debut) / 1.hour).truncate} heure.s)????</b></color>"],
+                    ["<color rgb='032E4D'>Taux horaire de vacation en vigueur au 01/05/2023</color>","<color rgb='032E4D'><b>11,52 €</b></color>"] ]
 
             table(data, 
                 header: true, 
                 column_widths: [150, 350], 
-                row_colors: ["FFFFFF", "FFEAD5"],
+                row_colors: ["FFEAD5", "FFFFFF"],
                 cell_style: { inline_format: true},
                 position: :center)
 
             move_down @margin_down * 3
-            data2 = [ ["Cadre réservé au \n<b>Surveillant</b>"], ["Date :  ……./………/2023 \n\n Signature : \n\n\n\n\n\n\n\n\n\n"]]
+            data2 = [ ["<color rgb='032E4D'>Cadre réservé au \n<b>Surveillant</b></color>"], ["<color rgb='032E4D'>Date :  ……./………/2023 \n\n Signature : \n\n\n\n\n\n\n\n\n\n</color>"]]
                 table(data2, 
                     header: true, 
-                    column_widths: [300], 
-                    row_colors: ["FFFFFF", "FFEAD5"],
+                    column_widths: [300],
                     cell_style: { inline_format: true, width: 300, align: :center, color: "032E4D"},
                     position: :center)
 
@@ -520,32 +518,31 @@ class ExportPdf
 
             move_down @margin_down * 4
 
-            infos = [ ["<b>EMARGEMENT POUR SURVEILLANCE D’EXAMEN</b> \n (Exemplaire à remettre à l’Administration)"] ]
+            infos = [ ["<color rgb='E68824'><b>EMARGEMENT POUR SURVEILLANCE D’EXAMEN</b></color> \n<color rgb='032E4D'> (Exemplaire à remettre à l’Administration)</color>"] ]
             table(infos, cell_style: {inline_format: true, border_color: "E68824", align: :center})
 
             move_down @margin_down
 
-            text "NOM – Prénom du \n surveillant :         #{cour.intervenant.nom_prenom}"
+            text "<color rgb='032E4D'>NOM – Prénom du surveillant : <b>#{surveillants}</b></color>", inline_format: true
 
             move_down @margin_down
 
             table(data, 
                 header: true, 
                 column_widths: [150, 350], 
-                row_colors: ["FFFFFF", "FFEAD5"],
+                row_colors: ["FFEAD5", "FFFFFF"],
                 cell_style: { inline_format: true},
                 position: :center)
 
             move_down @margin_down * 3
 
-            data3 = [ ["Cadre réservé au \n<b>Surveillant</b>", "Cadre réservé à \n<b>l’Administration</b>"]]
-            data3 += [ ["\n\nDate :  ……./………/2023 \n\n Signature : \n\n\n\n\n\n\n", "\n\nSaisie dans l’Outil Planning le \n\n\n ……./………/2023 \n\n\n\n\n\n"] ]
+            data3 = [ ["<color rgb='032E4D'>Cadre réservé au \n<b>Surveillant</b></color>", "<color rgb='032E4D'>Cadre réservé à \n<b>l’Administration</b></color>"]]
+            data3 += [ ["<color rgb='032E4D'>\n\nDate :  ……./………/2023 \n\n Signature : \n\n\n\n\n\n\n</color>", "<color rgb='032E4D'>\n\nSaisie dans l’Outil Planning le \n\n\n ……./………/2023 \n\n\n\n\n\n</color>"] ]
 
             move_down @margin_down
             table(data3, 
                 header: true, 
                 column_widths: [250, 250],
-                row_colors: ["FFFFFF", "FFEAD5"],
                 cell_style: { inline_format: true, align: :center},
                 position: :center)
 
@@ -553,62 +550,99 @@ class ExportPdf
 
             image "#{@image_path}/logo@100.png", :height => 60, position: :center
 
-            move_down @margin_down * 4
+            move_down @margin_down * 2
             
 
-            infos = [ ["<b>PROCÈS-VERBAL DE DÉROULEMENT D’EXAMEN</b>"] ]
+            infos = [ ["<color rgb='E68824'><b>PROCÈS-VERBAL DE DÉROULEMENT D’EXAMEN</b></color>"] ]
             table(infos, cell_style: {inline_format: true, width: 540, border_color: "E68824", align: :center})
 
             move_down @margin_down *2
 
-            text "UE#{cour.code_ue || "?"} #{cour.ue || "?????"}"
+            text "<color rgb='032E4D'><b>UE#{cour.code_ue || "?"} #{cour.nom_ou_ue || "?????"}</b></color>",inline_format: true, size: 16
 
             move_down @margin_down 
 
-            text "Pour tous problèmes importants durant l’examen, contacter le responsable(s) de l’UE :"
-            text "#{Intervenant.find_by(id: cour.intervenant_binome_id).prenom_nom} (tel: #{Intervenant.find_by(id: cour.intervenant_binome_id).téléphone_mobile})"
+            text "<color rgb='032E4D'><u>Pour tous problèmes importants durant l’examen, contacter le responsable(s) de l’UE</u> :</color>", inline_format: true
+            text "<color rgb='032E4D'><b>#{Intervenant.find_by(id: cour.intervenant_binome_id).prenom_nom} (tel: #{Intervenant.find_by(id: cour.intervenant_binome_id).téléphone_mobile})</b></color>", inline_format: true
 
-            move_down @margin_down * 2
-
-            table([ ["•", "Formation : #{cour.formation.nom}"],
-                ["•", "Date : #{I18n.l(cour.debut.to_date)}"],
-                ["•", "Horaires : #{cour.debut}-#{cour.fin}"],
-                ["•", "Salle : #{cour.salle.nom}"] ],
-                cell_style: { borders: [] })
-                move_down @margin_down
-            table([ ["•", "Nombre d’étudiants inscrits : ???"],
-                    ["•", "Nombre de copies rendues : ...................................."] ],
-                    cell_style: { borders: [] })
-            move_down @margin_down 
-            table([ ["•", "Nom(s) du/des surveillant(s) : #{cour.commentaires.split('[').each do |item| item.gsub(']', '') unless item.blank? end}"] ],
-            cell_style: { borders: [] })
-
-            move_down @margin_down * 2
-
-            text " COMPTE-RENDU DU DÉROULEMENT DE L’EXAMEN", align: :center
-
-            text "R. A. S."
-            text " INCIDENT"
-            text "Dans ce dernier cas, indiquez ci-après les observations ou incidents constatés pendant l’examen :"
-
-            text "Signature(s) surveillant(es)"
-            text "Signature de l’étudiant impliqué \ndans l’incident, le cas échéant"
-
-            start_new_page
-
-            text "#{cour.formation.nom}", align: :center
-
-            move_down @margin_down * 2
-
-            text "Surveillant.e.s :"
-            text "#{cour.commentaires.split('[').each do |item| item.gsub(']', '') unless item.blank? end}"
             move_down @margin_down
-            text "Examen UE#{cour.code_ue} #{cour.ue}"
-            text "Le #{I18n.l(cour.debut.to_date)}"
-            text "De #{cour.debut.strftime('%Hh%M')} à #{cour.fin.strftime('%Hh%M')}"
-            text "Salle #{cour.salle.nom}"
 
-            text " En fin d’épreuve, merci de remettre l’enveloppe contenant les copies à l’accueil."
+            table([ ["<color rgb='032E4D'>•</color>", "<color rgb='032E4D'><b>Formation : #{cour.formation.nom}</b></color>"],
+                ["<color rgb='032E4D'>•</color>", "<color rgb='032E4D'><b>Date : #{I18n.l(cour.debut.to_date)}</b></color>"],
+                ["<color rgb='032E4D'>•</color>", "<color rgb='032E4D'><b>Horaires : #{cour.debut.strftime('%Hh%M')}-#{cour.fin.strftime('%Hh%M')}</b></color>"],
+                ["<color rgb='032E4D'>•</color>", "<color rgb='032E4D'><b>Salle : #{cour.salle.nom}</b></color>"] ],
+                cell_style: { borders: [], inline_format: true })
+            move_down @margin_down / 2
+            table([ ["<color rgb='032E4D'>•</color>", "<color rgb='032E4D'><b>Nombre d’étudiants inscrits : #{cour.formation.nbr_etudiants} à vérifer !!!</b></color>"],
+                    ["<color rgb='032E4D'>•</color>", "<color rgb='032E4D'>Nombre de copies rendues : ....................................</color>"] ],
+                    cell_style: { borders: [], inline_format: true })
+            move_down @margin_down / 2
+            table([ ["<color rgb='032E4D'>•</color>", "<color rgb='032E4D'><b>Nom(s) du/des surveillant(s) : #{surveillants}</b></color>"] ],
+            cell_style: { borders: [], inline_format: true })
+
+            move_down @margin_down * 2
+
+            text "<color rgb='032E4D'><b><u>COMPTE-RENDU DU DÉROULEMENT DE L’EXAMEN</u></b></color>", inline_format: true, align: :center
+
+            text "[_]  <color rgb='032E4D'><b>R. A. S.</b></color>", inline_format: true
+            text "[_]  <color rgb='032E4D'><b>INCIDENT</b></color>", inline_format: true
+
+            move_down @margin_down
+
+            text "<color rgb='032E4D'><b>Dans ce dernier cas,</b> indiquez ci-après les observations ou incidents constatés pendant l’examen :</color>", inline_format: true
+
+            move_down @margin_down * 6
+
+            y_position = cursor
+            bounding_box([20, y_position], :width => 150) do
+                text "<color rgb='032E4D'>Signature(s) surveillant(es)</color>", inline_format: true
+            end
+            bounding_box([350, y_position], :width => 190) do
+                text "<color rgb='032E4D'>Signature de l’étudiant impliqué \ndans l’incident, le cas échéant</color>", inline_format: true
+            end    
+
+            start_new_page(layout: :landscape)
+
+            text "<color rgb='032E4D'><b>#{cour.formation.nom}</b></color>", inline_format: true, align: :center, size: 32
+
+            move_down @margin_down * 2
+
+            text "<color rgb='032E4D'><u>Surveillant.e.s :</u></color>", inline_format: true, size: 24
+            text "<color rgb='032E4D'><b>#{surveillants}</b></color>", inline_format: true, size: 24
+            move_down @margin_down
+            text "<color rgb='032E4D'>Examen <b>UE#{cour.code_ue || '?'} #{cour.nom_ou_ue}</b></color>", inline_format: true, size: 24
+            text "<color rgb='032E4D'>Le <b>#{I18n.l(cour.debut.to_date)}</b></color>", inline_format: true, size: 24
+            text "<color rgb='032E4D'>De <b>#{cour.debut.strftime('%Hh%M')} à #{cour.fin.strftime('%Hh%M')}</b></color>", inline_format: true, size: 24
+            text "<color rgb='032E4D'>Salle <b>#{cour.salle.nom}</b></color>", inline_format: true, size: 24
+
+            move_down @margin_down * 2
+            text "<color rgb='FF0000'>=>   <b><u>En fin d’épreuve</u>, merci de remettre l’enveloppe contenant les copies à l’accueil.</b></color>", inline_format: true, size: 24
+
+            start_new_page(layout: :portrait)
+
+            image "#{@image_path}/logo_iae_2.png", :height => 60
+
+            move_down @margin_down * 4
+
+            text "<color rgb='032E4D'><b>UE#{cour.code_ue || "?"} #{cour.nom_ou_ue}</b></color>", inline_format: true, size: 16
+            text "<color rgb='032E4D'><b>Examen du #{I18n.l(cour.debut.to_date)}</b></color>", inline_format: true, size: 16
+
+            move_down @margin_down * 3
+
+            text "<color rgb='E68824'><b>#{cour.formation.nom}</b></color>", inline_format: true, size: 16
+            text "<color rgb='E68824'>#{'Formation en apprentissage' if cour.formation.apprentissage}</b></color>", inline_format: true, size: 16
+            move_down @margin_down * 2
+            text "<color rgb='032E4D'>Enseignant : #{Intervenant.find_by(id: cour.intervenant_binome_id).nom}</color>", inline_format: true
+            move_down @margin_down
+            text "<color rgb='032E4D'>Durée : #{((cour.fin - cour.debut) / 1.hour).truncate}h (#{(((cour.fin - cour.debut) / 1.hour).truncate) + 1}h pour le tiers temps)</color>", inline_format: true
+            move_down @margin_down
+            text "<color rgb='032E4D'>> Documents papier #{papier ? "autorisés" : "interdits"}autorisés</color>", inline_format: true
+            text "<color rgb='032E4D'>> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission #{calculatrice ? "autorisée" : "interdite"}</color>", inline_format: true, size: 16
+            text "<color rgb='032E4D'>> Les ordinateurs, tablettes et téléphones portables sont #{outils ? "autorisés" : "interdits"}</color>", inline_format: true
+
+            move_down @margin_down * 3
+
+            text "<color rgb='032E4D'>Promotion ???</color>", inline_format: true, align: :right
 
             start_new_page
 
@@ -616,35 +650,28 @@ class ExportPdf
 
             move_down @margin_down * 4
 
-            text "#{cour.ue}"
-            text "Examen du #{I18n.l(cour.debut.to_date)}"
+            text "<color rgb='032E4D'><b>UE#{cour.code_ue || "?"} #{cour.nom_ou_ue}</b></color>", inline_format: true, size: 16
+            text "<color rgb='032E4D'><b>Examen du #{I18n.l(cour.debut.to_date)}</b></color>", inline_format: true, size: 16
 
-            text "#{cour.formation.nom}"
-            text "#{'Formation en apprentissage' if cour.formation.apprentissage}"
-            text "Enseignant : #{Intervenant.find_by(id: cour.intervenant_binome_id).nom}"
-            text "Durée : #{((cour.fin - cour.debut) / 1.hour).truncate}h (#{(((cour.fin - cour.debut) / 1.hour).truncate) + 1}h pour le tiers temps)"
+            move_down @margin_down * 2
+            text "<color rgb='032E4D'><i>Merci d’indiquer votre numéro étudiant : .......................</i></color>", inline_format: true, size: 16
 
-            # TODO: à refaire
-            if papier
-                text "> Documents papier autorisés"
-            else
-                text "> Documents papier interdits"
-            end
+            move_down @margin_down * 2
 
-            if calculatrice
-                text "> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission autorisée"
-            else
-                text "> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission interdie"
-            end
-
-            if outils
-                text "> Les ordinateurs, tablettes et téléphones portables sont autorisés"
-            else
-                text "> Les ordinateurs, tablettes et téléphones portables sont interdits"
-            end
-
+            text "<color rgb='E68824'><b>#{cour.formation.nom}</b></color>", inline_format: true, size: 16
+            text "<color rgb='E68824'>#{'Formation en apprentissage' if cour.formation.apprentissage}</b></color>", inline_format: true, size: 16
+            move_down @margin_down * 2
+            text "<color rgb='032E4D'>Enseignant : #{Intervenant.find_by(id: cour.intervenant_binome_id).nom}</color>", inline_format: true, size: 16
             move_down @margin_down
-            text "Promotion #{cour.formation.nom}"
+            text "<color rgb='032E4D'>Durée : #{((cour.fin - cour.debut) / 1.hour).truncate}h</color>", inline_format: true
+            move_down @margin_down
+            text "<color rgb='032E4D'>> Documents papier #{papier ? "autorisés" : "interdits"}</color>", inline_format: true
+            text "<color rgb='032E4D'>> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission #{calculatrice ? "autorisée" : "interdite"}</color>", inline_format: true
+            text "<color rgb='032E4D'>> Les ordinateurs, tablettes et téléphones portables sont #{outils ? "autorisés" : "interdits"}</color>", inline_format: true
+
+            move_down @margin_down * 3
+
+            text "<color rgb='032E4D'>Promotion ???</color>", inline_format: true, align: :right
         end
     end
 

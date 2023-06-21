@@ -288,14 +288,16 @@
         <%= label_tag :table, "Ajouter une colonne N° Table" %>
       </div>
     </div>
-  <% elsif params[:action_name] == "Pochette examen PDF" && @cours.count == 1 && @cours.first.examen? %>
+  <% elsif params[:action_name] == "Générer Pochette Examen PDF" && @cours.count == 1 && @cours.first.examen? %>
     <h3>Sélectionnez les options d'examens</h3>
-    <br>
+    <i>Cochez les options autorisées. Non cochée = option interdite</i>
+    <br><br>
     <%= check_box_tag :papier %> Papiers autorisés ?
     <br>
     <%= check_box_tag :calculatrice %> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyende transmission autorisés ?
     <br>
     <%= check_box_tag :outils %> Ordinateurs, tablettes et téléphones portables autorisés ?
+    <br><br>
   <% end %>
 
   <div class="row mb-5">
