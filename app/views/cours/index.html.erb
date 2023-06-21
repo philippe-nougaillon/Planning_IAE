@@ -58,6 +58,11 @@
               <% end %>
             </div>
           </div>
+        <% else %>
+          <div class="col-sm-5">
+            <%= label_tag "Intervenant" %>
+            <%= select_tag :intevenant, nil, class: "form-control form-control-sm select2"%>
+          </div>
         <% end %>
       </div>
       <br>

@@ -119,7 +119,7 @@ class CoursController < ApplicationController
       @cours = @cours.where(formation_id:formation_id)
     end
 
-    unless params[:intervenant].blank?
+    unless params[:intervenant].blank? || !user_signed_in?
       intervenant = params[:intervenant].strip
       intervenant_id = Intervenant.find_by(nom: intervenant.split(' ').first, prenom: intervenant.split(' ').last.rstrip)
       @cours = @cours.where("intervenant_id = ? OR intervenant_binome_id = ?", intervenant_id, intervenant_id)
