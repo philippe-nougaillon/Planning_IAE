@@ -470,7 +470,7 @@ class CoursController < ApplicationController
         @calendar = Cour.generate_ical(@cours)
         request.format = 'ics'
 
-      when "Exporter en PDF", "Feuille émargement PDF", "Pochette examen PDF"
+      when "Exporter en PDF", "Générer Feuille émargement PDF", "Générer Pochette Examen PDF"
         request.format = 'pdf'
 
     end 
@@ -514,14 +514,14 @@ class CoursController < ApplicationController
           filename: filename.concat('.pdf'),
             type: 'application/pdf',
             disposition: 'inline'
-        when "Feuille émargement PDF"
+        when "Générer Feuille émargement PDF"
           filename = "Feuille_émargement_#{ Date.today }.pdf"
           pdf = ExportPdf.new
           pdf.generate_feuille_emargement(@cours, params[:etudiants_id].try(:keys), params[:table])
 
           send_data pdf.render, filename: filename, type: 'application/pdf'
-        when "Pochette examen PDF"
-          filename = "Feuille_émargement_#{ Date.today }.pdf"
+        when "Générer Pochette Examen PDF"
+          filename = "Pochette_Examen_#{ Date.today }.pdf"
           pdf = ExportPdf.new
           pdf.pochette_examen(@cours, params[:papier], params[:calculatrice], params[:outils])
 
