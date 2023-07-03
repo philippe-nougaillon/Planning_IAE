@@ -1183,6 +1183,7 @@ class ToolsController < ApplicationController
                   .where("commentaires like '%[%'")
                   .where("debut between ? and ?", @start_date, @end_date.to_date + 1.day)
                   .includes(:formation)
+                  .order(:debut)
 
     respond_to do |format|
       format.html
