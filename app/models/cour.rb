@@ -55,7 +55,7 @@ class Cour < ApplicationRecord
       actions << ["Changer de salle", "Changer d'intervenant", "Intervertir"]
     end
     if role_number >= 5
-      actions << ["Changer d'état", "Changer de date", "Inviter", "Feuille émargement PDF"]
+      actions << ["Changer d'état", "Changer de date", "Inviter", "Générer Feuille émargement PDF", "Générer Pochette Examen PDF"]
     end
     return actions.flatten.sort
   end

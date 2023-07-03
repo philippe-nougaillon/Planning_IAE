@@ -119,7 +119,7 @@ class CoursController < ApplicationController
       @cours = @cours.where(formation_id:formation_id)
     end
 
-    unless params[:intervenant].blank?
+    unless params[:intervenant].blank? || !user_signed_in?
       intervenant = params[:intervenant].strip
       intervenant_id = Intervenant.find_by(nom: intervenant.split(' ').first, prenom: intervenant.split(' ').last.rstrip)
       @cours = @cours.where("intervenant_id = ? OR intervenant_binome_id = ?", intervenant_id, intervenant_id)
@@ -470,7 +470,7 @@ class CoursController < ApplicationController
         @calendar = Cour.generate_ical(@cours)
         request.format = 'ics'
 
-      when "Exporter en PDF", "Feuille émargement PDF"
+      when "Exporter en PDF", "Générer Feuille émargement PDF", "Générer Pochette Examen PDF"
         request.format = 'pdf'
 
     end 
@@ -514,10 +514,16 @@ class CoursController < ApplicationController
           filename: filename.concat('.pdf'),
             type: 'application/pdf',
             disposition: 'inline'
-        when "Feuille émargement PDF"
+        when "Générer Feuille émargement PDF"
           filename = "Feuille_émargement_#{ Date.today }.pdf"
           pdf = ExportPdf.new
           pdf.generate_feuille_emargement(@cours, params[:etudiants_id].try(:keys), params[:table])
+
+          send_data pdf.render, filename: filename, type: 'application/pdf'
+        when "Générer Pochette Examen PDF"
+          filename = "Pochette_Examen_#{ Date.today }.pdf"
+          pdf = ExportPdf.new
+          pdf.pochette_examen(@cours, params[:papier], params[:calculatrice], params[:outils])
 
           send_data pdf.render, filename: filename, type: 'application/pdf'
         end

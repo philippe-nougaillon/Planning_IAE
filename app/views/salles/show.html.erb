@@ -36,6 +36,26 @@
   <%= @salle.places %>
 </p>
 
+<% if @salle.bloc != "Z" %>
+  <p>
+    <strong>Taux d'occupation estimé :</strong>
+    <table class="table">
+      <tbody>
+        <tr>
+        <% @taux_occupation.keys.each do |year| %>
+          <td>
+            <b><%= year %>-<%= (year + 1).to_s.last(2) %></b>
+            <br>
+            <%= @taux_occupation[year] %> %
+          </td>
+        <% end %>
+        </tr>
+      </tbody>
+    </table>
+    <i>N.B. : Cours réalisés uniquement. occupation max = 11 heures par jour * 5.5j (soit une semaine) * 52 semaines - 8 semaines de fermeture </i>
+  </p>
+<% end %>
+
 <hr>
 <br>
 
@@ -68,7 +88,7 @@
       <th>Date du cours</th>
       <th>Action Salle</th>
     </thead>
-    <% @audits.includes(:user).each do |audit| %>
+    <% @audits.includes(:user).limit(1000).each do |audit| %>
         <% if extract_salle_id(audit) == @salle.id %>
             <% if cour = Cour.where(id: audit.auditable_id).first %>
               <tr>

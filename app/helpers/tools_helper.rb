@@ -126,10 +126,10 @@ module ToolsHelper
             salle_id = audit.audited_changes['salle_id'] 
             if salle_id.class.name == 'Array' 
                 if salle_id_was = salle_id.first 
-                    salle_before = Salle.find(salle_id_was).nom 
+                    salle_before = Salle.with_discarded.find(salle_id_was).nom 
                 end 
                 if salle_id = salle_id.last 
-                    salle_after = Salle.find(salle_id).nom 
+                    salle_after = Salle.with_discarded.find(salle_id).nom 
                 end 
                 if salle_before
                     return "Salle changée de '#{salle_before}' à '#{salle_after}'"
