@@ -25,16 +25,18 @@ class CoursController < ApplicationController
 
     if current_user && params.keys.count == 2
       if (current_user.intervenant? || current_user.enseignant?)
-        intervenant = Intervenant.where("LOWER(intervenants.email) = ?", current_user.email.downcase).first
-        params[:intervenant_id] = intervenant.id
-        params[:intervenant] = intervenant.nom + " " + intervenant.prenom
+        if intervenant = Intervenant.where("LOWER(intervenants.email) = ?", current_user.email.downcase).first
+          params[:intervenant_id] = intervenant.id
+          params[:intervenant] = intervenant.nom + " " + intervenant.prenom
+        end
       elsif current_user.étudiant?
-        formation = Etudiant
+        if formation = Etudiant
                       .where("LOWER(etudiants.email) = ?", current_user.email.downcase)
                       .first
                       .formation
-        params[:formation_id] = formation.id
-        params[:formation] = formation.nom
+          params[:formation_id] = formation.id
+          params[:formation] = formation.nom
+        end
       end
     end
 
