@@ -5,11 +5,14 @@ class InvitsController < ApplicationController
 
   # GET /invits or /invits.json
   def index
-
     params[:sort_by] ||= 'MàJ'
-    @invits = Invit
-                .where(user_id: current_user.id)
-                .where.not("invits.workflow_state = 'non_retenue'") 
+
+    @invits = Invit.all
+    unless current_user.id == 1
+      @invits = Invit
+                  .where(user_id: current_user.id)
+                  .where.not("invits.workflow_state = 'non_retenue'") 
+    end
 
     unless params[:formation].blank?
       @invits = @invits.joins(:formation).where("formations.id = ?", params[:formation])
