@@ -169,7 +169,9 @@
 
             <div class="col-sm-3">
               <%= vacation.collection_select :intervenant_id, 
-                                              Intervenant.where(doublon: false), :id, :nom_prenom,
+                                              Intervenant.where.not(doublon: true),
+                                              :id,
+                                              :nom_prenom,
                                               {include_blank: true, label: "*Intervenant", class: "select2"} %>
             </div>  
 
