@@ -154,7 +154,8 @@ class ToolPolicy < ApplicationPolicy
   end
 
   def audit_cours?
-    user.admin?
+    # Accès à la vue 'à booker' que pour Philippe, Barbara et Thierry.D
+    [1,6,41].include?(user.id)
   end
 
   def liste_surveillants_examens?
