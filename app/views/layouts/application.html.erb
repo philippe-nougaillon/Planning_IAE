@@ -56,7 +56,7 @@
 
   <body>
     <nav class="navbar navbar-expand navbar-light shadow-sm">
-      <a class="navbar-brand" href="/" aria-label="logo">
+      <a class="navbar-brand ms-3" href="/" aria-label="logo">
         <%= image_tag("logo_iae@195.png", height: 40, alt: 'logo IAE') %>
       </a>
 
@@ -121,8 +121,8 @@
     <div class="container">
       <% flash.each do |name, msg| %>
         <%= content_tag :div, class: "alert mt-3 alert-#{ (name == "alert" || name == "error") ? "danger" : "success" } alert-dismissable", role: "alert" do %>
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           <%= msg.to_s.html_safe %>
+          <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close"></button>
         <% end %>
       <% end %>
 

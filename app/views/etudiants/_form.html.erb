@@ -1,7 +1,7 @@
 <%=  bootstrap_form_for(@etudiant) do |f| %>
   <% if @etudiant.errors.any? %>
     <div class="alert alert-danger alert-dismissable" role="alert">
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close"></button>
       <h4><%= pluralize(@etudiant.errors.count, "erreur empêche", plural: 'erreurs empêchent') %> d'enregistrer cet étudiant :</h4>
 
       <ul>
@@ -24,7 +24,7 @@
         <%= check_box_tag :notify %> <b>Créer un compte d'accès et en informer les étudiants ?</b>
       </div>
 
-      <%= f.submit class: "btn btn-primary", 'data-turbo': false %>
+      <%= f.submit class: "btn btn-primary" %>
 
     </div>
 

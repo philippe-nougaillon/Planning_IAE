@@ -2,7 +2,7 @@
   <%= content_tag :div, 
       class: "alert mt-3 alert-#{@alert.etat} alert-dismissable",
       role: "alert" do %>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      <button type="button" class="btn-close float-end" data-bs-dismiss="alert" aria-label="Close"></button>
     <%= @alert.message %>
   <% end %>
 <% end %>
