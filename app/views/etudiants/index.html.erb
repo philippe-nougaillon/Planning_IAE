@@ -1,6 +1,6 @@
 <div class="pb-2 mt-4 mb-2 border-bottom">
   <% if policy(Etudiant).new? %>
-    <%= link_to new_etudiant_path, class: 'btn text-primary float-right' do %>
+    <%= link_to new_etudiant_path, class: 'btn text-primary float-end' do %>
       <%= fa_icon 'plus-circle' %> Etudiant
     <% end %>
   <% end %>
@@ -19,7 +19,7 @@
 
           <div class="col-sm-6">
             <%= label_tag "Formation" %>
-            <div class="input-group">
+            <div class="input-group" data-controller="select2">
               <%= select_tag :formation_id, 
                                   options_from_collection_for_select(Formation.unscoped.all, :id, :nom, params[:formation_id]), 
                                   class: 'form-control form-control-sm select2', 

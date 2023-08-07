@@ -2,10 +2,7 @@
   <%= content_tag :div, 
       class: "alert mt-3 alert-#{@alert.etat} alert-dismissable",
       role: "alert" do %>
-    <button type="button" class="close" data-dismiss="alert" aria-label="bouton du menu">
-      <span aria-hidden="true">&times;</span>
-      <span class="sr-only">Close</span>
-    </button>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     <%= @alert.message %>
   <% end %>
 <% end %>
@@ -15,7 +12,7 @@
 
     <%= link_to new_cour_path(formation: session[:formation], 
                               debut: DateTime.now), 
-                              class: 'btn text-primary float-right' do %>
+                              class: 'btn text-primary float-end' do %>
       <%= fa_icon 'plus-circle' %> Cours
     <% end %>
 
@@ -25,7 +22,7 @@
 
 <div class="container p-3 shadow-sm">
   <%= form_tag cours_path, method: :get do %>
-    <div class="form-group">
+    <div class="form-group" data-controller="select2">
       <div class="row">
         <div class="col-sm-5">
           <%= label_tag "Formation" %>   
@@ -50,7 +47,7 @@
                               onchange: 'this.form.submit()' %>
               <% if params.values.count(nil) < 5 %>
                 <span class="input-group-btn">
-                  <%= button_tag name: 'commit', value: 'RàZ', class: "btn btn-sm btn-light ml-1", title: "Remise à zéro des filtres" do %>
+                  <%= button_tag name: 'commit', value: 'RàZ', class: "btn btn-sm btn-light ms-1", title: "Remise à zéro des filtres" do %>
                     <i class="fas fa-times"></i> 
                     RàZ
                   <% end %>
@@ -135,7 +132,7 @@
               <% if policy(Cour).action? %>
                 <th>
                   <span data-action="click->action#click">
-                    <input type="checkbox" data-target="check-all.all action.source">
+                    <input type="checkbox" data-check-all-target="all" data-action-target="source">
                   </span>
                 </th>
               <% end %>
@@ -199,7 +196,7 @@
           </div>
           <div class="col">
             <% if policy(Cour).action? %>
-              <div data-target="action.selector">  
+              <div data-action-target="selector">
                 <span class="align-bottom">
                   Choisir une action à exécuter sur les cours sélectionnés
                 </span>
@@ -208,22 +205,22 @@
               </div>
             <% else %>
               <% if user_signed_in? && (params[:formation].present? || params[:intervenant].present?) %>
-                <span class="align-bottom">Exporter vers </span>
-                <%= link_to cours_url(format: :xls), class: 'btn btn-sm btn-success' do %>
-                  <%= fa_icon 'file-excel' %>
-                  Feuille Excel
-                <% end %>
+                <div class="d-flex justify-content-end" style="gap: 1em;">
+                  <%= link_to cours_url(format: :xls), class: 'btn btn-sm btn-success' do %>
+                    <%= fa_icon 'file-excel' %>
+                    Feuille Excel
+                  <% end %>
 
-                <%= link_to cours_url(format: :pdf), class: 'btn btn-sm btn-danger' do %>
-                  <%= fa_icon 'file-pdf' %>
-                  Document PDF
-                <% end %>
+                  <%= link_to cours_url(format: :pdf), class: 'btn btn-sm btn-danger' do %>
+                    <%= fa_icon 'file-pdf' %>
+                    Document PDF
+                  <% end %>
 
-                <%= link_to cours_url(format: :ics), class: 'btn btn-sm btn-info' do %>
-                  <%= fa_icon 'calendar' %>
-                  Calendrier
-                <% end %>
-
+                  <%= link_to url_for(params.permit!.merge(format: :ics)), class: 'btn btn-sm btn-primary' do %>
+                    <%= fa_icon 'calendar-day' %>
+                    Calendrier iCal
+                  <% end %>
+                </div>
               <% end %>
             <% end %>
         </div>

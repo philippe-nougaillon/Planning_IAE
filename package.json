@@ -1,27 +1,24 @@
 {
-  "name": "Planning",
+  "name": "planning",
   "private": true,
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.13.0",
-    "@rails/actioncable": "^6.0.0",
-    "@rails/actiontext": "^6.0.3-1",
-    "@rails/activestorage": "^6.0.0",
-    "@rails/ujs": "^6.0.0",
-    "@rails/webpacker": "^4.2.0",
-    "bootstrap": "^4.5.0",
-    "jquery": "^3.6.0",
+    "@hotwired/stimulus": "^3.2.1",
+    "@hotwired/turbo-rails": "^7.3.0",
+    "@popperjs/core": "^2.11.7",
+    "@rails/ujs": "^7.0.4-3",
+    "bootstrap": "^5.2.3",
+    "bootstrap-icons": "^1.10.5",
+    "esbuild": "^0.17.18",
+    "jquery": "^3.6.4",
     "popper.js": "^1.16.1",
-    "select2": "^4.0.13",
-    "stimulus": "^1.1.1",
-    "stimulus-check-all": "^0.3.0",
-    "trix": "^1.2.0",
-    "turbolinks": "^5.2.0"
+    "sass": "^1.62.1",
+    "select2": "^4.1.0-rc.0",
+    "stimulus": "^3.2.1",
+    "stimulus-check-all": "^0.6.0",
+    "trix": "^2.0.4"
   },
-  "version": "0.1.0",
-  "devDependencies": {
-    "webpack-dev-server": "^3.9.0"
-  },
-  "engines": {
-    "node": "12.16.2"
+  "scripts": {
+    "build": "esbuild app/javascript/*.* --bundle --sourcemap --outdir=app/assets/builds --public-path=assets",
+    "build:css": "sass ./app/assets/stylesheets/application.bootstrap.scss:./app/assets/builds/application.css --no-source-map --load-path=node_modules"
   }
 }

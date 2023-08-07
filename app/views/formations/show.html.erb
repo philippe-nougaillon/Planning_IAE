@@ -1,13 +1,13 @@
 <div class="card shadow-sm p-3 mt-3">
   <div>
-    <div class="btn-group float-right">
+    <div class="btn-group float-end">
       <% if policy(@formation).edit? %>
         <%= link_to edit_formation_path(@formation), class: 'btn btn-sm btn-outline-primary' do %>
           <%= fa_icon 'edit' %> Modifier
         <% end %>
       <% end %>
 
-      <a href="#audit" data-toggle="collapse" class='btn btn-sm btn-outline-primary'>
+      <a href="#audit" data-bs-toggle="collapse" data-bs-auto-close="false" class='btn btn-sm btn-outline-primary'>
         <%= fa_icon 'search' %> Audit
       </a>
 
@@ -115,7 +115,7 @@
       </h3>
       <% @salles_habituelles.each do |salle_id, count| %>
         <% salle = Salle.find(salle_id) %>
-        <span class="badge badge-sm badge-pill badge-success" style="font-size: calc( .25rem + <%= [1.5, (count.fdiv(@average_count))].min %>rem);" title="Salle <%= salle.nom %> a été utilisée <%= count %> fois">
+        <span class="badge badge-sm rounded-pill badge-success" style="font-size: calc( .25rem + <%= [1.5, (count.fdiv(@average_count))].min %>rem);" title="Salle <%= salle.nom %> a été utilisée <%= count %> fois">
           <%= salle.nom.first(2) %>
         </span>
       <% end %>

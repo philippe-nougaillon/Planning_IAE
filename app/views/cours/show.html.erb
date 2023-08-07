@@ -1,6 +1,6 @@
 <div class="card shadow-sm p-3 mt-3">
   <div>
-    <div class="btn-group float-right">
+    <div class="btn-group float-end">
       <% if policy(@cour).edit? %>
         <%= link_to edit_cour_path(@cour), class: 'btn btn-sm btn-outline-primary' do %>
           <%= fa_icon 'edit' %> Modifier
@@ -76,7 +76,7 @@
       <h4>
         <small class="text-muted">Salle</small><br>
         <% if @cour.salle %>
-          <span class="badge badge-pill badge-<%= @cour.style %>">
+          <span class="badge rounded-pill text-bg-<%= @cour.style %>">
             <%= @cour.salle.nom %>
           </span>             
 

@@ -13,7 +13,7 @@
 
   <%= form.hidden_field :intervenant_id %>
 
-  <div class="row">
+  <div class="row" data-controller="select2">
     <div class="col">
       <% if dossier.new_record? %>
         <%= form.select :période, options_for_select(Dossier.périodes, dossier.période) %>
@@ -55,7 +55,7 @@
   <br> 
 
   <div class="actions">
-    <%= form.submit %>
+    <%= form.submit, 'data-turbo': false %>
   </div>
 <% end %>
 

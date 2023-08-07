@@ -2,37 +2,36 @@
   <%= content_tag :div, 
       class: "alert mt-3 alert-#{@alert.etat} alert-dismissable",
       role: "alert" do %>
-    <button type="button" class="close" data-dismiss="alert" aria-label="bouton du menu">
-      <span aria-hidden="true">&times;</span>
-      <span class="sr-only">Close</span>
-    </button>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     <%= @alert.message %>
   <% end %>
 <% end %>
 
 <%= form_tag request.path, method: :get do %>
 
-  <div class="form-group">
-    <%= label_tag "Cours à partir du" %>
-    <%= text_field_tag :start_date, params[:start_date], type: 'date', onchange: 'this.form.submit()', class: "form-control form-control-sm", id: 'Cours___partir_du' %>
-  </div>  
-  
-  <div class="form-group">
-    <%= label_tag "Formation" %>    
-    <%= select_tag :formation, options_for_select(@formations, params[:formation]), 
-                    class: "select2-w100",
-                    include_blank: true, onchange: 'this.form.submit()' %>
-  </div>
-
-  <% if user_signed_in? %>
-    <div class="form-group">
-      <%= label_tag "Intervenant" %>
-      <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
-                        class: "select2-w100",
-                        include_blank: true,
-                        onchange:'this.form.submit()' %>
+  <div class="form-group" data-controller="select2">
+    <div class="mb-3">
+      <%= label_tag "Cours à partir du" %>
+      <%= text_field_tag :start_date, params[:start_date], type: 'date', onchange: 'this.form.submit()', class: "form-control form-control-sm", id: 'Cours___partir_du' %>
     </div>
-  <% end %>
+
+    <div class="mb-3">
+      <%= label_tag "Formation" %>    
+      <%= select_tag :formation, options_for_select(@formations, params[:formation]), 
+                      class: "select2-w100",
+                      include_blank: true, onchange: 'this.form.submit()' %>
+    </div>
+
+    <% if user_signed_in? %>
+      <div class="mb-3">
+        <%= label_tag "Intervenant" %>
+        <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
+                          class: "select2-w100",
+                          include_blank: true,
+                          onchange:'this.form.submit()' %>
+      </div>
+    <% end %>
+  </div>
 
   <%= button_tag name: 'commit', value: 'Filtrer', class: "btn btn-success" do %>
     <i class="fas fa-filter"></i> 

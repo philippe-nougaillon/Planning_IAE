@@ -5,24 +5,24 @@
 
 <%= form_tag({action: "creation_cours_do", method: :post}, multipart: true) do %>
 
-  <div class="form-group">
+  <div class="form-group" data-controller="select2">
     <div class="row">
       <div class="col-sm-7">
-        <%= label_tag :debut, "A partir du", class:"font-weight-bold"  %><br>
+        <%= label_tag :debut, "A partir du", class:"fw-bold" %><br>
         <%= datetime_select :cours, :start_date, minute_step:15 %>
         <br><br>
 
-        <%= label_tag :fin, "Jusqu'au", class:"font-weight-bold"  %><br>
+        <%= label_tag :fin, "Jusqu'au", class:"fw-bold" %><br>
         <%= date_select :cours, :end_date %>
         <br><br>
 
-        <%= label_tag :semaines, "Semaines *", class:"font-weight-bold"  %>
+        <%= label_tag :semaines, "Semaines *", class:"fw-bold" %>
         <%= select_tag :semaines, options_for_select((1..52).to_a), 
                           include_blank:true, multiple:true, class:"form-control" %>
         <br>
 
         <div class="field">
-          <%= label_tag :jours, nil, class:"font-weight-bold"  %><br>
+          <%= label_tag :jours, nil, class:"fw-bold" %><br>
           <%= check_box_tag :lundi, '1', params[:lundi] %> Lundi 
           <%= check_box_tag :mardi, '1', params[:mardi] %> Mardi 
           <%= check_box_tag :mercredi, '1', params[:mercredi] %> Mercredi
@@ -33,7 +33,7 @@
         <br>
   
         <section id="période">
-          <%= label_tag :periode, "Période", class:"font-weight-bold" %><br>
+          <%= label_tag :periode, "Période", class:"fw-bold" %><br>
           <div class="row">
             <div class="col">
               Matin
@@ -71,31 +71,31 @@
       <div class="col-sm-5">
         <div class="row">
 
-        <%= label_tag :formation_id, "Formation", class:"font-weight-bold"  %>
+        <%= label_tag :formation_id, "Formation", class:"fw-bold" %>
         <%= select_tag :formation_id, 
               options_from_collection_for_select(Formation.all, :id, :nom_promo), class:"form-control select2", include_blank:true %>
         <br>
 
-        <%= label_tag :intervenant_id, "Intervenant", class:"font-weight-bold"  %>
+        <%= label_tag :intervenant_id, "Intervenant", class:"fw-bold" %>
         <%= select_tag :intervenant_id,
               options_from_collection_for_select(Intervenant.all, :id, :nom_prenom), class:"form-control select2", include_blank:true %>
         <br>
 
-        <%= label_tag :nom, "Nom du cours *", class:"font-weight-bold"  %>
+        <%= label_tag :nom, "Nom du cours *", class:"fw-bold" %>
         <%= text_field_tag :nom, params[:nom], class:"form-control" %>
         <br>
 
-        <%= label_tag :code_ue, "UE *", class:"font-weight-bold"  %>
+        <%= label_tag :code_ue, "UE *", class:"fw-bold" %>
         <%= number_field :code_ue, params[:code_ue], class:"form-control" %>
         <br>
 
-        <%= label_tag :salle_id, "Salle *", class:"font-weight-bold"  %>
+        <%= label_tag :salle_id, "Salle *", class:"fw-bold" %>
         <%= select_tag :salle_id, options_from_collection_for_select(Salle.all, :id, :nom_places, params[:salle_id]), include_blank: true, class:"form-control" %>
         * Optionnel
         <br><br>
 
         <div class="field">
-          <strong class="lead font-weight-bold">Enregistrer les changements ?</strong> <br>
+          <strong class="lead fw-bold">Enregistrer les changements ?</strong> <br>
           <%= label :save, "Oui", :value => "true" %>
           <%= radio_button_tag :save, true %>
           <%= label :save, "Non", :value => "false" %>

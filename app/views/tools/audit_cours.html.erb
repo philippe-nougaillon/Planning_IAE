@@ -69,7 +69,7 @@
                 <h5>
                     <% color = 'warning' if (cours.debut.to_date - Date.today) <= 30 %>
                     <% color = 'danger' if (cours.debut.to_date - Date.today) <= 7 %>
-                    <span class="badge badge-pill badge-<%= color %>">
+                    <span class="badge bg-pill bg-<%= color %>">
                         <b><%= l cours.debut.to_date %></b>
                     </span>
                 </h5>

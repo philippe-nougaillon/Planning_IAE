@@ -31,44 +31,44 @@ class Dossier < ApplicationRecord
   ARCHIVE = 'archivé'
 
   workflow do
-    state NOUVEAU, meta: {style: 'badge-info'} do
+    state NOUVEAU, meta: {style: 'bg-info'} do
       event :envoyer, transitions_to: ENVOYE
     end
 
-    state ENVOYE, meta: {style: 'badge-primary'} do
+    state ENVOYE, meta: {style: 'bg-primary'} do
       event :relancer, transitions_to: RELANCE1
       event :déposer, transitions_to: DEPOSE
     end
 
-    state RELANCE1, meta: {style: 'badge-info'} do
+    state RELANCE1, meta: {style: 'bg-info'} do
       event :relancer, transitions_to: RELANCE2
       event :déposer, transitions_to: DEPOSE
     end
 
-    state RELANCE2, meta: {style: 'badge-info'} do
+    state RELANCE2, meta: {style: 'bg-info'} do
       event :relancer, transitions_to: RELANCE3
       event :déposer, transitions_to: DEPOSE
     end
     
-    state RELANCE3, meta: {style: 'badge-info'} do
+    state RELANCE3, meta: {style: 'bg-info'} do
       event :relancer, transitions_to: RELANCE1
       event :déposer, transitions_to: DEPOSE
     end
     
-    state DEPOSE, meta: {style: 'badge-warning'} do
+    state DEPOSE, meta: {style: 'bg-warning'} do
       event :valider, transitions_to: VALIDE
       event :rejeter, transitions_to: REJETE
     end
 
-    state VALIDE, meta: {style: 'badge-success'} do
+    state VALIDE, meta: {style: 'bg-success'} do
       event :archiver, transitions_to: ARCHIVE
     end
 
-    state REJETE, meta: {style: 'badge-danger'} do
+    state REJETE, meta: {style: 'bg-danger'} do
       event :déposer, transitions_to: DEPOSE
     end
 
-    state ARCHIVE, meta: {style: 'badge-dark'}
+    state ARCHIVE, meta: {style: 'bg-dark'}
   end
 
   # pour que le changement se voit dans l'audit trail

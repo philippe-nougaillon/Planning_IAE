@@ -1,7 +1,7 @@
 <%= bootstrap_form_for(@formation) do |f| %>
   <% if @formation.errors.any? %>
     <div class="alert alert-danger alert-dismissable" role="alert">
-      <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   
       <h3><%= t('activerecord.errors.template.header',
                   model: Formation.model_name.human, count: @formation.errors.count) %></h3>
@@ -167,7 +167,7 @@
               <%= vacation.date_field :date, label: "*Date" %>
             </div>
 
-            <div class="col-sm-3">
+            <div class="col-sm-3" data-controller="select2">
               <%= vacation.collection_select :intervenant_id, 
                                               Intervenant.where.not(doublon: true),
                                               :id,
@@ -196,7 +196,7 @@
             </div>
         </div>
       <% end %>
-    <%= f.submit class: "btn btn-primary" %>    
+    <%= f.submit class: "btn btn-primary", 'data-turbo': false %>
   </div>
 
 <% end %>

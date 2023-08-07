@@ -13,17 +13,17 @@ class Document < ApplicationRecord
   ARCHIVE= 'archivé'
 
   workflow do
-    state DEPOSE, meta: {style: 'badge-warning'}  do
+    state DEPOSE, meta: {style: 'bg-warning'}  do
       event :valider, transitions_to: VALIDE
       event :rejeter, transitions_to: REJETE
     end
-    state VALIDE, meta: {style: 'badge-success'} do
+    state VALIDE, meta: {style: 'bg-success'} do
       event :archiver, transitions_to: ARCHIVE
     end
-    state REJETE, meta: {style: 'badge-danger'} do
+    state REJETE, meta: {style: 'bg-danger'} do
       event :archiver, transitions_to: ARCHIVE
     end
-    state ARCHIVE, meta: {style: 'badge-secondary'}
+    state ARCHIVE, meta: {style: 'bg-secondary'}
   end
 
   def style

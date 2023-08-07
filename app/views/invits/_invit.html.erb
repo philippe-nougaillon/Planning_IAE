@@ -1,7 +1,7 @@
 <tr>
   <td>
       <span data-action="click->action#click">
-          <%= check_box_tag "[invits_id][#{invit.id}]", 'yes', false, data: {"target":"action.source"} %>
+          <%= check_box_tag "[invits_id][#{invit.id}]", 'yes', false, 'data-action-target': 'source' %>
       </span>
   </td>
   <td>

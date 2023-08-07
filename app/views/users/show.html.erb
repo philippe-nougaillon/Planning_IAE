@@ -1,12 +1,12 @@
 <div class="pb-2 mt-4 mb-2 border-bottom">
 
 	<% if current_user.try(:admin?) %>	
-		<div class="buttons-group float-right">
+		<div class="buttons-group float-end">
 			<%= link_to edit_user_path(@user), class: 'btn btn-default' do %>
 				<%= fa_icon 'edit', text: ' Modifier' %>
 			<% end %>
 
-			<a href="#audit" data-toggle="collapse" class='btn btn-default'>
+			<a href="#audit" data-bs-toggle="collapse" class='btn btn-default'>
 				<%= fa_icon 'search', text: ' Audit' %>
 			</a>
 

@@ -1,6 +1,6 @@
 <div class="pb-2 mt-4 mb-2">
   <% if policy(Alert).new? %>
-    <%= link_to new_alert_path(debut: Time.now, fin: Time.now), class: 'btn text-primary float-right' do %>
+    <%= link_to new_alert_path(debut: Time.now, fin: Time.now), class: 'btn text-primary float-end' do %>
       <%= fa_icon 'plus-circle' %> Alerte
     <% end %>
   <% end %>
@@ -9,7 +9,7 @@
 
 <h5 class="mb-4">
   Pour afficher un message sur le planning (écran / mobile / PC), il faut planifier sa visibilité en entrant une date et heure de début et de fin d'affichage.
-  <span class="text-warning font-weight-light">Attention, sur le serveur il est actuellement <%= l(Time.now.utc, format: "%Hh%M") %></span>
+  <span class="text-warning fw-light">Attention, sur le serveur il est actuellement <%= l(Time.now.utc, format: "%Hh%M") %></span>
 </h5>
 
 <table class="table table-bordered table-striped table-hover table-sm">

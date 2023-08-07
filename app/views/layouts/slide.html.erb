@@ -14,8 +14,8 @@
 
     <link rel="manifest" href="/manifest.json">
 
-    <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>  
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
   </head>
 
   <body>
@@ -23,7 +23,7 @@
     
       <div class="text-center w-100">
         <%= link_to image_tag('logo_iae@195.png', alt: 'logo IAE'), root_url, class: 'navbar-brand float-left', style: 'width: 0px;' %>
-        <h1 class="mr-2">
+        <h1 class="me-2">
           <%= l(@planning_date.to_date, format: :long) %>
         </h1>
       </div>

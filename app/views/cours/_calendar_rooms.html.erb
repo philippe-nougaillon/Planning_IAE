@@ -6,7 +6,7 @@
 
   <% meetings.each do |meeting| %>
     <div class="shadow-sm p-1 <%= meeting.formation.nbr_etudiants > 30 ? 'border-bottom border-danger' : '' %>" style="border-width: 5px !important;">
-      <span class="badge badge-<%= meeting.style %>"><%= meeting.etat.humanize %></span><br>
+      <span class="badge text-bg-<%= meeting.style %>"><%= meeting.etat.humanize %></span><br>
       <b><%= l(meeting.debut, format: :heures_min) %></b>
         - <%= l(meeting.fin, format: :heures_min) %>
       <br>

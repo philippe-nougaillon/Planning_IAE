@@ -18,7 +18,7 @@
             <%= select_tag :status, options_for_select(Intervenant.statuses, 
                   params[:status]), include_blank:true,
                   class: 'form-control form-control-sm', onchange: 'this.form.submit()' %>
-            <span class="input-group-btn ml-5">
+            <span class="input-group-btn ms-5">
               <%= submit_tag 'Filtrer', class: "btn btn-sm btn-success" %>
             </span>
           </div>
@@ -45,7 +45,7 @@
         <tr>
           <th>
             <span data-action="click->action#click">
-              <input type="checkbox" data-target="check-all.all action.source">
+              <input type="checkbox" data-check-all-target="all" data-action-target="source">
             </span>
           </th>
           <th>Nom/Prénom</th>
@@ -61,7 +61,7 @@
           <tr>
             <td>
               <span data-action="click->action#click">
-                <%= check_box_tag "[intervenants_id][#{intervenant.id}]", 'yes', false, data: {"target":"action.source"} %>
+                <%= check_box_tag "[intervenants_id][#{intervenant.id}]", 'yes', false, 'data-action-target': 'source' %>
               </span>
             </td>
             <td><%= intervenant.nom_prenom %></td>

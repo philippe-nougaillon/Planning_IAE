@@ -11,7 +11,7 @@
     <div class="form-group">
       <div class="row">
 
-        <div class="col-sm-5">
+        <div class="col-sm-5" data-controller="select2">
           <%= label_tag :formation %>
           <%= select_tag :formation, 
                               options_from_collection_for_select(@formations, :id, :nom_promo, params[:formation]), 

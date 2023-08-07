@@ -9,7 +9,7 @@
 
 <%= form_tag({action: "export_vacations_do", method: :post}) do %>
 
-  <div class="row">
+  <div class="row" data-controller="select2">
     <div class="col-sm-4">
       <%= label_tag "Formation" %>    
       <%= select_tag :formation_id, 

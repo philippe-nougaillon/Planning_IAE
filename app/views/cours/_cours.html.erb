@@ -2,7 +2,7 @@
     <% if policy(Cour).action? %>
         <td>
             <span data-action="click->action#click">
-                <%= check_box_tag "[cours_id][#{cours.id}]", 'yes', false, data: {"target":"action.source"} %>
+                <%= check_box_tag "[cours_id][#{cours.id}]", 'yes', false, 'data-action-target': 'source' %>
             </span>
         </td>
     <% end %>
@@ -62,7 +62,7 @@
     <td style="white-space: nowrap;">
         <% if cours.salle %>
             <h5>
-                <span class="badge badge-pill badge-<%= cours.style %>">
+                <span class="badge rounded-pill text-bg-<%= cours.style %>">
                     <%= cours.salle.nom %>
                 </span>
             </h5>
@@ -80,7 +80,7 @@
                 </i>
             <% else %>
                 <h5>
-                    <span class="badge badge-pill badge-<%= cours.style %>">
+                    <span class="badge rounded-pill text-bg-<%= cours.style %>">
                         <%= cours.etat.humanize %>
                     </span>
                 </h5>
