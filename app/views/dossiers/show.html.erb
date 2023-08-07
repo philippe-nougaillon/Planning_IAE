@@ -92,7 +92,7 @@
           <br>
           Veuillez ajouter les justificatifs correspondants à votre situation 
           (voir le document 'Pièces à fournir.pdf') en utilisant le bouton
-          <%= link_to new_document_path(dossier_id: @dossier.id), data: { toggle: "modal", target: "#myModal" }, class: 'btn btn-link' do %>
+          <%= link_to new_document_path(dossier_id: @dossier.id), data: { 'bs-toggle': "modal", 'bs-target': "#myModal" }, class: 'btn btn-link' do %>
             <%= fa_icon 'plus-circle' %> Ajouter un document
           <% end %>
           <br>
@@ -103,7 +103,7 @@
       <% end %>
     <% end %>
 
-    <%= link_to new_document_path(dossier_id: @dossier.id), data: { toggle: "modal", target: "#myModal" }, class: 'btn btn-link' do %>
+    <%= link_to new_document_path(dossier_id: @dossier.id), data: { 'bs-toggle': "modal", 'bs-target': "#myModal" }, class: 'btn btn-link' do %>
       <%= fa_icon 'plus-circle' %> Ajouter un document
     <% end %>
 
