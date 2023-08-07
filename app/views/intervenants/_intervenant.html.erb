@@ -12,7 +12,7 @@
             <%= fa_icon 'edit' %>
         <% end %>
         <% unless intervenant.cours.any? or Cour.where(intervenant_binome: intervenant).any? %> 
-            <%= link_to(intervenant, method: :delete, data:{confirm: 'Confirmez-vous ?'}, class: "btn btn-default") do %>
+            <%= link_to(intervenant, data: {'turbo-method': :delete, 'turbo-confirm': 'Confirmez-vous ?'}, class: "btn btn-default") do %>
                 <%= fa_icon 'trash-alt' %>
             <% end %>
         <% end %>

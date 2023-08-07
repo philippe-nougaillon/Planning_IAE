@@ -97,7 +97,7 @@
         <td><%= time_ago_in_words dossier.updated_at %></td>
         <td><%= link_to 'Voir', dossier %></td>
         <td><%= link_to 'Modifier', edit_dossier_path(dossier) %></td>
-        <td><%= link_to '[X]', dossier, method: :delete, data: { confirm: 'Etes-vous bien certain.e ?' } %></td>
+        <td><%= link_to '[X]', dossier, data: {'turbo-method': :delete, 'turbo-confirm': 'Confirmez-vous ?'} %></td>
       </tr>
     <% end %>
   </tbody>

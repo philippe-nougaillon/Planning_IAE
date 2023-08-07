@@ -7,7 +7,7 @@
         <% end %>
       <% end %>
       <% if policy(@cour).destroy? %>
-        <%= link_to(@cour, method: :delete, data:{confirm: 'Confirmez-vous la suppression définitive de ce cours ?'}, class: 'btn btn-sm btn-outline-primary' ) do %>
+        <%= link_to(@cour, data: {'turbo-method': :delete, 'turbo-confirm': 'Confirmez-vous la suppression définitive de ce cours ?'}, class: 'btn btn-sm btn-outline-primary' ) do %>
           <%= fa_icon 'trash-alt' %> Supprimer
         <% end %>
       <% end %>

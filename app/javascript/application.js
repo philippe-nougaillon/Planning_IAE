@@ -2,4 +2,4 @@
 import "@hotwired/turbo-rails"
 import "./controllers"
 
-Turbo.setFormMode("off")
+Turbo.setFormMode("optin") // No turbo forms unless you insist. Use data-turbo="true" to enable turbo on individual forms.

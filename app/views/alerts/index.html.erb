@@ -33,7 +33,7 @@
         <td><%= alert.message %></td>
         <td><%= alert.etat.humanize %></td>
         <td><%= link_to 'Voir', alert %></td>
-        <td><%= link_to '[X]', alert, method: :delete, data: { confirm: 'Certain.e ?' } %></td>
+        <td><%= link_to '[X]', alert, data: {'turbo-method': :delete, 'turbo-confirm': 'Confirmez-vous ?'} %></td>
       </tr>
     <% end %>
   </tbody>
