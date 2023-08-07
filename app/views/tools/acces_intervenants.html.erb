@@ -38,7 +38,7 @@
   <% end %>
 </div>
 
-<%= bootstrap_form_tag url: tools_acces_intervenants_do_path, method: :post do %>
+<%= bootstrap_form_tag url: tools_acces_intervenants_do_path, method: :post, data: { turbo: false }  do %>
   <div class="table-responsive" data-controller="check-all action">
     <table class="table table-hover table-striped table-bordered">
       <thead>
