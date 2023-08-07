@@ -9,22 +9,22 @@ class EnvoiLog < ApplicationRecord
     validates :date_prochain, :workflow_state, presence: true
 
     workflow do
-        state :pause, meta: { style: 'bg-secondary' } do
+        state :pause, meta: { style: 'text-bg-secondary' } do
             event :activer, :transitions_to => :prêt
             event :tester, :transitions_to => :testé
         end
 
-        state :prêt, meta: { style: 'bg-success' } do
+        state :prêt, meta: { style: 'text-bg-success' } do
             event :suspendre, :transitions_to => :pause
         end
 
-        state :testé, meta: { style: 'bg-warning' } do 
+        state :testé, meta: { style: 'text-bg-warning' } do 
             event :envoyer, :transitions_to => :exécuté
             event :echec, :transitions_to => :échoué
         end
 
-        state :exécuté, meta: { style: 'bg-primary' }
-        state :échoué, meta: { style: 'bg-danger' }
+        state :exécuté, meta: { style: 'text-bg-primary' }
+        state :échoué, meta: { style: 'text-bg-danger' }
     end
 
     default_scope { order('id DESC') }

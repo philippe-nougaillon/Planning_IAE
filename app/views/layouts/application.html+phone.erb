@@ -55,13 +55,13 @@
             </a>
 
             <!-- Toggler/collapsibe Button -->
-            <button class="navbar-toggler me-3" type="button" data-bs-toggle="collapse" data-target="#collapsibleNavbar" aria-label="menu">
+            <button class="navbar-toggler me-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar" aria-label="menu">
                 <%= fa_icon 'bars' %>
             </button>
 
             <!-- Navbar links -->
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav ps-3">
                     <%= navbar_nav_item('cours', 'calendar-alt', cours_path) %>
                     <%= navbar_nav_item('salles', 'chalkboard', occupation_salles_path) %>
                     <% if user_signed_in? %>
