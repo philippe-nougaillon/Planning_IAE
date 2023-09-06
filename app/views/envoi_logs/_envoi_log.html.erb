@@ -9,8 +9,10 @@
   <td>
     <% if (envoi_log.cible == 'Intervenant') && intervenant = Intervenant.find(envoi_log.cible_id) %>
       <%= intervenant.nom_prenom %>
+    <% elsif envoi_log.cible == 'Formation' %>
+      <%= "Formation : #{Formation.find(envoi_log.cible_id).abrg}" %>
     <% else %>
-      <%= "#{envoi_log.cible} #{envoi_log.cible_id}" %>
+      Tous
     <% end %>
   </td>
   <td>

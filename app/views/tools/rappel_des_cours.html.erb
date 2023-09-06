@@ -20,19 +20,16 @@
             options_from_collection_for_select(@formations, :id, :nom, params[:formation_id]), 
               class:"form-control select2", include_blank: true %>
 
-      <%= label_tag "Intervenant" %>
-      <%= select_tag :intervenant_id, 
-            options_from_collection_for_select(@intervenants, :id, :nom_prenom, params[:intervenant_id]), 
-              class:"form-control select2", include_blank: true %>
+      <div class="mt-4">
+        <%= label_tag "Intervenant" %>
+        <%= select_tag :intervenant_id, 
+              options_from_collection_for_select(@intervenants, :id, :nom_prenom, params[:intervenant_id]), 
+                class:"form-control select2", include_blank: true %>
+      </div>
 
-      <p class="mt-4">
-        Période
-        <br>
-        <small>Laissez vide pour le rappel des cours du mois suivant</small>
-      </p>
-      <div class="d-flex justify-content-between mb-4">
+      <div class="d-flex justify-content-between mt-4">
         <div>
-          <%= label_tag :du %>
+          <%= label_tag :du, "Période du" %>
           <%= text_field_tag :du, params[:du], type: 'date', class: 'form-control' %>
         </div>
         <div>
@@ -40,11 +37,12 @@
           <%= text_field_tag :au, params[:au], type: 'date', class: 'form-control' %>
         </div>
       </div>
+      <small>Laissez vide pour le rappel des cours du mois suivant</small>
     </div>
   </div>
   
-  <div class="d-flex align-items-center" style="gap: 1rem">
-  <%= submit_tag "Ajouter à la file d'attente", class: "btn btn-success" %>
-  <%= link_to "Voir la file d'attente", envoi_logs_path %>
+  <div class="d-flex align-items-center mt-4" style="gap: 1rem">
+    <%= submit_tag "Ajouter à la file d'attente", class: "btn btn-success" %>
+    <%= link_to "Voir la file d'attente", envoi_logs_path %>
+  </div>
 <% end %>
-<br>

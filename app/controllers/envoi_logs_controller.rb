@@ -53,9 +53,13 @@ class EnvoiLogsController < ApplicationController
 
   def envoyer
     EnvoiLog.with_prêt_state.each do |envoi_log|
-      EnvoyerNotificationsJob.perform_now(envoi_log.id, params[:test])
+      if params[:test]
+        EnvoyerNotificationsJob.perform_now(envoi_log.id, params[:test])
+      else
+        EnvoyerNotificationsJob.perform_later(envoi_log.id)
+      end
     end
-    redirect_to envoi_logs_path, notice: "Rappels 'prêts' de la file d'attente envoyés"
+    redirect_to envoi_logs_path, notice: "Démarrage  de l'envoi des rappels en état 'prêts'."
   end
 
   # GET /envoi_logs/new

@@ -10,14 +10,19 @@ class IntervenantMailer < ApplicationMailer
         mail(to: @intervenant.email, subject:"[PLANNING] Etat de services")
     end
 
-    def notifier_cours(debut, fin, intervenant, cours, gestionnaires, envoi_log_id)
+    def notifier_cours(debut, fin, intervenant, cours, gestionnaires, envoi_log_id, test)
         @debut = debut
         @fin = fin - 1.day
         @cours = cours
         @gestionnaires = gestionnaires
         @intervenant = intervenant
         @message = EnvoiLog.find(envoi_log_id).msg
-        mail(to: @intervenant.email, subject:"[PLANNING] Rappel de vos cours à l'IAE Paris du #{l @debut} au #{l @fin}")
+        if test
+            mail(to: "respfd@iae.pantheonsorbonne.fr", cc: "philippe.nougaillon@gmail.com, pierreemmanuel.dacquet@gmail.com",
+                subject:"[PLANNING] TEST / Rappel des cours de #{@intervenant.nom_prenom} du #{l @debut} au #{l @fin}")
+        else
+            mail(to: @intervenant.email, subject:"[PLANNING] Rappel de vos cours à l'IAE Paris du #{l @debut} au #{l @fin}")
+        end
     end
 
     def notifier_srh(intervenant)

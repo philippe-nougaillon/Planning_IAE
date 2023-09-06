@@ -35,21 +35,13 @@ namespace :cours do
 
     envoyes = 0
 
-    if args.test == 'true'
-      # id des intervenants tests
-      intervenants = Intervenant.where("UPPER(nom) LIKE '%NOUGAILLON%' OR UPPER(nom) LIKE '%FITSCH%' OR UPPER(nom) LIKE '%DACQUET%'")
-      puts "Intervenants TEST = #{ intervenants.pluck(:nom) }" 
+    case envoi_specs.cible
+    when 'Intervenant'
+      intervenants = Intervenant.where(id: envoi_specs.cible_id)
+    when 'Formation'
+      intervenants = Formation.find(envoi_specs.cible_id).intervenants
     else
-      case envoi_specs.cible
-      when 'Intervenant'
-        intervenants = Intervenant.where(id: envoi_specs.cible_id)
-      when 'Formation'
-        intervenants = Formation.find(envoi_specs.cible_id).intervenants
-      else
-        # commencer à partir des intervenants dont le nom commence par 'O'
-        #intervenants = Intervenant.where("intervenants.nom > 'O%'").where(doublon: false).or(Intervenant.where("intervenants.nom > 'O%'").where(doublon: nil))
-        intervenants = Intervenant.where(doublon: false).or(Intervenant.where(doublon: nil))
-      end
+      intervenants = Intervenant.where(doublon: false).or(Intervenant.where(doublon: nil))
     end
 
     intervenants.each do | intervenant |
@@ -81,7 +73,7 @@ namespace :cours do
           puts "Gestionnaire #{formation} = #{gest}"
         end
 
-        envoyes += 1 if envoyer_liste_cours_a_intervenant(args.draft, start_day, end_day, intervenant, cours, liste_des_gestionnaires, envoi_specs.id) 
+        envoyes += 1 if envoyer_liste_cours_a_intervenant(start_day, end_day, intervenant, cours, liste_des_gestionnaires, envoi_specs.id, args.test) 
 
         # Mettre à jour les infos du job
         envoi_specs.update(mail_count: envoyes)
@@ -103,19 +95,19 @@ namespace :cours do
     envoi_specs.update(workflow_state: "envoyé", date_exécution: DateTime.now ,mail_count: envoyes)
   end
 
-  def envoyer_liste_cours_a_intervenant(draft, debut, fin, intervenant, cours, gestionnaires, envoi_log_id)
+  def envoyer_liste_cours_a_intervenant(debut, fin, intervenant, cours, gestionnaires, envoi_log_id, test)
     if !intervenant.email.blank? && intervenant.email != '?'
       puts "OK => Planning envoyé à: #{intervenant.email}"
 
       mailer_response = IntervenantMailer
-                                        .notifier_cours(debut, fin, intervenant, cours, gestionnaires, envoi_log_id)
+                                        .notifier_cours(debut, fin, intervenant, cours, gestionnaires, envoi_log_id, test)
                                         .deliver_now
+
       MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: intervenant.email, subject: "Rappel des cours")
 
       return true
     else
       puts "!KO => Manque l'adresse email de '#{intervenant.nom_prenom}' (= #{intervenant.email})" 
-
       return false
     end
   end

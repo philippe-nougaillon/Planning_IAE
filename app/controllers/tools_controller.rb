@@ -1250,15 +1250,18 @@ class ToolsController < ApplicationController
   end
 
   def rappel_des_cours_do
-    unless params[:intervenant_id].blank? && params[:formation_id].blank?
+    unless params[:intervenant_id].blank? && params[:formation_id].blank? && (params[:du].blank? && params[:au].blank?)
       @envoi_log = EnvoiLog.new
       @envoi_log.date_prochain = DateTime.now
-      unless params[:intervenant_id].blank?
+
+      if not params[:intervenant_id].blank?
         @envoi_log.cible = "Intervenant"
         @envoi_log.cible_id = params[:intervenant_id]
-      else
+      elsif not params[:formation_id].blank?
         @envoi_log.cible = "Formation"
         @envoi_log.cible_id = params[:formation_id]
+      else
+        @envoi_log.cible = "Tous les intervenants"
       end
 
       unless params[:du].blank? && params[:au].blank?
@@ -1270,19 +1273,6 @@ class ToolsController < ApplicationController
       @envoi_log.save
 
       redirect_to envoi_logs_path, notice: "Job ajouté à la file d'attente"
-      # if params[:send] == 'true'
-      #   # Lancer & marquer la date d'exécution 
-      #   @envoi_log.workflow_state = "envoyé"
-      #   @envoi_log.date_exécution = DateTime.now
-      #   @envoi_log.save
-
-      #   # placer le job dans la file d'attente
-      #   EnvoyerNotificationsJob.perform_later(@envoi_log.id)
-      #   redirect_to envoi_logs_path, notice: "Envoi ajouté à la file d'attente"
-
-      # else
-      #   redirect_to root_path, alert: "Opération annulée"
-      # end
     end
   end
 
