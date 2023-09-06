@@ -45,4 +45,8 @@ class EnvoiLogPolicy < ApplicationPolicy
     index?
   end
 
+  def envoyer?
+    index?
+  end
+
 end

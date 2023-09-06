@@ -1261,19 +1261,28 @@ class ToolsController < ApplicationController
         @envoi_log.cible_id = params[:formation_id]
       end
 
-      if params[:send] == 'true'
-        # Lancer & marquer la date d'exécution 
-        @envoi_log.workflow_state = "exécuté"
-        @envoi_log.date_exécution = DateTime.now
-        @envoi_log.save
-
-        # placer le job dans la file d'attente
-        EnvoyerNotificationsJob.perform_later(@envoi_log.id)
-        redirect_to envoi_logs_path, notice: "Envoi ajouté à la file d'attente"
-
-      else
-        redirect_to root_path, alert: "Opération annulée"
+      unless params[:du].blank? && params[:au].blank?
+        @envoi_log.date_début = params[:du]
+        @envoi_log.date_fin = params[:au]
       end
+
+      @envoi_log.workflow_state = "prêt"
+      @envoi_log.save
+
+      redirect_to envoi_logs_path, notice: "Job ajouté à la file d'attente"
+      # if params[:send] == 'true'
+      #   # Lancer & marquer la date d'exécution 
+      #   @envoi_log.workflow_state = "envoyé"
+      #   @envoi_log.date_exécution = DateTime.now
+      #   @envoi_log.save
+
+      #   # placer le job dans la file d'attente
+      #   EnvoyerNotificationsJob.perform_later(@envoi_log.id)
+      #   redirect_to envoi_logs_path, notice: "Envoi ajouté à la file d'attente"
+
+      # else
+      #   redirect_to root_path, alert: "Opération annulée"
+      # end
     end
   end
 

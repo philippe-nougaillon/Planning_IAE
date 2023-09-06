@@ -1,30 +1,42 @@
 <div class="pb-2 mt-4 mb-2 border-bottom">
-  <h3><%= fa_icon 'bell' %> Planification des notifications</h3>
-  <h5 class='lead'>Pour tester, il faut au moins un cours dans la période (mois courant + 1) ayant un testeur comme intervenant.</h5>
+  <% if policy(EnvoiLog).new? %>
+    <%= link_to tools_rappel_des_cours_path, class: 'btn text-primary float-right' do %>
+      <%= fa_icon 'plus-circle' %> Rappel
+    <% end %>
+  <% end %>
+  <h3><%= fa_icon 'bell' %> Rappel des cours (file d'attente)</h3>
 </div>
-<br>
+
+<div class='container-fluid'>
+  <%= form_tag request.path, method: :get do %>
+    <div class="form-group">
+      <div class="row">
+        <div class="col-sm-2">
+          <%= label_tag :workflow_state, "État" %>
+          <%= select_tag :workflow_state, options_for_select(EnvoiLog.workflow_spec.states.keys, params[:workflow_state]), include_blank:true, onchange:'this.form.submit()', class:"form-control" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
 
 <table class="table table-bordered table-striped table-hover table-sm">
   <thead>
     <tr>
+      <th>MÀJ</th>
       <th>ID</th>
-      <th>Envoi prévu le</th>
+      <th>Envois prévus le</th>
+      <th>Destinataire(s)</th>
       <th>État</th>
-      <th>Cible</th>
-      <th>MàJ</th>
-      <th colspan="5"></th>
+      <th>Action</th>
+      <th>Envoyé</th>
+      <th>Nbr envoyés</th>
     </tr>
   </thead>
 
   <tbody>
     <%= render @envoi_logs %>
   </tbody>
-
-  <tfoot>
-    <tr>
-      <th colspan=10></th>
-    </tr>
-  </tfoot>
 
 </table>
 
@@ -34,4 +46,9 @@
 
 <%= will_paginate @envoi_logs, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
 
-<br>
+<% if params[:workflow_state] == "prêt" %>
+  <div class="d-flex mt-4" style="gap: 1rem">
+    <%= link_to "Envoyer les rappels 'prêts' aux testeurs (mode test)", envoyer_envoi_logs_path(test: true), class: 'btn btn-warning' %>
+    <%= link_to "Envoyer le rappel des cours 'prêts'", envoyer_envoi_logs_path(test: false), class: 'btn btn-danger' %>
+  </div>
+<%end %>

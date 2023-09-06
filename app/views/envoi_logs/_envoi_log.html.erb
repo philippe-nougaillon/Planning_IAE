@@ -1,61 +1,32 @@
 <tr>
-    <td class="text-right"><%= envoi_log.id %></td>
-    <td>
-        <%= l envoi_log.date_prochain, format: :short %>
-    </td>
-    <td>
-        <span class="badge <%= envoi_log.style %>"><%= envoi_log.workflow_state.humanize %></span>
-    </td>
-    <td>
-        <%= "#{envoi_log.cible} #{envoi_log.cible_id}" %>
-    </td>
-    <td><%= "Il y a #{time_ago_in_words(envoi_log.date_exécution)}" if envoi_log.date_exécution %></td>
-    <td>
-        <%= link_to envoi_log, class: "btn btn-sm btn-link" do %>
-            <%= fa_icon 'eye', text: ' Voir' %>
-        <% end %>
-    </td>
-
-    <% if envoi_log.current_state < :testé %>
-        <td>
-            <%= link_to edit_envoi_log_path(envoi_log), class: "btn btn-sm btn-link" do %>
-                <%= fa_icon 'edit', text: ' Modifier' %>
-            <% end %>
-        </td>
-        <td>
-            <% if envoi_log.prêt? %>
-                <%= link_to suspendre_envoi_log_path(envoi_log), class: "btn btn-sm btn-secondary", title: "Passe en état 'Pause'. La notification ne sera pas exécutée à la date prévue" do %>
-                    <%= fa_icon 'pause', text: ' Mettre en pause' %> 
-                <% end %>
-            <% else %>
-                <%= link_to '#', class: "btn btn-sm btn-light", title: "Passe en état 'Pause'. La notification ne sera pas exécutée à la date prévue" do %>
-                    <%= fa_icon 'pause', text: ' Mettre en pause' %> 
-                <% end %>
-            <% end %>
-        </td>
-        <td>    
-            <% if envoi_log.pause? %>
-                <%= link_to activer_envoi_log_path(envoi_log), class: "btn btn-sm btn-success", title: "Passe en état 'Prêt'. La notification sera exécutée à la date prévue" do %>
-                    <%= fa_icon 'play', text: ' Activer' %>
-                <% end %>
-            <% else %>
-                <%= link_to '#', class: "btn btn-sm btn-light", title: "Passe en état 'Prêt'. La notification sera exécutée à la date prévue" do %>
-                    <%= fa_icon 'play', text: ' Activer' %>
-                <% end %>
-            <% end %>
-        </td>
-        <td>
-            <% if envoi_log.pause? %>
-                <%= link_to tester_envoi_log_path(envoi_log), class: "btn btn-sm btn-warning", title: "Envoyer les notifications aux testeurs uniquement" do %>
-                    <%= fa_icon 'paper-plane', text: ' Tester' %>
-                <% end %>
-            <% else %>
-                <%= link_to '#', class: "btn btn-sm btn-light", title: "Envoyer les notifications aux testeurs uniquement" do %>
-                    <%= fa_icon 'paper-plane', text: ' Tester' %>
-                <% end %>
-            <% end %>
-        </td>
+  <td><%= "il y a #{time_ago_in_words(envoi_log.updated_at)}" %></td>
+  <td>
+    <%= link_to envoi_log.id, envoi_log %>
+  </td>
+  <td>
+    <%= l envoi_log.date_prochain, format: :short %>
+  </td>
+  <td>
+    <% if (envoi_log.cible == 'Intervenant') && intervenant = Intervenant.find(envoi_log.cible_id) %>
+      <%= intervenant.nom_prenom %>
     <% else %>
-        <td colspan=4></td>
+      <%= "#{envoi_log.cible} #{envoi_log.cible_id}" %>
     <% end %>
+  </td>
+  <td>
+    <span class="badge <%= envoi_log.style %>"><%= envoi_log.workflow_state.humanize %></span>
+  </td>
+  <td>
+    <% if envoi_log.prêt? %>
+      <%= link_to suspendre_envoi_log_path(envoi_log), class: "btn btn-sm btn-secondary", title: "Passe en état 'Pause'. La notification ne sera pas exécutée à la date prévue" do %>
+        <%= fa_icon 'pause', text: ' Pause' %> 
+      <% end %>
+    <% elsif envoi_log.pause? %>
+      <%= link_to activer_envoi_log_path(envoi_log), class: "btn btn-sm btn-success", title: "Passe en état 'Prêt'. La notification sera exécutée à la date prévue" do %>
+        <%= fa_icon 'play', text: ' Activer' %>
+      <% end %>
+    <% end %>
+  </td>
+  <td><%= "il y a #{time_ago_in_words(envoi_log.date_exécution)}" if envoi_log.date_exécution %></td>
+  <td><%= envoi_log.mail_count %></td>
 </tr>

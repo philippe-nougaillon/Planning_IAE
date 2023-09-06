@@ -1,58 +1,72 @@
 <div class="pb-2 mt-4 mb-2 border-top">
   <div class="btn-group float-right">
-    <%= link_to edit_envoi_log_path(@envoi_log), class: 'btn btn-sm btn-outline-primary' do %>
-      <%= fa_icon 'edit' %> Modifier
-    <% end %>
+  <%= link_to edit_envoi_log_path(@envoi_log), class: 'btn btn-sm btn-outline-primary' do %>
+    <%= fa_icon 'edit' %> Modifier
+  <% end %>
 
-    <a href="#audit" data-toggle="collapse" class='btn btn-sm btn-outline-primary'>
-      <%= fa_icon 'search' %> Audit
-    </a>
-
-    <%= link_to envoi_logs_path, class: 'btn btn-sm btn-outline-primary' do %>
-      <%= fa_icon 'list' %> Retour
-    <% end %>
+  <%= link_to envoi_logs_path, class: 'btn btn-sm btn-outline-primary' do %>
+    <%= fa_icon 'list' %> Retour
+  <% end %>
   </div>
 </div>
 
 <p>
-    <strong>Id : </strong>
-    <%= @envoi_log.id %>
+  <strong>Id : </strong>
+  <%= @envoi_log.id %>
 </p>
 
 <p>
-    <strong>Envoi prévu le : </strong>
-    <%= l @envoi_log.date_prochain %>
+  <strong>Envoi prévu le : </strong>
+  <%= l @envoi_log.date_prochain %>
+</p>
+
+
+<p>
+  <strong>Destinaire : </strong>
+  <% if (@envoi_log.cible == 'Intervenant') && intervenant = Intervenant.find(@envoi_log.cible_id) %>
+    <%= intervenant.nom_prenom %>
+  <% else %>
+    <%= "#{@envoi_log.cible} #{@envoi_log.cible_id}" %>
+  <% end %>
 </p>
 
 <p>
-    <strong>Statut : </strong>
-    <span class="badge <%= @envoi_log.style %>"><%= @envoi_log.workflow_state.humanize %></span>
+  <strong>Statut : </strong>
+  <span class="badge <%= @envoi_log.style %>"><%= @envoi_log.workflow_state.humanize %></span>
 </p>
 
 <p>
-    <strong>Date d'exécution : </strong>
-    <%= l(@envoi_log.date_exécution) if @envoi_log.date_exécution %>
+  <strong>Date d'envoi : </strong>
+  <%= l(@envoi_log.date_exécution) if @envoi_log.date_exécution %>
+</p>
+
+
+<p>
+  <strong>Nombre de rappels envoyés : </strong>
+  <%= @envoi_log.mail_count %>
 </p>
 
 <p>
-    <strong>Message :</strong>
-    <br>
-    <div class="jumbotron">
-        <%= @envoi_log.msg %>
-    </div>
+  <strong>MÀJ : </strong>
+  <%= "#{l @envoi_log.updated_at} (il y a #{time_ago_in_words(@envoi_log.updated_at)})" %>
 </p>
 
-<div id="audit" class="collapse">
-    <br>
+<p>
+  <strong>Message :</strong>
+  <br>
+  <div class="jumbotron">
+    <%= @envoi_log.msg %>
+  </div>
+</p>
 
-    <h4>Audit des modifications</h4>
-    <table class="table table-sm">
-        <% @envoi_log.audits.each do | audit | %>
-            <tr>
-                <td><%= audit.created_at %></td>
-                <td><%= audit.audited_changes %></td>
-            </tr>
-        <% end %>
-    </table>
-
+<div id="audit">
+  <h4>Audit des modifications</h4>
+  <table class="table table-sm">
+    <% @envoi_log.audits.each do | audit | %>
+      <tr>
+        <td><%= "il y a #{time_ago_in_words(audit.created_at)}" %></td>
+        <td><%= audit.audited_changes %></td>
+      </tr>
+    <% end %>
+  </table>
 </div>

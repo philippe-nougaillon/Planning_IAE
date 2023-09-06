@@ -5,7 +5,13 @@ class EnvoiLogsController < ApplicationController
   # GET /envoi_logs
   # GET /envoi_logs.json
   def index
-    @envoi_logs = EnvoiLog.paginate(page: params[:page], per_page: 20)
+    @envoi_logs = EnvoiLog.all
+
+    unless params[:workflow_state].blank?
+      @envoi_logs = @envoi_logs.where(workflow_state: params[:workflow_state])
+    end
+
+    @envoi_logs = @envoi_logs.paginate(page: params[:page], per_page: 20)
   end
 
   # GET /envoi_logs/1
@@ -43,6 +49,13 @@ class EnvoiLogsController < ApplicationController
   def activer
     @envoi_log.activer!
     redirect_to envoi_logs_path, notice: "Job prêt !"
+  end
+
+  def envoyer
+    EnvoiLog.with_prêt_state.each do |envoi_log|
+      EnvoyerNotificationsJob.perform_now(envoi_log.id, params[:test])
+    end
+    redirect_to envoi_logs_path, notice: "Rappels 'prêts' de la file d'attente envoyés"
   end
 
   # GET /envoi_logs/new
