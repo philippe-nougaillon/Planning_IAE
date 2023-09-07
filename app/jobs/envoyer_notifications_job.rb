@@ -1,7 +1,7 @@
 class EnvoyerNotificationsJob < ApplicationJob
   queue_as :default
 
-  def perform(envoi_log_id)
+  def perform(envoi_log_id, test = false)
     require 'rake'
 
     envoi_log = EnvoiLog.find(envoi_log_id)
@@ -11,20 +11,20 @@ class EnvoyerNotificationsJob < ApplicationJob
       
     Rake::Task['cours:envoyer_liste_cours'].reenable # in case you're going to invoke the same task second time.
     
-    begin
+    # begin
       # Lancer la tâche d'envoi
-      Rake::Task['cours:envoyer_liste_cours'].invoke(envoi_log.id)
+      Rake::Task['cours:envoyer_liste_cours'].invoke(envoi_log.id, test)
 
       # Passer à l'état 'Succès' si la tâche a été lancée avec succès
       # envoi_log.envoyer!
 
-    rescue Exception => e
-      # Une erreur est survenue !
-      logger.debug "[JOB FAILED] #{e}"
+    # rescue Exception => e
+    #   # Une erreur est survenue !
+    #   logger.debug "[JOB FAILED] #{e}"
 
-      # Passer à l'état 'Echoué'
-      envoi_log.echec!
-    end
+    #   # Passer à l'état 'Echoué'
+    #   envoi_log.echec!
+    # end
 
   end
 

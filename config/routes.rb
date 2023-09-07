@@ -71,6 +71,9 @@ Rails.application.routes.draw do
       get :tester
       get :suspendre
     end
+    collection do
+      get :envoyer
+    end
   end
 
   resources :mail_logs, only: %i[ index show ]
