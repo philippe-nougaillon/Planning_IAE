@@ -133,9 +133,10 @@ class DossiersController < ApplicationController
     @dossier.envoyer!
 
     # Informe l'intervenant
-    DossierMailer.with(dossier: @dossier).dossier_email.deliver_later
+    mailer_response = DossierMailer.with(dossier: @dossier).dossier_email.deliver_now
+    MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: @dossier.intervenant.email, subject: "Dossier de recrutement CEV (Envoyé)")
 
-    redirect_to @dossier, notice: "Un email va être envoyé à l'intervenant"
+    redirect_to @dossier, notice: "Un email vient d'être envoyé à l'intervenant."
   end
 
   def deposer
@@ -152,9 +153,10 @@ class DossiersController < ApplicationController
     @dossier.valider!
 
     # Informe l'intervenant
-    DossierMailer.with(dossier: @dossier).valider_email.deliver_later
+    mailer_response = DossierMailer.with(dossier: @dossier).valider_email.deliver_now
+    MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: @dossier.intervenant.email, subject: "Dossier de recrutement CEV (Validé)")
 
-    redirect_to @dossier, notice: "Dossier validé avec succès. L'intervenant va en être informé."
+    redirect_to @dossier, notice: "Dossier validé avec succès. L'intervenant vient d'être informé."
   end
 
   def relancer
@@ -162,9 +164,10 @@ class DossiersController < ApplicationController
     @dossier.relancer!
 
     # Informe l'intervenant
-    DossierMailer.with(dossier: @dossier).dossier_email.deliver_later
+    mailer_response = DossierMailer.with(dossier: @dossier).dossier_email.deliver_now
+    MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: @dossier.intervenant.email, subject: "Dossier de recrutement CEV (Relancé)")
 
-    redirect_to @dossier, notice: "Dossier relancé avec succès. L'intervenant va en être informé."
+    redirect_to @dossier, notice: "Dossier relancé avec succès. L'intervenant vient d'être informé."
   end
 
   def rejeter
@@ -179,9 +182,11 @@ class DossiersController < ApplicationController
       @dossier.rejeter!
 
       # Informe l'intervenant
-      DossierMailer.with(dossier: @dossier).rejeter_email.deliver_later
+      mailer_response = DossierMailer.with(dossier: @dossier).rejeter_email.deliver_now
+      MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: @dossier.intervenant.email, subject: "Dossier de recrutement CEV (Rejeté)")
 
-      redirect_to @dossier, notice: "Dossier rejeté. L'intervenant va en être informé."
+
+      redirect_to @dossier, notice: "Dossier rejeté. L'intervenant vient d'être informé."
     else
       redirect_to @dossier, alert: "Pour rejeter ce dossier, il faut qu'un document soit en statut 'Non_conforme' !"
     end
