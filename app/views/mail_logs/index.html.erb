@@ -1,8 +1,8 @@
 <h1>Mail Logs</h1>
-<p>Historique des envois de mails vers MailGun, et la réponse obtenue. (Statut consultable 5 jours)</p>
+<p>Historique des mails envoyés via MailGun, avec Statut et État consultables pendant 5 jours.</p>
 
 <% if @result_failed && @result_failed['items'].size.positive? %>
-  <p class="text-danger">Il y a actuellement <%= @result_failed['items'].count %> envois en statut 'KO'</p>
+  <p class="text-danger">Il y a actuellement <%= @result_failed['items'].count %> envois en Statut 'KO'</p>
 <% end %>
 
 <div class="container-fluid p-3 shadow-sm">
@@ -10,10 +10,17 @@
     <div class="form-group">
       <div class="row">
 
-        <div class="col-sm-5">
+        <div class="col-sm-3">
           <%= label_tag :search, "Destinataire" %>
           <div class="input-group">
-            <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
+            <%= text_field_tag :search, params[:search], include_blank: true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
+          </div>
+        </div>
+
+        <div class="col">
+          <%= label_tag :search_subject, "Sujet" %>
+          <div class="input-group">
+            <%= select_tag :search_subject, options_for_select(MailLog.all.pluck(:subject).uniq.sort, params[:search_subject]), include_blank: true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
             <span class="input-group-btn">
                 <%= submit_tag 'Filtrer', class:"btn btn-sm btn-success" %>
             </span>

@@ -15,6 +15,10 @@ class MailLogsController < ApplicationController
       @mail_logs = @mail_logs.where("LOWER(mail_logs.to) like :search", {search: "%#{params[:search]}%".downcase})
     end
 
+    unless params[:search_subject].blank?
+      @mail_logs = @mail_logs.where(subject: params[:search_subject])
+    end
+
     @mail_logs = @mail_logs.reorder('mail_logs.'+ sort_column + ' ' + sort_direction)
 
     if params[:ko].blank?
