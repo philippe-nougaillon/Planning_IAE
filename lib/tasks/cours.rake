@@ -41,7 +41,7 @@ namespace :cours do
     when 'Formation'
       intervenants = Formation.find(envoi_specs.cible_id).intervenants
     else
-      intervenants = Intervenant.where(doublon: false).or(Intervenant.where(doublon: nil))
+      intervenants = Intervenant.where(doublon: false)
     end
 
     intervenants.each do | intervenant |

@@ -1245,7 +1245,7 @@ class ToolsController < ApplicationController
   end
 
   def rappel_des_cours
-    @intervenants = Intervenant.where(doublon:false).or(Intervenant.where(doublon: nil))
+    @intervenants = Intervenant.where(doublon: false)
     @formations = Formation.all
   end
 

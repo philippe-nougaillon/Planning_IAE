@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_09_06_100343) do
+ActiveRecord::Schema.define(version: 2023_09_18_100740) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
@@ -260,7 +260,7 @@ ActiveRecord::Schema.define(version: 2023_09_06_100343) do
     t.string "adresse"
     t.string "cp"
     t.string "ville"
-    t.boolean "doublon"
+    t.boolean "doublon", default: false
     t.integer "nbr_heures_statutaire"
     t.date "date_naissance"
     t.string "memo"
