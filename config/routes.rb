@@ -70,6 +70,7 @@ Rails.application.routes.draw do
       get :activer
       get :tester
       get :suspendre
+      get :annuler
     end
     collection do
       get :envoyer
