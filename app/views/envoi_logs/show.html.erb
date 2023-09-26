@@ -47,13 +47,10 @@
 </p>
 
 <p>
-  <strong>Période du: </strong>
-  <%= @envoi_log.date_début %>
-</p>
-
-<p>
-  <strong>Au: </strong>
-  <%= @envoi_log.date_fin %>
+  <strong>Période : </strong>
+  <%= l(@envoi_log.date_début, default: '') %>
+  -
+  <%= l(@envoi_log.date_fin, default: '') %>
 </p>
 
 

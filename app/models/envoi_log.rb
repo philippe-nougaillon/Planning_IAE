@@ -9,13 +9,16 @@ class EnvoiLog < ApplicationRecord
     validates :date_prochain, :workflow_state, presence: true
 
     workflow do
-        state :pause, meta: { style: 'badge-primary' } do
+        state :pause, meta: { style: 'badge-secondary' } do
             event :activer, transitions_to: :prêt
+            event :annuler, transitions_to: :annulé
         end
 
         state :prêt, meta: { style: 'badge-warning' } do
             event :suspendre, transitions_to: :pause
         end
+
+        state :annulé, meta: { style: 'badge-danger' }
 
         state :envoyé, meta: { style: 'badge-success' }
     end

@@ -1,5 +1,5 @@
 class EnvoiLogsController < ApplicationController
-  before_action :set_envoi_log, only: [:show, :tester, :suspendre, :activer, :edit, :update, :destroy]
+  before_action :set_envoi_log, only: [:show, :tester, :suspendre, :activer, :annuler, :edit, :update, :destroy]
   before_action :is_user_authorized
 
   # GET /envoi_logs
@@ -49,6 +49,11 @@ class EnvoiLogsController < ApplicationController
   def activer
     @envoi_log.activer!
     redirect_to envoi_logs_path, notice: "Job prêt !"
+  end
+
+  def annuler
+    @envoi_log.annuler!
+    redirect_to envoi_logs_path, notice: "Job annulé !"
   end
 
   def envoyer
