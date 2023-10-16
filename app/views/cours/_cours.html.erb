@@ -87,14 +87,14 @@
             <% end %>
         <% end %>
 
-        <% if policy(Cour).edit? && !cours.commentaires.blank? %>
+        <% if policy(cours).edit? && !cours.commentaires.blank? %>
             <i title="<%= cours.commentaires %>" >
                 <%= fa_icon 'comment-dots' %>         
             </i>
         <% end %>
     </td>
 
-    <% if policy(Cour).edit? %>
+    <% if policy(cours).edit? %>
         <td>
             <%= link_to edit_cour_path(cours, from: params[:from]), class: "btn btn-sm btn-outline-light text-dark" do %>
                 <%= fa_icon 'edit '%>

@@ -78,5 +78,10 @@ class Formation < ApplicationRecord
 		end
 	end
 
+	# Pour savoir si cette formation est gérée par un partenaire QSE
+	def partenaire_qse?
+		%w[M1QSE M2QSE].include?(self.abrg[0..4])
+	end
+
 end
 

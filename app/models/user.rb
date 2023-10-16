@@ -74,4 +74,10 @@ class User < ApplicationRecord
     [ 'nom','prénom','email', 'mobile', 'rôle' ]
   end
 
+  # Pour donner le role 'gestionnaire' à un partenaire
+  # qui pourra modifier que les cours de ses formations
+  def partenaire_qse?
+    self.email == "d.gbedemah@icp.fr"
+  end
+
 end

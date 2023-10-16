@@ -4,7 +4,7 @@ class CoursController < ApplicationController
   include ApplicationHelper
 
   before_action :set_cour, only: [:show, :edit, :update, :destroy]
-  before_action :is_user_authorized, except: [:destroy]
+  before_action :is_user_authorized, except: [:show, :edit, :update, :destroy]
 
   layout :define_layout
 
@@ -537,11 +537,17 @@ class CoursController < ApplicationController
   # GET /cours/1
   # GET /cours/1.json
   def show
+    authorize @cour
   end
 
   # GET /cours/new
   def new
     @cour = Cour.new
+    @formations = Formation.unscoped.order(:nom, :promo)
+
+    if current_user.partenaire_qse?
+      @formations = @formations.select{ |f| f.partenaire_qse? }
+    end
 
     unless params[:formation].blank?
       @cour.formation_id = Formation.find_by(nom:params[:formation]).id
@@ -567,6 +573,12 @@ class CoursController < ApplicationController
 
   # GET /cours/1/edit
   def edit
+    authorize @cour
+    @formations = Formation.unscoped.order(:nom, :promo)
+
+    if current_user.partenaire_qse?
+      @formations = @formations.select{ |f| f.partenaire_qse? }
+    end
   end
 
   # POST /cours
@@ -600,6 +612,7 @@ class CoursController < ApplicationController
   # PATCH/PUT /cours/1
   # PATCH/PUT /cours/1.json
   def update
+    authorize @cour
     respond_to do |format|
       if @cour.update(cour_params)
         format.html do

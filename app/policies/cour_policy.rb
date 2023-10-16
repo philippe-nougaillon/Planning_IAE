@@ -14,7 +14,7 @@ class CourPolicy < ApplicationPolicy
   end
 
   def show?
-    user.role_number >= 2
+    edit?
   end
 
   def planning?
@@ -30,7 +30,7 @@ class CourPolicy < ApplicationPolicy
   end
 
   def new?
-    user && user.role_number >= 2
+    user && (user.role_number >= 2 || user.partenaire_qse?)
   end
 
   def create?
@@ -38,7 +38,7 @@ class CourPolicy < ApplicationPolicy
   end
 
   def edit?
-    user && user.role_number >= 2
+    user && (user.role_number >= 2 || (user.partenaire_qse? && record.formation.partenaire_qse?))
   end
 
   def update?
