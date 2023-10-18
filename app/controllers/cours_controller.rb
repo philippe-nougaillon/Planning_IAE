@@ -607,7 +607,16 @@ class CoursController < ApplicationController
         end
         format.json { render :show, status: :created, location: @cour }
       else
-        format.html { render :new }
+        format.html do
+          @formations = Formation.unscoped.order(:nom, :promo)
+          @salles = Salle.all
+      
+          if current_user.partenaire_qse?
+            @formations = @formations.select{ |f| f.partenaire_qse? }
+            @salles = @salles.where(nom: ["ICP 1", "ICP 2"])
+          end
+          render :new
+        end
         format.json { render json: @cour.errors, status: :unprocessable_entity }
       end
     end
@@ -640,7 +649,16 @@ class CoursController < ApplicationController
         end
         format.json { render :show, status: :ok, location: @cour }
       else
-        format.html { render :edit }
+        format.html do
+          @formations = Formation.unscoped.order(:nom, :promo)
+          @salles = Salle.all
+      
+          if current_user.partenaire_qse?
+            @formations = @formations.select{ |f| f.partenaire_qse? }
+            @salles = @salles.where(nom: ["ICP 1", "ICP 2"])
+          end
+          render :edit, params
+        end
         format.json { render json: @cour.errors, status: :unprocessable_entity }
       end
     end
