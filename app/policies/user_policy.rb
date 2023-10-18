@@ -42,7 +42,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def peut_réserver?
-    user.role_number >= 2
+    user.role_number >= 2 || (user.role_number == 1 && user.partenaire_qse?)
   end
 
 end

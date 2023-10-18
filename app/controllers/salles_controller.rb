@@ -164,6 +164,11 @@ class SallesController < ApplicationController
   def libres
     salles_dispos_ids = []
     cours = nil
+    @salles = Salle.all
+
+    if current_user && current_user.partenaire_qse?
+      @salles = @salles.where(nom: ["ICP 1", "ICP 2"])
+    end
 
     if !(params[:id].blank?)
       cours = Cour.find(params[:id])
@@ -177,7 +182,7 @@ class SallesController < ApplicationController
 
     if cours
       # Test chaque salle pour voir les disponibilités (cours.valid? == true)
-      Salle.all.each do |s|
+      @salles.each do |s|
         cours.salle = s 
         if cours.valid?
           salles_dispos_ids << s.id

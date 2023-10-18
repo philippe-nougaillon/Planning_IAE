@@ -34,7 +34,7 @@
                             data: { "target": "dispo.duree" } %>
     
     <%= f.collection_select :formation_id, 
-                            Formation.unscoped.order(:nom, :promo), 
+                            @formations, 
                             :id, 
                             :nom_promo, 
                             {include_blank: true},
@@ -76,7 +76,7 @@
       <% end %>
 
       <%= f.collection_select :salle_id, 
-                                        Salle.all, 
+                                        @salles, 
                                         :id, 
                                         :nom_places, 
                                         { include_blank: true },
