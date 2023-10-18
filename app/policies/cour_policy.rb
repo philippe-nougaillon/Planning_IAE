@@ -48,10 +48,12 @@ class CourPolicy < ApplicationPolicy
   def destroy?
     # Ne peuvent supprimer un cours que 
     # - son créateur 
-    # - le gestionnaire de formation 
+    # - le gestionnaire de formation
+    # - le partenaire_qse d'une formation_qse
     # - un admin
     (record.audits.first.user == user) || 
-    (record.formation.try(:user) == user) || 
+    (record.formation.try(:user) == user) ||
+    (record.formation.partenaire_qse? && user.partenaire_qse?) ||
     (user.admin?) 
   end
 

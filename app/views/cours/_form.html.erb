@@ -76,7 +76,7 @@
       <% end %>
 
       <%= f.collection_select :salle_id, 
-                                        Salle.all, 
+                                        @salles, 
                                         :id, 
                                         :nom_places, 
                                         { include_blank: true },
