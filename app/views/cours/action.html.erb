@@ -288,7 +288,7 @@
         <%= label_tag :table, "Ajouter une colonne N° Table" %>
       </div>
     </div>
-  <% elsif params[:action_name] == "Générer Pochette Examen PDF" && @cours.count == 1 && @cours.first.examen? %>
+  <% elsif (["Générer Pochette Examen PDF","Convocation étudiants PDF"].include?(params[:action_name])) && @cours.count == 1 && @cours.first.examen? %>
     <h3>Sélectionnez les options d'examens</h3>
     <i>Cochez les options autorisées. Non cochée = option interdite</i>
     <br><br>

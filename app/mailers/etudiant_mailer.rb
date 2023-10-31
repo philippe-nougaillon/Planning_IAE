@@ -24,4 +24,12 @@ class EtudiantMailer < ApplicationMailer
         end
     end
 
+    def convocation(étudiant, pdf)
+        @étudiant = étudiant
+        attachments['Convocation.pdf'] = pdf.render
+
+        mail(to: @étudiant.email, subject: "Convocation")
+
+    end
+
 end
