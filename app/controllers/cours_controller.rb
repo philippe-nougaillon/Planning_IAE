@@ -482,9 +482,8 @@ class CoursController < ApplicationController
             EtudiantMailer.convocation(étudiant, pdf).deliver_now
           end
         else
-          redirect_to cours_path, alert: 'Il y a plusieurs cours de sélectionné ou le cours n\'est pas un examen'
+          flash[:error] = 'Il y a plusieurs cours sélectionnés ou le cours n\'est pas un examen'
         end
-
     end 
 
     filename = "Export_Planning_#{Date.today.to_s}"

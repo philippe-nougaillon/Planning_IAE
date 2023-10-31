@@ -706,9 +706,15 @@ class ExportPdf
             -    vous présenter dans la salle d'examen 15 minutes avant le début de l'épreuve</b></color>", inline_format: true
 
         move_down @margin_down
-        text "<color rgb='032E4D'><b>> Documents papier #{papier ? "autorisés" : "interdits"}</b></color>", inline_format: true
-        text "<color rgb='032E4D'><b>> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission #{calculatrice ? "autorisée" : "interdite"}</b></color>", inline_format: true
-        text "<color rgb='032E4D'><b>> Les ordinateurs, tablettes et téléphones portables sont #{outils ? "autorisés" : "interdits"}</b></color>", inline_format: true
+        if papier
+            text "<color rgb='032E4D'><b>> Documents papier autorisés</b></color>", inline_format: true
+        end
+        if calculatrice
+            text "<color rgb='032E4D'><b>> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission autorisée</b></color>", inline_format: true
+        end
+        if outils
+            text "<color rgb='032E4D'><b>> Les ordinateurs, tablettes et téléphones portables sont autorisés</b></color>", inline_format: true
+        end
     end
 
 end
