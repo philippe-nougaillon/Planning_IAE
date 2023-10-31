@@ -636,8 +636,8 @@ class ExportPdf
             move_down @margin_down
             text "<color rgb='032E4D'>Durée : #{((cour.fin - cour.debut) / 1.hour).truncate}h (#{(((cour.fin - cour.debut) / 1.hour).truncate) + 1}h pour le tiers temps)</color>", inline_format: true
             move_down @margin_down
-            text "<color rgb='032E4D'>> Documents papier #{papier ? "autorisés" : "interdits"}autorisés</color>", inline_format: true
-            text "<color rgb='032E4D'>> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission #{calculatrice ? "autorisée" : "interdite"}</color>", inline_format: true, size: 16
+            text "<color rgb='032E4D'>> Documents papier #{papier ? "autorisés" : "interdits"}</color>", inline_format: true
+            text "<color rgb='032E4D'>> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission #{calculatrice ? "autorisée" : "interdite"}</color>", inline_format: true
             text "<color rgb='032E4D'>> Les ordinateurs, tablettes et téléphones portables sont #{outils ? "autorisés" : "interdits"}</color>", inline_format: true
 
             move_down @margin_down * 3
