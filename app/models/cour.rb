@@ -49,12 +49,16 @@ class Cour < ApplicationRecord
     ]
   end
   
-  def self.actions(role_number)
-    actions = ["Exporter vers Excel", "Exporter vers iCalendar", "Exporter en PDF", "Supprimer"]
-    if role_number >= 3
-      actions << ["Changer de salle", "Changer d'intervenant", "Intervertir"]
+  def self.actions(user)
+    actions = ["Exporter vers Excel", "Exporter vers iCalendar", "Exporter en PDF"]
+
+    if user.partenaire_qse?
+      actions << ["Générer Feuille émargement PDF"]
+    else
+      actions << ["Supprimer", "Changer de salle", "Changer d'intervenant", "Intervertir"]
     end
-    if role_number >= 5
+
+    if user.role_number >= 5
       actions << ["Changer d'état", "Changer de date", "Inviter", "Générer Feuille émargement PDF", "Générer Pochette Examen PDF"]
     end
     return actions.flatten.sort
