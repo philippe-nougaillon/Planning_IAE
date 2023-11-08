@@ -474,7 +474,16 @@ class CoursController < ApplicationController
 
       when "Exporter en PDF", "Générer Feuille émargement PDF", "Générer Pochette Examen PDF"
         request.format = 'pdf'
-
+      when 'Convocation étudiants PDF'
+        if @cours.count == 1 && @cours.first.examen?
+          @cours.first.formation.etudiants.each do |étudiant|
+            pdf = ExportPdf.new
+            pdf.convocation(@cours.first, étudiant, params[:papier], params[:calculatrice], params[:outils])
+            EtudiantMailer.convocation(étudiant, pdf).deliver_now
+          end
+        else
+          flash[:error] = 'Il y a plusieurs cours sélectionnés ou le cours n\'est pas un examen'
+        end
     end 
 
     filename = "Export_Planning_#{Date.today.to_s}"

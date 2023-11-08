@@ -298,6 +298,35 @@
     <br>
     <%= check_box_tag :outils %> Ordinateurs, tablettes et téléphones portables autorisés ?
     <br><br>
+  <% elsif params[:action_name] == "Convocation étudiants PDF" && @cours.count == 1 && @cours.first.examen? %>
+    <h3>Sélectionnez les étudiants</h3>
+    <br>
+    <div data-controller="check-all action">
+      <div data-action="click->action#click">
+        <input id="checkall" type="checkbox" data-target="check-all.all action.source">
+        <label for="checkall">Tous ?</label>
+      </div>
+      <% @cours.each do |c| %>
+        <% c.formation.etudiants.order(:nom, :prénom).each do |etudiant| %>
+          <span data-action="click->action#click">
+            <%= check_box_tag "[etudiants_id][#{etudiant.id}]", true, false, data: {"target":"action.source"} %>
+          </span>
+          <%= etudiant.nom_prénom %>
+          <br>
+        <% end %>
+      <% end %>
+    </div>
+    <br><br>
+
+    <h3>Sélectionnez les options d'examens</h3>
+    <i>Cochez les options autorisées. Non cochée = option interdite</i>
+    <br><br>
+    <%= check_box_tag :papier %> Papiers autorisés ?
+    <br>
+    <%= check_box_tag :calculatrice %> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyende transmission autorisés ?
+    <br>
+    <%= check_box_tag :outils %> Ordinateurs, tablettes et téléphones portables autorisés ?
+    <br><br>
   <% end %>
 
   <div class="row mb-5">

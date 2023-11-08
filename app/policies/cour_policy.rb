@@ -22,7 +22,7 @@ class CourPolicy < ApplicationPolicy
   end
 
   def action?
-    user && user.role_number >= 3
+    user && (user.role_number >= 3 || user.partenaire_qse?) 
   end
 
   def action_do?
