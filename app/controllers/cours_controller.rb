@@ -481,7 +481,8 @@ class CoursController < ApplicationController
             étudiants.each do |étudiant|
               pdf = ExportPdf.new
               pdf.convocation(@cours.first, étudiant, params[:papier], params[:calculatrice], params[:outils])
-              EtudiantMailer.convocation(étudiant, pdf).deliver_now
+              mailer_response = EtudiantMailer.convocation(étudiant, pdf).deliver_now
+              MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: étudiant.email, subject: "Convocation")
             end
           else
             flash[:error] = "Aucun étudiant n'a été sélectionné, il ne s'est rien passé"
