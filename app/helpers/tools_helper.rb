@@ -72,7 +72,9 @@ module ToolsHelper
                     pretty_changes << "État initialisé à '#{ c.last.humanize }'"
                 end
             when 'Discarded at'
-                pretty_changes << "Utilisateur #{c.last.first.nil? ? 'désactivé' : 'activé'}"
+                if audit.action == 'update'
+                    pretty_changes << "Utilisateur #{c.last.first.nil? ? 'désactivé' : 'activé'}"
+                end
             else
                 if audit.action == 'update'
                     unless c.last.first.blank? && c.last.last.blank?    
