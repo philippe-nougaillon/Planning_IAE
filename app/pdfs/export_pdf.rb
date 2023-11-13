@@ -678,11 +678,9 @@ class ExportPdf
     def convocation(cour, étudiant, papier, calculatrice, outils)
         font "OpenSans"
 
-        image "#{@image_path}/logo_iae_2.png", :height => 100, :position => :center
-        move_down @margin_down
+        image "#{@image_path}/logo_iae_2.png", :height => 60, :position => :center
+        move_down @margin_down * 3
         text "<color rgb='032E4D'><b>#{cour.formation.nom.upcase}</b></color>", inline_format: true, size: 16, style: :bold, align: :center
-        move_down @margin_down
-        text "<color rgb='032E4D'><b>Promotion #{cour.formation.promo}</b></color>", inline_format: true, size: 16, align: :center
         move_down @margin_down
         text "<color rgb='E68824'><b>Convocation aux Examens</b></color>", inline_format: true, size: 24, align: :center
 
@@ -696,25 +694,25 @@ class ExportPdf
         end
 
         move_down @margin_down * 2
-        text "<color rgb='E68824'><b>Examen de l’UE #{cour.code_ue} - #{cour.ue}</b></color>", inline_format: true, size: 16, align: :center
+        text "<color rgb='E68824'><b>Examen de #{cour.nom_ou_ue}</b></color>", inline_format: true, size: 16, align: :center
         move_down @margin_down
-        text "<color rgb='E68824'><b>Le #{cour.debut.to_date} de #{cour.debut.strftime('%Hh%M')} à #{cour.fin.strftime('%Hh%M')} en salle #{cour.salle.nom}</b></color>", inline_format: true, size: 16, align: :center
+        text "<color rgb='E68824'><b>Le #{I18n.l cour.debut.to_date} de #{cour.debut.strftime('%Hh%M')} à #{cour.fin.strftime('%Hh%M')} en salle #{cour.salle.nom}</b></color>", inline_format: true, size: 16, align: :center
 
-        move_down @margin_down
+        move_down @margin_down * 2
         text "<color rgb='032E4D'><b>Vous devez :
             -    vous munir de votre carte d'étudiant
             -    vous présenter dans la salle d'examen 15 minutes avant le début de l'épreuve</b></color>", inline_format: true
 
-        move_down @margin_down
+        move_down @margin_down * 2
         if papier
-            text "<color rgb='032E4D'><b>> Documents papier autorisés</b></color>", inline_format: true
+            text "<color rgb='032E4D'> => <b>Documents papier autorisés</b></color>", inline_format: true
+        else
+            text "<color rgb='032E4D'> => <b>Aucun document</b> n'est <b>autorisé</b> pendant l'épreuve</color>", inline_format: true
         end
-        if calculatrice
-            text "<color rgb='032E4D'><b>> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission autorisée</b></color>", inline_format: true
-        end
-        if outils
-            text "<color rgb='032E4D'><b>> Les ordinateurs, tablettes et téléphones portables sont autorisés</b></color>", inline_format: true
-        end
+        move_down @margin_down
+        text "<color rgb='032E4D'> => <b>Calculatrice</b> de poche (à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission) <b>#{calculatrice ? "autorisée" : "interdite"}</b></color>", inline_format: true
+        move_down @margin_down
+        text "<color rgb='032E4D'> => Les <b>ordinateurs, tablettes</b> et <b>téléphones portables</b> sont <b>#{outils ? "autorisés" : "interdits"}</b></color>", inline_format: true
     end
 
 end

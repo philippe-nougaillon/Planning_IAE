@@ -72,7 +72,7 @@ class CoursController < ApplicationController
         year =  Date.today.year + 1
       else
         year = Date.today.year
-      end    
+      end
       @date = Date.commercial(year, params[:semaine].to_i, 1)
     else
       unless params[:start_date].blank?
@@ -80,13 +80,13 @@ class CoursController < ApplicationController
           @date = Date.parse(params[:start_date])
         rescue
           @date = Date.today
-        end 
+        end
       else
         @date = Date.today
       end
     end
     params[:start_date] = @date.to_s
-  
+
     case params[:view]
       when 'list'
         @alert = Alert.visibles.first
@@ -111,9 +111,9 @@ class CoursController < ApplicationController
         _date = Date.parse(params[:start_date]).beginning_of_month
         @cours = @cours.where("cours.debut BETWEEN DATE(?) AND DATE(?)", _date, _date + 1.month)
     end
-  
+
     unless params[:formation_id].blank?
-      params[:formation] = Formation.find(params[:formation_id]).nom.rstrip 
+      params[:formation] = Formation.find(params[:formation_id]).nom.rstrip
     end
 
     unless params[:formation].blank?
@@ -137,7 +137,7 @@ class CoursController < ApplicationController
     end
 
     unless params[:salle_id].blank?
-      @cours = @cours.where(salle_id:params[:salle_id])      
+      @cours = @cours.where(salle_id:params[:salle_id])
     end
 
     unless params[:ue].blank?
@@ -162,7 +162,7 @@ class CoursController < ApplicationController
 
     @all_cours = @cours
 
-    if (params[:view] == 'list' and params[:paginate] == 'pages' and request.variant.include?(:desktop)) 
+    if (params[:view] == 'list' and params[:paginate] == 'pages' and request.variant.include?(:desktop))
       @cours = @cours.paginate(page: clean_page(params[:page]))
     end
 
@@ -188,14 +188,14 @@ class CoursController < ApplicationController
     session[:paginate] = params[:paginate]
 
     respond_to do |format|
-      format.html 
-    
+      format.html
+
       format.xls do
         book = Cour.generate_xls(@cours, !params[:intervenant])
         file_contents = StringIO.new
         book.write file_contents # => Now file_contents contains the rendered file output
         filename = "Export_Cours.xls"
-        send_data file_contents.string.force_encoding('binary'), filename: filename 
+        send_data file_contents.string.force_encoding('binary'), filename: filename
       end
 
       format.ics do
@@ -214,7 +214,7 @@ class CoursController < ApplicationController
         send_data pdf.render,
             filename: filename.concat('.pdf'),
             type: 'application/pdf',
-            disposition: 'inline'	
+            disposition: 'inline'
       end
     end
   end
@@ -224,7 +224,7 @@ class CoursController < ApplicationController
     session[:page_slide] ||= 0
 
     @now = ApplicationController.helpers.time_in_paris_selon_la_saison
-    
+
     if params[:planning_date]
       # Afficher tous les cours du jours
       begin
@@ -235,8 +235,8 @@ class CoursController < ApplicationController
       # si date du jour, on ajoute l'heure qu'il est
       @planning_date = @now if @planning_date == Date.today
     else
-      # afficher tous les cours du jour 
-      @planning_date = @now 
+      # afficher tous les cours du jour
+      @planning_date = @now
     end
 
     @tous_les_cours = Cour.where(etat: Cour.etats.values_at(:planifié, :confirmé))
@@ -247,7 +247,7 @@ class CoursController < ApplicationController
     @cours_count = @tous_les_cours.size
 
     unless @cours_count.zero?
-      # effectuer une rotation de x pages de 7 cours 
+      # effectuer une rotation de x pages de 7 cours
 
       per_page = 7
       @max_page_slide = (@cours_count / per_page) - 1
@@ -287,7 +287,7 @@ class CoursController < ApplicationController
           cours = Cour.find(id)
           salles = []
           Salle.all.each do |s|
-            cours.salle = s 
+            cours.salle = s
             salles << s.nom if cours.valid?
           end
           @salles_dispos = @salles_dispos & salles
@@ -295,13 +295,13 @@ class CoursController < ApplicationController
       elsif params[:action_name] == 'Intervertir'
         # Tester si la durée de deux cours n'est pas égale
         # pour prévenir l'utilisateur qu'il y a danger de chevauchement
-        durées = [] 
+        durées = []
         @action_ids.each do |id|
           durées << Cour.find(id).duree.to_f
         end
         if durées.first != durées.last
           @intervertir_alerte = "Attention, les deux cours n'ont pas la même durée, il y a un risque de chevauchement..."
-        end   
+        end
       end
 
       @cours = Cour
@@ -309,7 +309,7 @@ class CoursController < ApplicationController
                   .includes(:intervenant, :formation, :salle, :audits)
                   .where(id: @action_ids)
                   .order(:debut)
-    
+
     else
       redirect_to cours_path, alert:'Veuillez choisir des cours et une action à appliquer !'
     end
@@ -323,7 +323,7 @@ class CoursController < ApplicationController
                 .where(id: params[:cours_id].keys)
                 .order(:debut)
 
-    case action_name 
+    case action_name
       when 'Changer de salle'
         salle = !params[:salle_id].blank? ? Salle.find(params[:salle_id]) : nil
         @cours.each do |c|
@@ -351,9 +351,9 @@ class CoursController < ApplicationController
           new_date = params[:new_date].to_date
         end
         unless params[:add_n_days].blank?
-          add_n_days = params[:add_n_days].to_i 
+          add_n_days = params[:add_n_days].to_i
         end
-        
+
         @cours.each do |c|
           if add_n_days.present?
             new_date = c.debut + add_n_days.days
@@ -368,7 +368,7 @@ class CoursController < ApplicationController
             end
           else
             flash[:error] = "Aucun cours mis à jour"
-          end    
+          end
         end
 
       when "Changer d'intervenant"
@@ -386,9 +386,9 @@ class CoursController < ApplicationController
             unless intervenant_id.blank?
               @cours.each do |cour|
                 cour.invits.create!(user_id: current_user.id,
-                                    intervenant_id: intervenant_id.to_i, 
-                                    msg: params[:message_invitation], 
-                                    ue: invit[:ue].values.to_a[i], 
+                                    intervenant_id: intervenant_id.to_i,
+                                    msg: params[:message_invitation],
+                                    ue: invit[:ue].values.to_a[i],
                                     nom: invit[:nom].values.to_a[i])
                 invits_créées += 1
               end
@@ -396,13 +396,13 @@ class CoursController < ApplicationController
               MailLog.create(user_id: current_user.id, message_id:mailer_response.message_id, to:Invit.first.intervenant.email, subject: "Invitation")
             end
           end
-        end  
+        end
         if invits_créées > 0
-          @message_complémentaire = "#{ invits_créées } invitation.s créée.s avec succès"        
+          @message_complémentaire = "#{ invits_créées } invitation.s créée.s avec succès"
         else
           flash[:error] = "Action annulée"
         end
-        
+
       when 'Intervertir'
         # il faut 2 cours
         if params[:cours_id].keys.count == 2
@@ -415,46 +415,46 @@ class CoursController < ApplicationController
             cours_A.update_columns(intervenant_id: intervenant_B)
             cours_B.update_columns(intervenant_id: intervenant_A)
           end
-          
+
           if params[:intervertir_binomes]
             intervenant_A = cours_A.intervenant_binome_id
             intervenant_B = cours_B.intervenant_binome_id
             cours_A.update_columns(intervenant_binome_id: intervenant_B)
             cours_B.update_columns(intervenant_binome_id: intervenant_A)
           end
-          
+
           if params[:intervertir_intitulé]
             intitulé_A = cours_A.nom
             intitulé_B = cours_B.nom
             cours_A.update_columns(nom: intitulé_B)
             cours_B.update_columns(nom: intitulé_A)
           end
-          
+
           if params[:intervertir_ue]
             code_ue_A = cours_A.code_ue
             code_ue_B = cours_B.code_ue
             cours_A.update_columns(code_ue: code_ue_B)
             cours_B.update_columns(code_ue: code_ue_A)
           end
-          
+
           if params[:intervertir_salles]
             salle_A = cours_A.salle_id
             salle_B = cours_B.salle_id
             cours_A.update_columns(salle_id: salle_B)
             cours_B.update_columns(salle_id: salle_A)
-          end  
+          end
         else
           flash[:error] = "Il faut deux cours à intervertir ! Opération annulée"
         end
 
-      when "Supprimer" 
+      when "Supprimer"
         if (params[:invits_en_cours].present? && params[:confirmation] == 'yes') || !params[:invits_en_cours].present?
           if !params[:delete].blank?
             @cours.each do |c|
               if policy(c).destroy?
                 c.invits.destroy_all
                 c.destroy
-              else 
+              else
                 flash[:error] = "Vous ne pouvez pas supprimer ce cours (##{c.id}) ! Opération annulée"
                 next
               end
@@ -476,15 +476,20 @@ class CoursController < ApplicationController
         request.format = 'pdf'
       when 'Convocation étudiants PDF'
         if @cours.count == 1 && @cours.first.examen?
-          @cours.first.formation.etudiants.each do |étudiant|
-            pdf = ExportPdf.new
-            pdf.convocation(@cours.first, étudiant, params[:papier], params[:calculatrice], params[:outils])
-            EtudiantMailer.convocation(étudiant, pdf).deliver_now
+          étudiants = Etudiant.where(id: params[:etudiants_id].try(:keys))
+          if étudiants.any?
+            étudiants.each do |étudiant|
+              pdf = ExportPdf.new
+              pdf.convocation(@cours.first, étudiant, params[:papier], params[:calculatrice], params[:outils])
+              EtudiantMailer.convocation(étudiant, pdf).deliver_now
+            end
+          else
+            flash[:error] = "Aucun étudiant n'a été sélectionné, il ne s'est rien passé"
           end
         else
           flash[:error] = 'Il y a plusieurs cours sélectionnés ou le cours n\'est pas un examen'
         end
-    end 
+    end
 
     filename = "Export_Planning_#{Date.today.to_s}"
 
@@ -506,7 +511,7 @@ class CoursController < ApplicationController
         file_contents = StringIO.new
         book.write file_contents # => Now file_contents contains the rendered file output
         filename = "Export_Cours.xls"
-        send_data file_contents.string.force_encoding('binary'), filename: filename 
+        send_data file_contents.string.force_encoding('binary'), filename: filename
       end
 
       format.ics do
@@ -520,7 +525,7 @@ class CoursController < ApplicationController
         when "Exporter en PDF"
           pdf = ExportPdf.new
           pdf.export_liste_des_cours(@cours, true)
-          
+
           send_data pdf.render,
           filename: filename.concat('.pdf'),
             type: 'application/pdf',
@@ -569,16 +574,16 @@ class CoursController < ApplicationController
       intervenant_id = Intervenant.find_by(nom:intervenant.split(' ').first, prenom:intervenant.split(' ').last.rstrip)
       @cour.intervenant_id = intervenant_id
     end
-    
+
     @cour.formation_id = params[:formation_id] if params[:formation_id]
-    @cour.intervenant_id = params[:intervenant_id] if params[:intervenant_id] 
+    @cour.intervenant_id = params[:intervenant_id] if params[:intervenant_id]
     @cour.debut = params[:debut] if params[:debut]
     @cour.ue = params[:ue]
     @cour.salle_id = params[:salle_id]
     @cour.etat = params[:etat].to_i
     @cour.nom = params[:nom]
     if params[:heure]
-      @cour.debut = Time.zone.parse("#{params[:debut]} #{params[:heure]}:00").to_s 
+      @cour.debut = Time.zone.parse("#{params[:debut]} #{params[:heure]}:00").to_s
     end
   end
 
@@ -602,8 +607,8 @@ class CoursController < ApplicationController
     respond_to do |format|
       if @cour.valid? && @cour.save
         format.html do
-          if params[:create_and_add]  
-            redirect_to new_cour_path(debut:@cour.debut, fin:@cour.fin, 
+          if params[:create_and_add]
+            redirect_to new_cour_path(debut:@cour.debut, fin:@cour.fin,
                         formation_id:@cour.formation_id, intervenant_id:@cour.intervenant_id, ue:@cour.ue, salle_id:@cour.salle_id, nom:@cour.nom),
                         notice: 'Cours ajouté avec succès.'
           else
@@ -611,15 +616,15 @@ class CoursController < ApplicationController
               redirect_to occupation_salles_path, notice: "Cours ##{@cour.id} ajouté avec succès."
             else
               redirect_to cours_path, notice: "Cours ##{@cour.id} ajouté avec succès."
-            end  
-          end 
+            end
+          end
         end
         format.json { render :show, status: :created, location: @cour }
       else
         format.html do
           @formations = Formation.unscoped.order(:nom, :promo)
           @salles = Salle.all
-      
+
           if current_user.partenaire_qse?
             @formations = @formations.select{ |f| f.partenaire_qse? }
             @salles = @salles.where(nom: ["ICP 1", "ICP 2"])
@@ -644,7 +649,7 @@ class CoursController < ApplicationController
               NotifierEtudiantsJob.perform_later(etudiant, @cour, current_user.id)
             end
           end
-    
+
           # repartir à la page où a eu lieu la demande de modification
           if params[:from] == 'planning_salles'
             redirect_to cours_path(view:"calendar_rooms", start_date:@cour.debut)
@@ -661,7 +666,7 @@ class CoursController < ApplicationController
         format.html do
           @formations = Formation.unscoped.order(:nom, :promo)
           @salles = Salle.all
-      
+
           if current_user.partenaire_qse?
             @formations = @formations.select{ |f| f.partenaire_qse? }
             @salles = @salles.where(nom: ["ICP 1", "ICP 2"])
@@ -693,7 +698,7 @@ class CoursController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def cour_params
-      params.require(:cour).permit(:debut, :fin, :formation_id, :intervenant_id, 
+      params.require(:cour).permit(:debut, :fin, :formation_id, :intervenant_id,
                                     :salle_id, :code_ue, :nom, :etat, :duree,
                                     :intervenant_binome_id, :hors_service_statutaire,
                                     :commentaires, :elearning)
