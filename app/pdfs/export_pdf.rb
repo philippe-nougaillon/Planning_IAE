@@ -699,12 +699,15 @@ class ExportPdf
         text "<color rgb='E68824'><b>Le #{I18n.l cour.debut.to_date} de #{cour.debut.strftime('%Hh%M')} à #{cour.fin.strftime('%Hh%M')} en salle #{cour.salle.nom}</b></color>", inline_format: true, size: 16, align: :center
 
         move_down @margin_down * 2
-        text "<color rgb='032E4D'><b>Vous devez :
-            -    vous munir de votre carte d'étudiant
-            -    vous présenter dans la salle d'examen 15 minutes avant le début de l'épreuve</b></color>", inline_format: true
+        text "<color rgb='032E4D'><b>Vous devez :</b></color>", inline_format: true
+        move_down @margin_down
+            text "<color rgb='032E4D'><b>-    vous munir de votre carte d'étudiant</b></color>", inline_format: true
+        move_down @margin_down
+            text "<color rgb='032E4D'><b>-    vous présenter dans la salle d'examen 15 minutes avant le début de l'épreuve</b></color>", inline_format: true
 
         move_down @margin_down * 2
-        text "Consignes :"
+        text "<color rgb='032E4D'><b>Consignes :</b></color>", inline_format: true
+        move_down @margin_down
         if papier
             text "<color rgb='032E4D'> => <b>Documents papier autorisés</b></color>", inline_format: true
         else
