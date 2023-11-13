@@ -694,7 +694,7 @@ class ExportPdf
         end
 
         move_down @margin_down * 2
-        text "<color rgb='E68824'><b>Examen de #{cour.nom_ou_ue}</b></color>", inline_format: true, size: 16, align: :center
+        text "<color rgb='E68824'><b>Examen de l'UE n°#{cour.code_ue} : #{cour.nom_ou_ue}</b></color>", inline_format: true, size: 16, align: :center
         move_down @margin_down
         text "<color rgb='E68824'><b>Le #{I18n.l cour.debut.to_date} de #{cour.debut.strftime('%Hh%M')} à #{cour.fin.strftime('%Hh%M')} en salle #{cour.salle.nom}</b></color>", inline_format: true, size: 16, align: :center
 
