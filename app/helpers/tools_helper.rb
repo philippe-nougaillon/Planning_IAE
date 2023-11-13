@@ -5,7 +5,7 @@ module ToolsHelper
     def prettify(audit)    
 
         pretty_changes = []
-        
+
         audit.audited_changes.each do |c|
             key = c.first.humanize
             case key
@@ -71,6 +71,8 @@ module ToolsHelper
                 else
                     pretty_changes << "État initialisé à '#{ c.last.humanize }'"
                 end
+            when 'Discarded at'
+                pretty_changes << "Utilisateur #{c.last.first.nil? ? 'désactivé' : 'activé'}"
             else
                 if audit.action == 'update'
                     unless c.last.first.blank? && c.last.last.blank?    

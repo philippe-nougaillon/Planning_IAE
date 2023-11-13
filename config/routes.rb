@@ -21,13 +21,20 @@ Rails.application.routes.draw do
   end
 
   resources :formations
+
   resources :intervenants do
     member do
       get :invitations
       get :calendrier
     end
   end
-  resources :users
+
+  resources :users do
+    member do
+      get :reactivate
+    end
+  end
+
   resources :fermetures
   resources :etudiants
   resources :documents
