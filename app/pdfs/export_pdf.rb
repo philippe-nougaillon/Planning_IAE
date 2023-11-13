@@ -563,7 +563,7 @@ class ExportPdf
             move_down @margin_down 
 
             text "<color rgb='032E4D'><u>Pour tous problèmes importants durant l’examen, contacter le responsable(s) de l’UE</u> :</color>", inline_format: true
-            text "<color rgb='032E4D'><b>#{Intervenant.find_by(id: cour.intervenant_binome_id).prenom_nom} (tel: #{Intervenant.find_by(id: cour.intervenant_binome_id).téléphone_mobile})</b></color>", inline_format: true
+            text "<color rgb='032E4D'><b>#{Intervenant.find_by(id: cour.intervenant_binome_id).try(:prenom_nom)} (tel: #{Intervenant.find_by(id: cour.intervenant_binome_id).try(:téléphone_mobile)})</b></color>", inline_format: true
 
             move_down @margin_down
 
