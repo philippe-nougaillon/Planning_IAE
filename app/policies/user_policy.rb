@@ -33,6 +33,10 @@ class UserPolicy < ApplicationPolicy
     index?
   end
 
+  def reactivate?
+    index?
+  end
+
   def left_navbar?
     user.role_number >= 2
   end

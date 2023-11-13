@@ -1,7 +1,7 @@
 # ENCODING: UTF-8
 
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy]
+  before_action :set_user, only: [:show, :edit, :update, :destroy, :reactivate]
   before_action :is_user_authorized
   
   # GET /users
@@ -92,6 +92,14 @@ class UsersController < ApplicationController
     @user.discard
     respond_to do |format|
       format.html { redirect_to users_path, notice: 'Utilisateur désactivé !' }
+      format.json { head :no_content }
+    end
+  end
+
+  def reactivate
+    @user.undiscard
+    respond_to do |format|
+      format.html { redirect_to user_path, notice: 'Utilisateur réactivé !' }
       format.json { head :no_content }
     end
   end

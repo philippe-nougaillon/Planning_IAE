@@ -40,10 +40,21 @@
 <br>
 
 <p>
-	Compte créé le: 
+	Compte créé : 
 	le <%= l(@user.created_at) %> 
 	| Il y a <%= time_ago_in_words(@user.created_at) %>
 </p>
+
+<% if @user.discarded_at %>
+	<p class="font-weight-bold">
+		Compte désactivé : 
+		le <%= l(@user.discarded_at) %> 
+		| Il y a <%= time_ago_in_words(@user.discarded_at) %>
+		| Vous pouvez réactiver ce compte en cliquant <%= link_to "ici", reactivate_user_path(@user) %>.
+	</p>
+<% end %>
+
+<br>
 
 <% unless @user.sign_in_count.zero? %>
 	<p>
