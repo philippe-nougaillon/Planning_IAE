@@ -704,6 +704,7 @@ class ExportPdf
             -    vous présenter dans la salle d'examen 15 minutes avant le début de l'épreuve</b></color>", inline_format: true
 
         move_down @margin_down * 2
+        text "Consignes :"
         if papier
             text "<color rgb='032E4D'> => <b>Documents papier autorisés</b></color>", inline_format: true
         else
