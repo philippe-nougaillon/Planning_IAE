@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Cour:</strong>
+  <%= @presence.cour_id %>
+</p>
+
+<p>
+  <strong>User:</strong>
+  <%= @presence.user_id %>
+</p>
+
+<p>
+  <strong>Signature:</strong>
+  <%= @presence.signature %>
+</p>
+
+<%= link_to 'Edit', edit_presence_path(@presence) %> |
+<%= link_to 'Back', presences_path %>

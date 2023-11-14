@@ -167,12 +167,13 @@ Rails.application.routes.draw do
   resources :alerts
   resources :ouvertures
   resources :agents
-
+  resources :presences
 
   controller :pages do
     get 'mentions_légales', to: 'pages#mentions_légales', as: :mentions_legales
     get 'mes_sessions', to: 'pages#mes_sessions'
     get 'signature', to: 'pages#signature'
+    post 'signature_do', to: 'pages#signature_do'
   end
 
   root 'cours#index'

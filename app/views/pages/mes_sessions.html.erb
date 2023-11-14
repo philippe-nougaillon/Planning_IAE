@@ -1,5 +1,5 @@
-<h1 class="text-dark"><%= fa_icon 'calendar-day' %> Mes sessions</h1>
-<h4 class="text-dark mb-4">le <%= l Date.today, format: :long %></h4>
+<h4 class="text-dark"><%= fa_icon 'calendar-day' %> <%= l Date.today, format: :long %></h4>
+<h5 class="text-dark my-4">Mes sessions :</h5>
 
 <% @cours.each do |cour| %>
   <%= render partial: 'ma_session', locals: {cour: cour} %>

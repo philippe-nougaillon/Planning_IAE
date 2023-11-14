@@ -1,5 +1,5 @@
 <div class="card shadow-sm p-2 mb-4" style="border-left:6px; border-left-style:solid; border-left-color:<%= cour.formation.color %>;">
-  <div class="d-flex mb-4">
+  <div class="d-flex mb-2">
     <% image_found = false %>
     <% (2020..2023).each do |year| %>
       <% result = (1..12).each do |month| %>
@@ -18,7 +18,7 @@
     <% end %>
     <div>
       <p class="mb-0 font-weight-bold"><%= cour.intervenant.nom_prenom %></p>
-      <p class="mb-0"><%= cour.nom_ou_ue  || "???" %></p>
+      <p class="mb-0"><%= cour.nom_ou_ue %></p>
     </div>
   </div>
 
@@ -30,10 +30,13 @@
       </span>
     </p>
   </div>
-  <div class="progress mt-3" style="width: 100%">
+  <div class="progress mt-2" style="width: 100%">
     <div class="progress-bar bg-warning" 
         role="progressbar" aria-valuemin="0" aria-valuemax="100" 
         style="width: <%= cour.progress_bar_pct3 %>%; opacity: 0.3;">
     </div>
   </div>
+  <% if action_name == 'mes_sessions' && (0..100).include?(cour.progress_bar_pct3) && !(Presence.where(user_id: current_user.id, cour_id: cour.id).any?) %>
+    <%= link_to 'Signer la feuille de présence', signature_path(cour_id: cour.id), class: 'btn btn-warning btn-lg mt-4' %>
+  <% end %>
 </div>

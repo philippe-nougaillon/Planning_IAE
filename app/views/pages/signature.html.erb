@@ -4,16 +4,26 @@
 
 <h2 class="text-dark">Signature présence</h2>
 <h4 class="text-dark"><%= current_user.nom_et_prénom %></h4>
-<div id="signature">
-  <div class="wrapper">
-    <canvas id="signature-pad" class="signature-pad" style="border: 1px solid;" width=350 height=175></canvas>
-  </div>
 
-  <div style="margin-top: 8px;">
-    <button id="save">Enregistrer</button>
-    <a id="clear">Effacer</a>
+<%= form_with(model: @presence, url: signature_do_path) do |form| %>
+
+  <%= form.hidden_field :cour_id %>
+  <%= form.hidden_field :user_id %>
+
+  <%= form.text_field :signature, style: 'display: none' %>
+
+  <div id="signature">
+    <div class="wrapper">
+      <canvas id="signature-pad" class="signature-pad" style="border: 1px solid;" width=400 height=200></canvas>
+    </div>
+
+    <div style="margin-top: 8px;">
+      <button id="save">Enregistrer</button>
+      <a id="clear">Effacer</a>
+    </div>
   </div>
-</div>
+<% end %>
+
 
 <%= link_to 'Retour', mes_sessions_path, class:'btn btn-light mt-4' %>
 
