@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
       @ctrl = params[:controller]
       @action = params[:action]
       @sitename ||= request.subdomains.any? ? request.subdomains(0).first.upcase : 'IAE-Planning DEV'
-      @sitename.concat(' v4.26.a')
+      @sitename.concat(' v4.27')
     end
 
     def detect_device_format
