@@ -3,7 +3,7 @@ class PresencesController < ApplicationController
 
   # GET /presences or /presences.json
   def index
-    @presences = Presence.all
+    @presences = Presence.ordered
   end
 
   # GET /presences/1 or /presences/1.json

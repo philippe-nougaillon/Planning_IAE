@@ -1,31 +1,37 @@
-<p id="notice"><%= notice %></p>
-
-<h1>Presences</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>Cour</th>
-      <th>User</th>
-      <th>Signature</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @presences.each do |presence| %>
-      <tr>
-        <td><%= presence.cour_id %></td>
-        <td><%= presence.user_id %></td>
-        <td><%= presence.signature %></td>
-        <td><%= link_to 'Show', presence %></td>
-        <td><%= link_to 'Edit', edit_presence_path(presence) %></td>
-        <td><%= link_to 'Destroy', presence, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h3><%= fa_icon 'pen-nib' %> Présences</h3>
+</div>
 <br>
 
-<%= link_to 'New Presence', new_presence_path %>
+<div style="overflow-x: auto;">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Il y a</th>
+        <th>Date</th>
+        <th>Formation</th>
+        <th>Intervenant</th>
+        <th>Cours</th>
+        <th>Étudiant</th>
+        <th>Signature</th>
+        <th colspan="3"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @presences.each do |presence| %>
+        <tr>
+          <td><%= time_ago_in_words presence.created_at %></td>
+          <td><%= l presence.created_at, format: :long %></td>
+          <td><%= presence.cour.formation.nom %></td>
+          <td><%= presence.cour.intervenant.nom_prenom %></td>
+          <td><%= presence.cour.nom_ou_ue %></td>
+          <td><%= presence.user.nom_et_prénom %></td>
+          <td><img src=<%= presence.signature %> style="width: 100px; border: 1px #CCC solid; padding: 10px;"></td>
+          <td><%= link_to 'Voir', presence %></td>
+          <td><%= link_to '[X]', presence, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

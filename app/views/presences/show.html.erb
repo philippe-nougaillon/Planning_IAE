@@ -1,19 +1,44 @@
-<p id="notice"><%= notice %></p>
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h3><%= fa_icon 'pen-nib' %> Présence</h3>
+</div>
+<br>
 
 <p>
-  <strong>Cour:</strong>
-  <%= @presence.cour_id %>
+  <strong>Il y a :</strong>
+  <%= time_ago_in_words @presence.created_at %>
 </p>
 
 <p>
-  <strong>User:</strong>
-  <%= @presence.user_id %>
+  <strong>Étudiant :</strong>
+  <%= @presence.user.nom_et_prénom %>
 </p>
 
 <p>
-  <strong>Signature:</strong>
-  <%= @presence.signature %>
+  <strong>Cours :</strong>
+  <br>
+  <b><%= l(@presence.cour.debut, format: :heures_min) %></b> 
+  -
+  <%= l(@presence.cour.fin, format: :heures_min) %>
+  |
+  <%= @presence.cour.formation.nom %>
+  |
+  <%= @presence.cour.intervenant.nom_prenom %>
+  |
+  <%= @presence.cour.nom_ou_ue %>
+  |
+  <%= @presence.cour.salle.nom %>
 </p>
 
-<%= link_to 'Edit', edit_presence_path(@presence) %> |
-<%= link_to 'Back', presences_path %>
+<p>
+  <strong>Signature :</strong>
+  <br>
+  <img src=<%= @presence.signature %> style="width: 500px; border: 1px #CCC solid; padding: 10px;">
+</p>
+
+<p>
+  <strong>Signé le</strong>
+  <%= l @presence.created_at, format: :long %>
+</p>
+
+<%= link_to 'Modifier', edit_presence_path(@presence) %> |
+<%= link_to 'Retour', presences_path %>
