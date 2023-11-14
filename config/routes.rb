@@ -168,7 +168,12 @@ Rails.application.routes.draw do
   resources :ouvertures
   resources :agents
 
-  get 'mentions_légales', to: 'pages#mentions_légales', as: :mentions_legales
+
+  controller :pages do
+    get 'mentions_légales', to: 'pages#mentions_légales', as: :mentions_legales
+    get 'mes_sessions', to: 'pages#mes_sessions'
+    get 'signature', to: 'pages#signature'
+  end
 
   root 'cours#index'
 

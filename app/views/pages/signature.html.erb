@@ -1,0 +1,37 @@
+<h1 class="text-dark">Session</h1>
+
+<%= render partial: 'ma_session', locals: {cour: @cour} %>
+
+<h2 class="text-dark">Signature présence</h2>
+<h4 class="text-dark"><%= current_user.nom_et_prénom %></h4>
+<div id="signature">
+  <div class="wrapper">
+    <canvas id="signature-pad" class="signature-pad" style="border: 1px solid;" width=350 height=175></canvas>
+  </div>
+
+  <div style="margin-top: 8px;">
+    <button id="save">Enregistrer</button>
+    <a id="clear">Effacer</a>
+  </div>
+</div>
+
+<%= link_to 'Retour', mes_sessions_path, class:'btn btn-light mt-4' %>
+
+<script>
+  var signaturePad = new SignaturePad(document.getElementById('signature-pad'));
+  var signatureField = document.getElementById('presence_signature');
+  var saveButton = document.getElementById('save');
+  var cancelButton = document.getElementById('clear');
+
+  saveButton.addEventListener('click', function (event) {
+    if (signaturePad.isEmpty()){
+      event.preventDefault();
+    } else {
+      signatureField.setAttribute('value', signaturePad.toDataURL("image/svg+xml"));
+    }
+  });
+
+  cancelButton.addEventListener('click', function (event) {
+    signaturePad.clear();
+  });
+</script>

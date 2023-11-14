@@ -1,0 +1,39 @@
+<div class="card shadow-sm p-2 mb-4" style="border-left:6px; border-left-style:solid; border-left-color:<%= cour.formation.color %>;">
+  <div class="d-flex mb-4">
+    <% image_found = false %>
+    <% (2020..2023).each do |year| %>
+      <% result = (1..12).each do |month| %>
+        <% img_url = "https://www.iae-paris.com/sites/default/files/styles/360x265/public/#{year}-#{month.to_s.rjust(2, '0')}/#{cour.intervenant.nom.humanize}.png" %>
+        <% res = Net::HTTP.get_response(URI.parse(img_url)) %>
+        <% if res.code.to_i >= 200 && res.code.to_i < 400 %>
+          <%= image_tag "https://www.iae-paris.com/sites/default/files/styles/360x265/public/#{year}-#{month.to_s.rjust(2, '0')}/#{cour.intervenant.nom.humanize}.png", class:"border rounded mr-3", width: 95 %>
+          <% image_found = true %>
+          <% break %>
+        <% end %>
+      <% end %>
+      <% break if image_found %>
+    <% end %>
+    <% unless image_found %>
+      <%= image_tag '', class:"border rounded mr-3", width: 50 %>
+    <% end %>
+    <div>
+      <p class="mb-0 font-weight-bold"><%= cour.intervenant.nom_prenom %></p>
+      <p class="mb-0"><%= cour.nom_ou_ue  || "???" %></p>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-between">
+    <p class="mb-0"><b><%= l(cour.debut, format: :heures_min) %></b> - <%= l(cour.fin, format: :heures_min) %></p>
+    <p class="mb-0">
+      <span class="badge badge-pill badge-<%= cour.style %>">
+        <%= cour.salle.nom %>
+      </span>
+    </p>
+  </div>
+  <div class="progress mt-3" style="width: 100%">
+    <div class="progress-bar bg-warning" 
+        role="progressbar" aria-valuemin="0" aria-valuemax="100" 
+        style="width: <%= cour.progress_bar_pct3 %>%; opacity: 0.3;">
+    </div>
+  </div>
+</div>
