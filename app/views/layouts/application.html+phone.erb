@@ -60,7 +60,7 @@
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav">
                     <% if user_signed_in? && current_user.étudiant? %>
-                        <%= navbar_nav_item('mes sessions', 'calendar-day', mes_sessions_path) %>
+                        <%= navbar_nav_item('ma journée', 'calendar-day', mes_sessions_path) %>
                     <% end %>
                     <%= navbar_nav_item('cours', 'calendar-alt', cours_path) %>
                     <%= navbar_nav_item('salles', 'chalkboard', occupation_salles_path) %>

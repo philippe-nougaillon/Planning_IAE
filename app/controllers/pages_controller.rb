@@ -16,12 +16,13 @@ class PagesController < ApplicationController
 
   def signature
     @cour = Cour.find(params[:cour_id])
-    @presence = Presence.new(cour_id: params[:cour_id], user_id: current_user.id)
+    @presence = Presence.new(cour_id: params[:cour_id], user_id: current_user.id, code_ue: @cour.code_ue)
   end
 
   def signature_do
-    @presence = Presence.new(params.require(:presence).permit(:cour_id, :user_id, :signature))
+    @presence = Presence.new(params.require(:presence).permit(:cour_id, :user_id, :signature, :code_ue))
     if @presence.save
+      @presence.update!(ip: @presence.audits.first.remote_address)
       redirect_to mes_sessions_path, notice: "Signé"
     else
       render :new, status: :unprocessable_entity

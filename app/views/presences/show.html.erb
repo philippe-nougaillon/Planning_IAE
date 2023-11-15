@@ -15,7 +15,6 @@
 
 <p>
   <strong>Cours :</strong>
-  <br>
   <b><%= l(@presence.cour.debut, format: :heures_min) %></b> 
   -
   <%= l(@presence.cour.fin, format: :heures_min) %>
@@ -23,6 +22,8 @@
   <%= @presence.cour.formation.nom %>
   |
   <%= @presence.cour.intervenant.nom_prenom %>
+  |
+  UE : <%= @presence.code_ue %>
   |
   <%= @presence.cour.nom_ou_ue %>
   |
@@ -32,13 +33,18 @@
 <p>
   <strong>Signature :</strong>
   <br>
-  <img src=<%= @presence.signature %> style="width: 500px; border: 1px #CCC solid; padding: 10px;">
+  <img src=<%= @presence.signature %> style="width: 300px; border: 1px #CCC solid; padding: 10px;">
 </p>
 
 <p>
   <strong>Signé le</strong>
   <%= l @presence.created_at, format: :long %>
+  <span class="<%= @presence.style_ip %>">| IP : <%= @presence.ip %></span>
 </p>
 
-<%= link_to 'Modifier', edit_presence_path(@presence) %> |
+<p>
+  <strong>État :</strong>
+  <span class="badge <%= @presence.style %>"><%= @presence.workflow_state %></span>
+</p>
+
 <%= link_to 'Retour', presences_path %>

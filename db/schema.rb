@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_11_14_131924) do
+ActiveRecord::Schema.define(version: 2023_11_15_081816) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -320,6 +320,9 @@ ActiveRecord::Schema.define(version: 2023_11_14_131924) do
     t.string "signature"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "ip"
+    t.integer "code_ue"
+    t.string "workflow_state"
     t.index ["cour_id"], name: "index_presences_on_cour_id"
     t.index ["user_id"], name: "index_presences_on_user_id"
   end
