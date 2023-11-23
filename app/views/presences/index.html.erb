@@ -94,6 +94,7 @@
 
 <div class="page_info">
   <%= page_entries_info @presences %>
+  <%= JSON.pretty_generate(@presences.reorder(nil).select(:id).group(:workflow_state).count(:id)) %>
 </div>
 
 <%= will_paginate @presences, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
