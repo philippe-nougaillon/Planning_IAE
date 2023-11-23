@@ -26,6 +26,7 @@ Rails.application.routes.draw do
     member do
       get :invitations
       get :calendrier
+      get :mes_sessions
     end
   end
 
@@ -167,7 +168,13 @@ Rails.application.routes.draw do
   resources :alerts
   resources :ouvertures
   resources :agents
-  resources :presences
+  resources :presences do
+    member do
+      get :valider
+      get :rejeter
+      get :archiver
+    end
+  end
 
   controller :pages do
     get 'mentions_légales', to: 'pages#mentions_légales', as: :mentions_legales

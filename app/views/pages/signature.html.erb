@@ -11,6 +11,7 @@
   <%= form.hidden_field :cour_id %>
   <%= form.hidden_field :user_id %>
   <%= form.hidden_field :code_ue %>
+  <%= form.hidden_field :role %>
 
   <%= form.text_field :signature, style: 'display: none' %>
 
@@ -27,7 +28,7 @@
 <% end %>
 
 
-<%= link_to 'Retour', mes_sessions_path, class:'btn btn-light mt-4' %>
+<%= link_to 'Retour', current_user.étudiant? ? mes_sessions_path : mes_sessions_intervenant_path(Cour.find(params[:cour_id]).intervenant_id), class:'btn btn-light my-4' %>
 
 <script>
   var signaturePad = new SignaturePad(document.getElementById('signature-pad'));

@@ -1,5 +1,5 @@
 <div class="pb-2 mt-4 mb-2 border-bottom">
-  <h3><%= fa_icon 'pen-nib' %> Présence</h3>
+  <h3><%= fa_icon 'file-signature' %> Présence</h3>
 </div>
 <br>
 
@@ -9,7 +9,7 @@
 </p>
 
 <p>
-  <strong>Étudiant :</strong>
+  <strong><%= @presence.role.humanize %> :</strong>
   <%= @presence.user.nom_et_prénom %>
 </p>
 
@@ -44,7 +44,12 @@
 
 <p>
   <strong>État :</strong>
-  <span class="badge <%= @presence.style %>"><%= @presence.workflow_state %></span>
+  <span class="badge <%= @presence.style %>"><%= @presence.workflow_state.humanize %></span>
+  <br><br>
+  |
+  <%= link_to_if @presence.can_valider?, 'Valider', valider_presence_path(@presence), class: 'btn btn-sm btn-success' %> |
+  <%= link_to_if @presence.can_rejeter?, 'Rejeter', rejeter_presence_path(@presence), class: 'btn btn-sm btn-danger' %> |
+  <%= link_to_if @presence.can_archiver?, 'Archiver', archiver_presence_path(@presence), class: 'btn btn-sm btn-secondary' %> |
 </p>
 
-<%= link_to 'Retour', presences_path %>
+<%= link_to 'Retour', current_user.intervenant? ? mes_sessions_intervenant_path(@presence.cour.intervenant_id) : presences_path %>

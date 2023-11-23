@@ -14,7 +14,7 @@ class PagesPolicy < ApplicationPolicy
   end
 
   def signature?
-    user && user.étudiant?
+    user && ( user.étudiant? || user.intervenant? )
   end
 
   def signature_do?

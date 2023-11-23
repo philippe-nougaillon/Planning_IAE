@@ -41,4 +41,8 @@ class IntervenantPolicy < ApplicationPolicy
     true
   end
 
+  def mes_sessions?
+    user && user.intervenant? && (record.email.downcase == user.email.downcase)
+  end
+
 end

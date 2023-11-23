@@ -62,6 +62,9 @@
                     <% if user_signed_in? && current_user.étudiant? %>
                         <%= navbar_nav_item('ma journée', 'calendar-day', mes_sessions_path) %>
                     <% end %>
+                    <% if user_signed_in? && current_user.intervenant? %>
+                        <%= navbar_nav_item('ma journée', 'calendar-day', mes_sessions_intervenant_path(@intervenant_user_id)) %>
+                    <% end %>
                     <%= navbar_nav_item('cours', 'calendar-alt', cours_path) %>
                     <%= navbar_nav_item('salles', 'chalkboard', occupation_salles_path) %>
                     <% if user_signed_in? %>

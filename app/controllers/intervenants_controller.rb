@@ -2,8 +2,8 @@
 
 class IntervenantsController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[ invitations calendrier ]
-  before_action :set_intervenant, only: [:show, :invitations, :edit, :update, :destroy, :calendrier]
-  before_action :is_user_authorized
+  before_action :set_intervenant, only: [:show, :invitations, :edit, :update, :destroy, :calendrier, :mes_sessions]
+  before_action :is_user_authorized, except: [:mes_sessions]
 
   # check if logged and admin  
   # before_filter do 
@@ -135,6 +135,17 @@ class IntervenantsController < ApplicationController
         render plain: @calendar.to_ical
       end
     end
+  end
+
+  def mes_sessions
+    authorize @intervenant
+
+    @cours = Intervenant
+      .where("LOWER(intervenants.email) = ?", current_user.email.downcase)
+      .first
+      .cours
+      .where("DATE(debut) = ?", Date.today)
+      .order(:debut)
   end
 
   private

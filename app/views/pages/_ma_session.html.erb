@@ -1,23 +1,26 @@
 <div class="card shadow-sm p-2 mb-4" style="border-left:6px; border-left-style:solid; border-left-color:<%= cour.formation.color %>;">
   <div class="d-flex mb-2">
-    <% image_found = false %>
-    <% (2020..2023).each do |year| %>
-      <% result = (1..12).each do |month| %>
-        <% img_url = "https://www.iae-paris.com/sites/default/files/styles/360x265/public/#{year}-#{month.to_s.rjust(2, '0')}/#{cour.intervenant.nom.humanize}.png" %>
-        <% res = Net::HTTP.get_response(URI.parse(img_url)) %>
-        <% if res.code.to_i >= 200 && res.code.to_i < 400 %>
-          <%= image_tag "https://www.iae-paris.com/sites/default/files/styles/360x265/public/#{year}-#{month.to_s.rjust(2, '0')}/#{cour.intervenant.nom.humanize}.png", class:"border rounded mr-3", width: 95 %>
-          <% image_found = true %>
-          <% break %>
+    <% if false %>
+      <% image_found = false %>
+      <% (2020..2023).each do |year| %>
+        <% result = (1..12).each do |month| %>
+          <% img_url = "https://www.iae-paris.com/sites/default/files/styles/360x265/public/#{year}-#{month.to_s.rjust(2, '0')}/#{cour.intervenant.nom.humanize}.png" %>
+          <% res = Net::HTTP.get_response(URI.parse(img_url)) %>
+          <% if res.code.to_i >= 200 && res.code.to_i < 400 %>
+            <%= image_tag "https://www.iae-paris.com/sites/default/files/styles/360x265/public/#{year}-#{month.to_s.rjust(2, '0')}/#{cour.intervenant.nom.humanize}.png", class:"border rounded mr-3", width: 95 %>
+            <% image_found = true %>
+            <% break %>
+          <% end %>
         <% end %>
+        <% break if image_found %>
       <% end %>
-      <% break if image_found %>
-    <% end %>
-    <% unless image_found %>
-      <%= image_tag '', class:"border rounded mr-3", width: 50 %>
+      <% unless image_found %>
+        <%= image_tag '', class:"border rounded mr-3", width: 50 %>
+      <% end %>
     <% end %>
     <div>
       <p class="mb-0 font-weight-bold"><%= cour.intervenant.nom_prenom %></p>
+      <p class="mb-0"><%= cour.formation.nom %></p>
       <p class="mb-0"><%= cour.nom_ou_ue %></p>
     </div>
   </div>
@@ -36,7 +39,15 @@
         style="width: <%= cour.progress_bar_pct3 %>%; opacity: 0.3;">
     </div>
   </div>
-  <% if action_name == 'mes_sessions' && (0..100).include?(cour.progress_bar_pct3) && !(Presence.where(user_id: current_user.id, cour_id: cour.id).any?) %>
-    <%= link_to 'Signer la feuille de présence', signature_path(cour_id: cour.id), class: 'btn btn-warning btn-lg mt-4' %>
+  <% if Presence.exists?(cour_id: cour.id, user_id: current_user.id) %>
+    <p>Signé</p>
+  <% else %>
+    <% if action_name == 'mes_sessions' %>
+      <% if (0..100).include?(cour.progress_bar_pct3) && !(Presence.where(user_id: current_user.id, cour_id: cour.id).any?) %>
+        <%= link_to 'Signer la feuille de présence', signature_path(cour_id: cour.id), class: 'btn btn-warning btn-lg mt-4' %>
+      <% elsif cour.progress_bar_pct3 > 100 %>
+        <p>Pas signé</p>
+      <% end %>
+    <% end %>
   <% end %>
 </div>

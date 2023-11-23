@@ -73,6 +73,12 @@
                     </i>
                 <% end %>
             <% end %>
+            <% if user_signed_in? && (current_user.gestionnaire? || current_user.admin?) %>
+                <%= link_to presences_path(cours_id: cours.id) do %>
+                    <%= fa_icon 'graduation-cap' %>
+                    <%= cours.presences.count %>/<%= cours.formation.etudiants.count %>
+                <% end %>
+            <% end %>
         <% else %>
             <% if cours.confirmé? %>
                 <i title="Pas de salle réservée !">

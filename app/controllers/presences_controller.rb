@@ -1,13 +1,39 @@
 class PresencesController < ApplicationController
-  before_action :set_presence, only: %i[ show edit update destroy ]
+  before_action :set_presence, only: %i[ show edit update destroy valider rejeter archiver]
+  before_action :is_user_authorized, except: %i[show valider rejeter]
 
   # GET /presences or /presences.json
   def index
     @presences = Presence.ordered
+
+    if params[:search].present?
+      @presences = @presences.joins(:user).where("nom ILIKE :search OR prénom ILIKE :search", { search: "%#{params[:search]}%" })
+    end
+
+    if params[:formation_id].present?
+      @presences = @presences.joins(:cour).where('cour.formation_id': params[:formation_id])
+    end
+
+    if params[:intervenant].present?
+      intervenant = params[:intervenant].strip
+      intervenant_id = Intervenant.find_by(nom: intervenant.split(' ').first, prenom: intervenant.split(' ').last.rstrip)
+      @presences = @presences.joins(:cour).where('cour.intervenant_id': intervenant_id)
+    end
+
+    if params[:cours_id].present?
+      @presences = @presences.where(cour_id: params[:cours_id])
+    end
+
+    if params[:workflow_state].present?
+      @presences = @presences.where(workflow_state: params[:workflow_state])
+    end
+
+    @presences = @presences.paginate(page: params[:page], per_page: 20)
   end
 
   # GET /presences/1 or /presences/1.json
   def show
+    authorize @presence
   end
 
   # GET /presences/new
@@ -56,6 +82,23 @@ class PresencesController < ApplicationController
     end
   end
 
+  def valider
+    authorize @presence
+    @presence.valider!
+    redirect_to request.referrer, notice: 'Présence validée'
+  end
+
+  def rejeter
+    authorize @presence 
+    @presence.rejeter!
+    redirect_to request.referrer, notice: 'Présence rejetée'
+  end
+
+  def archiver
+    @presence.archiver!
+    redirect_to request.referrer, notice: 'Présence archivée'
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_presence
@@ -65,5 +108,9 @@ class PresencesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def presence_params
       params.require(:presence).permit(:cour_id, :user_id, :signature)
+    end
+
+    def is_user_authorized
+      authorize Presence
     end
 end

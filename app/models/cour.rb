@@ -12,6 +12,7 @@ class Cour < ApplicationRecord
   belongs_to :salle, optional: true
 
   has_many :invits
+  has_many :presences
 
   validates :debut, :formation_id, :intervenant_id, :duree, presence: true
   validate :check_chevauchement_intervenant

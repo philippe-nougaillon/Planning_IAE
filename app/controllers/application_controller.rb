@@ -27,6 +27,10 @@ class ApplicationController < ActionController::Base
       @action = params[:action]
       @sitename ||= request.subdomains.any? ? request.subdomains(0).first.upcase : 'IAE-Planning DEV'
       @sitename.concat(' v4.27')
+
+      if user_signed_in? && current_user.intervenant?
+        @intervenant_user_id = Intervenant.where("LOWER(intervenants.email) = ?", current_user.email.downcase).first.id
+      end
     end
 
     def detect_device_format
@@ -53,6 +57,9 @@ class ApplicationController < ActionController::Base
       stored_location_for(resource) ||
         if resource.is_a?(User) && resource.étudiant?
           mes_sessions_path
+        elsif resource.is_a?(User) && resource.intervenant?
+          intervenant_id = Intervenant.where("LOWER(intervenants.email) = ?", current_user.email.downcase).first.id
+          mes_sessions_intervenant_path(intervenant_id)
         else
           super
         end
