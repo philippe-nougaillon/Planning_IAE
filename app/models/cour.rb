@@ -13,6 +13,7 @@ class Cour < ApplicationRecord
 
   has_many :invits
   has_many :presences
+  has_many :etudiants, through: :formation
 
   validates :debut, :formation_id, :intervenant_id, :duree, presence: true
   validate :check_chevauchement_intervenant

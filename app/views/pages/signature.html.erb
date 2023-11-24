@@ -9,9 +9,9 @@
 <%= form_with(model: @presence, url: signature_do_path) do |form| %>
 
   <%= form.hidden_field :cour_id %>
-  <%= form.hidden_field :user_id %>
+  <%= form.hidden_field :etudiant_id %>
+  <%= form.hidden_field :intervenant_id %>
   <%= form.hidden_field :code_ue %>
-  <%= form.hidden_field :role %>
 
   <%= form.text_field :signature, style: 'display: none' %>
 

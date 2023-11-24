@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_11_23_124934) do
+ActiveRecord::Schema.define(version: 2023_11_24_093702) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -316,16 +316,17 @@ ActiveRecord::Schema.define(version: 2023_11_23_124934) do
 
   create_table "presences", force: :cascade do |t|
     t.bigint "cour_id", null: false
-    t.bigint "user_id", null: false
     t.string "signature"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "ip"
     t.integer "code_ue"
     t.string "workflow_state"
-    t.string "role"
+    t.bigint "etudiant_id"
+    t.bigint "intervenant_id"
     t.index ["cour_id"], name: "index_presences_on_cour_id"
-    t.index ["user_id"], name: "index_presences_on_user_id"
+    t.index ["etudiant_id"], name: "index_presences_on_etudiant_id"
+    t.index ["intervenant_id"], name: "index_presences_on_intervenant_id"
   end
 
   create_table "responsabilites", id: :serial, force: :cascade do |t|
@@ -412,7 +413,8 @@ ActiveRecord::Schema.define(version: 2023_11_23_124934) do
   add_foreign_key "invits", "intervenants"
   add_foreign_key "invits", "users"
   add_foreign_key "presences", "cours"
-  add_foreign_key "presences", "users"
+  add_foreign_key "presences", "etudiants"
+  add_foreign_key "presences", "intervenants"
 
   create_view "cours_non_planifies", materialized: true, sql_definition: <<-SQL
       SELECT cours.id

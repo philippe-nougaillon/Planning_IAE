@@ -20,13 +20,14 @@
   </div>
   <% if action_name == 'mes_sessions' %>
     <% if true || (0..100).include?(cour.progress_bar_pct3) %>
-      <% if !(Presence.where(user_id: current_user.id, cour_id: cour.id).any?) %>
+      <% if cour.presences.where(intervenant_id: @intervenant.id).empty? %>
         <%= link_to 'Signer la feuille de présence', signature_path(cour_id: cour.id), class: 'btn btn-warning btn-lg mt-4' %>
       <% end %>
       <h5 class="mt-3">Présents : </h5>
       <div class="d-inline">
-        <% cour.presences.where(role: 'étudiant').each do |presence| %>
-          <%= link_to presence.user.nom_et_prénom, presence_path(presence) %>
+        <% cour.presences.where.not(etudiant_id: nil).each do |presence| %>
+          <%= link_to presence.etudiant.nom_prénom, presence_path(presence) %>
+          <span class="badge <%= presence.style %>"><%= presence.workflow_state.humanize %></span>
           |
         <% end %>
       </div>

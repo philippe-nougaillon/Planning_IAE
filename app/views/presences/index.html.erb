@@ -1,5 +1,5 @@
 <div class="pb-2 mt-4 mb-2 border-bottom">
-  <h3><%= fa_icon 'file-signature' %> Présences</h3>
+  <h3><%= fa_icon 'file-signature' %> Signatures présences</h3>
 </div>
 
 <div class="container-fluid p-3 shadow-sm">
@@ -57,36 +57,16 @@
         <th>Étudiant</th>
         <th>Signature</th>
         <th>État</th>
-        <th colspan="3"></th>
+        <th colspan="2"></th>
       </tr>
     </thead>
 
     <tbody>
-      <% @presences.each do |presence| %>
-        <tr>
-          <td><%= time_ago_in_words presence.created_at %></td>
-          <td><%= l presence.created_at, format: :long %></td>
-          <td><%= presence.cour.formation.nom %></td>
-          <td><%= presence.cour.intervenant.nom_prenom %></td>
-          <td><%= presence.cour.nom_ou_ue %></td>
-          <td><%= presence.code_ue %></td>
-          <td>
-            <% if presence.role == 'étudiant' %>
-              <%= presence.user.nom_et_prénom %>
-              <br>
-              <span class="<%= presence.style_ip %>"><%= presence.ip%></span>
-            <% end %>
-          </td>
-          <td><img src=<%= presence.signature %> style="width: 50px;"></td>
-          <td><span class="badge <%= presence.style %>"><%= presence.workflow_state.humanize %></span></td>
-          <td><%= link_to 'Voir', presence %></td>
-          <td><%= link_to '[X]', presence, method: :delete, data: { confirm: 'Êtes-vous sûr ?' } %></td>
-        </tr>
-      <% end %>
+      <%= render partial: 'presence', collection: @presences %>
     </tbody>
     <tfoot>
       <tr>
-        <td colspan="11"></td>
+        <td colspan="10"></td>
       </tr>
     </tfoot>
   </table>

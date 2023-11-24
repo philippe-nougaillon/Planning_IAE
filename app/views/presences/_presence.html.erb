@@ -1,0 +1,18 @@
+<tr>
+  <td><%= time_ago_in_words presence.created_at %></td>
+  <td><%= l presence.created_at, format: :long %></td>
+  <td><%= presence.cour.formation.nom %></td>
+  <td><%= presence.cour.intervenant.nom_prenom %></td>
+  <td><%= presence.cour.nom_ou_ue %></td>
+  <td><%= presence.code_ue %></td>
+  <td>
+    <% if presence.etudiant_id.present? %>
+      <%= presence.etudiant.nom_prénom %>
+      <br>
+      <span class="<%= presence.style_ip %>"><%= presence.ip%></span>
+    <% end %>
+  </td>
+  <td><% if presence.signature %><img src=<%= presence.signature %> style="width: 50px;"><% end %></td>
+  <td><span class="badge <%= presence.style %>"><%= presence.workflow_state.humanize %></span></td>
+  <td><%= link_to 'Voir', presence %></td>
+</tr>

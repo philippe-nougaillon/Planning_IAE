@@ -5,27 +5,25 @@ class Presence < ApplicationRecord
   audited
 
   belongs_to :cour
-  belongs_to :user
+  belongs_to :etudiant, optional: true
+  belongs_to :intervenant, optional: true
+
 
   scope :ordered, -> { order(created_at: :desc) }
 
-  NOUVELLE = 'nouvelle'
+  SIGNEE = 'signée'
   VALIDEE = 'validée'
   REJETEE = 'rejetée'
-  ARCHIVEE= 'archivée'
+  MANQUANTE = 'manquante'
 
   workflow do
-    state NOUVELLE, meta: {style: 'badge-info'}  do
+    state SIGNEE, meta: {style: 'badge-info'}  do
       event :valider, transitions_to: VALIDEE
       event :rejeter, transitions_to: REJETEE
     end
-    state VALIDEE, meta: {style: 'badge-success'} do
-      event :archiver, transitions_to: ARCHIVEE
-    end
-    state REJETEE, meta: {style: 'badge-danger'} do
-      event :archiver, transitions_to: ARCHIVEE
-    end
-    state ARCHIVEE, meta: {style: 'badge-secondary'}
+    state VALIDEE, meta: {style: 'badge-success'}
+    state REJETEE, meta: {style: 'badge-danger'}
+    state MANQUANTE, meta: {style: 'badge-warning'}
   end
 
   def style
@@ -33,7 +31,7 @@ class Presence < ApplicationRecord
   end
 
   def style_ip
-    if self.ip.first(9) == "193.55.99"
+    if self.ip && self.ip.first(9) == "193.55.99"
       return 'text-success'
     else
       return 'text-danger font-weight-bold'

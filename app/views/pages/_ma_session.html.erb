@@ -39,11 +39,14 @@
         style="width: <%= cour.progress_bar_pct3 %>%; opacity: 0.3;">
     </div>
   </div>
-  <% if Presence.exists?(cour_id: cour.id, user_id: current_user.id) %>
-    <p>Signé</p>
+
+  <% if current_user.étudiant? && presence = cour.presences.find_by(etudiant_id: @etudiant.id) %>
+    <div class="alert alert-success mt-3" role="alert">
+      Présence signée à <%= l presence.created_at, format: :heures_log %>
+    </div>
   <% else %>
     <% if action_name == 'mes_sessions' %>
-      <% if (0..100).include?(cour.progress_bar_pct3) && !(Presence.where(user_id: current_user.id, cour_id: cour.id).any?) %>
+      <% if (0..100).include?(cour.progress_bar_pct3) && cour.presences.where(etudiant_id: @etudiant.id).empty? %>
         <%= link_to 'Signer la feuille de présence', signature_path(cour_id: cour.id), class: 'btn btn-warning btn-lg mt-4' %>
       <% elsif cour.progress_bar_pct3 > 100 %>
         <p>Pas signé</p>

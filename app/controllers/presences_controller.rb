@@ -1,5 +1,5 @@
 class PresencesController < ApplicationController
-  before_action :set_presence, only: %i[ show edit update destroy valider rejeter archiver]
+  before_action :set_presence, only: %i[ show edit update destroy valider rejeter]
   before_action :is_user_authorized, except: %i[show valider rejeter]
 
   # GET /presences or /presences.json
@@ -92,11 +92,6 @@ class PresencesController < ApplicationController
     authorize @presence 
     @presence.rejeter!
     redirect_to request.referrer, notice: 'Présence rejetée'
-  end
-
-  def archiver
-    @presence.archiver!
-    redirect_to request.referrer, notice: 'Présence archivée'
   end
 
   private

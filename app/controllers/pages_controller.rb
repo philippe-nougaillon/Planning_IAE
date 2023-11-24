@@ -5,9 +5,8 @@ class PagesController < ApplicationController
   end
 
   def mes_sessions
-    @cours = Etudiant
-            .where("LOWER(etudiants.email) = ?", current_user.email.downcase)
-            .first
+    @etudiant = Etudiant.find_by("LOWER(etudiants.email) = ?", current_user.email.downcase)
+    @cours = @etudiant
             .formation
             .cours
             .where("DATE(debut) = ?", Date.today)
@@ -16,17 +15,30 @@ class PagesController < ApplicationController
 
   def signature
     @cour = Cour.find(params[:cour_id])
-    @presence = Presence.new(cour_id: params[:cour_id], user_id: current_user.id, code_ue: @cour.code_ue, role: current_user.role)
+    if current_user.étudiant?
+      @etudiant = @cour.etudiants.find_by("LOWER(etudiants.email) = ?", current_user.email.downcase)
+      @presence = Presence.new(cour_id: @cour.id, etudiant_id: @etudiant.id, code_ue: @cour.code_ue)
+    elsif current_user.intervenant?
+      @intervenant = @cour.intervenant
+      @presence = Presence.new(cour_id: @cour.id, intervenant_id: @intervenant.id, code_ue: @cour.code_ue)
+    end
   end
 
   def signature_do
-    @presence = Presence.new(params.require(:presence).permit(:cour_id, :user_id, :signature, :code_ue, :role))
+    @presence = Presence.new(params.require(:presence).permit(:cour_id, :etudiant_id, :intervenant_id, :signature, :code_ue))
     if @presence.save
       @presence.update!(ip: @presence.audits.first.remote_address)
 
       if current_user.intervenant? || current_user.enseignant? 
-        @presence.cour.presences.where(workflow_state: 'nouvelle').update_all(workflow_state: 'validée')
-        flash[:notice] = 'Toutes les signatures de présences ont été validées'
+        @presence.cour.presences.where(workflow_state: 'signée').update_all(workflow_state: 'validée')
+
+        absents = @presence.cour.etudiants.where.not(id: @presence.cour.presences.pluck(:etudiant_id))
+
+        absents.each do |absent|
+          @presence.cour.presences.create(etudiant_id: absent.id, workflow_state: 'manquante')
+        end
+
+        flash[:notice] = 'Toutes les signatures de présences ont été validées. Les étudiants qui n\'ont pas signé sont notés absent'
       else
         flash[:notice] = 'Signé'
       end

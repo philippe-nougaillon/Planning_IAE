@@ -30,7 +30,7 @@ class PresencePolicy < ApplicationPolicy
   end
 
   def destroy?
-    user && user.admin?
+    false
   end
 
   def valider?
@@ -39,10 +39,6 @@ class PresencePolicy < ApplicationPolicy
 
   def rejeter?
     show?
-  end
-
-  def archiver?
-    user && user.admin?
   end
 
 end
