@@ -35,7 +35,7 @@
   <%= @presence.cour.salle.nom %>
 </p>
 
-<% if true %>
+<% if @presence.signature %>
   <p>
     <strong>Signature :</strong>
     <br>
@@ -49,13 +49,14 @@
   </p>
 <% end %>
 
-<p>
+<p >
   <strong>État :</strong>
   <span class="badge <%= @presence.style %>"><%= @presence.workflow_state.humanize %></span>
   <br><br>
-  |
-  <%= link_to_if @presence.can_valider?, 'Valider', valider_presence_path(@presence), class: 'btn btn-sm btn-success' %> |
-  <%= link_to_if @presence.can_rejeter?, 'Rejeter', rejeter_presence_path(@presence), class: 'btn btn-sm btn-danger' %> |
+  <div class="d-flex justify-content-around">
+    <%= link_to_if @presence.can_valider?, 'Valider', valider_presence_path(@presence), class: 'btn btn-lg btn-success' %>
+    <%= link_to_if @presence.can_rejeter?, 'Rejeter', rejeter_presence_path(@presence), class: 'btn btn-lg btn-danger' %>
+  </div>
 </p>
 
 <%= link_to 'Retour', current_user.intervenant? ? mes_sessions_intervenant_path(@presence.cour.intervenant_id) : presences_path %>

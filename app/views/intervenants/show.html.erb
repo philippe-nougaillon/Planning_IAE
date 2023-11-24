@@ -19,7 +19,11 @@
   
   <div class="row">
     <div class="col-sm-3">
-      <img src=<%= @intervenant.photo %> width=200 loading='eager' class="shadow">
+      <% if @intervenant.photo.present? %>
+        <img src=<%= @intervenant.photo %> width=250 loading='eager' class="shadow">
+      <% else %>
+        <%= image_tag 'planning_intervenant.jpg', height: 150, class: 'shadow' %>
+      <% end %>
     </div>  
 
     <div class="col-sm-5">

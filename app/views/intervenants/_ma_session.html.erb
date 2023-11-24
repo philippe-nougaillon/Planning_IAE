@@ -19,7 +19,7 @@
     </div>
   </div>
   <% if action_name == 'mes_sessions' %>
-    <% if true || (0..100).include?(cour.progress_bar_pct3) %>
+    <% if (30..100).include?(cour.progress_bar_pct3) %>
       <% if cour.presences.where(intervenant_id: @intervenant.id).empty? %>
         <%= link_to 'Signer la feuille de présence', signature_path(cour_id: cour.id), class: 'btn btn-warning btn-lg mt-4' %>
       <% end %>
