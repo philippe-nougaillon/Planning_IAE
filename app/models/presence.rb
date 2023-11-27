@@ -23,18 +23,14 @@ class Presence < ApplicationRecord
     end
     state VALIDEE, meta: {style: 'badge-success'}
     state REJETEE, meta: {style: 'badge-danger'}
-    state MANQUANTE, meta: {style: 'badge-warning'}
+    state MANQUANTE, meta: {style: 'badge-secondary'}
   end
 
   def style
     self.current_state.meta[:style]
   end
 
-  def style_ip
-    if self.ip && self.ip.first(9) == "193.55.99"
-      return 'text-success'
-    else
-      return 'text-danger font-weight-bold'
-    end
+  def wifi_detected?
+    self.ip && (self.ip.first(9) == "193.55.99")
   end
 end

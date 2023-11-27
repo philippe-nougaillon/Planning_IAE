@@ -39,8 +39,6 @@ class PagesController < ApplicationController
         end
 
         flash[:notice] = 'Toutes les signatures de présences ont été validées. Les étudiants qui n\'ont pas signé sont notés absent'
-      else
-        flash[:notice] = 'Signé'
       end
       redirect_to current_user.étudiant? ? mes_sessions_path : mes_sessions_intervenant_path(Intervenant.where("LOWER(intervenants.email) = ?", current_user.email.downcase).first.id)
     else
