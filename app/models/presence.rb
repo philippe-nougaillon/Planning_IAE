@@ -33,4 +33,8 @@ class Presence < ApplicationRecord
   def wifi_detected?
     self.ip && (self.ip.first(9) == "193.55.99")
   end
+
+  def self.workflow_states_count(presences)
+    JSON.pretty_generate(presences.reorder(nil).select(:id).group(:workflow_state).count(:id))
+  end
 end

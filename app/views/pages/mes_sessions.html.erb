@@ -1,7 +1,16 @@
-<h3 class="mt-4"><%= @cours.first.formation.nom %></h3>
+<h3 class="mt-4"><%= @cours.first.try(:formation).try(:nom) %></h3>
 <h4 class="text-dark my-4"><%= fa_icon 'calendar-day' %> <%= l(Date.today, format: :long).humanize %></h4>
 
-
-<% @cours.each do |cour| %>
-  <%= render partial: 'ma_session', locals: {cour: cour} %>
+<% if @cours.any?%>
+  <% @cours.each do |cour| %>
+    <%= render partial: 'ma_session', locals: {cour: cour} %>
+  <% end %>
+<% else %>
+  <div class="alert alert-info">
+    <h4 class="alert-heading">Aucun cours aujourd'hui !</h4>
+    <p>
+      Vous n'avez aucun cours aujourd'hui.
+      <%= link_to 'Voir les prochains cours', cours_path %>
+    </p>
+  </div>
 <% end %>

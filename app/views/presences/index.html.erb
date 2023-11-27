@@ -6,7 +6,7 @@
     <%= form_tag request.path, method: :get do %>
       <div class="form-group">
         <div class="row">
-          <div class="col-sm-4">
+          <div class="col-sm-3">
             <%= label_tag :search, "Rechercher" %>    
             <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
           </div>
@@ -20,6 +20,13 @@
                                   onchange: 'this.form.submit()' %>
             </div>
           </div>
+
+        <div class="col-sm-1">
+          <%= label_tag :ue, "U.E." %>   
+          <%= select_tag :ue, options_for_select((0..20), params[:ue]), 
+                          class: "form-control form-control-sm select2", 
+                          include_blank:true, onchange: 'this.form.submit()' %>
+        </div>
 
           <div class="col-sm-3">
             <%= label_tag "Intervenant" %>
@@ -74,7 +81,7 @@
 
 <div class="page_info">
   <%= page_entries_info @presences %>
-  <%= JSON.pretty_generate(@presences.reorder(nil).select(:id).group(:workflow_state).count(:id)) %>
+  <%= Presence.workflow_states_count(@presences) %>
 </div>
 
 <%= will_paginate @presences, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>

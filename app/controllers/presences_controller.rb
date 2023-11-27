@@ -7,11 +7,15 @@ class PresencesController < ApplicationController
     @presences = Presence.ordered
 
     if params[:search].present?
-      @presences = @presences.joins(:user).where("nom ILIKE :search OR prénom ILIKE :search", { search: "%#{params[:search]}%" })
+      @presences = @presences.joins(:etudiant).where("nom ILIKE :search OR prénom ILIKE :search", { search: "%#{params[:search]}%" })
     end
 
     if params[:formation_id].present?
       @presences = @presences.joins(:cour).where('cour.formation_id': params[:formation_id])
+    end
+
+    if params[:ue].present?
+      @presences = @presences.where(code_ue: params[:ue])
     end
 
     if params[:intervenant].present?

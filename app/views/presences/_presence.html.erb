@@ -9,7 +9,7 @@
     <% if presence.etudiant_id.present? %>
       <%= presence.etudiant.nom_prénom %>
       <br>
-      <span class="<%= presence.style_ip %>"><%= presence.ip%></span>
+      <%= fa_icon 'wifi', class: presence.wifi_detected? ? 'text-success' : 'text-warning' %>
     <% end %>
   </td>
   <td><% if presence.signature %><img src=<%= presence.signature %> style="width: 50px;"><% end %></td>
