@@ -73,7 +73,7 @@
                     </i>
                 <% end %>
             <% end %>
-            <% if user_signed_in? && (current_user.gestionnaire? || current_user.admin?) %>
+            <% if user_signed_in? && (current_user.gestionnaire? || current_user.admin?) &&  %>
                 <%= fa_icon 'file-signature' %>
                 <%= link_to presences_path(cours_id: cours.id), title: 'présences signées / nombre d\'étudiants' do %>
                     <%= cours.presences.count %>/<%= cours.formation.etudiants.count %>

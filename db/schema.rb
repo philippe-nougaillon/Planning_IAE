@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_11_24_093702) do
+ActiveRecord::Schema.define(version: 2023_11_27_133719) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -324,6 +324,7 @@ ActiveRecord::Schema.define(version: 2023_11_24_093702) do
     t.string "workflow_state"
     t.bigint "etudiant_id"
     t.bigint "intervenant_id"
+    t.datetime "signée_le"
     t.index ["cour_id"], name: "index_presences_on_cour_id"
     t.index ["etudiant_id"], name: "index_presences_on_etudiant_id"
     t.index ["intervenant_id"], name: "index_presences_on_intervenant_id"

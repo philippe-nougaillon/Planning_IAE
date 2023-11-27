@@ -37,30 +37,28 @@
 
 <% if @presence.signature %>
   <p>
-    <strong>Signature :</strong>
+    <strong>Signé le : </strong>
+    <%= l @presence.signée_le, format: :long %>
+    <%= fa_icon 'wifi', class: @presence.wifi_detected? ? 'text-success' : 'text-warning' %>
     <br>
     <img src=<%= @presence.signature %> style="width: 300px; border: 1px #CCC solid; padding: 10px;">
   </p>
-
-  <p>
-    <strong>Signé le</strong>
-    <%= l @presence.created_at, format: :long %>
-    <%= fa_icon 'wifi', class: @presence.wifi_detected? ? 'text-success' : 'text-warning' %>
-  </p>
 <% end %>
 
-<p >
+<p class='d-inline'>
   <strong>État :</strong>
-  <span class="badge <%= @presence.style %>"><%= @presence.workflow_state.humanize %></span>
-  <% if @presence.can_valider? || @presence.can_rejeter? %>
-    <br><br>
-    <div class="d-flex justify-content-around">
-        <%= link_to_if @presence.can_valider?, 'Valider', valider_presence_path(@presence), class: 'btn btn-lg btn-success' %>
-        <%= link_to_if @presence.can_rejeter?, 'Rejeter', rejeter_presence_path(@presence), class: 'btn btn-lg btn-danger' %>
-      </div>
-    </div>
-  <% end %>
+  <h5 class='d-inline'><span class="badge <%= @presence.style %>"><%= @presence.workflow_state.humanize %></span></h5>
 </p>
-<br><br>
-<%= link_to 'Retour', current_user.intervenant? ? mes_sessions_intervenant_path(@presence.cour.intervenant_id) : presences_path, class:'ml-3' %>
-<br><br>
+
+<% if @presence.can_valider? || @presence.can_rejeter? %>
+  <div class="d-flex justify-content-around justify-content-lg-start mb-4">
+    <%= link_to_if @presence.can_valider?, 'Valider', valider_presence_path(@presence), class: 'btn btn-lg btn-success flex-grow-1 flex-sm-grow-0' %>
+    <%= link_to_if @presence.can_rejeter?, 'Rejeter', rejeter_presence_path(@presence), class: 'btn btn-lg btn-danger flex-grow-1 flex-sm-grow-0' %>
+  </div>
+<% end %>
+
+<% if current_user.intervenant? %>
+  <%= link_to 'Annuler', mes_sessions_intervenant_path(@presence.cour.intervenant_id), class:'pb-4' %>
+<% else %>
+  <%= link_to 'Retour', presences_path, class:'pb-4' %>
+<% end %>

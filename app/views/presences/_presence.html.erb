@@ -1,6 +1,6 @@
 <tr>
   <td><%= time_ago_in_words presence.created_at %></td>
-  <td><%= l presence.created_at, format: :long %></td>
+  <td><%= l presence.signée_le, format: :long %></td>
   <td><%= presence.cour.formation.nom %></td>
   <td><%= presence.cour.intervenant.nom_prenom %></td>
   <td><%= presence.cour.nom_ou_ue %></td>
