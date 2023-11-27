@@ -18,18 +18,19 @@ class PagesController < ApplicationController
     now = ApplicationController.helpers.time_in_paris_selon_la_saison
     if current_user.étudiant?
       @etudiant = @cour.etudiants.find_by("LOWER(etudiants.email) = ?", current_user.email.downcase)
-      @presence = Presence.new(cour_id: @cour.id, etudiant_id: @etudiant.id, code_ue: @cour.code_ue, signée_le: now)
+      @presence = Presence.create(cour_id: @cour.id, etudiant_id: @etudiant.id, code_ue: @cour.code_ue, signée_le: now)
     elsif current_user.intervenant?
       @intervenant = @cour.intervenant
-      @presence = Presence.new(cour_id: @cour.id, intervenant_id: @intervenant.id, code_ue: @cour.code_ue, signée_le: now)
+      @presence = Presence.create(cour_id: @cour.id, intervenant_id: @intervenant.id, code_ue: @cour.code_ue, signée_le: now)
     end
   end
 
   def signature_do
-    @presence = Presence.new(params.require(:presence).permit(:cour_id, :etudiant_id, :intervenant_id, :signature, :code_ue, :signée_le))
+    @presence = Presence.find(params[:presence][:id])
+    @presence.workflow_state = 'signée'
+    @presence.ip = request.remote_ip
+    @presence.signature = params[:presence][:signature]
     if @presence.save
-      @presence.update!(ip: @presence.audits.first.remote_address)
-
       if current_user.intervenant? || current_user.enseignant? 
         @presence.cour.presences.where(workflow_state: 'signée').update_all(workflow_state: 'validée')
 

@@ -8,7 +8,7 @@
     </p>
   </div>
   <div class="mb-2">
-    <p class="mb-0"><%= cour.formation.nom %></p>
+    <p class="mb-0"><%= cour.formation.nom.humanize %></p>
     <p class="mb-0"><%= cour.nom_ou_ue %></p>
   </div>
 
@@ -18,29 +18,31 @@
         style="width: <%= cour.progress_bar_pct3 %>%; opacity: 0.3;">
     </div>
   </div>
-  <p>Nombre d'étudiants : <%= cour.etudiants.count %></p>
-  <p>
-    Présences : 
-    <%= Presence.workflow_states_count(cour.presences.where.not(etudiant_id: nil)) %> </p>
+  <h5 class="mt-3">Étudiants</h5>
+
+  <p><%= cour.etudiants.count %> étudiants prévus </p>
 
   <% if action_name == 'mes_sessions' %>
-    <% if (30..100).include?(cour.progress_bar_pct3) %>
-      <% if cour.presences.where(intervenant_id: @intervenant.id).empty? %>
-        <%= link_to 'Signer la feuille de présence', signature_path(cour_id: cour.id), class: 'btn btn-warning btn-lg mt-4' %>
-      <% end %>
-      <h5 class="mt-3">Étudiants</h5>
-      <div class="d-inline">
-        <% cour.presences.joins(:etudiant).where.not(etudiant_id: nil).order(:nom).each do |presence| %>
-          <%= link_to presence_path(presence) do %>
-            <h5 class='d-inline'>
-              <span class="badge <%= presence.style %>">
-                <%= presence.etudiant.nom.upcase %>
-                <%= fa_icon 'wifi' if presence.wifi_detected? %>
-              </span>
-            </h5>
-          <% end %>
+    <div class="d-inline">
+      <% cour.presences.joins(:etudiant).where.not(etudiant_id: nil).order(:nom).each do |presence| %>
+        <%= link_to presence_path(presence) do %>
+          <h5 class='d-inline'>
+            <span class="badge <%= presence.style %>">
+              <%= presence.etudiant.nom.upcase %>
+              <%= fa_icon 'wifi' if presence.wifi_detected? %>
+            </span>
+          </h5>
         <% end %>
-      </div>
+      <% end %>
+    </div>
+
+    <p class='mt-4'>
+      État des présences : 
+      <%= Presence.workflow_states_count(cour.presences.where.not(etudiant_id: nil)) %>
+    </p>
+
+    <% if (0..100).include?(cour.progress_bar_pct3) && cour.presences.where(intervenant_id: @intervenant.id).empty? %>
+      <%= link_to 'Signer la feuille de présence', signature_path(cour_id: cour.id), class: 'btn btn-warning btn-lg' %>
     <% end %>
   <% end %>
 </div>

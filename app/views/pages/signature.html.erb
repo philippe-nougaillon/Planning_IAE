@@ -4,18 +4,12 @@
 
 <h2 class="text-dark">Signature présence</h2>
 <h4 class="text-dark"><%= current_user.nom_et_prénom %></h4>
-<p>Le <%= l DateTime.now, format: :long %></p>
 
 <%= form_with(model: @presence, url: signature_do_path) do |form| %>
 
-  <%= form.hidden_field :cour_id %>
-  <%= form.hidden_field :etudiant_id %>
-  <%= form.hidden_field :intervenant_id %>
-  <%= form.hidden_field :code_ue %>
-  <%= form.hidden_field :signée_le %>
-
+  <%= form.hidden_field :id %>
   <%= form.text_field :signature, style: 'display: none' %>
-
+  
   <div id="signature">
     <div class="wrapper">
       <canvas id="signature-pad" class="signature-pad" style="border: 1px #ccc solid;" width=350 height=300></canvas>
@@ -28,8 +22,7 @@
   </div>
 <% end %>
 
-
-<%= link_to 'Retour', current_user.étudiant? ? mes_sessions_path : mes_sessions_intervenant_path(Cour.find(params[:cour_id]).intervenant_id), class:'btn btn-light my-4' %>
+<p class="my-4"><%= link_to 'Retour', current_user.étudiant? ? mes_sessions_path : mes_sessions_intervenant_path(Cour.find(params[:cour_id]).intervenant_id) %></p>
 
 <script>
   var signaturePad = new SignaturePad(document.getElementById('signature-pad'));
