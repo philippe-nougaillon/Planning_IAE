@@ -22,7 +22,7 @@
 
   <p><%= cour.etudiants.count %> étudiants prévus </p>
 
-  <% if action_name == 'mes_sessions' %>
+  <% if action_name == 'mes_sessions_intervenant' %>
     <div class="d-inline">
       <% cour.presences.joins(:etudiant).where.not(etudiant_id: nil).order(:nom).each do |presence| %>
         <%= link_to presence_path(presence) do %>
@@ -41,8 +41,8 @@
       <%= Presence.workflow_states_count(cour.presences.where.not(etudiant_id: nil)) %>
     </p>
 
-    <% if (0..100).include?(cour.progress_bar_pct3) && cour.presences.where(intervenant_id: @intervenant.id).empty? %>
-      <%= link_to 'Signer la feuille de présence', signature_path(cour_id: cour.id), class: 'btn btn-warning btn-lg' %>
+    <% if (0..100).include?(cour.progress_bar_pct3) && cour.presences.where(intervenant_id: @intervenant_user_id).empty? %>
+      <%= link_to 'Signer la feuille de présence', signature_cours_path(cour_id: cour.id), class: 'btn btn-warning btn-lg' %>
     <% end %>
   <% end %>
 </div>

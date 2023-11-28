@@ -5,7 +5,7 @@
 <h2 class="text-dark">Signature présence</h2>
 <h4 class="text-dark"><%= current_user.nom_et_prénom %></h4>
 
-<%= form_with(model: @presence, url: signature_do_path) do |form| %>
+<%= form_with(model: @presence, url: signature_do_cours_path) do |form| %>
 
   <%= form.hidden_field :id %>
   <%= form.text_field :signature, style: 'display: none' %>
@@ -22,7 +22,7 @@
   </div>
 <% end %>
 
-<p class="my-4"><%= link_to 'Retour', current_user.étudiant? ? mes_sessions_path : mes_sessions_intervenant_path(Cour.find(params[:cour_id]).intervenant_id) %></p>
+<p class="my-4"><%= link_to 'Retour', current_user.étudiant? ? mes_sessions_etudiant_cours_path : mes_sessions_intervenant_cours_path %></p>
 
 <script>
   var signaturePad = new SignaturePad(document.getElementById('signature-pad'));

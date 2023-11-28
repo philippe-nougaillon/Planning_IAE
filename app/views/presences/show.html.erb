@@ -58,7 +58,7 @@
 <% end %>
 
 <% if current_user.intervenant? %>
-  <%= link_to 'Annuler', mes_sessions_intervenant_path(@presence.cour.intervenant_id), class:'pb-4' %>
+  <%= link_to 'Annuler', mes_sessions_intervenant_cours_path, class:'pb-4' %>
 <% else %>
   <%= link_to 'Retour', presences_path, class:'pb-4' %>
 <% end %>

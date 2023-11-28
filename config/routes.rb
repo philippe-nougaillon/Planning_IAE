@@ -26,7 +26,6 @@ Rails.application.routes.draw do
     member do
       get :invitations
       get :calendrier
-      get :mes_sessions
     end
   end
 
@@ -46,6 +45,10 @@ Rails.application.routes.draw do
       get :planning, to: 'cours#index_slide'
       post :action
       post :action_do
+      get :mes_sessions_etudiant
+      get :mes_sessions_intervenant
+      get :signature
+      patch :signature_do
     end
   end
     
@@ -178,9 +181,6 @@ Rails.application.routes.draw do
 
   controller :pages do
     get 'mentions_légales', to: 'pages#mentions_légales', as: :mentions_legales
-    get 'mes_sessions', to: 'pages#mes_sessions'
-    get 'signature', to: 'pages#signature'
-    patch 'signature_do', to: 'pages#signature_do'
   end
 
   root 'cours#index'

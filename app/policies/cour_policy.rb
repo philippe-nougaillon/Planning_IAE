@@ -57,4 +57,20 @@ class CourPolicy < ApplicationPolicy
     (user.admin?) 
   end
 
+  def mes_sessions_etudiant?
+    user && user.étudiant?
+  end
+
+  def signature?
+    user && ( user.étudiant? || user.intervenant? )
+  end
+
+  def signature_do?
+    signature?
+  end
+
+  def mes_sessions_intervenant?
+    user && user.intervenant? && (record.intervenant.email.downcase == user.email.downcase)
+  end
+
 end

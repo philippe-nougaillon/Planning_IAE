@@ -56,10 +56,10 @@ class ApplicationController < ActionController::Base
     def after_sign_in_path_for(resource)
       stored_location_for(resource) ||
         if resource.is_a?(User) && resource.étudiant?
-          mes_sessions_path
+          mes_sessions_etudiant_cours_path
         elsif resource.is_a?(User) && resource.intervenant?
           intervenant_id = Intervenant.where("LOWER(intervenants.email) = ?", current_user.email.downcase).first.id
-          mes_sessions_intervenant_path(intervenant_id)
+          mes_sessions_intervenant_cours_path
         else
           super
         end

@@ -9,16 +9,4 @@ class PagesPolicy < ApplicationPolicy
     true
   end
 
-  def mes_sessions?
-    user && user.étudiant?
-  end
-
-  def signature?
-    user && ( user.étudiant? || user.intervenant? )
-  end
-
-  def signature_do?
-    signature?
-  end
-
 end
