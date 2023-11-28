@@ -715,22 +715,23 @@ class CoursController < ApplicationController
     @cour = Cour.find(params[:cour_id])
     authorize @cour
 
-    now = ApplicationController.helpers.time_in_paris_selon_la_saison
     if current_user.étudiant?
       @etudiant = @cour.etudiants.find_by("LOWER(etudiants.email) = ?", current_user.email.downcase)
-      @presence = Presence.create(cour_id: @cour.id, etudiant_id: @etudiant.id, code_ue: @cour.code_ue, signée_le: now)
+      @presence = Presence.find_or_create_by(cour_id: @cour.id, etudiant_id: @etudiant.id, code_ue: @cour.code_ue)
     elsif current_user.intervenant?
       @intervenant = @cour.intervenant
-      @presence = Presence.create(cour_id: @cour.id, intervenant_id: @intervenant.id, code_ue: @cour.code_ue, signée_le: now)
+      @presence = Presence.find_or_create_by(cour_id: @cour.id, intervenant_id: @intervenant.id, code_ue: @cour.code_ue)
     end
   end
 
   def signature_do
     @presence = Presence.find(params[:presence][:id])
     authorize @presence.cour
+    now = ApplicationController.helpers.time_in_paris_selon_la_saison
     @presence.workflow_state = 'signée'
     @presence.ip = request.remote_ip
     @presence.signature = params[:presence][:signature]
+    @presence.signée_le = now
     if @presence.save
       if current_user.intervenant? || current_user.enseignant? 
         @presence.cour.presences.where(workflow_state: 'signée').update_all(workflow_state: 'validée')
