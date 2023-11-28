@@ -4,7 +4,7 @@ class CoursController < ApplicationController
   include ApplicationHelper
 
   before_action :set_cour, only: [:show, :edit, :update, :destroy]
-  before_action :is_user_authorized, except: [:show, :edit, :update, :destroy, :mes_sessions_intervenant]
+  before_action :is_user_authorized, except: [:show, :edit, :update, :destroy, :mes_sessions_intervenant, :signature, :signature_do]
 
   layout :define_layout
 
@@ -713,6 +713,8 @@ class CoursController < ApplicationController
 
   def signature
     @cour = Cour.find(params[:cour_id])
+    authorize @cour
+
     now = ApplicationController.helpers.time_in_paris_selon_la_saison
     if current_user.étudiant?
       @etudiant = @cour.etudiants.find_by("LOWER(etudiants.email) = ?", current_user.email.downcase)
@@ -725,6 +727,7 @@ class CoursController < ApplicationController
 
   def signature_do
     @presence = Presence.find(params[:presence][:id])
+    authorize @presence.cour
     @presence.workflow_state = 'signée'
     @presence.ip = request.remote_ip
     @presence.signature = params[:presence][:signature]
