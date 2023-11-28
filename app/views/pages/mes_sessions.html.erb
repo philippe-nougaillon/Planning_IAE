@@ -1,4 +1,4 @@
-<h3 class="mt-4"><%= @cours.first.try(:formation).try(:nom) %></h3>
+<h3 class="mt-4"><%= @cours.first.try(:formation).try(:nom).try(:humanize) %></h3>
 <h4 class="text-dark my-4"><%= fa_icon 'calendar-day' %> <%= l(Date.today, format: :long).humanize %></h4>
 
 <% if @cours.any?%>

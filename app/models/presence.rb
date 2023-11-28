@@ -2,6 +2,9 @@ class Presence < ApplicationRecord
   include Workflow
   include WorkflowActiverecord
 
+  extend FriendlyId
+  friendly_id :slug_candidates, use: :slugged
+
   audited
 
   belongs_to :cour
@@ -40,5 +43,11 @@ class Presence < ApplicationRecord
 
   def self.workflow_states_count(presences)
     JSON.pretty_generate(presences.reorder(nil).select(:id).group(:workflow_state).count(:id))
+  end
+
+  private
+
+  def slug_candidates
+    [SecureRandom.uuid]
   end
 end

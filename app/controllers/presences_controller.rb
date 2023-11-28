@@ -101,7 +101,7 @@ class PresencesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_presence
-      @presence = Presence.find(params[:id])
+      @presence = Presence.find_by(slug: params[:id])
     end
 
     # Only allow a list of trusted parameters through.
