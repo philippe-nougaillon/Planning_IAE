@@ -67,7 +67,9 @@
               <%= navbar_nav_item('ma journée', 'calendar-day', mes_sessions_intervenant_cours_path) %>
             <% end %>
             <%= navbar_nav_item('cours', 'calendar-alt', cours_path, 'Planning') %>
-            <%= navbar_nav_item('salles', 'chalkboard', occupation_salles_path) %>
+            <% unless current_user.étudiant? %>
+              <%= navbar_nav_item('salles', 'chalkboard', occupation_salles_path) %>
+            <% end %>
             <% if policy(current_user).left_navbar? %>
               <%= navbar_nav_item('formations', 'briefcase', formations_path) %>
               <%= navbar_nav_item('intervenants', 'chalkboard-teacher', intervenants_path) %>
