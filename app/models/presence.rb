@@ -21,7 +21,7 @@ class Presence < ApplicationRecord
   MANQUANTE = 'manquante'
 
   workflow do
-    state NOUVELLE, meta: {style: 'badge-warning'}  do
+    state NOUVELLE, meta: {style: 'badge-light'}  do
       event :signer, transitions_to: SIGNEE
     end
     state SIGNEE, meta: {style: 'badge-info'}  do
