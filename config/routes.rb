@@ -45,12 +45,15 @@ Rails.application.routes.draw do
       get :planning, to: 'cours#index_slide'
       post :action
       post :action_do
-      get :mes_sessions_etudiant
-      get :mes_sessions_intervenant
       get :signature
       patch :signature_do
     end
   end
+
+  get :mes_sessions_etudiant, to: 'cours#mes_sessions_etudiant', as: :mes_sessions_etudiant
+  get :mes_sessions_intervenant, to: 'cours#mes_sessions_intervenant', as: :mes_sessions_intervenant
+
+
     
   resources :salles do
     collection do

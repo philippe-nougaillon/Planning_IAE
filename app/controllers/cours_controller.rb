@@ -743,7 +743,7 @@ class CoursController < ApplicationController
         end
         flash[:notice] = 'Toutes les signatures de présences ont été validées. Les étudiants qui n\'ont pas signé sont notés absent'
       end
-      redirect_to current_user.étudiant? ? mes_sessions_etudiant_cours_path : mes_sessions_intervenant_cours_path
+      redirect_to current_user.étudiant? ? mes_sessions_etudiant_path : mes_sessions_intervenant_path
     else
       render :new, status: :unprocessable_entity
     end

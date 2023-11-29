@@ -22,7 +22,7 @@
   </div>
 <% end %>
 
-<p class="my-4"><%= link_to 'Retour', current_user.étudiant? ? mes_sessions_etudiant_cours_path : mes_sessions_intervenant_cours_path %></p>
+<p class="my-4"><%= link_to 'Retour', current_user.étudiant? ? mes_sessions_etudiant_path : mes_sessions_intervenant_path %></p>
 
 <script>
   var signaturePad = new SignaturePad(document.getElementById('signature-pad'));

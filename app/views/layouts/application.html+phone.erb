@@ -61,10 +61,10 @@
                 <ul class="navbar-nav">
                     <% if user_signed_in? %> 
                         <% if current_user.étudiant? %>
-                            <%= navbar_nav_item('ma journée', 'calendar-day', mes_sessions_etudiant_cours_path) %>
+                            <%= navbar_nav_item('ma journée', 'calendar-day', mes_sessions_etudiant_path) %>
                         <% end%>
                         <% if current_user.intervenant? %>
-                            <%= navbar_nav_item('ma journée', 'calendar-day', mes_sessions_intervenant_cours_path) %>
+                            <%= navbar_nav_item('ma journée', 'calendar-day', mes_sessions_intervenant_path) %>
                         <% end %>
                         <%= navbar_nav_item('cours', 'calendar-alt', cours_path, 'Planning') %>
                         <% unless current_user.étudiant? %>
