@@ -4,7 +4,7 @@ class CoursController < ApplicationController
   include ApplicationHelper
 
   before_action :set_cour, only: [:show, :edit, :update, :destroy]
-  before_action :is_user_authorized, except: [:show, :edit, :update, :destroy, :mes_sessions_intervenant, :signature, :signature_do]
+  before_action :is_user_authorized, except: [:show, :edit, :update, :destroy, :signature, :signature_do]
 
   layout :define_layout
 
@@ -707,8 +707,6 @@ class CoursController < ApplicationController
       .cours
       .where("DATE(debut) = ?", Date.today)
       .order(:debut)
-
-    authorize @cours.first
   end
 
   def signature

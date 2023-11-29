@@ -61,16 +61,16 @@ class CourPolicy < ApplicationPolicy
     user && user.étudiant?
   end
 
+  def mes_sessions_intervenant?
+    user && ( user.intervenant? || user.enseignant?)
+  end
+
   def signature?
-    user && ( user.étudiant? && record.etudiants.pluck(:email).map{ |email| email.downcase}.include?(user.email.downcase)) || ( user.intervenant? && record.intervenant.email.downcase == user.email.downcase)
+    user && ( user.étudiant? && record.etudiants.pluck(:email).map{ |email| email.downcase}.include?(user.email.downcase)) || ( ( user.intervenant? || user.enseignant? ) && record.intervenant.email.downcase == user.email.downcase)
   end
 
   def signature_do?
     signature?
-  end
-
-  def mes_sessions_intervenant?
-    user && user.intervenant? && (record.intervenant.email.downcase == user.email.downcase)
   end
 
 end
