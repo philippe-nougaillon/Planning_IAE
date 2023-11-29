@@ -696,6 +696,7 @@ class CoursController < ApplicationController
     @cours = @etudiant
             .formation
             .cours
+            .confirmé
             .where("DATE(debut) = ?", Date.today)
             .order(:debut)
   end
@@ -705,6 +706,7 @@ class CoursController < ApplicationController
       .where("LOWER(intervenants.email) = ?", current_user.email.downcase)
       .first
       .cours
+      .confirmé
       .where("DATE(debut) = ?", Date.today)
       .order(:debut)
   end
