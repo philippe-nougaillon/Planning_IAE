@@ -20,9 +20,9 @@
     </div>
   </div>
 
-  <h6 class='mt-4'>Présences :</h6>
+  <h6 class='mt-4 mb-0'>Présences :</h6>
   <% if action_name == 'mes_sessions_intervenant' %>
-    <div class="d-inline">
+    <div class="d-inline mt-4">
       <% cour.presences.joins(:etudiant).where.not(etudiant_id: nil).order(:nom).each do |presence| %>
         <%= link_to presence_path(presence) do %>
           <h5 class='d-inline'>
