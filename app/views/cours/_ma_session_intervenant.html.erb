@@ -40,9 +40,10 @@
       <p class='mt-4'>
         État des présences : 
         <%= Presence.workflow_states_count(presences) %>
-        | Total : <%= presences.count %>
       </p>
     <% end %>
+    <p>Total : <%= presences.count %></p>
+
 
     <% if (0..100).include?(cour.progress_bar_pct3) && cour.presences.where(intervenant_id: @intervenant_user_id).empty? %>
       <%= link_to 'Signer la feuille de présence', signature_cours_path(cour_id: cour.id), class: 'btn btn-warning btn-lg' %>
