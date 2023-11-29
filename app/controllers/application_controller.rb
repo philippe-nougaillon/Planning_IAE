@@ -23,8 +23,6 @@ class ApplicationController < ActionController::Base
 
   private
     def set_layout_variables
-      @ctrl = params[:controller]
-      @action = params[:action]
       @sitename ||= request.subdomains.any? ? request.subdomains(0).first.upcase : 'IAE-Planning DEV'
       @sitename.concat(' v4.27')
 
