@@ -14,14 +14,14 @@ class Presence < ApplicationRecord
 
   scope :ordered, -> { order(created_at: :desc) }
 
-  NOUVELLE = 'nouvelle'
+  ATTENTE = 'attente signature'
   SIGNEE = 'signée'
   VALIDEE = 'validée'
   REJETEE = 'rejetée'
   MANQUANTE = 'manquante'
 
   workflow do
-    state NOUVELLE, meta: {style: 'badge-warning'}  do
+    state ATTENTE, meta: {style: 'badge-warning'}  do
       event :signer, transitions_to: SIGNEE
     end
     state SIGNEE, meta: {style: 'badge-info'}  do

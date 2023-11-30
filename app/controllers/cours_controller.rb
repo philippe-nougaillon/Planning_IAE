@@ -736,7 +736,7 @@ class CoursController < ApplicationController
       if current_user.intervenant? || current_user.enseignant? 
         @presence.cour.presences.where(workflow_state: 'signée').update_all(workflow_state: 'validée')
 
-        @presence.cour.presences.where(workflow_state: 'nouvelle').update_all(workflow_state: 'manquante')
+        @presence.cour.presences.where(workflow_state: 'attente signature').update_all(workflow_state: 'manquante')
 
         absents = @presence.cour.etudiants.where.not(id: @presence.cour.presences.pluck(:etudiant_id))
 
