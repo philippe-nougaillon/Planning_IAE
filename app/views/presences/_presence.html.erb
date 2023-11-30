@@ -2,7 +2,7 @@
   <td><%= time_ago_in_words presence.created_at %></td>
   <td><%= l presence.signée_le, format: :short if presence.signée_le %></td>
   <td><%= presence.cour.formation.abrg %></td>
-  <td><p class="<%= presence.intervenant_id.present? ? 'badge badge-info' : '' %>"><%= presence.cour.intervenant.nom_prenom %></p></td>
+  <td><p class="<%= presence.intervenant_id.present? ? 'badge badge-pill badge-primary text-uppercase font-italic' : '' %>"><%= presence.cour.intervenant.nom_prenom %></p></td>
   <td>
     <%= l presence.cour.debut, format: :short %>
     <br>

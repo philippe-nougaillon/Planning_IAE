@@ -79,7 +79,7 @@
   </table>
 </div>
 
-<div class="page_info">
+<div class="page_info mb-4">
   <%= page_entries_info @presences %>
   <%= JSON.pretty_generate(Presence.workflow_states_count(@presences)) %>
 </div>
