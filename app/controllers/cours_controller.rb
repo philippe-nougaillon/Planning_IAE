@@ -741,7 +741,7 @@ class CoursController < ApplicationController
         absents = @presence.cour.etudiants.where.not(id: @presence.cour.presences.pluck(:etudiant_id))
 
         absents.each do |absent|
-          @presence.cour.presences.create(etudiant_id: absent.id, workflow_state: 'manquante')
+          @presence.cour.presences.create(etudiant_id: absent.id, workflow_state: 'manquante', code_ue: @presence.cour.code_ue)
         end
         flash[:notice] = 'Toutes les signatures de présences ont été validées. Les étudiants qui n\'ont pas signé sont notés absent'
       end

@@ -57,8 +57,4 @@
   </div>
 <% end %>
 
-<% if current_user.intervenant? %>
-  <%= link_to 'Annuler', mes_sessions_intervenant_path, class:'pb-4' %>
-<% else %>
-  <%= link_to 'Retour', presences_path, class:'pb-4' %>
-<% end %>
+<%= link_to 'Retour', current_user.intervenant? ? mes_sessions_intervenant_path : presences_path, class:'pb-4' %>

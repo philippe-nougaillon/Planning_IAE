@@ -21,7 +21,7 @@ class Presence < ApplicationRecord
   MANQUANTE = 'manquante'
 
   workflow do
-    state NOUVELLE, meta: {style: 'badge-light'}  do
+    state NOUVELLE, meta: {style: 'badge-warning'}  do
       event :signer, transitions_to: SIGNEE
     end
     state SIGNEE, meta: {style: 'badge-info'}  do
@@ -42,7 +42,7 @@ class Presence < ApplicationRecord
   end
 
   def self.workflow_states_count(presences)
-    JSON.pretty_generate(presences.reorder(nil).select(:id).group(:workflow_state).count(:id))
+    presences.select(:id).group(:workflow_state).count(:id)
   end
 
   private

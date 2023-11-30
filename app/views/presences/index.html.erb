@@ -56,12 +56,12 @@
     <thead>
       <tr>
         <th>Il y a</th>
-        <th>Date</th>
+        <th>Date signature</th>
         <th>Formation</th>
         <th>Intervenant</th>
         <th>Cours</th>
         <th>UE</th>
-        <th>Étudiant</th>
+        <th>Nom / Prénom</th>
         <th>Signature</th>
         <th>État</th>
         <th colspan="2"></th>
@@ -81,7 +81,7 @@
 
 <div class="page_info">
   <%= page_entries_info @presences %>
-  <%= Presence.workflow_states_count(@presences) %>
+  <%= JSON.pretty_generate(Presence.workflow_states_count(@presences)) %>
 </div>
 
 <%= will_paginate @presences, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
