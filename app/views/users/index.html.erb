@@ -35,6 +35,14 @@
             </label>
         </div>
 
+        <div class="col-sm-3">
+          <br>
+          <label>
+            <%= check_box_tag :mauvais_email, 1, params[:mauvais_email], onchange: 'this.form.submit()' %>
+            Comptes à vérifier ?
+          </label>
+        </div>
+
       </div>
     </div>
   <% end %>
@@ -65,7 +73,14 @@
         <tr>
           <td><%= link_to user.nom, user %></td>
           <td><%= user.prénom %></td>
-          <td><%= user.email %></td>
+          <td>
+            <%= user.email %>
+            <% if user.étudiant? && Etudiant.find_by("LOWER(etudiants.email) = ?", user.email.downcase).nil? %>
+              <%= fa_icon 'question-circle', class: 'text-danger' , title: 'L\'utilisateur n\'a pas de profil étudiant associé à cet email' %>
+            <% elsif (user.intervenant? || user.enseignant? ) && Intervenant.find_by("LOWER(intervenants.email) = ?", user.email.downcase).nil? %>
+              <%= fa_icon 'question-circle', class: 'text-danger' , title: 'L\'utilisateur n\'a pas de profil intervenant associé à cet email' %>
+            <% end %>
+          </td>
           <td><%= user.role.humanize %></td>
           <td><%= time_ago_in_words user.current_sign_in_at if user.current_sign_in_at %></td>
           <td ><%= user.sign_in_count %></td>
