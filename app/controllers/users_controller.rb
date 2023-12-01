@@ -35,10 +35,14 @@ class UsersController < ApplicationController
     if params[:mauvais_email].present?
       mauvais_email_users_ids = []
       User.where(role: 'étudiant').each do |étudiant|
-        mauvais_email_users_ids << étudiant.id if Etudiant.find_by("LOWER(etudiants.email) = ?", étudiant.email.downcase).nil?
+        unless Etudiant.find_by("LOWER(etudiants.nom) = ? AND LOWER(etudiants.prénom) = ?", étudiant.try(:nom).try(:downcase), étudiant.try(:prénom).try(:downcase)).nil?
+          mauvais_email_users_ids << étudiant.id if Etudiant.find_by("LOWER(etudiants.email) = ?", étudiant.email.downcase).nil?
+        end
       end
       User.where(role: ['intervenant', 'enseignant']).each do |intervenant|
-        mauvais_email_users_ids << intervenant.id if Intervenant.find_by("LOWER(intervenants.email) = ?", intervenant.email.downcase).nil?
+        unless Intervenant.find_by("LOWER(intervenants.nom) = ? AND LOWER(intervenants.prenom) = ?", intervenant.try(:nom).try(:downcase), intervenant.try(:prénom).try(:downcase)).nil?
+          mauvais_email_users_ids << intervenant.id if Intervenant.find_by("LOWER(intervenants.email) = ?", intervenant.email.downcase).nil?
+        end
       end
       @users = @users.where(id: mauvais_email_users_ids)
     end
