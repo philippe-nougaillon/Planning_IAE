@@ -52,7 +52,7 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-expand navbar-light shadow-sm">
+    <nav class="navbar navbar-expand navbar-light shadow-sm <%= ENV["STAGING_COLOR_MODE"] %>">
       <a class="navbar-brand" href="/" aria-label="logo">
         <%= image_tag("logo_iae@195.png", height: 40, alt: 'logo IAE') %>
       </a>
