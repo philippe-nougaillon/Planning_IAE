@@ -97,18 +97,19 @@ namespace :cours do
 
   desc "Envoyer le lien des sessions des intervenants"
   task envoyer_sessions_intervenants: :environment do
-    formation = Formation.find_by(nom: 'Tech&Code P2022')
+    formation = Formation.find(672)
+    now = ApplicationController.helpers.time_in_paris_selon_la_saison
 
     cours = formation.cours.confirmé.where("DATE(debut) = ?", Date.today)
     cours.each do |cour|
-      if Time.now > cour.debut + 30.minute && Time.now < cour.debut + 40.minute
+      if now > cour.debut + 30.minute && now < cour.debut + 40.minute
         intervenant = cour.intervenant
         presence = Presence.find_or_create_by(cour_id: cour.id, intervenant_id: intervenant.id, code_ue: cour.code_ue)
         mailer_response = IntervenantMailer.mes_sessions(intervenant, presence.slug)
-        MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: intervenant.email, subject: "Cours d'aujourd'hui")
+        MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: intervenant.email, subject: "Validation présences")
 
-        puts 'email envoyé à ' + intervenant.nom_prenom
-        puts 'slug : ' + presence.slug
+        # puts 'email envoyé à ' + intervenant.nom_prenom
+        # puts 'slug : ' + presence.slug
       end
     end
   end
