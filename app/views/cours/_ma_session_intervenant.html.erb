@@ -53,8 +53,8 @@
       <% end %>
     </div>
 
-    <% if (0..100).include?(cour.progress_bar_pct3) && cour.presences.where(intervenant_id: @intervenant_user_id).empty? %>
-      <%= link_to 'Signer la feuille de présence', signature_cours_path(cour_id: cour.id), class: 'btn btn-warning btn-lg mt-4' %>
+    <% if (0..100).include?(cour.progress_bar_pct3) && cour.presences.where(intervenant_id: @intervenant.id).where.not(workflow_state: 'attente signature').empty? %>
+      <%= link_to 'Signer la feuille de présence', signature_intervenant_cours_path(presence_slug: params[:presence_slug]), class: 'btn btn-warning btn-lg mt-4' %>
     <% end %>
   <% end %>
 </div>

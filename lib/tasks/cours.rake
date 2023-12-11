@@ -95,6 +95,23 @@ namespace :cours do
     envoi_specs.update(workflow_state: "envoyé", date_exécution: DateTime.now ,mail_count: envoyes)
   end
 
+  desc "Envoyer le lien des sessions des intervenants"
+  task envoyer_sessions_intervenants: :environment do
+    formation = Formation.find_by(nom: 'Tech&Code P2022')
+
+    cours = formation.cours.confirmé.where("DATE(debut) = ?", Date.today)
+    cours.each do |cour|
+      if Time.now > cour.debut + 30.minute && Time.now < cour.debut + 40.minute
+        intervenant = cour.intervenant
+        presence = Presence.find_or_create_by(cour_id: cour.id, intervenant_id: intervenant.id, code_ue: cour.code_ue)
+        mailer_response = IntervenantMailer.mes_sessions(intervenant, presence.slug)
+        MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: intervenant.email, subject: "Cours d'aujourd'hui")
+
+        puts 'email envoyé à ' + intervenant.nom_prenom
+      end
+    end
+  end
+
   def envoyer_liste_cours_a_intervenant(debut, fin, intervenant, cours, gestionnaires, envoi_log_id, test)
     if !intervenant.email.blank? && intervenant.email != '?'
       puts "OK => Planning envoyé à: #{intervenant.email}"

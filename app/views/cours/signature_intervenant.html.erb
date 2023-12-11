@@ -3,9 +3,9 @@
 <%= render partial: 'ma_session', locals: {cour: @cour} %>
 
 <h2 class="text-dark">Signature présence</h2>
-<h4 class="text-dark"><%= current_user.nom_et_prénom %></h4>
+<h4 class="text-dark"><%= @presence.intervenant.nom_prenom %></h4>
 
-<%= form_with(model: @presence, url: signature_do_cours_path) do |form| %>
+<%= form_with(model: @presence, url: signature_intervenant_do_cours_path(presence_slug: params[:presence_slug])) do |form| %>
 
   <%= form.hidden_field :id %>
   <%= form.text_field :signature, style: 'display: none' %>
@@ -22,7 +22,7 @@
   </div>
 <% end %>
 
-<p class="my-4"><%= link_to 'Retour', current_user.étudiant? ? mes_sessions_etudiant_path : mes_sessions_intervenant_path %></p>
+<p class="my-4"><%= link_to 'Retour', mes_sessions_intervenant_path(presence_slug: @presence.slug) %></p>
 
 <script>
   var signaturePad = new SignaturePad(document.getElementById('signature-pad'));

@@ -1,0 +1,44 @@
+<h1 class="text-dark">Session</h1>
+
+<%= render partial: 'ma_session', locals: {cour: @cour} %>
+
+<h2 class="text-dark">Signature présence</h2>
+<h4 class="text-dark"><%= current_user.nom_et_prénom %></h4>
+
+<%= form_with(model: @presence, url: signature_etudiant_do_cours_path) do |form| %>
+
+  <%= form.hidden_field :id %>
+  <%= form.text_field :signature, style: 'display: none' %>
+  
+  <div id="signature">
+    <div class="wrapper">
+      <canvas id="signature-pad" class="signature-pad" style="border: 1px #ccc solid;" width=350 height=300></canvas>
+    </div>
+
+    <div style="margin-top: 8px;">
+      <button id="save" class="btn btn-success mr-3">Enregistrer</button>
+      <a id="clear">Effacer</a>
+    </div>
+  </div>
+<% end %>
+
+<p class="my-4"><%= link_to 'Retour', current_user.étudiant? ? mes_sessions_etudiant_path : mes_sessions_intervenant_path %></p>
+
+<script>
+  var signaturePad = new SignaturePad(document.getElementById('signature-pad'));
+  var signatureField = document.getElementById('presence_signature');
+  var saveButton = document.getElementById('save');
+  var cancelButton = document.getElementById('clear');
+
+  saveButton.addEventListener('click', function (event) {
+    if (signaturePad.isEmpty()){
+      event.preventDefault();
+    } else {
+      signatureField.setAttribute('value', signaturePad.toDataURL("image/svg+xml"));
+    }
+  });
+
+  cancelButton.addEventListener('click', function (event) {
+    signaturePad.clear();
+  });
+</script>

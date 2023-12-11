@@ -45,8 +45,10 @@ Rails.application.routes.draw do
       get :planning, to: 'cours#index_slide'
       post :action
       post :action_do
-      get :signature
-      patch :signature_do
+      get :signature_etudiant
+      get :signature_intervenant
+      patch :signature_etudiant_do
+      patch :signature_intervenant_do
     end
   end
 

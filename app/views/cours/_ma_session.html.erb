@@ -25,20 +25,20 @@
     </div>
   </div>
 
-  <% if current_user.étudiant? && presence = cour.presences.find_by(etudiant_id: @etudiant.id) %>
+  <% if user_signed_in? && current_user.étudiant? && presence = cour.presences.find_by(etudiant_id: @etudiant.id) %>
     <% if presence.validée? || presence.signée? %>
       <div class="alert alert-success mt-3" role="alert">
         Présence signée à <%= l presence.signée_le, format: :heures_log %>
       </div>
     <% elsif presence.manquante? || presence.rejetée? %>
       <div class="alert alert-danger mt-3" role="alert">
-        Absent
+        Vous avez été absent(e) à cette séance
       </div>
     <% end %>
   <% end %>
   <% if action_name == 'mes_sessions_etudiant' %>
-    <% if (0..100).include?(cour.progress_bar_pct3) && ( cour.presences.where(etudiant_id: @etudiant.id).empty? || cour.presences.where(etudiant_id: @etudiant.id, workflow_state: 'attente signature').any? ) %>
-      <%= link_to 'Signer la feuille de présence', signature_cours_path(cour_id: cour.id), class: 'btn btn-warning btn-lg mt-4' %>
+    <% if cour.signable_etudiant? && ( cour.presences.where(etudiant_id: @etudiant.id).empty? || cour.presences.where(etudiant_id: @etudiant.id, workflow_state: 'attente signature').any? ) %>
+      <%= link_to 'Signer la feuille de présence', signature_etudiant_cours_path(cour_id: cour.id), class: 'btn btn-warning btn-lg mt-4' %>
     <% end %>
   <% end %>
 </div>

@@ -4,7 +4,7 @@ class CoursController < ApplicationController
   include ApplicationHelper
 
   before_action :set_cour, only: [:show, :edit, :update, :destroy]
-  before_action :is_user_authorized, except: [:show, :edit, :update, :destroy, :signature, :signature_do]
+  before_action :is_user_authorized, except: [:show, :edit, :update, :destroy, :signature_etudiant, :signature_etudiant_do]
 
   layout :define_layout
 
@@ -702,50 +702,66 @@ class CoursController < ApplicationController
   end
 
   def mes_sessions_intervenant
-    @cours = Intervenant
-      .where("LOWER(intervenants.email) = ?", current_user.email.downcase)
-      .first
-      .cours
-      .confirmé
-      .where("DATE(debut) = ?", Date.today)
-      .order(:debut)
+    if params[:presence_slug].present?
+      presence = Presence.find_by(slug: params[:presence_slug]) 
+      @intervenant = presence.intervenant
+    else
+      @intervenant = Intervenant.find_by("LOWER(intervenants.email) = ?", current_user.email.downcase)
+    end
+
+    @cours = @intervenant.cours.confirmé.where("DATE(debut) = ?", Date.today).order(:debut)
   end
 
-  def signature
+  def signature_etudiant
     @cour = Cour.find(params[:cour_id])
     authorize @cour
 
-    if current_user.étudiant?
-      @etudiant = @cour.etudiants.find_by("LOWER(etudiants.email) = ?", current_user.email.downcase)
-      @presence = Presence.find_or_create_by(cour_id: @cour.id, etudiant_id: @etudiant.id, code_ue: @cour.code_ue)
-    elsif current_user.intervenant?
-      @intervenant = @cour.intervenant
-      @presence = Presence.find_or_create_by(cour_id: @cour.id, intervenant_id: @intervenant.id, code_ue: @cour.code_ue)
-    end
+    @etudiant = @cour.etudiants.find_by("LOWER(etudiants.email) = ?", current_user.email.downcase)
+    @presence = Presence.find_or_create_by(cour_id: @cour.id, etudiant_id: @etudiant.id, code_ue: @cour.code_ue)
   end
 
-  def signature_do
+  def signature_etudiant_do
     @presence = Presence.find(params[:presence][:id])
     authorize @presence.cour
+
     now = ApplicationController.helpers.time_in_paris_selon_la_saison
     @presence.workflow_state = 'signée'
     @presence.ip = request.remote_ip
     @presence.signature = params[:presence][:signature]
     @presence.signée_le = now
     if @presence.save
-      if current_user.intervenant? || current_user.enseignant? 
-        @presence.cour.presences.where(workflow_state: 'signée').update_all(workflow_state: 'validée')
+      redirect_to mes_sessions_etudiant_path
+    else
+      render :new, status: :unprocessable_entity
+    end
+  end
 
-        @presence.cour.presences.where(workflow_state: 'attente signature').update_all(workflow_state: 'manquante')
+  def signature_intervenant
+    @presence = Presence.find_by(slug: params[:presence_slug])
+    @cour = @presence.cour
+  end
 
-        absents = @presence.cour.etudiants.where.not(id: @presence.cour.presences.pluck(:etudiant_id))
+  def signature_intervenant_do
+    @presence = Presence.find(params[:presence][:id])
+    authorize @presence.cour
 
-        absents.each do |absent|
-          @presence.cour.presences.create(etudiant_id: absent.id, workflow_state: 'manquante', code_ue: @presence.cour.code_ue)
-        end
-        flash[:notice] = 'Toutes les signatures de présences ont été validées. Les étudiants qui n\'ont pas signé sont notés absent'
+    now = ApplicationController.helpers.time_in_paris_selon_la_saison
+    @presence.workflow_state = 'signée'
+    @presence.ip = request.remote_ip
+    @presence.signature = params[:presence][:signature]
+    @presence.signée_le = now
+    if @presence.save
+      @presence.cour.presences.where(workflow_state: 'signée').update_all(workflow_state: 'validée')
+
+      @presence.cour.presences.where(workflow_state: 'attente signature').update_all(workflow_state: 'manquante')
+
+      absents = @presence.cour.etudiants.where.not(id: @presence.cour.presences.pluck(:etudiant_id))
+
+      absents.each do |absent|
+        @presence.cour.presences.create(etudiant_id: absent.id, workflow_state: 'manquante', code_ue: @presence.cour.code_ue)
       end
-      redirect_to current_user.étudiant? ? mes_sessions_etudiant_path : mes_sessions_intervenant_path
+      flash[:notice] = 'Toutes les signatures de présences ont été validées. Les étudiants qui n\'ont pas signé sont notés absents.'
+      redirect_to mes_sessions_intervenant_path(presence_slug: @presence.slug)
     else
       render :new, status: :unprocessable_entity
     end

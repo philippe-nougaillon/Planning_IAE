@@ -603,6 +603,11 @@ class Cour < ApplicationRecord
   #       .count
   # end
 
+  def signable_etudiant?
+    now = ApplicationController.helpers.time_in_paris_selon_la_saison
+    self.debut < now && self.debut + 30.minute > now
+  end
+
   private
     def update_date_fin
       if self.debut and self.duree
