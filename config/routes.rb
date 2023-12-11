@@ -45,8 +45,17 @@ Rails.application.routes.draw do
       get :planning, to: 'cours#index_slide'
       post :action
       post :action_do
+      get :signature_etudiant
+      get :signature_intervenant
+      patch :signature_etudiant_do
+      patch :signature_intervenant_do
     end
   end
+
+  get :mes_sessions_etudiant, to: 'cours#mes_sessions_etudiant', as: :mes_sessions_etudiant
+  get :mes_sessions_intervenant, to: 'cours#mes_sessions_intervenant', as: :mes_sessions_intervenant
+
+
     
   resources :salles do
     collection do
@@ -167,8 +176,17 @@ Rails.application.routes.draw do
   resources :alerts
   resources :ouvertures
   resources :agents
+  resources :presences do
+    member do
+      get :valider
+      get :rejeter
+      get :archiver
+    end
+  end
 
-  get 'mentions_légales', to: 'pages#mentions_légales', as: :mentions_legales
+  controller :pages do
+    get 'mentions_légales', to: 'pages#mentions_légales', as: :mentions_legales
+  end
 
   root 'cours#index'
 

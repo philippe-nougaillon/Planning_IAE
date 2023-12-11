@@ -1,0 +1,60 @@
+<div class="pb-2 mt-4 mb-2 border-bottom">
+  <h3><%= fa_icon 'file-signature' %> Signature présence</h3>
+</div>
+<br>
+
+<p>
+  <strong>Il y a :</strong>
+  <%= time_ago_in_words @presence.created_at %>
+</p>
+
+<p>
+  <% if @presence.etudiant_id.present? %>
+    <strong>Étudiant :</strong>
+    <%= @presence.etudiant.nom_prénom %>
+  <% else %>
+    <strong>Intervenant :</strong>
+    <%= @presence.intervenant.nom_prenom %>
+  <% end %>
+</p>
+
+<p>
+  <strong>Cours :</strong>
+  <b><%= l(@presence.cour.debut, format: :heures_min) %></b> 
+  -
+  <%= l(@presence.cour.fin, format: :heures_min) %>
+  |
+  <%= @presence.cour.formation.nom %>
+  |
+  <%= @presence.cour.intervenant.nom_prenom %>
+  |
+  UE : <%= @presence.code_ue %>
+  |
+  <%= @presence.cour.nom_ou_ue %>
+  |
+  <%= @presence.cour.salle.nom %>
+</p>
+
+<% if @presence.signature %>
+  <p>
+    <strong>Signé le : </strong>
+    <%= l @presence.signée_le, format: :long %>
+    <%= fa_icon 'wifi', class: @presence.wifi_detected? ? 'text-success' : 'text-warning' %>
+    <br>
+    <img src=<%= @presence.signature %> style="width: 300px; border: 1px #CCC solid; padding: 10px;">
+  </p>
+<% end %>
+
+<p class='d-inline'>
+  <strong>État :</strong>
+  <h5 class='d-inline'><span class="badge <%= @presence.style %>"><%= @presence.workflow_state.humanize %></span></h5>
+</p>
+
+<% if @presence.can_valider? || @presence.can_rejeter? %>
+  <div class="d-flex justify-content-around justify-content-lg-start mb-4">
+    <%= link_to_if @presence.can_valider?, 'Valider', valider_presence_path(@presence), class: 'btn btn-lg btn-success flex-grow-1 flex-sm-grow-0' %>
+    <%= link_to_if @presence.can_rejeter?, 'Rejeter', rejeter_presence_path(@presence), class: 'btn btn-lg btn-danger flex-grow-1 flex-sm-grow-0' %>
+  </div>
+<% end %>
+
+<%= link_to 'Retour', current_user.intervenant? ? mes_sessions_intervenant_path : presences_path, class:'pb-4' %>

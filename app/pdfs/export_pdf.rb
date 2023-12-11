@@ -492,9 +492,9 @@ class ExportPdf
 
             data = [ ["<color rgb='032E4D'>Date</color>", "<color rgb='032E4D'><b>#{I18n.l(cour.debut.to_date)}</b></color>"],
                     ["<color rgb='032E4D'>Formation(s)</color>","<color rgb='032E4D'><b>#{cour.formation.nom}</b></color>"],
-                    ["<color rgb='032E4D'>Examen(s)</color>","<color rgb='032E4D'><b>UE#{cour.code_ue || '?'}</b></color>"],
+                    ["<color rgb='032E4D'>Examen(s)</color>","<color rgb='032E4D'><b>UE#{cour.code_ue}</b></color>"],
                     ["<color rgb='032E4D'>Horaires de surveillance   (nbre d’heures rémunérées)</color>",
-                    "<color rgb='032E4D'><b>#{cour.debut.strftime('%Hh%M')}-#{cour.fin.strftime('%Hh%M')} (#{((cour.fin - cour.debut) / 1.hour).truncate} heure.s)????</b></color>"],
+                    "<color rgb='032E4D'><b>#{cour.debut.strftime('%Hh%M')}-#{cour.fin.strftime('%Hh%M')} (#{((cour.fin - cour.debut) / 1.hour).truncate} heure.s)</b></color>"],
                     ["<color rgb='032E4D'>Taux horaire de vacation en vigueur au 01/05/2023</color>","<color rgb='032E4D'><b>11,52 €</b></color>"] ]
 
             table(data, 
@@ -558,7 +558,7 @@ class ExportPdf
 
             move_down @margin_down *2
 
-            text "<color rgb='032E4D'><b>UE#{cour.code_ue || "?"} #{cour.nom_ou_ue || "?????"}</b></color>",inline_format: true, size: 16
+            text "<color rgb='032E4D'><b>UE#{cour.code_ue} #{cour.nom_ou_ue}</b></color>",inline_format: true, size: 16
 
             move_down @margin_down 
 
@@ -610,7 +610,7 @@ class ExportPdf
             text "<color rgb='032E4D'><u>Surveillant.e.s :</u></color>", inline_format: true, size: 24
             text "<color rgb='032E4D'><b>#{surveillants}</b></color>", inline_format: true, size: 24
             move_down @margin_down
-            text "<color rgb='032E4D'>Examen <b>UE#{cour.code_ue || '?'} #{cour.nom_ou_ue}</b></color>", inline_format: true, size: 24
+            text "<color rgb='032E4D'>Examen <b>UE#{cour.code_ue} #{cour.nom_ou_ue}</b></color>", inline_format: true, size: 24
             text "<color rgb='032E4D'>Le <b>#{I18n.l(cour.debut.to_date)}</b></color>", inline_format: true, size: 24
             text "<color rgb='032E4D'>De <b>#{cour.debut.strftime('%Hh%M')} à #{cour.fin.strftime('%Hh%M')}</b></color>", inline_format: true, size: 24
             text "<color rgb='032E4D'>Salle <b>#{cour.salle.nom}</b></color>", inline_format: true, size: 24
@@ -624,7 +624,7 @@ class ExportPdf
 
             move_down @margin_down * 4
 
-            text "<color rgb='032E4D'><b>UE#{cour.code_ue || "?"} #{cour.nom_ou_ue}</b></color>", inline_format: true, size: 16
+            text "<color rgb='032E4D'><b>UE#{cour.code_ue} #{cour.nom_ou_ue}</b></color>", inline_format: true, size: 16
             text "<color rgb='032E4D'><b>Examen du #{I18n.l(cour.debut.to_date)}</b></color>", inline_format: true, size: 16
 
             move_down @margin_down * 3
@@ -642,7 +642,7 @@ class ExportPdf
 
             move_down @margin_down * 3
 
-            text "<color rgb='032E4D'>Promotion ???</color>", inline_format: true, align: :right
+            text "<color rgb='032E4D'>Promotion #{cour.formation.promo}</color>", inline_format: true, align: :right
 
             start_new_page
 
@@ -650,7 +650,7 @@ class ExportPdf
 
             move_down @margin_down * 4
 
-            text "<color rgb='032E4D'><b>UE#{cour.code_ue || "?"} #{cour.nom_ou_ue}</b></color>", inline_format: true, size: 16
+            text "<color rgb='032E4D'><b>UE#{cour.code_ue} #{cour.nom_ou_ue}</b></color>", inline_format: true, size: 16
             text "<color rgb='032E4D'><b>Examen du #{I18n.l(cour.debut.to_date)}</b></color>", inline_format: true, size: 16
 
             move_down @margin_down * 2
@@ -671,7 +671,7 @@ class ExportPdf
 
             move_down @margin_down * 3
 
-            text "<color rgb='032E4D'>Promotion ???</color>", inline_format: true, align: :right
+            text "<color rgb='032E4D'>Promotion #{cour.formation.promo}</color>", inline_format: true, align: :right
         end
     end
 

@@ -1,0 +1,22 @@
+<tr>
+  <td><%= time_ago_in_words presence.created_at %></td>
+  <td><%= l presence.signée_le, format: :short if presence.signée_le %></td>
+  <td><%= presence.cour.formation.abrg %></td>
+  <td><p class="<%= presence.intervenant_id.present? ? 'badge badge-pill badge-primary text-uppercase font-italic' : '' %>"><%= presence.cour.intervenant.nom_prenom %></p></td>
+  <td>
+    <%= l presence.cour.debut, format: :short %>
+    <br>
+    <%= presence.cour.nom_ou_ue %>
+  </td>
+  <td><%= presence.code_ue %></td>
+  <td>
+    <% if presence.etudiant_id.present? %>
+      <%= presence.etudiant.nom_prénom %>
+      <br>
+      <%= fa_icon 'wifi', class: presence.wifi_detected? ? 'text-success' : 'text-warning' %>
+    <% end %>
+  </td>
+  <td><% if presence.signature %><img src=<%= presence.signature %> style="width: 50px;"><% end %></td>
+  <td><span class="badge <%= presence.style %>"><%= presence.workflow_state.humanize %></span></td>
+  <td><%= link_to 'Voir', presence %></td>
+</tr>

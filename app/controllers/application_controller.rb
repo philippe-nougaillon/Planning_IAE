@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  before_action :authenticate_user!, except: [:index_slide, :index, :occupation, :mentions_légales]
+  before_action :authenticate_user!, except: [:index_slide, :index, :occupation, :mentions_légales, :mes_sessions_intervenant, :signature_intervenant, :signature_intervenant_do]
   before_action :detect_device_format
   before_action :set_layout_variables
   before_action :prepare_exception_notifier
@@ -23,10 +23,12 @@ class ApplicationController < ActionController::Base
 
   private
     def set_layout_variables
-      @ctrl = params[:controller]
-      @action = params[:action]
       @sitename ||= request.subdomains.any? ? request.subdomains(0).first.upcase : 'IAE-Planning DEV'
-      @sitename.concat(' v4.26.a')
+      @sitename.concat(' v4.27')
+
+      if user_signed_in? && ( current_user.intervenant?  || current_user.enseignant? )
+        @intervenant_user_id = Intervenant.where("LOWER(intervenants.email) = ?", current_user.email.downcase).first.id
+      end
     end
 
     def detect_device_format
@@ -47,6 +49,18 @@ class ApplicationController < ActionController::Base
       request.env["exception_notifier.exception_data"] = {
         current_user: current_user
       }
+    end
+
+    def after_sign_in_path_for(resource)
+      stored_location_for(resource) ||
+        if resource.is_a?(User) && resource.étudiant?
+          mes_sessions_etudiant_path
+        elsif resource.is_a?(User) && resource.intervenant?
+          intervenant_id = Intervenant.where("LOWER(intervenants.email) = ?", current_user.email.downcase).first.id
+          mes_sessions_intervenant_path
+        else
+          super
+        end
     end
 
 end

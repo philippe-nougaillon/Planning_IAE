@@ -1,0 +1,27 @@
+<h1 class="text-dark">Session</h1>
+
+<%= render partial: 'ma_session', locals: {cour: @cour} %>
+
+<h2 class="text-dark">Signature présence</h2>
+<h4 class="text-dark"><%= @presence.intervenant.nom_prenom %></h4>
+
+<%= form_with(model: @presence, url: signature_intervenant_do_cours_path(presence_slug: params[:presence_slug])) do |form| %>
+
+  <%= form.hidden_field :id %>
+  <%= form.text_field :signature, style: 'display: none' %>
+  
+  <div id="signature">
+    <div class="wrapper">
+      <canvas id="signature-pad" class="signature-pad" style="border: 1px #ccc solid;" width=350 height=300></canvas>
+    </div>
+
+    <div style="margin-top: 8px;">
+      <button id="save" class="btn btn-success mr-3">Enregistrer</button>
+      <a id="clear">Effacer</a>
+    </div>
+  </div>
+<% end %>
+
+<p class="my-4"><%= link_to 'Retour', mes_sessions_intervenant_path(presence_slug: @presence.slug) %></p>
+
+<%= render 'signature_pad' %>

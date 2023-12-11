@@ -10,10 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_09_18_100740) do
+ActiveRecord::Schema.define(version: 2023_11_28_083302) do
 
   # These are extensions that must be enabled in order to support this database
-  enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
 
   create_table "action_text_rich_texts", force: :cascade do |t|
@@ -315,6 +314,24 @@ ActiveRecord::Schema.define(version: 2023_09_18_100740) do
     t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable"
   end
 
+  create_table "presences", force: :cascade do |t|
+    t.bigint "cour_id", null: false
+    t.string "signature"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "ip"
+    t.integer "code_ue"
+    t.string "workflow_state"
+    t.bigint "etudiant_id"
+    t.bigint "intervenant_id"
+    t.datetime "signée_le"
+    t.string "slug"
+    t.index ["cour_id"], name: "index_presences_on_cour_id"
+    t.index ["etudiant_id"], name: "index_presences_on_etudiant_id"
+    t.index ["intervenant_id"], name: "index_presences_on_intervenant_id"
+    t.index ["slug"], name: "index_presences_on_slug", unique: true
+  end
+
   create_table "responsabilites", id: :serial, force: :cascade do |t|
     t.integer "intervenant_id"
     t.string "titre"
@@ -398,6 +415,9 @@ ActiveRecord::Schema.define(version: 2023_09_18_100740) do
   add_foreign_key "invits", "cours"
   add_foreign_key "invits", "intervenants"
   add_foreign_key "invits", "users"
+  add_foreign_key "presences", "cours"
+  add_foreign_key "presences", "etudiants"
+  add_foreign_key "presences", "intervenants"
 
   create_view "cours_non_planifies", materialized: true, sql_definition: <<-SQL
       SELECT cours.id

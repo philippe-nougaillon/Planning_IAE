@@ -17,7 +17,7 @@
         <%= number_with_precision(cours.duree, precision: 1, strip_insignificant_zeros: true) %> h
         <% if cours.debut.to_date == Date.today %>
             <div class="progress mt-1" style="width: 100%">
-                <div class="progress-bar bg-warning" 
+                <div class="progress-bar bg-primary" 
                     role="progressbar" aria-valuemin="0" aria-valuemax="100" 
                     style="width: <%= cours.progress_bar_pct3 %>%; opacity: 0.5;">
                 </div>
@@ -71,6 +71,16 @@
                     <i title="Manque <%= cours.formation.nbr_etudiants - cours.salle.places %> place.s">
                         <%= fa_icon 'exclamation-circle' %>
                     </i>
+                <% end %>
+            <% end %>
+            <% if user_signed_in? && (current_user.gestionnaire? || current_user.admin?) &&  %>
+                <% étudiants_présents = cours.presences.where.not(etudiant_id: nil).where(workflow_state: ['signée', 'validée']).count %>
+
+                <%= fa_icon 'file-signature' %>
+                <%= link_to presences_path(cours_id: cours.id), title: 'présences signées / pas signées' do %>
+                    <%= étudiants_présents %>
+                    /
+                    <%= cours.etudiants.count - étudiants_présents %>
                 <% end %>
             <% end %>
         <% else %>

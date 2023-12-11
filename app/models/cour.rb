@@ -12,6 +12,8 @@ class Cour < ApplicationRecord
   belongs_to :salle, optional: true
 
   has_many :invits
+  has_many :presences
+  has_many :etudiants, through: :formation
 
   validates :debut, :formation_id, :intervenant_id, :duree, presence: true
   validate :check_chevauchement_intervenant
@@ -600,6 +602,16 @@ class Cour < ApplicationRecord
   #       .where("cours.debut BETWEEN ? AND ?", Date.today, Date.today + 30.days)
   #       .count
   # end
+
+  def signable_etudiant?
+    now = ApplicationController.helpers.time_in_paris_selon_la_saison
+    (self.debut < now && self.debut + 30.minute > now)
+  end
+
+  def signable_intervenant?
+    now = ApplicationController.helpers.time_in_paris_selon_la_saison
+    (now > self.debut + 30.minute)
+  end
 
   private
     def update_date_fin

@@ -32,6 +32,21 @@ class UsersController < ApplicationController
       @users = @users.where(role: params[:role])
     end
 
+    if params[:mauvais_email].present?
+      mauvais_email_users_ids = []
+      User.where(role: 'étudiant').each do |étudiant|
+        unless Etudiant.find_by("LOWER(etudiants.nom) = ? AND LOWER(etudiants.prénom) = ?", étudiant.try(:nom).try(:downcase), étudiant.try(:prénom).try(:downcase)).nil?
+          mauvais_email_users_ids << étudiant.id if Etudiant.find_by("LOWER(etudiants.email) = ?", étudiant.email.downcase).nil?
+        end
+      end
+      User.where(role: ['intervenant', 'enseignant']).each do |intervenant|
+        unless Intervenant.find_by("LOWER(intervenants.nom) = ? AND LOWER(intervenants.prenom) = ?", intervenant.try(:nom).try(:downcase), intervenant.try(:prénom).try(:downcase)).nil?
+          mauvais_email_users_ids << intervenant.id if Intervenant.find_by("LOWER(intervenants.email) = ?", intervenant.email.downcase).nil?
+        end
+      end
+      @users = @users.where(id: mauvais_email_users_ids)
+    end
+
     session[:column] = params[:column]
     session[:direction] = params[:direction]
 

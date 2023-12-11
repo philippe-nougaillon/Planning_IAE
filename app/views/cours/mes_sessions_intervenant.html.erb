@@ -1,0 +1,18 @@
+<h4 class="text-dark my-4"><%= fa_icon 'calendar-day' %> <%= l(Date.today, format: :long).humanize %></h4>
+
+<% if @cours.any?%>
+  <% @cours.each do |cour| %>
+    <%= render partial: 'ma_session_intervenant', locals: {cour: cour} %>
+  <% end %>
+<% else %>
+  <div class="alert alert-info">
+    <h4 class="alert-heading">Aucun cours aujourd'hui !</h4>
+    <p>
+      Vous n'avez pas de cours planifiés pour aujourd'hui.
+    </p>
+  </div>
+<% end %>
+
+<% if user_signed_in? %>
+  <%= link_to 'Voir mes prochains cours...', cours_path(start_date: Date.tomorrow, intervenant_id: @intervenant.id, intervenant: @intervenant.nom + " " + @intervenant.prenom) %>
+<% end %>

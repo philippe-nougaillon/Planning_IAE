@@ -19,11 +19,11 @@
   
   <div class="row">
     <div class="col-sm-3">
-      <h2>
-        <span style="opacity: 80%;">
-          <%= fa_icon 'chalkboard-teacher 2x' %>
-        </span>
-      </h2>
+      <% if @intervenant.photo.present? %>
+        <img src=<%= @intervenant.photo %> width=250 loading='eager' class="shadow">
+      <% else %>
+        <%= image_tag 'planning_intervenant.jpg', height: 150, class: 'shadow' %>
+      <% end %>
     </div>  
 
     <div class="col-sm-5">
