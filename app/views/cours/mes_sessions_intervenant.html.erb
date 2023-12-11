@@ -13,4 +13,6 @@
   </div>
 <% end %>
 
-<%= link_to 'Voir mes prochains cours', cours_path(start_date: Date.tomorrow) %>
+<% if user_signed_in? %>
+  <%= link_to 'Voir mes prochains cours...', cours_path(start_date: Date.tomorrow, intervenant_id: @intervenant.id, intervenant: @intervenant.nom + " " + @intervenant.prenom) %>
+<% end %>

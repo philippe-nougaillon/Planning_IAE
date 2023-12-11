@@ -1,4 +1,4 @@
-<div class="card shadow-sm p-2 mb-4" style="border-left:6px; border-left-style:solid; border-left-color:<%= cour.formation.color %>;">
+<div class="card shadow-sm px-2 py-3 mb-4" style="border-left:6px; border-left-style:solid; border-left-color:<%= cour.formation.color %>;">
   <div class="d-flex mb-2">
     <% if cour.intervenant.photo.present? %>
       <%= image_tag cour.intervenant.photo, class:"border rounded mr-3", height: 75 %>
@@ -14,8 +14,8 @@
           </span>
         </p>
       </div>
-      <p class="mb-0 font-weight-bold"><%= cour.nom_ou_ue %></p>
       <p class="mb-0"><%= cour.intervenant.nom_prenom %></p>
+      <p class="mb-0 font-weight-bold"><%= cour.nom_ou_ue %></p>
     </div>
   </div>
   <div class="progress mt-2" style="width: 100%">
@@ -27,11 +27,11 @@
 
   <% if user_signed_in? && current_user.étudiant? && presence = cour.presences.find_by(etudiant_id: @etudiant.id) %>
     <% if presence.validée? || presence.signée? %>
-      <div class="alert alert-success mt-3" role="alert">
+      <div class="alert alert-success mt-3 mb-0" role="alert">
         Présence signée à <%= l presence.signée_le, format: :heures_log %>
       </div>
     <% elsif presence.manquante? || presence.rejetée? %>
-      <div class="alert alert-danger mt-3" role="alert">
+      <div class="alert alert-danger mt-3 mb-0" role="alert">
         Vous avez été absent(e) à cette séance
       </div>
     <% end %>

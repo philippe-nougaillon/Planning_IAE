@@ -24,21 +24,4 @@
 
 <p class="my-4"><%= link_to 'Retour', mes_sessions_intervenant_path(presence_slug: @presence.slug) %></p>
 
-<script>
-  var signaturePad = new SignaturePad(document.getElementById('signature-pad'));
-  var signatureField = document.getElementById('presence_signature');
-  var saveButton = document.getElementById('save');
-  var cancelButton = document.getElementById('clear');
-
-  saveButton.addEventListener('click', function (event) {
-    if (signaturePad.isEmpty()){
-      event.preventDefault();
-    } else {
-      signatureField.setAttribute('value', signaturePad.toDataURL("image/svg+xml"));
-    }
-  });
-
-  cancelButton.addEventListener('click', function (event) {
-    signaturePad.clear();
-  });
-</script>
+<%= render 'signature_pad' %>

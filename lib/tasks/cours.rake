@@ -108,6 +108,7 @@ namespace :cours do
         MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: intervenant.email, subject: "Cours d'aujourd'hui")
 
         puts 'email envoyé à ' + intervenant.nom_prenom
+        puts 'slug : ' + presence.slug
       end
     end
   end

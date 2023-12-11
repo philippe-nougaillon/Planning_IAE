@@ -1,6 +1,7 @@
 <div class="card shadow-sm p-2 mb-4" style="border-left:6px; border-left-style:solid; border-left-color:<%= cour.formation.color %>;">
   <div class="d-flex justify-content-between">
     <p class="mb-0"><b><%= l(cour.debut, format: :heures_min) %></b> - <%= l(cour.fin, format: :heures_min) %></p>
+    <br><br>
     <p class="mb-0">
       <span class="badge badge-pill badge-<%= cour.style %>">
         <%= cour.salle.nom %>
@@ -8,7 +9,7 @@
     </p>
   </div>
   <div class="mb-2">
-    <p class="mb-0"><%= cour.formation.nom.humanize %></p>
+    <p class="mb-0 font-weight-bold"><%= cour.formation.nom.humanize %></p>
     <p class="mb-0"><%= cour.nom_ou_ue %></p>
     <p class="mb-0">(<%= cour.etudiants.count %> étudiants prévus)</p>
   </div>
@@ -53,7 +54,7 @@
       <% end %>
     </div>
 
-    <% if (0..100).include?(cour.progress_bar_pct3) && cour.presences.where(intervenant_id: @intervenant.id).where.not(workflow_state: 'attente signature').empty? %>
+    <% if cour.signable_intervenant? && params[:presence_slug].present? && cour.presences.where(intervenant_id: @intervenant.id).where.not(workflow_state: 'attente signature').empty? %>
       <%= link_to 'Signer la feuille de présence', signature_intervenant_cours_path(presence_slug: params[:presence_slug]), class: 'btn btn-warning btn-lg mt-4' %>
     <% end %>
   <% end %>
