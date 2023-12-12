@@ -76,11 +76,11 @@
             <% if user_signed_in? && (current_user.gestionnaire? || current_user.admin?) &&  %>
                 <% étudiants_présents = cours.presences.where.not(etudiant_id: nil).where(workflow_state: ['signée', 'validée']).count %>
 
-                <%= fa_icon 'file-signature' %>
-                <%= link_to presences_path(cours_id: cours.id), title: 'présences signées / pas signées' do %>
-                    <%= étudiants_présents %>
-                    /
-                    <%= cours.etudiants.count - étudiants_présents %>
+                <% if étudiants_présents > 0 %>
+                    <%= fa_icon 'file-signature' %>
+                    <%= link_to presences_path(cours_id: cours.id), title: 'présences signées / pas signées' do %>
+                        <%= étudiants_présents %> / <%= cours.etudiants.count %>
+                    <% end %>
                 <% end %>
             <% end %>
         <% else %>
