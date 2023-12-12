@@ -1,86 +1,85 @@
-<div class="pb-2 mt-4 mb-3 border-top">
-  <div class="btn-group float-right">
-    <%= link_to edit_etudiant_path(@etudiant), class: 'btn btn-sm btn-outline-primary' do %>
-      <%= fa_icon 'edit' %> Modifier
-    <% end %>
-
-    <a href="#audit" data-toggle="collapse" class='btn btn-sm btn-outline-primary'>
-      <%= fa_icon 'search' %> Audit
-    </a>
-
-    <%= link_to etudiants_path, class: 'btn btn-sm btn-outline-primary' do %>
-      <%= fa_icon 'list' %> Retour
-    <% end %>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-sm-2">
-    <h2>
-      <br>
-      <%= fa_icon 'graduation-cap 3x' %>
-    </h2>
-  </div>
-
-  <div class="col-sm-6">
-    <h3>
-      <small class="text-muted">Civilité</small><br>
-      <%= @etudiant.civilité %>
-    </h3>
-    <h1>
-      <small class="text-muted">Nom</small><br>
-      <%= @etudiant.nom %>
-    </h1>
-    <h3>
-      <small class="text-muted">Prénom</small><br>
-      <%= @etudiant.prénom %>
-    </h3>
-    <h3>
-      <small class="text-muted">Email</small><br>
-      <%= @etudiant.email %>
-    </h3>
-
-    <h3>
-      <small class="text-muted">Mobile</small><br>
-      <%= @etudiant.mobile %>
-    </h3>
-
-  </div>
-
-  <div class="col-sm-4">
-        <h3>
-      <small class="text-muted">Formation</small><br>
-      <% if @etudiant.formation_id %>
-          <% formation = Formation.unscoped.find(@etudiant.formation_id) %>
-          <%= link_to formation.nom, formation %>
+<div class="card shadow-sm p-3 mt-3">
+  <div class='mb-4'>
+    <div class="btn-group float-right">
+      <%= link_to edit_etudiant_path(@etudiant), class: 'btn btn-sm btn-outline-primary' do %>
+        <%= fa_icon 'edit' %> Modifier
       <% end %>
-    </h3>
-    <h3>
-      <small class="text-muted">Statut</small><br>
-      <%= @etudiant.workflow_state %>
-    </h3>
-    <br> 
+
+      <a href="#audit" data-toggle="collapse" class='btn btn-sm btn-outline-primary'>
+        <%= fa_icon 'search' %> Audit
+      </a>
+
+      <%= link_to etudiants_path, class: 'btn btn-sm btn-outline-primary' do %>
+        <%= fa_icon 'list' %> Retour
+      <% end %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-2">
+      <h2 class='text-center'>
+        <%= fa_icon 'graduation-cap 3x' %>
+      </h2>
+    </div>
+
+    <div class="col-sm-6">
+      <h3>
+        <small class="text-muted">Civilité</small><br>
+        <%= @etudiant.civilité %>
+      </h3>
+      <h1>
+        <small class="text-muted">Nom</small><br>
+        <%= @etudiant.nom %>
+      </h1>
+      <h3>
+        <small class="text-muted">Prénom</small><br>
+        <%= @etudiant.prénom %>
+      </h3>
+      <h3>
+        <small class="text-muted">Email</small><br>
+        <%= @etudiant.email %>
+      </h3>
+
+      <h3>
+        <small class="text-muted">Mobile</small><br>
+        <%= @etudiant.mobile %>
+      </h3>
+
+    </div>
+
+    <div class="col-sm-4">
+      <h4>
+        <small class="text-muted">Formation</small><br>
+        <% if @etudiant.formation_id %>
+            <% formation = Formation.unscoped.find(@etudiant.formation_id) %>
+            <%= link_to formation.nom, formation %>
+        <% end %>
+      </h3>
+      <h3>
+        <small class="text-muted">Statut</small><br>
+        <%= @etudiant.workflow_state %>
+      </h3>
+      <br> 
+    </div>
+  </div>
+
+  <div id="audit" class="collapse">
+    <br><br>
+
+    <h4></span> Audit des modifications</h4>
+
+    <table class="table table-bordered table-hover table-condensed">
+      <thead>
+        <th>Date</th>
+        <th>Utilisateur</th>
+        <th>Type</th>
+        <th>Record_id</th>
+        <th>Action</th>
+        <th>Modifications</th>
+      </thead>
+      <tbody>
+        <%= render partial: 'tools/audit', collection: @etudiant.audits %>
+      </tbody>
+    </table>
   </div>
 </div>
-
-<div id="audit" class="collapse">
-  <br><br>
-
-  <h4></span> Audit des modifications</h4>
-
-  <table class="table table-bordered table-hover table-condensed">
-    <thead>
-      <th>Date</th>
-      <th>Utilisateur</th>
-      <th>Type</th>
-      <th>Record_id</th>
-      <th>Action</th>
-      <th>Modifications</th>
-    </thead>
-    <tbody>
-      <%= render partial: 'tools/audit', collection: @etudiant.audits %>
-    </tbody>
-  </table>
-</div> 
-
-
