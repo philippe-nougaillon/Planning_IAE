@@ -29,13 +29,13 @@
                       options_for_select(@types, params[:type]), include_blank:true, onchange:'this.form.submit()', class:"form-control" %>
               </div>
 
-              <div class="col-sm-2">
+              <div class="col-sm-1">
                 <%= label_tag :action_name, "Action" %>
                 <%= select_tag :action_name,
                       options_for_select(@actions, params[:action_name]), include_blank:true, onchange:'this.form.submit()', class:"form-control" %>
               </div>
 
-              <div class="col-sm-2">
+              <div class="col-sm-3">
                   <%= label_tag "Rechercher" %>
                   <div class="input-group">       
                     <%= text_field_tag :search, params[:search], class:"form-control" %>
