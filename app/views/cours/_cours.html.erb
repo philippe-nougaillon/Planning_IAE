@@ -78,7 +78,7 @@
 
                 <% if étudiants_présents > 0 %>
                     <%= fa_icon 'file-signature' %>
-                    <%= link_to presences_path(cours_id: cours.id), title: 'présences signées / pas signées' do %>
+                    <%= link_to presences_path(cours_id: cours.id), title: 'présences signées / nbr étudiants' do %>
                         <%= étudiants_présents %> / <%= cours.etudiants.count %>
                     <% end %>
                 <% end %>

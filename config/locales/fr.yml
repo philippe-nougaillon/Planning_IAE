@@ -277,3 +277,222 @@ fr:
         other: "%{count} %{model} affiché(e)s"
     page_gap: "&hellip;"
     previous_label: "← précédent"
+  devise:
+    sessions:
+      new:
+        title: Connexion
+    passwords:
+      new:
+        title: Mot de passe oublié
+      edit:
+        title: Changer votre mot de passe
+  users:
+    index:
+      title: Liste des utilisateurs
+    show:
+      title: Utilisateur
+    new:
+      title: Nouvel utilisateur
+    edit:
+      title: Modification utilisateur
+    registrations:
+      new:
+        title: Inscription
+  pages:
+    mentions_légales:
+      title: Mentions légales
+  cours:
+    index:
+      title: Liste des cours
+    show:
+      title: Cours
+    new:
+      title: Nouveau cours
+    edit:
+      title: Modification d'un cours
+    mes_sessions_etudiant:
+      title: Ma journée
+    mes_sessions_intervenant:
+      title: Ma journée
+    signature_etudiant:
+      title: Signature présence
+    signature_intervenant:
+      title: Signature présence
+  salles:
+    occupation:
+      title: Occupation des salles
+    index:
+      title: Salles
+    show:
+      title: Salle
+    new:
+      title: Ajouter une salle
+    edit:
+      title: Modification d'une salle
+  formations:
+    index:
+      title: Liste des formations
+    show:
+      title: Formation
+    new:  
+      title: Nouvelle formation
+    edit:
+      title: Modification d'une formation
+  intervenants:
+    index:
+      title: Liste des intervenants
+    show:
+      title: Intervenant
+    new:
+      title: Nouvel intervenant
+    edit:
+      title: Modification d'un intervenant
+  etudiants:
+    index:
+      title: Liste des étudiants
+    show:
+      title: Étudiant
+    new:
+      title: Nouvel étudiant
+    edit:
+      title: Modification d'un étudiant
+  guide:
+    index:
+      title: Aide-mémoire de l'application Planning
+  tools:
+    index:
+      title: Outils
+    rechercher:
+      title: Chercher
+    creation_cours:
+      title: Réservation de créneaux horaires
+    taux_occupation_jours:
+      title: Taux d'occupation jours
+    taux_occupation_salles:
+      title: Taux d'occupation salles
+    etats_services:
+      title: États de services
+    liste_surveillants_examens:
+      title: Liste des surveillances d'examens
+    import:
+      title: Import de cours
+    import_intervenants:
+      title: Import des intervenants
+    import_etudiants:
+      title: Import des étudiants
+    export:
+      title: Export de cours
+    export_intervenants:
+      title: Export des intervenants
+    export_etudiants:
+      title: Export des étudiants
+    export_formations:
+      title: Export des formations
+    export_vacations:
+      title: Export des vacations
+    acces_intervenants:
+      title: Liste des intervenants sans accès
+    import_utilisateurs:
+      title: Import des utilisateurs
+    export_utilisateurs:
+      title: Export des utilisateurs
+    swap_intervenant:
+      title: Intervertir intervenants
+    audits:
+      title: Audit des modifications
+    nouvelle_saison:
+      title: Réservations en masse
+    rappel_des_cours:
+      title: Rappel des cours
+    audit_cours:
+      title: Liste des cours "à booker"
+  agents:
+    index:
+      title: Agents
+    show:
+      title: Agent
+    new:
+      title: Nouvel agent
+    edit:
+      title: Modification agent
+  invits:
+    index:
+      title: Invitations
+    show:
+      title: Invitation
+    new:
+      title: Nouvelle invitation
+    edit:
+      title: Modification invitation
+  mail_logs:
+    index: 
+      title: Mail logs
+    show:
+      title: Mail log
+    new:
+      title: Nouveau mail log
+    edit:
+      title: Modification mail log
+  import_logs:
+    index:
+      title: Import logs
+    show:
+      title: Import log
+    new:
+      title: Nouvel import log
+    edit:
+      title: Modification import log
+  presences:
+    index:
+      title: Présences
+    show:
+      title: Présence
+    new:
+      title: Nouvelle présence
+    edit:
+      title: Modification présence
+  envoi_logs:
+    index:
+      title: Envoi logs
+    show:
+      title: Envoi log
+    new:
+      title: Nouvel envoi log
+    edit:
+      title: Modification envoi log
+  fermetures:
+    index:
+      title: Fermetures
+    show:
+      title: Fermeture
+    new:
+      title: Nouvelle fermeture
+    edit:
+      title: Modification d'un jour de fermeture
+  ouvertures:
+    index:
+      title: Horaires d'ouverture
+    show:
+      title: Ouverture
+    new:
+      title: Nouvelle ouverture
+    edit:
+      title: Modification Ouverture
+  alerts:
+    index:
+      title: Liste des Alertes
+    show:
+      title: Alerte
+    new:
+      title: Nouvelle Alerte
+    edit:
+      title: Modifier Alerte
+  dossiers:
+    index:
+      title: Liste des dossiers de candidature
+    show:
+      title: Dossier de candidature
+    new:
+      title: Nouveau dossier
+    edit:
+      title: Modification Dossier
