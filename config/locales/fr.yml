@@ -303,7 +303,7 @@ fr:
       title: Mentions légales
   cours:
     index:
-      title: Planning des cours
+      title: Liste des cours
     show:
       title: Cours
     new:
