@@ -41,10 +41,12 @@
             gtag('js', new Date());
             gtag('config', 'UA-89540844-1');
         </script>
+
+        <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
     </head>
 
     <body>
-        <nav class="navbar bg-light mb-3">
+        <nav class="navbar mb-3 <%= ENV["STAGING_COLOR_MODE"].present? ? ENV["STAGING_COLOR_MODE"] : 'bg-light' %>">
             <a class="navbar-brand" href="/">
                 <%= image_tag('logo_iae@195.png', height: 40, alt: 'logo IAE') %>
             </a>
@@ -57,9 +59,19 @@
             <!-- Navbar links -->
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav">
-                    <%= navbar_nav_item('cours', 'calendar-alt', cours_path) %>
-                    <%= navbar_nav_item('salles', 'chalkboard', occupation_salles_path) %>
-                    <% if user_signed_in? %>
+                    <% if user_signed_in? %> 
+                        <% if current_user.étudiant? %>
+                            <%= navbar_nav_item('ma journée', 'calendar-day', mes_sessions_etudiant_path, nil, 'mes_sessions_etudiant') %>
+                            <%= navbar_nav_item('cours', 'calendar-alt', cours_path, 'Planning', 'index') %>
+                        <% elsif current_user.intervenant? || current_user.enseignant? %>
+                            <%= navbar_nav_item('ma journée', 'calendar-day', mes_sessions_intervenant_path, nil, 'mes_sessions_intervenant') %>
+                            <%= navbar_nav_item('cours', 'calendar-alt', cours_path, 'Planning', 'index') %>
+                        <% else %>
+                            <%= navbar_nav_item('cours', 'calendar-alt', cours_path, 'Planning') %>
+                        <% end %>
+                        <% unless current_user.étudiant? %>
+                            <%= navbar_nav_item('salles', 'chalkboard', occupation_salles_path) %>
+                        <% end %>
                         <li class="nav-item">
                             <%= link_to destroy_user_session_path, method: :delete, class: "nav-link text-dark" do %><i class="fas fa-fw fa-sign-out-alt"></i></span> Déconnexion<% end %> 
                         </li>
@@ -71,6 +83,12 @@
         </nav>
 
         <div class="container">
+            <% flash.each do |name, msg| %>
+                <%= content_tag :div, class: "alert mt-3 alert-#{ (name == "alert" || name == "error") ? "danger" : "success" } alert-dismissable", role: "alert" do %>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="bouton du menu"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <%= msg.to_s.html_safe %>
+                <% end %>
+            <% end %>
             <%= yield %>
         </div>
     </body>

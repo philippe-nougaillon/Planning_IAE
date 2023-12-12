@@ -64,6 +64,8 @@
         </div>
       </div>
 
+      <%= f.text_field :photo %>
+
       <%= f.text_field :adresse %>
 
       <div class="row">        
@@ -74,10 +76,7 @@
           <%= f.text_field :ville %>
         </div>
       </div>
-    
-      <!---
-      <%= f.file_field :photo %>
-      -->
+
 
       <% if current_user.admin? %>
         <div class="row">        

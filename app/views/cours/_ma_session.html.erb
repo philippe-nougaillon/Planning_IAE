@@ -1,0 +1,44 @@
+<div class="card shadow-sm px-2 py-3 mb-4" style="border-left:6px; border-left-style:solid; border-left-color:<%= cour.formation.color %>;">
+  <div class="d-flex mb-2">
+    <% if cour.intervenant.photo.present? %>
+      <%= image_tag cour.intervenant.photo, class:"border rounded mr-3", height: 75 %>
+    <% else %>
+      <%= image_tag 'planning_intervenant.jpg', class:"border rounded mr-3", width: 75, height: 75 %>
+    <% end %>
+    <div class="w-100">
+      <div class="d-flex justify-content-between">
+        <p class="mb-0"><b><%= l(cour.debut, format: :heures_min) %></b> - <%= l(cour.fin, format: :heures_min) %></p>
+        <p class="mb-0">
+          <span class="badge badge-pill badge-<%= cour.style %>">
+            <%= cour.salle.nom %>
+          </span>
+        </p>
+      </div>
+      <p class="mb-0"><%= cour.intervenant.nom_prenom %></p>
+      <p class="mb-0 font-weight-bold"><%= cour.nom_ou_ue %></p>
+    </div>
+  </div>
+  <div class="progress mt-2" style="width: 100%">
+    <div class="progress-bar bg-primary" 
+        role="progressbar" aria-valuemin="0" aria-valuemax="100" 
+        style="width: <%= cour.progress_bar_pct3 %>%; opacity: 0.3;">
+    </div>
+  </div>
+
+  <% if user_signed_in? && current_user.étudiant? && presence = cour.presences.find_by(etudiant_id: @etudiant.id) %>
+    <% if presence.validée? || presence.signée? %>
+      <div class="alert alert-success mt-3 mb-0" role="alert">
+        Présence signée à <%= l presence.signée_le, format: :heures_log %>
+      </div>
+    <% elsif presence.manquante? || presence.rejetée? %>
+      <div class="alert alert-danger mt-3 mb-0" role="alert">
+        Vous avez été absent(e) à cette séance
+      </div>
+    <% end %>
+  <% end %>
+  <% if action_name == 'mes_sessions_etudiant' %>
+    <% if cour.formation_id == 672 && cour.signable_etudiant? && ( cour.presences.where(etudiant_id: @etudiant.id).empty? || cour.presences.where(etudiant_id: @etudiant.id, workflow_state: 'attente signature').any? ) %>
+      <%= link_to 'Signer la feuille de présence', signature_etudiant_cours_path(cour_id: cour.id), class: 'btn btn-warning btn-lg mt-4' %>
+    <% end %>
+  <% end %>
+</div>

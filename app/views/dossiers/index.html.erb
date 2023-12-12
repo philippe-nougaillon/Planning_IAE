@@ -109,7 +109,7 @@
 
 <div class="page_info">
   <%= page_entries_info @dossiers %>
-  <%= @dossiers.reorder(nil).select(:id).group(:workflow_state).count(:id) %>
+  <%= JSON.pretty_generate(@dossiers.reorder(nil).select(:id).group(:workflow_state).count(:id)) %>
 </div>
 
 <%= will_paginate @dossiers, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>

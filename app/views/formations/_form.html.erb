@@ -138,15 +138,18 @@
         <div class="col-sm-2">
           <%= etudiant.text_field :prénom %>
         </div>
+        <div class="col-sm-1">
+          <%= etudiant.text_field :civilité %>
+        </div>
         <div class="col-sm-4">
           <%= etudiant.text_field :email %>
         </div>
         <div class="col-sm-2">
           <%= etudiant.text_field :mobile %>
         </div>
-        <div class="col-sm-2">
+        <div class="col-sm-1">
           <br>
-          <%= etudiant.check_box :_destroy, label:"Supprimer ?" %>
+          <%= etudiant.check_box :_destroy, label:"Suppr?" %>
         </div>
       </div>
     <% end %>

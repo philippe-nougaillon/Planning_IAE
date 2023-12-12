@@ -57,4 +57,28 @@ class CourPolicy < ApplicationPolicy
     (user.admin?) 
   end
 
+  def mes_sessions_etudiant?
+    user && user.étudiant?
+  end
+
+  def mes_sessions_intervenant?
+    true
+  end
+
+  def signature_etudiant?
+    user && ( user.étudiant? && record.signable_etudiant? && record.etudiants.pluck(:email).map{ |email| email.downcase}.include?(user.email.downcase))
+  end
+
+  def signature_etudiant_do?
+    signature_etudiant?
+  end
+
+  def signature_intervenant?
+    true
+  end
+
+  def signature_intervenant_do?
+    signature_intervenant?
+  end
+
 end

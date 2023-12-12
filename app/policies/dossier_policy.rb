@@ -10,7 +10,7 @@ class DossierPolicy < ApplicationPolicy
   end
 
   def show?
-    index?
+    true
   end
 
   def new?
@@ -38,10 +38,6 @@ class DossierPolicy < ApplicationPolicy
   end
 
   def deposer?
-    true
-  end
-
-  def show?
     true
   end
 

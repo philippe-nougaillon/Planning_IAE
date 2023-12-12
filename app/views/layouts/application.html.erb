@@ -47,10 +47,12 @@
       gtag('config', 'UA-89540844-1');
     </script>
 
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+
   </head>
 
   <body>
-    <nav class="navbar navbar-expand navbar-light shadow-sm">
+    <nav class="navbar navbar-expand navbar-light shadow-sm <%= ENV["STAGING_COLOR_MODE"] %>">
       <a class="navbar-brand" href="/" aria-label="logo">
         <%= image_tag("logo_iae@195.png", height: 40, alt: 'logo IAE') %>
       </a>
@@ -58,8 +60,18 @@
       <div class="container-fluid">
         <ul class="navbar-nav">
           <% if user_signed_in? %>
-            <%= navbar_nav_item('cours', 'calendar-alt', cours_path, 'Planning') %>
-            <%= navbar_nav_item('salles', 'chalkboard', occupation_salles_path) %>
+            <% if current_user.étudiant? %>
+              <%= navbar_nav_item('ma journée', 'calendar-day', mes_sessions_etudiant_path, nil, 'mes_sessions_etudiant') %>
+              <%= navbar_nav_item('cours', 'calendar-alt', cours_path, 'Planning', 'index') %>
+            <% elsif current_user.intervenant? || current_user.enseignant? %>
+              <%= navbar_nav_item('ma journée', 'calendar-day', mes_sessions_intervenant_path, nil, 'mes_sessions_intervenant') %>
+              <%= navbar_nav_item('cours', 'calendar-alt', cours_path, 'Planning', 'index') %>
+            <% else %>
+              <%= navbar_nav_item('cours', 'calendar-alt', cours_path, 'Planning') %>
+            <% end %>
+            <% unless current_user.étudiant? %>
+              <%= navbar_nav_item('salles', 'chalkboard', occupation_salles_path) %>
+            <% end %>
             <% if policy(current_user).left_navbar? %>
               <%= navbar_nav_item('formations', 'briefcase', formations_path) %>
               <%= navbar_nav_item('intervenants', 'chalkboard-teacher', intervenants_path) %>
