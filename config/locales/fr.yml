@@ -321,6 +321,14 @@ fr:
   salles:
     occupation:
       title: Occupation des salles
+    index:
+      title: Salles
+    show:
+      title: Salle
+    new:
+      title: Ajouter une salle
+    edit:
+      title: Modification d'une salle
   formations:
     index:
       title: Liste des formations
@@ -443,15 +451,6 @@ fr:
       title: Nouvelle présence
     edit:
       title: Modification présence
-  salles:
-    index:
-      title: Salles
-    show:
-      title: Salle
-    new:
-      title: Ajouter une salle
-    edit:
-      title: Modification d'une salle
   envoi_logs:
     index:
       title: Envoi logs
