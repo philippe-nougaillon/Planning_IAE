@@ -96,8 +96,8 @@ namespace :cours do
   end
 
   desc "Envoyer le lien des sessions des intervenants"
-  task envoyer_sessions_intervenants: :environment do
-    formation = Formation.find(672)
+  task :envoyer_sessions_intervenants, [:formation_id] => :environment do |task, args|
+    formation = Formation.find(args.formation_id)
     now = ApplicationController.helpers.time_in_paris_selon_la_saison
 
     cours = formation.cours.confirmé.where("DATE(debut) = ?", Date.today)
