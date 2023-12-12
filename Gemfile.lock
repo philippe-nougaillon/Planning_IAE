@@ -177,6 +177,8 @@ GEM
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
     orm_adapter (0.5.0)
+    page_title_helper (6.0.0)
+      rails (>= 5.2.0, < 7.1)
     pdf-core (0.9.0)
     pg (1.2.3)
     pg_search (2.3.5)
@@ -359,6 +361,7 @@ DEPENDENCIES
   letter_opener_web
   listen (~> 3.2)
   mailgun-ruby (~> 1.2)
+  page_title_helper (~> 6.0)
   pg
   pg_search
   prawn (~> 2.2)
