@@ -1,4 +1,9 @@
-<tr>
+<tr class='shadow-sm'>
+  <td>
+    <span data-action="click->action#click">
+      <%= check_box_tag "[presences_id][#{presence.id}]", 'yes', false, data: {"target":"action.source"} %>
+    </span>
+  </td>
   <td><%= time_ago_in_words presence.created_at %></td>
   <td><%= l presence.signée_le, format: :short if presence.signée_le %></td>
   <td><%= presence.cour.formation.abrg %></td>

@@ -80,4 +80,8 @@ class User < ApplicationRecord
     self.email == "d.gbedemah@icp.fr"
   end
 
+  def unlinked?
+    return ( self.étudiant? && Etudiant.find_by("LOWER(etudiants.email) = ?", self.email.downcase).nil? ) || ( (self.intervenant? || self.enseignant?) && Intervenant.find_by("LOWER(intervenants.email) = ?", self.email.downcase).nil? )
+  end
+
 end

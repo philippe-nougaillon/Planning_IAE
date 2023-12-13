@@ -57,6 +57,7 @@ class IntervenantsController < ApplicationController
   # GET /intervenants/1
   # GET /intervenants/1.json
   def show
+    @user = @intervenant.linked_user
     @formations = @intervenant.formations.uniq
     @salles_habituelles = @intervenant.cours
                                       .joins(:salle)

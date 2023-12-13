@@ -33,6 +33,10 @@ class PresencePolicy < ApplicationPolicy
     false
   end
 
+  def action?
+    index?
+  end
+
   def valider?
     show?
   end

@@ -147,6 +147,10 @@ class Intervenant < ApplicationRecord
 		end
 	end
 
+	def linked_user
+    return User.intervenant.or(User.enseignant).find_by("LOWER(users.email) = ?", self.try(:email).try(:downcase))
+  end
+
 	private
 	def envoyer_mail
 		if self.status == 'CEV' and self.doublon == false 

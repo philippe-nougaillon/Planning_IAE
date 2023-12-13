@@ -104,4 +104,8 @@ class Etudiant < ApplicationRecord
   def nom_prénom
     self.nom + ' ' + self.prénom
   end
+
+  def linked_user
+    return User.étudiant.find_by("LOWER(users.email) = ?", self.try(:email).try(:downcase))
+  end
 end

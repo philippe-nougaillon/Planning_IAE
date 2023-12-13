@@ -59,7 +59,19 @@
         <small class="text-muted">Statut</small><br>
         <%= @etudiant.workflow_state %>
       </h3>
-      <br> 
+      <br>
+
+      <% if @user && @user.sign_in_count.positive? %>
+        <h4>
+          <small class='text-muted'>Dernière connexion</small>
+          <br>
+          Il y a <%= time_ago_in_words(@user.current_sign_in_at) %>
+        </h4>
+        <p>
+          (<%= @user.sign_in_count %> connexions)
+          <%= link_to 'Voir', user_path(@user) %>
+        </p>
+      <% end %>
     </div>
   </div>
 

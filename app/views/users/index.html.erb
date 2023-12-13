@@ -75,10 +75,10 @@
           <td><%= user.prénom %></td>
           <td>
             <%= user.email %>
-            <% if user.étudiant? && Etudiant.find_by("LOWER(etudiants.email) = ?", user.email.downcase).nil? %>
-              <%= fa_icon 'question-circle', class: 'text-danger' , title: 'L\'utilisateur n\'a pas de profil étudiant associé à cet email' %>
-            <% elsif (user.intervenant? || user.enseignant? ) && Intervenant.find_by("LOWER(intervenants.email) = ?", user.email.downcase).nil? %>
-              <%= fa_icon 'question-circle', class: 'text-danger' , title: 'L\'utilisateur n\'a pas de profil intervenant associé à cet email' %>
+            <% if user.unlinked? %>
+              <%= link_to user.étudiant? ? etudiants_path(search: user.nom) : intervenants_path(nom: user.nom) do %>
+                <%= fa_icon 'question-circle', class: 'text-danger' , title: 'L\'utilisateur n\'a pas de profil étudiant/intervenant associé à cet email' %>
+              <% end %>
             <% end %>
           </td>
           <td><%= user.role.humanize %></td>

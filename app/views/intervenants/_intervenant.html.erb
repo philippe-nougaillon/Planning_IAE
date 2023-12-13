@@ -6,8 +6,15 @@
     </td>
     <td><b><%= link_to intervenant.nom, intervenant %></b></td>
     <td><b><%= intervenant.prenom %></b></td>
-    <td><%= intervenant.titre1 %>
     <td><%= intervenant.try(:status) %></td>
+    <td>
+        <%= intervenant.email %>
+        <% unless intervenant.linked_user %>
+            <%= link_to users_path(search: intervenant.nom) do %>
+                <%= fa_icon 'question-circle', class: 'text-danger' , title: 'L\'intervenant n\'a pas de compte de connexion (utilisateur) associé à cet email' %>
+            <% end %>
+        <% end %>
+    </td>
     <td><%= intervenant.doublon ? "Autorisés" : "" %></td>
     <td><%= intervenant.nbr_heures_statutaire %></td>
     <td><%= l(intervenant.remise_dossier_srh.to_date) if intervenant.remise_dossier_srh %></td>

@@ -1,5 +1,5 @@
 <div class="pb-2 mt-4 mb-2 border-bottom">
-  <h3><%= fa_icon 'file-signature' %> Signatures présences</h3>
+  <h3><%= fa_icon 'file-signature' %> Émargements</h3>
 </div>
 
 <div class="container-fluid p-3 shadow-sm">
@@ -52,31 +52,47 @@
 </div>
 
 <div style="overflow-x: auto;">
-  <table class="table table-striped table-sm">
-    <thead>
-      <tr>
-        <th>Il y a</th>
-        <th>Date signature</th>
-        <th>Formation</th>
-        <th>Intervenant</th>
-        <th>Cours</th>
-        <th>UE</th>
-        <th>Nom / Prénom</th>
-        <th>Signature</th>
-        <th>État</th>
-        <th colspan="2"></th>
-      </tr>
-    </thead>
+  <%= form_tag action_presences_path, name: 'action' do %>
+    <div data-controller="check-all action">
+      <table class="table table-striped table-sm">
+        <thead>
+          <tr>
+            <th>
+              <span data-action="click->action#click">
+                <input type="checkbox" data-target="check-all.all action.source">
+              </span>
+            </th>
+            <th>Il y a</th>
+            <th>Date signature</th>
+            <th>Formation</th>
+            <th>Intervenant</th>
+            <th>Cours</th>
+            <th>UE</th>
+            <th>Nom / Prénom</th>
+            <th>Signature</th>
+            <th>État</th>
+            <th colspan="2"></th>
+          </tr>
+        </thead>
 
-    <tbody>
-      <%= render partial: 'presence', collection: @presences %>
-    </tbody>
-    <tfoot>
-      <tr>
-        <td colspan="10"></td>
-      </tr>
-    </tfoot>
-  </table>
+        <tbody>
+          <%= render partial: 'presence', collection: @presences %>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="10"></td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <div data-target="action.selector">
+          <%= select_tag :action_name, options_for_select(["Signer", "Valider", "Rejeter", "Supprimer"]), 
+                          include_blank: true,
+                          class: "form-control form-control-sm col-sm-3 mb-3 d-inline" %>
+          <%= submit_tag "Valider", class:'btn btn-danger btn-sm ml-3' %>
+      </div>
+    </div>
+  <% end %>
 </div>
 
 <div class="page_info mb-4">
