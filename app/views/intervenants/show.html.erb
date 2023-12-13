@@ -69,6 +69,17 @@
         <small class="text-muted">Courriel</small><br>
       </h3>
       <%= mail_to @intervenant.email %>
+
+      <% if @user && @user.sign_in_count.positive? %>
+        <h3 class='mt-4'>
+          <small class='text-muted'>Dernière connexion</small>
+        </h3>
+        Il y a <%= time_ago_in_words(@user.current_sign_in_at) %>
+        <p>
+          (<%= @user.sign_in_count %> connexions)
+          <%= link_to 'Voir', user_path(@user) %>
+        </p>
+      <% end %>
     </div>
 
     <div class="col-sm-4">

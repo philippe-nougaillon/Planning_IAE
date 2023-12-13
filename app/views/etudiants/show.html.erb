@@ -69,6 +69,7 @@
         </h4>
         <p>
           (<%= @user.sign_in_count %> connexions)
+          <%= link_to 'Voir', user_path(@user) %>
         </p>
       <% end %>
     </div>
