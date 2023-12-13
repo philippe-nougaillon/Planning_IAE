@@ -204,7 +204,7 @@ class Cour < ApplicationRecord
   # ETATS DE SERVICES 
 
   def self.Tarif
-    42.86
+    43.50
   end
 
   def taux_td
@@ -212,9 +212,9 @@ class Cour < ApplicationRecord
     when 'TD'
       Cour.Tarif
     when 'CM'
-      64.29
+      65.22
     when '3xTD'
-      128.58
+      130.50
     else
       0
     end
