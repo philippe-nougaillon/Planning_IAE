@@ -1,11 +1,18 @@
 <tr class='shadow-sm'>
     <td><b><%= link_to etudiant.nom, etudiant %></b></td>
     <td><%= etudiant.prénom %></td>
-    <td><%= etudiant.civilité %></td>
     <td>
         <% if etudiant.formation_id %>
             <% formation = Formation.unscoped.find(etudiant.formation_id) %>
             <%= link_to formation.nom, formation %>
+        <% end %>
+    </td>
+    <td>
+        <%= etudiant.email %>
+        <% unless etudiant.linked_user%>
+            <%= link_to users_path(search: etudiant.nom, role: 0) do %>
+                <%= fa_icon 'question-circle', class: 'text-danger' , title: 'L\'utilisateur n\'a pas de profil étudiant associé à cet email' %>
+            <% end %>
         <% end %>
     </td>
     <td>

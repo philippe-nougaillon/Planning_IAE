@@ -31,6 +31,7 @@ class EtudiantsController < ApplicationController
   # GET /etudiants/1
   # GET /etudiants/1.json
   def show
+    @user = @etudiant.linked_user
   end
 
   # GET /etudiants/new
