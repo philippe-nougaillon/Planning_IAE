@@ -9,9 +9,9 @@
     </td>
     <td>
         <%= etudiant.email %>
-        <% unless etudiant.linked_user%>
+        <% unless etudiant.linked_user %>
             <%= link_to users_path(search: etudiant.nom, role: 0) do %>
-                <%= fa_icon 'question-circle', class: 'text-danger' , title: 'L\'utilisateur n\'a pas de profil étudiant associé à cet email' %>
+                <%= fa_icon 'question-circle', class: 'text-danger' , title: 'L\'étudiant n\'a pas de compte de connexion (utilisateur) associé à cet email' %>
             <% end %>
         <% end %>
     </td>
