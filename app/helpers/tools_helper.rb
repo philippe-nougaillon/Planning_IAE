@@ -75,6 +75,12 @@ module ToolsHelper
                 if audit.action == 'update'
                     pretty_changes << "Utilisateur #{c.last.first.nil? ? 'désactivé' : 'activé'}"
                 end
+            when 'Signature'
+                if audit.action == 'update'
+                    unless c.last.blank? 
+                        pretty_changes << 'Signature présente'
+                    end
+                end
             else
                 if audit.action == 'update'
                     unless c.last.first.blank? && c.last.last.blank?    

@@ -86,6 +86,45 @@ class PresencesController < ApplicationController
     end
   end
 
+  def action
+    return unless params[:presences_id]
+
+    presences = Presence.where(id: params[:presences_id].keys)
+    count = 0
+
+    case params[:action_name]
+    when "Signer"
+      presences.each do |presence|
+        if presence.can_signer? 
+          presence.signer! 
+          count += 1
+        end
+      end
+    when "Valider"
+      presences.each do |presence|
+        if presence.can_valider? 
+          presence.valider! 
+          count += 1
+        end
+      end
+    when "Rejeter"
+      presences.each do |presence|
+        if presence.can_rejeter? 
+          presence.rejeter! 
+          count += 1
+        end
+      end
+    when "Supprimer"
+      presences.each do |presence| 
+        presence.destroy
+        count += 1
+      end
+    end
+    flash[:notice] = "#{count} presence.s modifiée.s"  
+
+    redirect_to presences_path
+  end
+
   def valider
     authorize @presence
     @presence.valider!

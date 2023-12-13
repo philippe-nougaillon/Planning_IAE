@@ -182,6 +182,9 @@ Rails.application.routes.draw do
       get :rejeter
       get :archiver
     end
+    collection do
+      post :action
+    end
   end
 
   controller :pages do

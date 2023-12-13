@@ -58,3 +58,24 @@
 <% end %>
 
 <%= link_to 'Retour', current_user.intervenant? ? mes_sessions_intervenant_path : presences_path, class:'pb-4' %>
+
+<% if user_signed_in? && (current_user.gestionnaire? || current_user.admin?) %>
+  <div class='mt-5'>
+    <h4>Audit des modifications</h4>
+    <table class="table table-bordered table-hover table-sm">
+      <thead>
+        <th>Date</th>
+        <th>Utilisateur</th>            
+        <th>Type</th>
+        <th>Record_id</th>
+        <th>Action</th>
+        <th>Modifications</th>
+      </thead>
+
+      <tbody>
+        <%= render partial: 'tools/audit', collection: @presence.audits %>
+      </tbody>
+
+    </table>
+  </div>
+<% end %>
