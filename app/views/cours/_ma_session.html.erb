@@ -1,4 +1,4 @@
-<div class="card shadow-sm px-2 py-3 mb-4" style="border-left:6px; border-left-style:solid; border-left-color:<%= cour.formation.color %>;">
+<div class="flex-fill card shadow-sm px-2 py-3 mb-4" style="border-left:6px; border-left-style:solid; border-left-color:<%= cour.formation.color %>;">
   <div class="d-flex mb-2">
     <% if cour.intervenant.photo.present? %>
       <%= image_tag cour.intervenant.photo, class:"border rounded mr-3", height: 75 %>
