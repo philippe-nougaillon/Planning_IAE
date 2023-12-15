@@ -10,7 +10,7 @@ class PresencePolicy < ApplicationPolicy
   end
 
   def show?
-    user && user.admin? || ( ( user.intervenant? || user.enseignant? ) && record.cour.intervenant_id == Intervenant.where("LOWER(intervenants.email) = ?", user.email.downcase).first.id) 
+    true
   end
 
   def new?
@@ -38,11 +38,11 @@ class PresencePolicy < ApplicationPolicy
   end
 
   def valider?
-    show?
+    true
   end
 
   def rejeter?
-    show?
+    true
   end
 
 end

@@ -41,10 +41,10 @@ class IntervenantMailer < ApplicationMailer
         end
     end
 
-    def mes_sessions(intervenant, presence_slug)
+    def mes_sessions(intervenant, presence_slug, gestionnaire_email)
         @intervenant = intervenant
         @presence_slug = presence_slug
-        mail(to: @intervenant.email,
+        mail(to: @intervenant.email, cc: gestionnaire_email,
             subject:"[PLANNING] Validation des présences pour la session en cours").tap do |message|
                 message.mailgun_options = {
                     "tag" => [@intervenant.nom, @intervenant.prenom, "presences"]

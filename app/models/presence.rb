@@ -30,7 +30,10 @@ class Presence < ApplicationRecord
     end
     state VALIDEE, meta: {style: 'badge-success'}
     state REJETEE, meta: {style: 'badge-danger'}
-    state MANQUANTE, meta: {style: 'badge-secondary'}
+    state MANQUANTE, meta: {style: 'badge-secondary'} do
+      event :valider, transitions_to: VALIDEE
+      event :rejeter, transitions_to: REJETEE
+    end
   end
 
   def style

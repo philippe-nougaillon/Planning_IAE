@@ -1,4 +1,4 @@
-<div class="card shadow-sm px-2 py-3 mb-4" style="border-left:6px; border-left-style:solid; border-left-color:<%= cour.formation.color %>;">
+<div class="flex-fill card shadow-sm px-2 py-3 mb-4" style="border-left:6px; border-left-style:solid; border-left-color:<%= cour.formation.color %>;">
   <div class="d-flex mb-2">
     <% if cour.intervenant.photo.present? %>
       <%= image_tag cour.intervenant.photo, class:"border rounded mr-3", height: 75 %>
@@ -37,7 +37,7 @@
     <% end %>
   <% end %>
   <% if action_name == 'mes_sessions_etudiant' %>
-    <% if cour.formation_id == 672 && cour.signable_etudiant? && ( cour.presences.where(etudiant_id: @etudiant.id).empty? || cour.presences.where(etudiant_id: @etudiant.id, workflow_state: 'attente signature').any? ) %>
+    <% if (cour.formation_id == 671 || cour.formation_id == 258) && cour.signable_etudiant? && ( cour.presences.where(etudiant_id: @etudiant.id).empty? || cour.presences.where(etudiant_id: @etudiant.id, workflow_state: 'attente signature').any? ) %>
       <%= link_to 'Signer la feuille de présence', signature_etudiant_cours_path(cour_id: cour.id), class: 'btn btn-warning btn-lg mt-4' %>
     <% end %>
   <% end %>

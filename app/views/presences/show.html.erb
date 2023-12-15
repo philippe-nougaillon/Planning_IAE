@@ -57,7 +57,9 @@
   </div>
 <% end %>
 
-<%= link_to 'Retour', current_user.intervenant? ? mes_sessions_intervenant_path : presences_path, class:'pb-4' %>
+<% if user_signed_in? %>
+  <%= link_to 'Retour', current_user.intervenant? ? mes_sessions_intervenant_path : presences_path, class:'pb-4' %>
+<% end %>
 
 <% if user_signed_in? && (current_user.gestionnaire? || current_user.admin?) %>
   <div class='mt-5'>
