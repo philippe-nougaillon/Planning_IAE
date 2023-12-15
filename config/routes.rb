@@ -145,33 +145,33 @@ Rails.application.routes.draw do
 
   get 'guide/index'
   
-  namespace :api, defaults: {format: 'json'} do 
-    namespace :v1 do 
-        resources :cours
-    end 
+  # namespace :api, defaults: {format: 'json'} do 
+  #   namespace :v1 do 
+  #       resources :cours
+  #   end 
 
-    namespace :v2 do 
-        resources :cours do
-          collection do
-            get :in_progress
-          end
-        end
-        resources :etudiants
-    end 
+  #   namespace :v2 do 
+  #       resources :cours do
+  #         collection do
+  #           get :in_progress
+  #         end
+  #       end
+  #       resources :etudiants
+  #   end 
   
-    namespace :v3 do 
-      resources :cours do
-        collection do
-          get :in_progress
-        end
-      end
-    end 
+  #   namespace :v3 do 
+  #     resources :cours do
+  #       collection do
+  #         get :in_progress
+  #       end
+  #     end
+  #   end 
 
-    namespace :v4 do 
-      resources :cours
-    end 
+  #   namespace :v4 do 
+  #     resources :cours
+  #   end 
 
-  end 
+  # end 
 
   resources :alerts
   resources :ouvertures

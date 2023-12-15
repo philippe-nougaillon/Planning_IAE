@@ -3,6 +3,7 @@
 class CoursController < ApplicationController
   include ApplicationHelper
 
+  skip_before_action :authenticate_user!, only: %i[ index ]
   before_action :set_cour, only: [:show, :edit, :update, :destroy]
   before_action :is_user_authorized, except: [:show, :edit, :update, :destroy, :signature_etudiant, :signature_etudiant_do]
 
