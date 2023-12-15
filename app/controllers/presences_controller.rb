@@ -1,4 +1,5 @@
 class PresencesController < ApplicationController
+  skip_before_action :authenticate_user!, only: %i[ show valider rejeter]
   before_action :set_presence, only: %i[ show edit update destroy valider rejeter]
   before_action :is_user_authorized, except: %i[show valider rejeter]
 

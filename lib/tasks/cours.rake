@@ -100,11 +100,12 @@ namespace :cours do
     now = ApplicationController.helpers.time_in_paris_selon_la_saison
 
     cours = Cour.where(formation_id: [258, 671]).confirmé.where("DATE(debut) = ?", Date.today)
+    # cours = Cour.confirmé.where("DATE(debut) = ?", Date.today)
     cours.each do |cour|
       if now > cour.debut + 30.minute && now < cour.debut + 40.minute
         intervenant = cour.intervenant
         presence = Presence.find_or_create_by(cour_id: cour.id, intervenant_id: intervenant.id, code_ue: cour.code_ue)
-        mailer_response = IntervenantMailer.mes_sessions(intervenant, presence.slug).deliver_now
+        mailer_response = IntervenantMailer.mes_sessions(intervenant, presence.slug, cour.formation.try(:user).try(:email)).deliver_now
         MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: intervenant.email, subject: "Validation présences")
 
         puts "email envoyé à #{intervenant.nom_prenom}, email : #{intervenant.email}"
