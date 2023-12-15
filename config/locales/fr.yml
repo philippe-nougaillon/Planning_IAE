@@ -310,14 +310,16 @@ fr:
       title: Nouveau cours
     edit:
       title: Modification d'un cours
+    action:
+      title: Action groupée
     mes_sessions_etudiant:
-      title: Ma journée
+      title: Ma journée (étudiant)
     mes_sessions_intervenant:
-      title: Ma journée
+      title: Ma journée (intervenant)
     signature_etudiant:
-      title: Signature présence
+      title: Émargement étudiant
     signature_intervenant:
-      title: Signature présence
+      title: Émargement intervenant
   salles:
     occupation:
       title: Occupation des salles

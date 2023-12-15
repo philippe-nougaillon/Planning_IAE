@@ -605,12 +605,12 @@ class Cour < ApplicationRecord
 
   def signable_etudiant?
     now = ApplicationController.helpers.time_in_paris_selon_la_saison
-    (self.debut < now && self.debut + 30.minute > now)
+    (self.debut - 10.minutes < now && self.debut + 30.minutes > now)
   end
 
   def signable_intervenant?
     now = ApplicationController.helpers.time_in_paris_selon_la_saison
-    (now > self.debut + 30.minute)
+    (now > self.debut + 30.minutes)
   end
 
   private

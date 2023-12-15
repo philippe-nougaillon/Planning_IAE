@@ -97,10 +97,9 @@ namespace :cours do
 
   desc "Envoyer le lien des sessions des intervenants"
   task envoyer_sessions_intervenants: :environment do
-    formation = Formation.find(672)
     now = ApplicationController.helpers.time_in_paris_selon_la_saison
 
-    cours = formation.cours.confirmé.where("DATE(debut) = ?", Date.today)
+    cours = Cour.where(formation_id: [258, 671]).confirmé.where("DATE(debut) = ?", Date.today)
     cours.each do |cour|
       if now > cour.debut + 30.minute && now < cour.debut + 40.minute
         intervenant = cour.intervenant
