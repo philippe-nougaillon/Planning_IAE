@@ -1,6 +1,7 @@
 # ENCODING: UTF-8
 
 class SallesController < ApplicationController
+  skip_before_action :authenticate_user!, only: %i[ occupation ]
   before_action :set_salle, only: [:show, :edit, :update, :destroy]
   before_action :is_user_authorized, except: %i[ libres ]
 

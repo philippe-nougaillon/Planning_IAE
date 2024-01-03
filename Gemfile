@@ -1,33 +1,51 @@
-source 'https://rubygems.org'
-git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+source "https://rubygems.org"
 
-ruby '2.7.6'
+ruby "3.3.0"
 
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 6.1.7'
+# Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
+gem "rails", "~> 7.1.2"
 
-gem 'pg'
+# The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
+gem "sprockets-rails"
 
-# Use Puma as the app server
-gem 'puma', '~> 4.1'
-# Use SCSS for stylesheets
-gem 'sass-rails', '>= 6'
-# Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
-gem 'webpacker', '~> 4.0'
-# Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
-gem 'turbolinks', '~> 5'
-# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.7'
+# Use postgresql as the database for Active Record
+gem "pg", "~> 1.1"
+
+# Use the Puma web server [https://github.com/puma/puma]
+gem "puma", ">= 5.0"
+
+# Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
+gem "importmap-rails"
+
+# Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
+gem "turbo-rails"
+
+# Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
+gem "stimulus-rails"
+
+# Use Tailwind CSS [https://github.com/rails/tailwindcss-rails]
+gem "tailwindcss-rails"
+
+# Build JSON APIs with ease [https://github.com/rails/jbuilder]
+gem "jbuilder"
+
 # Use Redis adapter to run Action Cable in production
-# gem 'redis', '~> 4.0'
-# Use Active Model has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
+# gem "redis", ">= 4.0.1"
 
-# Use Active Storage variant
-# gem 'image_processing', '~> 1.2'
+# Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
+# gem "kredis"
+
+# Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
+# gem "bcrypt", "~> 3.1.7"
+
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+gem "tzinfo-data", platforms: %i[ windows jruby ]
 
 # Reduces boot times through caching; required in config/boot.rb
-gem 'bootsnap', '>= 1.4.2', require: false
+gem "bootsnap", require: false
+
+# Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
+gem "image_processing", "~> 1.2"
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -36,10 +54,14 @@ group :development, :test do
 end
 
 group :development do
-  # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
-  gem 'web-console', '>= 3.3.0'
+  # Use console on exceptions pages [https://github.com/rails/web-console]
+  gem "web-console"
   gem 'listen', '~> 3.2'
-  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+
+  # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
+  # gem "rack-mini-profiler"
+
+  # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
 
@@ -47,7 +69,6 @@ group :development do
   gem 'letter_opener'
   # A web interface for browsing Ruby on Rails sent emails
   gem 'letter_opener_web'
-
 end
 
 group :test do
@@ -67,7 +88,7 @@ gem 'bootstrap_form', '~> 4.5'
 gem 'simple_calendar', '2.3.0'
 gem 'devise', '>= 4.7.1'
 gem 'devise-i18n'
-gem 'audited', '~> 4.0'
+gem 'audited', '~> 5.4'
 gem 'capture_stdout'
 gem 'will_paginate'
 gem 'will_paginate-bootstrap4'
@@ -98,7 +119,7 @@ gem 'workflow'
 gem 'workflow-activerecord'
 
 # This gem hooks up your Rails application with Roadie to help you generate HTML emails.
-gem 'roadie-rails', '~> 2.2'
+gem 'roadie-rails', '~> 3.1'
 
 gem 'exception_notification'
 
@@ -126,4 +147,4 @@ gem "mailgun-ruby", "~> 1.2"
 
 gem "sortable-for-rails", "~> 1.2"
 
-gem "page_title_helper", "~> 6.0"
+gem "page_title_helper", "~> 7.0"
