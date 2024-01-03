@@ -4,7 +4,7 @@
     <title><%= page_title %><%= @sitename %></title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
+    
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -32,8 +32,9 @@
     <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 
-    <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>  
+    <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
 
     <!-- sinon l'écran flappote !  -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
@@ -134,7 +135,7 @@
       <% end %>
 
       <%= yield %>
-      
+    
       <% if !(user_signed_in?) && current_page?("/users/sign_in") %>
         <footer class="fixed-bottom d-flex justify-content-center text-muted py-2 bg-light">
           <p class="mb-0">
@@ -145,5 +146,4 @@
       <% end %>
     </div>
   </body>
-
 </html>

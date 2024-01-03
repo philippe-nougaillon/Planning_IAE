@@ -1,5 +1,4 @@
 class InvitMailer < ApplicationMailer
-  default from: 'IAE-Paris <planning-iae@philnoug.com>'
 
   def envoyer_invitation
     @invit = params[:invit]

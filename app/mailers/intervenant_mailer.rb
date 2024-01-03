@@ -1,6 +1,5 @@
 class IntervenantMailer < ApplicationMailer
     include Roadie::Rails::Automatic
-    default from: "IAE-Paris <planning-iae@philnoug.com>"
 
     def etat_services(intervenant_id, cours_ids, start_date, end_date)
         @cours = Cour.where(id:cours_ids)
