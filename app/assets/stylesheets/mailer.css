@@ -10,16 +10,17 @@
   @else if $size == big-desktop-up
     @media (min-width: 1800px) { @content; }
 
-body
-  background: #f7f7f7
+body {
+  background: #f7f7f7;
   font-family: sans-serif
+}
 
-.container
-  border: solid
-  border-width: thin
-  border-color: #cccccc
-  border-radius: 8px
-  padding: 1.25rem
+.container {
+  border: solid;
+  border-width: thin;
+  border-color: #cccccc;
+  border-radius: 8px;
+  padding: 1.25rem;
   @include for-size(phone-only)
     margin: 10px
   @include for-size(tablet-portrait-up)
@@ -30,20 +31,24 @@ body
     margin: 10px 250px
   @include for-size(big-desktop-up)
     margin: 10px 400px
+}
 
-hr
-  margin-top: 30px
+hr {
+  margin-top: 30px;
   border: 1px solid #ccc
+}
 
-img, input
-  display: block
-  margin-left: auto
-  margin-right: auto
+img, input {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
 
-input
-  font-size: 16px
-  color: white
-  background-color: royalblue
-  border: none
-  border-radius: 5px
-  padding: 10px
+input {
+  font-size: 16px;
+  color: white;
+  background-color: royalblue;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+}
