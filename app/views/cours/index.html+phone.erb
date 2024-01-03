@@ -14,7 +14,7 @@
 
   <div class="form-group">
     <%= label_tag "Cours à partir du" %>
-    <%= text_field_tag :start_date, params[:start_date], type: 'date', onchange: 'this.form.submit()', class: "form-control form-control-sm", id: 'Cours___partir_du' %>
+    <%= text_field_tag :start_date, params[:start_date], type: 'date', onchange: 'this.form.submit()', class: "input input-bordered input-sm", id: 'Cours___partir_du' %>
   </div>  
   
   <div class="form-group">
@@ -70,7 +70,7 @@
   <%= will_paginate @cours, inner_window: 0, 
                             outer_window: 0, 
                             renderer: WillPaginate::ActionView::BootstrapLinkRenderer,
-                            list_classes: %w(pagination justify-content-center h4) %>
+                            list_classes: %w(pagination justify-center h4) %>
 <% else %>
   <p>
     Aucun cours à afficher...

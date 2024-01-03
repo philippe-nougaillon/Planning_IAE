@@ -20,13 +20,13 @@
       <% else %>
         <p>Période</p>
         
-        <span class="form-control"><%= dossier.période %></span>
+        <span class="input input-bordered"><%= dossier.période %></span>
         <br>
         
       <% end %>
       <%= form.select :intervenant_id, 
                       options_from_collection_for_select(@intervenants, :id, :nom_prenom, @dossier.intervenant_id), 
-                      class: 'form-control select2' %>
+                      class: 'input input-bordered select2' %>
 
     </div>
 

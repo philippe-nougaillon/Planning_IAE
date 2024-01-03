@@ -67,10 +67,10 @@
     <% end %>
 
   <% elsif params[:action_name] == "Changer d'état" %>
-    <div class="d-flex align-items-end mb-4" style="gap: 1rem;">
+    <div class="flex items-end mb-4" style="gap: 1rem;">
       <div>
         <%= label_tag "Nouvel état" %>    
-        <%= select_tag :etat, options_for_select(Cour.etats, params[:etat]), class:"form-control" %>
+        <%= select_tag :etat, options_for_select(Cour.etats, params[:etat]), class:"input input-bordered" %>
       </div>
       <div>
         <%= check_box_tag :notifier %> Notifier les étudiants ?
@@ -81,13 +81,13 @@
     <div class="row">
       <div class="col-sm-2">
         <%= label_tag "Nouvelle date" %>    
-        <%= text_field_tag :new_date, params[:new_date], type:'date', class:"form-control" %>
+        <%= text_field_tag :new_date, params[:new_date], type:'date', class:"input input-bordered" %>
       </div>
 
       <div class="col-sm-1">ou</div>
       <div class="col-sm-6">
         <%= label_tag "Décaler de x jours" %><br>
-        <%= number_field_tag :add_n_days, class: "form-control" %>
+        <%= number_field_tag :add_n_days, class: "input input-bordered" %>
       </div>
     </div>
 
@@ -96,7 +96,7 @@
       <%= label_tag "Nouvel intervenant" %>    
       <%= select_tag :intervenant_id, 
                       options_from_collection_for_select(Intervenant.all, :id, :nom_prenom, params[:intervenant_id]), 
-                      include_blank:true, class:"form-control" %>
+                      include_blank:true, class:"input input-bordered" %>
       <br><br>
     </div>
 
@@ -147,7 +147,7 @@
         <%= select_tag 'invit[intervenant][1]', 
                         options_from_collection_for_select(Intervenant.where.not(doublon:true), :id, :nom_prenom, params[:intervenant_ids]), 
                         include_blank: true,
-                        class: "form-control select2" %>
+                        class: "input input-bordered select2" %>
       </div>
       <div class="col-5">
         <%= label_tag :ue, "U.E." %>
@@ -155,7 +155,7 @@
         <%= select_tag 'invit[ue][1]', 
                         options_from_collection_for_select(@cours.first.formation.unites.order(:num), :id, :num_nom, params[:ue]), 
                         include_blank: true,
-                        class: "form-control select2" %>
+                        class: "input input-bordered select2" %>
       </div>
       <div class="col-4">
         <%= label_tag 'Intitulé du cours' %>
@@ -169,7 +169,7 @@
         <%= select_tag 'invit[intervenant][2]', 
                         options_from_collection_for_select(Intervenant.where.not(doublon:true), :id, :nom_prenom, params[:intervenant_ids]), 
                         include_blank: true,
-                        class: "form-control select2" %>
+                        class: "input input-bordered select2" %>
       </div>
       <div class="col-5">
         <%= label_tag :ue, "U.E." %>
@@ -177,7 +177,7 @@
         <%= select_tag 'invit[ue][2]', 
                         options_from_collection_for_select(@cours.first.formation.unites.order(:code), :id, :num_nom, params[:ue]), 
                         include_blank: true,
-                        class: "form-control select2" %>
+                        class: "input input-bordered select2" %>
       </div>
       <div class="col-4">
         <%= label_tag 'Intitulé du cours' %>
@@ -191,7 +191,7 @@
         <%= select_tag 'invit[intervenant][3]', 
                         options_from_collection_for_select(Intervenant.where.not(doublon:true), :id, :nom_prenom, params[:intervenant_ids]), 
                         include_blank: true,
-                        class: "form-control select2" %>
+                        class: "input input-bordered select2" %>
       </div>
       <div class="col-5">
         <%= label_tag :ue, "U.E." %>
@@ -199,7 +199,7 @@
         <%= select_tag 'invit[ue][3]', 
                         options_from_collection_for_select(@cours.first.formation.unites.order(:num), :id, :num_nom, params[:ue]), 
                         include_blank: true,
-                        class: "form-control select2" %>
+                        class: "input input-bordered select2" %>
       </div>
       <div class="col-4">
         <%= label_tag 'Intitulé du cours' %>
@@ -213,7 +213,7 @@
         <%= select_tag 'invit[intervenant][4]', 
                         options_from_collection_for_select(Intervenant.where.not(doublon:true), :id, :nom_prenom, params[:intervenant_ids]), 
                         include_blank: true,
-                        class: "form-control select2" %>
+                        class: "input input-bordered select2" %>
       </div>
       <div class="col-5">
         <%= label_tag :ue, "U.E." %>
@@ -221,7 +221,7 @@
         <%= select_tag 'invit[ue][4]', 
                         options_from_collection_for_select(@cours.first.formation.unites.order(:num), :id, :num_nom, params[:ue]), 
                         include_blank: true,
-                        class: "form-control select2" %>
+                        class: "input input-bordered select2" %>
       </div>
       <div class="col-4">
         <%= label_tag 'Intitulé du cours' %>
@@ -269,7 +269,7 @@
     <br>
     <div data-controller="check-all action">
       <div data-action="click->action#click">
-        <input id="checkall" type="checkbox" data-target="check-all.all action.source">
+        <input input-bordered id="checkall" type="checkbox" data-target="check-all.all action.source">
         <label for="checkall">Tous ?</label>
       </div>
       <% @cours.each do |c| %>
@@ -303,7 +303,7 @@
     <br>
     <div data-controller="check-all action">
       <div data-action="click->action#click">
-        <input id="checkall" type="checkbox" data-target="check-all.all action.source">
+        <input input-bordered id="checkall" type="checkbox" data-target="check-all.all action.source">
         <label for="checkall">Tous ?</label>
       </div>
       <% @cours.each do |c| %>

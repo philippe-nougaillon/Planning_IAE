@@ -9,21 +9,21 @@
 
       <div class="col-sm-3">
         <%= label_tag "Date" %>    
-        <%= text_field_tag :start_date, params[:start_date], type:'date', onchange:'this.form.submit()', class:"form-control form-control-sm" %>
+        <%= text_field_tag :start_date, params[:start_date], type:'date', onchange:'this.form.submit()', class:"input input-bordered input-sm" %>
       </div>
 
       <div class="col-sm-2">
         <%= label_tag "Batiment" %>
         <%= select_tag :bloc, 
                     options_for_select(Salle.blocs, params[:bloc]), 
-                    include_blank:true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
+                    include_blank:true, onchange:'this.form.submit()', class:"input input-bordered input-sm" %>
       </div>
 
       <div class="col-sm-2">
         <%= label_tag "Salle" %>
         <%= select_tag :salle_id, 
                     options_from_collection_for_select((params[:bloc].blank? ? Salle.all : Salle.where(bloc: params[:bloc])), :id, :nom, params[:salle_id]), 
-                    include_blank:true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
+                    include_blank:true, onchange:'this.form.submit()', class:"input input-bordered input-sm" %>
       </div>
 
       <div class="col-sm-3">

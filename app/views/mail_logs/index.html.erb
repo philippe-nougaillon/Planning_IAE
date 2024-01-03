@@ -13,14 +13,14 @@
         <div class="col-sm-3">
           <%= label_tag :search, "Destinataire" %>
           <div class="input-group">
-            <%= text_field_tag :search, params[:search], include_blank: true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
+            <%= text_field_tag :search, params[:search], include_blank: true, onchange:'this.form.submit()', class:"input input-bordered input-sm" %>
           </div>
         </div>
 
         <div class="col">
           <%= label_tag :search_subject, "Sujet" %>
           <div class="input-group">
-            <%= select_tag :search_subject, options_for_select(MailLog.all.pluck(:subject).uniq.sort, params[:search_subject]), include_blank: true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
+            <%= select_tag :search_subject, options_for_select(MailLog.all.pluck(:subject).uniq.sort, params[:search_subject]), include_blank: true, onchange:'this.form.submit()', class:"input input-bordered input-sm" %>
             <span class="input-group-btn">
                 <%= submit_tag 'Filtrer', class:"btn btn-sm btn-success" %>
             </span>

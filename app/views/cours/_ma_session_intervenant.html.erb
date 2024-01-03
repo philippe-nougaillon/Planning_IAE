@@ -1,5 +1,5 @@
 <div class="card shadow-sm p-2 mb-4" style="border-left:6px; border-left-style:solid; border-left-color:<%= cour.formation.color %>;">
-  <div class="d-flex justify-content-between">
+  <div class="flex justify-between">
     <p class="mb-0"><b><%= l(cour.debut, format: :heures_min) %></b> - <%= l(cour.fin, format: :heures_min) %></p>
     <br><br>
     <p class="mb-0">
@@ -34,7 +34,7 @@
     <% end %>
 
   <% if action_name == 'mes_sessions_intervenant' %>
-    <div class="d-flex flex-wrap justify-content-between justify-content-sm-start mt-2">
+    <div class="flex flex-wrap justify-between sm:justify-start mt-2">
       <% cour.etudiants.order(:nom).each do |etudiant| %>
         <% presence = cour.presences.find_by(etudiant_id: etudiant.id) %>
         <% if presence.present? %>

@@ -11,12 +11,12 @@
 
             <div class="col-sm-3">
                 <%= label_tag "Période du" %>    
-                <%= text_field_tag :start_date, params[:start_date], type:'date', class:"form-control" %>
+                <%= text_field_tag :start_date, params[:start_date], type:'date', class:"input input-bordered" %>
             </div>
 
             <div class="col-sm-3">
                 <%= label_tag "au" %>    
-                <%= text_field_tag :end_date, params[:end_date], type:'date', class:"form-control", onchange:'this.form.submit()' %>
+                <%= text_field_tag :end_date, params[:end_date], type:'date', class:"input input-bordered", onchange:'this.form.submit()' %>
             </div>
 
             <div class="col-sm-3">

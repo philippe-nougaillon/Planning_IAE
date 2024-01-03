@@ -15,7 +15,7 @@
           <div class="col-sm-5">
             <%= label_tag :nom, "Nom/Abrg./Code/Promo" %>
             <div class="input-group">    
-              <%= text_field_tag :nom, params[:nom], include_blank:true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
+              <%= text_field_tag :nom, params[:nom], include_blank:true, onchange:'this.form.submit()', class:"input input-bordered input-sm" %>
               <span class="input-group-btn">
                   <%= submit_tag 'Filtrer', class:"btn btn-sm btn-success" %>
               </span>

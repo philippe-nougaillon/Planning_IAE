@@ -2,7 +2,7 @@
 <h4 class="text-dark my-4"><%= fa_icon 'calendar-day' %> <%= l(Date.today, format: :long).humanize %></h4>
 
 <% if @cours.any?%>
-  <div class='d-flex flex-wrap' style='gap: 20px;'>
+  <div class='flex flex-wrap' style='gap: 20px;'>
     <% @cours.each do |cour| %>
       <%= render partial: 'ma_session', locals: {cour: cour} %>
     <% end %>

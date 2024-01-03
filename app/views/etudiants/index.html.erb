@@ -14,7 +14,7 @@
 
           <div class="col-sm-4">
             <%= label_tag :search, "Nom/Prénom/Email" %>
-            <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class: 'form-control form-control-sm' %>
+            <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class: 'input input-bordered input-sm' %>
           </div>
 
           <div class="col-sm-6">
@@ -22,7 +22,7 @@
             <div class="input-group">
               <%= select_tag :formation_id, 
                                   options_from_collection_for_select(Formation.unscoped.all, :id, :nom, params[:formation_id]), 
-                                  class: 'form-control form-control-sm select2', 
+                                  class: 'input input-bordered input-sm select2', 
                                   include_blank: true, 
                                   onchange: 'this.form.submit()' %>
 

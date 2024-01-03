@@ -18,7 +18,7 @@
 
         <%= label_tag :semaines, "Semaines *", class:"font-weight-bold"  %>
         <%= select_tag :semaines, options_for_select((1..52).to_a), 
-                          include_blank:true, multiple:true, class:"form-control" %>
+                          include_blank:true, multiple:true, class:"input input-bordered" %>
         <br>
 
         <div class="field">
@@ -73,24 +73,24 @@
 
         <%= label_tag :formation_id, "Formation", class:"font-weight-bold"  %>
         <%= select_tag :formation_id, 
-              options_from_collection_for_select(Formation.all, :id, :nom_promo), class:"form-control select2", include_blank:true %>
+              options_from_collection_for_select(Formation.all, :id, :nom_promo), class:"input input-bordered select2", include_blank:true %>
         <br>
 
         <%= label_tag :intervenant_id, "Intervenant", class:"font-weight-bold"  %>
         <%= select_tag :intervenant_id,
-              options_from_collection_for_select(Intervenant.all, :id, :nom_prenom), class:"form-control select2", include_blank:true %>
+              options_from_collection_for_select(Intervenant.all, :id, :nom_prenom), class:"input input-bordered select2", include_blank:true %>
         <br>
 
         <%= label_tag :nom, "Nom du cours *", class:"font-weight-bold"  %>
-        <%= text_field_tag :nom, params[:nom], class:"form-control" %>
+        <%= text_field_tag :nom, params[:nom], class:"input input-bordered" %>
         <br>
 
         <%= label_tag :code_ue, "UE *", class:"font-weight-bold"  %>
-        <%= number_field :code_ue, params[:code_ue], class:"form-control" %>
+        <%= number_field :code_ue, params[:code_ue], class:"input input-bordered" %>
         <br>
 
         <%= label_tag :salle_id, "Salle *", class:"font-weight-bold"  %>
-        <%= select_tag :salle_id, options_from_collection_for_select(Salle.all, :id, :nom_places, params[:salle_id]), include_blank: true, class:"form-control" %>
+        <%= select_tag :salle_id, options_from_collection_for_select(Salle.all, :id, :nom_places, params[:salle_id]), include_blank: true, class:"input input-bordered" %>
         * Optionnel
         <br><br>
 

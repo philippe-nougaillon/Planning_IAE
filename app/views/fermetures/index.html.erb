@@ -14,17 +14,17 @@
 
         <div class="col-sm-2">
           <%= label_tag "Période" %>    
-          <%= select_tag :nom, options_for_select(@noms_périodes, params[:nom]), {include_blank: true, class: 'form-control', onchange: 'this.form.submit()'} %>
+          <%= select_tag :nom, options_for_select(@noms_périodes, params[:nom]), {include_blank: true, class: 'input input-bordered', onchange: 'this.form.submit()'} %>
         </div>
 
         <div class="col-sm-3">
           <%= label_tag "Du" %>    
-          <%= text_field_tag :date_debut, params[:date_debut], type:'date', onchange:'this.form.submit()', class:"form-control" %>
+          <%= text_field_tag :date_debut, params[:date_debut], type:'date', onchange:'this.form.submit()', class:"input input-bordered" %>
         </div>
 
         <div class="col-sm-3">
           <%= label_tag "Au" %>    
-          <%= text_field_tag :date_fin, params[:date_fin], type:'date', onchange:'this.form.submit()', class:"form-control" %>
+          <%= text_field_tag :date_fin, params[:date_fin], type:'date', onchange:'this.form.submit()', class:"input input-bordered" %>
         </div>
 
         <div class="col-sm-2">

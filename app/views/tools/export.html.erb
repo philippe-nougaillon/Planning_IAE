@@ -16,27 +16,27 @@
         <div class="row">
             <div class="col-sm-6">
               <%= label_tag "Du" %>    
-              <%= text_field_tag :start_date, params[:start_date], type:'date', class:"form-control", required: true %>
+              <%= text_field_tag :start_date, params[:start_date], type:'date', class:"input input-bordered", required: true %>
             </div>
 
             <div class="col-sm-6">
               <%= label_tag "Au" %>    
-              <%= text_field_tag :end_date, params[:end_date], type:'date', class:"form-control", required: true %>
+              <%= text_field_tag :end_date, params[:end_date], type:'date', class:"input input-bordered", required: true %>
             </div>
         </div>
  
         <%= label_tag :etat, "Etat" %>
-        <%= select_tag :etat, options_for_select(Cour.etats, params[:etat]), include_blank:true, class:"form-control" %>
+        <%= select_tag :etat, options_for_select(Cour.etats, params[:etat]), include_blank:true, class:"input input-bordered" %>
         <br>
 
         <%= label_tag "Formation" %>    
         <%= select_tag :formation_id, 
-              options_from_collection_for_select(Formation.all, :id, :nom_promo), include_blank:true, class:"form-control select2" %>
+              options_from_collection_for_select(Formation.all, :id, :nom_promo), include_blank:true, class:"input input-bordered select2" %>
         <br>
 
         <%= label_tag :intervenant_id, "Intervenant" %>
         <%= select_tag :intervenant_id,
-              options_from_collection_for_select(Intervenant.all, :id, :nom_prenom), include_blank:true, class:"form-control select2" %>
+              options_from_collection_for_select(Intervenant.all, :id, :nom_prenom), include_blank:true, class:"input input-bordered select2" %>
 
         <%= check_box_tag :binome, true, true %>
         <%= label_tag "Exporter les binômes ?" %>

@@ -12,14 +12,14 @@
     <div class="row">
         <div class="col-sm-3">
             <%= label_tag "Cours du" %>
-            <%= text_field_tag :start_date, params[:start_date], type: 'date', class: "form-control", required: true  %>
+            <%= text_field_tag :start_date, params[:start_date], type: 'date', class: "input input-bordered", required: true  %>
         </div>
 
         <div class="col-sm-3">
             <%= label_tag "Au" %>
-            <%= text_field_tag :end_date, params[:end_date], type: 'date', class: "form-control", required: true %>
+            <%= text_field_tag :end_date, params[:end_date], type: 'date', class: "input input-bordered", required: true %>
         </div>
-        <div class="col-sm-3 align-self-end">
+        <div class="col-sm-3 self-end">
             <%= submit_tag 'Rechercher', class: 'btn btn-primary' %>
         </div>
     </div>

@@ -11,12 +11,12 @@
 
         <div class="col-sm-2">
             <%= label_tag "Du" %>    
-            <%= text_field_tag :start_date, params[:start_date], type: 'date', class: "form-control" %>
+            <%= text_field_tag :start_date, params[:start_date], type: 'date', class: "input input-bordered" %>
         </div>
 
         <div class="col-sm-2">
             <%= label_tag "Au" %>    
-            <%= text_field_tag :end_date, params[:end_date], type: 'date', class: "form-control" %>
+            <%= text_field_tag :end_date, params[:end_date], type: 'date', class: "input input-bordered" %>
         </div>
 
         <div class="col-sm-2">
@@ -24,7 +24,7 @@
             <%= select_tag :status, 
                 options_for_select(Intervenant.statuses, 
                 params[:status]), include_blank:true,
-                class: "form-control", onchange: 'this.form.submit()' %>
+                class: "input input-bordered", onchange: 'this.form.submit()' %>
         </div>
 
         <div class="col-sm-4">
@@ -34,7 +34,7 @@
                                     options_from_collection_for_select(@intervenants_for_select, :id, :nom_prenom, params[:intervenant_id]), 
                                     include_blank:true, 
                                     onchange:'this.form.submit()', 
-                                    class: "form-control" %>
+                                    class: "input input-bordered" %>
             <% end %>
        </div>
     </div>

@@ -9,7 +9,7 @@
 
         <div class="col-sm-4">
           <%= label_tag :search, "Nom/Prénom/Email" %>
-          <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
+          <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class:"input input-bordered input-sm" %>
         </div>
 
         <div class="col-sm-3">
@@ -17,7 +17,7 @@
           <div class="input-group">
             <%= select_tag :status, options_for_select(Intervenant.statuses, 
                   params[:status]), include_blank:true,
-                  class: 'form-control form-control-sm', onchange: 'this.form.submit()' %>
+                  class: 'input input-bordered input-sm', onchange: 'this.form.submit()' %>
             <span class="input-group-btn ml-5">
               <%= submit_tag 'Filtrer', class: "btn btn-sm btn-success" %>
             </span>
