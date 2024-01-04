@@ -1,16 +1,16 @@
-<div class="pb-2 mt-4 mb-2 border-b">
+<div class="pb-2 mt-6 mb-2 border-b">
   <h3><%= fa_icon 'file-signature' %> Émargements</h3>
 </div>
 
-<div class="container-fluid p-3 shadow-sm">
+<div class="container-fluid p-4 shadow-sm">
     <%= form_tag request.path, method: :get do %>
       <div class="form-group">
         <div class="flex flex-wrap">
-          <div class="sm:w-1/4 pr-4 pl-4">
+          <div class="sm:w-1/4 px-4">
             <%= label_tag :search, "Rechercher" %>    
             <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class:"input input-bordered w-full input-sm" %>
           </div>
-          <div class="sm:w-1/4 pr-4 pl-4">
+          <div class="sm:w-1/4 px-4">
             <%= label_tag "Formation" %>
             <div class="input-group">
               <%= select_tag :formation_id, 
@@ -21,14 +21,14 @@
             </div>
           </div>
 
-        <div class="sm:w-1/6 pr-4 pl-4">
+        <div class="sm:w-1/6 px-4">
           <%= label_tag :ue, "U.E." %>   
           <%= select_tag :ue, options_for_select((0..20), params[:ue]), 
                           class: "input input-bordered w-full input-sm select2", 
                           include_blank:true, onchange: 'this.form.submit()' %>
         </div>
 
-          <div class="sm:w-1/4 pr-4 pl-4">
+          <div class="sm:w-1/4 px-4">
             <%= label_tag "Intervenant" %>
             <div class="input-group">
               <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
@@ -38,7 +38,7 @@
             </div>
           </div>
 
-          <div class="sm:w-1/5 pr-4 pl-4">
+          <div class="sm:w-1/5 px-4">
             <%= label_tag :workflow_state, "État" %>
             <%= select_tag :workflow_state, 
                                 options_for_select(Presence.workflow_spec.states.keys.to_a, params[:workflow_state]), 
@@ -88,14 +88,14 @@
       <div data-target="action.selector">
           <%= select_tag :action_name, options_for_select(["Signer", "Valider", "Rejeter", "Supprimer"]), 
                           include_blank: true,
-                          class: "input input-bordered w-full input-sm sm:w-1/4 pr-4 pl-4 mb-3 inline" %>
-          <%= submit_tag "Valider", class:'btn btn-danger btn-sm ml-3' %>
+                          class: "input input-bordered w-full input-sm sm:w-1/4 px-4 mb-4 inline" %>
+          <%= submit_tag "Valider", class:'btn btn-danger btn-sm ml-4' %>
       </div>
     </div>
   <% end %>
 </div>
 
-<div class="page_info mb-4">
+<div class="page_info mb-6">
   <%= page_entries_info @presences %>
   <%= JSON.pretty_generate(Presence.workflow_states_count(@presences)) %>
 </div>

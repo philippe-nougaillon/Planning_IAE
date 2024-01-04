@@ -1,4 +1,4 @@
-<div class="pb-2 mt-4 mb-2 border-b">
+<div class="pb-2 mt-6 mb-2 border-b">
   <h3><%= fa_icon 'search' %> Audit des modifications</h3>
 </div>
 
@@ -7,35 +7,35 @@
         <div class="form-group">
             <div class="flex flex-wrap">
 
-              <div class="sm:w-1/5 pr-4 pl-4">
+              <div class="sm:w-1/5 px-4">
                   <%= label_tag "Du" %>    
                   <%= text_field_tag :start_date, params[:start_date], type:'date', class:"input input-bordered w-full" %>
               </div>
 
-              <div class="sm:w-1/5 pr-4 pl-4">
+              <div class="sm:w-1/5 px-4">
                   <%= label_tag "Au" %>    
                   <%= text_field_tag :end_date, params[:end_date], type:'date', class:"input input-bordered w-full", onchange:'this.form.submit()' %>
               </div>
 
-              <div class="sm:w-1/5 pr-4 pl-4">
+              <div class="sm:w-1/5 px-4">
                 <%= label_tag :role, "Rôle" %>
                 <%= select_tag :role,
                       options_for_select(User.roles, params[:role]), include_blank:true, onchange:'this.form.submit()', class:"input input-bordered w-full" %>
               </div>
 
-              <div class="sm:w-1/5 pr-4 pl-4">
+              <div class="sm:w-1/5 px-4">
                 <%= label_tag :type, "Type" %>
                 <%= select_tag :type,
                       options_for_select(@types, params[:type]), include_blank:true, onchange:'this.form.submit()', class:"input input-bordered w-full" %>
               </div>
 
-              <div class="sm:w-1/6 pr-4 pl-4">
+              <div class="sm:w-1/6 px-4">
                 <%= label_tag :action_name, "Action" %>
                 <%= select_tag :action_name,
                       options_for_select(@actions, params[:action_name]), include_blank:true, onchange:'this.form.submit()', class:"input input-bordered w-full" %>
               </div>
 
-              <div class="sm:w-1/4 pr-4 pl-4">
+              <div class="sm:w-1/4 px-4">
                   <%= label_tag "Rechercher" %>
                   <div class="input-group">       
                     <%= text_field_tag :search, params[:search], class:"input input-bordered w-full" %>
@@ -49,7 +49,7 @@
               </div>
 
               <% if params[:start_date].present? && params[:end_date].present? && params[:type] == 'Cour' %>
-                <div class="sm:w-2/5 pr-4 pl-4">
+                <div class="sm:w-2/5 px-4">
                     <br>
                     <%= check_box_tag :chgt_salle, 1, params[:chgt_salle], onchange:'this.form.submit()' %>
                     <%= label_tag :chgt_salle, "Ne voir que les changements de salle ?" %>

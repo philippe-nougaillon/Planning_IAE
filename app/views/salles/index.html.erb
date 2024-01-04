@@ -1,4 +1,4 @@
-<div class="pb-2 mt-4 mb-2 border-b">
+<div class="pb-2 mt-6 mb-2 border-b">
   <%= link_to new_salle_path, class: 'btn text-primary float-right' do %>
     <%= fa_icon 'plus-circle' %> Ajouter
   <% end %>
@@ -9,7 +9,7 @@
     <%= form_tag request.path, method: :get do %>
       <div class="form-group">
         <div class="flex flex-wrap">
-          <div class="sm:w-1/5 pr-4 pl-4">
+          <div class="sm:w-1/5 px-4">
             <%= label_tag "Salle" %>    
               <%= select_tag :salle_id, 
                       options_from_collection_for_select(Salle.order(:nom), :id, :nom, params[:salle_id]), 

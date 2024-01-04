@@ -1,4 +1,4 @@
-<h3 class="mt-5 mb-5">
+<h3 class="mt-12 mb-12">
   <%= fa_icon 'calendar-check' %>
   Invitations à l'attention de <%= @intervenant.prenom_nom %>
   <div class="small mt-2">
@@ -6,12 +6,12 @@
   </div>
 </h3>
 
-<div class="container-fluid p-3 shadow-sm">
+<div class="container-fluid p-4 shadow-sm">
   <%= form_tag request.path, method: :get do %>
     <div class="form-group">
       <div class="flex flex-wrap">
 
-        <div class="sm:w-2/5 pr-4 pl-4">
+        <div class="sm:w-2/5 px-4">
           <%= label_tag :formation %>
           <%= select_tag :formation, 
                               options_from_collection_for_select(@formations, :id, :nom_promo, params[:formation]), 
@@ -20,7 +20,7 @@
                               onchange: 'this.form.submit()' %>
         </div>
 
-        <div class="sm:w-1/5 pr-4 pl-4">
+        <div class="sm:w-1/5 px-4">
           <%= label_tag :workflow_state, "État" %>
           <%= select_tag :workflow_state, 
                               options_for_select(Invit.workflow_spec.states.keys.to_a, params[:workflow_state]), 

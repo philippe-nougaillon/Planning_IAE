@@ -1,4 +1,4 @@
-<div class="pb-2 mt-4 mb-2 border-b">
+<div class="pb-2 mt-6 mb-2 border-b">
   <% if policy(Dossier).new? %>
     <%= link_to new_dossier_path, class: 'btn text-primary float-right' do %>
       <%= fa_icon 'plus-circle' %> Dossier
@@ -10,12 +10,12 @@
   </h3>
 </div>
 
-<div class="container-fluid p-3 shadow-sm">
+<div class="container-fluid p-4 shadow-sm">
     <%= form_tag request.path, method: :get do %>
       <div class="form-group">
         <div class="flex flex-wrap">
 
-          <div class="sm:w-1/5 pr-4 pl-4">
+          <div class="sm:w-1/5 px-4">
             <%= label_tag :période, "Période" %>
             <%= select_tag :période, 
                                 options_for_select(Dossier.périodes, params[:période]), 
@@ -24,12 +24,12 @@
                                 onchange: 'this.form.submit()' %>
           </div>
 
-          <div class="sm:w-1/4 pr-4 pl-4">
+          <div class="sm:w-1/4 px-4">
             <%= label_tag :nom, "Nom" %>    
             <%= text_field_tag :nom, params[:nom], include_blank:true, onchange:'this.form.submit()', class: 'input input-bordered w-full input-sm' %>
           </div>
 
-          <div class="sm:w-1/5 pr-4 pl-4">
+          <div class="sm:w-1/5 px-4">
             <%= label_tag :workflow_state, "Etat" %>
             <%= select_tag :workflow_state, 
                                 options_for_select(Dossier.workflow_spec.states.keys.to_a, params[:workflow_state]), 
@@ -38,7 +38,7 @@
                                 onchange: 'this.form.submit()' %>
           </div>
 
-          <div class="sm:w-1/5 pr-4 pl-4">
+          <div class="sm:w-1/5 px-4">
             <%= label_tag "Trier par " %>
             <br> 
             <%= radio_button_tag :order_by, 'dossiers.updated_at', (params[:order_by]=='dossiers.updated_at'), onchange:'this.form.submit()' %>
@@ -47,7 +47,7 @@
             Nom 
           </div>
 
-          <div class="sm:w-1/4 pr-4 pl-4 mt-2">
+          <div class="sm:w-1/4 px-4 mt-2">
             <br>
             <%= check_box_tag :archive, nil, params[:archive], onchange: 'this.form.submit()' %>
             <%= label_tag :archive, "Inclure les archivés ?" %>

@@ -1,6 +1,6 @@
 <% if @alert && !user_signed_in? %>
   <%= content_tag :div, 
-      class: "alert mt-3 alert-#{@alert.etat} alert-dismissable",
+      class: "alert mt-4 alert-#{@alert.etat} alert-dismissable",
       role: "alert" do %>
     <button type="button" class="close" data-dismiss="alert" aria-label="bouton du menu">
       <span aria-hidden="true">&times;</span>
@@ -10,7 +10,7 @@
   <% end %>
 <% end %>
 
-<div class="pb-2 mt-4 mb-2 border-b">
+<div class="pb-2 mt-6 mb-2 border-b">
   <% if policy(Cour).new? %>
 
     <%= link_to new_cour_path(formation: session[:formation], 
@@ -23,25 +23,25 @@
   <h3><%= fa_icon 'calendar-alt' %> Planning des cours</h3>
 </div>
 
-<div class="bs-container p-3 shadow-sm">
+<div class="bs-container p-4 shadow-sm">
   <%= form_tag cours_path, method: :get do %>
     <div class="form-group">
       <div class="flex flex-wrap">
-        <div class="sm:w-2/5 pr-4 pl-4">
+        <div class="sm:w-2/5 px-4">
           <%= label_tag "Formation" %>   
           <%= select_tag :formation, grouped_options_for_select(Formation.for_select, params[:formation]), 
                           class: "input input-bordered w-full input-sm select2", 
                           include_blank:true, onchange: 'this.form.submit()' %>
         </div>
 
-        <div class="sm:w-1/5 pr-4 pl-4">
+        <div class="sm:w-1/5 px-4">
           <%= label_tag :ue, "U.E." %>   
           <%= select_tag :ue, options_for_select((0..20), params[:ue]), 
                           class: "input input-bordered w-full input-sm select2", 
                           include_blank:true, onchange: 'this.form.submit()' %>
         </div>
         <% if user_signed_in? %>
-          <div class="sm:w-2/5 pr-4 pl-4">
+          <div class="sm:w-2/5 px-4">
             <%= label_tag "Intervenant" %>
             <div class="input-group">
               <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
@@ -61,7 +61,7 @@
             </div>
           </div>
         <% else %>
-          <div class="sm:w-2/5 pr-4 pl-4">
+          <div class="sm:w-2/5 px-4">
             <%= label_tag "Intervenant" %>
             <%= select_tag :intevenant, nil, class: "input input-bordered w-full input-sm select2"%>
           </div>
@@ -70,25 +70,25 @@
       <br>
 
       <div class="flex flex-wrap">
-        <div class="sm:w-1/6 pr-4 pl-4">
+        <div class="sm:w-1/6 px-4">
           <%= label_tag "Semaine" %>    
           <%= select_tag :semaine, 
                   options_for_select(@week_numbers, params[:semaine]), 
                     include_blank:true, onchange:'this.form.submit()', class:"input input-bordered w-full input-sm" %>
         </div>
 
-        <div class="sm:w-1/5 pr-4 pl-4">
+        <div class="sm:w-1/5 px-4">
           <%= label_tag "A partir du" %>    
           <%= text_field_tag :start_date, params[:start_date], type:'date', onchange:'this.form.submit()', class:"input input-bordered w-full input-sm" %>
         </div>
 
-        <div class="sm:w-1/5 pr-4 pl-4">
+        <div class="sm:w-1/5 px-4">
           <%= label_tag :etat, "Etat" %>
           <%= select_tag :etat, options_for_select(Cour.etats, params[:etat]), include_blank:true,
                   class:"input input-bordered w-full input-sm", onchange:'this.form.submit()' %>
         </div>
 
-        <div class="sm:w-1/5 pr-4 pl-4">
+        <div class="sm:w-1/5 px-4">
           <%= label_tag "Cours" %>
           <br> 
           <%= radio_button_tag :filter, "upcoming", (params[:filter]=='upcoming'), onchange:'this.form.submit()' %>
@@ -97,7 +97,7 @@
           Tous 
         </div>
 
-        <div class="sm:w-1/4 pr-4 pl-4">
+        <div class="sm:w-1/4 px-4">
           <%= label_tag "Vue" %>
           <br> 
           <%= radio_button_tag :view, "list", (params[:view]=='list'), onchange:'this.form.submit()' %>
@@ -111,7 +111,7 @@
         </div>
 
         <% if params[:view] == 'list' %>
-          <div class="sm:w-1/5 pr-4 pl-4">
+          <div class="sm:w-1/5 px-4">
             <%= label_tag "Afficher" %>
             <br> 
             <%= radio_button_tag :paginate, "pages", (params[:paginate]=='pages'), onchange:'this.form.submit()' %>

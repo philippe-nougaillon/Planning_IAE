@@ -1,16 +1,16 @@
-<div class="pb-2 mt-4 mb-2 border-b">
+<div class="pb-2 mt-6 mb-2 border-b">
   <h3><%= fa_icon 'upload' %> Export des vacations </h3>
 </div>
 <br>
 
 <div>
-  <h3 class="mb-4">Cette fonction génère une feuille Excel des vacations d'une ou de toutes les formations</h3>
+  <h3 class="mb-6">Cette fonction génère une feuille Excel des vacations d'une ou de toutes les formations</h3>
 </div>
 
 <%= form_tag({action: "export_vacations_do", method: :post}) do %>
 
   <div class="flex flex-wrap">
-    <div class="sm:w-1/3 pr-4 pl-4">
+    <div class="sm:w-1/3 px-4">
       <%= label_tag "Formation" %>    
       <%= select_tag :formation_id, 
             options_from_collection_for_select(Formation.joins(:vacations).uniq, :id, :nom, params[:formation_id]), 

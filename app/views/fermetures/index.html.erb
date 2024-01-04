@@ -1,4 +1,4 @@
-<div class="pb-2 mt-4 mb-2 border-b">
+<div class="pb-2 mt-6 mb-2 border-b">
   <% if policy(Fermeture).new? %>
     <%= link_to new_fermeture_path, class: 'btn text-primary float-right' do %>
       <%= fa_icon 'plus-circle' %> Fermeture
@@ -12,22 +12,22 @@
     <div class="form-group">
       <div class="flex flex-wrap">
 
-        <div class="sm:w-1/5 pr-4 pl-4">
+        <div class="sm:w-1/5 px-4">
           <%= label_tag "Période" %>    
           <%= select_tag :nom, options_for_select(@noms_périodes, params[:nom]), {include_blank: true, class: 'input input-bordered w-full', onchange: 'this.form.submit()'} %>
         </div>
 
-        <div class="sm:w-1/4 pr-4 pl-4">
+        <div class="sm:w-1/4 px-4">
           <%= label_tag "Du" %>    
           <%= text_field_tag :date_debut, params[:date_debut], type:'date', onchange:'this.form.submit()', class:"input input-bordered w-full" %>
         </div>
 
-        <div class="sm:w-1/4 pr-4 pl-4">
+        <div class="sm:w-1/4 px-4">
           <%= label_tag "Au" %>    
           <%= text_field_tag :date_fin, params[:date_fin], type:'date', onchange:'this.form.submit()', class:"input input-bordered w-full" %>
         </div>
 
-        <div class="sm:w-1/5 pr-4 pl-4">
+        <div class="sm:w-1/5 px-4">
           <%= label_tag "Fermetures" %>
           <br> 
           <%= radio_button_tag :futur, 'oui', (params[:futur]=='oui'), onchange:'this.form.submit()' %>
@@ -36,7 +36,7 @@
           Toutes 
         </div>
 
-        <div class="sm:w-1/5 pr-4 pl-4">
+        <div class="sm:w-1/5 px-4">
           <%= label_tag "Afficher" %>
           <br> 
           <%= radio_button_tag :paginate, "pages", (params[:paginate]=='pages'), onchange:'this.form.submit()' %>

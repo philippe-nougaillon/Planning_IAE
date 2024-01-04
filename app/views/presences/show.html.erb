@@ -1,4 +1,4 @@
-<div class="pb-2 mt-4 mb-2 border-b">
+<div class="pb-2 mt-6 mb-2 border-b">
   <h3><%= fa_icon 'file-signature' %> Émargement</h3>
 </div>
 <br>
@@ -51,18 +51,18 @@
 </p>
 
 <% if @presence.can_valider? || @presence.can_rejeter? %>
-  <div class="flex justify-around lg:justify-start mb-4">
+  <div class="flex justify-around lg:justify-start mb-6">
     <%= link_to_if @presence.can_valider?, 'Valider', valider_presence_path(@presence), class: 'btn btn-lg btn-success flex-grow-1 flex-sm-grow-0' %>
     <%= link_to_if @presence.can_rejeter?, 'Rejeter', rejeter_presence_path(@presence), class: 'btn btn-lg btn-danger flex-grow-1 flex-sm-grow-0' %>
   </div>
 <% end %>
 
 <% if user_signed_in? %>
-  <%= link_to 'Retour', current_user.intervenant? ? mes_sessions_intervenant_path : presences_path, class:'pb-4' %>
+  <%= link_to 'Retour', current_user.intervenant? ? mes_sessions_intervenant_path : presences_path, class:'pb-6' %>
 <% end %>
 
 <% if user_signed_in? && (current_user.gestionnaire? || current_user.admin?) %>
-  <div class='mt-5'>
+  <div class='mt-12'>
     <h4>Audit des modifications</h4>
     <table class="table table-bordered table-sm">
       <thead>

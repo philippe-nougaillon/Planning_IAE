@@ -13,7 +13,7 @@
   <% end %>
 
   <div class="flex flex-wrap">
-    <div class="sm:w-2/5 pr-4 pl-4">
+    <div class="sm:w-2/5 px-4">
       <%= f.text_field :nom, required: true %>
       <%= f.text_field :prenom, label:"Prénom", required: true %>
       <%= f.text_field :email, required: true %>
@@ -36,10 +36,10 @@
       </div>
     </div>
 
-    <div class="sm:w-1/6 pr-4 pl-4">
+    <div class="sm:w-1/6 px-4">
     </div>
 
-    <div class="sm:w-1/2 pr-4 pl-4">
+    <div class="sm:w-1/2 px-4">
       <div class="flex flex-wrap">
         <div class="relative flex-grow max-w-full flex-1 px-4">
           <%= f.select :status, Intervenant.statuses.keys.to_a, {include_blank: true, label: 'Statut'}, required: true %>
@@ -69,10 +69,10 @@
       <%= f.text_field :adresse %>
 
       <div class="flex flex-wrap">        
-        <div class="sm:w-1/4 pr-4 pl-4">
+        <div class="sm:w-1/4 px-4">
           <%= f.text_field :cp %>
         </div> 
-        <div class="sm:w-3/4 pr-4 pl-4">
+        <div class="sm:w-3/4 px-4">
           <%= f.text_field :ville %>
         </div>
       </div>
@@ -104,29 +104,29 @@
     <hr>
     <%= f.fields_for :responsabilites do |r| %>
       <div class="flex flex-wrap shadow-sm p-1 m-1">
-          <div class="sm:w-1/5 pr-4 pl-4">
+          <div class="sm:w-1/5 px-4">
             <%= r.date_field :debut, label:"Date" %>
           </div>
 
-          <div class="sm:w-1/2 pr-4 pl-4">
+          <div class="sm:w-1/2 px-4">
             <%= r.select :titre, Intervenant.liste_responsabilites, include_blank: true %>
           </div>
 
-          <div class="sm:w-1/4 pr-4 pl-4">
+          <div class="sm:w-1/4 px-4">
             <%= r.collection_select :formation_id, 
                     Formation.where(hors_catalogue: false), 
                     :id, :nom_eotp, {include_blank: true, label: "Formation/EOTP"} %>
           </div>  
   
-          <div class="sm:w-1/6 pr-4 pl-4">
+          <div class="sm:w-1/6 px-4">
             <%= r.text_field :heures, label:"Forfait" %>
           </div>
 
-          <div class="sm:w-2/3 pr-4 pl-4">
+          <div class="sm:w-2/3 px-4">
             <%= r.text_field :commentaires, label:"Commentaires" %>
           </div>
 
-          <div class="sm:w-1/5 pr-4 pl-4">
+          <div class="sm:w-1/5 px-4">
             <br>
             <%= r.check_box :_destroy, label:"Supprimer ?" %>
           </div>

@@ -47,7 +47,7 @@
     </head>
 
     <body>
-        <nav class="navbar mb-3 <%= ENV["STAGING_COLOR_MODE"].present? ? ENV["STAGING_COLOR_MODE"] : 'bg-light' %>">
+        <nav class="navbar mb-4 <%= ENV["STAGING_COLOR_MODE"].present? ? ENV["STAGING_COLOR_MODE"] : 'bg-light' %>">
             <a class="navbar-brand" href="/">
                 <%= image_tag('logo_iae@195.png', height: 40, alt: 'logo IAE') %>
             </a>
@@ -87,7 +87,7 @@
 
         <div class="bs-container">
             <% flash.each do |name, msg| %>
-                <%= content_tag :div, class: "alert mt-3 alert-#{ (name == "alert" || name == "error") ? "danger" : "success" } alert-dismissable", role: "alert" do %>
+                <%= content_tag :div, class: "alert mt-4 alert-#{ (name == "alert" || name == "error") ? "danger" : "success" } alert-dismissable", role: "alert" do %>
                     <button type="button" class="close" data-dismiss="alert" aria-label="bouton du menu"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                     <%= msg.to_s.html_safe %>
                 <% end %>

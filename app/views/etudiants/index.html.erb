@@ -1,4 +1,4 @@
-<div class="pb-2 mt-4 mb-2 border-b">
+<div class="pb-2 mt-6 mb-2 border-b">
   <% if policy(Etudiant).new? %>
     <%= link_to new_etudiant_path, class: 'btn text-primary float-right' do %>
       <%= fa_icon 'plus-circle' %> Etudiant
@@ -7,17 +7,17 @@
   <h3><%= fa_icon 'graduation-cap' %> Liste des étudiants</h3>
 </div>
 
-<div class="container-fluid p-3 shadow-sm">
+<div class="container-fluid p-4 shadow-sm">
     <%= form_tag request.path, method: :get do %>
       <div class="form-group">
         <div class="flex flex-wrap">
 
-          <div class="sm:w-1/3 pr-4 pl-4">
+          <div class="sm:w-1/3 px-4">
             <%= label_tag :search, "Nom/Prénom/Email" %>
             <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class: 'input input-bordered w-full input-sm' %>
           </div>
 
-          <div class="sm:w-1/2 pr-4 pl-4">
+          <div class="sm:w-1/2 px-4">
             <%= label_tag "Formation" %>
             <div class="input-group">
               <%= select_tag :formation_id, 

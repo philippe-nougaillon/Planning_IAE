@@ -1,4 +1,4 @@
-<div class="card shadow-sm p-3 mt-3">
+<div class="card shadow-sm p-4 mt-4">
 
   <div>
     <div class="btn-group float-right">
@@ -18,7 +18,7 @@
   </div>
   
   <div class="flex flex-wrap">
-    <div class="sm:w-1/4 pr-4 pl-4">
+    <div class="sm:w-1/4 px-4">
       <% if @intervenant.photo.present? %>
         <img src=<%= @intervenant.photo %> width=250 loading='eager' class="shadow">
       <% else %>
@@ -26,14 +26,14 @@
       <% end %>
     </div>  
 
-    <div class="sm:w-2/5 pr-4 pl-4">
+    <div class="sm:w-2/5 px-4">
       <h2>
         <small class="text-gray-700">Nom</small><br>
         <%= @intervenant.nom %>
       </h2>
     </div>
 
-    <div class="sm:w-1/3 pr-4 pl-4">
+    <div class="sm:w-1/3 px-4">
       <h2>
         <small class="text-gray-700">Prénom</small><br>
         <%= @intervenant.prenom %>
@@ -44,7 +44,7 @@
   <hr>
   
   <div class="flex flex-wrap">
-    <div class="sm:w-1/4 pr-4 pl-4">
+    <div class="sm:w-1/4 px-4">
       <h3>
         <small class="text-gray-700">Titre</small><br>
       </h3>
@@ -64,14 +64,14 @@
       <% end %>
     </div>
 
-    <div class="sm:w-2/5 pr-4 pl-4">
+    <div class="sm:w-2/5 px-4">
       <h3>
         <small class="text-gray-700">Courriel</small><br>
       </h3>
       <%= mail_to @intervenant.email %>
 
       <% if @user && @user.sign_in_count.positive? %>
-        <h3 class='mt-4'>
+        <h3 class='mt-6'>
           <small class='text-gray-700'>Dernière connexion</small>
         </h3>
         Il y a <%= time_ago_in_words(@user.current_sign_in_at) %>
@@ -82,7 +82,7 @@
       <% end %>
     </div>
 
-    <div class="sm:w-1/3 pr-4 pl-4">
+    <div class="sm:w-1/3 px-4">
       <h3>
         <small class="text-gray-700">Mobile</small><br>
       </h3>
@@ -126,7 +126,7 @@
 
   <% if policy(:tool).can_see_RHGroup_private_tool? %>
     <% if @intervenant.responsabilites.any? %>
-      <div class="shadow-sm p-4">
+      <div class="shadow-sm p-6">
         <h2>
           <%= fa_icon 'file-contract' %>
           Responsabilités
@@ -167,7 +167,7 @@
   <% end %>
 
   <% if @intervenant.vacations.any? %>
-    <div class="shadow-sm p-4">
+    <div class="shadow-sm p-6">
       <h2>
         <%= fa_icon 'user-md' %>
         Vacations

@@ -1,9 +1,9 @@
-<div class="flex-fill card shadow-sm px-2 py-3 mb-4" style="border-left:6px; border-left-style:solid; border-left-color:<%= cour.formation.color %>;">
+<div class="flex-fill card shadow-sm px-2 py-4 mb-6" style="border-left:6px; border-left-style:solid; border-left-color:<%= cour.formation.color %>;">
   <div class="flex mb-2">
     <% if cour.intervenant.photo.present? %>
-      <%= image_tag cour.intervenant.photo, class:"border rounded mr-3", height: 75 %>
+      <%= image_tag cour.intervenant.photo, class:"border rounded mr-4", height: 75 %>
     <% else %>
-      <%= image_tag 'planning_intervenant.jpg', class:"border rounded mr-3", width: 75, height: 75 %>
+      <%= image_tag 'planning_intervenant.jpg', class:"border rounded mr-4", width: 75, height: 75 %>
     <% end %>
     <div class="w-100">
       <div class="flex justify-between">
@@ -27,18 +27,18 @@
 
   <% if user_signed_in? && current_user.étudiant? && presence = cour.presences.find_by(etudiant_id: @etudiant.id) %>
     <% if presence.validée? || presence.signée? %>
-      <div class="alert alert-success mt-3 mb-0" role="alert">
+      <div class="alert alert-success mt-4 mb-0" role="alert">
         Présence signée à <%= l presence.signée_le, format: :heures_log %>
       </div>
     <% elsif presence.manquante? || presence.rejetée? %>
-      <div class="alert alert-danger mt-3 mb-0" role="alert">
+      <div class="alert alert-danger mt-4 mb-0" role="alert">
         Vous avez été absent(e) à cette séance
       </div>
     <% end %>
   <% end %>
   <% if action_name == 'mes_sessions_etudiant' %>
     <% if (cour.formation_id == 671 || cour.formation_id == 258) && cour.signable_etudiant? && ( cour.presences.where(etudiant_id: @etudiant.id).empty? || cour.presences.where(etudiant_id: @etudiant.id, workflow_state: 'attente signature').any? ) %>
-      <%= link_to 'Signer la feuille de présence', signature_etudiant_cours_path(cour_id: cour.id), class: 'btn btn-warning btn-lg mt-4' %>
+      <%= link_to 'Signer la feuille de présence', signature_etudiant_cours_path(cour_id: cour.id), class: 'btn btn-warning btn-lg mt-6' %>
     <% end %>
   <% end %>
 </div>

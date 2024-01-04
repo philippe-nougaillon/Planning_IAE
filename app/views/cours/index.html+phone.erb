@@ -1,6 +1,6 @@
 <% if @alert %>
   <%= content_tag :div, 
-      class: "alert mt-3 alert-#{@alert.etat} alert-dismissable",
+      class: "alert mt-4 alert-#{@alert.etat} alert-dismissable",
       role: "alert" do %>
     <button type="button" class="close" data-dismiss="alert" aria-label="bouton du menu">
       <span aria-hidden="true">&times;</span>
@@ -50,7 +50,7 @@
 <% @cours.each do | cours | %>
   <% _date_cours = cours.debut.to_date %>
   <% if _date_cours != current_date %>
-    <div class="shadow-sm bg-light mt-3 py-2">
+    <div class="shadow-sm bg-light mt-4 py-2">
       <%= fa_icon 'calendar-day' %>
       <b><%= l(_date_cours, format: :long).humanize %></b>
     </div>
@@ -63,7 +63,7 @@
 <br>
 
 <% if @cours.length > 0 %>
-  <div class="page_info m-3">
+  <div class="page_info m-6">
     <%= page_entries_info @cours %>
   </div>
 

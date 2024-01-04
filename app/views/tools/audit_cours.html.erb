@@ -1,4 +1,4 @@
-<div class="pb-2 mt-4 mb-2 border-b">
+<div class="pb-2 mt-6 mb-2 border-b">
   <h3><%= fa_icon 'calendar-check' %> Liste des cours "à booker" </h3>
   <p>
     Liste des cours récemment planifiés (sans salle) et à confirmer.
@@ -9,17 +9,17 @@
     <div class="form-group">
         <div class="flex flex-wrap">
 
-            <div class="sm:w-1/4 pr-4 pl-4">
+            <div class="sm:w-1/4 px-4">
                 <%= label_tag "Période du" %>    
                 <%= text_field_tag :start_date, params[:start_date], type:'date', class:"input input-bordered w-full" %>
             </div>
 
-            <div class="sm:w-1/4 pr-4 pl-4">
+            <div class="sm:w-1/4 px-4">
                 <%= label_tag "au" %>    
                 <%= text_field_tag :end_date, params[:end_date], type:'date', class:"input input-bordered w-full", onchange:'this.form.submit()' %>
             </div>
 
-            <div class="sm:w-1/4 pr-4 pl-4">
+            <div class="sm:w-1/4 px-4">
                 <p>Trier par</p>
 
                 <div class="form-check-inline">
