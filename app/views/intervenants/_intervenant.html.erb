@@ -11,7 +11,7 @@
         <%= intervenant.email %>
         <% if !intervenant.linked_user && intervenant.cours.confirmé.count.positive? %>
             <%= link_to users_path(search: intervenant.nom) do %>
-                <%= fa_icon 'question-circle', class: 'text-secondary' , title: 'L\'intervenant n\'a pas de compte de connexion (utilisateur) associé à cet email' %>
+                <%= fa_icon 'question-circle', class: 'text-base-content' , title: 'L\'intervenant n\'a pas de compte de connexion (utilisateur) associé à cet email' %>
             <% end %>
         <% end %>
     </td>
