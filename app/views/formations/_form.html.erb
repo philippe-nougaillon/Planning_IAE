@@ -100,7 +100,7 @@
     <hr>
 
     <%= f.fields_for :unites do |ue| %>
-      <div class="row shadow-sm">
+      <div class="flex flex-wrap shadow-sm">
         <div class="sm:w-1/6 pr-4 pl-4">
           <%= ue.number_field :code %>
         </div>  
@@ -131,7 +131,7 @@
     <hr>
 
     <%= f.fields_for :etudiants do |etudiant| %>
-      <div class="row shadow-sm">
+      <div class="flex flex-wrap shadow-sm">
         <div class="sm:w-1/5 pr-4 pl-4">
           <%= etudiant.text_field :nom %>
         </div>  
@@ -165,7 +165,7 @@
       <hr>
 
       <%= f.fields_for :vacations do |vacation| %>
-        <div class="row shadow-sm mt-2">
+        <div class="flex flex-wrap shadow-sm mt-2">
             <div class="sm:w-1/5 pr-4 pl-4">
               <%= vacation.date_field :date, label: "*Date" %>
             </div>

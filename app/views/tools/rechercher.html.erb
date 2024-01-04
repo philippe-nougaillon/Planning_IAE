@@ -5,7 +5,7 @@
 <div class="container-fluid p-3 shadow-sm">
   <%= form_tag tools_rechercher_path, method: :get do %>
     <div class="form-group">
-      <div class="row mb-3 px-3">
+      <div class="flex flex-wrap mb-3 px-3">
         <%= label_tag :nom, "Entrez un terme à rechercher dans toute l'application" %>
         <div class="input-group">
           <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class:"input input-bordered w-full input-sm" %>

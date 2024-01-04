@@ -282,7 +282,7 @@
         <% end %>
       <% end %>
     </div>
-    <div class="row my-4">
+    <div class="flex flex-wrap my-4">
       <div class="sm:w-1/3 pr-4 pl-4">
         <%= check_box_tag :table %>
         <%= label_tag :table, "Ajouter une colonne N° Table" %>
@@ -329,7 +329,7 @@
     <br><br>
   <% end %>
 
-  <div class="row mb-5">
+  <div class="flex flex-wrap mb-5">
     <div class="sm:w-full pr-4 pl-4">
       <%= submit_tag 'Appliquer', class:"btn btn-primary" %>
       <%= link_to 'Annuler', root_url, class:"btn btn-light" %>

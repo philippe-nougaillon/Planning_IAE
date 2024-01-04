@@ -2,7 +2,7 @@
   <h3><%= fa_icon 'inbox' %> Import log #<%= @import_log.id %></h3>
 </div>
 
-<dl class="row">
+<dl class="flex flex-wrap">
   <div class="relative flex-grow max-w-full flex-1 px-4">
     <dt>Le</dt>
     <dd><%= @import_log.created_at.in_time_zone('Paris') %></dd>
