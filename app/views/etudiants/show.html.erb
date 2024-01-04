@@ -24,24 +24,24 @@
 
     <div class="col-sm-6">
       <h3>
-        <small class="text-muted">Civilité</small><br>
+        <small class="text-gray-700">Civilité</small><br>
         <%= @etudiant.civilité %>
       </h3>
       <h1>
-        <small class="text-muted">Nom</small><br>
+        <small class="text-gray-700">Nom</small><br>
         <%= @etudiant.nom %>
       </h1>
       <h3>
-        <small class="text-muted">Prénom</small><br>
+        <small class="text-gray-700">Prénom</small><br>
         <%= @etudiant.prénom %>
       </h3>
       <h3>
-        <small class="text-muted">Email</small><br>
+        <small class="text-gray-700">Email</small><br>
         <%= @etudiant.email %>
       </h3>
 
       <h3>
-        <small class="text-muted">Mobile</small><br>
+        <small class="text-gray-700">Mobile</small><br>
         <%= @etudiant.mobile %>
       </h3>
 
@@ -49,21 +49,21 @@
 
     <div class="col-sm-4">
       <h4>
-        <small class="text-muted">Formation</small><br>
+        <small class="text-gray-700">Formation</small><br>
         <% if @etudiant.formation_id %>
             <% formation = Formation.unscoped.find(@etudiant.formation_id) %>
             <%= link_to formation.nom, formation %>
         <% end %>
       </h3>
       <h3>
-        <small class="text-muted">Statut</small><br>
+        <small class="text-gray-700">Statut</small><br>
         <%= @etudiant.workflow_state %>
       </h3>
       <br>
 
       <% if @user && @user.sign_in_count.positive? %>
         <h4>
-          <small class='text-muted'>Dernière connexion</small>
+          <small class='text-gray-700'>Dernière connexion</small>
           <br>
           Il y a <%= time_ago_in_words(@user.current_sign_in_at) %>
         </h4>

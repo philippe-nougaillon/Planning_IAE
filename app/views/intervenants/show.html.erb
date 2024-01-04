@@ -28,14 +28,14 @@
 
     <div class="col-sm-5">
       <h2>
-        <small class="text-muted">Nom</small><br>
+        <small class="text-gray-700">Nom</small><br>
         <%= @intervenant.nom %>
       </h2>
     </div>
 
     <div class="col-sm-4">
       <h2>
-        <small class="text-muted">Prénom</small><br>
+        <small class="text-gray-700">Prénom</small><br>
         <%= @intervenant.prenom %>
       </h2>
     </div>
@@ -46,19 +46,19 @@
   <div class="row">
     <div class="col-sm-3">
       <h3>
-        <small class="text-muted">Titre</small><br>
+        <small class="text-gray-700">Titre</small><br>
       </h3>
       <%= @intervenant.titre1 %>
       <%= @intervenant.titre2 %>
 
       <h3 class="mt-2">
-        <small class="text-muted">Statut</small><br>
+        <small class="text-gray-700">Statut</small><br>
       </h3>
       <%= @intervenant.try(:status) %>
 
       <% if @intervenant.année_entrée %>
         <h3 class="mt-2">
-          <small class="text-muted">Ancienneté</small><br>
+          <small class="text-gray-700">Ancienneté</small><br>
         </h3>
         <%= Date.today.year - @intervenant.année_entrée %>
       <% end %>
@@ -66,13 +66,13 @@
 
     <div class="col-sm-5">
       <h3>
-        <small class="text-muted">Courriel</small><br>
+        <small class="text-gray-700">Courriel</small><br>
       </h3>
       <%= mail_to @intervenant.email %>
 
       <% if @user && @user.sign_in_count.positive? %>
         <h3 class='mt-4'>
-          <small class='text-muted'>Dernière connexion</small>
+          <small class='text-gray-700'>Dernière connexion</small>
         </h3>
         Il y a <%= time_ago_in_words(@user.current_sign_in_at) %>
         <p>
@@ -84,12 +84,12 @@
 
     <div class="col-sm-4">
       <h3>
-        <small class="text-muted">Mobile</small><br>
+        <small class="text-gray-700">Mobile</small><br>
       </h3>
       <%= @intervenant.téléphone_mobile %>
 
       <h3 class="mt-2">
-        <small class="text-muted">Salles habituelles</small><br>
+        <small class="text-gray-700">Salles habituelles</small><br>
       </h3>
       <% @salles_habituelles.each do |salle_id, count| %>
         <% salle = Salle.find(salle_id) %>
