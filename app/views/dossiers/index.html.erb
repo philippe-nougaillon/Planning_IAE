@@ -20,13 +20,13 @@
             <%= select_tag :période, 
                                 options_for_select(Dossier.périodes, params[:période]), 
                                 include_blank: true,
-                                class: 'input input-bordered input-sm', 
+                                class: 'input input-bordered w-full input-sm', 
                                 onchange: 'this.form.submit()' %>
           </div>
 
           <div class="sm:w-1/4 pr-4 pl-4">
             <%= label_tag :nom, "Nom" %>    
-            <%= text_field_tag :nom, params[:nom], include_blank:true, onchange:'this.form.submit()', class: 'input input-bordered input-sm' %>
+            <%= text_field_tag :nom, params[:nom], include_blank:true, onchange:'this.form.submit()', class: 'input input-bordered w-full input-sm' %>
           </div>
 
           <div class="sm:w-1/5 pr-4 pl-4">
@@ -34,7 +34,7 @@
             <%= select_tag :workflow_state, 
                                 options_for_select(Dossier.workflow_spec.states.keys.to_a, params[:workflow_state]), 
                                 include_blank: true,
-                                class: 'input input-bordered input-sm', 
+                                class: 'input input-bordered w-full input-sm', 
                                 onchange: 'this.form.submit()' %>
           </div>
 

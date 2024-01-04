@@ -14,7 +14,7 @@
       <%= label_tag "Formation" %>    
       <%= select_tag :formation_id, 
             options_from_collection_for_select(Formation.joins(:vacations).uniq, :id, :nom, params[:formation_id]), 
-              class:"input input-bordered select2", include_blank: true %>
+              class:"input input-bordered w-full select2", include_blank: true %>
     </div>
   </div>
   <br>

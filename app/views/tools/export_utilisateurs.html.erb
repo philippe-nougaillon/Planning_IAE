@@ -10,7 +10,7 @@
 <%= form_tag({action: "export_utilisateurs_do", method: :post}) do %>
 
   <div class="form-group">
-    <%= check_box_tag :desactives, class: 'input input-bordered' %>
+    <%= check_box_tag :desactives, class: 'input input-bordered w-full' %>
     <%= label_tag :desactives, "Ajouter les utilisateurs désactivés ?" %>
   </div>
 

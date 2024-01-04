@@ -14,17 +14,17 @@
 
         <div class="sm:w-1/5 pr-4 pl-4">
           <%= label_tag "Période" %>    
-          <%= select_tag :nom, options_for_select(@noms_périodes, params[:nom]), {include_blank: true, class: 'input input-bordered', onchange: 'this.form.submit()'} %>
+          <%= select_tag :nom, options_for_select(@noms_périodes, params[:nom]), {include_blank: true, class: 'input input-bordered w-full', onchange: 'this.form.submit()'} %>
         </div>
 
         <div class="sm:w-1/4 pr-4 pl-4">
           <%= label_tag "Du" %>    
-          <%= text_field_tag :date_debut, params[:date_debut], type:'date', onchange:'this.form.submit()', class:"input input-bordered" %>
+          <%= text_field_tag :date_debut, params[:date_debut], type:'date', onchange:'this.form.submit()', class:"input input-bordered w-full" %>
         </div>
 
         <div class="sm:w-1/4 pr-4 pl-4">
           <%= label_tag "Au" %>    
-          <%= text_field_tag :date_fin, params[:date_fin], type:'date', onchange:'this.form.submit()', class:"input input-bordered" %>
+          <%= text_field_tag :date_fin, params[:date_fin], type:'date', onchange:'this.form.submit()', class:"input input-bordered w-full" %>
         </div>
 
         <div class="sm:w-1/5 pr-4 pl-4">

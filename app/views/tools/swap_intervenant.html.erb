@@ -11,12 +11,12 @@
 
         <%= label_tag :intervenant_from_id, "Intervenant à remplacer" %>
         <%= select_tag :intervenant_from_id,
-              options_from_collection_for_select(Intervenant.all, :id, :nom_prenom, Intervenant.all), include_blank:true, class:"input input-bordered" %>
+              options_from_collection_for_select(Intervenant.all, :id, :nom_prenom, Intervenant.all), include_blank:true, class:"input input-bordered w-full" %>
         <br>
 
         <%= label_tag :intervenant_to_id, "Remplacer par" %>
         <%= select_tag :intervenant_to_id,
-              options_from_collection_for_select(Intervenant.all, :id, :nom_prenom, Intervenant.all), include_blank:true, class:"input input-bordered" %>
+              options_from_collection_for_select(Intervenant.all, :id, :nom_prenom, Intervenant.all), include_blank:true, class:"input input-bordered w-full" %>
         <br>
 
         <div class="field">

@@ -30,15 +30,15 @@
       <%= label_tag "Formation" %>    
       <%= select_tag :formation_id, 
             options_from_collection_for_select(Formation.all, :id, :nom, params[:formation_id]), 
-              class:"input input-bordered select2", include_blank: true %>
+              class:"input input-bordered w-full select2", include_blank: true %>
       
       <%= label :filename, "Fichier source", class: 'form-label mt-4' %>
-      <%= file_field_tag 'upload', accept: 'application/vnd.ms-excel', class: 'input input-bordered pb-5 pt-3' %>
+      <%= file_field_tag 'upload', accept: 'application/vnd.ms-excel', class: 'input input-bordered w-full pb-5 pt-3' %>
       <br>
 
       <b>Enregistrer les changements ?</b> <br>
       <label class="radio-inline">
-        <%= radio_button_tag :save, true, class: 'input input-bordered' %>
+        <%= radio_button_tag :save, true, class: 'input input-bordered w-full' %>
         Oui
       </label>
       <label class="radio-inline">     

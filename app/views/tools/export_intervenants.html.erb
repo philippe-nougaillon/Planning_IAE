@@ -13,12 +13,12 @@
     <div class="flex flex-wrap">
       <div class="sm:w-1/5 pr-4 pl-4">
         <%= label_tag :date_debut, "Intervenus du" %>
-        <%= text_field_tag :date_debut, params[:date_debut], type: 'date', class: 'input input-bordered', required: true %>
+        <%= text_field_tag :date_debut, params[:date_debut], type: 'date', class: 'input input-bordered w-full', required: true %>
       </div>
 
       <div class="sm:w-1/5 pr-4 pl-4">
         <%= label_tag :date_fin, "au" %>
-        <%= text_field_tag :date_fin, params[:date_fin], type: 'date', class: 'input input-bordered', required: true %>
+        <%= text_field_tag :date_fin, params[:date_fin], type: 'date', class: 'input input-bordered w-full', required: true %>
       </div>
 
       <div class="sm:w-1/4 pr-4 pl-4">
@@ -26,7 +26,7 @@
           <%= select_tag :status, 
                 options_for_select(Intervenant.statuses, params[:status]), 
                 include_blank:true,
-                class: 'input input-bordered' %>
+                class: 'input input-bordered w-full' %>
       </div>
     </div>
 

@@ -13,7 +13,7 @@
       <div class="flex flex-wrap">
         <div class="sm:w-1/5 pr-4 pl-4">
           <%= label_tag :workflow_state, "État" %>
-          <%= select_tag :workflow_state, options_for_select(EnvoiLog.workflow_spec.states.keys, params[:workflow_state]), include_blank:true, onchange:'this.form.submit()', class:"input input-bordered input-sm" %>
+          <%= select_tag :workflow_state, options_for_select(EnvoiLog.workflow_spec.states.keys, params[:workflow_state]), include_blank:true, onchange:'this.form.submit()', class:"input input-bordered w-full input-sm" %>
         </div>
       </div>
     </div>
