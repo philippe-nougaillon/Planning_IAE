@@ -10,8 +10,8 @@
 <div class="container-fluid p-3 shadow-sm mb-4">
   <%= form_tag request.path, method: :get do %>
     <div class="form-group">
-      <div class="row">
-        <div class="col-sm-2">
+      <div class="flex flex-wrap">
+        <div class="sm:w-1/5 pr-4 pl-4">
           <%= label_tag :workflow_state, "État" %>
           <%= select_tag :workflow_state, options_for_select(EnvoiLog.workflow_spec.states.keys, params[:workflow_state]), include_blank:true, onchange:'this.form.submit()', class:"input input-bordered input-sm" %>
         </div>

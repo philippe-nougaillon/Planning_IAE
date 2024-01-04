@@ -6,8 +6,8 @@
 <%= form_tag({action: "creation_cours_do", method: :post}, multipart: true) do %>
 
   <div class="form-group">
-    <div class="row">
-      <div class="col-sm-7">
+    <div class="flex flex-wrap">
+      <div class="sm:w-3/5 pr-4 pl-4">
         <%= label_tag :debut, "A partir du", class:"font-weight-bold"  %><br>
         <%= datetime_select :cours, :start_date, minute_step:15 %>
         <br><br>
@@ -34,19 +34,19 @@
   
         <section id="période">
           <%= label_tag :periode, "Période", class:"font-weight-bold" %><br>
-          <div class="row">
-            <div class="col">
+          <div class="flex flex-wrap">
+            <div class="relative flex-grow max-w-full flex-1 px-4">
               Matin
               <br>
               <%= check_box_tag :am, '1', params[:am] %> 9h-12h
             </div>
             
-            <div class="col">
+            <div class="relative flex-grow max-w-full flex-1 px-4">
               Après-midi
               <br>
               <%= check_box_tag :pm, '1', params[:pm] %> 13h-16h
             </div>
-            <div class="col">
+            <div class="relative flex-grow max-w-full flex-1 px-4">
               Soir
               <br>
               <%= check_box_tag :soir_params, '1', params[:soir_params] == 1 %> 19h-22h
@@ -55,7 +55,7 @@
               <br>
               <%= check_box_tag :soir_params, '3', params[:soir_params] == 3 %> 20h15-22h15
             </div>
-            <div class="col">
+            <div class="relative flex-grow max-w-full flex-1 px-4">
               Autre
               <br>
               <%= check_box_tag :other, '1', params[:other] %> Durée:
@@ -68,8 +68,8 @@
         </section>
       </div>
 
-      <div class="col-sm-5">
-        <div class="row">
+      <div class="sm:w-2/5 pr-4 pl-4">
+        <div class="flex flex-wrap">
 
         <%= label_tag :formation_id, "Formation", class:"font-weight-bold"  %>
         <%= select_tag :formation_id, 

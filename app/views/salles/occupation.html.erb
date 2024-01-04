@@ -5,28 +5,28 @@
 <div class="container-fluid p-3 shadow-sm">
 
   <%= form_tag request.path, method: :get do %>
-    <div class="row">
+    <div class="flex flex-wrap">
 
-      <div class="col-sm-3">
+      <div class="sm:w-1/4 pr-4 pl-4">
         <%= label_tag "Date" %>    
         <%= text_field_tag :start_date, params[:start_date], type:'date', onchange:'this.form.submit()', class:"input input-bordered input-sm" %>
       </div>
 
-      <div class="col-sm-2">
+      <div class="sm:w-1/5 pr-4 pl-4">
         <%= label_tag "Batiment" %>
         <%= select_tag :bloc, 
                     options_for_select(Salle.blocs, params[:bloc]), 
                     include_blank:true, onchange:'this.form.submit()', class:"input input-bordered input-sm" %>
       </div>
 
-      <div class="col-sm-2">
+      <div class="sm:w-1/5 pr-4 pl-4">
         <%= label_tag "Salle" %>
         <%= select_tag :salle_id, 
                     options_from_collection_for_select((params[:bloc].blank? ? Salle.all : Salle.where(bloc: params[:bloc])), :id, :nom, params[:salle_id]), 
                     include_blank:true, onchange:'this.form.submit()', class:"input input-bordered input-sm" %>
       </div>
 
-      <div class="col-sm-3">
+      <div class="sm:w-1/4 pr-4 pl-4">
         <%= label_tag "Vue" %>
         <br> 
         <%= radio_button_tag :vue, "jour", (params[:vue]=='jour'), onchange:'this.form.submit()' %>

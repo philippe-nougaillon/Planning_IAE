@@ -7,7 +7,7 @@
 <br>
 
 <div class="row shadow p-5">
-  <div class="col-sm-4">
+  <div class="sm:w-1/3 pr-4 pl-4">
     <p>
       <strong>Intervenant:</strong>
       <%= @dossier.intervenant.nom_prenom %>
@@ -43,7 +43,7 @@
 
   </div>
 
-  <div class="col">
+  <div class="relative flex-grow max-w-full flex-1 px-4">
     <h5>Pièces justificatives</h5>
 
     <% if @dossier.documents.any? %>

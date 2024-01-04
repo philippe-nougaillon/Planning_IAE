@@ -10,13 +10,13 @@
 <div class='container-fluid'>
   <%= form_tag request.path, method: :get do %>
     <div class="form-group">
-      <div class="row">
-        <div class="col-sm-4">
+      <div class="flex flex-wrap">
+        <div class="sm:w-1/3 pr-4 pl-4">
           <%= label_tag :search, "Nom/Prénom/Courriel" %>    
           <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class:"input input-bordered" %>
         </div>
 
-        <div class="col-sm-2">
+        <div class="sm:w-1/5 pr-4 pl-4">
           <%= label_tag :role, "Rôle" %>
           <%= select_tag :role, 
                   options_for_select(User.roles, 
@@ -27,7 +27,7 @@
           %>          
         </div>
 
-        <div class="col-sm-2">
+        <div class="sm:w-1/5 pr-4 pl-4">
             <br>
             <label>
               <%= check_box_tag :discarded, 1, params[:discarded], onchange: 'this.form.submit()' %>
@@ -35,7 +35,7 @@
             </label>
         </div>
 
-        <div class="col-sm-3">
+        <div class="sm:w-1/4 pr-4 pl-4">
           <br>
           <label>
             <%= check_box_tag :mauvais_email, 1, params[:mauvais_email], onchange: 'this.form.submit()' %>

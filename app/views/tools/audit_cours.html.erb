@@ -7,19 +7,19 @@
 
 <%= form_tag request.path, method: :get do %>
     <div class="form-group">
-        <div class="row">
+        <div class="flex flex-wrap">
 
-            <div class="col-sm-3">
+            <div class="sm:w-1/4 pr-4 pl-4">
                 <%= label_tag "Période du" %>    
                 <%= text_field_tag :start_date, params[:start_date], type:'date', class:"input input-bordered" %>
             </div>
 
-            <div class="col-sm-3">
+            <div class="sm:w-1/4 pr-4 pl-4">
                 <%= label_tag "au" %>    
                 <%= text_field_tag :end_date, params[:end_date], type:'date', class:"input input-bordered", onchange:'this.form.submit()' %>
             </div>
 
-            <div class="col-sm-3">
+            <div class="sm:w-1/4 pr-4 pl-4">
                 <p>Trier par</p>
 
                 <div class="form-check-inline">

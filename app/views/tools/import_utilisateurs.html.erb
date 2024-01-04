@@ -18,8 +18,8 @@
   </div>
   <br>
   
-  <div class="row">
-    <div class="col-sm-4">
+  <div class="flex flex-wrap">
+    <div class="sm:w-1/3 pr-4 pl-4">
       <%= label :role, "Rôle" %>
       <%= select_tag :role, 
             options_for_select(User.roles.keys), class:"input input-bordered", include_blank: true %>

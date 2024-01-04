@@ -17,8 +17,8 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-sm-1">
+  <div class="flex flex-wrap">
+    <div class="sm:w-1/6 pr-4 pl-4">
       <h2>
         <span style="opacity: 80%;color:<%= @formation.color %>">
           <%= fa_icon 'briefcase 2x' %>
@@ -26,7 +26,7 @@
       </h2>
     </div>    
 
-    <div class="col-sm-6">
+    <div class="sm:w-1/2 pr-4 pl-4">
       <h3>
         <small class="text-gray-700">Nom</small><br>
         <%= @formation.nom %>
@@ -57,7 +57,7 @@
       </h3>
     </div>
 
-    <div class="col-sm-4">
+    <div class="sm:w-1/3 pr-4 pl-4">
       <h3>
         <small class="text-gray-700">Abrégé</small><br>
         <%= @formation.try(:abrg) %>
@@ -71,8 +71,8 @@
   </div>
   <hr>
 
-  <div class="row">
-    <div class="col-sm-3">
+  <div class="flex flex-wrap">
+    <div class="sm:w-1/4 pr-4 pl-4">
       <h3>
         <small class="text-gray-700">Diplôme</small><br>
       </h3>
@@ -86,7 +86,7 @@
       <%= @formation.nbr_heures %>
     </div>
 
-    <div class="col-sm-4">
+    <div class="sm:w-1/3 pr-4 pl-4">
       <h3>
         <small class="text-gray-700">Code Analytique</small><br>
       </h3>
@@ -100,7 +100,7 @@
       <%= @formation.nomtauxtd %>
     </div>
 
-    <div class="col-sm-5">
+    <div class="sm:w-2/5 pr-4 pl-4">
       <h3>
         <small class="text-gray-700">Nbr Etudiants</small>
       </h3>

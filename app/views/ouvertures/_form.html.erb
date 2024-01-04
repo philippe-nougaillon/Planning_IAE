@@ -11,7 +11,7 @@
     </div>
   <% end %>
 
-  <div class="col-sm-4">
+  <div class="sm:w-1/3 pr-4 pl-4">
     <%= form.select :bloc, options_for_select(['A','B','D'], ouverture.bloc) %>
     <%= form.select :jour, options_for_select(Ouverture.jours.keys, ouverture.jour) %>
     <%= form.text_field :début, type: 'time', value: (ouverture.new_record? ? '08:00' : ouverture.début.strftime("%H:%M")) %>

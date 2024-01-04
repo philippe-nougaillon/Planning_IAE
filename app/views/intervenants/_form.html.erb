@@ -12,54 +12,54 @@
     </div>
   <% end %>
 
-  <div class="row">
-    <div class="col-sm-5">
+  <div class="flex flex-wrap">
+    <div class="sm:w-2/5 pr-4 pl-4">
       <%= f.text_field :nom, required: true %>
       <%= f.text_field :prenom, label:"Prénom", required: true %>
       <%= f.text_field :email, required: true %>
-      <div class="row">        
-        <div class="col">
+      <div class="flex flex-wrap">        
+        <div class="relative flex-grow max-w-full flex-1 px-4">
           <%= f.text_field :titre1, label:"Titre" %>
         </div>
-        <div class="col">
+        <div class="relative flex-grow max-w-full flex-1 px-4">
           <%= f.text_field :bureau %>
         </div>
       </div>
 
-      <div class="row">        
-        <div class="col">
+      <div class="flex flex-wrap">        
+        <div class="relative flex-grow max-w-full flex-1 px-4">
           <%= f.text_field :téléphone_fixe %>
         </div>
-        <div class="col">
+        <div class="relative flex-grow max-w-full flex-1 px-4">
           <%= f.text_field :téléphone_mobile %>
         </div>
       </div>
     </div>
 
-    <div class="col-sm-1">
+    <div class="sm:w-1/6 pr-4 pl-4">
     </div>
 
-    <div class="col-sm-6">
-      <div class="row">
-        <div class="col">
+    <div class="sm:w-1/2 pr-4 pl-4">
+      <div class="flex flex-wrap">
+        <div class="relative flex-grow max-w-full flex-1 px-4">
           <%= f.select :status, Intervenant.statuses.keys.to_a, {include_blank: true, label: 'Statut'}, required: true %>
         </div>
 
-        <div class="col-5">
+        <div class="w-2/5">
           <%= f.number_field :nbr_heures_statutaire, label:"Nombre heures statutaires" %>
         </div>
 
-        <div class="col">
+        <div class="relative flex-grow max-w-full flex-1 px-4">
           <%= f.number_field :année_entrée, label:"Année d'entrée" %>
         </div>
       </div>
 
-      <div class="row">
-        <div class="col">
+      <div class="flex flex-wrap">
+        <div class="relative flex-grow max-w-full flex-1 px-4">
           <%= f.date_field :date_naissance %>
         </div>
 
-        <div class="col">
+        <div class="relative flex-grow max-w-full flex-1 px-4">
           <%= f.date_field :remise_dossier_srh, label:"Date remise dossier SRH" %>
         </div>
       </div>
@@ -68,26 +68,26 @@
 
       <%= f.text_field :adresse %>
 
-      <div class="row">        
-        <div class="col-sm-3">
+      <div class="flex flex-wrap">        
+        <div class="sm:w-1/4 pr-4 pl-4">
           <%= f.text_field :cp %>
         </div> 
-        <div class="col-sm-9">
+        <div class="sm:w-3/4 pr-4 pl-4">
           <%= f.text_field :ville %>
         </div>
       </div>
 
 
       <% if current_user.admin? %>
-        <div class="row">        
-          <div class="col">
+        <div class="flex flex-wrap">        
+          <div class="relative flex-grow max-w-full flex-1 px-4">
             <%= f.check_box :doublon, 
                             label:"Autoriser les doublons ?", 
                             title:"Autorise les doublons de cours sur un même créneau horaire !" 
             %>
           </div>
           
-          <div class="col">
+          <div class="relative flex-grow max-w-full flex-1 px-4">
             <%= f.check_box :notifier, 
                               label: "Notification planning ?",
                               title: "Envoyer la liste des cours du mois prochain"
@@ -104,29 +104,29 @@
     <hr>
     <%= f.fields_for :responsabilites do |r| %>
       <div class="row shadow-sm p-1 m-1">
-          <div class="col-sm-2">
+          <div class="sm:w-1/5 pr-4 pl-4">
             <%= r.date_field :debut, label:"Date" %>
           </div>
 
-          <div class="col-sm-6">
+          <div class="sm:w-1/2 pr-4 pl-4">
             <%= r.select :titre, Intervenant.liste_responsabilites, include_blank: true %>
           </div>
 
-          <div class="col-sm-3">
+          <div class="sm:w-1/4 pr-4 pl-4">
             <%= r.collection_select :formation_id, 
                     Formation.where(hors_catalogue: false), 
                     :id, :nom_eotp, {include_blank: true, label: "Formation/EOTP"} %>
           </div>  
   
-          <div class="col-sm-1">
+          <div class="sm:w-1/6 pr-4 pl-4">
             <%= r.text_field :heures, label:"Forfait" %>
           </div>
 
-          <div class="col-sm-8">
+          <div class="sm:w-2/3 pr-4 pl-4">
             <%= r.text_field :commentaires, label:"Commentaires" %>
           </div>
 
-          <div class="col-sm-2">
+          <div class="sm:w-1/5 pr-4 pl-4">
             <br>
             <%= r.check_box :_destroy, label:"Supprimer ?" %>
           </div>

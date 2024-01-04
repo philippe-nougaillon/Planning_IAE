@@ -3,7 +3,7 @@
 </div>
 
 <dl class="row">
-  <div class='col'>
+  <div class="relative flex-grow max-w-full flex-1 px-4">
     <dt>Le</dt>
     <dd><%= @import_log.created_at.in_time_zone('Paris') %></dd>
 
@@ -21,20 +21,20 @@
 
   </div>
 
-  <div class='col'>
+  <div class="relative flex-grow max-w-full flex-1 px-4">
     <dt>Etat</dt>
     <dd>
       <%= fa_icon @import_log.icon_etat, class: @import_log.icon_color %>
       <%= @import_log.etat.humanize %>
     </dd>
 
-    <div class="row">
-      <div class="col">
+    <div class="flex flex-wrap">
+      <div class="relative flex-grow max-w-full flex-1 px-4">
         <dt>Nbr lignes à importer</dt>
         <dd><%= link_to @import_log.nbr_lignes, import_log_path(@import_log) %></dd>
       </div>
 
-      <div class="col">
+      <div class="relative flex-grow max-w-full flex-1 px-4">
         <% if @import_log.etat == "warning" %>
           <dt>Rejetées</dt>
           <dd>
@@ -43,7 +43,7 @@
         <% end %>
       </div>
 
-      <div class="col">
+      <div class="relative flex-grow max-w-full flex-1 px-4">
         <dt>Importées</dt>
         <dd><%= @import_log.lignes_importees %></dd>
       </div>

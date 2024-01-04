@@ -17,31 +17,31 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="col">
+      <div class="flex flex-wrap">
+        <div class="relative flex-grow max-w-full flex-1 px-4">
           <span>
             Inclure :
           </span>
           <%= check_box_tag :search_cours, '1', params[:search_cours] == '1' %>
           <%= label_tag "Cours" %>
         </div>
-        <div class="col">
+        <div class="relative flex-grow max-w-full flex-1 px-4">
           <%= check_box_tag :search_formations, '1', params[:search_formations] == '1' %>
           <%= label_tag "Formations" %>
         </div>
-        <div class="col">
+        <div class="relative flex-grow max-w-full flex-1 px-4">
           <%= check_box_tag :search_intervenants, '1', params[:search_intervenants] == '1' %>
           <%= label_tag "Intervenants" %>
         </div>
-        <div class="col">
+        <div class="relative flex-grow max-w-full flex-1 px-4">
           <%= check_box_tag :search_etudiants, '1', params[:search_etudiants] == '1' %>
           <%= label_tag "Étudiants" %>
         </div>
-        <div class="col">
+        <div class="relative flex-grow max-w-full flex-1 px-4">
           <%= check_box_tag :search_users, '1', params[:search_users] == '1' %>
           <%= label_tag "Utilisateurs" %>
         </div>
-        <div class="col-1">
+        <div class="w-1/6">
           <%= check_box_tag :search_ue, '1', params[:search_ue] == '1' %>
           <%= label_tag :ue, "U.E." %>
         </div>

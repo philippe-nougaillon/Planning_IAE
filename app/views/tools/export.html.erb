@@ -10,16 +10,16 @@
 <%= form_tag({action: "export_do", method: :post}) do %>
 
   <div class="form-group">
-    <div class="row">
-      <div class="col-sm-5">
+    <div class="flex flex-wrap">
+      <div class="sm:w-2/5 pr-4 pl-4">
 
-        <div class="row">
-            <div class="col-sm-6">
+        <div class="flex flex-wrap">
+            <div class="sm:w-1/2 pr-4 pl-4">
               <%= label_tag "Du" %>    
               <%= text_field_tag :start_date, params[:start_date], type:'date', class:"input input-bordered", required: true %>
             </div>
 
-            <div class="col-sm-6">
+            <div class="sm:w-1/2 pr-4 pl-4">
               <%= label_tag "Au" %>    
               <%= text_field_tag :end_date, params[:end_date], type:'date', class:"input input-bordered", required: true %>
             </div>

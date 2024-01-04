@@ -78,21 +78,21 @@
     </div>
 
   <% elsif params[:action_name] == "Changer de date" %>
-    <div class="row">
-      <div class="col-sm-2">
+    <div class="flex flex-wrap">
+      <div class="sm:w-1/5 pr-4 pl-4">
         <%= label_tag "Nouvelle date" %>    
         <%= text_field_tag :new_date, params[:new_date], type:'date', class:"input input-bordered" %>
       </div>
 
-      <div class="col-sm-1">ou</div>
-      <div class="col-sm-6">
+      <div class="sm:w-1/6 pr-4 pl-4">ou</div>
+      <div class="sm:w-1/2 pr-4 pl-4">
         <%= label_tag "Décaler de x jours" %><br>
         <%= number_field_tag :add_n_days, class: "input input-bordered" %>
       </div>
     </div>
 
   <% elsif params[:action_name] == "Changer d'intervenant" %>
-    <div class="col-sm-6">
+    <div class="sm:w-1/2 pr-4 pl-4">
       <%= label_tag "Nouvel intervenant" %>    
       <%= select_tag :intervenant_id, 
                       options_from_collection_for_select(Intervenant.all, :id, :nom_prenom, params[:intervenant_id]), 
@@ -103,28 +103,28 @@
   <% elsif params[:action_name] == "Intervertir" %>
     <h3>Que voulez-vous intervertir ?</h3>
     <br>
-    <div class="row">
-      <div class="col-sm-2">
+    <div class="flex flex-wrap">
+      <div class="sm:w-1/5 pr-4 pl-4">
         <%= check_box_tag :intervertir_intervenants %>
         <%= label_tag "Intervenants" %>    
       </div>
 
-      <div class="col-sm-2">
+      <div class="sm:w-1/5 pr-4 pl-4">
         <%= check_box_tag :intervertir_binomes %>
         <%= label_tag "Binômes" %>    
       </div>
 
-      <div class="col-sm-2">
+      <div class="sm:w-1/5 pr-4 pl-4">
         <%= check_box_tag :intervertir_intitulé %>
         <%= label_tag "Intitulé cours" %>    
       </div>
 
-      <div class="col-sm-2">
+      <div class="sm:w-1/5 pr-4 pl-4">
         <%= check_box_tag :intervertir_ue %>
         <%= label_tag "UE" %>    
       </div>
 
-      <div class="col-sm-2">
+      <div class="sm:w-1/5 pr-4 pl-4">
         <%= check_box_tag :intervertir_salles %>
         <%= label_tag "Salles" %>    
       </div>
@@ -141,15 +141,15 @@
       <br>
       Une proposition par cours et par intervenant sera créée et envoyée.
     </p>
-    <div class="row">
-      <div class="col-3">
+    <div class="flex flex-wrap">
+      <div class="w-1/4">
         <%= label_tag 'Intervenant *' %>
         <%= select_tag 'invit[intervenant][1]', 
                         options_from_collection_for_select(Intervenant.where.not(doublon:true), :id, :nom_prenom, params[:intervenant_ids]), 
                         include_blank: true,
                         class: "input input-bordered select2" %>
       </div>
-      <div class="col-5">
+      <div class="w-2/5">
         <%= label_tag :ue, "U.E." %>
         <br>
         <%= select_tag 'invit[ue][1]', 
@@ -157,21 +157,21 @@
                         include_blank: true,
                         class: "input input-bordered select2" %>
       </div>
-      <div class="col-4">
+      <div class="w-1/3">
         <%= label_tag 'Intitulé du cours' %>
         <br>
         <%= text_field_tag 'invit[nom][1]', nil, style: 'width: 100%' %>
       </div>
     </div>
-    <div class="row">
-      <div class="col-3">
+    <div class="flex flex-wrap">
+      <div class="w-1/4">
         <%= label_tag 'Intervenant *' %>
         <%= select_tag 'invit[intervenant][2]', 
                         options_from_collection_for_select(Intervenant.where.not(doublon:true), :id, :nom_prenom, params[:intervenant_ids]), 
                         include_blank: true,
                         class: "input input-bordered select2" %>
       </div>
-      <div class="col-5">
+      <div class="w-2/5">
         <%= label_tag :ue, "U.E." %>
         <br>
         <%= select_tag 'invit[ue][2]', 
@@ -179,21 +179,21 @@
                         include_blank: true,
                         class: "input input-bordered select2" %>
       </div>
-      <div class="col-4">
+      <div class="w-1/3">
         <%= label_tag 'Intitulé du cours' %>
         <br>
         <%= text_field_tag 'invit[nom][2]', nil, style: 'width: 100%' %>
       </div>
     </div>
-    <div class="row">
-      <div class="col-3">
+    <div class="flex flex-wrap">
+      <div class="w-1/4">
         <%= label_tag 'Intervenant *' %>
         <%= select_tag 'invit[intervenant][3]', 
                         options_from_collection_for_select(Intervenant.where.not(doublon:true), :id, :nom_prenom, params[:intervenant_ids]), 
                         include_blank: true,
                         class: "input input-bordered select2" %>
       </div>
-      <div class="col-5">
+      <div class="w-2/5">
         <%= label_tag :ue, "U.E." %>
         <br>
         <%= select_tag 'invit[ue][3]', 
@@ -201,21 +201,21 @@
                         include_blank: true,
                         class: "input input-bordered select2" %>
       </div>
-      <div class="col-4">
+      <div class="w-1/3">
         <%= label_tag 'Intitulé du cours' %>
         <br>
         <%= text_field_tag 'invit[nom][3]', nil, style: 'width: 100%' %>
       </div>
     </div>
-    <div class="row">
-      <div class="col-3">
+    <div class="flex flex-wrap">
+      <div class="w-1/4">
         <%= label_tag 'Intervenant *' %>
         <%= select_tag 'invit[intervenant][4]', 
                         options_from_collection_for_select(Intervenant.where.not(doublon:true), :id, :nom_prenom, params[:intervenant_ids]), 
                         include_blank: true,
                         class: "input input-bordered select2" %>
       </div>
-      <div class="col-5">
+      <div class="w-2/5">
         <%= label_tag :ue, "U.E." %>
         <br>
         <%= select_tag 'invit[ue][4]', 
@@ -223,7 +223,7 @@
                         include_blank: true,
                         class: "input input-bordered select2" %>
       </div>
-      <div class="col-4">
+      <div class="w-1/3">
         <%= label_tag 'Intitulé du cours' %>
         <br>
         <%= text_field_tag 'invit[nom][4]', nil, style: 'width: 100%' %>
@@ -246,7 +246,7 @@
     <br>
 
   <% elsif params[:action_name] == "Supprimer" %>
-    <div class="col-sm-8">
+    <div class="sm:w-2/3 pr-4 pl-4">
       <%= label_tag "Confirmation :" %><br>
       <%= check_box_tag :delete %> Suppression définitive de tous les cours sélectionnés ?
       <br>
@@ -283,7 +283,7 @@
       <% end %>
     </div>
     <div class="row my-4">
-      <div class="col-sm-4">
+      <div class="sm:w-1/3 pr-4 pl-4">
         <%= check_box_tag :table %>
         <%= label_tag :table, "Ajouter une colonne N° Table" %>
       </div>
@@ -330,7 +330,7 @@
   <% end %>
 
   <div class="row mb-5">
-    <div class="col-sm-12">
+    <div class="sm:w-full pr-4 pl-4">
       <%= submit_tag 'Appliquer', class:"btn btn-primary" %>
       <%= link_to 'Annuler', root_url, class:"btn btn-light" %>
     </div>

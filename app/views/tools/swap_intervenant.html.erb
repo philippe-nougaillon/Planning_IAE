@@ -6,8 +6,8 @@
 <%= form_tag({action: "swap_intervenant_do", method: :post}, multipart: true) do %>
 
   <div class="form-group">
-    <div class="row">
-      <div class="col-sm-5">
+    <div class="flex flex-wrap">
+      <div class="sm:w-2/5 pr-4 pl-4">
 
         <%= label_tag :intervenant_from_id, "Intervenant à remplacer" %>
         <%= select_tag :intervenant_from_id,

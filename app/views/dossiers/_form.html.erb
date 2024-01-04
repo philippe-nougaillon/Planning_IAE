@@ -13,8 +13,8 @@
 
   <%= form.hidden_field :intervenant_id %>
 
-  <div class="row">
-    <div class="col">
+  <div class="flex flex-wrap">
+    <div class="relative flex-grow max-w-full flex-1 px-4">
       <% if dossier.new_record? %>
         <%= form.select :période, options_for_select(Dossier.périodes, dossier.période) %>
       <% else %>
@@ -30,7 +30,7 @@
 
     </div>
 
-    <div class="col">
+    <div class="relative flex-grow max-w-full flex-1 px-4">
       <%= form.select :workflow_state, Dossier.workflow_spec.states.keys.to_a, label: "Etat" %>
       <%= form.text_area :mémo %>
     </div>
@@ -40,13 +40,13 @@
     <h5>Pièces justificatives</h5>
     <%= form.fields_for :documents do |doc| %>
       <div class="row shadow-sm">
-        <div class="col-sm-3">
+        <div class="sm:w-1/4 pr-4 pl-4">
           <%= doc.text_field :nom %>
         </div>
-        <div class="col-sm-2">
+        <div class="sm:w-1/5 pr-4 pl-4">
           <%= doc.select :workflow_state, Document.workflow_spec.states.keys.to_a, label: "Etat" %>
         </div>
-        <div class="col">
+        <div class="relative flex-grow max-w-full flex-1 px-4">
           <%= doc.text_field :commentaire %>
         </div>
       </div>

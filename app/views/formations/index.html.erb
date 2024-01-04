@@ -10,9 +10,9 @@
 <div class="container-fluid p-3 shadow-sm">
     <%= form_tag request.path, method: :get do %>
       <div class="form-group">
-        <div class="row">
+        <div class="flex flex-wrap">
 
-          <div class="col-sm-5">
+          <div class="sm:w-2/5 pr-4 pl-4">
             <%= label_tag :nom, "Nom/Abrg./Code/Promo" %>
             <div class="input-group">    
               <%= text_field_tag :nom, params[:nom], include_blank:true, onchange:'this.form.submit()', class:"input input-bordered input-sm" %>
@@ -22,7 +22,7 @@
             </div> 
           </div>
 
-          <div class="col-sm-3">
+          <div class="sm:w-1/4 pr-4 pl-4">
             <%= label_tag :catalogue, "Catalogue ?" %>
             <br>
             <%= radio_button_tag :catalogue, "yes", (params[:catalogue]=='yes'), onchange:'this.form.submit()' %>
@@ -33,13 +33,13 @@
             Tout           
           </div>
 
-          <div class="col-sm-2">
+          <div class="sm:w-1/5 pr-4 pl-4">
             <%= label_tag :archive, "Archivées ?" %>
             <br>
             <%= check_box_tag :archive, 1, params[:archive], onchange:'this.form.submit()' %>
           </div>
 
-          <div class="col-sm-2">
+          <div class="sm:w-1/5 pr-4 pl-4">
               <%= label_tag "Afficher" %>
               <br> 
               <%= radio_button_tag :paginate, "pages", (params[:paginate]=='pages'), onchange:'this.form.submit()' %>

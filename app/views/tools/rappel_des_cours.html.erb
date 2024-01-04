@@ -13,8 +13,8 @@
     <br>
   </div>
   
-  <div class="row">
-    <div class="col-sm-4">
+  <div class="flex flex-wrap">
+    <div class="sm:w-1/3 pr-4 pl-4">
       <%= label_tag "Formation" %>
       <%= select_tag :formation_id, 
             options_from_collection_for_select(@formations, :id, :nom, params[:formation_id]), 

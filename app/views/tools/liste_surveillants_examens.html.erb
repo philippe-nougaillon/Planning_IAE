@@ -9,17 +9,17 @@
 </div>
 
 <%= form_tag(request.path, method: :get) do %>
-    <div class="row">
-        <div class="col-sm-3">
+    <div class="flex flex-wrap">
+        <div class="sm:w-1/4 pr-4 pl-4">
             <%= label_tag "Cours du" %>
             <%= text_field_tag :start_date, params[:start_date], type: 'date', class: "input input-bordered", required: true  %>
         </div>
 
-        <div class="col-sm-3">
+        <div class="sm:w-1/4 pr-4 pl-4">
             <%= label_tag "Au" %>
             <%= text_field_tag :end_date, params[:end_date], type: 'date', class: "input input-bordered", required: true %>
         </div>
-        <div class="col-sm-3 self-end">
+        <div class="sm:w-1/4 pr-4 pl-4 self-end">
             <%= submit_tag 'Rechercher', class: 'btn btn-primary' %>
         </div>
     </div>

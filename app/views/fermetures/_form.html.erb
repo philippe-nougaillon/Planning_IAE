@@ -18,18 +18,18 @@
   <%= f.text_field :date, 
                     value: !@fermeture.new_record? ? @fermeture.date.strftime("%Y-%m-%dT%H:%M") : nil, 
                     type: 'datetime-local', # datetime-local et pas date à cause de Firefox
-                    label: 'Début de la période de fermeture', class: 'col-sm-3' %>
+                    label: 'Début de la période de fermeture', class: 'sm:w-1/4 pr-4 pl-4' %>
 
   <% if @fermeture.new_record? %>
     <%= label_tag 'Fin de la période' %>
     <%= text_field_tag :date_fin,
                         :date_fin,
                         type: 'datetime-local', # datetime-local et pas date à cause de Firefox
-                        class: 'input input-bordered col-sm-3' %>
+                        class: 'input input-bordered sm:w-1/4 pr-4 pl-4' %>
   <% end %>
   <br>
 
-  <%= f.text_field :nom, class: 'col-sm-3' %>
+  <%= f.text_field :nom, class: 'sm:w-1/4 pr-4 pl-4' %>
   <br>
 
   <%= f.form_group do %>

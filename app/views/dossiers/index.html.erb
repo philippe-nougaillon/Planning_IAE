@@ -13,9 +13,9 @@
 <div class="container-fluid p-3 shadow-sm">
     <%= form_tag request.path, method: :get do %>
       <div class="form-group">
-        <div class="row">
+        <div class="flex flex-wrap">
 
-          <div class="col-sm-2">
+          <div class="sm:w-1/5 pr-4 pl-4">
             <%= label_tag :période, "Période" %>
             <%= select_tag :période, 
                                 options_for_select(Dossier.périodes, params[:période]), 
@@ -24,12 +24,12 @@
                                 onchange: 'this.form.submit()' %>
           </div>
 
-          <div class="col-sm-3">
+          <div class="sm:w-1/4 pr-4 pl-4">
             <%= label_tag :nom, "Nom" %>    
             <%= text_field_tag :nom, params[:nom], include_blank:true, onchange:'this.form.submit()', class: 'input input-bordered input-sm' %>
           </div>
 
-          <div class="col-sm-2">
+          <div class="sm:w-1/5 pr-4 pl-4">
             <%= label_tag :workflow_state, "Etat" %>
             <%= select_tag :workflow_state, 
                                 options_for_select(Dossier.workflow_spec.states.keys.to_a, params[:workflow_state]), 
@@ -38,7 +38,7 @@
                                 onchange: 'this.form.submit()' %>
           </div>
 
-          <div class="col-sm-2">
+          <div class="sm:w-1/5 pr-4 pl-4">
             <%= label_tag "Trier par " %>
             <br> 
             <%= radio_button_tag :order_by, 'dossiers.updated_at', (params[:order_by]=='dossiers.updated_at'), onchange:'this.form.submit()' %>
@@ -47,7 +47,7 @@
             Nom 
           </div>
 
-          <div class="col-sm-3 mt-2">
+          <div class="sm:w-1/4 pr-4 pl-4 mt-2">
             <br>
             <%= check_box_tag :archive, nil, params[:archive], onchange: 'this.form.submit()' %>
             <%= label_tag :archive, "Inclure les archivés ?" %>

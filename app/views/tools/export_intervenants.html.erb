@@ -10,18 +10,18 @@
 <%= form_tag({action: "export_intervenants_do", method: :post}) do %>
 
   <div class="form-group">
-    <div class="row">
-      <div class="col-sm-2">
+    <div class="flex flex-wrap">
+      <div class="sm:w-1/5 pr-4 pl-4">
         <%= label_tag :date_debut, "Intervenus du" %>
         <%= text_field_tag :date_debut, params[:date_debut], type: 'date', class: 'input input-bordered', required: true %>
       </div>
 
-      <div class="col-sm-2">
+      <div class="sm:w-1/5 pr-4 pl-4">
         <%= label_tag :date_fin, "au" %>
         <%= text_field_tag :date_fin, params[:date_fin], type: 'date', class: 'input input-bordered', required: true %>
       </div>
 
-      <div class="col-sm-3">
+      <div class="sm:w-1/4 pr-4 pl-4">
           <%= label_tag :status, "Statut" %>
           <%= select_tag :status, 
                 options_for_select(Intervenant.statuses, params[:status]), 
@@ -31,7 +31,7 @@
     </div>
 
     <div class="row mt-3">
-      <div class="col-sm-2">
+      <div class="sm:w-1/5 pr-4 pl-4">
         <div class="actions">
           <%= submit_tag "Exporter", class: "btn btn-success" %>
         </div>

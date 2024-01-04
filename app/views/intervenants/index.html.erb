@@ -10,13 +10,13 @@
 <div class="container-fluid p-3 shadow-sm shadow-sm">
   <%= form_tag request.path, method: :get do %>
     <div class="form-group">
-      <div class="row">
-        <div class="col-sm-4">
+      <div class="flex flex-wrap">
+        <div class="sm:w-1/3 pr-4 pl-4">
           <%= label_tag :nom, "Nom/Prénom" %>    
           <%= text_field_tag :nom, params[:nom], include_blank:true, onchange:'this.form.submit()', class:"input input-bordered input-sm" %>
         </div>
         
-        <div class="col-sm-3">
+        <div class="sm:w-1/4 pr-4 pl-4">
           <%= label_tag :status, "Statut" %>
           <div class="input-group">
             <%= select_tag :status, options_for_select(Intervenant.statuses, 
@@ -28,7 +28,7 @@
           </div>
         </div>
 
-        <div class="col-sm-3">
+        <div class="sm:w-1/4 pr-4 pl-4">
           <%= label_tag :doublon, "Doublons autorisés ?" %>
           <br>    
           <%= check_box_tag :doublon, 1, params[:doublon], onchange:'this.form.submit()' %>

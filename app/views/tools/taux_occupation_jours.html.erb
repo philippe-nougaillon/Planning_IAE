@@ -18,13 +18,13 @@
 <%= form_tag({action: "taux_occupation_jours_do", method: :post}) do %>
 
     <div class="form-group">
-        <div class="row">
-            <div class="col-sm-2">
+        <div class="flex flex-wrap">
+            <div class="sm:w-1/5 pr-4 pl-4">
                 <%= label_tag "Période du" %>    
                 <%= text_field_tag :start_date, params[:start_date], type:'date', class:"input input-bordered" %>
             </div>
 
-            <div class="col-sm-2">
+            <div class="sm:w-1/5 pr-4 pl-4">
                 <%= label_tag "Au" %>    
                 <%= text_field_tag :end_date, params[:end_date], type:'date', class:"input input-bordered" %>
             </div>

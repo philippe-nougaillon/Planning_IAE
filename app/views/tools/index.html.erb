@@ -3,8 +3,8 @@
 </div>
 <br>
 
-<div class="row">
-	<div class="col-sm-4">
+<div class="flex flex-wrap">
+	<div class="sm:w-1/3 pr-4 pl-4">
 		<ul>
 			<li>
 				<%= fa_icon 'calendar-day' %>
@@ -63,7 +63,7 @@
 		</ul>
 	</div>
 	
-	<div class="col-sm-4">
+	<div class="sm:w-1/3 pr-4 pl-4">
 		<ul>
 			<li>
 				<%= fa_icon 'download' %>
@@ -132,7 +132,7 @@
 	</div>
 
 	<% if current_user.admin? %>
-		<div class="col-sm-4">
+		<div class="sm:w-1/3 pr-4 pl-4">
 			<ul>
 				<li>
 					<%= fa_icon 'users' %>
