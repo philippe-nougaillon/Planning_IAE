@@ -3,9 +3,9 @@ module ApplicationHelper
     def navbar_nav_item(name, icon, path, label = nil, action = nil)
         is_active = action ? action_name == action : controller_name == name
         render(inline: %{
-            <li class="nav-item">
+            <li>
                 <%= link_to '#{ url_for(path) }', 
-                            class: 'nav-link text-#{ is_active ? 'primary' : 'dark' }' do %>
+                            class: 'text-#{ is_active ? 'primary' : 'dark' }' do %>
                     <%= fa_icon '#{ icon }' %>
                     #{ label ? label : name.humanize }
                 <% end %>

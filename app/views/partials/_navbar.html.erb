@@ -1,5 +1,5 @@
 <nav class="navbar <%= ENV["STAGING_COLOR_MODE"] %> sticky top-0 z-50 shadow">
-  <div class="navbar-start">
+  <div class="flex-1">
     <a href="/" aria-label="logo">
       <%= image_tag("logo_iae@195.png", height: 40, alt: 'logo IAE') %>
     </a>
@@ -44,9 +44,8 @@
     </ul>
   </div>
 
-  <div class="navbar-end">
-
-    <ul class="menu menu-horizontal px-1">
+  <div>
+    <ul class="menu menu-horizontal items-center px-1">
       <% if user_signed_in? %>
         <li class="mr-5">
           <%= current_user.username %>
@@ -62,7 +61,7 @@
         <% end %>
 
         <li>
-          <%= button_to destroy_user_session_path, method: :delete, class:'btn btn-outline-danger', 'data-turbo': false, title: "Fermer la session de #{current_user.email}" do %>
+          <%= button_to destroy_user_session_path, method: :delete, 'data-turbo': false, title: "Fermer la session de #{current_user.email}" do %>
             <i class="fas fa-fw fa-sign-out-alt"></i>
             </span> Déconnexion
           <% end %> 
@@ -72,6 +71,5 @@
         <%= navbar_nav_item('Se connecter', 'sign-in-alt', new_user_session_path) %>
       <% end %>
     </ul>
-    
   </div>
 </nav>

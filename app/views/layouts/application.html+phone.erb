@@ -74,7 +74,9 @@
                             <%= navbar_nav_item('salles', 'chalkboard', occupation_salles_path) %>
                         <% end %>
                         <li class="nav-item">
-                            <%= link_to destroy_user_session_path, method: :delete, class: "nav-link text-dark" do %><i class="fas fa-fw fa-sign-out-alt"></i></span> Déconnexion<% end %> 
+                            <%= button_to destroy_user_session_path, method: :delete, class:'btn btn-outline-danger', 'data-turbo': false, title: "Fermer la session de #{current_user.email}" do %>
+                                <i class="fas fa-fw fa-sign-out-alt"></i></span> Déconnexion
+                            <% end %> 
                         </li>
                     <% else %>
                         <%= navbar_nav_item('Se connecter', 'sign-in-alt', new_user_session_path) %>
