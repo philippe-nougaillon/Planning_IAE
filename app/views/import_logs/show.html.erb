@@ -54,7 +54,7 @@
 </dl>
 
 <div class="overflow-x-auto">
-  <table class="table table-zebra table-bordered table-hover table-sm">
+  <table class="table table-zebra table-bordered table-sm">
     <thead>
       <tr>
         <th>Ligne</th>
@@ -66,7 +66,7 @@
 
     <tbody>
       <% @import_log_lines.each do |import_log_line| %>
-        <tr>
+        <tr class="hover">
           <td><%= import_log_line.num_ligne %></td>
           <td><%= fa_icon import_log_line.icon_etat, class: import_log_line.icon_color %></td>
           <td><%= import_log_line.pretiffy_message.first %></td>

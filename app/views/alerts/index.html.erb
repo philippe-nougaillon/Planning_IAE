@@ -12,7 +12,7 @@
   <span class="text-warning font-weight-light">Attention, sur le serveur il est actuellement <%= l(Time.now.utc, format: "%Hh%M") %></span>
 </h5>
 
-<table class="table table-bordered table-zebra table-hover table-sm">
+<table class="table table-bordered table-zebra table-sm">
   <thead>
     <tr>
       <th><%= sortable :debut do %>Début d'affichage<% end %></th>
@@ -26,7 +26,7 @@
 
   <tbody>
     <% @alerts.each do |alert| %>
-      <tr>
+      <tr class="hover">
         <td><%= l(alert.debut, format: :short) %></td>
         <td><%= l(alert.fin, format: :short) %></td>
         <td><%= 'OUI' if alert.visible? %></td>

@@ -59,7 +59,7 @@
 </div>
 <br>
 
-<table class="table table-hover table-zebra">
+<table class="table table-zebra">
   <thead>
     <tr>
       <th>Période</th>
@@ -73,7 +73,7 @@
 
   <tbody>
     <% @dossiers.each do |dossier| %>
-      <tr>
+      <tr class="hover">
         <td><%= dossier.période %></td>
         <td><%= dossier.intervenant.nom_prenom %></td>
         <td>

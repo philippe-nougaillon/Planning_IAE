@@ -47,7 +47,7 @@
     <h5>Pièces justificatives</h5>
 
     <% if @dossier.documents.any? %>
-      <table class="table table-hover table-sm shadow-sm">
+      <table class="table table-sm shadow-sm">
         <thead>
           <th>Type</th>
           <th>Fichier</th>
@@ -57,7 +57,7 @@
         </thead>
         <tbody>
           <% @dossier.documents.each do | doc | %>
-            <tr>
+            <tr class="hover">
               <td><%= doc.nom %></td>
               <td>
                 <% if doc.fichier.attached? %>
@@ -138,7 +138,7 @@
   <br>
   <h5>Audit des modifications</h5>
 
-  <table class="table table-hover table-sm table-zebra table-bordered">
+  <table class="table table-sm table-zebra table-bordered">
     <thead>
       <th>Date</th>
       <th>Utilisateur</th>            

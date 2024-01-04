@@ -31,7 +31,7 @@
     Surveillances trouvées
 </h4>
 
-<table class="table table-sm table-zebra table-hover">
+<table class="table table-sm table-zebra">
     <thead>
         <th>Le</th>
         <th>Formation</th>
@@ -54,7 +54,7 @@
                     <% surveillant = item.gsub(']', '').delete("\r\n\\") %>
                     <% durée = exam.duree + ((exam.intervenant_id == 1314) ? 0 : 1) %>
                     <% @cumuls[surveillant] ? @cumuls[surveillant] += durée : @cumuls[surveillant] = durée %>
-                    <tr>
+                    <tr class="hover">
                         <td><%= link_to l(exam.debut, format: :long), cour_path(exam.id) %></td>
                         <td><%= exam.formation.nom %></td>
                         <td><b><%= surveillant %></b></td>
@@ -73,7 +73,7 @@
     <%= "Total par surveillant (du #{l @start_date.to_date} au #{l @end_date.to_date})" %>
 </h4>
 
-<table class="table table-sm table-zebra table-hover table-bordered" style="width: 70%">
+<table class="table table-sm table-zebra table-bordered" style="width: 70%">
     <thead>
         <th>Nom</th>
         <th>Total durée payée</th>
@@ -83,7 +83,7 @@
     </tfoot>
     <tbody>
         <% @cumuls.keys.sort.each do | k | %>
-            <tr>
+            <tr class="hover">
                 <td><%= k %></td>
                 <td><%= @cumuls[k] %> h</td>
                 <td><%= link_to 'Exporter en PDF', url_for(params.permit!.merge(format: :pdf, surveillant: k)) %>

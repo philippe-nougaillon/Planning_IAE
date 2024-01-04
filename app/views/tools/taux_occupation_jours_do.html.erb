@@ -5,7 +5,7 @@
   </h1>
 </div>
 
-<table class="table table-zebra table-hover">
+<table class="table table-zebra">
   <thead>
     <th>Date</th>
     <th>Taux journée</th>
@@ -16,7 +16,7 @@
   </tfoot>
   <tbody>
     <% @results.each do |r| %>
-      <tr>
+      <tr class="hover">
         <td><%= r[0] %></td>
         <td><%= r[1] %>%</td>
         <td><%= r[2] %>%</td>

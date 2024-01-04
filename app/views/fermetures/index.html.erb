@@ -51,7 +51,7 @@
 </div>
 
 <div class="overflow-x-auto">
-  <table class="table table-zebra table-bordered table-hover">
+  <table class="table table-zebra table-bordered">
     <thead>
       <tr>
         <th><%= fermetures_sort_link 'fermetures.date', 'Date' %></th>
@@ -64,7 +64,7 @@
 
     <tbody>
       <% @fermetures.each do |fermeture| %>
-        <tr>
+        <tr class="hover">
           <td><b><%= l fermeture.date %></b></td>
           <td><%= l fermeture.date, format: :long %></td>
           <td><%= fermeture.nom %></td>

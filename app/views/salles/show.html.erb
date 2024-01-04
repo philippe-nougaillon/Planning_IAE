@@ -61,7 +61,7 @@
 
 <div id="audit" class="collapse">
   <h4>Audit des modifications</h4>
-  <table class="table table-bordered table-hover table-sm">
+  <table class="table table-bordered table-sm">
     <thead>
       <th>Date</th>
       <th>Utilisateur</th>            
@@ -79,7 +79,7 @@
     Audit des attributions
   </h4>
 
-  <table class="table table-bordered table-zebra table-hover table-sm">
+  <table class="table table-bordered table-zebra table-sm">
     <thead>
       <th>Date</th>
       <th>Qui</th>
@@ -91,7 +91,7 @@
     <% @audits.includes(:user).limit(1000).each do |audit| %>
         <% if extract_salle_id(audit) == @salle.id %>
             <% if cour = Cour.where(id: audit.auditable_id).first %>
-              <tr>
+              <tr class="hover">
                 <td><%= l(audit.created_at, format: :perso) %></td>
                 <td><%= audit.try(:user).try(:email) %></td>
                 <td><%= link_to audit.auditable_id, cour_path(cour) %></td>

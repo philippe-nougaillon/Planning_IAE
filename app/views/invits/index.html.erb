@@ -61,7 +61,7 @@
 <%= form_tag action_invits_path, name: 'action' do %>
   <div data-controller="action">
 
-    <table class="table table-hover">
+    <table class="table">
       <thead>
         <tr>
           <th></th>
@@ -80,7 +80,7 @@
         <%= current_date = '' %>
         <% @invits.each do | invit | %>
           <% if invit.cour.debut.to_date != current_date %>
-            <tr class="shadow-sm bg-light">
+            <tr class="hover shadow-sm bg-light">
               <th colspan=9>
                 <%= fa_icon 'calendar-check' %>
                 <b><%= l(invit.cour.debut.to_date, format: :long).humanize %></b> 

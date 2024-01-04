@@ -6,7 +6,7 @@
   soit <%= @nbr_jours %> jours 
 </div>
 
-<table class="table table-zebra table-hover">
+<table class="table table-zebra">
   <thead>
     <th>Salle</th>
     <th>Nbr heures de cours</th>
@@ -18,7 +18,7 @@
   </tfoot>
   <tbody>
     <% @results.sort.each do |r| %>
-      <tr>
+      <tr class="hover">
         <td><b><%= r.first %></b></td>
         <td><%= r.last %></td>
         <td><%= @nbr_heures_dispo_salle %></td>

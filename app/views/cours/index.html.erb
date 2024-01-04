@@ -129,7 +129,7 @@
     
     <%= form_tag action_cours_path, name: 'action' do %>
       <div data-controller="check-all action">
-        <table class="table table-hover">
+        <table class="table">
           <thead class="shadow-sm">
             <tr>
               <% if policy(Cour).action? %>
@@ -157,7 +157,7 @@
             <% @cours.includes(:formation, :intervenant, :salle).each do | cours | %>
 
               <% if cours.debut.to_date != current_date %>
-                <tr class="shadow-sm bg-light">
+                <tr class="hover shadow-sm bg-light">
                   <% if policy(Cour).action? %><th></th><% end %>
                   <th colspan=<%= policy(Cour).action? ? '9' : '8' %>>
                     <%= fa_icon 'calendar-day' %>

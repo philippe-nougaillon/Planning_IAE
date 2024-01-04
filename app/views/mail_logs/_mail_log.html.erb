@@ -1,4 +1,4 @@
-<tr>
+<tr class="hover">
   <td><%= mail_log.user_id == 0 ? "Système" : User.find(mail_log.user_id).nom_et_prénom %></td>
   <td><%= mail_log.to %></td>
   <td><%= mail_log.subject %></td>

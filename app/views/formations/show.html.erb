@@ -127,7 +127,7 @@
     </h3>
     
     <div class="overflow-x-auto">
-      <table class="table table-zebra table-hover table-sm">
+      <table class="table table-zebra table-sm">
         <thead>
           <tr>
             <th>Code</th>
@@ -144,7 +144,7 @@
           <% total_ue_prévu = total_prévu = 0.0 %>
           <% total_ue_réalisé = total_réalisé = 0.0 %>
           <% @formation.unites.each do | unite | %>
-            <tr>
+            <tr class="hover">
               <% cours = @formation.cours.where(code_ue: unite.code) %>
               <td style="text-align: right;"><%= link_to unite.code, cours_path(formation_id: @formation, ue: unite.num) %></td>
               <td><%= unite.nom %></td>
@@ -185,7 +185,7 @@
     </h3>
     
     <div class="overflow-x-auto">
-      <table class="table table-zebra table-hover table-sm">
+      <table class="table table-zebra table-sm">
         <thead>
           <tr>
             <th>Nom</th>
@@ -198,7 +198,7 @@
 
         <tbody>
           <% @formation.etudiants.each do | etudiant | %>
-            <tr>
+            <tr class="hover">
               <td><%= etudiant.nom %></td>
               <td><%= etudiant.prénom %></td>
               <td><%= etudiant.civilité %></td>
@@ -222,7 +222,7 @@
       <small class="text-gray-700">Vacations</small>
     </h3>
 
-    <table class="table table-zebra table-hover table-sm">
+    <table class="table table-zebra table-sm">
       <thead>
         <th>Date</th>
         <th>Formation</th>
@@ -242,7 +242,7 @@
   <div id="audit" class="collapse">
     <% if @formation.audits.any? %>
       <h4>Audit des modifications</h4>
-      <table class="table table-bordered table-hover table-condensed">
+      <table class="table table-bordered table-sm">
         <thead>
           <th>Date</th>
           <th>Utilisateur</th>            

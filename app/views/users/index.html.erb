@@ -49,7 +49,7 @@
 </div>
 
 <div class="overflow-x-auto">
-  <table class="table table-zebra table-hover">
+  <table class="table table-zebra">
     <thead>
       <tr>
         <th><%= sort_link 'users.nom', 'Nom' %></th>
@@ -70,7 +70,7 @@
 
     <tbody>
       <% @users.each do |user| %>
-        <tr class='shadow-sm'>
+        <tr class="hover shadow-sm">
           <td><%= link_to user.nom, user %></td>
           <td><%= user.prénom %></td>
           <td>
