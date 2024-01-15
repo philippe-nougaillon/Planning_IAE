@@ -22,19 +22,15 @@
             <div class="sm:w-1/4 px-4">
                 <p>Trier par</p>
 
-                <div class="form-check-inline">
-                    <label class="form-check-label">
-                        <%= radio_button_tag :tri, :date_cours, params[:tri] == 'date_cours', class: "form-check-input", onchange:'this.form.submit()' %>
-                        Date du cours
-                    </label>
-                </div>
+                <label>
+                    <%= radio_button_tag :tri, :date_cours, params[:tri] == 'date_cours', onchange:'this.form.submit()' %>
+                    Date du cours
+                </label>
 
-                <div class="form-check-inline">
-                    <label class="form-check-label">
-                        <%= radio_button_tag :tri, :date_création, params[:tri] == 'date_création' , class: "form-check-input", onchange:'this.form.submit()' %>
-                        Date de création
-                    </label>
-                </div>
+                <label>
+                    <%= radio_button_tag :tri, :date_création, params[:tri] == 'date_création', onchange:'this.form.submit()' %>
+                    Date de création
+                </label>
 
             </div>
 
