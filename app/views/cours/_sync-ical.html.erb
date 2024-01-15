@@ -4,14 +4,13 @@
 <p>
   Ajouter le lien ci-dessous à votre calendrier personnel (Google Agenda, Apple Calendar, Outlook, ...) pour que vos cours apparaissent automatiquement.
 </p>
-<div class="input-group mb-4">
-  <input type="text" class="input input-bordered w-full" value=<%= url %> id="calendar-clipboard">
-  <div class="input-group-append">
-    <span id="myTooltip" onclick="myFunction()" class="input-group-text" style="cursor: pointer;">
-      Copier
-    </span>
-  </div>
+<div class="join w-full mb-4">
+  <input type="text" class="input input-bordered w-full join-item" value=<%= url %> id="calendar-clipboard">
+  <span id="myTooltip" onclick="myFunction()" class="btn join-item" style="cursor: pointer;">
+    Copier
+  </span>
 </div>
+
 <script>
   function myFunction() {
     var copyText = document.getElementById("calendar-clipboard");

@@ -12,18 +12,14 @@
 
         <div class="sm:w-1/4 px-4">
           <%= label_tag :search, "Destinataire" %>
-          <div class="input-group">
-            <%= text_field_tag :search, params[:search], include_blank: true, onchange:'this.form.submit()', class:"input input-bordered w-full input-sm" %>
-          </div>
+          <%= text_field_tag :search, params[:search], include_blank: true, onchange:'this.form.submit()', class:"input input-bordered w-full input-sm" %>
         </div>
 
         <div class="relative flex-grow max-w-full flex-1 px-4">
           <%= label_tag :search_subject, "Sujet" %>
-          <div class="input-group">
-            <%= select_tag :search_subject, options_for_select(MailLog.all.pluck(:subject).uniq.sort, params[:search_subject]), include_blank: true, onchange:'this.form.submit()', class:"input input-bordered w-full input-sm" %>
-            <span class="input-group-btn">
-                <%= submit_tag 'Filtrer', class:"btn btn-sm btn-success" %>
-            </span>
+          <div class="join w-full">
+            <%= select_tag :search_subject, options_for_select(MailLog.all.pluck(:subject).uniq.sort, params[:search_subject]), include_blank: true, onchange:'this.form.submit()', class:"input input-bordered w-full input-sm join-item" %>
+            <%= submit_tag 'Filtrer', class:"btn btn-sm btn-success join-item" %>
           </div> 
         </div>
 

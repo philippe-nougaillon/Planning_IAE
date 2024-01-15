@@ -12,16 +12,14 @@
           </div>
           <div class="sm:w-1/4 px-4">
             <%= label_tag "Formation" %>
-            <div class="input-group">
-              <%= select_tag :formation_id, 
-                                  options_from_collection_for_select(Formation.unscoped.all, :id, :nom, params[:formation_id]), 
-                                  class: 'input input-bordered w-full input-sm select2', 
-                                  include_blank: true, 
-                                  onchange: 'this.form.submit()' %>
-            </div>
+            <%= select_tag :formation_id, 
+                                options_from_collection_for_select(Formation.unscoped.all, :id, :nom, params[:formation_id]), 
+                                class: 'input input-bordered w-full input-sm select2', 
+                                include_blank: true, 
+                                onchange: 'this.form.submit()' %>
           </div>
 
-        <div class="sm:w-1/6 px-4">
+        <div class="sm:w-1/12 px-4">
           <%= label_tag :ue, "U.E." %>   
           <%= select_tag :ue, options_for_select((0..20), params[:ue]), 
                           class: "input input-bordered w-full input-sm select2", 
@@ -30,15 +28,13 @@
 
           <div class="sm:w-1/4 px-4">
             <%= label_tag "Intervenant" %>
-            <div class="input-group">
-              <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
-                              class: "input input-bordered w-full input-sm select2",
-                              include_blank:true,
-                              onchange: 'this.form.submit()' %>
-            </div>
+            <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
+                            class: "input input-bordered w-full input-sm select2",
+                            include_blank:true,
+                            onchange: 'this.form.submit()' %>
           </div>
 
-          <div class="sm:w-1/5 px-4">
+          <div class="sm:w-1/6 px-4">
             <%= label_tag :workflow_state, "État" %>
             <%= select_tag :workflow_state, 
                                 options_for_select(Presence.workflow_spec.states.keys.to_a, params[:workflow_state]), 

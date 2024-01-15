@@ -14,11 +14,9 @@
 
           <div class="sm:w-2/5 px-4">
             <%= label_tag :nom, "Nom/Abrg./Code/Promo" %>
-            <div class="input-group">    
-              <%= text_field_tag :nom, params[:nom], include_blank:true, onchange:'this.form.submit()', class:"input input-bordered w-full input-sm" %>
-              <span class="input-group-btn">
-                  <%= submit_tag 'Filtrer', class:"btn btn-sm btn-success" %>
-              </span>
+            <div class="join w-full">    
+              <%= text_field_tag :nom, params[:nom], include_blank:true, onchange:'this.form.submit()', class:"input input-bordered w-full input-sm join-item" %>
+              <%= submit_tag 'Filtrer', class:"btn btn-sm btn-success join-item" %>
             </div> 
           </div>
 

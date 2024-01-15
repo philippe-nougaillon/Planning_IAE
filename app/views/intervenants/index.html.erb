@@ -16,15 +16,14 @@
           <%= text_field_tag :nom, params[:nom], include_blank:true, onchange:'this.form.submit()', class:"input input-bordered w-full input-sm" %>
         </div>
         
-        <div class="sm:w-1/4 px-4">
+        <div class="sm:w-1/5 px-4">
           <%= label_tag :status, "Statut" %>
-          <div class="input-group">
+          <br>
+          <div class="join w-full">
             <%= select_tag :status, options_for_select(Intervenant.statuses, 
                   params[:status]), include_blank:true,
-                  class: 'input input-bordered w-full input-sm', onchange: 'this.form.submit()' %>
-            <span class="input-group-btn">
-              <%= submit_tag 'Filtrer', class: "btn btn-sm btn-success" %>
-            </span>
+                  class: 'input input-bordered w-full input-sm join-item', onchange: 'this.form.submit()' %>
+            <%= submit_tag 'Filtrer', class: "btn btn-sm btn-success join-item" %>
           </div>
         </div>
 
