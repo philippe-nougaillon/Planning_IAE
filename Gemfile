@@ -148,3 +148,5 @@ gem "mailgun-ruby", "~> 1.2"
 gem "sortable-for-rails", "~> 1.2"
 
 gem "page_title_helper", "~> 7.0"
+
+gem "matrix", "~> 0.4.2"
