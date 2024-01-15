@@ -32,7 +32,7 @@
             options_from_collection_for_select(Formation.all, :id, :nom, params[:formation_id]), 
               class:"input input-bordered w-full input-sm select2", include_blank: true %>
       
-      <%= label :filename, "Fichier source", class: 'form-label mt-6' %>
+      <%= label :filename, "Fichier source", class: 'mt-6' %>
       <%= file_field_tag 'upload', accept: 'application/vnd.ms-excel', class: 'input input-bordered w-full input-sm pb-12 pt-4' %>
       <br>
 
