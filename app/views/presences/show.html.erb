@@ -32,7 +32,7 @@
   |
   <%= @presence.cour.nom_ou_ue %>
   |
-  <%= @presence.cour.salle.nom %>
+  <%= @presence.cour.salle.try(:nom) %>
 </p>
 
 <% if @presence.signature %>
