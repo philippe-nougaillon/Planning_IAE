@@ -39,12 +39,18 @@
 
               <div class="field">
                   <%= label_tag "Jours de présence", nil %><br>
-                  <%= check_box_tag :lundi, '1', true %> Lundi 
-                  <%= check_box_tag :mardi, '1', true %> Mardi 
-                  <%= check_box_tag :mercredi, '1', true %> Mercredi
-                  <%= check_box_tag :jeudi,  '1', true %> Jeudi
-                  <%= check_box_tag :vendredi, '1', true %> Vendredi
-                  <%= check_box_tag :samedi,  '1', false %> Samedi
+                  <%= check_box_tag :lundi, '1', true %> 
+                  <%= label_tag :lundi %>
+                  <%= check_box_tag :mardi, '1', true %>
+                  <%= label_tag :mardi %>
+                  <%= check_box_tag :mercredi, '1', true %>
+                  <%= label_tag :mercredi %>
+                  <%= check_box_tag :jeudi,  '1', true %>
+                  <%= label_tag :jeudi %>
+                  <%= check_box_tag :vendredi, '1', true %>
+                  <%= label_tag :vendredi %>
+                  <%= check_box_tavg :samedi,  '1', false %>
+                  <%= label_tag :samedi %>
               </div>
               <br>
 

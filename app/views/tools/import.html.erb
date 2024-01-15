@@ -38,11 +38,11 @@
 
       <b>Enregistrer les changements ?</b> <br>
       <label class="radio-inline">
-        <%= radio_button_tag :save, true, class: 'input input-bordered w-full' %>
+        <%= radio_button_tag :save, true, class: 'radio' %>
         Oui
       </label>
       <label class="radio-inline">     
-        <%= radio_button_tag :save, false, :checked => true %>
+        <%= radio_button_tag :save, false, class: 'radio', :checked => true %>
         Non
       </label>
       

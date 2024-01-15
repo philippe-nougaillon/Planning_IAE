@@ -21,7 +21,8 @@
       <%= f.text_field :mobile %>
 
       <div class="field mb-6">
-        <%= check_box_tag :notify %> <b>Créer un compte d'accès et en informer l'étudiant ?</b>
+        <%= check_box_tag :notify %>
+        <%= label_tag :notify, "Créer un compte d'accès et en informer l'étudiant ?", class: 'font-bold' %>
       </div>
 
       <%= f.submit class: "btn btn-primary" %>

@@ -73,7 +73,8 @@
         <%= select_tag :etat, options_for_select(Cour.etats, params[:etat]), class:"input input-bordered w-full" %>
       </div>
       <div>
-        <%= check_box_tag :notifier %> Notifier les étudiants ?
+        <%= check_box_tag :notifier %>
+        <%= label_tag :notifier, "Notifier les étudiants ?" %>
       </div>
     </div>
 
@@ -106,27 +107,27 @@
     <div class="flex flex-wrap">
       <div class="sm:w-1/5 px-4">
         <%= check_box_tag :intervertir_intervenants %>
-        <%= label_tag "Intervenants" %>    
+        <%= label_tag :intervertir_intervenants, "Intervenants" %>    
       </div>
 
       <div class="sm:w-1/5 px-4">
         <%= check_box_tag :intervertir_binomes %>
-        <%= label_tag "Binômes" %>    
+        <%= label_tag :intervertir_binomes, "Binômes" %>    
       </div>
 
       <div class="sm:w-1/5 px-4">
         <%= check_box_tag :intervertir_intitulé %>
-        <%= label_tag "Intitulé cours" %>    
+        <%= label_tag :intervertir_intitulé, "Intitulé cours" %>    
       </div>
 
       <div class="sm:w-1/5 px-4">
         <%= check_box_tag :intervertir_ue %>
-        <%= label_tag "UE" %>    
+        <%= label_tag :intervertir_ue, "UE" %>    
       </div>
 
       <div class="sm:w-1/5 px-4">
         <%= check_box_tag :intervertir_salles %>
-        <%= label_tag "Salles" %>    
+        <%= label_tag :intervertir_salles, "Salles" %>    
       </div>
     </div>
     <br>
@@ -240,7 +241,8 @@
         <b>Attention ! Il y a des invitations en cours...</b>
         <br>
         <%= hidden_field_tag :invits_en_cours, true %>
-        <%= check_box_tag :confirmation, 'yes' %> Je sais ce que je fais (enfin je crois) !
+        <%= check_box_tag :confirmation, 'yes' %>
+        <%= label_tag :confirmation, "Je sais ce que je fais (enfin je crois) !" %>
       </p>
     <% end %>
     <br>
@@ -248,7 +250,8 @@
   <% elsif params[:action_name] == "Supprimer" %>
     <div class="sm:w-2/3 px-4">
       <%= label_tag "Confirmation :" %><br>
-      <%= check_box_tag :delete %> Suppression définitive de tous les cours sélectionnés ?
+      <%= check_box_tag :delete %>
+      <%= label_tag :delete, "Suppression définitive de tous les cours sélectionnés ?" %>
       <br>
 
       <i>Notez que les cours ne peuvent être supprimés que par leur créateur, le gestionnaire ou un administrateur</i>
@@ -259,7 +262,8 @@
           <strong>Attention ! Il y a des invitations liées à ce.s cours </strong>
           <br>
           <%= hidden_field_tag :invits_en_cours, true %>
-          <%= check_box_tag :confirmation, 'yes' %> Supprimer les invitations liées ?
+          <%= check_box_tag :confirmation, 'yes' %>
+          <%= label_tag :confirmation, "Supprimer les invitations liées ?" %>
         </p>
       <% end %>
 
@@ -269,7 +273,7 @@
     <br>
     <div data-controller="check-all action">
       <div data-action="click->action#click">
-        <input input-bordered w-full id="checkall" type="checkbox" data-target="check-all.all action.source">
+        <input id="checkall" type="checkbox" data-target="check-all.all action.source">
         <label for="checkall">Tous ?</label>
       </div>
       <% @cours.each do |c| %>
@@ -292,18 +296,21 @@
     <h3>Sélectionnez les options d'examens</h3>
     <i>Cochez les options autorisées. Non cochée = option interdite</i>
     <br><br>
-    <%= check_box_tag :papier %> Papiers autorisés ?
+    <%= check_box_tag :papier %> 
+    <%= label_tag :papier, "Papiers autorisés ?" %>
     <br>
-    <%= check_box_tag :calculatrice %> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyende transmission autorisés ?
+    <%= check_box_tag :calculatrice %>
+    <%= label_tag :calculatrice, "Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyende transmission autorisés ?" %>
     <br>
-    <%= check_box_tag :outils %> Ordinateurs, tablettes et téléphones portables autorisés ?
+    <%= check_box_tag :outils %> 
+    <%= label_tag :outils, "Ordinateurs, tablettes et téléphones portables autorisés ?" %>
     <br><br>
   <% elsif params[:action_name] == "Convocation étudiants PDF" && @cours.count == 1 && @cours.first.examen? %>
     <h3>Sélectionnez les étudiants</h3>
     <br>
     <div data-controller="check-all action">
       <div data-action="click->action#click">
-        <input input-bordered w-full id="checkall" type="checkbox" data-target="check-all.all action.source">
+        <input id="checkall" type="checkbox" data-target="check-all.all action.source">
         <label for="checkall">Tous ?</label>
       </div>
       <% @cours.each do |c| %>
@@ -321,11 +328,14 @@
     <h3>Sélectionnez les options d'examens</h3>
     <i>Cochez les options autorisées. Non cochée = option interdite</i>
     <br><br>
-    <%= check_box_tag :papier %> Papiers autorisés ?
+    <%= check_box_tag :papier %>
+    <%= label_tag :papier, "Papiers autorisés ?" %>
     <br>
-    <%= check_box_tag :calculatrice %> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyende transmission autorisés ?
+    <%= check_box_tag :calculatrice %>
+    <%= label_tag :calculatrice, "Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyende transmission autorisés ?" %>
     <br>
-    <%= check_box_tag :outils %> Ordinateurs, tablettes et téléphones portables autorisés ?
+    <%= check_box_tag :outils %>
+    <%= label_tag :outils, "Ordinateurs, tablettes et téléphones portables autorisés ?" %>
     <br><br>
   <% end %>
 

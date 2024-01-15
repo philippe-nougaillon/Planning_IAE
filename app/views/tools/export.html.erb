@@ -39,7 +39,7 @@
               options_from_collection_for_select(Intervenant.all, :id, :nom_prenom), include_blank:true, class:"input input-bordered w-full select2" %>
 
         <%= check_box_tag :binome, true, true %>
-        <%= label_tag "Exporter les binômes ?" %>
+        <%= label_tag :binome, "Exporter les binômes ?" %>
         
         <br><br>      
 

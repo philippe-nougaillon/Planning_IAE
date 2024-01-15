@@ -8,7 +8,7 @@
     <div class="form-group">
       <div class="flex flex-wrap">
 
-        <div class="sm:w-1/4 px-4">
+        <div class="sm:w-1/5 px-4">
           <%= label_tag :formation %>
           <%= select_tag :formation, 
                               options_from_collection_for_select(@formations, :id, :nom_promo, params[:formation]), 
@@ -26,12 +26,12 @@
                               onchange: 'this.form.submit()' %>
         </div>
 
-        <div class="sm:w-1/5 px-4">
+        <div class="sm:w-1/6 px-4">
           <%= label_tag "A partir du" %>    
           <%= text_field_tag :start_date, params[:start_date], type:'date', onchange:'this.form.submit()', class:"input input-bordered w-full input-sm" %>
         </div>
 
-        <div class="sm:w-1/5 px-4">
+        <div class="sm:w-1/6 px-4">
           <%= label_tag :workflow_state, "État" %>
           <%= select_tag :workflow_state, 
                               options_for_select(Invit.workflow_spec.states.keys.to_a, params[:workflow_state]), 
@@ -40,15 +40,16 @@
                               onchange: 'this.form.submit()' %>
         </div>
 
-        <div class="sm:w-1/5 px-4">
+        <div class="sm:w-1/6 px-4">
           <%= label_tag :workflow_state, "Triées par" %>
           <br>
           <%= radio_button_tag :sort_by, 'Date', params[:sort_by] == 'Date', onchange: 'this.form.submit()' %> Date
           <%= radio_button_tag :sort_by, 'MàJ', params[:sort_by] == 'MàJ', onchange: 'this.form.submit()' %> MàJ
         </div>
 
-        <div class="sm:w-1/6 px-4">
-          Archivées?
+        <div class="sm:w-1/12 px-4">
+          <%= label_tag :archive, "Archivées?" %>
+          <br>
           <%= check_box_tag :archive, '1', params[:archive] == '1', onchange: 'this.form.submit()' %>
         </div>
 

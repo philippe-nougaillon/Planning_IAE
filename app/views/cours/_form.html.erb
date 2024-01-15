@@ -95,7 +95,8 @@
 
   <% unless @cour.new_record? %>
     <%= f.form_group do %>
-      <%= check_box_tag :notifier %> Notifier les étudiants ?
+      <%= check_box_tag :notifier %>
+      <%= label_tag :notifier, "Notifier les étudiants ?" %>
     <% end %>
   <% end %>
 

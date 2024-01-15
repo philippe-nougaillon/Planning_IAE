@@ -70,40 +70,40 @@
       <br>
 
       <div class="flex flex-wrap">
-        <div class="sm:w-1/6 px-4">
+        <div class="sm:w-1/12 px-4">
           <%= label_tag "Semaine" %>    
           <%= select_tag :semaine, 
                   options_for_select(@week_numbers, params[:semaine]), 
                     include_blank:true, onchange:'this.form.submit()', class:"input input-bordered w-full input-sm" %>
         </div>
 
-        <div class="sm:w-1/5 px-4">
+        <div class="sm:w-1/6 px-4">
           <%= label_tag "A partir du" %>    
           <%= text_field_tag :start_date, params[:start_date], type:'date', onchange:'this.form.submit()', class:"input input-bordered w-full input-sm" %>
         </div>
 
-        <div class="sm:w-1/5 px-4">
+        <div class="sm:w-1/6 px-4">
           <%= label_tag :etat, "Etat" %>
           <%= select_tag :etat, options_for_select(Cour.etats, params[:etat]), include_blank:true,
                   class:"input input-bordered w-full input-sm", onchange:'this.form.submit()' %>
         </div>
 
-        <div class="sm:w-1/5 px-4">
+        <div class="relative flex-grow max-w-full flex-1 px-4">
           <%= label_tag "Cours" %>
           <br> 
           <%= radio_button_tag :filter, "upcoming", (params[:filter]=='upcoming'), onchange:'this.form.submit()' %>
-          A venir 
+          A venir
           <%= radio_button_tag :filter, "all", (params[:filter]=='all'), onchange:'this.form.submit()' %>
           Tous 
         </div>
 
-        <div class="sm:w-1/4 px-4">
+        <div class="sm:w-1/4 px-3">
           <%= label_tag "Vue" %>
-          <br> 
+          <br>
           <%= radio_button_tag :view, "list", (params[:view]=='list'), onchange:'this.form.submit()' %>
           Liste 
           <%= radio_button_tag :view, "calendar_rooms", (params[:view]=='calendar_rooms'), onchange:'this.form.submit()' %>    
-          Salles 
+          Salles
           <%= radio_button_tag :view, "calendar_week", (params[:view]=='calendar_week'), onchange:'this.form.submit()' %>
           Sem
           <%= radio_button_tag :view, "calendar_month", (params[:view]=='calendar_month'), onchange:'this.form.submit()' %>
@@ -111,7 +111,7 @@
         </div>
 
         <% if params[:view] == 'list' %>
-          <div class="sm:w-1/5 px-4">
+          <div class="sm:w-1/6 px-4">
             <%= label_tag "Afficher" %>
             <br> 
             <%= radio_button_tag :paginate, "pages", (params[:paginate]=='pages'), onchange:'this.form.submit()' %>

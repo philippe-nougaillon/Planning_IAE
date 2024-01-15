@@ -23,12 +23,18 @@
 
         <div class="field">
           <%= label_tag :jours, nil, class:"font-weight-bold"  %><br>
-          <%= check_box_tag :lundi, '1', params[:lundi] %> Lundi 
-          <%= check_box_tag :mardi, '1', params[:mardi] %> Mardi 
-          <%= check_box_tag :mercredi, '1', params[:mercredi] %> Mercredi
-          <%= check_box_tag :jeudi,  '1', params[:jeudi] %> Jeudi
-          <%= check_box_tag :vendredi, '1', params[:vendredi] %> Vendredi
-          <%= check_box_tag :samedi,  '1', params[:samedi] %> Samedi
+          <%= check_box_tag :lundi, '1', params[:lundi] %>
+          <%= label_tag :lundi %>
+          <%= check_box_tag :mardi, '1', params[:mardi] %>
+          <%= label_tag :mardi %>
+          <%= check_box_tag :mercredi, '1', params[:mercredi] %>
+          <%= label_tag :mercredi %>
+          <%= check_box_tag :jeudi,  '1', params[:jeudi] %>
+          <%= label_tag :jeudi %>
+          <%= check_box_tag :vendredi, '1', params[:vendredi] %>
+          <%= label_tag :vendredi %>
+          <%= check_box_tag :samedi,  '1', params[:samedi] %>
+          <%= label_tag :samedi %>
         </div>
         <br>
   

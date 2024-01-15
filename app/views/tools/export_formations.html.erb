@@ -10,7 +10,7 @@
 <%= form_tag({action: "export_formations_do", method: :post}) do %>
 
   <div class="form-group">
-    <%= check_box_tag :archive, class: 'input input-bordered w-full' %>
+    <%= check_box_tag :archive %>
     <%= label_tag :archive, "Ajouter les archivés ?" %>
   </div>
 

@@ -33,13 +33,13 @@
             Tout           
           </div>
 
-          <div class="sm:w-1/5 px-4">
+          <div class="sm:w-1/6 px-4">
             <%= label_tag :archive, "Archivées ?" %>
             <br>
             <%= check_box_tag :archive, 1, params[:archive], onchange:'this.form.submit()' %>
           </div>
 
-          <div class="sm:w-1/5 px-4">
+          <div class="sm:w-1/6 px-4">
               <%= label_tag "Afficher" %>
               <br> 
               <%= radio_button_tag :paginate, "pages", (params[:paginate]=='pages'), onchange:'this.form.submit()' %>
