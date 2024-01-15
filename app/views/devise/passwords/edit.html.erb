@@ -13,15 +13,13 @@
 <%
 =end%>
   
-  <div class="form-group">
-    <div class="flex flex-wrap">
-      <div class="relative flex-grow max-w-full flex-1 px-4">
-        <%= f.hidden_field :reset_password_token %>
-        <%= f.password_field :password, autocomplete: "off" %>
-        <%= f.password_field :password_confirmation, autocomplete: "off" %>
-        <div class="actions">
-          <%= f.submit t('.change_my_password'), class: "btn btn-primary" %>
-        </div>
+  <div class="flex flex-wrap">
+    <div class="relative flex-grow max-w-full flex-1 px-4">
+      <%= f.hidden_field :reset_password_token %>
+      <%= f.password_field :password, autocomplete: "off" %>
+      <%= f.password_field :password_confirmation, autocomplete: "off" %>
+      <div class="actions">
+        <%= f.submit t('.change_my_password'), class: "btn btn-primary" %>
       </div>
     </div>
   </div>

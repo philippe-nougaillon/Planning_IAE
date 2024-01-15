@@ -9,45 +9,43 @@
 
 <%= form_tag({action: "export_do", method: :post}) do %>
 
-  <div class="form-group">
-    <div class="flex flex-wrap">
-      <div class="sm:w-2/5 px-4">
+  <div class="flex flex-wrap">
+    <div class="sm:w-2/5 px-4">
 
-        <div class="flex flex-wrap">
-            <div class="sm:w-1/2 px-4">
-              <%= label_tag "Du" %>    
-              <%= text_field_tag :start_date, params[:start_date], type:'date', class:"input input-bordered w-full", required: true %>
-            </div>
+      <div class="flex flex-wrap">
+          <div class="sm:w-1/2 px-4">
+            <%= label_tag "Du" %>    
+            <%= text_field_tag :start_date, params[:start_date], type:'date', class:"input input-bordered w-full input-sm", required: true %>
+          </div>
 
-            <div class="sm:w-1/2 px-4">
-              <%= label_tag "Au" %>    
-              <%= text_field_tag :end_date, params[:end_date], type:'date', class:"input input-bordered w-full", required: true %>
-            </div>
-        </div>
- 
-        <%= label_tag :etat, "Etat" %>
-        <%= select_tag :etat, options_for_select(Cour.etats, params[:etat]), include_blank:true, class:"input input-bordered w-full" %>
-        <br>
+          <div class="sm:w-1/2 px-4">
+            <%= label_tag "Au" %>    
+            <%= text_field_tag :end_date, params[:end_date], type:'date', class:"input input-bordered w-full input-sm", required: true %>
+          </div>
+      </div>
 
-        <%= label_tag "Formation" %>    
-        <%= select_tag :formation_id, 
-              options_from_collection_for_select(Formation.all, :id, :nom_promo), include_blank:true, class:"input input-bordered w-full select2" %>
-        <br>
+      <%= label_tag :etat, "Etat" %>
+      <%= select_tag :etat, options_for_select(Cour.etats, params[:etat]), include_blank:true, class:"input input-bordered w-full input-sm" %>
+      <br>
 
-        <%= label_tag :intervenant_id, "Intervenant" %>
-        <%= select_tag :intervenant_id,
-              options_from_collection_for_select(Intervenant.all, :id, :nom_prenom), include_blank:true, class:"input input-bordered w-full select2" %>
+      <%= label_tag "Formation" %>    
+      <%= select_tag :formation_id, 
+            options_from_collection_for_select(Formation.all, :id, :nom_promo), include_blank:true, class:"input input-bordered w-full input-sm select2" %>
+      <br>
 
-        <%= check_box_tag :binome, true, true %>
-        <%= label_tag :binome, "Exporter les binômes ?" %>
-        
-        <br><br>      
+      <%= label_tag :intervenant_id, "Intervenant" %>
+      <%= select_tag :intervenant_id,
+            options_from_collection_for_select(Intervenant.all, :id, :nom_prenom), include_blank:true, class:"input input-bordered w-full input-sm select2" %>
 
-        <div class="actions">
-          <%= submit_tag "Exporter", class: "btn btn-success" %>
-        </div>
+      <%= check_box_tag :binome, true, true %>
+      <%= label_tag :binome, "Exporter les binômes ?" %>
+      
+      <br><br>      
 
-    </div>
+      <div class="actions">
+        <%= submit_tag "Exporter", class: "btn btn-success" %>
+      </div>
+
   </div>
-  
+
 <% end %>

@@ -18,23 +18,23 @@
       <%= label_tag "Formation" %>
       <%= select_tag :formation_id, 
             options_from_collection_for_select(@formations, :id, :nom, params[:formation_id]), 
-              class:"input input-bordered w-full select2", include_blank: true %>
+              class:"input input-bordered w-full input-sm select2", include_blank: true %>
 
       <div class="mt-6">
         <%= label_tag "Intervenant" %>
         <%= select_tag :intervenant_id, 
               options_from_collection_for_select(@intervenants, :id, :nom_prenom, params[:intervenant_id]), 
-                class:"input input-bordered w-full select2", include_blank: true %>
+                class:"input input-bordered w-full input-sm select2", include_blank: true %>
       </div>
 
       <div class="flex justify-between mt-6">
         <div>
           <%= label_tag :du, "Période du" %>
-          <%= text_field_tag :du, params[:du], type: 'date', class: 'input input-bordered w-full' %>
+          <%= text_field_tag :du, params[:du], type: 'date', class: 'input input-bordered w-full input-sm' %>
         </div>
         <div>
           <%= label_tag :au %>
-          <%= text_field_tag :au, params[:au], type: 'date', class: 'input input-bordered w-full' %>
+          <%= text_field_tag :au, params[:au], type: 'date', class: 'input input-bordered w-full input-sm' %>
         </div>
       </div>
       <small>Laissez vide pour le rappel des cours du mois suivant</small>

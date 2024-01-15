@@ -12,12 +12,12 @@
     <div class="flex flex-wrap">
         <div class="sm:w-1/4 px-4">
             <%= label_tag "Cours du" %>
-            <%= text_field_tag :start_date, params[:start_date], type: 'date', class: "input input-bordered w-full", required: true  %>
+            <%= text_field_tag :start_date, params[:start_date], type: 'date', class: "input input-bordered w-full input-sm", required: true  %>
         </div>
 
         <div class="sm:w-1/4 px-4">
             <%= label_tag "Au" %>
-            <%= text_field_tag :end_date, params[:end_date], type: 'date', class: "input input-bordered w-full", required: true %>
+            <%= text_field_tag :end_date, params[:end_date], type: 'date', class: "input input-bordered w-full input-sm", required: true %>
         </div>
         <div class="sm:w-1/4 px-4 self-end">
             <%= submit_tag 'Rechercher', class: 'btn btn-primary' %>

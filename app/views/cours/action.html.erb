@@ -70,7 +70,7 @@
     <div class="flex items-end mb-6" style="gap: 1rem;">
       <div>
         <%= label_tag "Nouvel état" %>    
-        <%= select_tag :etat, options_for_select(Cour.etats, params[:etat]), class:"input input-bordered w-full" %>
+        <%= select_tag :etat, options_for_select(Cour.etats, params[:etat]), class:"input input-bordered w-full input-sm" %>
       </div>
       <div>
         <%= check_box_tag :notifier %>
@@ -82,13 +82,13 @@
     <div class="flex flex-wrap">
       <div class="sm:w-1/5 px-4">
         <%= label_tag "Nouvelle date" %>    
-        <%= text_field_tag :new_date, params[:new_date], type:'date', class:"input input-bordered w-full" %>
+        <%= text_field_tag :new_date, params[:new_date], type:'date', class:"input input-bordered w-full input-sm" %>
       </div>
 
       <div class="sm:w-1/6 px-4">ou</div>
       <div class="sm:w-1/2 px-4">
         <%= label_tag "Décaler de x jours" %><br>
-        <%= number_field_tag :add_n_days, class: "input input-bordered w-full" %>
+        <%= number_field_tag :add_n_days, class: "input input-bordered w-full input-sm" %>
       </div>
     </div>
 
@@ -97,7 +97,7 @@
       <%= label_tag "Nouvel intervenant" %>    
       <%= select_tag :intervenant_id, 
                       options_from_collection_for_select(Intervenant.all, :id, :nom_prenom, params[:intervenant_id]), 
-                      include_blank:true, class:"input input-bordered w-full" %>
+                      include_blank:true, class:"input input-bordered w-full input-sm" %>
       <br><br>
     </div>
 
@@ -148,7 +148,7 @@
         <%= select_tag 'invit[intervenant][1]', 
                         options_from_collection_for_select(Intervenant.where.not(doublon:true), :id, :nom_prenom, params[:intervenant_ids]), 
                         include_blank: true,
-                        class: "input input-bordered w-full select2" %>
+                        class: "input input-bordered w-full input-sm select2" %>
       </div>
       <div class="w-2/5">
         <%= label_tag :ue, "U.E." %>
@@ -156,7 +156,7 @@
         <%= select_tag 'invit[ue][1]', 
                         options_from_collection_for_select(@cours.first.formation.unites.order(:num), :id, :num_nom, params[:ue]), 
                         include_blank: true,
-                        class: "input input-bordered w-full select2" %>
+                        class: "input input-bordered w-full input-sm select2" %>
       </div>
       <div class="w-1/3">
         <%= label_tag 'Intitulé du cours' %>
@@ -170,7 +170,7 @@
         <%= select_tag 'invit[intervenant][2]', 
                         options_from_collection_for_select(Intervenant.where.not(doublon:true), :id, :nom_prenom, params[:intervenant_ids]), 
                         include_blank: true,
-                        class: "input input-bordered w-full select2" %>
+                        class: "input input-bordered w-full input-sm select2" %>
       </div>
       <div class="w-2/5">
         <%= label_tag :ue, "U.E." %>
@@ -178,7 +178,7 @@
         <%= select_tag 'invit[ue][2]', 
                         options_from_collection_for_select(@cours.first.formation.unites.order(:code), :id, :num_nom, params[:ue]), 
                         include_blank: true,
-                        class: "input input-bordered w-full select2" %>
+                        class: "input input-bordered w-full input-sm select2" %>
       </div>
       <div class="w-1/3">
         <%= label_tag 'Intitulé du cours' %>
@@ -192,7 +192,7 @@
         <%= select_tag 'invit[intervenant][3]', 
                         options_from_collection_for_select(Intervenant.where.not(doublon:true), :id, :nom_prenom, params[:intervenant_ids]), 
                         include_blank: true,
-                        class: "input input-bordered w-full select2" %>
+                        class: "input input-bordered w-full input-sm select2" %>
       </div>
       <div class="w-2/5">
         <%= label_tag :ue, "U.E." %>
@@ -200,7 +200,7 @@
         <%= select_tag 'invit[ue][3]', 
                         options_from_collection_for_select(@cours.first.formation.unites.order(:num), :id, :num_nom, params[:ue]), 
                         include_blank: true,
-                        class: "input input-bordered w-full select2" %>
+                        class: "input input-bordered w-full input-sm select2" %>
       </div>
       <div class="w-1/3">
         <%= label_tag 'Intitulé du cours' %>
@@ -214,7 +214,7 @@
         <%= select_tag 'invit[intervenant][4]', 
                         options_from_collection_for_select(Intervenant.where.not(doublon:true), :id, :nom_prenom, params[:intervenant_ids]), 
                         include_blank: true,
-                        class: "input input-bordered w-full select2" %>
+                        class: "input input-bordered w-full input-sm select2" %>
       </div>
       <div class="w-2/5">
         <%= label_tag :ue, "U.E." %>
@@ -222,7 +222,7 @@
         <%= select_tag 'invit[ue][4]', 
                         options_from_collection_for_select(@cours.first.formation.unites.order(:num), :id, :num_nom, params[:ue]), 
                         include_blank: true,
-                        class: "input input-bordered w-full select2" %>
+                        class: "input input-bordered w-full input-sm select2" %>
       </div>
       <div class="w-1/3">
         <%= label_tag 'Intitulé du cours' %>

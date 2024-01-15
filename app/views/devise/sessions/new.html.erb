@@ -7,20 +7,18 @@
       <h1 class="text-center border-b mb-4 pb-4">
         <%= t('.sign_in') %>
       </h1>
-      <div class="form-group">
-        <div class="flex flex-wrap">
-          <div class="relative flex-grow max-w-full flex-1 px-4">
-            <%= f.email_field :email, autofocus: true, required: true %>
-            <%= f.password_field :password, autocomplete: "off", required: true %>
-            <% if devise_mapping.rememberable? %>
-              <%= f.check_box :remember_me %>
-            <% end %>
+      <div class="flex flex-wrap">
+        <div class="relative flex-grow max-w-full flex-1 px-4">
+          <%= f.email_field :email, autofocus: true, required: true %>
+          <%= f.password_field :password, autocomplete: "off", required: true %>
+          <% if devise_mapping.rememberable? %>
+            <%= f.check_box :remember_me %>
+          <% end %>
+          <br>
+          <div class="actions">
+            <%= f.submit t('.sign_in'), class: "btn btn-primary mb-4" %>
             <br>
-            <div class="actions">
-              <%= f.submit t('.sign_in'), class: "btn btn-primary mb-4" %>
-              <br>
-              <%= render "devise/shared/links" %>
-            </div>
+            <%= render "devise/shared/links" %>
           </div>
         </div>
       </div>

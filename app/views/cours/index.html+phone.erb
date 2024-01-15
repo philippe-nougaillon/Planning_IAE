@@ -12,26 +12,20 @@
 
 <%= form_tag request.path, method: :get do %>
 
-  <div class="form-group">
-    <%= label_tag "Cours à partir du" %>
-    <%= text_field_tag :start_date, params[:start_date], type: 'date', onchange: 'this.form.submit()', class: "input input-bordered w-full input-sm", id: 'Cours___partir_du' %>
-  </div>  
+  <%= label_tag "Cours à partir du" %>
+  <%= text_field_tag :start_date, params[:start_date], type: 'date', onchange: 'this.form.submit()', class: "input input-bordered w-full input-sm", id: 'Cours___partir_du' %>
   
-  <div class="form-group">
-    <%= label_tag "Formation" %>    
-    <%= select_tag :formation, options_for_select(@formations, params[:formation]), 
-                    class: "select2-w100",
-                    include_blank: true, onchange: 'this.form.submit()' %>
-  </div>
+  <%= label_tag "Formation" %>    
+  <%= select_tag :formation, options_for_select(@formations, params[:formation]), 
+                  class: "select2-w100",
+                  include_blank: true, onchange: 'this.form.submit()' %>
 
   <% if user_signed_in? %>
-    <div class="form-group">
-      <%= label_tag "Intervenant" %>
-      <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
-                        class: "select2-w100",
-                        include_blank: true,
-                        onchange:'this.form.submit()' %>
-    </div>
+    <%= label_tag "Intervenant" %>
+    <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
+                      class: "select2-w100",
+                      include_blank: true,
+                      onchange:'this.form.submit()' %>
   <% end %>
 
   <%= button_tag name: 'commit', value: 'Filtrer', class: "btn btn-success" do %>

@@ -9,22 +9,20 @@
         <%= t('.sign_up') %>
       </h1>
 
-      <div class="form-group">
-        <div class="flex flex-wrap">
-          <div class="relative flex-grow max-w-full flex-1 px-4">
-            <%= f.text_field :nom, autofocus: true %>
+      <div class="flex flex-wrap">
+        <div class="relative flex-grow max-w-full flex-1 px-4">
+          <%= f.text_field :nom, autofocus: true %>
 
-            <%= f.text_field :prénom %>
+          <%= f.text_field :prénom %>
 
-            <%= f.email_field :email %>
-            <%= f.password_field :password, autocomplete: "off" %>
-            <%= f.password_field :password_confirmation, autocomplete: "off" %>
+          <%= f.email_field :email %>
+          <%= f.password_field :password, autocomplete: "off" %>
+          <%= f.password_field :password_confirmation, autocomplete: "off" %>
+          <br>
+          <div class="actions">
+            <%= f.submit t('.sign_up'), class: "btn btn-primary mb-4" %>
             <br>
-            <div class="actions">
-              <%= f.submit t('.sign_up'), class: "btn btn-primary mb-4" %>
-              <br>
-              <%= render "devise/shared/links" %>
-            </div>
+            <%= render "devise/shared/links" %>
           </div>
         </div>
       </div>

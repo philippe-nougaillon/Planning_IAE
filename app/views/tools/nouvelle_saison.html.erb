@@ -7,24 +7,22 @@
 </div>
 
 <%= form_tag(request.path, method: :get) do %>
-  <div class="form-group">
-    <div class="flex flex-wrap">
-        <div class="sm:w-2/5 px-4">
-            <%= label_tag :saison, "Année scolaire" %>
-            <%= select_tag :saison, 
-                options_for_select(@years, params[:saison]), include_blank:true, class:"input input-bordered w-full", onchange:'this.form.submit()' %>
+  <div class="flex flex-wrap">
+      <div class="sm:w-2/5 px-4">
+          <%= label_tag :saison, "Année scolaire" %>
+          <%= select_tag :saison, 
+              options_for_select(@years, params[:saison]), include_blank:true, class:"input input-bordered w-full input-sm", onchange:'this.form.submit()' %>
 
-            <% if @formations.present? %>    
-              <%= label_tag "Formation" %>    
-              <%= select_tag :formation_id, 
-                  options_from_collection_for_select(@formations, :id, :nom_promo_full, params[:formation_id]), class:"input input-bordered w-full select2", include_blank:true, onchange:'this.form.submit()' %>
-                     
-            <% end %>
-            <div class="actions" style="display:none">
-                <%= submit_tag "Afficher", class: "btn btn-success" %>
-            </div>
-        </div>
-    </div>
+          <% if @formations.present? %>    
+            <%= label_tag "Formation" %>    
+            <%= select_tag :formation_id, 
+                options_from_collection_for_select(@formations, :id, :nom_promo_full, params[:formation_id]), class:"input input-bordered w-full input-sm select2", include_blank:true, onchange:'this.form.submit()' %>
+                    
+          <% end %>
+          <div class="actions" style="display:none">
+              <%= submit_tag "Afficher", class: "btn btn-success" %>
+          </div>
+      </div>
   </div>
 <% end %>
 

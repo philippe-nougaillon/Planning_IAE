@@ -22,11 +22,11 @@
     <div class="sm:w-1/3 px-4">
       <%= label :role, "Rôle" %>
       <%= select_tag :role, 
-            options_for_select(User.roles.keys), class:"input input-bordered w-full", include_blank: true %>
+            options_for_select(User.roles.keys), class:"input input-bordered w-full input-sm", include_blank: true %>
       <br>
       <div class="field">
         <%= label :filename, "Fichier .xls" %>
-        <%= file_field_tag 'upload', accept: 'application/vnd.ms-excel', class: 'input input-bordered w-full pb-12 pt-4' %>
+        <%= file_field_tag 'upload', accept: 'application/vnd.ms-excel', class: 'input input-bordered w-full input-sm pb-12 pt-4' %>
       </div>
     </div>
   </div>

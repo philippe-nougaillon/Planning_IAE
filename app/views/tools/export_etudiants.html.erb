@@ -18,21 +18,19 @@
       <%= label_tag "Formation" %>    
       <%= select_tag :formation_id, 
             options_from_collection_for_select(Formation.all, :id, :nom, params[:formation_id]), 
-              class:"input input-bordered w-full select2", include_blank: true %>
+              class:"input input-bordered w-full input-sm select2", include_blank: true %>
     </div>
   </div>
   <br>
 
-  <div class="form-group">
-    <div class="flex flex-wrap">
-      <div class="sm:w-1/3 px-4">
+  <div class="flex flex-wrap">
+    <div class="sm:w-1/3 px-4">
 
-        <div class="actions">
-          <%= submit_tag "Exporter", class: "btn btn-success" %>
-        </div>
-
+      <div class="actions">
+        <%= submit_tag "Exporter", class: "btn btn-success" %>
       </div>
+
     </div>
   </div>
-  
+
 <% end %>

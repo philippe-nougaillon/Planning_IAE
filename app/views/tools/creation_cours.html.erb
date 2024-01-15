@@ -4,99 +4,97 @@
 <br>
 
 <%= form_tag({action: "creation_cours_do", method: :post}, multipart: true) do %>
+  <div class="flex flex-wrap">
+    <div class="sm:w-3/5 px-4">
+      <%= label_tag :debut, "A partir du", class:"font-bold"  %><br>
+      <%= datetime_select :cours, :start_date, minute_step:15 %>
+      <br><br>
 
-  <div class="form-group">
-    <div class="flex flex-wrap">
-      <div class="sm:w-3/5 px-4">
-        <%= label_tag :debut, "A partir du", class:"font-bold"  %><br>
-        <%= datetime_select :cours, :start_date, minute_step:15 %>
-        <br><br>
+      <%= label_tag :fin, "Jusqu'au", class:"font-bold"  %><br>
+      <%= date_select :cours, :end_date %>
+      <br><br>
 
-        <%= label_tag :fin, "Jusqu'au", class:"font-bold"  %><br>
-        <%= date_select :cours, :end_date %>
-        <br><br>
+      <%= label_tag :semaines, "Semaines *", class:"font-bold"  %>
+      <%= select_tag :semaines, options_for_select((1..52).to_a), 
+                        include_blank:true, multiple:true, class:"input input-bordered w-full input-sm" %>
+      <br>
 
-        <%= label_tag :semaines, "Semaines *", class:"font-bold"  %>
-        <%= select_tag :semaines, options_for_select((1..52).to_a), 
-                          include_blank:true, multiple:true, class:"input input-bordered w-full" %>
-        <br>
-
-        <div class="field">
-          <%= label_tag :jours, nil, class:"font-bold"  %><br>
-          <%= check_box_tag :lundi, '1', params[:lundi] %>
-          <%= label_tag :lundi %>
-          <%= check_box_tag :mardi, '1', params[:mardi] %>
-          <%= label_tag :mardi %>
-          <%= check_box_tag :mercredi, '1', params[:mercredi] %>
-          <%= label_tag :mercredi %>
-          <%= check_box_tag :jeudi,  '1', params[:jeudi] %>
-          <%= label_tag :jeudi %>
-          <%= check_box_tag :vendredi, '1', params[:vendredi] %>
-          <%= label_tag :vendredi %>
-          <%= check_box_tag :samedi,  '1', params[:samedi] %>
-          <%= label_tag :samedi %>
-        </div>
-        <br>
-  
-        <section id="période">
-          <%= label_tag :periode, "Période", class:"font-bold" %><br>
-          <div class="flex flex-wrap">
-            <div class="relative flex-grow max-w-full flex-1 px-4">
-              Matin
-              <br>
-              <%= check_box_tag :am, '1', params[:am] %> 9h-12h
-            </div>
-            
-            <div class="relative flex-grow max-w-full flex-1 px-4">
-              Après-midi
-              <br>
-              <%= check_box_tag :pm, '1', params[:pm] %> 13h-16h
-            </div>
-            <div class="relative flex-grow max-w-full flex-1 px-4">
-              Soir
-              <br>
-              <%= check_box_tag :soir_params, '1', params[:soir_params] == 1 %> 19h-22h
-              <br>
-              <%= check_box_tag :soir_params, '2', params[:soir_params] == 2 %> 18h15-20h15
-              <br>
-              <%= check_box_tag :soir_params, '3', params[:soir_params] == 3 %> 20h15-22h15
-            </div>
-            <div class="relative flex-grow max-w-full flex-1 px-4">
-              Autre
-              <br>
-              <%= check_box_tag :other, '1', params[:other] %> Durée:
-              <br>
-              <%= select_tag :duree, 
-                              options_for_select([0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0], 3.0), 
-                              include_blank:true %> h
-            </div>
-          </div>
-        </section>
+      <div class="field">
+        <%= label_tag :jours, nil, class:"font-bold"  %><br>
+        <%= check_box_tag :lundi, '1', params[:lundi] %>
+        <%= label_tag :lundi %>
+        <%= check_box_tag :mardi, '1', params[:mardi] %>
+        <%= label_tag :mardi %>
+        <%= check_box_tag :mercredi, '1', params[:mercredi] %>
+        <%= label_tag :mercredi %>
+        <%= check_box_tag :jeudi,  '1', params[:jeudi] %>
+        <%= label_tag :jeudi %>
+        <%= check_box_tag :vendredi, '1', params[:vendredi] %>
+        <%= label_tag :vendredi %>
+        <%= check_box_tag :samedi,  '1', params[:samedi] %>
+        <%= label_tag :samedi %>
       </div>
+      <br>
 
-      <div class="sm:w-2/5 px-4">
+      <section id="période">
+        <%= label_tag :periode, "Période", class:"font-bold" %><br>
         <div class="flex flex-wrap">
+          <div class="relative flex-grow max-w-full flex-1 px-4">
+            Matin
+            <br>
+            <%= check_box_tag :am, '1', params[:am] %> 9h-12h
+          </div>
+          
+          <div class="relative flex-grow max-w-full flex-1 px-4">
+            Après-midi
+            <br>
+            <%= check_box_tag :pm, '1', params[:pm] %> 13h-16h
+          </div>
+          <div class="relative flex-grow max-w-full flex-1 px-4">
+            Soir
+            <br>
+            <%= check_box_tag :soir_params, '1', params[:soir_params] == 1 %> 19h-22h
+            <br>
+            <%= check_box_tag :soir_params, '2', params[:soir_params] == 2 %> 18h15-20h15
+            <br>
+            <%= check_box_tag :soir_params, '3', params[:soir_params] == 3 %> 20h15-22h15
+          </div>
+          <div class="relative flex-grow max-w-full flex-1 px-4">
+            Autre
+            <br>
+            <%= check_box_tag :other, '1', params[:other] %> Durée:
+            <br>
+            <%= select_tag :duree, 
+                            options_for_select([0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0], 3.0), 
+                            include_blank:true %> h
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="sm:w-2/5 px-4">
+      <div class="flex flex-wrap">
 
         <%= label_tag :formation_id, "Formation", class:"font-bold"  %>
         <%= select_tag :formation_id, 
-              options_from_collection_for_select(Formation.all, :id, :nom_promo), class:"input input-bordered w-full select2", include_blank:true %>
+              options_from_collection_for_select(Formation.all, :id, :nom_promo), class:"input input-bordered w-full input-sm select2", include_blank:true %>
         <br>
 
         <%= label_tag :intervenant_id, "Intervenant", class:"font-bold"  %>
         <%= select_tag :intervenant_id,
-              options_from_collection_for_select(Intervenant.all, :id, :nom_prenom), class:"input input-bordered w-full select2", include_blank:true %>
+              options_from_collection_for_select(Intervenant.all, :id, :nom_prenom), class:"input input-bordered w-full input-sm select2", include_blank:true %>
         <br>
 
         <%= label_tag :nom, "Nom du cours *", class:"font-bold"  %>
-        <%= text_field_tag :nom, params[:nom], class:"input input-bordered w-full" %>
+        <%= text_field_tag :nom, params[:nom], class:"input input-bordered input-sm w-full" %>
         <br>
 
         <%= label_tag :code_ue, "UE *", class:"font-bold"  %>
-        <%= number_field :code_ue, params[:code_ue], class:"input input-bordered w-full" %>
+        <%= number_field :code_ue, params[:code_ue], class:"input input-bordered input-sm w-full" %>
         <br>
 
         <%= label_tag :salle_id, "Salle *", class:"font-bold"  %>
-        <%= select_tag :salle_id, options_from_collection_for_select(Salle.all, :id, :nom_places, params[:salle_id]), include_blank: true, class:"input input-bordered w-full" %>
+        <%= select_tag :salle_id, options_from_collection_for_select(Salle.all, :id, :nom_places, params[:salle_id]), include_blank: true, class:"input input-bordered w-full input-sm" %>
         * Optionnel
         <br><br>
 
@@ -109,12 +107,11 @@
           <br><i>Choisissez 'Non' pour tester votre création car <b>elle est irréversible !</b></i><br />
         </div>
         <br><br><br><br>
-      
+    
         <div class="actions">
           <%= submit_tag "Lancer la création", class: "btn btn-success mt-12" %>
         </div>
-
       </div>
+    </div>
   </div>
-  
 <% end %>

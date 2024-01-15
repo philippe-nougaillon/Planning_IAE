@@ -9,10 +9,8 @@
 
 <%= form_tag({action: "export_formations_do", method: :post}) do %>
 
-  <div class="form-group">
-    <%= check_box_tag :archive %>
-    <%= label_tag :archive, "Ajouter les archivés ?" %>
-  </div>
+  <%= check_box_tag :archive %>
+  <%= label_tag :archive, "Ajouter les archivés ?" %>
 
   <div class="actions">
     <%= submit_tag "Exporter", class: "btn btn-success" %>
