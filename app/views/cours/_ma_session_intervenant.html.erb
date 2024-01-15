@@ -9,7 +9,7 @@
     </p>
   </div>
   <div class="mb-2">
-    <p class="mb-0 font-weight-bold"><%= cour.formation.nom.humanize %></p>
+    <p class="mb-0 font-bold"><%= cour.formation.nom.humanize %></p>
     <p class="mb-0"><%= cour.nom_ou_ue %></p>
     <p class="mb-0">(<%= cour.etudiants.count %> étudiants prévus)</p>
   </div>
@@ -35,7 +35,7 @@
         <% if presence.present? %>
           <%= link_to presence_path(presence) do %>
             <h5 class='mr-1'>
-              <span class="badge <%= presence.style %> font-weight-normal">
+              <span class="badge <%= presence.style %> font-normal">
                 <%= presence.etudiant.nom.upcase %>
                 <%= fa_icon 'wifi' if presence.wifi_detected? %>
               </span>
@@ -43,7 +43,7 @@
           <% end %>
         <% else %>
           <h5 class='mr-1'>
-            <span class="badge badge-light font-weight-normal"><%= etudiant.nom.upcase %></span>
+            <span class="badge badge-light font-normal"><%= etudiant.nom.upcase %></span>
           </h5>
         <% end %>
       <% end %>

@@ -50,7 +50,7 @@
 </p>
 
 <% if @user.discarded_at %>
-	<p class="font-weight-bold">
+	<p class="font-bold">
 		Compte désactivé : 
 		le <%= l(@user.discarded_at) %> 
 		| Il y a <%= time_ago_in_words(@user.discarded_at) %>
