@@ -1,4 +1,4 @@
-@mixin for-size($size)
+/* @mixin for-size($size)
   @if $size == phone-only
     @media (max-width: 480px) { @content; }
   @else if $size == tablet-portrait-up
@@ -51,4 +51,4 @@ input {
   border: none;
   border-radius: 5px;
   padding: 10px;
-}
+} */
