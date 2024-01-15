@@ -45,11 +45,6 @@
 
   <% if cours.debut.to_date == Date.today %>
     <br>
-    <div class="progress" style="width: 100%">
-      <div class="progress-bar bg-primary" 
-          role="progressbar" aria-valuemin="0" aria-valuemax="100" 
-          style="width: <%= cours.progress_bar_pct3 %>%; opacity: 0.3;">
-      </div>
-    </div>
+    <progress class="progress progress-info opacity-50" value="<%= cours.progress_bar_pct3 %>" max="100"></progress>
   <% end %>
 </div>

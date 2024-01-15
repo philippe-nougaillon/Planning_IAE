@@ -16,12 +16,7 @@
     <td>
         <%= number_with_precision(cours.duree, precision: 1, strip_insignificant_zeros: true) %> h
         <% if cours.debut.to_date == Date.today %>
-            <div class="progress mt-1" style="width: 100%">
-                <div class="progress-bar bg-primary" 
-                    role="progressbar" aria-valuemin="0" aria-valuemax="100" 
-                    style="width: <%= cours.progress_bar_pct3 %>%; opacity: 0.5;">
-                </div>
-            </div>
+            <progress class="progress progress-info opacity-50 mt-1" value="<%= cours.progress_bar_pct3 %>" max="100"></progress>
         <% end %>
     </td>
     <td style="border-left: .3rem solid <%= cours.formation.try(:positive_color) %>">

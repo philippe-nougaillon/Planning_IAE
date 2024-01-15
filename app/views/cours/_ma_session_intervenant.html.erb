@@ -14,12 +14,7 @@
     <p class="mb-0">(<%= cour.etudiants.count %> étudiants prévus)</p>
   </div>
 
-  <div class="progress mt-2" style="width: 100%">
-    <div class="progress-bar bg-primary" 
-        role="progressbar" aria-valuemin="0" aria-valuemax="100" 
-        style="width: <%= cour.progress_bar_pct3 %>%; opacity: 0.3;">
-    </div>
-  </div>
+  <progress class="progress progress-info opacity-50 mt-2" value="<%= cour.progress_bar_pct3 %>" max="100"></progress>
 
   <h6 class='mt-6 mb-0'>Signatures présences :</h6>
     <% presences = cour.presences.where.not(etudiant_id: nil) %>
