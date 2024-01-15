@@ -8,11 +8,13 @@
     <div class="w-100">
       <div class="d-flex justify-content-between">
         <p class="mb-0"><b><%= l(cour.debut, format: :heures_min) %></b> - <%= l(cour.fin, format: :heures_min) %></p>
-        <p class="mb-0">
-          <span class="badge badge-pill badge-<%= cour.style %>">
-            <%= cour.salle.try(:nom) %>
-          </span>
-        </p>
+        <% if cour.salle %>
+          <p class="mb-0">
+            <span class="badge badge-pill badge-<%= cour.style %>">
+              <%= cour.salle.nom %>
+            </span>
+          </p>
+        <% end %>
       </div>
       <p class="mb-0"><%= cour.intervenant.nom_prenom %></p>
       <p class="mb-0 font-weight-bold"><%= cour.nom_ou_ue %></p>

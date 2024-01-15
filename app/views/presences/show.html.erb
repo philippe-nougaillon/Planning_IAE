@@ -31,8 +31,10 @@
   UE : <%= @presence.code_ue %>
   |
   <%= @presence.cour.nom_ou_ue %>
-  |
-  <%= @presence.cour.salle.try(:nom) %>
+  <% if @presence.cour.salle %>
+    |
+    <%= @presence.cour.salle.nom %>
+  <% end %>
 </p>
 
 <% if @presence.signature %>
