@@ -43,20 +43,16 @@
         <% if user_signed_in? %>
           <div class="sm:w-2/5 px-4">
             <%= label_tag "Intervenant" %>
-            <div class="input-group">
+            <div class="join">
               <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
-                              class: "input input-bordered w-full input-sm select2",
+                              class: "input input-bordered w-full input-sm select2 join-item",
                               include_blank:true,
                               onchange: 'this.form.submit()' %>
               <% if params.values.count(nil) < 5 %>
-                <div class="input-group-append">
-                  <span class="input-group-text">
-                    <%= button_tag name: 'commit', value: 'RàZ', class: "btn btn-sm btn-light ml-1", title: "Remise à zéro des filtres" do %>
-                      <i class="fas fa-times"></i> 
-                      RàZ
-                    <% end %>
-                  </span>
-                </div>
+                <%= button_tag name: 'commit', value: 'RàZ', class: "btn btn-active btn-sm join-item", title: "Remise à zéro des filtres" do %>
+                  <i class="fas fa-times"></i> 
+                  RàZ
+                <% end %>
               <% end %>
             </div>
           </div>
