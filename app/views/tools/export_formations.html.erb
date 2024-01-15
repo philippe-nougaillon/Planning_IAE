@@ -8,12 +8,8 @@
 </div>
 
 <%= form_tag({action: "export_formations_do", method: :post}) do %>
-
   <%= check_box_tag :archive %>
   <%= label_tag :archive, "Ajouter les archivés ?" %>
 
-  <div class="actions">
-    <%= submit_tag "Exporter", class: "btn btn-success" %>
-  </div>
-
+  <%= submit_tag "Exporter", class: "btn btn-success" %>
 <% end %>

@@ -18,7 +18,5 @@
     <%= form.text_field :fin, type: 'time', value: (ouverture.new_record? ? '20:00' : ouverture.fin.strftime("%H:%M")) %>
   </div>
 
-  <div class="actions">
-    <%= form.submit %>
-  </div>
+  <%= form.submit %>
 <% end %>

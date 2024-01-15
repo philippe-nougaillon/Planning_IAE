@@ -16,7 +16,6 @@
 <br>
 
 <%= form_tag({action: "taux_occupation_jours_do", method: :post}) do %>
-
     <div class="flex flex-wrap">
         <div class="sm:w-1/5 px-4">
             <%= label_tag "Période du" %>    
@@ -31,8 +30,5 @@
     </div>
     <br>
 
-    <div class="actions">
-        <%= submit_tag "Valider", class: "btn btn-success" %>
-    </div>
-
+    <%= submit_tag "Valider", class: "btn btn-success" %>
 <% end %>
