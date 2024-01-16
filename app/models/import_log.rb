@@ -22,7 +22,7 @@ class ImportLog < ApplicationRecord
     when 'succès'
       'text-success'
     when 'echec', 
-      'text-danger'
+      'text-error'
     when 'warning'
       'text-warning'
     end

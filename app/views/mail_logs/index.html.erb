@@ -2,7 +2,7 @@
 <p>Historique des mails envoyés via MailGun, avec Statut et État consultables pendant 5 jours.</p>
 
 <% if @result_failed && @result_failed['items'].size.positive? %>
-  <p class="text-danger">Il y a actuellement <%= @result_failed['items'].count %> envois en Statut 'KO'</p>
+  <p class="text-error">Il y a actuellement <%= @result_failed['items'].count %> envois en Statut 'KO'</p>
 <% end %>
 
 <div class="bs-container mx-auto sm:px-4 max-w-full p-4 shadow-sm">

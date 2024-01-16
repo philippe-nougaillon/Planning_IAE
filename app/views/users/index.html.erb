@@ -71,7 +71,7 @@
             <%= user.email %>
             <% if user.unlinked? %>
               <%= link_to user.étudiant? ? etudiants_path(search: user.nom) : intervenants_path(nom: user.nom) do %>
-                <%= fa_icon 'question-circle', class: 'text-danger' , title: 'L\'utilisateur n\'a pas de profil étudiant/intervenant associé à cet email' %>
+                <%= fa_icon 'question-circle', class: 'text-error' , title: 'L\'utilisateur n\'a pas de profil étudiant/intervenant associé à cet email' %>
               <% end %>
             <% end %>
           </td>

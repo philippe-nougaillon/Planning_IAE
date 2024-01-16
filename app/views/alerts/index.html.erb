@@ -43,9 +43,9 @@
 </table>
 
 <% if @alert %>
-  <footer class="fixed-bottom">
+  <footer class="fixed bottom-0 left-0 right-0">
     <h5>Aperçu de l'alerte visible :</h5>
-    <div class="bg-<%= @alert.etat == "warning" ? 'warning text-black' : @alert.etat + ' text-white' %> text-lg mb-0 p-2">
+    <div class="alert alert-<%= @alert.etat %> text-lg rounded-none mb-0 p-2">
       <h3 class="mb-0"><%= truncate(@alert.message, length: 110) %></h3>
     </div>
   </footer>

@@ -1,5 +1,5 @@
 <h3 class="mt-6"><%= @cours.first.try(:formation).try(:abrg) %></h3>
-<h4 class="text-dark my-6"><%= fa_icon 'calendar-day' %> <%= l(Date.today, format: :long).humanize %></h4>
+<h4 class="text-base-content my-6"><%= fa_icon 'calendar-day' %> <%= l(Date.today, format: :long).humanize %></h4>
 
 <% if @cours.any?%>
   <div class='flex flex-wrap' style='gap: 20px;'>

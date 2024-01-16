@@ -6,7 +6,7 @@
   <td>
     <% if mail_log.created_at > 5.days.ago %>
       <% if status_ko %>
-        <span class="text-danger">KO</span>
+        <span class="text-error">KO</span>
       <% else %>
         <span class="text-success">OK</span>
       <% end %>
@@ -15,7 +15,7 @@
   <td>
     <% if mail_log.created_at > 5.days.ago && !status_ko %>
       <% if status = @result_opened["items"].find{|item| item["message"]["headers"]["message-id"] == mail_log.message_id } %>
-        <span class="has-text-info">OUVERT</span>
+        <span class="text-info">OUVERT</span>
       <% end %>
     <% end %>
   </td>

@@ -44,13 +44,13 @@
   <div class="flex flex-wrap mt-4">
     <div class="relative flex-grow max-w-full flex-1 px-4">
       <h4>
-        <small class="text-gray-700">Intitulé</small><br>
+        <small class="text-secondary">Intitulé</small><br>
         <%= @cour.nom_ou_ue %>
       </h4>
     </div>
     <div class="relative flex-grow max-w-full flex-1 px-4">
       <h4>
-        <small class="text-gray-700">Intervenant</small><br>
+        <small class="text-secondary">Intervenant</small><br>
         <%= link_to @cour.intervenant.nom_prenom, @cour.intervenant %>
       </h4>
     </div>
@@ -59,13 +59,13 @@
   <div class="flex flex-wrap mt-4">
     <div class="relative flex-grow max-w-full flex-1 px-4">
       <h4>
-        <small class="text-gray-700">Durée</small><br>
+        <small class="text-secondary">Durée</small><br>
         <%= @cour.duree %>h
       </h4>
     </div>
     <div class="relative flex-grow max-w-full flex-1 px-4">
       <h4>
-        <small class="text-gray-700">Fin</small><br>
+        <small class="text-secondary">Fin</small><br>
         <%= l(@cour.fin, format: :long) %>
       </h4>
     </div>
@@ -74,7 +74,7 @@
   <div class="flex flex-wrap mt-4">
     <div class="relative flex-grow max-w-full flex-1 px-4">
       <h4>
-        <small class="text-gray-700">Salle</small><br>
+        <small class="text-secondary">Salle</small><br>
         <% if @cour.salle %>
           <span class="badge badge-pill badge-<%= @cour.style %>">
             <%= @cour.salle.nom %>
@@ -90,14 +90,14 @@
     </div>
     <div class="relative flex-grow max-w-full flex-1 px-4">
       <h4>
-        <small class="text-gray-700">Etat</small><br>
+        <small class="text-secondary">Etat</small><br>
         <span class="label <%= @cour.style %>"><%= @cour.etat.humanize %></span>
       </h4>
     </div>
   </div>
       
   <h4 class="mt-4">
-    <small class="text-gray-700">Commentaires</small><br>
+    <small class="text-secondary">Commentaires</small><br>
   </h4>
   <p>
     <%= @cour.commentaires %>

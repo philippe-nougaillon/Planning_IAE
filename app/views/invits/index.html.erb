@@ -79,7 +79,7 @@
         <%= current_date = '' %>
         <% @invits.each do | invit | %>
           <% if invit.cour.debut.to_date != current_date %>
-            <tr class="hover shadow-sm bg-light">
+            <tr class="hover shadow-sm bg-base-200">
               <th colspan=9>
                 <%= fa_icon 'calendar-check' %>
                 <b><%= l(invit.cour.debut.to_date, format: :long).humanize %></b> 
