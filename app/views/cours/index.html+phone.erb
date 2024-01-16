@@ -17,23 +17,23 @@
   
   <%= label_tag "Formation" %>    
   <%= select_tag :formation, options_for_select(@formations, params[:formation]), 
-                  class: "select2-w100",
+                  class: "input input-bordered w-full input-sm select2-w100",
                   include_blank: true, onchange: 'this.form.submit()' %>
 
   <% if user_signed_in? %>
     <%= label_tag "Intervenant" %>
     <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
-                      class: "select2-w100",
+                      class: "input input-bordered w-full input-sm select2-w100",
                       include_blank: true,
                       onchange:'this.form.submit()' %>
   <% end %>
 
-  <%= button_tag name: 'commit', value: 'Filtrer', class: "btn btn-success" do %>
+  <%= button_tag name: 'commit', value: 'Filtrer', class: "btn btn-success btn-sm mt-4" do %>
     <i class="fas fa-filter"></i> 
     Filtrer
   <% end %>
   <% if params.values.count(nil) < 5 %>
-    <%= button_tag name: 'commit', value: 'RàZ', class: "btn btn-light" do %>
+    <%= button_tag name: 'commit', value: 'RàZ', class: "btn btn-light btn-sm" do %>
       <i class="fas fa-times"></i> 
       Voir tous
     <% end %>

@@ -1,0 +1,37 @@
+<nav class="navbar mb-4 sticky top-0 z-50 shadow <%= ENV["STAGING_COLOR_MODE"].present? ? ENV["STAGING_COLOR_MODE"] : 'bg-base-300' %>">
+  <div class="navbar-start">
+    <%= link_to root_path do %>
+      <%= image_tag('logo_iae@195.png', height: 40, alt: 'logo IAE') %>
+    <% end %>
+  </div>
+  <div class="navbar-end">
+    <div class="dropdown dropdown-end">
+      <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+      </div>
+      <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+        <% if user_signed_in? %> 
+          <% if current_user.étudiant? %>
+            <%= navbar_nav_item('ma journée', 'calendar-day', mes_sessions_etudiant_path, nil, 'mes_sessions_etudiant') %>
+            <%= navbar_nav_item('cours', 'calendar-alt', cours_path, 'Planning', 'index') %>
+          <% elsif current_user.intervenant? || current_user.enseignant? %>
+            <%= navbar_nav_item('ma journée', 'calendar-day', mes_sessions_intervenant_path, nil, 'mes_sessions_intervenant') %>
+            <%= navbar_nav_item('cours', 'calendar-alt', cours_path, 'Planning', 'index') %>
+          <% else %>
+            <%= navbar_nav_item('cours', 'calendar-alt', cours_path, 'Planning') %>
+          <% end %>
+          <% unless current_user.étudiant? %>
+            <%= navbar_nav_item('salles', 'chalkboard', occupation_salles_path) %>
+          <% end %>
+          <li class="nav-item">
+            <%= button_to destroy_user_session_path, method: :delete, class:'btn btn-outline-danger', 'data-turbo': false, title: "Fermer la session de #{current_user.email}" do %>
+              <i class="fas fa-fw fa-sign-out-alt"></i></span> Déconnexion
+            <% end %> 
+          </li>
+        <% else %>
+          <%= navbar_nav_item('Se connecter', 'sign-in-alt', new_user_session_path) %>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</nav>
