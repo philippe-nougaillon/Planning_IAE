@@ -1,4 +1,4 @@
-<%= bootstrap_form_with(model: dossier, local: true) do |form| %>
+<%= form_with(model: dossier, local: true) do |form| %>
   <% if dossier.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(dossier.errors.count, "error") %> empêche ce dossier d'être enregistré :</h2>
@@ -16,23 +16,35 @@
   <div class="flex flex-wrap">
     <div class="relative flex-grow max-w-full flex-1 px-4">
       <% if dossier.new_record? %>
-        <%= form.select :période, options_for_select(Dossier.périodes, dossier.période) %>
+        <div class="form-control">
+          <%= form.label :période %>
+          <%= form.select :période, options_for_select(Dossier.périodes, dossier.période), {}, class: 'select select-bordered w-full select-sm' %>
+        </div>
       <% else %>
         <p>Période</p>
-        
         <span class="input input-bordered w-full input-sm"><%= dossier.période %></span>
-        <br>
-        
       <% end %>
-      <%= form.select :intervenant_id, 
-                      options_from_collection_for_select(@intervenants, :id, :nom_prenom, @dossier.intervenant_id), 
-                      class: 'select select-bordered w-full select-sm select2' %>
+
+      <div class="form-control">
+        <%= form.label :intervenant_id %>
+        <%= form.select :intervenant_id, 
+                        options_from_collection_for_select(@intervenants, :id, :nom_prenom, @dossier.intervenant_id), 
+                        {},
+                        class: 'select select-bordered w-full select-sm select2' %>
+      </div>
 
     </div>
 
     <div class="relative flex-grow max-w-full flex-1 px-4">
-      <%= form.select :workflow_state, Dossier.workflow_spec.states.keys.to_a, label: "Etat" %>
-      <%= form.text_area :mémo %>
+      <div class="form-control">
+        <%= form.label :workflow_state %>
+        <%= form.select :workflow_state, Dossier.workflow_spec.states.keys.to_a, {}, class: 'select select-bordered w-full select-sm' %>
+      </div>
+
+      <div class="form-control">
+        <%= form.label :mémo %>
+        <%= form.text_area :mémo, class: 'textarea textarea-bordered w-full textarea-sm' %>
+      </div>
     </div>
   </div>
 
@@ -52,8 +64,7 @@
       </div>
     <% end %>
   <% end %>
-  <br> 
-
-  <%= form.submit %>
+  
+  <%= form.submit class: "btn" %>
 <% end %>
 

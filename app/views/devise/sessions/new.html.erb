@@ -3,18 +3,26 @@
     <%= image_tag "logo@2000.png", style: "width: 100%; max-width: 500px;" %>
   <% end %>
   <div class="border border-gray-900 rounded shadow w-100 p-6" style="max-width: 500px">
-    <%= bootstrap_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
       <h1 class="text-center border-b mb-4 pb-4">
         <%= t('.sign_in') %>
       </h1>
       <div class="flex flex-wrap">
         <div class="relative flex-grow max-w-full flex-1 px-4">
-          <%= f.email_field :email, autofocus: true, required: true %>
-          <%= f.password_field :password, autocomplete: "off", required: true %>
+          <div class="form-control">
+            <%= f.label :email, label: "Email *" %>
+            <%= f.email_field :email, autofocus: true, required: true, class: "input input-bordered w-full input-sm" %>
+          </div>
+
+          <div class="form-control">
+            <%= f.label :password, label: "Mot de passe *" %>
+            <%= f.password_field :password, autocomplete: "off", required: true, class: "input input-bordered w-full input-sm" %>
+          </div>
+
           <% if devise_mapping.rememberable? %>
             <%= f.check_box :remember_me %>
+            <%= f.label :remember_me %>
           <% end %>
-          <br>
           <div>
             <%= f.submit t('.sign_in'), class: "btn btn-primary mb-4" %>
             <br>

@@ -1,7 +1,7 @@
-<%= bootstrap_form_for(@cour, layout: :horizontal, label_col: "sm:w-1/5 px-4", control_col: "sm:w-1/2 px-4") do |f| %>
+<%= form_for(@cour, layout: :horizontal, label_col: "sm:w-1/5 px-4", control_col: "sm:w-1/2 px-4") do |f| %>
 
   <% if @cour.errors.any? %>
-    <div class="alert alert-error alert-dismissable" role="alert">
+    <div class="alert alert-danger alert-dismissable" role="alert">
       <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
   
       <h3><%= t('activerecord.errors.template.header',
@@ -20,28 +20,33 @@
   <div data-controller="dispo">
     <%= hidden_field_tag :id, @cour.id, data: { "target": "dispo.id" } %>
 
+    <%= f.label :debut, "Date *" %>
     <%= f.text_field :debut, 
                             value: @cour.debut.strftime("%Y-%m-%dT%H:%M"), 
                             type: "datetime-local", 
-                            label: "Date", 
+                            class: 'input input-bordered w-full input-sm', 
+                            required: true,
                             data: { "target":"dispo.date" } %>
 
-    <%= f.select  :duree, 
+    <%= f.label :duree, "Durée *" %>
+    <%= f.select :duree, 
                             options_for_select(Cour.durées, @cour.duree.to_s), 
-                            { include_blank: true, 
-                            label: "Durée" }, 
+                            { include_blank: true}, 
+                            class: 'select select-bordered w-full select-sm',
                             required: true, 
                             data: { "target": "dispo.duree" } %>
     
+    <%= f.label :formation_id, "Formation *" %>
     <%= f.collection_select :formation_id, 
                             @formations, 
                             :id, 
                             :nom_promo, 
                             {include_blank: true},
                             required: true, 
-                            class: "select2",
+                            class: "select select-bordered w-full select-sm select2",
                             data: { "target": "dispo.formation_id"} %>
     
+    <%= f.label :intervenant_id, "Intervenant *" %>
     <%= f.collection_select :intervenant_id, 
                             Intervenant.all, 
                             :id, 
@@ -49,63 +54,66 @@
                             {include_blank: true}, 
                             required: true, 
                             id: "intervenant_id",
-                            class: "select2",
+                            class: "select select-bordered w-full select-sm select2",
                             data: {
                               "target": "dispo.intervenant_id",
                               "action": (@cour.new_record? ? "change->dispo#show_dispo" : '') 
                             } %>
 
+    <%= f.label :intervenant_binome_id, "Intervenant en binôme" %>
     <%= f.collection_select :intervenant_binome_id, 
                             Intervenant.all, 
                             :id, 
                             :nom_prenom, 
-                            { include_blank: true, label: "Intervenant en binôme" }, 
-                            class: "select2" %>
+                            { include_blank: true }, 
+                            class: "select select-bordered w-full select-sm select2" %>
     
-    <%= f.number_field :code_ue, placeholder: "UE#", label: "Code UE" %>
-    <%= f.text_field :nom, placeholder: "Nom du cours (si vide; sera remplacé par le nom de l'UE)" %>
+    <%= f.label :code_ue, "Code UE" %>
+    <%= f.number_field :code_ue, placeholder: "UE#", class: "input input-bordered w-full input-sm" %>
 
-    <%= f.form_group do %>
-      <%= f.check_box :hors_service_statutaire, label: "Hors Service Statutaire ?" %>
-      <%= f.check_box :elearning, label: "eLearning ?" %>
-    <% end %>
+    <%= f.label :nom %>
+    <%= f.text_field :nom, placeholder: "Nom du cours (si vide; sera remplacé par le nom de l'UE)", class: "input input-bordered w-full input-sm" %>
+
+    <%= f.label :hors_service_statutaire, "Hors Service Statutaire ?" %>
+    <%= f.check_box :hors_service_statutaire %>
+
+    <%= f.label :elearning, "eLearning ?" %>
+    <%= f.check_box :elearning %>
 
     <% if policy(current_user).peut_réserver? %>
       <% unless @cour.new_record? %>
+        <%= f.label :etat, "État" %>
         <%= f.select(:etat, Cour.etats.keys.to_a, { include_blank: true }) %>
       <% end %>
 
+      <%= f.label :salle_id, "Salle" %>
       <%= f.collection_select :salle_id, 
                                         @salles, 
                                         :id, 
                                         :nom_places, 
                                         { include_blank: true },
+                                        class: "select select-bordered w-full select-sm",
                                         data: { "target": "dispo.salles" } %>
   
-      <%= f.form_group do %>
-        <span data-action="click->dispo#show_dispo" 
-              class="btn btn-sm btn-outline-success">
-              Chercher les salles disponibles
-        </span>
-      <% end %>
+      <span data-action="click->dispo#show_dispo" 
+            class="btn btn-sm btn-outline-success">
+            Chercher les salles disponibles
+      </span>
     <% end %>
   </div>
 
-  <%= f.text_area :commentaires %>
+  <%= f.label :commentaires %>
+  <%= f.text_area :commentaires, class: "textarea textarea-bordered w-full textarea-sm" %>
 
   <% unless @cour.new_record? %>
-    <%= f.form_group do %>
-      <%= check_box_tag :notifier %>
-      <%= label_tag :notifier, "Notifier les étudiants ?" %>
-    <% end %>
+    <%= check_box_tag :notifier %>
+    <%= label_tag :notifier, "Notifier les étudiants ?" %>
   <% end %>
 
-  <%= f.form_group do %>
-    <%= f.submit "Enregistrer", class: "btn btn-primary" %>
-    <%= link_to "Annuler", cours_path, class: "btn btn-light" %>
-    <% if @cour.new_record? %>
-      <%= f.submit "Enregistrer et en saisir une autre", name: 'create_and_add', class: 'btn btn-outline-primary' %>
-    <% end %>
+  <%= f.submit "Enregistrer", class: "btn btn-primary" %>
+  <%= link_to "Annuler", cours_path, class: "btn btn-light" %>
+  <% if @cour.new_record? %>
+    <%= f.submit "Enregistrer et en saisir une autre", name: 'create_and_add', class: 'btn btn-outline-primary' %>
   <% end %>
 
 <% end %>

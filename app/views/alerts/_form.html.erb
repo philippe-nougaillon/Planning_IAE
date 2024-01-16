@@ -1,4 +1,4 @@
-<%= bootstrap_form_with(model: alert) do |form| %>
+<%= form_with(model: alert) do |f| %>
   <% if alert.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(alert.errors.count, "error") %> empêche cette alerte d'être enregistré :</h2>
@@ -15,29 +15,35 @@
     <span class="text-warning font-light">Attention, sur le serveur il est actuellement <%= l(Time.now.utc, format: "%Hh%M") %></span>
   </h5>
 
-  <div class="field">
-    <%= form.text_field :debut, 
-                            value: @alert.debut.strftime("%Y-%m-%dT%H:%M"), 
-                            type: "datetime-local", 
-                            label: "Début d'affichage",
-                            required: true %>
-  </div>
+  <div class="flex flex-col gap-4">
+    <div class="form-control">
+      <%= f.label :debut, "Début d'affichage *" %>
+      <%= f.text_field :debut, 
+                              value: @alert.debut.strftime("%Y-%m-%dT%H:%M"), 
+                              type: "datetime-local", 
+                              class: 'input input-bordered w-full input-sm',
+                              required: true %>
+    </div>
 
-  <div class="field">
-    <%= form.text_field :fin, 
-                            value: @alert.fin.strftime("%Y-%m-%dT%H:%M"), 
-                            type: "datetime-local", 
-                            label: "Fin d'affichage",
-                            required: true %>
-  </div>
+    <div class="form-control">
+      <%= f.label :fin, "Fin d'affichage *" %>
+      <%= f.text_field :fin, 
+                              value: @alert.fin.strftime("%Y-%m-%dT%H:%M"), 
+                              type: "datetime-local", 
+                              class: 'input input-bordered w-full input-sm',
+                              required: true %>
+    </div>
 
-  <div class="field">
-    <%= form.text_field :message, required: true %>
-  </div>
+    <div class="form-control">
+      <%= f.label :message, "Message *" %>
+      <%= f.text_field :message, required: true, class: 'input input-bordered w-full input-sm' %>
+    </div>
 
-  <div class="field">
-    <%= form.select(:etat, Alert.etats.keys.to_a, label: "Style") %>
-  </div>
+    <div class="form-control">
+      <%= f.label :message, "Message *" %>
+      <%= f.select :etat, Alert.etats.keys.to_a, {}, class: 'select select-bordered w-full select-sm' %>
+    </div>
 
-  <%= form.submit %>
+    <%= f.submit class: 'btn btn-primary' %>
+  </div>
 <% end %>

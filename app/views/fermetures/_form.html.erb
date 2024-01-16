@@ -1,4 +1,4 @@
-<%= bootstrap_form_for(@fermeture) do |f| %>
+<%= form_for(@fermeture) do |f| %>
   <% if @fermeture.errors.any? %>
     <div class="alert alert-error alert-dismissable" role="alert">
       <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
@@ -15,25 +15,29 @@
   <% end %>
   <br>
 
-  <%= f.text_field :date, 
-                    value: !@fermeture.new_record? ? @fermeture.date.strftime("%Y-%m-%dT%H:%M") : nil, 
-                    type: 'datetime-local', # datetime-local et pas date à cause de Firefox
-                    label: 'Début de la période de fermeture', class: 'sm:w-1/4 px-4' %>
+  <div class="form-control">
+    <%= f.label :date, "Début de la période de fermeture" %>
+    <%= f.text_field :date, 
+                      value: !@fermeture.new_record? ? @fermeture.date.strftime("%Y-%m-%dT%H:%M") : nil, 
+                      type: 'datetime-local', # datetime-local et pas date à cause de Firefox
+                      class: 'input input-bordered w-full input-sm sm:w-1/4 px-4' %>
+  </div>
 
   <% if @fermeture.new_record? %>
-    <%= label_tag 'Fin de la période' %>
-    <%= text_field_tag :date_fin,
-                        :date_fin,
-                        type: 'datetime-local', # datetime-local et pas date à cause de Firefox
-                        class: 'input input-bordered w-full input-sm sm:w-1/4 px-4' %>
+    <div class="form-control">
+      <%= label_tag :date_fin, 'Fin de la période' %>
+      <%= text_field_tag :date_fin,
+                          :date_fin,
+                          type: 'datetime-local', # datetime-local et pas date à cause de Firefox
+                          class: 'input input-bordered w-full input-sm sm:w-1/4 px-4' %>
+    </div>
   <% end %>
-  <br>
 
-  <%= f.text_field :nom, class: 'sm:w-1/4 px-4' %>
-  <br>
+  <div class="form-control">
+    <%= f.label :nom %>
+    <%= f.text_field :nom, class: 'input input-bordered w-full input-sm sm:w-1/4 px-4' %>
+  </div>
 
-  <%= f.form_group do %>
-    <%= f.submit class: "btn btn-primary" %>
-  <% end %>
+  <%= f.submit class: "btn btn-primary" %>
 
 <% end %>

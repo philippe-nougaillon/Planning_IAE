@@ -1,4 +1,4 @@
-<%= bootstrap_form_for(@formation) do |f| %>
+<%= form_for(@formation) do |f| %>
   <% if @formation.errors.any? %>
     <div class="alert alert-error alert-dismissable" role="alert">
       <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
@@ -16,42 +16,68 @@
 
   <div class="flex flex-wrap">
     <div class="sm:w-2/5 px-4">
-      <%= f.text_field :nom, label: '*Nom' %>
+      <div class="form-control">
+        <%= f.label :nom, "Nom *" %>
+        <%= f.text_field :nom, required: true, class: 'input input-bordered w-full input-sm' %>
+      </div>
 
       <div class="flex flex-wrap">
         <div class="relative flex-grow max-w-full flex-1 px-4">
-          <%= f.text_field :abrg, label: '*Abr.' %>
+          <div class="form-control">
+            <%= f.label :abrg, "Abr. *" %>
+            <%= f.text_field :abrg, required: true, class: 'input input-bordered w-full input-sm' %>
+          </div>
         </div>
         <div class="relative flex-grow max-w-full flex-1 px-4">
-          <%= f.color_field :color, label: 'Couleur' %>
+          <div class="form-control">
+            <%= f.label :color, "Couleur" %>
+            <%= f.color_field :color, class: 'input input-bordered w-full input-sm' %>
+          </div>
         </div>
       </div>
 
       <div class="flex flex-wrap">
         <div class="relative flex-grow max-w-full flex-1 px-4">
-          <%= f.check_box :hors_catalogue, label: "Hors catalogue ?" %>
+          <div class="form-control">
+            <%= f.check_box :hors_catalogue %>
+            <%= f.label :hors_catalogue, "Hors catalogue ?" %>
+          </div>
         </div>
         <div class="relative flex-grow max-w-full flex-1 px-4">
-          <%= f.check_box :archive, label: "Archivée ?" %>
+          <div class="form-control">
+            <%= f.check_box :archive %>
+            <%= f.label :archive, "Archivée ?" %>
+          </div>
         </div>
       </div>
 
       <div class="flex flex-wrap">
         <div class="relative flex-grow max-w-full flex-1 px-4">
-          <%= f.text_field :promo %>
+          <div class="form-control">
+            <%= f.label :promo %>
+            <%= f.text_field :promo, class: 'input input-bordered w-full input-sm' %>
+          </div>
         </div>
         <div class="relative flex-grow max-w-full flex-1 px-4">
-          <%= f.text_field :diplome, label: "Diplôme" %>
+          <div class="form-control">
+            <%= f.label :diplome, "Diplôme" %>
+            <%= f.text_field :diplome, class: 'input input-bordered w-full input-sm' %>
+          </div>
         </div>  
       </div>
 
       <div class="flex flex-wrap">
         <div class="relative flex-grow max-w-full flex-1 px-4">
-          <%= f.text_field :domaine %>
+          <div class="form-control">
+            <%= f.label :domaine %>
+            <%= f.text_field :domaine, class: 'input input-bordered w-full input-sm' %>
+          </div>
         </div>
         <div class="relative flex-grow max-w-full flex-1 px-4">
-          <br>
-          <%= f.check_box :apprentissage, label: "Apprentissage ?" %>
+          <div class="form-control">
+            <%= f.check_box :apprentissage %>
+            <%= f.label :apprentissage, 'Apprentissage ?' %>
+          </div>
         </div>
       </div>
 
@@ -63,31 +89,56 @@
     </div>
 
     <div class="sm:w-1/2 px-4">
-      <%= f.collection_select :user_id, User.where.not(nom: nil).order(:nom), :id, :nom_et_prénom, {include_blank: true, label:"*Gestionnaire de formation (User)"} %>
+      <div class="form-control">
+        <%= f.label :user_id, "Gestionnaire de formation (User) *" %>
+        <%= f.collection_select :user_id, User.where.not(nom: nil).order(:nom), :id, :nom_et_prénom, {required: true, include_blank: true}, class:"select select-bordered w-full select-sm" %>
+      </div>
       <div class="flex flex-wrap">
         <div class="relative flex-grow max-w-full flex-1 px-4">
-          <%= f.number_field :nbr_etudiants, label: "Nombre d'étudiants prévus" %>
+          <div class="form-control">
+            <%= f.label :nbr_etudiants, "Nombre d'étudiants prévus" %>
+            <%= f.number_field :nbr_etudiants, class: 'input input-bordered w-full input-sm' %>
+          </div>
         </div>  
         <div class="relative flex-grow max-w-full flex-1 px-4">
-          <%= f.number_field :nbr_heures, label: "*Nombre d'heures prévues" %>
+          <div class="form-control">
+            <%= f.label :nbr_heures, "Nombre d'heures prévues *" %>
+            <%= f.number_field :nbr_heures, required: true, class: 'input input-bordered w-full input-sm' %>
+          </div>
         </div>  
       </div>  
 
       <div class="flex flex-wrap">
         <div class="sm:w-1/2 px-4">
-          <%= f.text_field :code_analytique, label: "Code Analytique (EOTP)" %>
+          <div class="form-control">
+            <%= f.label :code_analytique, "Code Analytique (EOTP)" %>
+            <%= f.text_field :code_analytique, class: 'input input-bordered w-full input-sm' %>
+          </div>
         </div>
         <div class="sm:w-1/4 px-4">
-          <%= f.select :nomtauxtd, ['','TD','CM','3xTD'] ,label: "Taux Horaire" %>
+          <div class="form-control">
+            <%= f.label :nomtauxtd, "Taux horaire" %>
+            <%= f.select :nomtauxtd, ['','TD','CM','3xTD'], {}, class: 'select select-bordered w-full select-sm' %>
+          </div>
         </div>
         <div class="sm:w-1/4 px-4">
-          <br />
-          <%= f.check_box :hss, label: "HSS?", title: "Cochez pour ne pas imputer dans les états de services" %>
+          <br>
+          <div class="form-control">
+            <%= f.check_box :hss, title: "Cochez pour ne pas imputer dans les états de services" %>
+            <%= f.label :hss, "HSS?" %>
+          </div>
         </div>
       </div>
 
-      <%= f.text_area :memo, label: "Mémo" %>
-      <%= f.text_field :courriel, label: "Adresse mail générique de la formation", placeholder: "mastermmc.app.iae@univ-paris1.fr" %>
+      <div class="form-control">
+        <%= f.label :memo, "Mémo" %>
+        <%= f.text_area :memo, class: 'textarea textarea-bordered w-full textarea-sm' %>
+      </div>
+
+      <div class="form-control">
+        <%= f.label :courriel, "Adresse mail générique de la formation" %>
+        <%= f.text_field :courriel, placeholder: "mastermmc.app.iae@univ-paris1.fr", class: 'input input-bordered w-full input-sm' %>
+      </div>
 
     </div>
   </div>
