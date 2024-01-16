@@ -241,7 +241,7 @@ class CoursController < ApplicationController
     end
 
     @tous_les_cours = Cour.where(etat: Cour.etats.values_at(:planifié, :confirmé))
-                          .where("DATE(fin) = ? AND fin > ?", @planning_date.to_date, @planning_date.to_s(:db))
+                          .where("DATE(fin) = ? AND fin > ?", @planning_date.to_date, @planning_date.to_formatted_s(:db))
                           .reorder(:debut, :fin)
                           .pluck(:id)
 
