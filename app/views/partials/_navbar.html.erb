@@ -29,7 +29,8 @@
 
         <% if policy(:tool).audit_cours? %>
           <li class="nav-item">
-            <%= link_to tools_audit_cours_path, class: 'nav-link text-dark' do %>
+            <% is_active = params[:action] == 'audit_cours' %>
+            <%= link_to tools_audit_cours_path, class: "nav-link text-#{ is_active ? 'primary' : 'base-content' }" do %>
               <%= fa_icon 'calendar-check' %>
               À booker
               <% aplanifier = CoursNonPlanifie.count %>
