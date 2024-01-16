@@ -1,7 +1,7 @@
 <%= bootstrap_form_for(@cour, layout: :horizontal, label_col: "sm:w-1/5 px-4", control_col: "sm:w-1/2 px-4") do |f| %>
 
   <% if @cour.errors.any? %>
-    <div class="alert alert-danger alert-dismissable" role="alert">
+    <div class="alert alert-error alert-dismissable" role="alert">
       <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
   
       <h3><%= t('activerecord.errors.template.header',

@@ -48,6 +48,6 @@
 <% if params[:workflow_state] == "prêt" %>
   <div class="flex mt-6" style="gap: 1rem">
     <%= link_to "Envoyer les rappels 'prêts' aux testeurs (mode test)", envoyer_envoi_logs_path(test: true), class: 'btn btn-warning' %>
-    <%= link_to "Envoyer le rappel des cours 'prêts'", envoyer_envoi_logs_path, class: 'btn btn-danger' %>
+    <%= link_to "Envoyer le rappel des cours 'prêts'", envoyer_envoi_logs_path, class: 'btn btn-error' %>
   </div>
 <%end %>

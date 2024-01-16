@@ -1,6 +1,6 @@
 <%=  bootstrap_form_for(@etudiant) do |f| %>
   <% if @etudiant.errors.any? %>
-    <div class="alert alert-danger alert-dismissable" role="alert">
+    <div class="alert alert-error alert-dismissable" role="alert">
       <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
       <h4><%= pluralize(@etudiant.errors.count, "erreur empêche", plural: 'erreurs empêchent') %> d'enregistrer cet étudiant :</h4>
 

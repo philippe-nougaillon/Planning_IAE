@@ -91,7 +91,7 @@
         </td>
         <td style="white-space: nowrap;">
           <% if invit.can_rejeter? %>
-            <%= link_to "Je ne suis pas disponible", rejeter_invit_path(invit), class: 'btn btn-sm btn-outline-danger' %>
+            <%= link_to "Je ne suis pas disponible", rejeter_invit_path(invit), class: 'btn btn-sm btn-outline-error' %>
           <% end %>
         </td>
         <td><%= link_to 'Commentaires', invit %></td>

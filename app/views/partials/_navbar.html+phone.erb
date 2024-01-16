@@ -24,7 +24,7 @@
             <%= navbar_nav_item('salles', 'chalkboard', occupation_salles_path) %>
           <% end %>
           <li class="nav-item">
-            <%= button_to destroy_user_session_path, method: :delete, class:'btn btn-outline-danger', 'data-turbo': false, title: "Fermer la session de #{current_user.email}" do %>
+            <%= button_to destroy_user_session_path, method: :delete, class:'btn btn-outline-error', 'data-turbo': false, title: "Fermer la session de #{current_user.email}" do %>
               <i class="fas fa-fw fa-sign-out-alt"></i></span> Déconnexion
             <% end %> 
           </li>

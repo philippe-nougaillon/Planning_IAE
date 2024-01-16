@@ -28,7 +28,7 @@
         Présence signée à <%= l presence.signée_le, format: :heures_log %>
       </div>
     <% elsif presence.manquante? || presence.rejetée? %>
-      <div class="alert alert-danger mt-4 mb-0" role="alert">
+      <div class="alert alert-error mt-4 mb-0" role="alert">
         Vous avez été absent(e) à cette séance
       </div>
     <% end %>

@@ -55,7 +55,7 @@
 <% if @presence.can_valider? || @presence.can_rejeter? %>
   <div class="flex justify-around lg:justify-start mb-6">
     <%= link_to_if @presence.can_valider?, 'Valider', valider_presence_path(@presence), class: 'btn btn-lg btn-success flex-grow-1 flex-sm-grow-0' %>
-    <%= link_to_if @presence.can_rejeter?, 'Rejeter', rejeter_presence_path(@presence), class: 'btn btn-lg btn-danger flex-grow-1 flex-sm-grow-0' %>
+    <%= link_to_if @presence.can_rejeter?, 'Rejeter', rejeter_presence_path(@presence), class: 'btn btn-lg btn-error flex-grow-1 flex-sm-grow-0' %>
   </div>
 <% end %>
 
