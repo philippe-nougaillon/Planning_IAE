@@ -17,13 +17,13 @@
   
   <%= label_tag "Formation" %>    
   <%= select_tag :formation, options_for_select(@formations, params[:formation]), 
-                  class: "input input-bordered w-full input-sm select2-w100",
+                  class: "select select-bordered w-full select-sm select2-w100",
                   include_blank: true, onchange: 'this.form.submit()' %>
 
   <% if user_signed_in? %>
     <%= label_tag "Intervenant" %>
     <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
-                      class: "input input-bordered w-full input-sm select2-w100",
+                      class: "select select-bordered w-full select-sm select2-w100",
                       include_blank: true,
                       onchange:'this.form.submit()' %>
   <% end %>

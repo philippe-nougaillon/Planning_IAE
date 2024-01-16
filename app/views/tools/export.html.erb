@@ -25,17 +25,17 @@
       </div>
 
       <%= label_tag :etat, "Etat" %>
-      <%= select_tag :etat, options_for_select(Cour.etats, params[:etat]), include_blank:true, class:"input input-bordered w-full input-sm" %>
+      <%= select_tag :etat, options_for_select(Cour.etats, params[:etat]), include_blank:true, class:"select select-bordered w-full select-sm" %>
       <br>
 
       <%= label_tag "Formation" %>    
       <%= select_tag :formation_id, 
-            options_from_collection_for_select(Formation.all, :id, :nom_promo), include_blank:true, class:"input input-bordered w-full input-sm select2" %>
+            options_from_collection_for_select(Formation.all, :id, :nom_promo), include_blank:true, class:"select select-bordered w-full select-sm select2" %>
       <br>
 
       <%= label_tag :intervenant_id, "Intervenant" %>
       <%= select_tag :intervenant_id,
-            options_from_collection_for_select(Intervenant.all, :id, :nom_prenom), include_blank:true, class:"input input-bordered w-full input-sm select2" %>
+            options_from_collection_for_select(Intervenant.all, :id, :nom_prenom), include_blank:true, class:"select select-bordered w-full select-sm select2" %>
 
       <%= check_box_tag :binome, true, true %>
       <%= label_tag :binome, "Exporter les binômes ?" %>

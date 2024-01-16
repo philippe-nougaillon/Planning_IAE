@@ -16,7 +16,7 @@
         <div class="join w-full">
           <%= select_tag :status, options_for_select(Intervenant.statuses, 
                 params[:status]), include_blank:true,
-                class: 'input input-bordered w-full input-sm', onchange: 'this.form.submit()' %>
+                class: 'select select-bordered w-full select-sm', onchange: 'this.form.submit()' %>
           <%= submit_tag 'Filtrer', class: "btn btn-sm btn-success join-item" %>
         </div>
       </div>

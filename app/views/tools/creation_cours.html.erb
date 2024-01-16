@@ -16,7 +16,7 @@
 
       <%= label_tag :semaines, "Semaines *", class:"font-bold"  %>
       <%= select_tag :semaines, options_for_select((1..52).to_a), 
-                        include_blank:true, multiple:true, class:"input input-bordered w-full input-sm" %>
+                        include_blank:true, multiple:true, class:"select select-bordered w-full select-sm" %>
       <br>
 
       <div class="field">
@@ -66,6 +66,7 @@
             <br>
             <%= select_tag :duree, 
                             options_for_select([0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0], 3.0), 
+                            class: 'select select-bordered select-sm',
                             include_blank:true %> h
           </div>
         </div>
@@ -77,12 +78,12 @@
 
         <%= label_tag :formation_id, "Formation", class:"font-bold"  %>
         <%= select_tag :formation_id, 
-              options_from_collection_for_select(Formation.all, :id, :nom_promo), class:"input input-bordered w-full input-sm select2", include_blank:true %>
+              options_from_collection_for_select(Formation.all, :id, :nom_promo), class:"select select-bordered w-full select-sm select2", include_blank:true %>
         <br>
 
         <%= label_tag :intervenant_id, "Intervenant", class:"font-bold"  %>
         <%= select_tag :intervenant_id,
-              options_from_collection_for_select(Intervenant.all, :id, :nom_prenom), class:"input input-bordered w-full input-sm select2", include_blank:true %>
+              options_from_collection_for_select(Intervenant.all, :id, :nom_prenom), class:"select select-bordered w-full select-sm select2", include_blank:true %>
         <br>
 
         <%= label_tag :nom, "Nom du cours *", class:"font-bold"  %>
@@ -94,7 +95,7 @@
         <br>
 
         <%= label_tag :salle_id, "Salle *", class:"font-bold"  %>
-        <%= select_tag :salle_id, options_from_collection_for_select(Salle.all, :id, :nom_places, params[:salle_id]), include_blank: true, class:"input input-bordered w-full input-sm" %>
+        <%= select_tag :salle_id, options_from_collection_for_select(Salle.all, :id, :nom_places, params[:salle_id]), include_blank: true, class:"select select-bordered w-full select-sm" %>
         * Optionnel
         <br><br>
 

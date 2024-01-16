@@ -18,7 +18,7 @@
       <%= label_tag "Formation" %>    
       <%= select_tag :formation_id, 
             options_from_collection_for_select(Formation.all, :id, :nom, params[:formation_id]), 
-              class:"input input-bordered w-full input-sm select2", include_blank: true %>
+              class:"select select-bordered w-full select-sm select2", include_blank: true %>
     </div>
   </div>
   <br>

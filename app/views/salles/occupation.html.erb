@@ -16,14 +16,14 @@
         <%= label_tag "Batiment" %>
         <%= select_tag :bloc, 
                     options_for_select(Salle.blocs, params[:bloc]), 
-                    include_blank:true, onchange:'this.form.submit()', class:"input input-bordered w-full input-sm" %>
+                    include_blank:true, onchange:'this.form.submit()', class:"select select-bordered w-full select-sm" %>
       </div>
 
       <div class="w-full sm:w-1/5">
         <%= label_tag "Salle" %>
         <%= select_tag :salle_id, 
                     options_from_collection_for_select((params[:bloc].blank? ? Salle.all : Salle.where(bloc: params[:bloc])), :id, :nom, params[:salle_id]), 
-                    include_blank:true, onchange:'this.form.submit()', class:"input input-bordered w-full input-sm" %>
+                    include_blank:true, onchange:'this.form.submit()', class:"select select-bordered w-full select-sm" %>
       </div>
 
       <div class="w-full sm:w-1/4">
