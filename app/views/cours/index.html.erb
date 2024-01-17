@@ -1,6 +1,6 @@
 <% if @alert && !user_signed_in? %>
   <%= content_tag :div, 
-      class: "alert mt-4 alert-#{@alert.etat} alert-dismissable",
+      class: "alert mt-4 alert-#{@alert.etat}",
       role: "alert" do %>
     <button type="button" class="close" data-dismiss="alert" aria-label="bouton du menu">
       <span aria-hidden="true">&times;</span>

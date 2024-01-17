@@ -1,6 +1,6 @@
 <%= form_for(@intervenant) do |f| %>
   <% if @intervenant.errors.any? %>
-    <div class="alert alert-error alert-dismissable" role="alert">
+    <div class="alert alert-error" role="alert">
       <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
         <h3><%= t('activerecord.errors.template.header',
                   model: Intervenant.model_name.human, count: @intervenant.errors.count) %></h3>
