@@ -39,18 +39,18 @@
       <section id="période">
         <%= label_tag :periode, "Période", class:"font-bold" %><br>
         <div class="flex flex-wrap">
-          <div class="relative flex-grow max-w-full flex-1 px-4">
+          <div class="relative flex-grow max-w-full flex-1">
             Matin
             <br>
             <%= check_box_tag :am, '1', params[:am] %> 9h-12h
           </div>
           
-          <div class="relative flex-grow max-w-full flex-1 px-4">
+          <div class="relative flex-grow max-w-full flex-1">
             Après-midi
             <br>
             <%= check_box_tag :pm, '1', params[:pm] %> 13h-16h
           </div>
-          <div class="relative flex-grow max-w-full flex-1 px-4">
+          <div class="relative flex-grow max-w-full flex-1">
             Soir
             <br>
             <%= check_box_tag :soir_params, '1', params[:soir_params] == 1 %> 19h-22h
@@ -59,7 +59,7 @@
             <br>
             <%= check_box_tag :soir_params, '3', params[:soir_params] == 3 %> 20h15-22h15
           </div>
-          <div class="relative flex-grow max-w-full flex-1 px-4">
+          <div class="relative flex-grow max-w-full flex-1">
             Autre
             <br>
             <%= check_box_tag :other, '1', params[:other] %> Durée:

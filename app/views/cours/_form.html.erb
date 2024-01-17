@@ -21,7 +21,7 @@
     <div data-controller="dispo" class="flex flex-col gap-4">
       <%= hidden_field_tag :id, @cour.id, data: { "target": "dispo.id" } %>
 
-      <div class="flex flex-wrap gap-4">
+      <div class="flex flex-wrap">
         <%= f.label :debut, "Date *", class: 'sm:w-1/5' %>
         <%= f.text_field :debut, 
                                 value: @cour.debut.strftime("%Y-%m-%dT%H:%M"), 
@@ -31,7 +31,7 @@
                                 data: { "target":"dispo.date" } %>
       </div>
 
-      <div class="flex flex-wrap gap-4">
+      <div class="flex flex-wrap">
         <%= f.label :duree, "Durée *", class: 'sm:w-1/5' %>
         <%= f.select :duree, 
                                 options_for_select(Cour.durées, @cour.duree.to_s), 
@@ -41,7 +41,7 @@
                                 data: { "target": "dispo.duree" } %>
       </div>
       
-      <div class="flex flex-wrap gap-4">
+      <div class="flex flex-wrap">
         <%= f.label :formation_id, "Formation *", class: 'sm:w-1/5' %>
         <%= f.collection_select :formation_id, 
                                 @formations, 
@@ -53,7 +53,7 @@
                                 data: { "target": "dispo.formation_id"} %>
       </div>
       
-      <div class="flex flex-wrap gap-4">
+      <div class="flex flex-wrap">
         <%= f.label :intervenant_id, "Intervenant *", class: 'sm:w-1/5' %>
         <%= f.collection_select :intervenant_id, 
                                 Intervenant.all, 
@@ -69,7 +69,7 @@
                                 } %>
       </div>
 
-      <div class="flex flex-wrap gap-4">
+      <div class="flex flex-wrap">
         <%= f.label :intervenant_binome_id, "Intervenant en binôme", class: 'sm:w-1/5' %>
         <%= f.collection_select :intervenant_binome_id, 
                                 Intervenant.all, 
@@ -79,17 +79,17 @@
                                 class: "select select-bordered w-full select-sm select2 sm:w-1/2" %>
       </div>
       
-      <div class="flex flex-wrap gap-4">
+      <div class="flex flex-wrap">
         <%= f.label :code_ue, "Code UE", class: 'sm:w-1/5' %>
         <%= f.number_field :code_ue, placeholder: "UE#", class: "input input-bordered w-full input-sm sm:w-1/2" %>
       </div>
 
-      <div class="flex flex-wrap gap-4">
+      <div class="flex flex-wrap">
         <%= f.label :nom, class: 'sm:w-1/5' %>
         <%= f.text_field :nom, placeholder: "Nom du cours (si vide; sera remplacé par le nom de l'UE)", class: "input input-bordered w-full input-sm sm:w-1/2" %>
       </div>
 
-      <div class="flex flex-wrap gap-4">
+      <div class="flex flex-wrap">
         <div class="sm:w-1/5"></div>
         <div class="sm:w-1/2">
           <%= f.check_box :hors_service_statutaire %>
@@ -97,7 +97,7 @@
         </div>
       </div>
 
-      <div class="flex flex-wrap gap-4">
+      <div class="flex flex-wrap">
         <div class="sm:w-1/5"></div>
         <div class="sm:w-1/2">
           <%= f.check_box :elearning %>
@@ -107,13 +107,13 @@
 
       <% if policy(current_user).peut_réserver? %>
         <% unless @cour.new_record? %>
-          <div class="flex flex-wrap gap-4">
+          <div class="flex flex-wrap">
             <%= f.label :etat, "État", class: 'sm:w-1/5' %>
             <%= f.select :etat, Cour.etats.keys.to_a, { include_blank: true }, class: "select select-bordered w-full select-sm sm:w-1/2" %>
           </div>
         <% end %>
 
-        <div class="flex flex-wrap gap-4">
+        <div class="flex flex-wrap">
           <%= f.label :salle_id, "Salle", class: 'sm:w-1/5' %>
           <div class="sm:w-1/2">
             <%= f.collection_select :salle_id, 
@@ -133,13 +133,13 @@
       <% end %>
     </div>
 
-    <div class="flex flex-wrap gap-4">
+    <div class="flex flex-wrap">
       <%= f.label :commentaires, class: 'sm:w-1/5' %>
       <%= f.text_area :commentaires, class: "textarea textarea-bordered w-full textarea-sm sm:w-1/2" %>
     </div>
 
     <% unless @cour.new_record? %>
-      <div class="flex flex-wrap gap-4">
+      <div class="flex flex-wrap">
         <div class="sm:w-1/5"></div>
         <div class="sm:w-1/2">
           <%= check_box_tag :notifier %>
@@ -148,7 +148,7 @@
       </div>
     <% end %>
 
-    <div class="flex flex-wrap gap-4">
+    <div class="flex flex-wrap">
       <div class="sm:w-1/5"></div>
         <div class="sm:w-1/2">
           <%= f.submit "Enregistrer", class: "btn btn-primary" %>

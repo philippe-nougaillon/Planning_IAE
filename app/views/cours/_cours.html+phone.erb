@@ -1,12 +1,12 @@
 <div class="shadow-sm p-4" style="border-left: .3rem solid <%= cours.try(:formation).try(:positive_color) %>">
   <div class="flex flex-wrap">
     
-    <div class="relative flex-grow max-w-full flex-1 px-4">
+    <div class="relative flex-grow max-w-full flex-1">
       <b><%= l(cours.debut, format: :heures_min) %></b>
       <small>- <%= l(cours.fin, format: :heures_min) %></small>
     </div>
 
-    <div class="relative flex-grow max-w-full flex-1 px-4 text-right">
+    <div class="relative flex-grow max-w-full flex-1 text-right">
       <% if cours.salle %>
         <h5>
           <span class="badge badge-<%= cours.style %>">

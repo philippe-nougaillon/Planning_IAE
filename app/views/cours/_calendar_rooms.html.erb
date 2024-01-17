@@ -22,7 +22,7 @@
 <% end %>
   
 <div class="flex flex-wrap">
-  <div class="relative flex-grow max-w-full flex-1 px-4">
+  <div class="relative flex-grow max-w-full flex-1">
     <% bloc = 'A' %> 
     <% Salle.all.reorder(:bloc, :nom).each do |salle| %>
       <% @salle = salle %>

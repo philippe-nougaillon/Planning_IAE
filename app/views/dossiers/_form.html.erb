@@ -14,7 +14,7 @@
   <%= form.hidden_field :intervenant_id %>
 
   <div class="flex flex-wrap">
-    <div class="relative flex-grow max-w-full flex-1 px-4">
+    <div class="relative flex-grow max-w-full flex-1">
       <% if dossier.new_record? %>
         <div class="form-control">
           <%= form.label :période %>
@@ -35,7 +35,7 @@
 
     </div>
 
-    <div class="relative flex-grow max-w-full flex-1 px-4">
+    <div class="relative flex-grow max-w-full flex-1">
       <div class="form-control">
         <%= form.label :workflow_state %>
         <%= form.select :workflow_state, Dossier.workflow_spec.states.keys.to_a, {}, class: 'select select-bordered w-full select-sm' %>
@@ -58,7 +58,7 @@
         <div class="sm:w-1/5 px-4">
           <%= doc.select :workflow_state, Document.workflow_spec.states.keys.to_a, label: "Etat" %>
         </div>
-        <div class="relative flex-grow max-w-full flex-1 px-4">
+        <div class="relative flex-grow max-w-full flex-1">
           <%= doc.text_field :commentaire %>
         </div>
       </div>

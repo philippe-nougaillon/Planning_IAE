@@ -83,7 +83,7 @@
                 class:"select select-bordered w-full select-sm", onchange:'this.form.submit()' %>
       </div>
 
-      <div class="relative flex-grow max-w-full flex-1 px-4">
+      <div class="relative flex-grow max-w-full flex-1">
         <%= label_tag "Cours" %>
         <br> 
         <%= radio_button_tag :filter, "upcoming", (params[:filter]=='upcoming'), onchange:'this.form.submit()' %>
@@ -187,7 +187,7 @@
         </table>
 
         <div class="flex flex-wrap">
-          <div class="relative flex-grow max-w-full flex-1 px-4">
+          <div class="relative flex-grow max-w-full flex-1">
             <% if params[:paginate] == 'pages' %>
               <%= page_entries_info @cours %>
               <div class="planning_pagination">
@@ -195,7 +195,7 @@
               </div>
             <% end %>
           </div>
-          <div class="relative flex-grow max-w-full flex-1 px-4">
+          <div class="relative flex-grow max-w-full flex-1">
             <% if policy(Cour).action? %>
               <div data-target="action.selector">  
                 <span class="align-bottom">

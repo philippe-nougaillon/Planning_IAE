@@ -33,7 +33,7 @@
       </h3>
     </div>
   
-    <div class="relative flex-grow max-w-full flex-1 px-4">
+    <div class="relative flex-grow max-w-full flex-1">
       <h3>
         <span style="background-color:<%= @cour.formation.try(:color) %>;padding-left: 5px;margin-right: 5px;"></span>
         <%= @cour.formation.try(:nom_promo) %>
@@ -42,13 +42,13 @@
   </div>
 
   <div class="flex flex-wrap mt-4">
-    <div class="relative flex-grow max-w-full flex-1 px-4">
+    <div class="relative flex-grow max-w-full flex-1">
       <h4>
         <small class="text-secondary">Intitulé</small><br>
         <%= @cour.nom_ou_ue %>
       </h4>
     </div>
-    <div class="relative flex-grow max-w-full flex-1 px-4">
+    <div class="relative flex-grow max-w-full flex-1">
       <h4>
         <small class="text-secondary">Intervenant</small><br>
         <%= link_to @cour.intervenant.nom_prenom, @cour.intervenant %>
@@ -57,13 +57,13 @@
   </div>
 
   <div class="flex flex-wrap mt-4">
-    <div class="relative flex-grow max-w-full flex-1 px-4">
+    <div class="relative flex-grow max-w-full flex-1">
       <h4>
         <small class="text-secondary">Durée</small><br>
         <%= @cour.duree %>h
       </h4>
     </div>
-    <div class="relative flex-grow max-w-full flex-1 px-4">
+    <div class="relative flex-grow max-w-full flex-1">
       <h4>
         <small class="text-secondary">Fin</small><br>
         <%= l(@cour.fin, format: :long) %>
@@ -72,7 +72,7 @@
   </div>
 
   <div class="flex flex-wrap mt-4">
-    <div class="relative flex-grow max-w-full flex-1 px-4">
+    <div class="relative flex-grow max-w-full flex-1">
       <h4>
         <small class="text-secondary">Salle</small><br>
         <% if @cour.salle %>
@@ -88,7 +88,7 @@
         <% end %>
       </h4>
     </div>
-    <div class="relative flex-grow max-w-full flex-1 px-4">
+    <div class="relative flex-grow max-w-full flex-1">
       <h4>
         <small class="text-secondary">Etat</small><br>
         <span class="label <%= @cour.style %>"><%= @cour.etat.humanize %></span>

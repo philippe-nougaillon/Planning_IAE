@@ -4,7 +4,7 @@
 </h3>
 <div class="bs-container card shadow-sm p-4 my-4">
   <div class="flex flex-wrap">
-    <div class="relative flex-grow max-w-full flex-1 px-4">
+    <div class="relative flex-grow max-w-full flex-1">
       <p>
         <strong>
           <%= l(@invit.cour.debut, format: :long).humanize %>
@@ -37,7 +37,7 @@
         <%= @invit.nom %>
       </p>
     </div>
-    <div class="relative flex-grow max-w-full flex-1 px-4">
+    <div class="relative flex-grow max-w-full flex-1">
       <h5>
         Vos autres cours à L’IAE le <%= l(@jour, format: :long) %>
       </h5>
@@ -91,7 +91,7 @@
   </div>
 
   <div class="flex flex-wrap">
-    <div class="relative flex-grow max-w-full flex-1 px-4">
+    <div class="relative flex-grow max-w-full flex-1">
       <p>
         <strong>Message du gestionnaire de formation</strong>
         <br>
@@ -101,7 +101,7 @@
       </p>
     </div>
 
-    <div class="relative flex-grow max-w-full flex-1 px-4">
+    <div class="relative flex-grow max-w-full flex-1">
       <p>
         <% if @invit.can_valider? || @invit.can_rejeter? %>
           <strong>Votre réponse</strong>

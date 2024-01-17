@@ -14,27 +14,27 @@
       </div>
     </div>
 
-    <div class="flex flex-wrap">
-      <div class="relative flex-grow max-w-full flex-1 px-4">
+    <div class="flex flex-wrap px-4">
+      <div class="relative flex-grow max-w-full flex-1">
         <span>
           Inclure :
         </span>
         <%= check_box_tag :search_cours, '1', params[:search_cours] == '1' %>
         <%= label_tag :search_cours, "Cours" %>
       </div>
-      <div class="relative flex-grow max-w-full flex-1 px-4">
+      <div class="relative flex-grow max-w-full flex-1">
         <%= check_box_tag :search_formations, '1', params[:search_formations] == '1' %>
         <%= label_tag :search_formations, "Formations" %>
       </div>
-      <div class="relative flex-grow max-w-full flex-1 px-4">
+      <div class="relative flex-grow max-w-full flex-1">
         <%= check_box_tag :search_intervenants, '1', params[:search_intervenants] == '1' %>
         <%= label_tag :search_intervenants, "Intervenants" %>
       </div>
-      <div class="relative flex-grow max-w-full flex-1 px-4">
+      <div class="relative flex-grow max-w-full flex-1">
         <%= check_box_tag :search_etudiants, '1', params[:search_etudiants] == '1' %>
         <%= label_tag :search_etudiants, "Étudiants" %>
       </div>
-      <div class="relative flex-grow max-w-full flex-1 px-4">
+      <div class="relative flex-grow max-w-full flex-1">
         <%= check_box_tag :search_users, '1', params[:search_users] == '1' %>
         <%= label_tag :search_users, "Utilisateurs" %>
       </div>

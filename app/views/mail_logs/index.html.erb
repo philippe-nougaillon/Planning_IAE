@@ -14,7 +14,7 @@
         <%= text_field_tag :search, params[:search], include_blank: true, onchange:'this.form.submit()', class:"input input-bordered w-full input-sm" %>
       </div>
 
-      <div class="relative flex-grow max-w-full flex-1 px-4">
+      <div class="relative flex-grow max-w-full flex-1">
         <%= label_tag :search_subject, "Sujet" %>
         <div class="join w-full">
           <%= select_tag :search_subject, options_for_select(MailLog.all.pluck(:subject).uniq.sort, params[:search_subject]), include_blank: true, onchange:'this.form.submit()', class:"select select-bordered w-full select-sm join-item" %>
