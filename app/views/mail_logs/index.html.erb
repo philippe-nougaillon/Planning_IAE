@@ -64,5 +64,7 @@
     <%= page_entries_info @mail_logs %>
   </div>
 
-  <%= will_paginate @mail_logs, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+  <div class="planning_pagination">
+    <%= will_paginate @mail_logs %>
+  </div>
 <% end %>

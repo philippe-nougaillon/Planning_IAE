@@ -67,7 +67,9 @@
     <div class="page_info">
       <%= page_entries_info @results %>
     </div>
-    <%= will_paginate @results, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+    <div class="planning_pagination">
+      <%= will_paginate @results %>
+    </div>
     <br>
   <% else %>
     <p class="title is-4 has-text-centered p-6">

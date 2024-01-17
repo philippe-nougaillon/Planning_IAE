@@ -190,7 +190,9 @@
           <div class="relative flex-grow max-w-full flex-1 px-4">
             <% if params[:paginate] == 'pages' %>
               <%= page_entries_info @cours %>
-              <%= will_paginate @cours, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+              <div class="planning_pagination">
+                <%= will_paginate @cours %>
+              </div>
             <% end %>
           </div>
           <div class="relative flex-grow max-w-full flex-1 px-4">

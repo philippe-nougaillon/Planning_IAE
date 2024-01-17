@@ -83,7 +83,9 @@
         <%= page_entries_info @formations %>
       </div>
 
-      <%= will_paginate @formations, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+      <div class="planning_pagination">
+        <%= will_paginate @formations %>
+      </div>
     <% end %>  
   </div>
 <% end %>

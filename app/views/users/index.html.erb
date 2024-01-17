@@ -99,7 +99,7 @@
     <%= page_entries_info @users %>
   </div>
 
-  <%= will_paginate @users, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+  <div class="planning_pagination">
+    <%= will_paginate @users %>
+  </div>
 </div>
-<br>
-

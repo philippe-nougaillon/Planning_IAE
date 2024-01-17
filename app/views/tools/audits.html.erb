@@ -74,4 +74,6 @@
   <%= page_entries_info @audits %>
 </div>
 
-<%= will_paginate @audits, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+<div class="planning_pagination">
+  <%= will_paginate @audits %>
+</div>

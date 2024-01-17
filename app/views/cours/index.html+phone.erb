@@ -60,11 +60,12 @@
   <div class="page_info m-6">
     <%= page_entries_info @cours %>
   </div>
-
-  <%= will_paginate @cours, inner_window: 0, 
-                            outer_window: 0, 
-                            renderer: WillPaginate::ActionView::BootstrapLinkRenderer,
-                            list_classes: %w(pagination justify-center h4) %>
+  
+  <div class="planning_pagination w-full justify-center">
+    <%= will_paginate @cours, inner_window: 0, 
+                              outer_window: 0, 
+                              class: 'pagination' %>
+  </div>
 <% else %>
   <p>
     Aucun cours à afficher...

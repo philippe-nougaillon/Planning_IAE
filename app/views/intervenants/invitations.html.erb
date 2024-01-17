@@ -108,5 +108,7 @@
   <%= page_entries_info @invits %>
 </div>
 
-<%= will_paginate @invits, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+<div class="planning_pagination">
+  <%= will_paginate @invits %>
+</div>
 <br>

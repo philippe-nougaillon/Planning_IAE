@@ -94,4 +94,6 @@
   <%= JSON.pretty_generate(Presence.workflow_states_count(@presences)) %>
 </div>
 
-<%= will_paginate @presences, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+<div class="planning_pagination">
+  <%= will_paginate @presences %>
+</div>

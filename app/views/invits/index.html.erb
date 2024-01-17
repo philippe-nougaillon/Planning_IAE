@@ -110,5 +110,7 @@
   <%= @invits.reorder(nil).select(:id).group(:workflow_state).count(:id) %>
 </div>
 
-<%= will_paginate @invits, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+<div class="planning_pagination">
+  <%= will_paginate @invits %>
+</div>
 <br>

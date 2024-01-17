@@ -110,7 +110,9 @@
   <%= JSON.pretty_generate(@dossiers.reorder(nil).select(:id).group(:workflow_state).count(:id)) %>
 </div>
 
-<%= will_paginate @dossiers, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+<div class="planning_pagination">
+  <%= will_paginate @dossiers %>
+</div>
 <br>
 <%= link_to 'Export XLS', url_for(params.permit(:nom, :période, :workflow_state).merge(format: :xls)) %>
 

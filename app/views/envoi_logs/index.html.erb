@@ -43,7 +43,9 @@
   <%= page_entries_info @envoi_logs %>
 </div>
 
-<%= will_paginate @envoi_logs, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+<div class="planning_pagination">
+  <%= will_paginate @envoi_logs %>
+</div>
 
 <% if params[:workflow_state] == "prêt" %>
   <div class="flex mt-6" style="gap: 1rem">

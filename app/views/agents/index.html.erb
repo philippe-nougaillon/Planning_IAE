@@ -36,7 +36,9 @@
       <%= page_entries_info @agents %>
     </div>
 
-    <%= will_paginate @agents, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+    <div class="planning_pagination">
+      <%= will_paginate @agents %>
+    </div>
 
   </div>
 <% end %>

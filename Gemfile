@@ -91,7 +91,6 @@ gem 'devise-i18n'
 gem 'audited', '~> 5.4'
 gem 'capture_stdout'
 gem 'will_paginate'
-gem 'will_paginate-bootstrap4'
 gem 'pundit'
 
 # PDF

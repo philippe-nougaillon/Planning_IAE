@@ -62,5 +62,7 @@
     <%= page_entries_info @etudiants %>
   </div>
 
-  <%= will_paginate @etudiants, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+  <div class="planning_pagination">
+    <%= will_paginate @etudiants %>
+  </div>
 </div>

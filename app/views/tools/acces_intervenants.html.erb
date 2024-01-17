@@ -75,10 +75,12 @@
     </table>
   </div>
 
-  <div class="page_info mb-4">
+  <div class="my-4">
     <% if params[:paginate] == 'pages' %>
         <%= page_entries_info @intervenants %>
-        <%= will_paginate @intervenants, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+        <div class="planning_pagination">
+          <%= will_paginate @intervenants %>
+        </div>
     <% else %>
       Nombre d'intervenants : <%= @intervenants.count %>
     <% end %>
