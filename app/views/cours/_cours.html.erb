@@ -57,7 +57,7 @@
     <td style="white-space: nowrap;">
         <% if cours.salle %>
             <h5>
-                <span class="badge badge-pill badge-<%= cours.style %>">
+                <span class="badge badge-<%= cours.style %>">
                     <%= cours.salle.nom %>
                 </span>
             </h5>
@@ -85,7 +85,7 @@
                 </i>
             <% else %>
                 <h5>
-                    <span class="badge badge-pill badge-<%= cours.style %>">
+                    <span class="badge badge-<%= cours.style %>">
                         <%= cours.etat.humanize %>
                     </span>
                 </h5>
