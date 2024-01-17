@@ -4,29 +4,10 @@
 
 @import 'actiontext.css';
 
-@layer directive {
-  /* Pour y mettre du css pur */
-  input[type=checkbox] {
-    flex-shrink: 0;
-    --chkbg: var(--fallback-bc, oklch(var(--bc)/1));
-    --chkfg: var(--fallback-b1, oklch(var(--b1)/1));
-    height: 1.5rem !important;
-    width: 1.5rem !important;
-    cursor: pointer;
-    appearance: none !important;
-    border-radius: var(--rounded-btn, .5rem) !important;
-    border-width: 1px !important;
-    border-color: var(--fallback-bc, oklch(var(--bc)/var(--tw-border-opacity)));
-    --tw-border-opacity: 0.2;
-  }
-
-  input[type=checkbox]:checked, input[type=checkbox][aria-checked=true], input[type=checkbox][checked=true] {
-    background-repeat: no-repeat !important;
-    animation: checkmark var(--animation-input, .2s) ease-out;
-    background-color: var(--chkbg) !important;
-    background-image: linear-gradient(-45deg, transparent 65%, var(--chkbg) 65.99%), linear-gradient(45deg, transparent 75%, var(--chkbg) 75.99%), linear-gradient(-45deg, var(--chkbg) 40%, transparent 40.99%), linear-gradient(45deg, var(--chkbg) 30%, var(--chkfg) 30.99%, var(--chkfg) 40%, transparent 40.99%), linear-gradient(-45deg, var(--chkfg) 50%, var(--chkbg) 50.99%) !important;
-  }
-}
+/* @layer directive {
+  Pour y mettre du css pur, mais ça a moins de priorité que les autres fichiers css
+} 
+*/
 
 @layer components {
   h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6{
