@@ -1,17 +1,17 @@
 <div class="card shadow-sm p-4 mt-4">
 
   <div>
-    <div class="btn-group float-right">
+    <div class="join float-right">
       <% if policy(:tool).can_see_RHGroup_private_tool? %>
-        <%= link_to edit_intervenant_path(@intervenant), class: 'btn btn-sm btn-primary btn-outline' do %>
+        <%= link_to edit_intervenant_path(@intervenant), class: 'btn btn-sm btn-primary btn-outline join-item' do %>
           <%= fa_icon 'edit' %> Modifier
         <% end %>
 
-        <a href="#audit" data-toggle="collapse" class='btn btn-sm btn-primary btn-outline'>
+        <a href="#audit" data-toggle="collapse" class='btn btn-sm btn-primary btn-outline join-item'>
           <%= fa_icon 'search' %> Audit
         </a>
       <% end %>
-      <%= link_to intervenants_path, class: 'btn btn-sm btn-primary btn-outline' do %>
+      <%= link_to intervenants_path, class: 'btn btn-sm btn-primary btn-outline join-item' do %>
         <%= fa_icon 'list' %> Retour
       <% end %>
     </div>

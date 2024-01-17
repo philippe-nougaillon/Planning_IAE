@@ -1,10 +1,10 @@
 <div class="pb-2 mt-6 mb-2 border-b">
-	<div class="btn-group float-right">
-		<%= link_to @etudiant, class: 'btn btn-sm btn-primary btn-outline' do %>
+	<div class="join float-right">
+		<%= link_to @etudiant, class: 'btn btn-sm btn-primary btn-outline join-item' do %>
 			<%= fa_icon 'eye' %> Voir
 		<% end %>
 
-		<%= link_to etudiants_path, class: 'btn btn-sm btn-primary btn-outline' do %>
+		<%= link_to etudiants_path, class: 'btn btn-sm btn-primary btn-outline join-item' do %>
 			<%= fa_icon 'list' %> Retour
 		<% end %>
 

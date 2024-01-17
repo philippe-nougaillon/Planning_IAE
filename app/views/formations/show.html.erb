@@ -1,17 +1,17 @@
 <div class="card shadow-sm p-4 mt-4" style="border-left: .3rem solid <%= @formation.try(:positive_color) %>">
   <div class='mb-6'>
-    <div class="btn-group float-right">
+    <div class="join float-right">
       <% if policy(@formation).edit? %>
-        <%= link_to edit_formation_path(@formation), class: 'btn btn-sm btn-primary btn-outline' do %>
+        <%= link_to edit_formation_path(@formation), class: 'btn btn-sm btn-primary btn-outline join-item' do %>
           <%= fa_icon 'edit' %> Modifier
         <% end %>
       <% end %>
 
-      <a href="#audit" data-toggle="collapse" class='btn btn-sm btn-primary btn-outline'>
+      <a href="#audit" data-toggle="collapse" class='btn btn-sm btn-primary btn-outline join-item'>
         <%= fa_icon 'search' %> Audit
       </a>
 
-      <%= link_to formations_path, class: 'btn btn-sm btn-primary btn-outline' do %>
+      <%= link_to formations_path, class: 'btn btn-sm btn-primary btn-outline join-item' do %>
         <%= fa_icon 'list' %> Retour
       <% end %>
     </div>
