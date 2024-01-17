@@ -86,12 +86,12 @@
         <td>il y a <%= time_ago_in_words invit.updated_at %></td>
         <td>
           <% if invit.can_valider? %>
-            <%= link_to "Je suis disponible", valider_invit_path(invit), class: 'btn btn-sm btn-outline-success' %>
+            <%= link_to "Je suis disponible", valider_invit_path(invit), class: 'btn btn-sm btn-success btn-outline' %>
           <% end %>
         </td>
         <td style="white-space: nowrap;">
           <% if invit.can_rejeter? %>
-            <%= link_to "Je ne suis pas disponible", rejeter_invit_path(invit), class: 'btn btn-sm btn-outline-error' %>
+            <%= link_to "Je ne suis pas disponible", rejeter_invit_path(invit), class: 'btn btn-sm btn-error btn-outline' %>
           <% end %>
         </td>
         <td><%= link_to 'Commentaires', invit %></td>

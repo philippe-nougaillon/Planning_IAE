@@ -96,7 +96,7 @@
                                         data: { "target": "dispo.salles" } %>
   
       <span data-action="click->dispo#show_dispo" 
-            class="btn btn-sm btn-outline-success">
+            class="btn btn-sm btn-success btn-outline">
             Chercher les salles disponibles
       </span>
     <% end %>
@@ -113,7 +113,7 @@
   <%= f.submit "Enregistrer", class: "btn btn-primary" %>
   <%= link_to "Annuler", cours_path, class: "btn btn-light" %>
   <% if @cour.new_record? %>
-    <%= f.submit "Enregistrer et en saisir une autre", name: 'create_and_add', class: 'btn btn-outline-primary' %>
+    <%= f.submit "Enregistrer et en saisir une autre", name: 'create_and_add', class: 'btn btn-primary btn-outline' %>
   <% end %>
 
 <% end %>

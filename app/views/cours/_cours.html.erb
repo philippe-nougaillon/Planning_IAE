@@ -101,7 +101,7 @@
 
     <% if policy(cours).edit? %>
         <td>
-            <%= link_to edit_cour_path(cours, from: params[:from]), class: "btn btn-sm btn-outline-light text-base-content" do %>
+            <%= link_to edit_cour_path(cours, from: params[:from]), class: "btn btn-sm btn-ghost text-base-content" do %>
                 <%= fa_icon 'edit '%>
             <% end %>
         </td>

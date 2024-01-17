@@ -1,22 +1,22 @@
 <div class="pb-2 mt-6 mb-2 border-b">
 	<div class="btn-group float-right">
-		<%= link_to @formation, class: 'btn btn-sm btn-outline-primary' do %>
+		<%= link_to @formation, class: 'btn btn-sm btn-primary btn-outline' do %>
 			<%= fa_icon 'eye' %> Voir
 		<% end %>
 
-		<%= link_to '#UE', data: {'toggle':'collapse'}, class: 'btn btn-sm btn-outline-primary' do %>
+		<%= link_to '#UE', data: {'toggle':'collapse'}, class: 'btn btn-sm btn-primary btn-outline' do %>
 			<%= fa_icon 'book' %> UE
 		<% end %>
 
-		<%= link_to '#Etudiants', data: {'toggle':'collapse'}, class: 'btn btn-sm btn-outline-primary' do %>
+		<%= link_to '#Etudiants', data: {'toggle':'collapse'}, class: 'btn btn-sm btn-primary btn-outline' do %>
 			<%= fa_icon 'graduation-cap' %> Etudiants
 		<% end %>
 
-		<%= link_to '#Vacations', data: {'toggle':'collapse'}, class: 'btn btn-sm btn-outline-primary' do %>
+		<%= link_to '#Vacations', data: {'toggle':'collapse'}, class: 'btn btn-sm btn-primary btn-outline' do %>
 			<%= fa_icon 'user-md' %> Vacations
 		<% end %>
 
-		<%= link_to formations_path, class: 'btn btn-sm btn-outline-primary' do %>
+		<%= link_to formations_path, class: 'btn btn-sm btn-primary btn-outline' do %>
 			<%= fa_icon 'list' %> Retour
 		<% end %>
 

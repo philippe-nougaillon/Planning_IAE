@@ -1,15 +1,15 @@
 <div class="card shadow-sm p-4 mt-4">
   <div class='mb-6'>
     <div class="btn-group float-right">
-      <%= link_to edit_etudiant_path(@etudiant), class: 'btn btn-sm btn-outline-primary' do %>
+      <%= link_to edit_etudiant_path(@etudiant), class: 'btn btn-sm btn-primary btn-outline' do %>
         <%= fa_icon 'edit' %> Modifier
       <% end %>
 
-      <a href="#audit" data-toggle="collapse" class='btn btn-sm btn-outline-primary'>
+      <a href="#audit" data-toggle="collapse" class='btn btn-sm btn-primary btn-outline'>
         <%= fa_icon 'search' %> Audit
       </a>
 
-      <%= link_to etudiants_path, class: 'btn btn-sm btn-outline-primary' do %>
+      <%= link_to etudiants_path, class: 'btn btn-sm btn-primary btn-outline' do %>
         <%= fa_icon 'list' %> Retour
       <% end %>
     </div>

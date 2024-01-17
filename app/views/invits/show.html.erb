@@ -109,8 +109,8 @@
           <%= form_tag validation_invit_path(@invit), method: :post do %>
             <%= text_area_tag :reponse, @invit.reponse, rows: 5, cols: 55, disabled: user_signed_in? %>
             <br>
-            <%= submit_tag "Disponible", disabled: user_signed_in?, class: "btn btn-outline-success" %>
-            <%= submit_tag "Pas disponible", disabled: user_signed_in?, class: "btn btn-outline-error" %>
+            <%= submit_tag "Disponible", disabled: user_signed_in?, class: "btn btn-success btn-outline" %>
+            <%= submit_tag "Pas disponible", disabled: user_signed_in?, class: "btn btn-error btn-outline" %>
           <% end %>
         <% else %>
           <strong>Réponse de l'enseignant</strong>
