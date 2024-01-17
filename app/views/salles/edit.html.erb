@@ -1,11 +1,13 @@
 <div class="pb-2 mt-6 mb-2 border-b">
-	<%= link_to salles_path, class: 'btn text-primary float-right' do %>
-		<%= fa_icon 'list-alt' %> Retour
-	<% end %>
+	<div class="join float-right">
+		<%= link_to salles_path, class: 'btn btn-sm btn-primary btn-outline join-item' do %>
+			<%= fa_icon 'list-alt' %> Retour
+		<% end %>
 
-	<%= link_to @salle, class: 'btn text-primary float-right' do %>
-	   	<%= fa_icon 'eye', text: 'Voir' %>
-	<% end %>
+		<%= link_to @salle, class: 'btn btn-sm btn-primary btn-outline join-item' do %>
+				<%= fa_icon 'eye', text: 'Voir' %>
+		<% end %>
+	</div>
 
 	<h3><%= fa_icon 'chalkboard' %> Modification d'une salle</h3>
 </div>
