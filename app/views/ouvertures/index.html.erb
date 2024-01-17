@@ -25,10 +25,10 @@
           <td><%= ouverture.début.strftime("%Hh%M") %></td>
           <td><%= ouverture.fin.strftime("%Hh%M") %></td>
           <td>
-            <%= link_to edit_ouverture_path(ouverture), class: 'btn btn-default' do %>
+            <%= link_to edit_ouverture_path(ouverture), class: 'btn btn-ghost' do %>
               <%= fa_icon 'edit' %>
             <% end %>
-            <%= link_to(ouverture, method: :delete, data: {confirm: 'Confirmez-vous ?'}, class: 'btn btn-default') do %>
+            <%= link_to(ouverture, method: :delete, data: {confirm: 'Confirmez-vous ?'}, class: 'btn btn-ghost') do %>
               <%= fa_icon 'trash' %>
             <% end %>
           </td>

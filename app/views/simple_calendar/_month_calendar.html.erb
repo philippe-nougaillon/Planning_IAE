@@ -2,7 +2,7 @@
   <div class="calendar-heading">
     <%= link_to url_for(params
                           .permit(:formation, :ue, :intervenant, :semaine, :start_date, :etat, :filter, :view)
-                          .merge(semaine:nil, start_date:params[:start_date].to_date - 1.month)), class: "btn btn-default" do %>
+                          .merge(semaine:nil, start_date:params[:start_date].to_date - 1.month)), class: "btn btn-ghost" do %>
         <%= fa_icon 'chevron-circle-left' %>
     <% end %>
 
@@ -10,7 +10,7 @@
 
     <%= link_to url_for(params
                           .permit(:formation, :ue, :intervenant, :semaine, :start_date, :etat, :filter, :view)
-                          .merge(semaine:nil, start_date:params[:start_date].to_date + 1.month)), class: "btn btn-default" do %>
+                          .merge(semaine:nil, start_date:params[:start_date].to_date + 1.month)), class: "btn btn-ghost" do %>
         <%= fa_icon 'chevron-circle-right' %>
     <% end %>
   </div>

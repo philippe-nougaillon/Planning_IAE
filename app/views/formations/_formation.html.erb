@@ -20,13 +20,13 @@
         <%= link_to_unless (formation.archive || formation_cours_réalisé_count.zero?), formation_cours_réalisé_count, cours_path(ids:formation_cours.réalisé.pluck(:id), filter:'all') %>
     </td>
     <td>
-        <%= link_to edit_formation_path(formation), class: "btn btn-default" do %>
+        <%= link_to edit_formation_path(formation), class: "btn btn-ghost" do %>
             <%= fa_icon 'edit' %>
         <% end %>
     </td>
     <td>
         <% unless formation_cours.any? %>
-            <%= link_to(formation, method: :delete, data:{confirm: 'Confirmez-vous ?'}, class: "btn btn-default") do %>
+            <%= link_to(formation, method: :delete, data:{confirm: 'Confirmez-vous ?'}, class: "btn btn-ghost") do %>
                 <%= fa_icon 'trash-alt' %>
             <% end %>
         <% end %>

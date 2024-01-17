@@ -4,7 +4,7 @@
     <td><%= salle.bloc %></td>
     <td class="text-center">
         <% unless Cour.where(salle_id: salle).any? %>
-            <%= link_to(salle, method: :delete, data: {confirm: 'Confirmez-vous ?'}, class: "btn btn-default") do %>
+            <%= link_to(salle, method: :delete, data: {confirm: 'Confirmez-vous ?'}, class: "btn btn-ghost") do %>
                 <%= fa_icon 'trash' %>
             <% end %>
         <% end %>

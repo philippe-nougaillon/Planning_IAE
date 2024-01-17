@@ -79,11 +79,11 @@
           <td><%= time_ago_in_words user.current_sign_in_at if user.current_sign_in_at %></td>
           <td ><%= user.sign_in_count %></td>
           <td>
-            <%= link_to edit_user_path(user), class: "btn btn-default" do %>
+            <%= link_to edit_user_path(user), class: "btn btn-ghost" do %>
               <%= fa_icon 'edit' %>
             <% end %>
             <% unless user.discarded? %>
-              <%= link_to(user, method: :delete, data:{confirm: 'Confirmez-vous la désactivation de cet utilisateur ?'}, class: "btn btn-default", title: "Désactiver cet utilisateur") do %>
+              <%= link_to(user, method: :delete, data:{confirm: 'Confirmez-vous la désactivation de cet utilisateur ?'}, class: "btn btn-ghost", title: "Désactiver cet utilisateur") do %>
                 <%= fa_icon 'trash' %>
               <% end %>
             <% else %>

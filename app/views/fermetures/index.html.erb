@@ -68,10 +68,10 @@
           <td><%= fermeture.nom %></td>
           <td>il y a <%= time_ago_in_words fermeture.updated_at %></td>
           <td>
-            <%= link_to edit_fermeture_path(fermeture), class: 'btn btn-default' do %>
+            <%= link_to edit_fermeture_path(fermeture), class: 'btn btn-ghost' do %>
               <%= fa_icon 'edit' %>
             <% end %>
-            <%= link_to(fermeture, method: :delete, data: {confirm: 'Confirmez-vous ?'}, class: 'btn btn-default') do %>
+            <%= link_to(fermeture, method: :delete, data: {confirm: 'Confirmez-vous ?'}, class: 'btn btn-ghost') do %>
               <%= fa_icon 'trash' %>
             <% end %>
           </td>

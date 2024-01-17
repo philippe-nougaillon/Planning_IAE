@@ -20,12 +20,12 @@
     </td>
     <td>
         <% if policy(Etudiant).edit? %>
-            <%= link_to edit_etudiant_path(etudiant), class:"btn btn-default" do %>
+            <%= link_to edit_etudiant_path(etudiant), class:"btn btn-ghost" do %>
                 <%= fa_icon 'edit '%>
             <% end %>
         <% end %>
         <% if policy(Etudiant).destroy? %>
-            <%= link_to(etudiant, method: :delete, data: {confirm: 'Confirmez-vous ?'}, class: 'btn btn-default') do %>
+            <%= link_to(etudiant, method: :delete, data: {confirm: 'Confirmez-vous ?'}, class: 'btn btn-ghost') do %>
                 <%= fa_icon 'trash' %>
             <% end %>
         <% end %>

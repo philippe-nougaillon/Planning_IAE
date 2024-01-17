@@ -20,11 +20,11 @@
     <td><%= l(intervenant.remise_dossier_srh.to_date) if intervenant.remise_dossier_srh %></td>
     <td><%= time_ago_in_words(intervenant.created_at) %></td>
     <td>
-        <%= link_to edit_intervenant_path(intervenant), class: "btn btn-default" do %>
+        <%= link_to edit_intervenant_path(intervenant), class: "btn btn-ghost" do %>
             <%= fa_icon 'edit' %>
         <% end %>
         <% unless intervenant.cours.any? or Cour.where(intervenant_binome: intervenant).any? %> 
-            <%= link_to(intervenant, method: :delete, data:{confirm: 'Confirmez-vous ?'}, class: "btn btn-default") do %>
+            <%= link_to(intervenant, method: :delete, data:{confirm: 'Confirmez-vous ?'}, class: "btn btn-ghost") do %>
                 <%= fa_icon 'trash-alt' %>
             <% end %>
         <% end %>

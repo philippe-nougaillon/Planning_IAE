@@ -49,7 +49,7 @@
         <%= link_to url_for(params
                                 .permit(:start_date, :end_date, :status)
                                 .merge(intervenant_id: intervenant.id, format: 'xls')), 
-                            class: 'btn btn-default btn-xs' do %>
+                            class: 'btn btn-ghost btn-xs' do %>
                 <%= fa_icon 'file-excel' %>
                 Export EXCEL
         <% end %>
