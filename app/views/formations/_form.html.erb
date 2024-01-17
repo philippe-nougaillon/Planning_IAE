@@ -153,20 +153,32 @@
     <%= f.fields_for :unites do |ue| %>
       <div class="flex flex-wrap shadow-sm">
         <div class="sm:w-1/6 px-4">
-          <%= ue.number_field :code %>
+          <div class="form-control">
+            <%= ue.label :code %>
+            <%= ue.number_field :code, class: 'input input-bordered w-full input-sm' %>
+          </div>
         </div>  
         <div class="sm:w-1/2 px-4">
-          <%= ue.text_field :nom %>
+          <div class="form-control">
+            <%= ue.label :nom %>
+            <%= ue.text_field :nom, class: 'input input-bordered w-full input-sm' %>
+          </div>
         </div>
         <div class="sm:w-1/6 px-4">
-          <%= ue.number_field :séances %>
+          <div class="form-control">
+            <%= ue.label :séance %>
+            <%= ue.number_field :séances, class: 'input input-bordered w-full input-sm' %>
+          </div>
         </div>  
         <div class="sm:w-1/5 px-4">
-          <%= ue.number_field :heures %>
+          <div class="form-control">
+            <%= ue.label :heures %>
+            <%= ue.number_field :heures, class: 'input input-bordered w-full input-sm' %>
+          </div>
         </div>  
         <div class="sm:w-1/5 px-4">
-          <br>
-          <%= ue.check_box :_destroy, label:"Supprimer ?" %>
+          <%= ue.check_box :_destroy %>
+          <%= ue.label :_destroy, 'Supprimer ?' %>
         </div>
       </div>
     <% end %>
@@ -184,23 +196,38 @@
     <%= f.fields_for :etudiants do |etudiant| %>
       <div class="flex flex-wrap shadow-sm">
         <div class="sm:w-1/5 px-4">
-          <%= etudiant.text_field :nom %>
+          <div class="form-control">
+            <%= etudiant.label :num %>
+            <%= etudiant.text_field :nom, class: 'input input-bordered w-full input-sm' %>
+          </div>
         </div>  
         <div class="sm:w-1/5 px-4">
-          <%= etudiant.text_field :prénom %>
+          <div class="form-control">
+            <%= etudiant.label :prénom %>
+            <%= etudiant.text_field :prénom, class: 'input input-bordered w-full input-sm' %>
+          </div>
         </div>
         <div class="sm:w-1/6 px-4">
-          <%= etudiant.text_field :civilité %>
+          <div class="form-control">
+            <%= etudiant.label :civilité %>
+            <%= etudiant.text_field :civilité, class: 'input input-bordered w-full input-sm' %>
+          </div>
         </div>
         <div class="sm:w-1/3 px-4">
-          <%= etudiant.text_field :email %>
+          <div class="form-control">
+            <%= etudiant.label :email %>
+            <%= etudiant.text_field :email, class: 'input input-bordered w-full input-sm' %>
+          </div>
         </div>
         <div class="sm:w-1/5 px-4">
-          <%= etudiant.text_field :mobile %>
+          <div class="form-control">
+            <%= etudiant.label :mobile %>
+            <%= etudiant.text_field :mobile, class: 'input input-bordered w-full input-sm' %>
+          </div>
         </div>
         <div class="sm:w-1/6 px-4">
-          <br>
-          <%= etudiant.check_box :_destroy, label:"Suppr?" %>
+          <%= etudiant.check_box :_destroy %>
+          <%= etudiant.label :_destroy, 'Suppr?' %>
         </div>
       </div>
     <% end %>
@@ -218,35 +245,54 @@
       <%= f.fields_for :vacations do |vacation| %>
         <div class="flex flex-wrap shadow-sm mt-2">
             <div class="sm:w-1/5 px-4">
-              <%= vacation.date_field :date, label: "*Date" %>
+              <div class="form-control">
+                <%= vacation.label :date, 'Date *' %>
+                <%= vacation.date_field :date, required: true, class: 'input input-bordered w-full input-sm' %>
+              </div>
             </div>
 
             <div class="sm:w-1/4 px-4">
-              <%= vacation.collection_select :intervenant_id, 
-                                              Intervenant.where.not(doublon: true),
-                                              :id,
-                                              :nom_prenom,
-                                              {include_blank: true, label: "*Intervenant", class: "select2"} %>
+              <div class="form-control">
+                <%= vacation.label :intervenant_id, 'Intervenant *' %>
+                <%= vacation.collection_select :intervenant_id, 
+                                                Intervenant.where.not(doublon: true),
+                                                :id,
+                                                :nom_prenom,
+                                                {include_blank: true, required: true}, class: "select select-bordered w-full select-sm select2" %>
+              </div>
             </div>  
 
             <div class="sm:w-1/3 px-4">
-              <%= vacation.select :titre, Vacation.activités, include_blank: true, label: "*Activité" %>
+              <div class="form-control">
+                <%= vacation.label :titre, 'Activité *' %>
+                <%= vacation.select :titre, Vacation.activités, {include_blank: true, required: true}, class: "select select-bordered w-full select-sm" %>
+              </div>
             </div>
 
             <div class="sm:w-1/6 px-4">
-              <%= vacation.number_field :qte, label: "*Qté" %>
+              <div class="form-control">
+                <%= vacation.label :qte, "Qté *" %>
+                <%= vacation.number_field :qte, required: true, class: 'input input-bordered w-full input-sm' %>
+              </div>
             </div>
 
             <div class="sm:w-1/5 px-4">
-              <%= vacation.select :forfaithtd, Vacation.forfaits_htd, include_blank: true, label: "*Forfait HTD" %>
+              <div class="form-control">
+                <%= vacation.label :forfaithtd, 'Forfait HTD *' %>
+                <%= vacation.select :forfaithtd, Vacation.forfaits_htd, {include_blank: true, required: true}, class: "select select-bordered w-full select-sm" %>
+              </div>
             </div>
 
             <div class="sm:w-3/4 px-4">
-              <%= vacation.text_area :commentaires, label: "Commentaires" %>
+              <div class="form-control">
+                <%= vacation.label :commentaires %>
+                <%= vacation.text_area :commentaires, class: 'textarea textarea-bordered w-full textarea-sm' %>
+              </div>
             </div>
             
             <div class="sm:w-1/5 px-4">
-              <%= vacation.check_box :_destroy, label: "Supprimer ?" %>
+              <%= vacation.check_box :_destroy %>
+              <%= vacation.label :_destroy, 'Supprimer ?' %>
             </div>
         </div>
       <% end %>
