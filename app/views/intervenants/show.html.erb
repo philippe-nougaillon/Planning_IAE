@@ -17,7 +17,7 @@
     </div>
   </div>
   
-  <div class="flex flex-wrap">
+  <div class="flex flex-wrap mb-4">
     <div class="sm:w-1/4 px-4">
       <% if @intervenant.photo.present? %>
         <img src=<%= @intervenant.photo %> width=250 loading='eager' class="shadow">
@@ -43,7 +43,7 @@
 
   <hr>
   
-  <div class="flex flex-wrap">
+  <div class="flex flex-wrap mb-4">
     <div class="sm:w-1/4 px-4">
       <h3>
         <small class="text-secondary">Titre</small><br>
@@ -91,12 +91,15 @@
       <h3 class="mt-2">
         <small class="text-secondary">Salles habituelles</small><br>
       </h3>
-      <% @salles_habituelles.each do |salle_id, count| %>
-        <% salle = Salle.find(salle_id) %>
-        <span class="badge badge-sm badge-success" style="font-size: calc( .25rem + <%= [1.5, (count.fdiv(@average_count))].min %>rem);" title="Salle <%= salle.nom %> a été utilisée <%= count %> fois">
-          <%= salle.nom.first(2) %>
-        </span>
-      <% end %>
+
+      <div class="flex flex-wrap items-center gap-2">
+        <% @salles_habituelles.each do |salle_id, count| %>
+          <% salle = Salle.find(salle_id) %>
+          <span class="badge badge-sm badge-success" style="font-size: calc( .25rem + <%= [1.5, (count.fdiv(@average_count))].min %>rem); padding: calc( <%= [1.5, (count.fdiv(@average_count))].min %>rem) calc( <%= [0.75, (count.fdiv(@average_count)) / 2].min %>rem);" title="Salle <%= salle.nom %> a été utilisée <%= count %> fois">
+            <%= salle.nom.first(2) %>
+          </span>
+        <% end %>
+      </div>
     </div>
   </div>
 
