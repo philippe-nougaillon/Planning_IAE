@@ -7,7 +7,7 @@
         <th>Formations</th> 
         <th>Cours</th>
         <% @etendue_horaire.each_with_index do |heure, index| %>
-          <th class="<%= 'alert alert-warning' if ((@date == Date.today) && (heure == time_in_paris.hour)) %>"><%= heure %>h</th>
+          <th class="<%= 'alert alert-warning rounded-none' if ((@date == Date.today) && (heure == time_in_paris.hour)) %>"><%= heure %>h</th>
           <% if [4,9].include?(index) %><th></th><th></th><% end %>
         <% end %>
       </tr>
@@ -29,7 +29,7 @@
             <tr>
               <th colspan=4></th>
               <% @etendue_horaire.each_with_index do |heure, index| %>
-                <th class="<%= 'alert alert-warning' if ((@date == Date.today) && (heure == time_in_paris.hour)) %>"><%= heure %>h</th>
+                <th class="<%= 'alert alert-warning rounded-none' if ((@date == Date.today) && (heure == time_in_paris.hour)) %>"><%= heure %>h</th>
                 <% if [4,9].include?(index) %><th></th><th></th><% end %>
               <% end %>
             </tr>
@@ -59,7 +59,7 @@
             <% map = @etendue_horaire.map {|i| range.include?(i) ? 'red' : 'lightgreen' } %>
             
             <% map.each_with_index do |color, index| %>
-              <td class="<%= 'text-center alert alert-warning' if ((@date == Date.today) && ((index + 8) == time_in_paris.hour)) %>">
+              <td class="<%= 'text-center alert alert-warning rounded-none' if ((@date == Date.today) && ((index + 8) == time_in_paris.hour)) %>">
                 <% if color == 'lightgreen' %>
                   <%= link_to new_cour_path(debut: @date, heure: (index + 8), salle_id: salle.id, from: 'occupation') do %>
                     <span style="background-color:<%= color %>;padding-left: 15px;"></span>
