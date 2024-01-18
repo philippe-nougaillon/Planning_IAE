@@ -27,7 +27,7 @@
     <tbody>
       <% @cours.each do |cours| %>
         <tr class="hover">
-          <td><%= check_box_tag "[cours_id][#{cours.id}]", true, true %></td>                
+          <td><%= check_box_tag "cours_id[#{cours.id}]", true, true %></td>                
           <td><%= l(cours.debut.to_date) %></td>
           <td><%= "#{l(cours.debut, format: :heures_min)}-#{l(cours.fin, format: :heures_min)}" %></td>
           <td>
@@ -60,7 +60,7 @@
                     action_do_cours_path(params
                                           .permit!
                                           .merge(salle_id: Salle.find_by(nom: salle))),
-                    method: :post, 
+                    data: { turbo_method: :post }, 
                     class: "btn btn-success btn-outline btn-sm mb-1" %>
       <% end %>
       <br><br>

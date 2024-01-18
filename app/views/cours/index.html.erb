@@ -131,7 +131,7 @@
               <% if policy(Cour).action? %>
                 <th>
                   <span data-action="click->action#click">
-                    <input type="checkbox" data-target="check-all.all action.source">
+                    <input type="checkbox" data-action-target="check-all.all source">
                   </span>
                 </th>
               <% end %>
@@ -197,7 +197,7 @@
           </div>
           <div class="relative flex-grow max-w-full flex-1">
             <% if policy(Cour).action? %>
-              <div data-target="action.selector">  
+              <div data-action-target="selector">  
                 <span class="align-bottom">
                   Choisir une action à exécuter sur les cours sélectionnés
                 </span>
