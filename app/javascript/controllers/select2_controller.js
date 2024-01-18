@@ -1,4 +1,4 @@
-import { Controller } from "stimulus"
+import { Controller } from "@hotwired/stimulus"
 // import $ from 'jquery';
 // import 'select2/dist/css/select2.min.css'
 // import Select2 from "select2"

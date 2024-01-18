@@ -124,14 +124,14 @@
   <% if @cours.size > 0 %>
     
     <%= form_tag action_cours_path, name: 'action' do %>
-      <div data-controller="check-all action">
+      <div data-controller="checkbox-select-all action">
         <table class="table">
           <thead class="shadow-sm">
             <tr>
               <% if policy(Cour).action? %>
                 <th>
                   <span data-action="click->action#click">
-                    <input type="checkbox" data-action-target="check-all.all source">
+                    <input type="checkbox" data-checkbox-select-all-target="checkboxAll" data-action-target="source">
                   </span>
                 </th>
               <% end %>

@@ -23,7 +23,5 @@ application.register("dispo", DispoController)
 import Select2Controller from "./select2_controller"
 application.register("select2", Select2Controller)
 
-// https://github.com/rbague/stimulus-check-all
-
-import CheckAll from "stimulus-check-all"
-application.register("check-all", CheckAll)
+import CheckboxSelectAll from 'stimulus-checkbox-select-all'
+application.register('checkbox-select-all', CheckboxSelectAll)
