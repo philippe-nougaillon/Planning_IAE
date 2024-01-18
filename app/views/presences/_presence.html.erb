@@ -1,7 +1,7 @@
 <tr class='shadow-sm'>
   <td>
     <span data-action="click->action#click">
-      <%= check_box_tag "[presences_id][#{presence.id}]", 'yes', false, data: {"target":"action.source"} %>
+      <%= check_box_tag "presences_id[#{presence.id}]", 'yes', false, data: {"action-target": "source", "checkbox-select-all-target": "checkbox"} %>
     </span>
   </td>
   <td><%= time_ago_in_words presence.created_at %></td>
