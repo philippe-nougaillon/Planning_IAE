@@ -4,6 +4,9 @@ import Rails from "@rails/ujs";
 export default class extends Controller {
   static targets = [ 'id', 'date', 'duree', 'formation_id', 'intervenant_id', 'salles' ]
 
+  connect() {
+    console.log("dispo controller connected...");
+  }
   // connect() {
     //   $("#intervenant_id").on('select2:select', function () {
       //       //console.log("list item selected");

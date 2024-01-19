@@ -9,8 +9,9 @@ export default class extends Controller {
     }
 
     connect() {
-        // console.log("Hello, Stimulus! Action_controller", this.element)
+        console.log("Hello, Stimulus! Action_controller", this.element)
     }
+
     click() {
         var check_boxes = this.sourceTargets;
         var enabled = check_boxes.filter(myFunction);
