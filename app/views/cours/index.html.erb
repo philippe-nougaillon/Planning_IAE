@@ -194,33 +194,32 @@
             <% end %>
           </div>
           <div class="relative flex-grow max-w-full flex-1">
-            <% if policy(Cour).action? %>
-              <div data-action-target="selector">  
+            <div data-action-target="selector">
+              <% if policy(Cour).action? %>
                 <span class="align-bottom">
                   Choisir une action à exécuter sur les cours sélectionnés
                 </span>
                 <% actions = Cour.actions(current_user) %>
                 <%= select_tag "action_name", options_for_select(actions), include_blank:true, class:"select select-bordered w-full select-sm", onchange:'this.form.submit()' %>
-              </div>
-            <% else %>
-              <% if user_signed_in? && (params[:formation].present? || params[:intervenant].present?) %>
-                <span class="align-bottom">Exporter vers </span>
-                <%= link_to cours_url(format: :xls), class: 'btn btn-sm btn-success' do %>
-                  <%= fa_icon 'file-excel' %>
-                  Feuille Excel
-                <% end %>
-
-                <%= link_to cours_url(format: :pdf), class: 'btn btn-sm btn-error' do %>
-                  <%= fa_icon 'file-pdf' %>
-                  Document PDF
-                <% end %>
-
-                <%= link_to cours_url(format: :ics), class: 'btn btn-sm btn-info' do %>
-                  <%= fa_icon 'calendar' %>
-                  Calendrier
-                <% end %>
-
               <% end %>
+            </div>
+            <% if user_signed_in? && (params[:formation].present? || params[:intervenant].present?) %>
+              <span class="align-bottom">Exporter vers </span>
+              <%= link_to cours_url(format: :xls), class: 'btn btn-sm btn-success' do %>
+                <%= fa_icon 'file-excel' %>
+                Feuille Excel
+              <% end %>
+
+              <%= link_to cours_url(format: :pdf), class: 'btn btn-sm btn-error' do %>
+                <%= fa_icon 'file-pdf' %>
+                Document PDF
+              <% end %>
+
+              <%= link_to cours_url(format: :ics), class: 'btn btn-sm btn-info' do %>
+                <%= fa_icon 'calendar' %>
+                Calendrier
+              <% end %>
+
             <% end %>
         </div>
       </div>
@@ -240,7 +239,7 @@
 <br>
 
 <script>
-  const selects = document.querySelectorAll('.slim-select')
+  var selects = document.querySelectorAll('.slim-select')
   selects.forEach((selectElement) => {
     new SlimSelect({
       select: selectElement,
