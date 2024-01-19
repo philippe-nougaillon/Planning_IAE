@@ -11,17 +11,17 @@ eagerLoadControllersFrom("controllers", application)
 // lazyLoadControllersFrom("controllers", application)
 
 
-import HelloController from "./hello_controller"
-application.register("hello", HelloController)
+// import HelloController from "./hello_controller"
+// application.register("hello", HelloController)
 
-import ActionController from "./action_controller"
-application.register("action", ActionController)
+// import ActionController from "./action_controller"
+// application.register("action", ActionController)
 
 import DispoController from "./dispo_controller"
 application.register("dispo", DispoController)
 
-import Select2Controller from "./select2_controller"
-application.register("select2", Select2Controller)
+// import Select2Controller from "./select2_controller"
+// application.register("select2", Select2Controller)
 
-import CheckboxSelectAll from 'stimulus-checkbox-select-all'
-application.register('checkbox-select-all', CheckboxSelectAll)
+// import CheckboxSelectAll from 'stimulus-checkbox-select-all'
+// application.register('checkbox-select-all', CheckboxSelectAll)
