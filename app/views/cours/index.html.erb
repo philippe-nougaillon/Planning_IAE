@@ -29,14 +29,12 @@
       <div class="sm:w-2/5 px-4">
         <%= label_tag "Formation" %>   
         <%= select_tag :formation, grouped_options_for_select(Formation.for_select, params[:formation]), 
-                        class: "select select-bordered w-full select-sm select2", 
-                        include_blank:true, onchange: 'this.form.submit()' %>
+                        include_blank:true, onchange: 'this.form.submit()', autocomplete: 'off' %>
       </div>
 
       <div class="sm:w-1/5 px-4">
         <%= label_tag :ue, "U.E." %>   
-        <%= select_tag :ue, options_for_select((0..20), params[:ue]), 
-                        class: "select select-bordered w-full select-sm select2", 
+        <%= select_tag :ue, options_for_select((0..20), params[:ue]),
                         include_blank:true, onchange: 'this.form.submit()' %>
       </div>
       <% if user_signed_in? %>
@@ -44,7 +42,7 @@
           <%= label_tag "Intervenant" %>
           <div class="join w-full">
             <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
-                            class: "select select-bordered w-full select-sm select2 join-item",
+                            class: "join-item",
                             include_blank:true,
                             onchange: 'this.form.submit()' %>
             <% if params.values.count(nil) < 5 %>
@@ -240,3 +238,15 @@
   <%= render partial: params[:view] %>
 <% end %>
 <br>
+
+<script>
+  new SlimSelect({
+    select: '#formation'
+  })
+    new SlimSelect({
+    select: '#ue'
+  })
+    new SlimSelect({
+    select: '#intervenant'
+  })
+</script>
