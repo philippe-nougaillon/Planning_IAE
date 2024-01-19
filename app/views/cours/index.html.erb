@@ -28,13 +28,13 @@
     <div class="flex flex-wrap">
       <div class="sm:w-2/5 px-4">
         <%= label_tag "Formation" %>   
-        <%= select_tag :formation, grouped_options_for_select(Formation.for_select, params[:formation]), 
-                        include_blank:true, onchange: 'this.form.submit()', autocomplete: 'off' %>
+        <%= select_tag :formation, grouped_options_for_select(Formation.for_select, params[:formation]), class: 'slim-select',
+                        include_blank:true, onchange: 'this.form.submit()' %>
       </div>
 
       <div class="sm:w-1/5 px-4">
         <%= label_tag :ue, "U.E." %>   
-        <%= select_tag :ue, options_for_select((0..20), params[:ue]),
+        <%= select_tag :ue, options_for_select((0..20), params[:ue]), class:'slim-select',
                         include_blank:true, onchange: 'this.form.submit()' %>
       </div>
       <% if user_signed_in? %>
@@ -42,7 +42,7 @@
           <%= label_tag "Intervenant" %>
           <div class="join w-full">
             <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
-                            class: "join-item",
+                            class: "slim-select join-item",
                             include_blank:true,
                             onchange: 'this.form.submit()' %>
             <% if params.values.count(nil) < 5 %>
@@ -240,28 +240,15 @@
 <br>
 
 <script>
-  new SlimSelect({
-    select: '#formation',
-    settings: {
-      searchPlaceholder: 'Recherches',
-      searchText: 'Pas de résultat',
-      searchingText: 'Recherche...',
-    }
-  })
+  const selects = document.querySelectorAll('.slim-select')
+  selects.forEach((selectElement) => {
     new SlimSelect({
-    select: '#ue',
-    settings: {
-      searchPlaceholder: 'Recherches',
-      searchText: 'Pas de résultat',
-      searchingText: 'Recherche...',
-    }
-  })
-    new SlimSelect({
-    select: '#intervenant',
-    settings: {
-      searchPlaceholder: 'Recherches',
-      searchText: 'Pas de résultat',
-      searchingText: 'Recherche...',
-    }
+      select: selectElement,
+      settings: {
+        searchPlaceholder: 'Recherches',
+        searchText: 'Pas de résultat',
+        searchingText: 'Recherche...',
+      }
+    })
   })
 </script>
