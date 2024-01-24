@@ -5,15 +5,8 @@ export default class extends Controller {
   static targets = [ 'id', 'date', 'duree', 'formation_id', 'intervenant_id', 'salles' ]
 
   connect() {
-    console.log("dispo controller connected...");
+    // console.log("dispo controller connected...");
   }
-  // connect() {
-    //   $("#intervenant_id").on('select2:select', function () {
-      //       //console.log("list item selected");
-      //       let event = new Event('change', { bubbles: true }) // fire a native event
-      //       this.dispatchEvent(event);
-    //   });
-  // }
 
   show_dispo() {
     this.updateAvailableRooms()

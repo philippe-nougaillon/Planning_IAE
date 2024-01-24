@@ -22,7 +22,7 @@
       <%= label_tag "Formation" %>    
       <%= select_tag :formation_id, 
             options_from_collection_for_select(Formation.all, :id, :nom, params[:formation_id]), 
-              class:"select select-bordered w-full select-sm select2", include_blank: true, required: true %>
+              class:"slim-select", include_blank: true, required: true %>
       <br>
       <div class="field">
         <%= label :filename, "Fichier source" %>
@@ -50,3 +50,5 @@
   
   <%= submit_tag "Lancer l'import", class: "btn btn-success mb-4" %>
 <% end %>
+
+<%= render 'partials/slim_select' %>

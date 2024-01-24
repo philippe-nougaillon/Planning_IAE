@@ -49,7 +49,7 @@
                                 :nom_promo, 
                                 {include_blank: true},
                                 required: true, 
-                                class: "select select-bordered w-full select-sm select2 sm:w-1/2",
+                                class: "slim-select sm:w-1/2",
                                 data: { "dispo-target": "formation_id"} %>
       </div>
       
@@ -62,7 +62,7 @@
                                 {include_blank: true}, 
                                 required: true, 
                                 id: "intervenant_id",
-                                class: "select select-bordered w-full select-sm select2 sm:w-1/2",
+                                class: "slim-select sm:w-1/2",
                                 data: {
                                   "dispo-target": "intervenant_id",
                                   "action": (@cour.new_record? ? "change->dispo#show_dispo" : '') 
@@ -76,7 +76,7 @@
                                 :id, 
                                 :nom_prenom, 
                                 { include_blank: true }, 
-                                class: "select select-bordered w-full select-sm select2 sm:w-1/2" %>
+                                class: "slim-select sm:w-1/2" %>
       </div>
       
       <div class="flex flex-wrap">
@@ -162,3 +162,5 @@
   </div>
 
 <% end %>
+
+<%= render 'partials/slim_select' %>

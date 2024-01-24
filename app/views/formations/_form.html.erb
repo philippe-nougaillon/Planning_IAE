@@ -246,7 +246,7 @@
                                               Intervenant.where.not(doublon: true),
                                               :id,
                                               :nom_prenom,
-                                              {include_blank: true}, class: "select select-bordered w-full select-sm select2" %>
+                                              {include_blank: true}, class: "slim-select" %>
             </div>
           </div>  
 
@@ -288,3 +288,5 @@
   </div>
 
 <% end %>
+
+<%= render 'partials/slim_select' %>

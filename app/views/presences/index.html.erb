@@ -13,7 +13,7 @@
           <%= label_tag "Formation" %>
           <%= select_tag :formation_id, 
                               options_from_collection_for_select(Formation.unscoped.all, :id, :nom, params[:formation_id]), 
-                              class: 'select select-bordered w-full select-sm select2', 
+                              class: 'slim-select', 
                               include_blank: true, 
                               onchange: 'this.form.submit()' %>
         </div>
@@ -21,14 +21,14 @@
       <div class="sm:w-1/12 px-4">
         <%= label_tag :ue, "U.E." %>   
         <%= select_tag :ue, options_for_select((0..20), params[:ue]), 
-                        class: "select select-bordered w-full select-sm select2", 
+                        class: "slim-select", 
                         include_blank:true, onchange: 'this.form.submit()' %>
       </div>
 
       <div class="sm:w-1/4 px-4">
         <%= label_tag "Intervenant" %>
         <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
-                        class: "select select-bordered w-full select-sm select2",
+                        class: "slim-select",
                         include_blank:true,
                         onchange: 'this.form.submit()' %>
       </div>
@@ -97,3 +97,5 @@
 <div class="planning_pagination">
   <%= will_paginate @presences %>
 </div>
+
+<%= render 'partials/slim_select' %>

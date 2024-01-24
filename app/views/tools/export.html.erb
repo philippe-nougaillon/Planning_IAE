@@ -30,12 +30,12 @@
 
       <%= label_tag "Formation" %>    
       <%= select_tag :formation_id, 
-            options_from_collection_for_select(Formation.all, :id, :nom_promo), include_blank:true, class:"select select-bordered w-full select-sm select2" %>
+            options_from_collection_for_select(Formation.all, :id, :nom_promo), include_blank:true, class:"slim-select" %>
       <br>
 
       <%= label_tag :intervenant_id, "Intervenant" %>
       <%= select_tag :intervenant_id,
-            options_from_collection_for_select(Intervenant.all, :id, :nom_prenom), include_blank:true, class:"select select-bordered w-full select-sm select2" %>
+            options_from_collection_for_select(Intervenant.all, :id, :nom_prenom), include_blank:true, class:"slim-select" %>
 
       <%= check_box_tag :binome, true, true %>
       <%= label_tag :binome, "Exporter les binômes ?" %>
@@ -47,3 +47,5 @@
   </div>
 
 <% end %>
+
+<%= render 'partials/slim_select' %>

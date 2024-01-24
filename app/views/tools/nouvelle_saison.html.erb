@@ -16,7 +16,7 @@
           <% if @formations.present? %>    
             <%= label_tag "Formation" %>    
             <%= select_tag :formation_id, 
-                options_from_collection_for_select(@formations, :id, :nom_promo_full, params[:formation_id]), class:"select select-bordered w-full select-sm select2", include_blank:true, onchange:'this.form.submit()' %>
+                options_from_collection_for_select(@formations, :id, :nom_promo_full, params[:formation_id]), class:"slim-select", include_blank:true, onchange:'this.form.submit()' %>
                     
           <% end %>
           <div class="actions" style="display:none">
@@ -90,3 +90,5 @@
   </div>
 <% end %>
 <br>
+
+<%= render 'partials/slim_select' %>

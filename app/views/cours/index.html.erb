@@ -56,7 +56,7 @@
       <% else %>
         <div class="sm:w-2/5 px-4">
           <%= label_tag "Intervenant" %>
-          <%= select_tag :intevenant, nil, class: "select select-bordered w-full select-sm select2"%>
+          <%= select_tag :intevenant, nil, class: "slim-select" %>
         </div>
       <% end %>
     </div>
@@ -238,16 +238,4 @@
 <% end %>
 <br>
 
-<script>
-  var selects = document.querySelectorAll('.slim-select')
-  selects.forEach((selectElement) => {
-    new SlimSelect({
-      select: selectElement,
-      settings: {
-        searchPlaceholder: 'Recherches',
-        searchText: 'Pas de résultat',
-        searchingText: 'Recherche...',
-      }
-    })
-  })
-</script>
+<%= render 'partials/slim_select' %>

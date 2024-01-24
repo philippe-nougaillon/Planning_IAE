@@ -30,7 +30,7 @@
         <%= form.select :intervenant_id, 
                         options_from_collection_for_select(@intervenants, :id, :nom_prenom, @dossier.intervenant_id), 
                         {},
-                        class: 'select select-bordered w-full select-sm select2' %>
+                        class: 'slim-select' %>
       </div>
 
     </div>
@@ -68,3 +68,4 @@
   <%= form.submit class: "btn" %>
 <% end %>
 
+<%= render 'partials/slim_select' %>

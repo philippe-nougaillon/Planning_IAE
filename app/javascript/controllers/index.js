@@ -22,6 +22,3 @@ eagerLoadControllersFrom("controllers", application)
 
 // import DispoController from "./dispo_controller"
 // application.register("dispo", DispoController)
-
-// import Select2Controller from "./select2_controller"
-// application.register("select2", Select2Controller)

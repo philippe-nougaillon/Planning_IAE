@@ -1,0 +1,13 @@
+<script>
+  var selects = document.querySelectorAll('.slim-select')
+  selects.forEach((selectElement) => {
+    new SlimSelect({
+      select: selectElement,
+      settings: {
+        searchPlaceholder: 'Rechercher',
+        searchText: 'Pas de résultat',
+        searchingText: 'Recherche...',
+      }
+    })
+  })
+</script>

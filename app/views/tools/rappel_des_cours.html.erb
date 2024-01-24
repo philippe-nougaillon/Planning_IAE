@@ -18,13 +18,13 @@
       <%= label_tag "Formation" %>
       <%= select_tag :formation_id, 
             options_from_collection_for_select(@formations, :id, :nom, params[:formation_id]), 
-              class:"select select-bordered w-full select-sm select2", include_blank: true %>
+              class:"slim-select", include_blank: true %>
 
       <div class="mt-6">
         <%= label_tag "Intervenant" %>
         <%= select_tag :intervenant_id, 
               options_from_collection_for_select(@intervenants, :id, :nom_prenom, params[:intervenant_id]), 
-                class:"select select-bordered w-full select-sm select2", include_blank: true %>
+                class:"slim-select", include_blank: true %>
       </div>
 
       <div class="flex justify-between mt-6">
@@ -46,3 +46,5 @@
     <%= link_to "Voir la file d'attente", envoi_logs_path %>
   </div>
 <% end %>
+
+<%= render 'partials/slim_select' %>

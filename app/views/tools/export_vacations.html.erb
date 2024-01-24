@@ -14,10 +14,12 @@
       <%= label_tag "Formation" %>    
       <%= select_tag :formation_id, 
             options_from_collection_for_select(Formation.joins(:vacations).uniq, :id, :nom, params[:formation_id]), 
-              class:"select select-bordered w-full select-sm select2", include_blank: true %>
+              class:"slim-select", include_blank: true %>
     </div>
   </div>
   <br>
 
   <%= submit_tag "Exporter", class: "btn btn-success" %>
 <% end %>
+
+<%= render 'partials/slim_select' %>

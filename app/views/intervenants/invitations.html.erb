@@ -15,7 +15,7 @@
         <%= select_tag :formation, 
                             options_from_collection_for_select(@formations, :id, :nom_promo, params[:formation]), 
                             include_blank: true,
-                            class: 'select select-bordered w-full select-sm select2', 
+                            class: 'slim-select', 
                             onchange: 'this.form.submit()' %>
       </div>
 
@@ -112,3 +112,5 @@
   <%= will_paginate @invits %>
 </div>
 <br>
+
+<%= render 'partials/slim_select' %>

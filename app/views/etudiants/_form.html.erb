@@ -51,7 +51,7 @@
     <div class="sm:w-1/2 px-4">
       <div class="form-control">
         <%= f.label :formation_id, "Formation" %>
-        <%= f.collection_select(:formation_id, Formation.unscoped.all, :id, :nom, {include_blank: true}, class:"select select-bordered w-full select-sm select2") %>
+        <%= f.collection_select(:formation_id, Formation.unscoped.all, :id, :nom, {include_blank: true}, class:"slim-select") %>
       </div>
 
       <div class="form-control">
@@ -62,3 +62,5 @@
   </div>
 <% end %>
 <br>
+
+<%= render 'partials/slim_select' %>

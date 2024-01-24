@@ -78,12 +78,12 @@
 
         <%= label_tag :formation_id, "Formation", class:"font-bold"  %>
         <%= select_tag :formation_id, 
-              options_from_collection_for_select(Formation.all, :id, :nom_promo), class:"select select-bordered w-full select-sm select2", include_blank:true %>
+              options_from_collection_for_select(Formation.all, :id, :nom_promo), class:"slim-select", include_blank:true %>
         <br>
 
         <%= label_tag :intervenant_id, "Intervenant", class:"font-bold"  %>
         <%= select_tag :intervenant_id,
-              options_from_collection_for_select(Intervenant.all, :id, :nom_prenom), class:"select select-bordered w-full select-sm select2", include_blank:true %>
+              options_from_collection_for_select(Intervenant.all, :id, :nom_prenom), class:"slim-select", include_blank:true %>
         <br>
 
         <%= label_tag :nom, "Nom du cours *", class:"font-bold"  %>
@@ -113,3 +113,5 @@
     </div>
   </div>
 <% end %>
+
+<%= render 'partials/slim_select' %>

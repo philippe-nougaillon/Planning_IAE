@@ -21,7 +21,7 @@
           <div class="join w-full">
             <%= select_tag :formation_id, 
                                 options_from_collection_for_select(Formation.unscoped.all, :id, :nom, params[:formation_id]), 
-                                class: 'select select-bordered w-full select-sm select2 join-item', 
+                                class: 'slim-select join-item', 
                                 include_blank: true, 
                                 onchange: 'this.form.submit()' %>
 
@@ -66,3 +66,5 @@
     <%= will_paginate @etudiants %>
   </div>
 </div>
+
+<%= render 'partials/slim_select' %>
