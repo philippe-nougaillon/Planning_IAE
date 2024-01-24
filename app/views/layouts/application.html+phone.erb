@@ -58,12 +58,7 @@
         <%= render 'partials/navbar' %>
 
         <div class="bs-container">
-            <% flash.each do |name, msg| %>
-                <%= content_tag :div, class: "alert mt-4 alert-#{ (name == "alert" || name == "error") ? "error" : "success" }", role: "alert" do %>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="bouton du menu"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <%= msg.to_s.html_safe %>
-                <% end %>
-            <% end %>
+            <%= render 'partials/notification' %>
             <%= yield %>
         </div>
     </body>
