@@ -1,5 +1,5 @@
 class ImportLogsController < ApplicationController
-  before_action :set_import_log, only: [:show, :edit, :update, :destroy]
+  before_action :set_import_log, only: %i[ show ]
   before_action :is_user_authorized
 
   # GET /import_logs
