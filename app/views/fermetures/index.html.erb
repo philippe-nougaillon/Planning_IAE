@@ -71,7 +71,7 @@
             <%= link_to edit_fermeture_path(fermeture), class: 'btn btn-ghost' do %>
               <%= fa_icon 'edit' %>
             <% end %>
-            <%= link_to(fermeture, method: :delete, data: {confirm: 'Confirmez-vous ?'}, class: 'btn btn-ghost') do %>
+            <%= link_to(fermeture, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: 'btn btn-ghost') do %>
               <%= fa_icon 'trash' %>
             <% end %>
           </td>

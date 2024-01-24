@@ -25,7 +25,7 @@
             <% end %>
         <% end %>
         <% if policy(Etudiant).destroy? %>
-            <%= link_to(etudiant, method: :delete, data: {confirm: 'Confirmez-vous ?'}, class: 'btn btn-ghost') do %>
+            <%= link_to(etudiant, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: 'btn btn-ghost') do %>
                 <%= fa_icon 'trash' %>
             <% end %>
         <% end %>

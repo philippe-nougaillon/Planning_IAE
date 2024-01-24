@@ -23,9 +23,12 @@
           <% unless current_user.étudiant? %>
             <%= navbar_nav_item('salles', 'chalkboard', occupation_salles_path) %>
           <% end %>
-          <li class="nav-item">
-            <%= button_to destroy_user_session_path, method: :delete, class:'btn btn-error btn-outline', 'data-turbo': false, title: "Fermer la session de #{current_user.email}" do %>
-              <i class="fas fa-fw fa-sign-out-alt"></i></span> Déconnexion
+          <li>
+            <%= link_to destroy_user_session_path, 'data-turbo-method': :delete, title: "Fermer la session de #{current_user.email}" do %>
+              <span class="text-base-content">
+                <i class="fas fa-fw fa-sign-out-alt"></i>
+                Déconnexion
+              </span>
             <% end %> 
           </li>
         <% else %>

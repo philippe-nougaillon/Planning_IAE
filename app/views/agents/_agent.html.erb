@@ -7,7 +7,7 @@
         <%= link_to edit_agent_path(agent), class: "btn btn-ghost" do %>
             <%= fa_icon 'edit' %>
         <% end %>
-        <%= link_to(agent, method: :delete, data:{confirm: 'Confirmez-vous ?'}, class: "btn btn-ghost") do %>
+        <%= link_to(agent, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: "btn btn-ghost") do %>
             <%= fa_icon 'trash-alt' %>
         <% end %>
     </td>

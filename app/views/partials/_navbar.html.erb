@@ -62,8 +62,8 @@
         <% end %>
 
         <li>
-          <%= button_to destroy_user_session_path, method: :delete, 'data-turbo': false, title: "Fermer la session de #{current_user.email}", form_class: 'p-0' do %>
-            <span class="btn btn-ghost btn-sm">
+          <%= link_to destroy_user_session_path, 'data-turbo-method': :delete, title: "Fermer la session de #{current_user.email}", class: 'p-1.5' do %>
+            <span class="text-base-content">
               <i class="fas fa-fw fa-sign-out-alt"></i>
               Déconnexion
             </span>

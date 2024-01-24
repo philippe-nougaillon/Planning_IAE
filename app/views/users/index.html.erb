@@ -83,7 +83,7 @@
               <%= fa_icon 'edit' %>
             <% end %>
             <% unless user.discarded? %>
-              <%= link_to(user, method: :delete, data:{confirm: 'Confirmez-vous la désactivation de cet utilisateur ?'}, class: "btn btn-ghost", title: "Désactiver cet utilisateur") do %>
+              <%= link_to(user, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous la désactivation de cet utilisateur ?', class: "btn btn-ghost", title: "Désactiver cet utilisateur") do %>
                 <%= fa_icon 'trash' %>
               <% end %>
             <% else %>
