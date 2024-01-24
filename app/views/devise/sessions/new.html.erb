@@ -2,7 +2,7 @@
   <% unless request.variant.include?(:phone) %>
     <%= image_tag "logo@2000.png", style: "width: 100%; max-width: 500px;" %>
   <% end %>
-  <div class="border border-gray-900 rounded shadow w-100 p-6" style="max-width: 500px">
+  <div class="border border-gray-900 rounded shadow w-100 p-6 w-full" style="max-width: 500px">
     <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
       <h1 class="text-center border-b mb-4 pb-4">
         <%= t('.sign_in') %>
@@ -14,7 +14,7 @@
             <%= f.email_field :email, autofocus: true, required: true, class: "input input-bordered input-sm w-full" %>
           </div>
 
-          <div class="form-control">
+          <div class="form-control my-4">
             <%= f.label :password, label: "Mot de passe *" %>
             <%= f.password_field :password, autocomplete: "off", required: true, class: "input input-bordered input-sm w-full" %>
           </div>
@@ -24,7 +24,7 @@
             <%= f.label :remember_me %>
           <% end %>
           <div>
-            <%= f.submit t('.sign_in'), class: "btn btn-primary w-full mt-2 mb-4" %>
+            <%= f.submit t('.sign_in'), class: "btn btn-primary btn-outline w-full mt-2 mb-4" %>
             <br>
             <%= render "devise/shared/links" %>
           </div>
