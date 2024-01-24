@@ -34,14 +34,14 @@
   <% end %>
 </div>
 
-<%= bootstrap_form_tag url: tools_acces_intervenants_do_path, method: :post do %>
+<%= form_tag tools_acces_intervenants_do_path, method: :post do %>
   <div class="overflow-x-auto" data-controller="check-all action">
     <table class="table table-zebra table-bordered">
       <thead>
         <tr>
           <th>
             <span data-action="click->action#click">
-              <input type="checkbox" data-target="check-all.all action.source">
+              <input type="checkbox" data-action-target="source" data-target="check-all.all">
             </span>
           </th>
           <th>Nom/Prénom</th>

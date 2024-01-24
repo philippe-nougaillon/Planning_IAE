@@ -3,7 +3,7 @@
 </div>
 <br>
 
-<%= bootstrap_form_tag url:  :action_do_cours do %>
+<%= form_tag :action_do_cours do %>
 
 	<%= hidden_field_tag :action_name, params[:action_name] %>
 
@@ -97,7 +97,7 @@
       <%= label_tag "Nouvel intervenant" %>    
       <%= select_tag :intervenant_id, 
                       options_from_collection_for_select(Intervenant.all, :id, :nom_prenom, params[:intervenant_id]), 
-                      include_blank:true, class:"select select-bordered select-sm w-full" %>
+                      include_blank:true, class:"slim-select" %>
       <br><br>
     </div>
 
