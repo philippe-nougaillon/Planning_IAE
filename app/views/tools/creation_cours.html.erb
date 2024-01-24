@@ -95,7 +95,7 @@
         <br>
 
         <%= label_tag :salle_id, "Salle *", class:"font-bold"  %>
-        <%= select_tag :salle_id, options_from_collection_for_select(Salle.all, :id, :nom_places, params[:salle_id]), include_blank: true, class:"select select-bordered select-sm w-full" %>
+        <%= select_tag :salle_id, options_from_collection_for_select(Salle.all, :id, :nom_places, params[:salle_id]), include_blank: true, class:"slim-select" %>
         * Optionnel
         <br><br>
 

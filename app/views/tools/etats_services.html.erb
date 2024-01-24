@@ -34,7 +34,7 @@
                                     options_from_collection_for_select(@intervenants_for_select, :id, :nom_prenom, params[:intervenant_id]), 
                                     include_blank:true, 
                                     onchange:'this.form.submit()', 
-                                    class: "select select-bordered select-sm w-full" %>
+                                    class: "slim-select" %>
             <% end %>
        </div>
     </div>
@@ -65,3 +65,5 @@
     <hr>
 
 <% end %>
+
+<%= render 'partials/slim_select' %>

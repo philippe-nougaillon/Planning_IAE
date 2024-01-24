@@ -23,7 +23,7 @@
         <%= label_tag "Salle" %>
         <%= select_tag :salle_id, 
                     options_from_collection_for_select((params[:bloc].blank? ? Salle.all : Salle.where(bloc: params[:bloc])), :id, :nom, params[:salle_id]), 
-                    include_blank:true, onchange:'this.form.submit()', class:"select select-bordered select-sm w-full" %>
+                    include_blank:true, onchange:'this.form.submit()', class:"slim-select" %>
       </div>
 
       <div class="w-full sm:w-1/4">
@@ -41,3 +41,4 @@
 <br>
 
 <%= render partial: "occupation_#{ params[:vue] }" %>
+<%= render 'partials/slim_select' %>

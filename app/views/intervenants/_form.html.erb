@@ -158,7 +158,7 @@
           <div class="sm:w-1/2 px-4">
             <div class="form-control">
               <%= r.label :titre %>
-              <%= r.select :titre, Intervenant.liste_responsabilites, {include_blank: true}, class: 'select select-bordered select-sm w-full' %>
+              <%= r.select :titre, Intervenant.liste_responsabilites, {include_blank: true}, class: 'slim-select' %>
             </div>
           </div>
 
@@ -170,7 +170,7 @@
                       :id,
                       :nom_eotp,
                       {include_blank: true},
-                      class: 'select select-bordered select-sm w-full' %>
+                      class: 'slim-select' %>
             </div>
           </div>  
   
@@ -199,3 +199,5 @@
 
   <%= f.submit class: "btn btn-primary m-4" %>
 <% end %>
+
+<%= render 'partials/slim_select' %>
