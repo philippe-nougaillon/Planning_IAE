@@ -1,7 +1,7 @@
 <% unless @cours_count.zero? %>
   <table class="table table-bordered table-sm">
     <thead>
-      <tr>
+      <tr class="text-lg">
         <th>Horaires</th>
         <th>Formation</th>
         <th>Intervenant</th>
@@ -16,7 +16,7 @@
     </tbody>
   </table>
 
-  <span class="navbar-text">
+  <div class="mt-4">
     <%= @planning_date.to_formatted_s(:db) %> 
     |
     <% if @max_page_slide %> 
@@ -24,7 +24,7 @@
     <% end %>
     | <%= @cours_count %> Cours au total
 
-  </span>
+  </div>
 
   <% if @alert %>
     <footer class="fixed bottom-0 left-0 right-0 alert alert-<%= @alert.etat %> text-lg rounded-none mb-0 p-2">

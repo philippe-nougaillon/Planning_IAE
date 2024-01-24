@@ -1,12 +1,12 @@
 <tr class="shadow-sm" style="height:110px">
 
   <td class="align-middle">
-    <h3 class="text-base-content">
+    <h2 class="text-base-content">
       <%= l(le_cours.debut, format: :heures_min) %>
       <small>
         - <%= l(le_cours.fin, format: :heures_min) %>
       </small>
-    </h3>
+    </h2>
 
     <progress class="progress opacity-50" value="<%= le_cours.progress_bar_pct2 %>" max="100"></progress>
   </td>
@@ -39,8 +39,8 @@
   </td>
   
   <td class="align-middle" style="width:200px">
-    <span class="badge badge-<%= le_cours.style %> p-4">
-      <h3 style="margin: 0 !important;"><%= le_cours.try(:salle).try(:nom) %></h3>
+    <span class="badge badge-<%= le_cours.style %> mask mask-circle p-8">
+      <h3 class="font-bold text-base-100" style="margin: 0"><%= le_cours.try(:salle).try(:nom) %></h3>
     </span>
   </td>
 

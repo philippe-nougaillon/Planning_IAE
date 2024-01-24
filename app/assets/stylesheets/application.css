@@ -42,6 +42,12 @@ body{
   }
 }
 
+h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
+  font-weight: 500;
+  line-height: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
 [type=submit].btn {
   background-color: oklch(var(--btn-color, var(--b2))/var(--tw-bg-opacity));
 }
