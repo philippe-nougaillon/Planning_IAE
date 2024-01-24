@@ -8,36 +8,36 @@
 
       <div class="sm:w-1/6 px-4">
         <%= label_tag "Du" %>    
-        <%= text_field_tag :start_date, params[:start_date], type:'date', class:"input input-bordered w-full input-sm" %>
+        <%= text_field_tag :start_date, params[:start_date], type:'date', class:"input input-bordered input-sm w-full" %>
       </div>
 
       <div class="sm:w-1/6 px-4">
         <%= label_tag "Au" %>    
-        <%= text_field_tag :end_date, params[:end_date], type:'date', class:"input input-bordered w-full input-sm", onchange:'this.form.submit()' %>
+        <%= text_field_tag :end_date, params[:end_date], type:'date', class:"input input-bordered input-sm w-full", onchange:'this.form.submit()' %>
       </div>
 
       <div class="sm:w-1/6 px-4">
         <%= label_tag :role, "Rôle" %>
         <%= select_tag :role,
-              options_for_select(User.roles, params[:role]), include_blank:true, onchange:'this.form.submit()', class:"input input-bordered w-full input-sm" %>
+              options_for_select(User.roles, params[:role]), include_blank:true, onchange:'this.form.submit()', class:"input input-bordered input-sm w-full" %>
       </div>
 
       <div class="sm:w-1/6 px-4">
         <%= label_tag :type, "Type" %>
         <%= select_tag :type,
-              options_for_select(@types, params[:type]), include_blank:true, onchange:'this.form.submit()', class:"input input-bordered w-full input-sm" %>
+              options_for_select(@types, params[:type]), include_blank:true, onchange:'this.form.submit()', class:"input input-bordered input-sm w-full" %>
       </div>
 
       <div class="sm:w-1/12 px-4">
         <%= label_tag :action_name, "Action" %>
         <%= select_tag :action_name,
-              options_for_select(@actions, params[:action_name]), include_blank:true, onchange:'this.form.submit()', class:"input input-bordered w-full input-sm" %>
+              options_for_select(@actions, params[:action_name]), include_blank:true, onchange:'this.form.submit()', class:"input input-bordered input-sm w-full" %>
       </div>
 
       <div class="sm:w-1/5 px-4">
         <%= label_tag "Rechercher" %>
         <div class="join w-full">       
-          <%= text_field_tag :search, params[:search], class:"input input-bordered w-full input-sm join-item" %>
+          <%= text_field_tag :search, params[:search], class:"input input-bordered input-sm w-full join-item" %>
           <%= submit_tag 'GO', class:"btn btn-success btn-sm join-item" %>
           <%# submit_tag 'Exporter', class:"btn btn-ghost join-item" %>
         </div>

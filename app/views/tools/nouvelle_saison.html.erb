@@ -11,7 +11,7 @@
       <div class="sm:w-2/5 px-4">
           <%= label_tag :saison, "Année scolaire" %>
           <%= select_tag :saison, 
-              options_for_select(@years, params[:saison]), include_blank:true, class:"select select-bordered w-full select-sm", onchange:'this.form.submit()' %>
+              options_for_select(@years, params[:saison]), include_blank:true, class:"select select-bordered select-sm w-full", onchange:'this.form.submit()' %>
 
           <% if @formations.present? %>    
             <%= label_tag "Formation" %>    
@@ -71,7 +71,7 @@
         <%= label_tag "Salle" %>    
         <%= select_tag :salle_id, 
                         options_from_collection_for_select(Salle.order(:nom), :id, :nom_places, params[:salle_id]), 
-                        include_blank:true, class:"select select-bordered w-full select-sm" %>
+                        include_blank:true, class:"select select-bordered select-sm w-full" %>
         <br>
 
         <div class="field">

@@ -16,27 +16,27 @@
     <div class="sm:w-1/2 px-4">
       <div class="form-control">
         <%= f.label :civilité, "Civilité *" %>
-        <%= f.text_field :civilité, required: true, class: 'input input-bordered w-full input-sm' %>
+        <%= f.text_field :civilité, required: true, class: 'input input-bordered input-sm w-full' %>
       </div>
 
       <div class="form-control">
         <%= f.label :nom, "Nom *" %>
-        <%= f.text_field :nom, required: true, class: 'input input-bordered w-full input-sm' %>
+        <%= f.text_field :nom, required: true, class: 'input input-bordered input-sm w-full' %>
       </div>
 
       <div class="form-control">
         <%= f.label :prénom, "Prénom *" %>
-        <%= f.text_field :prénom, required: true, class: 'input input-bordered w-full input-sm' %>
+        <%= f.text_field :prénom, required: true, class: 'input input-bordered input-sm w-full' %>
       </div>
 
       <div class="form-control">
         <%= f.label :email, "Email *" %>
-        <%= f.text_field :email, required: true, class: 'input input-bordered w-full input-sm' %>
+        <%= f.text_field :email, required: true, class: 'input input-bordered input-sm w-full' %>
       </div>
 
       <div class="form-control">
         <%= f.label :mobile, "Mobile" %>
-        <%= f.text_field :mobile, class: 'input input-bordered w-full input-sm' %>
+        <%= f.text_field :mobile, class: 'input input-bordered input-sm w-full' %>
       </div>
 
       <div class="field mb-6">
@@ -56,7 +56,7 @@
 
       <div class="form-control">
         <%= f.label :workflow_state, "Statut" %>
-        <%= f.select :workflow_state, Etudiant.workflow_spec.states.keys.to_a, {include_blank: true}, class: 'select select-bordered w-full select-sm' %>
+        <%= f.select :workflow_state, Etudiant.workflow_spec.states.keys.to_a, {include_blank: true}, class: 'select select-bordered select-sm w-full' %>
       </div>
     </div>
   </div>

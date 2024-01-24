@@ -18,11 +18,11 @@
       <% if dossier.new_record? %>
         <div class="form-control">
           <%= form.label :période %>
-          <%= form.select :période, options_for_select(Dossier.périodes, dossier.période), {}, class: 'select select-bordered w-full select-sm' %>
+          <%= form.select :période, options_for_select(Dossier.périodes, dossier.période), {}, class: 'select select-bordered select-sm w-full' %>
         </div>
       <% else %>
         <p>Période</p>
-        <span class="input input-bordered w-full input-sm"><%= dossier.période %></span>
+        <span class="input input-bordered input-sm w-full"><%= dossier.période %></span>
       <% end %>
 
       <div class="form-control">
@@ -38,12 +38,12 @@
     <div class="relative flex-grow max-w-full flex-1">
       <div class="form-control">
         <%= form.label :workflow_state %>
-        <%= form.select :workflow_state, Dossier.workflow_spec.states.keys.to_a, {}, class: 'select select-bordered w-full select-sm' %>
+        <%= form.select :workflow_state, Dossier.workflow_spec.states.keys.to_a, {}, class: 'select select-bordered select-sm w-full' %>
       </div>
 
       <div class="form-control">
         <%= form.label :mémo %>
-        <%= form.text_area :mémo, class: 'textarea textarea-bordered w-full textarea-sm' %>
+        <%= form.text_area :mémo, class: 'textarea textarea-bordered textarea-sm w-full' %>
       </div>
     </div>
   </div>

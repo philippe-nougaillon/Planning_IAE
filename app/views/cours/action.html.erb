@@ -70,7 +70,7 @@
     <div class="flex items-end mb-6" style="gap: 1rem;">
       <div>
         <%= label_tag "Nouvel état" %>    
-        <%= select_tag :etat, options_for_select(Cour.etats, params[:etat]), class:"select select-bordered w-full select-sm" %>
+        <%= select_tag :etat, options_for_select(Cour.etats, params[:etat]), class:"select select-bordered select-sm w-full" %>
       </div>
       <div>
         <%= check_box_tag :notifier %>
@@ -82,13 +82,13 @@
     <div class="flex flex-wrap">
       <div class="sm:w-1/5 px-4">
         <%= label_tag "Nouvelle date" %>    
-        <%= text_field_tag :new_date, params[:new_date], type:'date', class:"input input-bordered w-full input-sm" %>
+        <%= text_field_tag :new_date, params[:new_date], type:'date', class:"input input-bordered input-sm w-full" %>
       </div>
 
       <div class="sm:w-1/6 px-4">ou</div>
       <div class="sm:w-1/2 px-4">
         <%= label_tag "Décaler de x jours" %><br>
-        <%= number_field_tag :add_n_days, class: "input input-bordered w-full input-sm" %>
+        <%= number_field_tag :add_n_days, class: "input input-bordered input-sm w-full" %>
       </div>
     </div>
 
@@ -97,7 +97,7 @@
       <%= label_tag "Nouvel intervenant" %>    
       <%= select_tag :intervenant_id, 
                       options_from_collection_for_select(Intervenant.all, :id, :nom_prenom, params[:intervenant_id]), 
-                      include_blank:true, class:"select select-bordered w-full select-sm" %>
+                      include_blank:true, class:"select select-bordered select-sm w-full" %>
       <br><br>
     </div>
 
@@ -161,7 +161,7 @@
       <div class="w-1/3">
         <%= label_tag 'Intitulé du cours' %>
         <br>
-        <%= text_field_tag 'invit[nom][1]', nil, class: 'input input-bordered w-full input-sm' %>
+        <%= text_field_tag 'invit[nom][1]', nil, class: 'input input-bordered input-sm w-full' %>
       </div>
     </div>
     <div class="flex flex-wrap">
@@ -183,7 +183,7 @@
       <div class="w-1/3">
         <%= label_tag 'Intitulé du cours' %>
         <br>
-        <%= text_field_tag 'invit[nom][2]', nil, class: 'input input-bordered w-full input-sm' %>
+        <%= text_field_tag 'invit[nom][2]', nil, class: 'input input-bordered input-sm w-full' %>
       </div>
     </div>
     <div class="flex flex-wrap">
@@ -205,7 +205,7 @@
       <div class="w-1/3">
         <%= label_tag 'Intitulé du cours' %>
         <br>
-        <%= text_field_tag 'invit[nom][3]', nil, class: 'input input-bordered w-full input-sm' %>
+        <%= text_field_tag 'invit[nom][3]', nil, class: 'input input-bordered input-sm w-full' %>
       </div>
     </div>
     <div class="flex flex-wrap">
@@ -227,13 +227,13 @@
       <div class="w-1/3">
         <%= label_tag 'Intitulé du cours' %>
         <br>
-        <%= text_field_tag 'invit[nom][4]', nil, class: 'input input-bordered w-full input-sm' %>
+        <%= text_field_tag 'invit[nom][4]', nil, class: 'input input-bordered input-sm w-full' %>
       </div>
     </div>
     <br>
     <%= label_tag :message_invitation, "Message" %>
     <br>
-    <%= text_area_tag :message_invitation,nil, rows: 5, cols:80, class:'textarea textarea-bordered w-full' %>
+    <%= text_area_tag :message_invitation,nil, rows: 5, cols:80, class:'textarea textarea-bordered textarea-sm w-full' %>
     <br>
     <% if Invit.where(cour_id: @cours.pluck(:id)).where.not("workflow_state = 'non_retenue' OR  workflow_state = 'confirmée'").any? %>
       <p>

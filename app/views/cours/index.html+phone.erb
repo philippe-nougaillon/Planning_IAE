@@ -13,7 +13,7 @@
 <%= form_tag request.path, method: :get do %>
 
   <%= label_tag "Cours à partir du" %>
-  <%= text_field_tag :start_date, params[:start_date], type: 'date', onchange: 'this.form.submit()', class: "input input-bordered w-full input-sm", id: 'Cours___partir_du' %>
+  <%= text_field_tag :start_date, params[:start_date], type: 'date', onchange: 'this.form.submit()', class: "input input-bordered input-sm w-full", id: 'Cours___partir_du' %>
   
   <%= label_tag "Formation" %>    
   <%= select_tag :formation, options_for_select(@formations, params[:formation]), 

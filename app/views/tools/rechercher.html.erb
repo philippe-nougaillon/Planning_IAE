@@ -7,7 +7,7 @@
     <div class="flex flex-wrap mb-4 px-4">
       <%= label_tag :nom, "Entrez un terme à rechercher dans toute l'application" %>
       <div class="join w-full">
-        <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class:"input input-bordered w-full input-sm join-item" %>
+        <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class:"input input-bordered input-sm w-full join-item" %>
         <%= button_tag name: 'commit', value: 'Go', class: "btn btn-sm btn-success join-item" do %>
           <%= fa_icon 'search-plus' %>
         <% end %>

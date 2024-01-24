@@ -19,12 +19,12 @@
 
       <div class="form-control">
         <%= f.label :password %>
-        <%= f.password_field :password, autocomplete: "off", class: "input input-bordered w-full input-sm" %>
+        <%= f.password_field :password, autocomplete: "off", class: "input input-bordered input-sm w-full" %>
       </div>
 
       <div class="form-control">
         <%= f.label :password_confirmation %>
-        <%= f.password_field :password_confirmation, autocomplete: "off", class: "input input-bordered w-full input-sm" %>
+        <%= f.password_field :password_confirmation, autocomplete: "off", class: "input input-bordered input-sm w-full" %>
       </div>
 
       <%= f.submit t('.change_my_password'), class: "btn btn-primary" %>

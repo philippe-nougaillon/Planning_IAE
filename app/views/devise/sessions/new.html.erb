@@ -11,12 +11,12 @@
         <div class="relative flex-grow max-w-full flex-1">
           <div class="form-control">
             <%= f.label :email, label: "Email *" %>
-            <%= f.email_field :email, autofocus: true, required: true, class: "input input-bordered w-full input-sm" %>
+            <%= f.email_field :email, autofocus: true, required: true, class: "input input-bordered input-sm w-full" %>
           </div>
 
           <div class="form-control">
             <%= f.label :password, label: "Mot de passe *" %>
-            <%= f.password_field :password, autocomplete: "off", required: true, class: "input input-bordered w-full input-sm" %>
+            <%= f.password_field :password, autocomplete: "off", required: true, class: "input input-bordered input-sm w-full" %>
           </div>
 
           <% if devise_mapping.rememberable? %>

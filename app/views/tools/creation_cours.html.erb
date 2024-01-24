@@ -16,7 +16,7 @@
 
       <%= label_tag :semaines, "Semaines *", class:"font-bold"  %>
       <%= select_tag :semaines, options_for_select((1..52).to_a), 
-                        include_blank:true, multiple:true, class:"select select-bordered w-full select-sm" %>
+                        include_blank:true, multiple:true, class:"select select-bordered select-sm w-full" %>
       <br>
 
       <div class="field">
@@ -87,15 +87,15 @@
         <br>
 
         <%= label_tag :nom, "Nom du cours *", class:"font-bold"  %>
-        <%= text_field_tag :nom, params[:nom], class:"input input-bordered w-full input-sm" %>
+        <%= text_field_tag :nom, params[:nom], class:"input input-bordered input-sm w-full" %>
         <br>
 
         <%= label_tag :code_ue, "UE *", class:"font-bold"  %>
-        <%= number_field :code_ue, params[:code_ue], class:"input input-bordered w-full input-sm" %>
+        <%= number_field :code_ue, params[:code_ue], class:"input input-bordered input-sm w-full" %>
         <br>
 
         <%= label_tag :salle_id, "Salle *", class:"font-bold"  %>
-        <%= select_tag :salle_id, options_from_collection_for_select(Salle.all, :id, :nom_places, params[:salle_id]), include_blank: true, class:"select select-bordered w-full select-sm" %>
+        <%= select_tag :salle_id, options_from_collection_for_select(Salle.all, :id, :nom_places, params[:salle_id]), include_blank: true, class:"select select-bordered select-sm w-full" %>
         * Optionnel
         <br><br>
 

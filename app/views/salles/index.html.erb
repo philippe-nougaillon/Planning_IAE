@@ -12,7 +12,7 @@
           <%= label_tag "Salle" %>    
             <%= select_tag :salle_id, 
                     options_from_collection_for_select(Salle.order(:nom), :id, :nom, params[:salle_id]), 
-                      include_blank:true, onchange:'this.form.submit()', class:"input input-bordered w-full input-sm" %>
+                      include_blank:true, onchange:'this.form.submit()', class:"input input-bordered input-sm w-full" %>
         </div>
       </div>
     <% end %>

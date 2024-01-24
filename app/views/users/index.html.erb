@@ -12,7 +12,7 @@
     <div class="flex flex-wrap">
       <div class="sm:w-1/3 px-4">
         <%= label_tag :search, "Nom/Prénom/Courriel" %>    
-        <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class:"input input-bordered w-full input-sm" %>
+        <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class:"input input-bordered input-sm w-full" %>
       </div>
 
       <div class="sm:w-1/5 px-4">
@@ -21,7 +21,7 @@
                 options_for_select(User.roles, 
                 params[:role]), 
                 include_blank:true,
-                class: 'select select-bordered w-full select-sm', 
+                class: 'select select-bordered select-sm w-full', 
                 onchange: 'this.form.submit()' 
         %>          
       </div>

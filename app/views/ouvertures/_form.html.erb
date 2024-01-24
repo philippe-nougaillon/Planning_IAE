@@ -14,22 +14,22 @@
   <div class="sm:w-1/3 px-4">
     <div class="form-control">
       <%= form.label :bloc %>
-      <%= form.select :bloc, options_for_select(['A','B','D'], ouverture.bloc), {}, class: 'select select-bordered w-full select-sm' %>
+      <%= form.select :bloc, options_for_select(['A','B','D'], ouverture.bloc), {}, class: 'select select-bordered select-sm w-full' %>
     </div>
 
     <div class="form-control">
       <%= form.label :jour %>
-      <%= form.select :jour, options_for_select(Ouverture.jours.keys, ouverture.jour), {}, class: 'select select-bordered w-full select-sm' %>
+      <%= form.select :jour, options_for_select(Ouverture.jours.keys, ouverture.jour), {}, class: 'select select-bordered select-sm w-full' %>
     </div>
 
     <div class="form-control">
       <%= form.label :début %>
-      <%= form.text_field :début, type: 'time', value: (ouverture.new_record? ? '08:00' : ouverture.début.strftime("%H:%M")), class: 'input input-bordered w-full input-sm' %>
+      <%= form.text_field :début, type: 'time', value: (ouverture.new_record? ? '08:00' : ouverture.début.strftime("%H:%M")), class: 'input input-bordered input-sm w-full' %>
     </div>
 
     <div class="form-control">
       <%= form.label :fin %>
-      <%= form.text_field :fin, type: 'time', value: (ouverture.new_record? ? '20:00' : ouverture.fin.strftime("%H:%M")), class: 'input input-bordered w-full input-sm' %>
+      <%= form.text_field :fin, type: 'time', value: (ouverture.new_record? ? '20:00' : ouverture.fin.strftime("%H:%M")), class: 'input input-bordered input-sm w-full' %>
     </div>
   </div>
 
