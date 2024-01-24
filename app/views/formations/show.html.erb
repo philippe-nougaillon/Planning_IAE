@@ -1,4 +1,4 @@
-<div class="card shadow-sm p-4 mt-4" style="border-left: .3rem solid <%= @formation.try(:positive_color) %>">
+<div class="card shadow p-4 mt-4" style="border-left: .3rem solid <%= @formation.try(:positive_color) %>">
   <div class='mb-6'>
     <div class="join float-right">
       <% if policy(@formation).edit? %>
@@ -6,10 +6,6 @@
           <%= fa_icon 'edit' %> Modifier
         <% end %>
       <% end %>
-
-      <a href="#audit" data-toggle="collapse" class='btn btn-sm btn-primary btn-outline join-item'>
-        <%= fa_icon 'search' %> Audit
-      </a>
 
       <%= link_to formations_path, class: 'btn btn-sm btn-primary btn-outline join-item' do %>
         <%= fa_icon 'list' %> Retour
@@ -125,8 +121,8 @@
   </div>
 
   <% if @formation.unites.any? %>
-    <h3>
-      <small class="text-secondary">Unités d'enseignements</small>
+    <h3 class="mt-8">
+      Unités d'enseignements
     </h3>
     
     <div class="overflow-x-auto">
@@ -221,43 +217,50 @@
   <% end %>
 
   <% if @formation.vacations.any? %>
-    <h3>
-      <small class="text-secondary">Vacations</small>
-    </h3>
+    <div class="mt-8">
+      <h2>
+        <%= fa_icon 'user-md' %>
+        Vacations
+      </h2>
 
-    <table class="table table-zebra table-sm">
-      <thead>
-        <th>Date</th>
-        <th>Formation</th>
-        <th>Activité</th>
-        <th>Intervenant</th>
-        <th>Qté</th>
-        <th>Forfait HTD</th>
-        <th>Commentaires</th>
-      </thead>
-
-      <% @formation.vacations.each do |vacation| %>
-        <%= render vacation %>
-      <% end %>
-    </table>
-  <% end %>
-
-  <div id="audit" class="collapse">
-    <% if @formation.audits.any? %>
-      <h4>Audit des modifications</h4>
-      <table class="table table-bordered table-sm">
+      <table class="table table-zebra table-sm">
         <thead>
           <th>Date</th>
-          <th>Utilisateur</th>            
-          <th>Type</th>
-          <th>Record_id</th>
-          <th>Action</th>
-          <th>Modifications</th>
+          <th>Formation</th>
+          <th>Activité</th>
+          <th>Intervenant</th>
+          <th>Qté</th>
+          <th>Forfait HTD</th>
+          <th>Commentaires</th>
         </thead>
 
-        <%= render partial: 'tools/audit', collection: @formation.audits %>
-
+        <% @formation.vacations.each do |vacation| %>
+          <%= render vacation %>
+        <% end %>
       </table>
-    <% end %>
-  </div> 
+    </div>
+  <% end %>
+
+  <div tabindex="0" class="collapse collapse-arrow border border-base-300 bg-base-200 mt-8">
+    <div class="collapse-title text-xl font-medium">
+      Audit des modifications
+    </div>
+    <div class="collapse-content bg-base-100"> 
+      <% if @formation.audits.any? %>
+        <table class="table table-bordered table-sm">
+          <thead>
+            <th>Date</th>
+            <th>Utilisateur</th>            
+            <th>Type</th>
+            <th>Record_id</th>
+            <th>Action</th>
+            <th>Modifications</th>
+          </thead>
+
+          <%= render partial: 'tools/audit', collection: @formation.audits %>
+
+        </table>
+      <% end %>
+    </div>
+  </div>
 </div>

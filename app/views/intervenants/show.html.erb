@@ -6,10 +6,6 @@
         <%= link_to edit_intervenant_path(@intervenant), class: 'btn btn-sm btn-primary btn-outline join-item' do %>
           <%= fa_icon 'edit' %> Modifier
         <% end %>
-
-        <a href="#audit" data-toggle="collapse" class='btn btn-sm btn-primary btn-outline join-item'>
-          <%= fa_icon 'search' %> Audit
-        </a>
       <% end %>
       <%= link_to intervenants_path, class: 'btn btn-sm btn-primary btn-outline join-item' do %>
         <%= fa_icon 'list' %> Retour
@@ -22,7 +18,7 @@
       <% if @intervenant.photo.present? %>
         <img src=<%= @intervenant.photo %> width=250 loading='eager' class="shadow">
       <% else %>
-        <%= image_tag 'planning_intervenant.jpg', height: 150, class: 'shadow' %>
+        <%= image_tag 'planning_intervenant.jpg', class: 'shadow h-3/5' %>
       <% end %>
     </div>  
 
@@ -129,7 +125,7 @@
 
   <% if policy(:tool).can_see_RHGroup_private_tool? %>
     <% if @intervenant.responsabilites.any? %>
-      <div class="shadow-sm p-6">
+      <div class="mt-8">
         <h2>
           <%= fa_icon 'file-contract' %>
           Responsabilités
@@ -145,7 +141,7 @@
           </thead>
 
           <% @intervenant.responsabilites.each do |r| %>
-            <tr>
+            <tr class="hover">
                 <td>
                   <%= l r.debut %>
                 </td>
@@ -170,7 +166,7 @@
   <% end %>
 
   <% if @intervenant.vacations.any? %>
-    <div class="shadow-sm p-6">
+    <div class="mt-8">
       <h2>
         <%= fa_icon 'user-md' %>
         Vacations
@@ -195,26 +191,27 @@
 
   <% end %>
 
-  <hr>
-  <br>
+  <div tabindex="0" class="collapse collapse-arrow border border-base-300 bg-base-200 mt-8">
+    <div class="collapse-title text-xl font-medium">
+      Audit des modifications
+    </div>
+    <div class="collapse-content bg-base-100">
+      <table class="table table-bordered table-sm">
+        <thead>
+          <th>Date</th>
+          <th>Utilisateur</th>            
+          <th>Type</th>
+          <th>Record_id</th>
+          <th>Action</th>
+          <th>Modifications</th>
+        </thead>
 
-  <div id="audit" class="collapse">
-    <h4>Audit des modifications</h4>
-    <table class="table table-bordered table-sm">
-      <thead>
-        <th>Date</th>
-        <th>Utilisateur</th>            
-        <th>Type</th>
-        <th>Record_id</th>
-        <th>Action</th>
-        <th>Modifications</th>
-      </thead>
+        <tbody>
+          <%= render partial: 'tools/audit', collection: @intervenant.audits %>
+        </tbody>
 
-      <tbody>
-        <%= render partial: 'tools/audit', collection: @intervenant.audits %>
-      </tbody>
-
-    </table>
+      </table>
+    </div>
   </div>
 
 </div>

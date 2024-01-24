@@ -6,10 +6,6 @@
 				<%= fa_icon 'edit', text: ' Modifier' %>
 			<% end %>
 
-			<a href="#audit" data-toggle="collapse" class='btn btn-ghost'>
-				<%= fa_icon 'search', text: ' Audit' %>
-			</a>
-
 			<%= link_to users_path, class: 'btn btn-ghost' do %>
 				<%= fa_icon 'list-alt', text: ' Retour' %>
 			<% end %>
@@ -77,19 +73,23 @@
 <% end %>
 <br>
 
-<div id="audit" class="collapse">
-  <% if current_user.admin? %>
-    <h3>Audit des modifications</h3>
-	<table class="table table-bordered table-sm">
-		<thead>
-			<th>Date</th>
-			<th>Utilisateur</th>            
-			<th>Type</th>
-			<th>Record_id</th>
-			<th>Action</th>
-			<th>Modifications</th>
-		</thead>
-		<%= render partial: 'tools/audit', collection: @user.audits %>
-	</table>
-  <% end %>
-</div> 
+<% if current_user.admin? %>
+	<div tabindex="0" class="collapse collapse-arrow border border-base-300 bg-base-200">
+		<div class="collapse-title text-xl font-medium">
+			Audit des modifications
+		</div>
+		<div class="collapse-content bg-base-100"> 
+			<table class="table table-bordered table-sm">
+				<thead>
+					<th>Date</th>
+					<th>Utilisateur</th>
+					<th>Type</th>
+					<th>Record_id</th>
+					<th>Action</th>
+					<th>Modifications</th>
+				</thead>
+				<%= render partial: 'tools/audit', collection: @user.audits %>
+			</table>
+		</div>
+	</div>
+<% end %>
