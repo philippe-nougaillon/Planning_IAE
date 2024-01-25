@@ -13,17 +13,17 @@
 
   <%= form.hidden_field :intervenant_id %>
 
-  <div class="flex flex-wrap">
+  <div class="flex flex-wrap gap-8">
     <div class="relative flex-grow max-w-full flex-1">
-      <% if dossier.new_record? %>
-        <div class="form-control">
+      <div class="form-control mb-8">
+        <% if dossier.new_record? %>
           <%= form.label :période %>
           <%= form.select :période, options_for_select(Dossier.périodes, dossier.période), {}, class: 'select select-bordered select-sm w-full' %>
-        </div>
-      <% else %>
-        <p>Période</p>
-        <span class="input input-bordered input-sm w-full"><%= dossier.période %></span>
-      <% end %>
+        <% else %>
+          <label>Période</label>
+          <input class="input input-bordered input-sm w-full" value=<%= dossier.période %> disabled=true>
+        <% end %>
+      </div>
 
       <div class="form-control">
         <%= form.label :intervenant_id %>
@@ -36,7 +36,7 @@
     </div>
 
     <div class="relative flex-grow max-w-full flex-1">
-      <div class="form-control">
+      <div class="form-control mb-8">
         <%= form.label :workflow_state %>
         <%= form.select :workflow_state, Dossier.workflow_spec.states.keys.to_a, {}, class: 'select select-bordered select-sm w-full' %>
       </div>

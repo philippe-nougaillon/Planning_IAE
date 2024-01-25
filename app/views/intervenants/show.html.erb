@@ -1,4 +1,4 @@
-<div class="card shadow p-4 mt-4">
+<div class="card shadow p-4 my-8">
 
   <div>
     <div class="join float-right">
@@ -18,7 +18,7 @@
       <% if @intervenant.photo.present? %>
         <img src=<%= @intervenant.photo %> width=250 loading='eager' class="shadow">
       <% else %>
-        <%= image_tag 'planning_intervenant.jpg', class: 'shadow h-3/5' %>
+        <%= image_tag 'planning_intervenant.jpg', class: 'shadow', width: 150 %>
       <% end %>
     </div>  
 
@@ -102,11 +102,11 @@
   <hr>
 
   <% if @formations.any? %>
-    <h3>
-      <small>
+    <h3 class="mt-8">
+        <small class="text-secondary">
         <%= "Formation".pluralize(@formations.size) %>
         <%= "dispensée".pluralize(@formations.size) %>
-        <span class="badge badge-info">
+        <span class="badge badge-info text-white">
           <%= @formations.size %>
         </span>
       </small>
@@ -121,6 +121,8 @@
                                 filter: 'all') %><%= ',' if index != @formations.size - 1 %>
       <% end %>
     </p>
+
+    <hr class="mt-4">
   <% end %>
 
   <% if policy(:tool).can_see_RHGroup_private_tool? %>
@@ -191,12 +193,12 @@
 
   <% end %>
 
-  <div tabindex="0" class="collapse collapse-arrow border border-base-300 bg-base-200 mt-8">
-    <div class="collapse-title text-xl font-medium">
+  <div tabindex="0" class="collapse collapse-arrow border border-base-300 bg-base-100 mt-8">
+    <div class="collapse-title">
       Audit des modifications
     </div>
     <div class="collapse-content bg-base-100">
-      <table class="table table-bordered table-sm">
+      <table class="table table-bordered table-xs">
         <thead>
           <th>Date</th>
           <th>Utilisateur</th>            

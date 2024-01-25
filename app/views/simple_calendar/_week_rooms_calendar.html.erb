@@ -38,7 +38,7 @@
           
           <% week.each do |day| %>
             <% unless day.sunday? %>
-              <% day_style_class = 'shadow bg-yellow-50' if day == Date.today %>
+              <% day_style_class = 'shadow bg-amber-100' if day == Date.today %>
               <% day_style_class = 'shadow alert-error' if Fermeture.find_by(date: day) %>
               
               <%= content_tag :td, class: day_style_class do %>

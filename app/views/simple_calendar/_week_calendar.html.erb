@@ -5,7 +5,7 @@
       <tr>
         <% date_range.slice(0, 7).each do |day| %>
           <% unless day.sunday? %>
-            <th><%= l(day, format: :short) %></th>
+            <th class="text-lg"><%= l(day, format: :short) %></th>
           <% end %>
         <% end %>
       </tr>
@@ -17,7 +17,7 @@
           <% week.each do |day| %>
             <% unless day.sunday? %>
                 <%= content_tag :td, class: calendar.td_classes_for(day) do %>
-                  <div class="shadow p-2 mb-6 bg-base-100" >
+                  <div class="shadow-lg p-2 mb-6 bg-base-100" >
                     <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(block) %>
                       <% capture_haml(day, sorted_events.fetch(day, []), &block) %>
                     <% else %>

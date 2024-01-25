@@ -6,14 +6,14 @@
 </p>
 <br>
 
-<div class="flex flex-wrap shadow p-12">
+<div class="flex flex-wrap shadow-lg p-12">
   <div class="sm:w-1/3 px-4">
-    <p>
+    <p class="mb-4">
       <strong>Intervenant:</strong>
       <%= @dossier.intervenant.nom_prenom %>
     </p>
 
-    <p>
+    <p class="mb-4">
       <strong>Email:</strong>
       <%= @dossier.intervenant.email %>
     </p>
@@ -112,18 +112,18 @@
 
 <% if current_user %>
   <br>
-  <%= link_to 'Modifier', edit_dossier_path(@dossier) %> |
-  <%= link_to_if @dossier.can_envoyer?, 'Envoyer', envoyer_dossier_path(@dossier), title: "Envoyer un mail à l'intervenant contenant un lien unique vers son dossier", class: 'btn btn-sm btn-primary' %> |
-  <%= link_to_if @dossier.can_valider?, 'Valider', valider_dossier_path(@dossier), class: 'btn btn-sm btn-success' %> |
-  <%= link_to_if @dossier.can_rejeter?, 'Rejeter', rejeter_dossier_path(@dossier), class: 'btn btn-sm btn-error' %> |
-  <%= link_to_if @dossier.can_relancer?, 'Relancer', relancer_dossier_path(@dossier), class: 'btn btn-sm btn-info' %> |
-  <%= link_to_if @dossier.can_archiver?, 'Archiver', archiver_dossier_path(@dossier), class: 'btn btn-sm btn-secondary' %> |
-  <%= link_to 'Retour', dossiers_path %>
+  <%= link_to 'Modifier', edit_dossier_path(@dossier), class: 'link' %> |
+  <%= link_to_if @dossier.can_envoyer?, 'Envoyer', envoyer_dossier_path(@dossier), title: "Envoyer un mail à l'intervenant contenant un lien unique vers son dossier", class: 'btn btn-sm btn-primary text-white' %> |
+  <%= link_to_if @dossier.can_valider?, 'Valider', valider_dossier_path(@dossier), class: 'btn btn-sm btn-success text-white' %> |
+  <%= link_to_if @dossier.can_rejeter?, 'Rejeter', rejeter_dossier_path(@dossier), class: 'btn btn-sm btn-error text-white' %> |
+  <%= link_to_if @dossier.can_relancer?, 'Relancer', relancer_dossier_path(@dossier), class: 'btn btn-sm btn-info text-white' %> |
+  <%= link_to_if @dossier.can_archiver?, 'Archiver', archiver_dossier_path(@dossier), class: 'btn btn-sm btn-secondary text-white' %> |
+  <%= link_to 'Retour', dossiers_path, class: 'link' %>
   <br>
 <% else %>
   <% if @dossier.can_déposer? %>
     <br>
-    <%= link_to deposer_dossier_path(dossier_id: @dossier.id), data: { confirm: 'Etes-vous bien certain.e de vouloir déposer ce dossier ?' }, class: "btn btn-success #{ 'disabled' unless @dossier.documents.any? }" do %>
+    <%= link_to deposer_dossier_path(dossier_id: @dossier.id), data: { confirm: 'Etes-vous bien certain.e de vouloir déposer ce dossier ?' }, class: "btn btn-success text-white #{ 'disabled' unless @dossier.documents.any? }" do %>
       <%= fa_icon 'arrow-circle-up' %> Déposer le dossier
     <% end %>
 
@@ -138,7 +138,7 @@
   <br>
   <h5>Audit des modifications</h5>
 
-  <table class="table table-sm table-zebra table-bordered">
+  <table class="table table-xs table-zebra table-bordered">
     <thead>
       <th>Date</th>
       <th>Utilisateur</th>            

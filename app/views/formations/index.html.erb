@@ -1,6 +1,6 @@
 <div class="pb-2 mt-6 mb-2 border-b">
   <% if policy(Formation).new? %>
-    <%= link_to new_formation_path, class: 'btn text-primary float-right' do %>
+    <%= link_to new_formation_path, class: 'text-primary float-right' do %>
       <%= fa_icon 'plus-circle' %> Formation
     <% end %>
   <% end %>
@@ -15,7 +15,7 @@
           <%= label_tag :nom, "Nom/Abrg./Code/Promo" %>
           <div class="join w-full">    
             <%= text_field_tag :nom, params[:nom], include_blank:true, onchange:'this.form.submit()', class:"input input-bordered input-sm w-full join-item" %>
-            <%= submit_tag 'Filtrer', class:"btn btn-sm btn-success join-item" %>
+            <%= submit_tag 'Filtrer', class:"btn btn-sm btn-success text-white join-item" %>
           </div> 
         </div>
 

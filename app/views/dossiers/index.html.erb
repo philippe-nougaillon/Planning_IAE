@@ -1,6 +1,6 @@
 <div class="pb-2 mt-6 mb-2 border-b">
   <% if policy(Dossier).new? %>
-    <%= link_to new_dossier_path, class: 'btn text-primary float-right' do %>
+    <%= link_to new_dossier_path, class: 'text-primary float-right' do %>
       <%= fa_icon 'plus-circle' %> Dossier
     <% end %>
   <% end %>
@@ -23,7 +23,7 @@
                               onchange: 'this.form.submit()' %>
         </div>
 
-        <div class="sm:w-1/4 px-4">
+        <div class="sm:w-1/5 px-4">
           <%= label_tag :nom, "Nom" %>    
           <%= text_field_tag :nom, params[:nom], include_blank:true, onchange:'this.form.submit()', class: 'input input-bordered input-sm w-full' %>
         </div>
@@ -46,7 +46,7 @@
           Nom 
         </div>
 
-        <div class="sm:w-1/4 px-4 mt-2">
+        <div class="sm:w-1/5 px-4 mt-2">
           <br>
           <%= check_box_tag :archive, nil, params[:archive], onchange: 'this.form.submit()' %>
           <%= label_tag :archive, "Inclure les archivés ?" %>
@@ -75,7 +75,7 @@
         <td><%= dossier.période %></td>
         <td><%= dossier.intervenant.nom_prenom %></td>
         <td>
-          <span class="badge <%= dossier.style %>">
+          <span class="badge <%= dossier.style %> text-white">
             <%= dossier.workflow_state.humanize %>
           </span>
           <% if dossier.envoyé? && (dossier.updated_at.to_date..Date.today).to_a.size >= 60 %>
@@ -93,8 +93,8 @@
         </td>
         <td><%= time_ago_in_words dossier.created_at %></td>
         <td><%= time_ago_in_words dossier.updated_at %></td>
-        <td><%= link_to 'Voir', dossier %></td>
-        <td><%= link_to 'Modifier', edit_dossier_path(dossier) %></td>
+        <td><%= link_to 'Voir', dossier, class: 'link' %></td>
+        <td><%= link_to 'Modifier', edit_dossier_path(dossier), class: 'link' %></td>
         <td><%= link_to '[X]', dossier, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?' %></td>
       </tr>
     <% end %>
@@ -114,6 +114,6 @@
   <%= will_paginate @dossiers %>
 </div>
 <br>
-<%= link_to 'Export XLS', url_for(params.permit(:nom, :période, :workflow_state).merge(format: :xls)) %>
+<%= link_to 'Export XLS', url_for(params.permit(:nom, :période, :workflow_state).merge(format: :xls)), class:'link' %>
 
 
