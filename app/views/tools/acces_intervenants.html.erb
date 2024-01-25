@@ -35,44 +35,46 @@
 </div>
 
 <%= form_tag tools_acces_intervenants_do_path, method: :post do %>
-  <div class="overflow-x-auto" data-controller="check-all action">
-    <table class="table table-zebra table-bordered">
-      <thead>
-        <tr>
-          <th>
-            <span data-action="click->action#click">
-              <input type="checkbox" data-action-target="source" data-target="check-all.all">
-            </span>
-          </th>
-          <th>Nom/Prénom</th>
-          <th>Status</th>
-          <th>Email</th>
-          <th>Créé il y a</th>
-          <th>Prochain cours</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <% @intervenants.each do |intervenant| %>
-          <tr class="hover">
-            <td>
+  <div data-controller="check-all action">
+    <div class="overflow-x-auto">
+      <table class="table table-zebra table-bordered">
+        <thead>
+          <tr>
+            <th>
               <span data-action="click->action#click">
-                <%= check_box_tag "intervenants_id[#{intervenant.id}]", 'yes', false, data: {"action-target": "source"} %>
+                <input type="checkbox" data-action-target="source" data-target="check-all.all">
               </span>
-            </td>
-            <td><%= intervenant.nom_prenom %></td>
-            <td><%= intervenant.status %></td>
-            <td><%= intervenant.email %></td>
-            <td><%= time_ago_in_words intervenant.created_at %></td>
-            <td>
-              <% if prochain_cours = intervenant.cours.confirmé.where("cours.debut >= ?", DateTime.now).first.try(:debut).try(:to_date) %>
-                <%= l prochain_cours %>
-              <% end %>
-            </td>
+            </th>
+            <th>Nom/Prénom</th>
+            <th>Status</th>
+            <th>Email</th>
+            <th>Créé il y a</th>
+            <th>Prochain cours</th>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
+        </thead>
+
+        <tbody>
+          <% @intervenants.each do |intervenant| %>
+            <tr class="hover">
+              <td>
+                <span data-action="click->action#click">
+                  <%= check_box_tag "intervenants_id[#{intervenant.id}]", 'yes', false, data: {"action-target": "source"} %>
+                </span>
+              </td>
+              <td><%= intervenant.nom_prenom %></td>
+              <td><%= intervenant.status %></td>
+              <td><%= intervenant.email %></td>
+              <td><%= time_ago_in_words intervenant.created_at %></td>
+              <td>
+                <% if prochain_cours = intervenant.cours.confirmé.where("cours.debut >= ?", DateTime.now).first.try(:debut).try(:to_date) %>
+                  <%= l prochain_cours %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <div class="my-4">

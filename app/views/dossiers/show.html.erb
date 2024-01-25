@@ -47,41 +47,43 @@
     <h5>Pièces justificatives</h5>
 
     <% if @dossier.documents.any? %>
-      <table class="table table-sm shadow">
-        <thead>
-          <th>Type</th>
-          <th>Fichier</th>
-          <th>Etat</th>
-          <th>MàJ il y a</th>
-          <th></th>
-        </thead>
-        <tbody>
-          <% @dossier.documents.each do | doc | %>
-            <tr class="hover">
-              <td><%= doc.nom %></td>
-              <td>
-                <% if doc.fichier.attached? %>
-                <%= link_to doc.fichier.filename, url_for(doc.fichier), target: '_blank' %>
-                <% end %>
-              </td>
-              <td>
-                 <span class="badge <%= doc.style %>">
-                  <%= doc.workflow_state.humanize %>
-                </span>
-                <% if doc.non_conforme? %>
-                  <br>
-                  <b><%= "Motif: #{ doc.commentaire }" %></b>
-                <% end %>
-              </td>
-              <td><%= time_ago_in_words(doc.created_at) %></td>
-              <td><%= link_to_if @dossier.can_déposer?, '[X]', doc, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?' %></td>
-            </tr>
-          <% end %>
-        </tbody>
-        <tfoot>
-          <tr><th colspan=5></th></tr>
-        </tfoot>
-      </table>
+      <div class="overflow-x-auto">
+        <table class="table table-sm shadow">
+          <thead>
+            <th>Type</th>
+            <th>Fichier</th>
+            <th>Etat</th>
+            <th>MàJ il y a</th>
+            <th></th>
+          </thead>
+          <tbody>
+            <% @dossier.documents.each do | doc | %>
+              <tr class="hover">
+                <td><%= doc.nom %></td>
+                <td>
+                  <% if doc.fichier.attached? %>
+                  <%= link_to doc.fichier.filename, url_for(doc.fichier), target: '_blank' %>
+                  <% end %>
+                </td>
+                <td>
+                  <span class="badge <%= doc.style %>">
+                    <%= doc.workflow_state.humanize %>
+                  </span>
+                  <% if doc.non_conforme? %>
+                    <br>
+                    <b><%= "Motif: #{ doc.commentaire }" %></b>
+                  <% end %>
+                </td>
+                <td><%= time_ago_in_words(doc.created_at) %></td>
+                <td><%= link_to_if @dossier.can_déposer?, '[X]', doc, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?' %></td>
+              </tr>
+            <% end %>
+          </tbody>
+          <tfoot>
+            <tr><th colspan=5></th></tr>
+          </tfoot>
+        </table>
+      </div>
     <% else %>
       <% if current_user %>
         <p>
@@ -138,17 +140,19 @@
   <br>
   <h5>Audit des modifications</h5>
 
-  <table class="table table-xs table-zebra table-bordered">
-    <thead>
-      <th>Date</th>
-      <th>Utilisateur</th>            
-      <th>Type</th>
-      <th>Id</th>
-      <th>Action</th>
-      <th>Modifications</th>
-    </thead>
-    <%= render partial: 'tools/audit', collection: @dossier.own_and_associated_audits %>
-  </table>
+  <div class="overflow-x-auto">
+    <table class="table table-xs table-zebra table-bordered">
+      <thead>
+        <th>Date</th>
+        <th>Utilisateur</th>            
+        <th>Type</th>
+        <th>Id</th>
+        <th>Action</th>
+        <th>Modifications</th>
+      </thead>
+      <%= render partial: 'tools/audit', collection: @dossier.own_and_associated_audits %>
+    </table>
+  </div>
   <br>
 <% end %>
 

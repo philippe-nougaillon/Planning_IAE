@@ -108,19 +108,21 @@
   <% if @cour.audits.any? %>
     <br>
     <h4>Audit des modifications</h4>
-    <table class="table table-bordered table-sm">
-      <thead>
-        <th>Date</th>
-        <th>Utilisateur</th>            
-        <th>Type</th>
-        <th>Record_id</th>
-        <th>Action</th>
-        <th>Modifications</th>
-      </thead>
+    <div class="overflow-x-auto">
+      <table class="table table-bordered table-xs">
+        <thead>
+          <th>Date</th>
+          <th>Utilisateur</th>            
+          <th>Type</th>
+          <th>Record_id</th>
+          <th>Action</th>
+          <th>Modifications</th>
+        </thead>
 
-      <%= render partial: 'tools/audit', collection: @cour.audits %>
+        <%= render partial: 'tools/audit', collection: @cour.audits %>
 
-    </table>
+      </table>
+    </div>
   <% end %>
 </div>
 <br>

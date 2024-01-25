@@ -133,35 +133,37 @@
           Responsabilités
         </h2>
 
-        <table class="table table-zebra table-sm">
-          <thead>
-            <th>Date</th>
-            <th>Formation</th>
-            <th>Titre</th>
-            <th>Forfait</th>
-            <th>Commentaires</th>
-          </thead>
+        <div class="overflow-x-auto">
+          <table class="table table-zebra table-sm">
+            <thead>
+              <th>Date</th>
+              <th>Formation</th>
+              <th>Titre</th>
+              <th>Forfait</th>
+              <th>Commentaires</th>
+            </thead>
 
-          <% @intervenant.responsabilites.each do |r| %>
-            <tr class="hover">
-                <td>
-                  <%= l r.debut %>
-                </td>
-                <td>
-                  <%= link_to(Formation.unscoped.find(r.formation_id).nom, formations_path(r.formation_id)) %>
-                </td>
-                <td>
-                  <%= r.titre %>
-                </td>
-                <td>
-                  <%= r.heures %>h
-                </td>
-                <td>
-                  <%= r.commentaires %>
-                </td>
-            </tr>
-          <% end %>
-        </table>
+            <% @intervenant.responsabilites.each do |r| %>
+              <tr class="hover">
+                  <td>
+                    <%= l r.debut %>
+                  </td>
+                  <td>
+                    <%= link_to(Formation.unscoped.find(r.formation_id).nom, formations_path(r.formation_id)) %>
+                  </td>
+                  <td>
+                    <%= r.titre %>
+                  </td>
+                  <td>
+                    <%= r.heures %>h
+                  </td>
+                  <td>
+                    <%= r.commentaires %>
+                  </td>
+              </tr>
+            <% end %>
+          </table>
+        </div>
       </div>
       <br>
     <% end %>
@@ -174,21 +176,23 @@
         Vacations
       </h2>
 
-      <table class="table table-zebra table-sm ">
-        <thead>
-          <th>Date</th>
-          <th>Formation</th>
-          <th>Activité</th>
-          <th>Intervenant</th>
-          <th>Qté</th>
-          <th>Forfait_HTD</th>
-          <th>Commentaires</th>
-        </thead>
+      <div class="overflow-x-auto">
+        <table class="table table-zebra table-sm ">
+          <thead>
+            <th>Date</th>
+            <th>Formation</th>
+            <th>Activité</th>
+            <th>Intervenant</th>
+            <th>Qté</th>
+            <th>Forfait_HTD</th>
+            <th>Commentaires</th>
+          </thead>
 
-        <% @intervenant.vacations.each do |vacation| %>
-          <%= render vacation %>
-        <% end %>
-      </table>
+          <% @intervenant.vacations.each do |vacation| %>
+            <%= render vacation %>
+          <% end %>
+        </table>
+      </div>
     </div>
 
   <% end %>
@@ -197,7 +201,7 @@
     <div class="collapse-title">
       Audit des modifications
     </div>
-    <div class="collapse-content bg-base-100">
+    <div class="overflow-x-auto collapse-content bg-base-100">
       <table class="table table-bordered table-xs">
         <thead>
           <th>Date</th>

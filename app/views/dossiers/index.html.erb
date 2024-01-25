@@ -57,53 +57,55 @@
 </div>
 <br>
 
-<table class="table table-zebra">
-  <thead>
-    <tr>
-      <th>Période</th>
-      <th>Intervenant</th>
-      <th>Etat</th>
-      <th>Création</th>
-      <th>MàJ</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @dossiers.each do |dossier| %>
-      <tr class="hover">
-        <td><%= dossier.période %></td>
-        <td><%= dossier.intervenant.nom_prenom %></td>
-        <td>
-          <span class="badge <%= dossier.style %> text-white">
-            <%= dossier.workflow_state.humanize %>
-          </span>
-          <% if dossier.envoyé? && (dossier.updated_at.to_date..Date.today).to_a.size >= 60 %>
-            <%= fa_icon 'exclamation-circle' %>
-          <% end %>
-          <% if dossier.workflow_state == 'relancé 1 fois' && (dossier.updated_at.to_date..Date.today).to_a.size >= 15 %>
-            <%= fa_icon 'exclamation-circle' %>
-          <% end %>
-          <% if dossier.workflow_state == 'relancé 2 fois' && (dossier.updated_at.to_date..Date.today).to_a.size >= 7 %>
-            <%= fa_icon 'exclamation-circle' %>
-          <% end %>
-          <% if dossier.workflow_state == 'relancé 3 fois' && (dossier.updated_at.to_date..Date.today).to_a.size >= 3 %>
-            <%= fa_icon 'exclamation-circle' %>
-          <% end %>
-        </td>
-        <td><%= time_ago_in_words dossier.created_at %></td>
-        <td><%= time_ago_in_words dossier.updated_at %></td>
-        <td><%= link_to 'Voir', dossier, class: 'link' %></td>
-        <td><%= link_to 'Modifier', edit_dossier_path(dossier), class: 'link' %></td>
-        <td><%= link_to '[X]', dossier, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?' %></td>
+<div class="overflow-x-auto">
+  <table class="table table-zebra">
+    <thead>
+      <tr>
+        <th>Période</th>
+        <th>Intervenant</th>
+        <th>Etat</th>
+        <th>Création</th>
+        <th>MàJ</th>
+        <th colspan="3"></th>
       </tr>
-    <% end %>
-  </tbody>
+    </thead>
 
-  <tfoot>
-    <tr><th colspan=8></th></tr>
-  </tfoot>
-</table>
+    <tbody>
+      <% @dossiers.each do |dossier| %>
+        <tr class="hover">
+          <td><%= dossier.période %></td>
+          <td><%= dossier.intervenant.nom_prenom %></td>
+          <td>
+            <span class="badge <%= dossier.style %> text-white">
+              <%= dossier.workflow_state.humanize %>
+            </span>
+            <% if dossier.envoyé? && (dossier.updated_at.to_date..Date.today).to_a.size >= 60 %>
+              <%= fa_icon 'exclamation-circle' %>
+            <% end %>
+            <% if dossier.workflow_state == 'relancé 1 fois' && (dossier.updated_at.to_date..Date.today).to_a.size >= 15 %>
+              <%= fa_icon 'exclamation-circle' %>
+            <% end %>
+            <% if dossier.workflow_state == 'relancé 2 fois' && (dossier.updated_at.to_date..Date.today).to_a.size >= 7 %>
+              <%= fa_icon 'exclamation-circle' %>
+            <% end %>
+            <% if dossier.workflow_state == 'relancé 3 fois' && (dossier.updated_at.to_date..Date.today).to_a.size >= 3 %>
+              <%= fa_icon 'exclamation-circle' %>
+            <% end %>
+          </td>
+          <td><%= time_ago_in_words dossier.created_at %></td>
+          <td><%= time_ago_in_words dossier.updated_at %></td>
+          <td><%= link_to 'Voir', dossier, class: 'link' %></td>
+          <td><%= link_to 'Modifier', edit_dossier_path(dossier), class: 'link' %></td>
+          <td><%= link_to '[X]', dossier, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?' %></td>
+        </tr>
+      <% end %>
+    </tbody>
+
+    <tfoot>
+      <tr><th colspan=8></th></tr>
+    </tfoot>
+  </table>
+</div>
 
 <div class="page_info">
   <%= page_entries_info @dossiers %>

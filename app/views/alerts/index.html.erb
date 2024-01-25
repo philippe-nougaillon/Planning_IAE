@@ -12,35 +12,37 @@
   <span class="text-warning font-light">Attention, sur le serveur il est actuellement <%= l(Time.now.utc, format: "%Hh%M") %></span>
 </h5>
 
-<table class="table table-bordered table-zebra table-sm">
-  <thead>
-    <tr>
-      <th><%= sortable :debut do %>Début d'affichage<% end %></th>
-      <th><%= sortable :fin do %>Fin d'affichage<% end %></th>
-      <th>Visible?</th>
-      <th><%= sortable :message do %>Message<% end %></th>
-      <th><%= sortable :etat do %>Style<% end %></th>
-      <th colspan="2"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @alerts.each do |alert| %>
-      <tr class="hover">
-        <td><%= l(alert.debut, format: :short) %></td>
-        <td><%= l(alert.fin, format: :short) %></td>
-        <td><%= 'OUI' if alert.visible? %></td>
-        <td><%= alert.message %></td>
-        <td><%= alert.etat.humanize %></td>
-        <td><%= link_to 'Voir', alert %></td>
-        <td><%= link_to '[X]', alert, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?' %></td>
+<div class="overflow-x-auto">
+  <table class="table table-bordered table-zebra table-sm">
+    <thead>
+      <tr>
+        <th><%= sortable :debut do %>Début d'affichage<% end %></th>
+        <th><%= sortable :fin do %>Fin d'affichage<% end %></th>
+        <th>Visible?</th>
+        <th><%= sortable :message do %>Message<% end %></th>
+        <th><%= sortable :etat do %>Style<% end %></th>
+        <th colspan="2"></th>
       </tr>
-    <% end %>
-  </tbody>
-  <tfoot>
-    <th colspan=7></th>
-  </tfoot>
-</table>
+    </thead>
+
+    <tbody>
+      <% @alerts.each do |alert| %>
+        <tr class="hover">
+          <td><%= l(alert.debut, format: :short) %></td>
+          <td><%= l(alert.fin, format: :short) %></td>
+          <td><%= 'OUI' if alert.visible? %></td>
+          <td><%= alert.message %></td>
+          <td><%= alert.etat.humanize %></td>
+          <td><%= link_to 'Voir', alert %></td>
+          <td><%= link_to '[X]', alert, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?' %></td>
+        </tr>
+      <% end %>
+    </tbody>
+    <tfoot>
+      <th colspan=7></th>
+    </tfoot>
+  </table>
+</div>
 
 <% if @alert %>
   <footer class="fixed bottom-0 left-0 right-0">

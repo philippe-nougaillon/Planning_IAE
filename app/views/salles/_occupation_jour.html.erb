@@ -82,22 +82,22 @@
       <% end %>
     </tbody>
   </table>
+</div>
 
-  <% if current_user && current_user.admin? && (!params[:salle_id] || params[:salle_id].blank?) %>
-    <div class="flex flex-wrap">
-      <div class="sm:w-1/2 px-4">
-        <h5>
-          Heures de cours planifiées jour: <%= @nombre_heures_cours.first %>h <br>
-          Heures de salles disponibles jour: <%= @heures_dispo_salles.first %>h
-           (<%= @salles_dispo %> salles * <%= @nb_heures_journée %>h)<br>
-        </h5>
-      </div>
-      <div class="sm:w-1/2 px-4">
-        <h4>
-          Taux d'occupation jour: <%= @taux_occupation.first.to_i %>%
-        </h4>
-      </div>
-    </h4>
+<% if current_user && current_user.admin? && (!params[:salle_id] || params[:salle_id].blank?) %>
+  <div class="flex flex-wrap">
+    <div class="sm:w-1/2 px-4">
+      <h5>
+        Heures de cours planifiées jour: <%= @nombre_heures_cours.first %>h <br>
+        Heures de salles disponibles jour: <%= @heures_dispo_salles.first %>h
+          (<%= @salles_dispo %> salles * <%= @nb_heures_journée %>h)<br>
+      </h5>
+    </div>
+    <div class="sm:w-1/2 px-4">
+      <h4>
+        Taux d'occupation jour: <%= @taux_occupation.first.to_i %>%
+      </h4>
+    </div>
   </div>
 
   <div class="flex flex-wrap">
@@ -105,7 +105,7 @@
       <h5>
           Heures de cours planifiées soir: <%= @nombre_heures_cours.last %>h <br>
           Heures de salles disponibles soir: <%= @heures_dispo_salles.last %>h
-           (<%= @salles_dispo %> salles * <%= @nb_heures_soirée %>h)<br>
+          (<%= @salles_dispo %> salles * <%= @nb_heures_soirée %>h)<br>
         </h5>
       </div>
       <div class="sm:w-1/2 px-4">

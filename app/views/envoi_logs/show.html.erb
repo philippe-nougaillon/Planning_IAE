@@ -70,12 +70,14 @@
 
 <div id="audit">
   <h4>Audit des modifications</h4>
-  <table class="table table-sm">
-    <% @envoi_log.audits.each do | audit | %>
-      <tr>
-        <td><%= "il y a #{time_ago_in_words(audit.created_at)}" %></td>
-        <td><%= audit.audited_changes %></td>
-      </tr>
-    <% end %>
-  </table>
+  <div class="overflow-x-auto">
+    <table class="table table-sm">
+      <% @envoi_log.audits.each do | audit | %>
+        <tr>
+          <td><%= "il y a #{time_ago_in_words(audit.created_at)}" %></td>
+          <td><%= audit.audited_changes %></td>
+        </tr>
+      <% end %>
+    </table>
+  </div>
 </div>

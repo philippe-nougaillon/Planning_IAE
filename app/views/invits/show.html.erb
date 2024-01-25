@@ -42,46 +42,48 @@
         Vos autres cours à L’IAE le <%= l(@jour, format: :long) %>
       </h5>
       <% if @cours.any? %>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Heure</th>
-              <th>Formation</th>
-              <th>Cours</th>
-              <th>Salle</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @cours.each do |c| %>
+        <div class="overflow-x-auto">
+          <table class="table">
+            <thead>
               <tr>
-                <td>
-                  <%= link_to c do %>
-                    <%= l(c.debut, format: :heures_min) %>
-                    -
-                    <%= l(c.fin, format: :heures_min) %>
-                  <% end %>
-                </td>
-                <td>
-                  <span style="background-color:<%= c.formation.try(:color) %>;padding-left: 5px;margin-right: 5px;"></span>
-                  <%= c.formation.try(:nom_promo) %>
-                </td>
-                <td>
-                  <%= c.nom_ou_ue %>
-                </td>
-                <td>
-                  <% if c.salle %>
-                    <span class="badge badge-<%= c.style %>">
-                      <%= c.salle.nom %>
-                    </span>
-                  <% end %>
-                </td>
+                <th>Heure</th>
+                <th>Formation</th>
+                <th>Cours</th>
+                <th>Salle</th>
               </tr>
-            <% end %>
-          </tbody>
-          <tfoot>
-            <tr><th colspan=4></th></tr>
-          </tfoot>
-        </table>
+            </thead>
+            <tbody>
+              <% @cours.each do |c| %>
+                <tr>
+                  <td>
+                    <%= link_to c do %>
+                      <%= l(c.debut, format: :heures_min) %>
+                      -
+                      <%= l(c.fin, format: :heures_min) %>
+                    <% end %>
+                  </td>
+                  <td>
+                    <span style="background-color:<%= c.formation.try(:color) %>;padding-left: 5px;margin-right: 5px;"></span>
+                    <%= c.formation.try(:nom_promo) %>
+                  </td>
+                  <td>
+                    <%= c.nom_ou_ue %>
+                  </td>
+                  <td>
+                    <% if c.salle %>
+                      <span class="badge badge-<%= c.style %>">
+                        <%= c.salle.nom %>
+                      </span>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+            <tfoot>
+              <tr><th colspan=4></th></tr>
+            </tfoot>
+          </table>
+        </div>
       <% else %>
         <p>
           Vous n'avez pas encore de cours programmés ce jour là... 
@@ -170,19 +172,21 @@
     <br>
     <% if @invit.audits.any? %>
       <h4>Audit des modifications</h4>
-      <table class="table table-bordered table-sm">
-        <thead>
-          <th>Date</th>
-          <th>Utilisateur</th>            
-          <th>Type</th>
-          <th>Record_id</th>
-          <th>Action</th>
-          <th>Modifications</th>
-        </thead>
+      <div class="overflow-x-auto">
+        <table class="table table-bordered table-sm">
+          <thead>
+            <th>Date</th>
+            <th>Utilisateur</th>            
+            <th>Type</th>
+            <th>Record_id</th>
+            <th>Action</th>
+            <th>Modifications</th>
+          </thead>
 
-        <%= render partial: 'tools/audit', collection: @invit.audits %>
+          <%= render partial: 'tools/audit', collection: @invit.audits %>
 
-      </table>
+        </table>
+      </div>
     <% end %>
   </div> 
 

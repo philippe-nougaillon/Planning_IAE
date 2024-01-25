@@ -9,45 +9,47 @@
 
   <h3>Cours sélectionnés</h3>
 
-  <table class="table table-bordered table-zebra table-sm">
-    <thead>
-      <tr>
-        <td></td>
-        <td>Date</td>
-        <td>Horaire</td>
-        <td>Formation</td>
-        <td>Intervenant</td>
-        <td>UE</td>
-        <td>Intitulé du cours</td>
-        <td>Etat</td>
-        <td>Salle</td>
-        <td>Crée par</td>
-      </tr>
-    </thead>
-    <tbody>
-      <% @cours.each do |cours| %>
-        <tr class="hover">
-          <td><%= check_box_tag "cours_id[#{cours.id}]", true, true %></td>                
-          <td><%= l(cours.debut.to_date) %></td>
-          <td><%= "#{l(cours.debut, format: :heures_min)}-#{l(cours.fin, format: :heures_min)}" %></td>
-          <td>
-            <span style="background-color:<%= cours.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
-            <%= cours.try(:formation).try(:nom_promo) %>
-          </td>
-          <td><%= cours.intervenant.nom_prenom %>
-            <% if cours.intervenant_binome %>
-              <%= cours.intervenant_binome.nom_prenom %>
-            <% end %>
-          </td>
-          <td><%= cours.code_ue %></td>
-          <td><%= cours.nom %></td>
-          <td><span class="badge badge-<%= cours.style %> text-white"><%= cours.etat.humanize %></span></td>
-          <td><%= cours.try(:salle).try(:nom)  %></td>
-          <td><%= cours.audits.first.user.try(:email) %></td>
+  <div class="overflow-x-auto">
+    <table class="table table-bordered table-zebra table-sm">
+      <thead>
+        <tr>
+          <td></td>
+          <td>Date</td>
+          <td>Horaire</td>
+          <td>Formation</td>
+          <td>Intervenant</td>
+          <td>UE</td>
+          <td>Intitulé du cours</td>
+          <td>Etat</td>
+          <td>Salle</td>
+          <td>Crée par</td>
         </tr>
-      <% end %>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        <% @cours.each do |cours| %>
+          <tr class="hover">
+            <td><%= check_box_tag "cours_id[#{cours.id}]", true, true %></td>                
+            <td><%= l(cours.debut.to_date) %></td>
+            <td><%= "#{l(cours.debut, format: :heures_min)}-#{l(cours.fin, format: :heures_min)}" %></td>
+            <td>
+              <span style="background-color:<%= cours.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
+              <%= cours.try(:formation).try(:nom_promo) %>
+            </td>
+            <td><%= cours.intervenant.nom_prenom %>
+              <% if cours.intervenant_binome %>
+                <%= cours.intervenant_binome.nom_prenom %>
+              <% end %>
+            </td>
+            <td><%= cours.code_ue %></td>
+            <td><%= cours.nom %></td>
+            <td><span class="badge badge-<%= cours.style %> text-white"><%= cours.etat.humanize %></span></td>
+            <td><%= cours.try(:salle).try(:nom)  %></td>
+            <td><%= cours.audits.first.user.try(:email) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
   <br>
 
   <% if params[:action_name] == "Changer de salle" %>  

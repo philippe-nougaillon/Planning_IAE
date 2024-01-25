@@ -54,21 +54,23 @@
   <% end %>
 </div>
 
-<table class="table table-bordered table-sm">
-    <thead>
-        <tr>
-            <th>Date</th>
-            <th>Utilisateur</th>            
-            <th>Type</th>
-            <th>Id</th>
-            <th>Action</th>
-            <th>Modifications</th>
-        </tr>
-    </thead>
+<div class="overflow-x-auto">
+  <table class="table table-bordered table-sm">
+      <thead>
+          <tr>
+              <th>Date</th>
+              <th>Utilisateur</th>            
+              <th>Type</th>
+              <th>Id</th>
+              <th>Action</th>
+              <th>Modifications</th>
+          </tr>
+      </thead>
 
-    <%= render partial: 'audit', collection: @audits %>
+      <%= render partial: 'audit', collection: @audits %>
 
-</table>
+  </table>
+</div>
 
 <div class="page_info">
   <%= page_entries_info @audits %>

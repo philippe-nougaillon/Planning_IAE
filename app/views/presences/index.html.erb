@@ -48,36 +48,38 @@
 <div style="overflow-x: auto;">
   <%= form_tag action_presences_path, name: 'action' do %>
     <div data-controller="checkbox-select-all action">
-      <table class="table table-zebra table-sm">
-        <thead>
-          <tr>
-            <th>
-              <span data-action="click->action#click">
-                <input type="checkbox" data-checkbox-select-all-target="checkboxAll" data-action-target="source">
-              </span>
-            </th>
-            <th>Il y a</th>
-            <th>Date signature</th>
-            <th>Formation</th>
-            <th>Intervenant</th>
-            <th>Cours</th>
-            <th>UE</th>
-            <th>Nom / Prénom</th>
-            <th>Signature</th>
-            <th>État</th>
-            <th colspan="2"></th>
-          </tr>
-        </thead>
+      <div class="overflow-x-auto">
+        <table class="table table-zebra table-sm">
+          <thead>
+            <tr>
+              <th>
+                <span data-action="click->action#click">
+                  <input type="checkbox" data-checkbox-select-all-target="checkboxAll" data-action-target="source">
+                </span>
+              </th>
+              <th>Il y a</th>
+              <th>Date signature</th>
+              <th>Formation</th>
+              <th>Intervenant</th>
+              <th>Cours</th>
+              <th>UE</th>
+              <th>Nom / Prénom</th>
+              <th>Signature</th>
+              <th>État</th>
+              <th colspan="2"></th>
+            </tr>
+          </thead>
 
-        <tbody>
-          <%= render partial: 'presence', collection: @presences %>
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="10"></td>
-          </tr>
-        </tfoot>
-      </table>
+          <tbody>
+            <%= render partial: 'presence', collection: @presences %>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="10"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
 
       <div data-action-target="selector">
           <%= select_tag :action_name, options_for_select(["Signer", "Valider", "Rejeter", "Supprimer"]), 

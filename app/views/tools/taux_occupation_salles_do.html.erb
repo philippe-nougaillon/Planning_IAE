@@ -6,26 +6,28 @@
   soit <%= @nbr_jours %> jours 
 </div>
 
-<table class="table table-zebra">
-  <thead>
-    <th>Salle</th>
-    <th>Nbr heures de cours</th>
-    <th>Nbr heures dispo par salle</th>
-    <th>%</th>
-  </thead>
-  <tfoot>
-    <th /><th /><th /><th />
-  </tfoot>
-  <tbody>
-    <% @results.sort.each do |r| %>
-      <tr class="hover">
-        <td><b><%= r.first %></b></td>
-        <td><%= r.last %></td>
-        <td><%= @nbr_heures_dispo_salle %></td>
-        <td><%= ((r.last * 100) / @nbr_heures_dispo_salle).to_i %> %</td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<div class="overflow-x-auto">
+  <table class="table table-zebra">
+    <thead>
+      <th>Salle</th>
+      <th>Nbr heures de cours</th>
+      <th>Nbr heures dispo par salle</th>
+      <th>%</th>
+    </thead>
+    <tfoot>
+      <th /><th /><th /><th />
+    </tfoot>
+    <tbody>
+      <% @results.sort.each do |r| %>
+        <tr class="hover">
+          <td><b><%= r.first %></b></td>
+          <td><%= r.last %></td>
+          <td><%= @nbr_heures_dispo_salle %></td>
+          <td><%= ((r.last * 100) / @nbr_heures_dispo_salle).to_i %> %</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 <br>
 

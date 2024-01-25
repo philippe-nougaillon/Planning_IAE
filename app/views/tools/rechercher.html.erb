@@ -48,22 +48,24 @@
 
 <% if defined?(@results) %>
   <% if @results.any? %>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Contenu</th>
-          <th>Voir</th>
-          <th>MÀJ</th>
-        </tr>
-      </thead>
-      <tbody>
-        <%= render partial: @results, as: :result %>
-      </tbody>
-      <tfoot>
-        <tr><th colspan=4></th></tr>
-      </tfoot>
-    </table>
+    <div class="overflow-x-auto">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Contenu</th>
+            <th>Voir</th>
+            <th>MÀJ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= render partial: @results, as: :result %>
+        </tbody>
+        <tfoot>
+          <tr><th colspan=4></th></tr>
+        </tfoot>
+      </table>
+    </div>
     <div class="page_info">
       <%= page_entries_info @results %>
     </div>

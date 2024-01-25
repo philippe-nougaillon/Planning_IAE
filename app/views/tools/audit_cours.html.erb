@@ -36,84 +36,86 @@
     </div>
 <% end %>
 
-<table class="table table-sm">
-    <thead class="shadow">
-        <tr>    
-            <th>Semaine</th>
-            <th>Date</th>
-            <th>Heure</th>
-            <th>Formation</th>
-            <th>Intervenant</th>
-            <th colspan="2">UE/Intitulé du cours</th>
-            <th>Etat</th>
-            <th>Depuis</th>
-            <th>Par</th>
-            <th></th>
-        </tr>
-    </thead>
+<div class="overflow-x-auto">
+    <table class="table table-sm">
+        <thead class="shadow">
+            <tr>    
+                <th>Semaine</th>
+                <th>Date</th>
+                <th>Heure</th>
+                <th>Formation</th>
+                <th>Intervenant</th>
+                <th colspan="2">UE/Intitulé du cours</th>
+                <th>Etat</th>
+                <th>Depuis</th>
+                <th>Par</th>
+                <th></th>
+            </tr>
+        </thead>
 
-    <% @cours.each do | cours | %>
-        <tr class="hover shadow">
-            <td class="text-center">
-                <%= link_to cours_url(start_date: cours.debut.to_date.beginning_of_week, view: 'calendar_rooms'), target: '_blank' do %>
-                    <%= cours.debut.to_date.strftime('%-V') %>
-                <% end %>
-            </td>
-            <td>
-                <h5>
-                    <% color = 'warning' if (cours.debut.to_date - Date.today) <= 30 %>
-                    <% color = 'error' if (cours.debut.to_date - Date.today) <= 7 %>
-                    <span class="badge badge-<%= color %>">
-                        <b><%= l cours.debut.to_date %></b>
-                    </span>
-                </h5>
-            </td>
-            <td>
-                <b><%= l(cours.debut, format: :heures_min) %></b> 
-                <%= l(cours.fin, format: :heures_min) %>
-            </td>
-            <td>
-                <span style="background-color:<%= cours.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
-                <%= link_to cours.formation.nom_nbr_etudiants, cours.formation %>
-            </td>
-            <td>
-                <%= cours.intervenant.nom_prenom %>
-                <% if cours.intervenant_binome %>
-                    <br>
-                    <%= cours.intervenant_binome.nom_prenom %>
-                <% end %>
-            </td>
-            <td>
-                <%= cours.try(:ue) %>
-            </td>
-            <td>
-                <%= cours.nom_ou_ue %>
-            </td>
-            <td style="white-space: nowrap;">
-                <%= cours.etat.humanize %>
+        <% @cours.each do | cours | %>
+            <tr class="hover shadow">
+                <td class="text-center">
+                    <%= link_to cours_url(start_date: cours.debut.to_date.beginning_of_week, view: 'calendar_rooms'), target: '_blank' do %>
+                        <%= cours.debut.to_date.strftime('%-V') %>
+                    <% end %>
+                </td>
+                <td>
+                    <h5>
+                        <% color = 'warning' if (cours.debut.to_date - Date.today) <= 30 %>
+                        <% color = 'error' if (cours.debut.to_date - Date.today) <= 7 %>
+                        <span class="badge badge-<%= color %>">
+                            <b><%= l cours.debut.to_date %></b>
+                        </span>
+                    </h5>
+                </td>
+                <td>
+                    <b><%= l(cours.debut, format: :heures_min) %></b> 
+                    <%= l(cours.fin, format: :heures_min) %>
+                </td>
+                <td>
+                    <span style="background-color:<%= cours.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
+                    <%= link_to cours.formation.nom_nbr_etudiants, cours.formation %>
+                </td>
+                <td>
+                    <%= cours.intervenant.nom_prenom %>
+                    <% if cours.intervenant_binome %>
+                        <br>
+                        <%= cours.intervenant_binome.nom_prenom %>
+                    <% end %>
+                </td>
+                <td>
+                    <%= cours.try(:ue) %>
+                </td>
+                <td>
+                    <%= cours.nom_ou_ue %>
+                </td>
+                <td style="white-space: nowrap;">
+                    <%= cours.etat.humanize %>
 
-                <% unless cours.commentaires.blank? %>
-                    <%= fa_icon 'comment-dots' %>         
-                    <%= cours.commentaires %>
-                <% end %>
-            </td>
+                    <% unless cours.commentaires.blank? %>
+                        <%= fa_icon 'comment-dots' %>         
+                        <%= cours.commentaires %>
+                    <% end %>
+                </td>
 
-            <td style="white-space: nowrap;">                
-                <%= time_ago_in_words cours.audits.first.created_at %>
-            </td>
+                <td style="white-space: nowrap;">                
+                    <%= time_ago_in_words cours.audits.first.created_at %>
+                </td>
 
-            <td>
-                <%= cours.audits.first.user.nom_et_prénom %>
-            </td>
-            
-            <td>
-                <%= link_to edit_cour_path(cours), target: '_blank', class: "btn btn-ghost text-base-content" do %>
-                    <%= fa_icon 'edit '%>
-                <% end %>
-            </td>
-        </tr>
-    <% end %>
-</table>
+                <td>
+                    <%= cours.audits.first.user.nom_et_prénom %>
+                </td>
+                
+                <td>
+                    <%= link_to edit_cour_path(cours), target: '_blank', class: "btn btn-ghost text-base-content" do %>
+                        <%= fa_icon 'edit '%>
+                    <% end %>
+                </td>
+            </tr>
+        <% end %>
+    </table>
+</div>
 
 <%= "Affichage de #{ @cours.length } cours au total" %>
 <br>

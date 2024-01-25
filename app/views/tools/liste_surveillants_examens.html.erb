@@ -31,64 +31,68 @@
     Surveillances trouvées
 </h4>
 
-<table class="table table-sm table-zebra">
-    <thead>
-        <th>Le</th>
-        <th>Formation</th>
-        <th>Surveillant</th>
-        <th>Durée examen</th>
-        <th>Durée payée</th>
-        <th>Cumul durée payée</th>
-    </thead>
+<div class="overflow-x-auto">
+    <table class="table table-sm table-zebra">
+        <thead>
+            <th>Le</th>
+            <th>Formation</th>
+            <th>Surveillant</th>
+            <th>Durée examen</th>
+            <th>Durée payée</th>
+            <th>Cumul durée payée</th>
+        </thead>
 
-    <tfoot>
-        <tr>
-            <th colspan=6></th>
-        </tr>
-    </tfoot>
+        <tfoot>
+            <tr>
+                <th colspan=6></th>
+            </tr>
+        </tfoot>
 
-    <tbody>
-        <% @examens.each do | exam | %>
-            <% exam.commentaires.split('[').each do |item| %>
-                <% unless item.blank? %>
-                    <% surveillant = item.gsub(']', '').delete("\r\n\\") %>
-                    <% durée = exam.duree + ((exam.intervenant_id == 1314) ? 0 : 1) %>
-                    <% @cumuls[surveillant] ? @cumuls[surveillant] += durée : @cumuls[surveillant] = durée %>
-                    <tr class="hover">
-                        <td><%= link_to l(exam.debut, format: :long), cour_path(exam.id) %></td>
-                        <td><%= exam.formation.nom %></td>
-                        <td><b><%= surveillant %></b></td>
-                        <td><%= exam.duree %> h</td>
-                        <td><%= durée %> h</td>
-                        <td><b><%= @cumuls[surveillant] %> h</b></td>
-                    </tr>
+        <tbody>
+            <% @examens.each do | exam | %>
+                <% exam.commentaires.split('[').each do |item| %>
+                    <% unless item.blank? %>
+                        <% surveillant = item.gsub(']', '').delete("\r\n\\") %>
+                        <% durée = exam.duree + ((exam.intervenant_id == 1314) ? 0 : 1) %>
+                        <% @cumuls[surveillant] ? @cumuls[surveillant] += durée : @cumuls[surveillant] = durée %>
+                        <tr class="hover">
+                            <td><%= link_to l(exam.debut, format: :long), cour_path(exam.id) %></td>
+                            <td><%= exam.formation.nom %></td>
+                            <td><b><%= surveillant %></b></td>
+                            <td><%= exam.duree %> h</td>
+                            <td><%= durée %> h</td>
+                            <td><b><%= @cumuls[surveillant] %> h</b></td>
+                        </tr>
+                    <% end %>
                 <% end %>
             <% end %>
-        <% end %>
-    </tbody>
-</table>
+        </tbody>
+    </table>
+</div>
 <br><br>
 
 <h4>
     <%= "Total par surveillant (du #{l @start_date.to_date} au #{l @end_date.to_date})" %>
 </h4>
 
-<table class="table table-sm table-zebra table-bordered" style="width: 70%">
-    <thead>
-        <th>Nom</th>
-        <th>Total durée payée</th>
-    </thead>
-    <tfoot>
-        <tr><th></th><th></th></tr>
-    </tfoot>
-    <tbody>
-        <% @cumuls.keys.sort.each do | k | %>
-            <tr class="hover">
-                <td><%= k %></td>
-                <td><%= @cumuls[k] %> h</td>
-                <td><%= link_to 'Exporter en PDF', url_for(params.permit!.merge(format: :pdf, surveillant: k)) %>
-            </tr>
-        <% end %>
-    </tbody>
-</table>
+<div class="overflow-x-auto">
+    <table class="table table-sm table-zebra table-bordered" style="width: 70%">
+        <thead>
+            <th>Nom</th>
+            <th>Total durée payée</th>
+        </thead>
+        <tfoot>
+            <tr><th></th><th></th></tr>
+        </tfoot>
+        <tbody>
+            <% @cumuls.keys.sort.each do | k | %>
+                <tr class="hover">
+                    <td><%= k %></td>
+                    <td><%= @cumuls[k] %> h</td>
+                    <td><%= link_to 'Exporter en PDF', url_for(params.permit!.merge(format: :pdf, surveillant: k)) %>
+                </tr>
+            <% end %>
+        </tbody>
+    </table>
+</div>
 <br><br>

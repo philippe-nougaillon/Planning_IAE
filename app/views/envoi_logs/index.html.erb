@@ -18,26 +18,28 @@
   <% end %>
 </div>
 
-<table class="table table-bordered table-zebra table-sm">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>MÀJ</th>
-      <th>Destinataire(s)</th>
-      <th>Période</th>
-      <th>État</th>
-      <th></th>
-      <th>Envoyé</th>
-      <th>Mails</th>
-      <th></th>
-    </tr>
-  </thead>
+<div class="overflow-x-auto">
+  <table class="table table-bordered table-zebra table-sm">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>MÀJ</th>
+        <th>Destinataire(s)</th>
+        <th>Période</th>
+        <th>État</th>
+        <th></th>
+        <th>Envoyé</th>
+        <th>Mails</th>
+        <th></th>
+      </tr>
+    </thead>
 
-  <tbody>
-    <%= render @envoi_logs %>
-  </tbody>
+    <tbody>
+      <%= render @envoi_logs %>
+    </tbody>
 
-</table>
+  </table>
+</div>
 
 <div class="page_info">
   <%= page_entries_info @envoi_logs %>

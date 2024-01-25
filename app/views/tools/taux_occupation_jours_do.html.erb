@@ -5,25 +5,27 @@
   </h1>
 </div>
 
-<table class="table table-zebra">
-  <thead>
-    <th>Date</th>
-    <th>Taux journée</th>
-    <th>Taux soirée</th>
-  </thead>
-  <tfoot>
-    <th /><th /><th />
-  </tfoot>
-  <tbody>
-    <% @results.each do |r| %>
-      <tr class="hover">
-        <td><%= r[0] %></td>
-        <td><%= r[1] %>%</td>
-        <td><%= r[2] %>%</td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<div class="overflow-x-auto">
+  <table class="table table-zebra">
+    <thead>
+      <th>Date</th>
+      <th>Taux journée</th>
+      <th>Taux soirée</th>
+    </thead>
+    <tfoot>
+      <th /><th /><th />
+    </tfoot>
+    <tbody>
+      <% @results.each do |r| %>
+        <tr class="hover">
+          <td><%= r[0] %></td>
+          <td><%= r[1] %>%</td>
+          <td><%= r[2] %>%</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 
 <h4>
   Nombre de jours: <%= @nbr_jours %> |

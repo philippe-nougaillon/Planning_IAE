@@ -31,14 +31,13 @@
       </tbody>
 
     </table>
+  </div>
 
-    <div class="page_info">
-      <%= page_entries_info @agents %>
-    </div>
+  <div class="page_info">
+    <%= page_entries_info @agents %>
+  </div>
 
-    <div class="planning_pagination">
-      <%= will_paginate @agents %>
-    </div>
-
+  <div class="planning_pagination">
+    <%= will_paginate @agents %>
   </div>
 <% end %>

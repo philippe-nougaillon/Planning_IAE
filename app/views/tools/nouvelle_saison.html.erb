@@ -53,20 +53,22 @@
         <br>
 
         <%= label_tag "Semaines de présence", nil %><br>
-        <table class="table table-zebra table-bordered table-sm">
-            <tr>
-              <th>N° Semaine</th>
-              <th>Premier jour de la semaine</th>
-              <th>Présence</th>
-            </tr>
-            <% @jours.each do |j| %>
-                <tr class="hover">
-                    <td class="text-center"><%= j.cweek %></td>
-                    <td><%= l(j, format: :long) %></td>
-                    <td class="text-center"><%= check_box_tag "[semaine][#{j.cweek}]", '1', false %></td>
-                </tr>
-            <% end %>
-        </table>
+        <div class="overflow-x-auto">
+          <table class="table table-zebra table-bordered table-sm">
+              <tr>
+                <th>N° Semaine</th>
+                <th>Premier jour de la semaine</th>
+                <th>Présence</th>
+              </tr>
+              <% @jours.each do |j| %>
+                  <tr class="hover">
+                      <td class="text-center"><%= j.cweek %></td>
+                      <td><%= l(j, format: :long) %></td>
+                      <td class="text-center"><%= check_box_tag "[semaine][#{j.cweek}]", '1', false %></td>
+                  </tr>
+              <% end %>
+          </table>
+        </div>
 
         <%= label_tag :salle_id %>    
         <%= select_tag :salle_id, 

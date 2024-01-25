@@ -77,15 +77,15 @@
       </tbody>
 
     </table>
-
-    <% if params[:paginate] == 'pages' %>
-      <div class="page_info">
-        <%= page_entries_info @formations %>
-      </div>
-
-      <div class="planning_pagination">
-        <%= will_paginate @formations %>
-      </div>
-    <% end %>  
   </div>
+
+  <% if params[:paginate] == 'pages' %>
+    <div class="page_info">
+      <%= page_entries_info @formations %>
+    </div>
+
+    <div class="planning_pagination">
+      <%= will_paginate @formations %>
+    </div>
+  <% end %>
 <% end %>

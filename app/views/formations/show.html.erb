@@ -224,21 +224,23 @@
         Vacations
       </h2>
 
-      <table class="table table-zebra table-sm">
-        <thead>
-          <th>Date</th>
-          <th>Formation</th>
-          <th>Activité</th>
-          <th>Intervenant</th>
-          <th>Qté</th>
-          <th>Forfait HTD</th>
-          <th>Commentaires</th>
-        </thead>
+      <div class="overflow-x-auto">
+        <table class="table table-zebra table-sm">
+          <thead>
+            <th>Date</th>
+            <th>Formation</th>
+            <th>Activité</th>
+            <th>Intervenant</th>
+            <th>Qté</th>
+            <th>Forfait HTD</th>
+            <th>Commentaires</th>
+          </thead>
 
-        <% @formation.vacations.each do |vacation| %>
-          <%= render vacation %>
-        <% end %>
-      </table>
+          <% @formation.vacations.each do |vacation| %>
+            <%= render vacation %>
+          <% end %>
+        </table>
+      </div>
     </div>
   <% end %>
 
@@ -246,7 +248,7 @@
     <div class="collapse-title">
       Audit des modifications
     </div>
-    <div class="collapse-content bg-base-100"> 
+    <div class="overflow-x-auto collapse-content bg-base-100"> 
       <% if @formation.audits.any? %>
         <table class="table table-bordered table-xs">
           <thead>

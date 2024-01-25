@@ -33,76 +33,78 @@
 </div>
 <br>
 
-<table class="table table-zebra">
-  <thead>
-    <tr>
-      <th>Date</th>
-      <th>Formation</th>
-      <th>U.E.</th>
-      <th>État</th>
-      <th>Message</th>
-      <th>MàJ</th>
-      <th colspan="4"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <%= current_date = '' %>
-    <% @invits.each do |invit| %>
-      <% if invit.cour.debut.to_date != current_date %>
-        <tr class="hover shadow bg-base-200">
-          <th colspan=9>
-            <%= fa_icon 'calendar-check' %>
-            <b><%= l(invit.cour.debut.to_date, format: :long).humanize %></b> 
-          </th>
-        </tr>
-        <% current_date = invit.cour.debut.to_date %>
-      <% end %>  
-
+<div class="overflow-x-auto">
+  <table class="table table-zebra">
+    <thead>
       <tr>
-        <td>
-          <%= link_to invit do %>
-            <b><%= l(invit.cour.debut, format: :heures_min) %></b> 
-            <br>
-            <%= l(invit.cour.fin, format: :heures_min) %>
-          <% end %>
-        </td>
-        <td>
-          <span style="background-color:<%= invit.cour.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
-            <%= invit.cour.formation.nom %>
-          </span>
-        </td>
-        <td>
-          <%= Unite.find(invit.ue).num unless invit.ue.blank? %>
-          :
-          <%= invit.nom unless invit.nom.blank? %>
-        </td>
-        <td>
-          <span class="badge <%= invit.style %>">
-            <%= invit.workflow_state.humanize %>
-          </span>
-        </td>
-        <td><span title="<%= invit.msg %>"><%= truncate(invit.msg, length: 20) %></span></td>
-        <td>il y a <%= time_ago_in_words invit.updated_at %></td>
-        <td>
-          <% if invit.can_valider? %>
-            <%= link_to "Je suis disponible", valider_invit_path(invit), class: 'btn btn-sm btn-success text-white btn-outline' %>
-          <% end %>
-        </td>
-        <td style="white-space: nowrap;">
-          <% if invit.can_rejeter? %>
-            <%= link_to "Je ne suis pas disponible", rejeter_invit_path(invit), class: 'btn btn-sm btn-error btn-outline' %>
-          <% end %>
-        </td>
-        <td><%= link_to 'Commentaires', invit %></td>
+        <th>Date</th>
+        <th>Formation</th>
+        <th>U.E.</th>
+        <th>État</th>
+        <th>Message</th>
+        <th>MàJ</th>
+        <th colspan="4"></th>
       </tr>
-    <% end %>
-  </tbody>
+    </thead>
 
-  <tfoot>
-    <tr><th colspan=10></th></tr>
-  </tfoot>
-</table>
+    <tbody>
+      <%= current_date = '' %>
+      <% @invits.each do |invit| %>
+        <% if invit.cour.debut.to_date != current_date %>
+          <tr class="hover shadow bg-base-200">
+            <th colspan=9>
+              <%= fa_icon 'calendar-check' %>
+              <b><%= l(invit.cour.debut.to_date, format: :long).humanize %></b> 
+            </th>
+          </tr>
+          <% current_date = invit.cour.debut.to_date %>
+        <% end %>  
+
+        <tr>
+          <td>
+            <%= link_to invit do %>
+              <b><%= l(invit.cour.debut, format: :heures_min) %></b> 
+              <br>
+              <%= l(invit.cour.fin, format: :heures_min) %>
+            <% end %>
+          </td>
+          <td>
+            <span style="background-color:<%= invit.cour.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
+              <%= invit.cour.formation.nom %>
+            </span>
+          </td>
+          <td>
+            <%= Unite.find(invit.ue).num unless invit.ue.blank? %>
+            :
+            <%= invit.nom unless invit.nom.blank? %>
+          </td>
+          <td>
+            <span class="badge <%= invit.style %>">
+              <%= invit.workflow_state.humanize %>
+            </span>
+          </td>
+          <td><span title="<%= invit.msg %>"><%= truncate(invit.msg, length: 20) %></span></td>
+          <td>il y a <%= time_ago_in_words invit.updated_at %></td>
+          <td>
+            <% if invit.can_valider? %>
+              <%= link_to "Je suis disponible", valider_invit_path(invit), class: 'btn btn-sm btn-success text-white btn-outline' %>
+            <% end %>
+          </td>
+          <td style="white-space: nowrap;">
+            <% if invit.can_rejeter? %>
+              <%= link_to "Je ne suis pas disponible", rejeter_invit_path(invit), class: 'btn btn-sm btn-error btn-outline' %>
+            <% end %>
+          </td>
+          <td><%= link_to 'Commentaires', invit %></td>
+        </tr>
+      <% end %>
+    </tbody>
+
+    <tfoot>
+      <tr><th colspan=10></th></tr>
+    </tfoot>
+  </table>
+</div>
 
 <div class="page_info">
   <%= page_entries_info @invits %>

@@ -35,19 +35,21 @@
 <% if @salle.bloc != "Z" %>
   <p>
     <strong>Taux d'occupation estimé :</strong>
-    <table class="table">
-      <tbody>
-        <tr>
-        <% @taux_occupation.keys.each do |year| %>
-          <td>
-            <b><%= year %>-<%= (year + 1).to_s.last(2) %></b>
-            <br>
-            <%= @taux_occupation[year] %> %
-          </td>
-        <% end %>
-        </tr>
-      </tbody>
-    </table>
+    <div class="overflow-x-auto">
+      <table class="table">
+        <tbody>
+          <tr>
+          <% @taux_occupation.keys.each do |year| %>
+            <td>
+              <b><%= year %>-<%= (year + 1).to_s.last(2) %></b>
+              <br>
+              <%= @taux_occupation[year] %> %
+            </td>
+          <% end %>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <i>N.B. : Cours réalisés uniquement. occupation max = 11 heures par jour * 5.5j (soit une semaine) * 52 semaines - 8 semaines de fermeture </i>
   </p>
 <% end %>
@@ -56,7 +58,7 @@
   <div class="collapse-title">
     Audit des modifications
   </div>
-  <div class="collapse-content bg-base-100"> 
+  <div class="overflow-x-auto collapse-content bg-base-100"> 
     <table class="table table-bordered table-xs">
       <thead>
         <th>Date</th>
@@ -77,31 +79,31 @@
   <div class="collapse-title">
     Audit des attributions
   </div>
-  <div class="collapse-content bg-base-100"> 
-  <table class="table table-bordered table-zebra table-xs">
-    <thead>
-      <th>Date</th>
-      <th>Qui</th>
-      <th>Cours</th>
-      <th>Formation</th>
-      <th>Date du cours</th>
-      <th>Action Salle</th>
-    </thead>
-    <% @audits.includes(:user).limit(1000).each do |audit| %>
-        <% if extract_salle_id(audit) == @salle.id %>
-            <% if cour = Cour.where(id: audit.auditable_id).first %>
-              <tr class="hover">
-                <td><%= l(audit.created_at, format: :perso) %></td>
-                <td><%= audit.try(:user).try(:email) %></td>
-                <td><%= link_to audit.auditable_id, cour_path(cour) %></td>
-                <td><%= cour.try(:formation).try(:nom) %></td>
-                <td><%= l(cour.debut, format: :perso) %></td>
-                <td><%= convertir_id_salles(audit) %></td>
-              </tr>
-            <% end %>  
-        <% end %>
-      <% end %>  
-  </table>
+  <div class="overflow-x-auto collapse-content bg-base-100"> 
+    <table class="table table-bordered table-zebra table-xs">
+      <thead>
+        <th>Date</th>
+        <th>Qui</th>
+        <th>Cours</th>
+        <th>Formation</th>
+        <th>Date du cours</th>
+        <th>Action Salle</th>
+      </thead>
+      <% @audits.includes(:user).limit(1000).each do |audit| %>
+          <% if extract_salle_id(audit) == @salle.id %>
+              <% if cour = Cour.where(id: audit.auditable_id).first %>
+                <tr class="hover">
+                  <td><%= l(audit.created_at, format: :perso) %></td>
+                  <td><%= audit.try(:user).try(:email) %></td>
+                  <td><%= link_to audit.auditable_id, cour_path(cour) %></td>
+                  <td><%= cour.try(:formation).try(:nom) %></td>
+                  <td><%= l(cour.debut, format: :perso) %></td>
+                  <td><%= convertir_id_salles(audit) %></td>
+                </tr>
+              <% end %>  
+          <% end %>
+        <% end %>  
+    </table>
   </div>
 </div>
 
