@@ -1,16 +1,16 @@
-<div class="flex-fill card shadow px-2 py-4 mb-6" style="border-left:6px; border-left-style:solid; border-left-color:<%= cour.formation.color %>;">
+<div class="flex-1 card shadow px-2 py-4 mb-6" style="border-left:6px; border-left-style:solid; border-left-color:<%= cour.formation.color %>;">
   <div class="flex mb-2">
     <% if cour.intervenant.photo.present? %>
-      <%= image_tag cour.intervenant.photo, class:"border rounded mr-4", height: 75 %>
+      <%= image_tag cour.intervenant.photo, class:"border rounded mr-4 w-1/3" %>
     <% else %>
       <%= image_tag 'planning_intervenant.jpg', class:"border rounded mr-4", width: 75, height: 75 %>
     <% end %>
-    <div class="w-100">
+    <div class="w-full">
       <div class="flex justify-between">
         <p class="mb-0"><b><%= l(cour.debut, format: :heures_min) %></b> - <%= l(cour.fin, format: :heures_min) %></p>
         <% if cour.salle %>
           <p class="mb-0">
-            <span class="badge badge-<%= cour.style %>">
+            <span class="badge badge-<%= cour.style %> text-white">
               <%= cour.salle.nom %>
             </span>
           </p>
