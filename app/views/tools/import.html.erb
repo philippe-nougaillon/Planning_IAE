@@ -26,7 +26,7 @@
   </div>
 
   <div class="flex flex-wrap">
-    <div class="sm:w-1/3 px-4">
+    <div class="sm:w-1/3">
       <%= label_tag :formation_id %>    
       <%= select_tag :formation_id, 
             options_from_collection_for_select(Formation.all, :id, :nom, params[:formation_id]), 

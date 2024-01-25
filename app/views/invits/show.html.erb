@@ -5,30 +5,30 @@
 <div class="bs-container card shadow p-4 my-4">
   <div class="flex flex-wrap">
     <div class="relative flex-grow max-w-full flex-1">
-      <p>
+      <p class="mb-4">
         <strong>
           <%= l(@invit.cour.debut, format: :long).humanize %>
         </strong>
       </p>
 
-      <p>
+      <p class="mb-4">
         <span style="background-color:<%= @invit.cour.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
           <%= @invit.cour.formation.nom %>
         </span>
       </p>
 
-      <p>
+      <p class="mb-4">
         <strong>Durée :</strong>
         <%= number_with_precision(@invit.cour.duree, precision: 1, strip_insignificant_zeros: true) %>h
       </p>
 
       <% if user_signed_in? %>
-        <p>
+        <p class="mb-4">
           <strong>Proposé à :</strong>
           <%= @invit.intervenant.nom_prenom %>
         </p>
       <% end %>
-      <p>
+      <p class="mb-4">
         <strong>U.E. :</strong>
         <%= Unite.find(@invit.ue).num_nom unless @invit.ue.blank? %>
       </p>
@@ -56,7 +56,7 @@
               <% @cours.each do |c| %>
                 <tr>
                   <td>
-                    <%= link_to c do %>
+                    <%= link_to c, class: 'link' do %>
                       <%= l(c.debut, format: :heures_min) %>
                       -
                       <%= l(c.fin, format: :heures_min) %>
@@ -71,7 +71,7 @@
                   </td>
                   <td>
                     <% if c.salle %>
-                      <span class="badge badge-<%= c.style %>">
+                      <span class="badge badge-<%= c.style %> text-white">
                         <%= c.salle.nom %>
                       </span>
                     <% end %>
@@ -92,12 +92,12 @@
     </div>
   </div>
 
-  <div class="flex flex-wrap">
+  <div class="flex flex-wrap gap-8">
     <div class="relative flex-grow max-w-full flex-1">
       <p>
         <strong>Message du gestionnaire de formation</strong>
         <br>
-        <div class="jumbotron bg-base-200">
+        <div class="py-8 px-4 md:py-16 md:px-8 mb-8 rounded bg-base-200">
           <%= simple_format @invit.msg %>
         </div>
       </p>
@@ -117,7 +117,7 @@
         <% else %>
           <strong>Réponse de l'enseignant</strong>
           <br>
-          <div class="jumbotron bg-base-200">
+          <div class="py-8 px-4 md:py-16 md:px-8 mb-8 rounded bg-base-200">
             <%= simple_format @invit.reponse %>
           </div>
         <% end %>
@@ -129,7 +129,7 @@
 
 <% if user_signed_in? %>
   Etat :
-  <span class="badge <%= @invit.style %>">
+  <span class="badge <%= @invit.style %> text-white">
     <%= @invit.workflow_state.humanize %>
   </span>
   |-->> 
@@ -137,35 +137,37 @@
   <%= link_to_if @invit.can_relancer?, 
       'Relancer', 
       relancer_invit_path(@invit), 
-      class: "btn btn-sm " + Invit.workflow_spec.states[:relance1].meta[:style] 
+      class: "btn btn-sm text-white " + Invit.workflow_spec.states[:relance1].meta[:style] 
   %> 
   |
   <%= link_to_if @invit.can_valider?, 
       'Disponible', 
       valider_invit_path(@invit), 
-      class: "btn btn-sm " + Invit.workflow_spec.states[:disponible].meta[:style] 
+      class: "btn btn-sm text-white " + Invit.workflow_spec.states[:disponible].meta[:style] 
   %> 
   |
   <%= link_to_if @invit.can_rejeter?, 
       'Pas disponible', 
       rejeter_invit_path(@invit), 
-      class: "btn btn-sm " + Invit.workflow_spec.states[:pas_disponible].meta[:style] 
+      class: "btn btn-sm text-white " + Invit.workflow_spec.states[:pas_disponible].meta[:style] 
   %> 
   |
   <%= link_to_if @invit.can_confirmer?, 
       'Confirmer', 
       confirmer_invit_path(@invit), 
-      class: "btn btn-sm " + Invit.workflow_spec.states[:confirmée].meta[:style] 
+      class: "btn btn-sm text-white " + Invit.workflow_spec.states[:confirmée].meta[:style] 
   %> 
   |
   <%= link_to_if @invit.can_archiver?, 
       'Archiver', 
       archiver_invit_path(@invit), 
-      class: "btn btn-sm " + Invit.workflow_spec.states[:non_retenue].meta[:style] 
+      class: "btn btn-sm text-white " + Invit.workflow_spec.states[:non_retenue].meta[:style] 
   %>
   <br>
   <br>
-  <%= link_to 'Retour', invits_path if user_signed_in? %>
+  <% if user_signed_in? %>
+    <%= link_to 'Retour', invits_path, class: 'link' %>
+  <% end %>
   <br>
 
   <div id="audit">

@@ -23,7 +23,7 @@
   </td>
   <td><%= invit.intervenant.nom_prenom %></td>
   <td>
-    <span class="badge <%= invit.style %>">
+    <span class="badge <%= invit.style %> text-white">
       <%= invit.workflow_state.humanize %>
     </span>
   </td>
@@ -31,5 +31,5 @@
     <%= fa_icon('comment-alt', title: invit.reponse) unless invit.reponse.blank? %>
   </td>
   <td><%= time_ago_in_words invit.updated_at %></td>
-  <td><%= link_to 'Voir', invit %></td>
+  <td><%= link_to 'Voir', invit, class: 'link' %></td>
 </tr>

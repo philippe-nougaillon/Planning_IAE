@@ -20,7 +20,7 @@
             <%= text_field_tag :end_date, params[:end_date], type: 'date', class: "input input-bordered input-sm w-full", required: true %>
         </div>
         <div class="sm:w-1/4 px-4 self-end">
-            <%= submit_tag 'Rechercher', class: "btn btn-primary text-white" %>
+            <%= submit_tag 'Rechercher', class: "btn btn-primary btn-sm text-white" %>
         </div>
     </div>
     <br>
@@ -89,7 +89,7 @@
                 <tr class="hover">
                     <td><%= k %></td>
                     <td><%= @cumuls[k] %> h</td>
-                    <td><%= link_to 'Exporter en PDF', url_for(params.permit!.merge(format: :pdf, surveillant: k)) %>
+                    <td><%= link_to 'Exporter en PDF', url_for(params.permit!.merge(format: :pdf, surveillant: k)), class: 'link' %>
                 </tr>
             <% end %>
         </tbody>
