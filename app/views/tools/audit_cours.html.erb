@@ -9,12 +9,12 @@
     <div class="flex flex-wrap">
 
         <div class="sm:w-1/4 px-4">
-            <%= label_tag "Période du" %>    
+            <%= label_tag :start_date, "Période du" %>    
             <%= text_field_tag :start_date, params[:start_date], type:'date', class:"input input-bordered input-sm w-full" %>
         </div>
 
         <div class="sm:w-1/4 px-4">
-            <%= label_tag "au" %>    
+            <%= label_tag :end_date, "au" %>    
             <%= text_field_tag :end_date, params[:end_date], type:'date', class:"input input-bordered input-sm w-full", onchange:'this.form.submit()' %>
         </div>
 

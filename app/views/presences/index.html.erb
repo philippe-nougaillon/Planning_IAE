@@ -10,7 +10,7 @@
           <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class:"input input-bordered input-sm w-full" %>
         </div>
         <div class="sm:w-1/4 px-4">
-          <%= label_tag "Formation" %>
+          <%= label_tag :formation_id %>
           <%= select_tag :formation_id, 
                               options_from_collection_for_select(Formation.unscoped.all, :id, :nom, params[:formation_id]), 
                               class: 'slim-select', 
@@ -26,7 +26,7 @@
       </div>
 
       <div class="sm:w-1/4 px-4">
-        <%= label_tag "Intervenant" %>
+        <%= label_tag :intervenant %>
         <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
                         class: "slim-select",
                         include_blank:true,

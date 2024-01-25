@@ -12,16 +12,16 @@
 
 <%= form_tag request.path, method: :get do %>
 
-  <%= label_tag "Cours à partir du" %>
+  <%= label_tag :start_date, "Cours à partir du" %>
   <%= text_field_tag :start_date, params[:start_date], type: 'date', onchange: 'this.form.submit()', class: "input input-bordered input-sm w-full", id: 'Cours___partir_du' %>
   
-  <%= label_tag "Formation" %>    
+  <%= label_tag :formation %>    
   <%= select_tag :formation, options_for_select(@formations, params[:formation]), 
                   class: "slim-select",
                   include_blank: true, onchange: 'this.form.submit()' %>
 
   <% if user_signed_in? %>
-    <%= label_tag "Intervenant" %>
+    <%= label_tag :intervenant %>
     <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
                       class: "slim-select",
                       include_blank: true,

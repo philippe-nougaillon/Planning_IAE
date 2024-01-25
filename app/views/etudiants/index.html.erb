@@ -17,7 +17,7 @@
         </div>
 
         <div class="sm:w-1/2 px-4">
-          <%= label_tag "Formation" %>
+          <%= label_tag :formation_id %>
           <div class="join w-full">
             <%= select_tag :formation_id, 
                                 options_from_collection_for_select(Formation.unscoped.all, :id, :nom, params[:formation_id]), 

@@ -26,7 +26,7 @@
       </div>
 
       <div class="sm:w-1/6 px-4">
-        <%= label_tag "A partir du" %>    
+        <%= label_tag :start_date, "A partir du" %>    
         <%= text_field_tag :start_date, params[:start_date], type:'date', onchange:'this.form.submit()', class:"input input-bordered input-sm w-full" %>
       </div>
 

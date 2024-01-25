@@ -19,7 +19,7 @@
   
   <div class="flex flex-wrap">
     <div class="sm:w-1/3 px-4">
-      <%= label_tag "Formation" %>    
+      <%= label_tag :formation_id %>    
       <%= select_tag :formation_id, 
             options_from_collection_for_select(Formation.all, :id, :nom, params[:formation_id]), 
               class:"slim-select", include_blank: true, required: true %>

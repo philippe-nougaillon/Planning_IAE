@@ -14,7 +14,7 @@
               options_for_select(@years, params[:saison]), include_blank:true, class:"select select-bordered select-sm w-full", onchange:'this.form.submit()' %>
 
           <% if @formations.present? %>    
-            <%= label_tag "Formation" %>    
+            <%= label_tag :formation %>    
             <%= select_tag :formation_id, 
                 options_from_collection_for_select(@formations, :id, :nom_promo_full, params[:formation_id]), class:"slim-select", include_blank:true, onchange:'this.form.submit()' %>
                     
@@ -68,7 +68,7 @@
             <% end %>
         </table>
 
-        <%= label_tag "Salle" %>    
+        <%= label_tag :salle_id %>    
         <%= select_tag :salle_id, 
                         options_from_collection_for_select(Salle.order(:nom), :id, :nom_places, params[:salle_id]), 
                         include_blank:true, class:"slim-select" %>

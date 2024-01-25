@@ -27,7 +27,7 @@
   <%= form_tag cours_path, method: :get do %>
     <div class="flex flex-wrap">
       <div class="sm:w-2/5 px-4">
-        <%= label_tag "Formation" %>   
+        <%= label_tag :formation %>   
         <%= select_tag :formation, grouped_options_for_select(Formation.for_select, params[:formation]), class: 'slim-select',
                         include_blank:true, onchange: 'this.form.submit()' %>
       </div>
@@ -39,7 +39,7 @@
       </div>
       <% if user_signed_in? %>
         <div class="sm:w-2/5 px-4">
-          <%= label_tag "Intervenant" %>
+          <%= label_tag :intervenant %>
           <div class="join w-full">
             <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
                             class: "slim-select join-item",
@@ -55,7 +55,7 @@
         </div>
       <% else %>
         <div class="sm:w-2/5 px-4">
-          <%= label_tag "Intervenant" %>
+          <%= label_tag :intervenant %>
           <%= select_tag :intevenant, nil, class: "slim-select" %>
         </div>
       <% end %>
@@ -64,14 +64,14 @@
 
     <div class="flex flex-wrap">
       <div class="sm:w-1/12 px-4">
-        <%= label_tag "Semaine" %>    
+        <%= label_tag :semaine %>    
         <%= select_tag :semaine, 
                 options_for_select(@week_numbers, params[:semaine]), 
                   include_blank:true, onchange:'this.form.submit()', class:"select select-bordered select-sm w-full" %>
       </div>
 
       <div class="sm:w-1/6 px-4">
-        <%= label_tag "A partir du" %>    
+        <%= label_tag :start_date, "A partir du" %>    
         <%= text_field_tag :start_date, params[:start_date], type:'date', onchange:'this.form.submit()', class:"input input-bordered input-sm w-full" %>
       </div>
 
@@ -82,7 +82,7 @@
       </div>
 
       <div class="relative flex-grow max-w-full flex-1">
-        <%= label_tag "Cours" %>
+        <%= label_tag :filter, "Cours" %>
         <br> 
         <%= radio_button_tag :filter, "upcoming", (params[:filter]=='upcoming'), onchange:'this.form.submit()' %>
         A venir
@@ -91,7 +91,7 @@
       </div>
 
       <div class="sm:w-1/4 px-3">
-        <%= label_tag "Vue" %>
+        <%= label_tag :view, "Vue" %>
         <br>
         <%= radio_button_tag :view, "list", (params[:view]=='list'), onchange:'this.form.submit()' %>
         Liste 
@@ -105,7 +105,7 @@
 
       <% if params[:view] == 'list' %>
         <div class="sm:w-1/6 px-4">
-          <%= label_tag "Afficher" %>
+          <%= label_tag :paginate, "Afficher" %>
           <br> 
           <%= radio_button_tag :paginate, "pages", (params[:paginate]=='pages'), onchange:'this.form.submit()' %>
           Pages 

@@ -38,7 +38,7 @@
         </div>
 
         <div class="sm:w-1/5 px-4">
-          <%= label_tag "Trier par " %>
+          <%= label_tag :order_by, "Trier par" %>
           <br> 
           <%= radio_button_tag :order_by, 'dossiers.updated_at', (params[:order_by]=='dossiers.updated_at'), onchange:'this.form.submit()' %>
           Date MàJ 

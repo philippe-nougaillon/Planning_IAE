@@ -14,12 +14,12 @@
 
       <div class="flex flex-wrap">
           <div class="sm:w-1/2 px-4">
-            <%= label_tag "Du" %>    
+            <%= label_tag :start_date, "Du" %>    
             <%= text_field_tag :start_date, params[:start_date], type:'date', class:"input input-bordered input-sm w-full", required: true %>
           </div>
 
           <div class="sm:w-1/2 px-4">
-            <%= label_tag "Au" %>    
+            <%= label_tag :end_date, "Au" %>    
             <%= text_field_tag :end_date, params[:end_date], type:'date', class:"input input-bordered input-sm w-full", required: true %>
           </div>
       </div>
@@ -28,12 +28,12 @@
       <%= select_tag :etat, options_for_select(Cour.etats, params[:etat]), include_blank:true, class:"select select-bordered select-sm w-full" %>
       <br>
 
-      <%= label_tag "Formation" %>    
+      <%= label_tag :formation %>    
       <%= select_tag :formation_id, 
             options_from_collection_for_select(Formation.all, :id, :nom_promo), include_blank:true, class:"slim-select" %>
       <br>
 
-      <%= label_tag :intervenant_id, "Intervenant" %>
+      <%= label_tag :intervenant_id %>
       <%= select_tag :intervenant_id,
             options_from_collection_for_select(Intervenant.all, :id, :nom_prenom), include_blank:true, class:"slim-select" %>
 

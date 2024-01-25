@@ -69,7 +69,7 @@
   <% elsif params[:action_name] == "Changer d'état" %>
     <div class="flex items-end mb-6" style="gap: 1rem;">
       <div>
-        <%= label_tag "Nouvel état" %>    
+        <%= label_tag :etat, "Nouvel état" %>    
         <%= select_tag :etat, options_for_select(Cour.etats, params[:etat]), class:"select select-bordered select-sm w-full" %>
       </div>
       <div>
@@ -81,20 +81,20 @@
   <% elsif params[:action_name] == "Changer de date" %>
     <div class="flex flex-wrap">
       <div class="sm:w-1/5 px-4">
-        <%= label_tag "Nouvelle date" %>    
+        <%= label_tag :new_date, "Nouvelle date" %>    
         <%= text_field_tag :new_date, params[:new_date], type:'date', class:"input input-bordered input-sm w-full" %>
       </div>
 
       <div class="sm:w-1/6 px-4">ou</div>
       <div class="sm:w-1/2 px-4">
-        <%= label_tag "Décaler de x jours" %><br>
-        <%= number_field_tag :add_n_days, class: "input input-bordered input-sm w-full" %>
+        <%= label_tag :add_n_days, "Décaler de x jours" %><br>
+        <%= number_field_tag :add_n_days, nil, class: "input input-bordered input-sm w-full" %>
       </div>
     </div>
 
   <% elsif params[:action_name] == "Changer d'intervenant" %>
     <div class="sm:w-1/2 px-4">
-      <%= label_tag "Nouvel intervenant" %>    
+      <%= label_tag :intervenant_id, "Nouvel intervenant" %>    
       <%= select_tag :intervenant_id, 
                       options_from_collection_for_select(Intervenant.all, :id, :nom_prenom, params[:intervenant_id]), 
                       include_blank:true, class:"slim-select" %>
@@ -151,7 +151,7 @@
                         class: "slim-select" %>
       </div>
       <div class="w-2/5">
-        <%= label_tag :ue, "U.E." %>
+        <%= label_tag "U.E." %>
         <br>
         <%= select_tag 'invit[ue][1]', 
                         options_from_collection_for_select(@cours.first.formation.unites.order(:num), :id, :num_nom, params[:ue]), 
@@ -173,7 +173,7 @@
                         class: "slim-select" %>
       </div>
       <div class="w-2/5">
-        <%= label_tag :ue, "U.E." %>
+        <%= label_tag "U.E." %>
         <br>
         <%= select_tag 'invit[ue][2]', 
                         options_from_collection_for_select(@cours.first.formation.unites.order(:code), :id, :num_nom, params[:ue]), 
@@ -195,7 +195,7 @@
                         class: "slim-select" %>
       </div>
       <div class="w-2/5">
-        <%= label_tag :ue, "U.E." %>
+        <%= label_tag "U.E." %>
         <br>
         <%= select_tag 'invit[ue][3]', 
                         options_from_collection_for_select(@cours.first.formation.unites.order(:num), :id, :num_nom, params[:ue]), 
@@ -217,7 +217,7 @@
                         class: "slim-select" %>
       </div>
       <div class="w-2/5">
-        <%= label_tag :ue, "U.E." %>
+        <%= label_tag "U.E." %>
         <br>
         <%= select_tag 'invit[ue][4]', 
                         options_from_collection_for_select(@cours.first.formation.unites.order(:num), :id, :num_nom, params[:ue]), 
@@ -230,11 +230,12 @@
         <%= text_field_tag 'invit[nom][4]', nil, class: 'input input-bordered input-sm w-full' %>
       </div>
     </div>
-    <br>
-    <%= label_tag :message_invitation, "Message" %>
-    <br>
-    <%= text_area_tag :message_invitation,nil, rows: 5, cols:80, class:'textarea textarea-bordered textarea-sm w-full' %>
-    <br>
+    
+    <div class="my-4">
+      <%= label_tag :message_invitation, "Message" %>
+      <%= text_area_tag :message_invitation,nil, rows: 5, cols:80, class:'textarea textarea-bordered textarea-sm w-full' %>
+    </div>
+
     <% if Invit.where(cour_id: @cours.pluck(:id)).where.not("workflow_state = 'non_retenue' OR  workflow_state = 'confirmée'").any? %>
       <p>
         <br>
@@ -249,7 +250,7 @@
 
   <% elsif params[:action_name] == "Supprimer" %>
     <div class="sm:w-2/3 px-4">
-      <%= label_tag "Confirmation :" %><br>
+      <p>Confirmation :</p>
       <%= check_box_tag :delete %>
       <%= label_tag :delete, "Suppression définitive de tous les cours sélectionnés ?" %>
       <br>
