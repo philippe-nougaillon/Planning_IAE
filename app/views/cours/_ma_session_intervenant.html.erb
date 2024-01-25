@@ -23,7 +23,7 @@
     <% if presences.any? %>
       <h5 class='mt-4'>
         <% Presence.workflow_states_count(presences).each do |state| %>
-          <span class="badge <%= Presence.workflow_spec.states[state.first.to_sym].meta[:style] %>">
+          <span class="badge text-white <%= Presence.workflow_spec.states[state.first.to_sym].meta[:style] %>">
             <%= state.first.humanize %> : <%= state.last %>
           </span>
         <% end %>
@@ -37,7 +37,7 @@
         <% if presence.present? %>
           <%= link_to presence_path(presence) do %>
             <h5 class='mr-1'>
-              <span class="badge <%= presence.style %> font-normal">
+              <span class="badge <%= presence.style %> text-white font-normal">
                 <%= presence.etudiant.nom.upcase %>
                 <%= fa_icon 'wifi' if presence.wifi_detected? %>
               </span>
@@ -45,7 +45,7 @@
           <% end %>
         <% else %>
           <h5 class='mr-1'>
-            <span class="badge badge-light font-normal"><%= etudiant.nom.upcase %></span>
+            <span class="badge text-white font-normal"><%= etudiant.nom.upcase %></span>
           </h5>
         <% end %>
       <% end %>

@@ -76,12 +76,12 @@
       <h4>
         <small class="text-secondary">Salle</small><br>
         <% if @cour.salle %>
-          <span class="badge badge-<%= @cour.style %>">
+          <span class="badge badge-<%= @cour.style %> text-white">
             <%= @cour.salle.nom %>
           </span>             
 
           <% if @cour.formation.try(:nbr_etudiants) && (@cour.formation.try(:nbr_etudiants) > @cour.salle.places) %>
-            <span class="badge" title="Manque <%= @cour.formation.nbr_etudiants - @cour.salle.places %> place.s">
+            <span class="badge text-white" title="Manque <%= @cour.formation.nbr_etudiants - @cour.salle.places %> place.s">
               <%= fa_icon 'exclamation-circle' %>
             </span>
           <% end %>
