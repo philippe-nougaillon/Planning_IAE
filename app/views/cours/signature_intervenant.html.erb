@@ -22,6 +22,6 @@
   </div>
 <% end %>
 
-<p class="my-6"><%= link_to 'Retour', mes_sessions_intervenant_path(presence_slug: @presence.slug) %></p>
+<p class="my-6"><%= link_to 'Retour', mes_sessions_intervenant_path(presence_slug: @presence.slug), class: 'link' %></p>
 
 <%= render 'signature_pad' %>
