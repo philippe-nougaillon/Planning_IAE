@@ -37,7 +37,7 @@
 <% end %>
 
 <table class="table table-sm">
-    <thead class="shadow-sm">
+    <thead class="shadow">
         <tr>    
             <th>Semaine</th>
             <th>Date</th>
@@ -53,7 +53,7 @@
     </thead>
 
     <% @cours.each do | cours | %>
-        <tr class="hover shadow-sm">
+        <tr class="hover shadow">
             <td class="text-center">
                 <%= link_to cours_url(start_date: cours.debut.to_date.beginning_of_week, view: 'calendar_rooms'), target: '_blank' do %>
                     <%= cours.debut.to_date.strftime('%-V') %>

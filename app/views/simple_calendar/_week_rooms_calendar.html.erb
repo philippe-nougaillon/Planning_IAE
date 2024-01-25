@@ -4,8 +4,8 @@
       <tr>
         <th></th>
         <% date_range.slice(0, 6).each do |day| %>
-          <th style="width: 160px;">
-            <%= l(day, format: :short) %>
+          <th class="text-lg" style="width: 160px;">
+            <b><%= l(day, format: :short) %></b>
             <br>
             <% if @salle %>
               <% if Ouverture.where(bloc: @salle.bloc, jour: day.wday).any? %>
@@ -26,11 +26,11 @@
         <tr>
           <td>
             <% if @salle %>
-              <h4 id=<%= @salle.nom %> style="text-align: center;vertical-align: middle;">
-                <%= @salle.nom %>
+              <p id=<%= @salle.nom %> class="text-2xl" style="text-align: center;vertical-align: middle;">
+                <b><%= @salle.nom %></b>
                 <br>
                 <small>(<%= @salle.places %>)</small>
-              </h4>
+              </p>
             <% else %>
               <span>À BOOKER</span>
             <% end %>
@@ -38,8 +38,8 @@
           
           <% week.each do |day| %>
             <% unless day.sunday? %>
-              <% day_style_class = 'shadow-sm alert-warning' if day == Date.today %>
-              <% day_style_class = 'shadow-sm alert-error' if Fermeture.find_by(date: day) %>
+              <% day_style_class = 'shadow bg-yellow-50' if day == Date.today %>
+              <% day_style_class = 'shadow alert-error' if Fermeture.find_by(date: day) %>
               
               <%= content_tag :td, class: day_style_class do %>
                 <% block.call day, sorted_events.fetch(day, []) %>

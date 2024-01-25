@@ -51,7 +51,7 @@
   <% unless dossier.new_record? %>
     <h5>Pièces justificatives</h5>
     <%= form.fields_for :documents do |doc| %>
-      <div class="flex flex-wrap shadow-sm">
+      <div class="flex flex-wrap shadow">
         <div class="sm:w-1/4 px-4">
           <%= doc.text_field :nom %>
         </div>

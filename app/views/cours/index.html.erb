@@ -15,7 +15,7 @@
 
     <%= link_to new_cour_path(formation: session[:formation], 
                               debut: DateTime.now), 
-                              class: 'btn text-primary float-right' do %>
+                              class: 'text-primary float-right' do %>
       <%= fa_icon 'plus-circle' %> Cours
     <% end %>
 
@@ -23,7 +23,7 @@
   <h3><%= fa_icon 'calendar-alt' %> Planning des cours</h3>
 </div>
 
-<div class="bs-container p-4 shadow-sm">
+<div class="bs-container p-4 shadow">
   <%= form_tag cours_path, method: :get do %>
     <div class="flex flex-wrap">
       <div class="sm:w-2/5 px-4">
@@ -124,7 +124,7 @@
     <%= form_tag action_cours_path, name: 'action' do %>
       <div data-controller="checkbox-select-all action">
         <table class="table">
-          <thead class="shadow-sm">
+          <thead class="shadow">
             <tr>
               <% if policy(Cour).action? %>
                 <th>
@@ -151,7 +151,7 @@
             <% @cours.includes(:formation, :intervenant, :salle).each do | cours | %>
 
               <% if cours.debut.to_date != current_date %>
-                <tr class="hover shadow-sm bg-base-200">
+                <tr class="hover shadow bg-base-200">
                   <% if policy(Cour).action? %><th></th><% end %>
                   <th colspan=<%= policy(Cour).action? ? '9' : '8' %>>
                     <%= fa_icon 'calendar-day' %>
@@ -184,7 +184,7 @@
           </tfoot>
         </table>
 
-        <div class="flex flex-wrap">
+        <div class="flex flex-wrap items-end">
           <div class="relative flex-grow max-w-full flex-1">
             <% if params[:paginate] == 'pages' %>
               <%= page_entries_info @cours %>
@@ -194,7 +194,7 @@
             <% end %>
           </div>
           <div class="relative flex-grow max-w-full flex-1">
-            <div data-action-target="selector">
+            <div data-action-target="selector" class="mb-4">
               <% if policy(Cour).action? %>
                 <span class="align-bottom">
                   Choisir une action à exécuter sur les cours sélectionnés
@@ -204,21 +204,22 @@
               <% end %>
             </div>
             <% if user_signed_in? && (params[:formation].present? || params[:intervenant].present?) %>
-              <span class="align-bottom">Exporter vers </span>
-              <%= link_to cours_url(format: :xls), class: 'btn btn-sm btn-success' do %>
-                <%= fa_icon 'file-excel' %>
-                Feuille Excel
-              <% end %>
+              <div class="float-right">
+                <%= link_to cours_url(format: :xls), class: 'btn btn-xs btn-success btn-outline' do %>
+                  <%= fa_icon 'file-excel' %>
+                  Feuille Excel
+                <% end %>
 
-              <%= link_to cours_url(format: :pdf), class: 'btn btn-sm btn-error' do %>
-                <%= fa_icon 'file-pdf' %>
-                Document PDF
-              <% end %>
+                <%= link_to cours_url(format: :pdf), class: 'btn btn-xs btn-error btn-outline' do %>
+                  <%= fa_icon 'file-pdf' %>
+                  Document PDF
+                <% end %>
 
-              <%= link_to cours_url(format: :ics), class: 'btn btn-sm btn-info' do %>
-                <%= fa_icon 'calendar' %>
-                Calendrier
-              <% end %>
+                <%= link_to cours_url(format: :ics), class: 'btn btn-xs btn-info btn-outline' do %>
+                  <%= fa_icon 'calendar' %>
+                  Calendrier
+                <% end %>
+              </div>
 
             <% end %>
         </div>

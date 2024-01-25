@@ -75,7 +75,7 @@
         </div>
       </div>
 
-      <%= f.submit class: "btn btn-primary" %>     
+      <%= f.submit class: "btn btn-primary text-white" %>     
 
     </div>
 
@@ -131,7 +131,7 @@
     </div>
   </div>
 
-  <div id="UE" class="collapse shadow-sm p-6">
+  <div id="UE" class="collapse shadow p-6">
     <h4>
       <%= fa_icon 'book' %>
       Unités d'enseignements
@@ -139,7 +139,7 @@
     <hr>
 
     <%= f.fields_for :unites do |ue| %>
-      <div class="flex flex-wrap items-end shadow-sm pb-4 mb-4">
+      <div class="flex flex-wrap items-end shadow pb-4 mb-4">
         <div class="sm:w-1/6 px-4">
           <div class="form-control">
             <%= ue.label :code %>
@@ -171,10 +171,10 @@
       </div>
     <% end %>
 
-    <%= f.submit "Enregistrer", class: "btn btn-primary" %>
+    <%= f.submit "Enregistrer", class: "btn btn-primary text-white" %>
   </div>
   
-  <div id="Etudiants" class="collapse shadow-sm p-6">
+  <div id="Etudiants" class="collapse shadow p-6">
     <h4>
       <%= fa_icon 'graduation-cap' %>
       Etudiants
@@ -182,7 +182,7 @@
     <hr>
 
     <%= f.fields_for :etudiants do |etudiant| %>
-      <div class="flex flex-wrap items-end shadow-sm pb-4 mb-4">
+      <div class="flex flex-wrap items-end shadow pb-4 mb-4">
         <div class="sm:w-1/5 px-4">
           <div class="form-control">
             <%= etudiant.label :num %>
@@ -220,10 +220,10 @@
       </div>
     <% end %>
 
-    <%= f.submit class: "btn btn-primary" %>    
+    <%= f.submit class: "btn btn-primary text-white" %>    
   </div>
 
-  <div id="Vacations" class="collapse shadow-sm p-6">
+  <div id="Vacations" class="collapse shadow p-6">
       <h4>
         <%= fa_icon 'user-md' %>
         Vacations ou autres activités
@@ -231,7 +231,7 @@
       <hr>
 
       <%= f.fields_for :vacations do |vacation| %>
-        <div class="flex flex-wrap shadow-sm mt-2">
+        <div class="flex flex-wrap shadow mt-2">
           <div class="sm:w-1/6 px-4">
             <div class="form-control">
               <%= vacation.label :date, 'Date *' %>
@@ -284,7 +284,7 @@
           </div>
         </div>
       <% end %>
-    <%= f.submit class: "btn btn-primary" %>    
+    <%= f.submit class: "btn btn-primary text-white" %>    
   </div>
 
 <% end %>

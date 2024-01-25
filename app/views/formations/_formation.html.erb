@@ -1,7 +1,7 @@
 <% formation_cours = formation.cours %>
 <% formation_cours_planifié_count = formation_cours.planifié.count %>
 
-<tr class="hover shadow-sm <%= formation_cours_planifié_count != 0 ? 'bg-warning' : '' %>">
+<tr class="hover shadow <%= formation_cours_planifié_count != 0 ? 'bg-warning' : '' %>">
     <td style="border-left: .3rem solid <%= formation.try(:positive_color) %>">
         <%= link_to formation.nom, formation %>
     </td>

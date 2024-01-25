@@ -41,7 +41,7 @@
           </td>
           <td><%= cours.code_ue %></td>
           <td><%= cours.nom %></td>
-          <td><span class="badge badge-<%= cours.style %>"><%= cours.etat.humanize %></span></td>
+          <td><span class="badge badge-<%= cours.style %> text-white"><%= cours.etat.humanize %></span></td>
           <td><%= cours.try(:salle).try(:nom)  %></td>
           <td><%= cours.audits.first.user.try(:email) %></td>
         </tr>
@@ -341,8 +341,8 @@
   <% end %>
 
   <div class="flex flex-wrap mb-12">
-    <div class="sm:w-full px-4">
-      <%= submit_tag 'Appliquer', class:"btn btn-primary" %>
+    <div class="sm:w-full">
+      <%= submit_tag 'Appliquer', class:"btn btn-primary text-white" %>
       <%= link_to 'Annuler', root_url, class:"btn btn-light" %>
     </div>
   </div>
