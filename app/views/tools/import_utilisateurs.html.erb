@@ -19,14 +19,14 @@
   <br>
   
   <div class="flex flex-wrap">
-    <div class="sm:w-1/3 px-4">
+    <div class="sm:w-1/3">
       <%= label :role, "Rôle" %>
       <%= select_tag :role, 
             options_for_select(User.roles.keys), class:"select select-bordered select-sm w-full", include_blank: true %>
       <br>
       <div class="field">
         <%= label :filename, "Fichier .xls" %>
-        <%= file_field_tag 'upload', accept: 'application/vnd.ms-excel', class: 'input input-bordered input-sm w-full pb-12 pt-4' %>
+        <%= file_field_tag 'upload', accept: 'application/vnd.ms-excel', class: 'file-input file-input-bordered file-input-sm w-full' %>
       </div>
     </div>
   </div>

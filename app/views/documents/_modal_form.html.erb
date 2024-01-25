@@ -1,7 +1,7 @@
 <%= bootstrap_form_with(model: document, method: :post, local: true) do |form| %>
     <%= form.hidden_field :dossier_id %>
     <%= form.select :nom, options_for_select(Document.types, params[:nom]), label: 'Type du document' %>
-    <%= form.file_field :fichier, required: true, label: 'Fichier PDF', accept: 'application/pdf'  %>
+    <%= form.file_field :fichier, required: true, label: 'Fichier PDF', accept: 'application/pdf', class: 'file-input file-input-bordered file-input-sm' %>
     <%= form.submit "Ajouter", class: "btn btn-success text-white" %>
 <% end %>
 
