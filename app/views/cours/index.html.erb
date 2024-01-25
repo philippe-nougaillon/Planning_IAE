@@ -152,7 +152,7 @@
               <% @cours.includes(:formation, :intervenant, :salle).each do | cours | %>
 
                 <% if cours.debut.to_date != current_date %>
-                  <tr class="hover shadow bg-base-200">
+                  <tr class="hover shadow bg-slate-100">
                     <% if policy(Cour).action? %><th></th><% end %>
                     <th colspan=<%= policy(Cour).action? ? '9' : '8' %>>
                       <%= fa_icon 'calendar-day' %>
