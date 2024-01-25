@@ -8,8 +8,10 @@
 </div>
 
 <%= form_tag({action: "export_utilisateurs_do", method: :post}) do %>
-  <%= check_box_tag :desactives %>
-  <%= label_tag :desactives, "Ajouter les utilisateurs désactivés ?" %>
+  <div class="mb-4">
+    <%= check_box_tag :desactives %>
+    <%= label_tag :desactives, "Ajouter les utilisateurs désactivés ?" %>
+  </div>
 
   <%= submit_tag "Exporter", class: "btn btn-success text-white" %>
 <% end %>

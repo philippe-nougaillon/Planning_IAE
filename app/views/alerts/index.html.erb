@@ -33,7 +33,7 @@
           <td><%= 'OUI' if alert.visible? %></td>
           <td><%= alert.message %></td>
           <td><%= alert.etat.humanize %></td>
-          <td><%= link_to 'Voir', alert %></td>
+          <td><%= link_to 'Voir', alert, class: 'link' %></td>
           <td><%= link_to '[X]', alert, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?' %></td>
         </tr>
       <% end %>

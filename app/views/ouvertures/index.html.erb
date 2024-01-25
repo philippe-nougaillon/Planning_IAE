@@ -1,4 +1,9 @@
 <div class="pb-2 mt-6 mb-2 border-b">
+  <% if policy(Ouverture).new? %>
+    <%= link_to new_ouverture_path, class: 'text-primary float-right' do %>
+      <%= fa_icon 'plus-circle' %> Ouverture
+    <% end %>
+  <% end %>
   <h3>
     <%= fa_icon 'business-time' %>
     Horaires d'ouverture
@@ -36,7 +41,3 @@
       <% end %>
     </tbody>
   </table>
-
-<br>
-
-<%= link_to 'Nouvelle Ouverture', new_ouverture_path %>

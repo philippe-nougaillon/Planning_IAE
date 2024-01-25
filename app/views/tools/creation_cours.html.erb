@@ -7,11 +7,11 @@
   <div class="flex flex-wrap">
     <div class="sm:w-3/5 px-4">
       <%= label_tag :debut, "A partir du", class:"font-bold"  %><br>
-      <%= datetime_select :cours, :start_date, minute_step:15 %>
+      <%= datetime_select :cours, :start_date, {minute_step: 15}, class: 'select select-bordered select-sm' %>
       <br><br>
 
       <%= label_tag :fin, "Jusqu'au", class:"font-bold"  %><br>
-      <%= date_select :cours, :end_date %>
+      <%= date_select :cours, :end_date, {}, class: 'select select-bordered select-sm' %>
       <br><br>
 
       <%= label_tag :semaines, "Semaines *", class:"font-bold"  %>
@@ -19,7 +19,7 @@
                         include_blank:true, multiple:true, class:"select select-bordered select-sm w-full" %>
       <br>
 
-      <div class="field">
+      <div class="field mt-4">
         <%= label_tag :jours, nil, class:"font-bold"  %><br>
         <%= check_box_tag :lundi, '1', params[:lundi] %>
         <%= label_tag :lundi %>
@@ -34,7 +34,6 @@
         <%= check_box_tag :samedi,  '1', params[:samedi] %>
         <%= label_tag :samedi %>
       </div>
-      <br>
 
       <section id="période">
         <%= label_tag :periode, "Période", class:"font-bold" %><br>
@@ -108,7 +107,7 @@
           <br><i>Choisissez 'Non' pour tester votre création car <b>elle est irréversible !</b></i><br />
         </div>
 
-        <%= submit_tag "Lancer la création", class: "btn btn-success text-white mt-12" %>
+        <%= submit_tag "Lancer la création", class: "btn btn-success text-white my-4" %>
       </div>
     </div>
   </div>

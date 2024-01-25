@@ -17,23 +17,23 @@
 </div>
 <br>
 
-<p>
+<p class="mb-4">
 	<strong>Nom:</strong>
 	<%= @user.nom %>
 </p>
-<p>
+<p class="mb-4">
 	<strong>Prénom:</strong>
 	<%= @user.prénom %>
 </p>
-<p>
+<p class="mb-4">
 	<strong>Mobile:</strong>
 	<%= @user.mobile %>
 </p>
-<p>
+<p class="mb-4">
 	<strong>Rôle:</strong>
 	<%= @user.role.humanize %>
 </p>
-<p>
+<p class="mb-4">
 	<strong>Email:</strong>
 	<%= @user.email %>
 </p>
@@ -46,7 +46,7 @@
 </p>
 
 <% if @user.discarded_at %>
-	<p class="font-bold">
+	<p class="font-bold ">
 		Compte désactivé : 
 		le <%= l(@user.discarded_at) %> 
 		| Il y a <%= time_ago_in_words(@user.discarded_at) %>
@@ -57,12 +57,12 @@
 <br>
 
 <% unless @user.sign_in_count.zero? %>
-	<p>
+	<p class="mb-4">
 		Connexion actuelle: 
 		le <%= l(@user.current_sign_in_at) %> 
 		| Il y a <%= time_ago_in_words(@user.current_sign_in_at) %>
 	</p>
-	<p>
+	<p class="mb-4">
 		Dernière connexion: 
 		le <%= l(@user.last_sign_in_at) %> 
 		| Il y a <%= time_ago_in_words(@user.last_sign_in_at) %>

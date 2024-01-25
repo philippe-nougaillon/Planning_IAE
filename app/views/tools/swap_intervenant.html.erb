@@ -5,7 +5,7 @@
 
 <%= form_tag({action: "swap_intervenant_do", method: :post}, multipart: true) do %>
   <div class="flex flex-wrap">
-    <div class="sm:w-2/5 px-4">
+    <div class="sm:w-2/5">
 
       <%= label_tag :intervenant_from_id, "Intervenant à remplacer" %>
       <%= select_tag :intervenant_from_id,
@@ -25,9 +25,7 @@
         <%= radio_button_tag :save, false, :checked => true %>
         <br><i>Choisissez 'Non' pour tester votre création car <b>elle est irréversible !</b></i><br />
       </div>
-      <br><br>
-    
-      <%= submit_tag "Lancer la modification", class: "btn btn-success text-white" %>
+      <%= submit_tag "Lancer la modification", class: "btn btn-success text-white mt-4" %>
     </div>
   </div>
 <% end %>

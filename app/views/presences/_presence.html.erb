@@ -7,7 +7,7 @@
   <td><%= time_ago_in_words presence.created_at %></td>
   <td><%= l presence.signée_le, format: :short if presence.signée_le %></td>
   <td><%= presence.cour.formation.abrg %></td>
-  <td><p class="<%= presence.intervenant_id.present? ? 'badge badge-primary uppercase italic' : '' %>"><%= presence.cour.intervenant.nom_prenom %></p></td>
+  <td><p class="<%= presence.intervenant_id.present? ? 'badge badge-primary text-white uppercase italic' : '' %>"><%= presence.cour.intervenant.nom_prenom %></p></td>
   <td>
     <%= l presence.cour.debut, format: :short %>
     <br>
@@ -22,6 +22,6 @@
     <% end %>
   </td>
   <td><% if presence.signature %><img src=<%= presence.signature %> style="width: 50px;"><% end %></td>
-  <td><span class="badge <%= presence.style %>"><%= presence.workflow_state.humanize %></span></td>
-  <td><%= link_to 'Voir', presence %></td>
+  <td><span class="badge <%= presence.style %> text-white"><%= presence.workflow_state.humanize %></span></td>
+  <td><%= link_to 'Voir', presence, class: 'link' %></td>
 </tr>

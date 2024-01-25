@@ -37,6 +37,6 @@
   <td><%= "il y a #{time_ago_in_words(envoi_log.date_exécution)}" if envoi_log.date_exécution %></td>
   <td><%= link_to_if (not envoi_log.mail_count.to_i.zero?), envoi_log.mail_count, mail_logs_path %></td>
   <td>
-    <%= link_to "Détails", envoi_log %>
+    <%= link_to "Détails", envoi_log, class: 'link' %>
   </td>
 </tr>

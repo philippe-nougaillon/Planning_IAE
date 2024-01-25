@@ -49,18 +49,18 @@
 
 <p class='inline'>
   <strong>État :</strong>
-  <h5 class='inline'><span class="badge <%= @presence.style %>"><%= @presence.workflow_state.humanize %></span></h5>
+  <h5 class='inline'><span class="badge <%= @presence.style %> text-white"><%= @presence.workflow_state.humanize %></span></h5>
 </p>
 
 <% if @presence.can_valider? || @presence.can_rejeter? %>
   <div class="flex justify-around lg:justify-start mb-6">
-    <%= link_to_if @presence.can_valider?, 'Valider', valider_presence_path(@presence), class: 'btn btn-lg btn-success flex-grow-1 flex-sm-grow-0' %>
-    <%= link_to_if @presence.can_rejeter?, 'Rejeter', rejeter_presence_path(@presence), class: 'btn btn-lg btn-error flex-grow-1 flex-sm-grow-0' %>
+    <%= link_to_if @presence.can_valider?, 'Valider', valider_presence_path(@presence), class: 'btn btn-lg btn-success text-white flex-grow-1 flex-sm-grow-0' %>
+    <%= link_to_if @presence.can_rejeter?, 'Rejeter', rejeter_presence_path(@presence), class: 'btn btn-lg btn-error text-white flex-grow-1 flex-sm-grow-0' %>
   </div>
 <% end %>
 
 <% if user_signed_in? %>
-  <%= link_to 'Retour', current_user.intervenant? ? mes_sessions_intervenant_path : presences_path, class:'pb-6' %>
+  <%= link_to 'Retour', current_user.intervenant? ? mes_sessions_intervenant_path : presences_path, class:'link pb-6' %>
 <% end %>
 
 <% if user_signed_in? && (current_user.gestionnaire? || current_user.admin?) %>
