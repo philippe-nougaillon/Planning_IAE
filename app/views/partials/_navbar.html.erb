@@ -1,4 +1,4 @@
-<nav class="navbar <%= ENV["STAGING_COLOR_MODE"] %> sticky top-0 z-50 shadow">
+<nav class="navbar sticky top-0 z-50 shadow <%= ENV["STAGING_COLOR_MODE"].present? ? ENV["STAGING_COLOR_MODE"] : 'bg-base-100' %>">
   <div class="flex-1">
     <a href="/" aria-label="logo">
       <%= image_tag("logo_iae@195.png", height: 40, alt: 'logo IAE') %>
