@@ -9,8 +9,8 @@
     <div class="relative flex-grow max-w-full flex-1 text-right">
       <% if cours.salle %>
         <h5>
-          <span class="badge badge-<%= cours.style %>">
-            <%= link_to cours.salle.nom, image_path("Plan_d_acces_Campus_BioPark_-_IAE_Paris.pdf"), style: "color: white", title: "Plan d'accès au campus BioPark" %>
+          <span class="badge badge-<%= cours.style %> text-white font-bold">
+            <%= cours.salle.nom %>
           </span>
         </h5>
       <% end %>
