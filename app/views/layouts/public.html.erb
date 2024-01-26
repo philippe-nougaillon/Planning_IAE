@@ -54,9 +54,9 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-expand navbar-light shadow">
+    <nav class="navbar sticky top-0 z-50 shadow <%= ENV["STAGING_COLOR_MODE"].present? ? ENV["STAGING_COLOR_MODE"] : 'bg-base-100' %>">
       <a class="navbar-brand" href="/">
-        <%= image_tag("logo_iae@195.png", height: 50, alt: 'logo IAE') %>
+        <%= image_tag("1200px-Logo_iae.png", width: 175, alt: 'logo IAE') %>
       </a>
     </nav>
 
