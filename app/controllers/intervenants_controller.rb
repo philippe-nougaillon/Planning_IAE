@@ -78,7 +78,6 @@ class IntervenantsController < ApplicationController
     @intervenant = Intervenant.new
     @intervenant.notifier = true
     @intervenant.année_entrée = Date.today.year
-    10.times { @intervenant.responsabilites.build }
   end
 
   # GET /intervenants/1/edit

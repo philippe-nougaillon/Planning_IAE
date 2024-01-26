@@ -231,7 +231,7 @@
     <hr>
 
     <%= f.fields_for :vacations do |vacation| %>
-      <div class="flex flex-wrap shadow mt-2">
+      <div class="flex flex-wrap shadow pb-4 mb-4">
         <div class="sm:w-1/6 px-4">
           <div class="form-control">
             <%= vacation.label :date, 'Date *' %>
@@ -278,7 +278,7 @@
           </div>
         </div>
         
-        <div class="sm:w-1/5 px-4">
+        <div class="sm:w-1/5 px-4 self-end">
           <%= vacation.check_box :_destroy %>
           <%= vacation.label :_destroy, 'Supprimer ?' %>
         </div>
