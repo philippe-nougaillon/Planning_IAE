@@ -1,27 +1,29 @@
-<div class="pb-2 mt-6 mb-2 border-b">
-	<div class="join float-right">
-		<%= link_to @formation, class: 'btn btn-sm btn-primary btn-outline join-item' do %>
-			<%= fa_icon 'eye' %> Voir
-		<% end %>
+<div data-controller="reveal" data-reveal-hidden-class="hidden">
+	<div class="pb-2 mt-6 mb-2 border-b">
+		<div class="join float-right">
+			<%= link_to @formation, class: 'btn btn-sm btn-primary btn-outline join-item border-r-0' do %>
+				<%= fa_icon 'eye' %> Voir
+			<% end %>
 
-		<%= link_to '#UE', data: {'toggle':'collapse'}, class: 'btn btn-sm btn-primary btn-outline join-item' do %>
-			<%= fa_icon 'book' %> UE
-		<% end %>
+			<p data-action="click->reveal#openPannelUe" class='btn btn-sm btn-primary btn-outline join-item'>
+				<%= fa_icon 'book' %> UE
+			</p>
 
-		<%= link_to '#Etudiants', data: {'toggle':'collapse'}, class: 'btn btn-sm btn-primary btn-outline join-item' do %>
-			<%= fa_icon 'graduation-cap' %> Etudiants
-		<% end %>
+			<p data-action="click->reveal#openPannelEtudiants" class='btn btn-sm btn-primary btn-outline join-item'>
+				<%= fa_icon 'graduation-cap' %> Etudiants
+			</p>
 
-		<%= link_to '#Vacations', data: {'toggle':'collapse'}, class: 'btn btn-sm btn-primary btn-outline join-item' do %>
-			<%= fa_icon 'user-md' %> Vacations
-		<% end %>
+			<p data-action="click->reveal#openPannelVacations" class='btn btn-sm btn-primary btn-outline join-item'>
+				<%= fa_icon 'user-md' %> Vacations
+			</p>
 
-		<%= link_to formations_path, class: 'btn btn-sm btn-primary btn-outline join-item' do %>
-			<%= fa_icon 'list' %> Retour
-		<% end %>
+			<%= link_to formations_path, class: 'btn btn-sm btn-primary btn-outline join-item' do %>
+				<%= fa_icon 'list' %> Retour
+			<% end %>
 
+		</div>
+			<h3><%= fa_icon 'briefcase' %> Modification d'une formation</h3>
 	</div>
-  	<h3><%= fa_icon 'briefcase' %> Modification d'une formation</h3>
-</div>
 
-<%= render 'form' %>
+	<%= render 'form' %>
+</div>

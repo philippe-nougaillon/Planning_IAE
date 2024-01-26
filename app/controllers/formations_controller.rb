@@ -73,9 +73,6 @@ class FormationsController < ApplicationController
   # GET /formations/new
   def new
     @formation = Formation.new
-    15.times { @formation.unites.build }
-    10.times { @formation.etudiants.build } 
-    10.times { @formation.vacations.build }
   end
 
   # GET /formations/1/edit
