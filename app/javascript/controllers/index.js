@@ -9,16 +9,3 @@ eagerLoadControllersFrom("controllers", application)
 // Lazy load controllers as they appear in the DOM (remember not to preload controllers in import map!)
 // import { lazyLoadControllersFrom } from "@hotwired/stimulus-loading"
 // lazyLoadControllersFrom("controllers", application)
-
-
-// import HelloController from "./hello_controller"
-// application.register("hello", HelloController)
-
-// import ActionController from "./action_controller"
-// application.register("action", ActionController)
-
-// import CheckboxSelectAllController from "./checkbox_select_all_controller"
-// application.register("checkbox-select-all", CheckboxSelectAllController)
-
-// import DispoController from "./dispo_controller"
-// application.register("dispo", DispoController)

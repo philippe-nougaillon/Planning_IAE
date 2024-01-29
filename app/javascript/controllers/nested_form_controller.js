@@ -7,6 +7,6 @@ application.register('nested-form', NestedForm)
 // Connects to data-controller="nested-form"
 export default class extends Controller {
   connect() {
-    console.log("Hello, Stimulus nested_form!", this.element)
+    // console.log("Hello, Stimulus nested_form!", this.element)
   }
 }
