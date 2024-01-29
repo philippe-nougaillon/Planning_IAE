@@ -1,11 +1,11 @@
 <div class="pb-2 mt-6 mb-2 border-b">
-  <h3><%= fa_icon 'download' %> Import des utilisateurs</h3>
+  <h3 class="text-2xl"><%= fa_icon 'download' %> Import des utilisateurs</h3>
 </div>
 <br>
 
 <%= form_tag({action: "import_utilisateurs_do", method: :post}, multipart: true) do %>
   <div>
-    <h3>Cette fonction permet l'importation des utilisateurs à partir d'un fichier Excel</h3>
+    <h3 class="text-2xl">Cette fonction permet l'importation des utilisateurs à partir d'un fichier Excel</h3>
     <ul class="list-disc ml-4 mb-4">
         <li>Le fichier source peut avoir les colonnes suivantes: <%= User.xls_headers.join(', ') %></li>
         <li>Les champs obligatoires sont : <strong>nom, prénom, rôle</strong></li>

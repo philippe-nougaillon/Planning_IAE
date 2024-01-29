@@ -1,7 +1,7 @@
 <%= form_with(model: alert) do |f| %>
   <% if alert.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(alert.errors.count, "error") %> empêche cette alerte d'être enregistré :</h2>
+      <h2 class="text-3xl"><%= pluralize(alert.errors.count, "error") %> empêche cette alerte d'être enregistré :</h2>
 
       <ul>
         <% alert.errors.each do |error| %>
@@ -11,7 +11,7 @@
     </div>
   <% end %>
 
-  <h5 class="mb-6">
+  <h5 class="text-lg mb-6">
     <span class="text-warning font-light">Attention, sur le serveur il est actuellement <%= l(Time.now.utc, format: "%Hh%M") %></span>
   </h5>
 

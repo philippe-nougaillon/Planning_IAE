@@ -2,7 +2,7 @@
   <% if @intervenant.errors.any? %>
     <div class="alert alert-error" role="alert">
       <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h3><%= t('activerecord.errors.template.header',
+        <h3 class="text-2xl"><%= t('activerecord.errors.template.header',
                   model: Intervenant.model_name.human, count: @intervenant.errors.count) %></h3>
       <ul>
       <% @intervenant.errors.full_messages.each do |message| %>
@@ -144,7 +144,7 @@
   </div>
 
   <% if policy(:tool).can_see_RHGroup_private_tool? %>
-    <h4>Responsabilités</h4>
+    <h4 class="text-xl">Responsabilités</h4>
     <hr>
     <%= f.fields_for :responsabilites do |r| %>
       <div class="flex flex-wrap shadow py-4 mb-4">

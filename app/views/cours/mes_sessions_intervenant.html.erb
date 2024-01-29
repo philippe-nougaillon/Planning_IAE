@@ -1,4 +1,4 @@
-<h4 class="text-base-content my-6"><%= fa_icon 'calendar-day' %> <%= l(Date.today, format: :long).humanize %></h4>
+<h4 class="text-xl text-base-content my-6"><%= fa_icon 'calendar-day' %> <%= l(Date.today, format: :long).humanize %></h4>
 
 <% if @cours.any?%>
   <% @cours.each do |cour| %>
@@ -6,7 +6,7 @@
   <% end %>
 <% else %>
   <div class="alert alert-info">
-    <h4 class="alert-heading">Aucun cours aujourd'hui !</h4>
+    <h4 class="text-xl alert-heading">Aucun cours aujourd'hui !</h4>
     <p>
       Vous n'avez pas de cours planifiés pour aujourd'hui.
     </p>

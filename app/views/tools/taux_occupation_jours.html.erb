@@ -1,10 +1,10 @@
 <div class="pb-2 mt-6 mb-2 border-b">
-  <h3><%= fa_icon 'tachometer-alt' %> Taux d'occupation jours</h3>
+  <h3 class="text-2xl"><%= fa_icon 'tachometer-alt' %> Taux d'occupation jours</h3>
 </div>
 <br>
 
 <div>
-    <h3>Calcule le taux d'occupation des salles pour chaque jours d'une période donnée</h3>
+    <h3 class="text-2xl">Calcule le taux d'occupation des salles pour chaque jours d'une période donnée</h3>
     <br>
     <p>
         Salles prises en compte les jours de la semaine: <%= Salle.salles_de_cours.pluck(:nom).join(', ') %><br>

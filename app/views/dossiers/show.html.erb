@@ -44,7 +44,7 @@
   </div>
 
   <div class="relative flex-grow max-w-full flex-1">
-    <h5>Pièces justificatives</h5>
+    <h5 class="text-lg">Pièces justificatives</h5>
 
     <% if @dossier.documents.any? %>
       <div class="overflow-x-auto">
@@ -138,7 +138,7 @@
 
 <% if policy(@dossier).audits? %>
   <br>
-  <h5>Audit des modifications</h5>
+  <h5 class="text-lg">Audit des modifications</h5>
 
   <div class="overflow-x-auto">
     <table class="table table-xs table-zebra table-bordered">
@@ -163,7 +163,7 @@
 
       <!-- Modal Header -->
       <div class="modal-header">
-        <h4 class="modal-title">Ajout d'un document</h4>
+        <h4 class="text-xl modal-title">Ajout d'un document</h4>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
 

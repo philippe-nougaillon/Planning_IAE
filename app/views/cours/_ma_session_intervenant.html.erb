@@ -21,7 +21,7 @@
   <h6 class='mt-6 mb-0'>Signatures présences :</h6>
     <% presences = cour.presences.where.not(etudiant_id: nil) %>
     <% if presences.any? %>
-      <h5 class='mt-4'>
+      <h5 class="text-lg mt-4">
         <% Presence.workflow_states_count(presences).each do |state| %>
           <span class="badge text-white <%= Presence.workflow_spec.states[state.first.to_sym].meta[:style] %>">
             <%= state.first.humanize %> : <%= state.last %>
@@ -36,7 +36,7 @@
         <% presence = cour.presences.find_by(etudiant_id: etudiant.id) %>
         <% if presence.present? %>
           <%= link_to presence_path(presence) do %>
-            <h5 class='mr-1'>
+            <h5 class="text-lg mr-1">
               <span class="badge <%= presence.style %> text-white font-normal">
                 <%= presence.etudiant.nom.upcase %>
                 <%= fa_icon 'wifi' if presence.wifi_detected? %>
@@ -44,7 +44,7 @@
             </h5>
           <% end %>
         <% else %>
-          <h5 class='mr-1'>
+          <h5 class="text-lg mr-1">
             <span class="badge text-white font-normal"><%= etudiant.nom.upcase %></span>
           </h5>
         <% end %>

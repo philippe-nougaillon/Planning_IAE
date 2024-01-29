@@ -1,7 +1,7 @@
 <tr class="shadow" style="height:110px">
 
   <td class="align-middle">
-    <h2 class="text-base-content">
+    <h2 class="text-3xl text-base-content">
       <%= l(le_cours.debut, format: :heures_min) %>
       <small>
         - <%= l(le_cours.fin, format: :heures_min) %>
@@ -13,7 +13,7 @@
   
   <td style="border-left: 1rem solid <%= le_cours.formation.color %>">
     <div>
-      <h3 class="text-primary">
+      <h3 class="text-2xl text-primary">
         
         <span style="margin-left: 15px;">
           <%= le_cours.formation.try(:nom_promo) %>
@@ -30,7 +30,7 @@
   </td>
 
   <td class="align-middle">
-    <h3 class="text-base-content">
+    <h3 class="text-2xl text-base-content">
       <%= le_cours.intervenant.nom_prenom %>
       <% if le_cours.intervenant_binome_id %>
           / <%= le_cours.intervenant_binome.nom_prenom %>
@@ -40,7 +40,7 @@
   
   <td class="align-middle" style="width:200px">
     <span class="badge badge-<%= le_cours.style %> text-white mask mask-circle p-8">
-      <h3 class="font-bold text-base-100" style="margin: 0"><%= le_cours.try(:salle).try(:nom) %></h3>
+      <h3 class="text-2xl font-bold text-base-100" style="margin: 0"><%= le_cours.try(:salle).try(:nom) %></h3>
     </span>
   </td>
 

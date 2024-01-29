@@ -2,7 +2,7 @@
   <% if @etudiant.errors.any? %>
     <div class="alert alert-error" role="alert">
       <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-      <h4><%= pluralize(@etudiant.errors.count, "erreur empêche", plural: 'erreurs empêchent') %> d'enregistrer cet étudiant :</h4>
+      <h4 class="text-xl"><%= pluralize(@etudiant.errors.count, "erreur empêche", plural: 'erreurs empêchent') %> d'enregistrer cet étudiant :</h4>
 
       <ul>
       <% @etudiant.errors.full_messages.each do |msg| %>

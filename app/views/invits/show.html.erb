@@ -1,4 +1,4 @@
-<h3 class="my-6">
+<h3 class="text-2xl my-6">
   <%= fa_icon 'calendar-check' %>
   Proposition de créneau horaire
 </h3>
@@ -38,7 +38,7 @@
       </p>
     </div>
     <div class="relative flex-grow max-w-full flex-1">
-      <h5>
+      <h5 class="text-lg">
         Vos autres cours à L’IAE le <%= l(@jour, format: :long) %>
       </h5>
       <% if @cours.any? %>
@@ -173,7 +173,7 @@
   <div id="audit">
     <br>
     <% if @invit.audits.any? %>
-      <h4>Audit des modifications</h4>
+      <h4 class="text-xl">Audit des modifications</h4>
       <div class="overflow-x-auto">
         <table class="table table-bordered table-sm">
           <thead>

@@ -1,7 +1,7 @@
 <%= form_with(model: dossier, local: true) do |form| %>
   <% if dossier.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(dossier.errors.count, "error") %> empêche ce dossier d'être enregistré :</h2>
+      <h2 class="text-3xl"><%= pluralize(dossier.errors.count, "error") %> empêche ce dossier d'être enregistré :</h2>
 
       <ul>
         <% dossier.errors.each do |error| %>
@@ -49,7 +49,7 @@
   </div>
 
   <% unless dossier.new_record? %>
-    <h5>Pièces justificatives</h5>
+    <h5 class="text-lg">Pièces justificatives</h5>
     <%= form.fields_for :documents do |doc| %>
       <div class="flex flex-wrap shadow">
         <div class="sm:w-1/4 px-4">

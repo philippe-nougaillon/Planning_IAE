@@ -1,5 +1,5 @@
 <div class="pb-2 mt-6 mb-2 border-b">
-  <h3><%= fa_icon 'calendar-check' %> Liste des cours "à booker" </h3>
+  <h3 class="text-2xl"><%= fa_icon 'calendar-check' %> Liste des cours "à booker" </h3>
   <p>
     Liste des cours récemment planifiés (sans salle) et à confirmer.
   </p>
@@ -61,7 +61,7 @@
                     <% end %>
                 </td>
                 <td>
-                    <h5>
+                    <h5 class="text-lg">
                         <% color = 'warning' if (cours.debut.to_date - Date.today) <= 30 %>
                         <% color = 'error' if (cours.debut.to_date - Date.today) <= 7 %>
                         <span class="badge badge-<%= color %> text-white">

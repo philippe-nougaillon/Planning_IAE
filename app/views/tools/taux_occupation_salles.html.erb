@@ -1,10 +1,10 @@
 <div class="pb-2 mt-6 mb-2 border-b">
-  <h3><%= fa_icon 'tachometer-alt' %> Taux d'occupation salles</h3>
+  <h3 class="text-2xl"><%= fa_icon 'tachometer-alt' %> Taux d'occupation salles</h3>
 </div>
 <br>
 
 <div>
-    <h3>Calcule le taux d'occupation par salle sur une période donnée</h3>
+    <h3 class="text-2xl">Calcule le taux d'occupation par salle sur une période donnée</h3>
     <p>
         Nombre d'heures de disponibilité par salle: <%= Salle.nb_heures_journée %>h en journée / <%= Salle.nb_heures_soirée %>h en soirée<br>
         Les samedis soir, les dimanches et les jours de fermeture n'entrent pas dans le calcul du nombre d'heures disponibles par salle<br>

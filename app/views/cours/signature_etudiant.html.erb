@@ -1,9 +1,9 @@
-<h1 class="text-base-content">Session</h1>
+<h1 class="text-4xl text-base-content">Session</h1>
 
 <%= render partial: 'ma_session', locals: {cour: @cour} %>
 
-<h2 class="text-base-content">Signature présence</h2>
-<h4 class="text-base-content"><%= current_user.nom_et_prénom %></h4>
+<h2 class="text-3xl text-base-content">Signature présence</h2>
+<h4 class="text-xl text-base-content"><%= current_user.nom_et_prénom %></h4>
 
 <%= form_with(model: @presence, url: signature_etudiant_do_cours_path) do |form| %>
 

@@ -1,7 +1,7 @@
 <%= form_with(model: ouverture) do |form| %>
   <% if ouverture.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(ouverture.errors.count, "error") %> empêche cette ouverture d'être enregistré :</h2>
+      <h2 class="text-3xl"><%= pluralize(ouverture.errors.count, "error") %> empêche cette ouverture d'être enregistré :</h2>
 
       <ul>
         <% ouverture.errors.each do |error| %>

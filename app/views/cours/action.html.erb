@@ -1,5 +1,5 @@
 <div class="pb-2 mt-6 mb-2 border-b">
-  <h3><%= fa_icon 'exclamation-triangle' %> <%= params[:action_name] %></h3>
+  <h3 class="text-2xl"><%= fa_icon 'exclamation-triangle' %> <%= params[:action_name] %></h3>
 </div>
 <br>
 
@@ -7,7 +7,7 @@
 
 	<%= hidden_field_tag :action_name, params[:action_name] %>
 
-  <h3>Cours sélectionnés</h3>
+  <h3 class="text-2xl">Cours sélectionnés</h3>
 
   <div class="overflow-x-auto">
     <table class="table table-bordered table-zebra table-sm">
@@ -54,7 +54,7 @@
 
   <% if params[:action_name] == "Changer de salle" %>  
     <% if @salles_dispos %>
-      <h3>
+      <h3 class="text-2xl">
         Salles disponibles
       </h3>
       <% @salles_dispos.each do |salle| %>
@@ -104,7 +104,7 @@
     </div>
 
   <% elsif params[:action_name] == "Intervertir" %>
-    <h3>Que voulez-vous intervertir ?</h3>
+    <h3 class="text-2xl">Que voulez-vous intervertir ?</h3>
     <br>
     <div class="flex flex-wrap">
       <div class="sm:w-1/5 px-4">
@@ -272,7 +272,7 @@
 
     </div>
   <% elsif params[:action_name] == "Générer Feuille émargement PDF" && @cours.count == 1 && @cours.first.examen? %>
-    <h3>Sélectionnez les étudiants</h3>
+    <h3 class="text-2xl">Sélectionnez les étudiants</h3>
     <br>
     <div data-controller="checkbox-select-all action">
       <div data-action="click->action#click">
@@ -296,7 +296,7 @@
       </div>
     </div>
   <% elsif params[:action_name] == "Générer Pochette Examen PDF" && @cours.count == 1 && @cours.first.examen? %>
-    <h3>Sélectionnez les options d'examens</h3>
+    <h3 class="text-2xl">Sélectionnez les options d'examens</h3>
     <i>Cochez les options autorisées. Non cochée = option interdite</i>
     <br><br>
     <%= check_box_tag :papier %> 
@@ -309,7 +309,7 @@
     <%= label_tag :outils, "Ordinateurs, tablettes et téléphones portables autorisés ?" %>
     <br><br>
   <% elsif params[:action_name] == "Convocation étudiants PDF" && @cours.count == 1 && @cours.first.examen? %>
-    <h3>Sélectionnez les étudiants</h3>
+    <h3 class="text-2xl">Sélectionnez les étudiants</h3>
     <br>
     <div data-controller="checkbox-select-all action">
       <div data-action="click->action#click">
@@ -328,7 +328,7 @@
     </div>
     <br><br>
 
-    <h3>Sélectionnez les options d'examens</h3>
+    <h3 class="text-2xl">Sélectionnez les options d'examens</h3>
     <i>Cochez les options autorisées. Non cochée = option interdite</i>
     <br><br>
     <%= check_box_tag :papier %>

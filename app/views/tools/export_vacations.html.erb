@@ -1,10 +1,10 @@
 <div class="pb-2 mt-6 mb-2 border-b">
-  <h3><%= fa_icon 'upload' %> Export des vacations </h3>
+  <h3 class="text-2xl"><%= fa_icon 'upload' %> Export des vacations </h3>
 </div>
 <br>
 
 <div>
-  <h3 class="mb-6">Cette fonction génère une feuille Excel des vacations d'une ou de toutes les formations</h3>
+  <h3 class="text-2xl mb-6">Cette fonction génère une feuille Excel des vacations d'une ou de toutes les formations</h3>
 </div>
 
 <%= form_tag({action: "export_vacations_do", method: :post}) do %>

@@ -28,12 +28,12 @@
 
   <% if @alert %>
     <footer class="fixed bottom-0 left-0 right-0 alert alert-<%= @alert.etat %> text-lg rounded-none mb-0 p-2">
-      <h3 class="mb-0"><%= truncate(@alert.message, length: 110) %></h3>
+      <h3 class="text-2xl mb-0"><%= truncate(@alert.message, length: 110) %></h3>
     </footer>
   <% end %>
 
 <% else %>
-  <h1>
+  <h1 class="text-4xl">
     <%= image_tag("http://www.bing.com/#{@image}", class:"img-thumbnail img-responsive") %>
   </h1>
 <% end %>

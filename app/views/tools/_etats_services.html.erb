@@ -4,7 +4,7 @@
 
 <% if cours_ids %>
     <div class="page-header"> 
-        <h2><%= link_to intervenant.nom_prenom, intervenant, target:"_new" %></h2>
+        <h2 class="text-3xl"><%= link_to intervenant.nom_prenom, intervenant, target:"_new" %></h2>
     </div> 
 
     <% @vacations = intervenant.vacations.where("date BETWEEN ? AND ?", @start_date, @end_date) %>

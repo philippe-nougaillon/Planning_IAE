@@ -1,11 +1,11 @@
 <div class="pb-2 mt-6 mb-2 border-b">
-  <h3><%= fa_icon 'bell' %> Rappel des cours</h3>
+  <h3 class="text-2xl"><%= fa_icon 'bell' %> Rappel des cours</h3>
 </div>
 <br>
 
 <%= form_tag({action: "rappel_des_cours_do", method: :post}, multipart: true) do %>
   <div>
-    <h4>
+    <h4 class="text-xl">
       Ajouter un rappel des cours dans la file d'attente.
       <br>
       <small> Pour tous les intervenants d'une formation ou un seul intervenant, sur une période choisie</small>

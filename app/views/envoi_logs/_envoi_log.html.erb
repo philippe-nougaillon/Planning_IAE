@@ -18,7 +18,7 @@
     <%= "#{l(envoi_log.date_début, default: '')} - #{l(envoi_log.date_fin, default: '')}" %>
   </td>
   <td>
-    <h5><span class="badge <%= envoi_log.style %> text-white"><%= envoi_log.workflow_state.humanize %></span></h5>
+    <h5 class="text-lg"><span class="badge <%= envoi_log.style %> text-white"><%= envoi_log.workflow_state.humanize %></span></h5>
   </td>
   <td>
     <% if envoi_log.prêt? %>

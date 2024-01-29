@@ -20,7 +20,7 @@
 
   <div class="flex flex-wrap mt-4">
     <div class="sm:w-1/6 px-4">
-      <h2>
+      <h2 class="text-3xl">
         <span style="opacity: 80%;">
           <%= fa_icon 'calendar-day 2x' %>
         </span>
@@ -28,13 +28,13 @@
     </div>    
 
     <div class="sm:w-2/5 px-4">
-      <h3>
+      <h3 class="text-2xl">
         <%= l(@cour.debut, format: :long) %>
       </h3>
     </div>
   
     <div class="relative flex-grow max-w-full flex-1">
-      <h3>
+      <h3 class="text-2xl">
         <span style="background-color:<%= @cour.formation.try(:color) %>;padding-left: 5px;margin-right: 5px;"></span>
         <%= @cour.formation.try(:nom_promo) %>
       </h3>
@@ -43,13 +43,13 @@
 
   <div class="flex flex-wrap mt-4">
     <div class="relative flex-grow max-w-full flex-1">
-      <h4>
+      <h4 class="text-xl">
         <small class="text-secondary">Intitulé</small><br>
         <%= @cour.nom_ou_ue %>
       </h4>
     </div>
     <div class="relative flex-grow max-w-full flex-1">
-      <h4>
+      <h4 class="text-xl">
         <small class="text-secondary">Intervenant</small><br>
         <%= link_to @cour.intervenant.nom_prenom, @cour.intervenant %>
       </h4>
@@ -58,13 +58,13 @@
 
   <div class="flex flex-wrap mt-4">
     <div class="relative flex-grow max-w-full flex-1">
-      <h4>
+      <h4 class="text-xl">
         <small class="text-secondary">Durée</small><br>
         <%= @cour.duree %>h
       </h4>
     </div>
     <div class="relative flex-grow max-w-full flex-1">
-      <h4>
+      <h4 class="text-xl">
         <small class="text-secondary">Fin</small><br>
         <%= l(@cour.fin, format: :long) %>
       </h4>
@@ -73,7 +73,7 @@
 
   <div class="flex flex-wrap mt-4">
     <div class="relative flex-grow max-w-full flex-1">
-      <h4>
+      <h4 class="text-xl">
         <small class="text-secondary">Salle</small><br>
         <% if @cour.salle %>
           <span class="badge badge-<%= @cour.style %> text-white">
@@ -89,14 +89,14 @@
       </h4>
     </div>
     <div class="relative flex-grow max-w-full flex-1">
-      <h4>
+      <h4 class="text-xl">
         <small class="text-secondary">Etat</small><br>
         <span class="label <%= @cour.style %>"><%= @cour.etat.humanize %></span>
       </h4>
     </div>
   </div>
       
-  <h4 class="mt-4">
+  <h4 class="text-xl mt-4">
     <small class="text-secondary">Commentaires</small><br>
   </h4>
   <p>
@@ -107,7 +107,7 @@
 
   <% if @cour.audits.any? %>
     <br>
-    <h4>Audit des modifications</h4>
+    <h4 class="text-xl">Audit des modifications</h4>
     <div class="overflow-x-auto">
       <table class="table table-bordered table-xs">
         <thead>
