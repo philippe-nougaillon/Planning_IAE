@@ -50,19 +50,32 @@
 
   <% unless dossier.new_record? %>
     <h5 class="text-lg">Pièces justificatives</h5>
-    <%= form.fields_for :documents do |doc| %>
-      <div class="flex flex-wrap shadow">
-        <div class="sm:w-1/4 px-4">
-          <%= doc.text_field :nom %>
-        </div>
-        <div class="sm:w-1/5 px-4">
-          <%= doc.select :workflow_state, Document.workflow_spec.states.keys.to_a, label: "Etat" %>
-        </div>
-        <div class="relative flex-grow max-w-full flex-1">
-          <%= doc.text_field :commentaire %>
-        </div>
-      </div>
-    <% end %>
+    <div class="overflow-x-auto">
+      <table class="table table">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>État</th>
+            <th>Commentaire</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= form.fields_for :documents do |doc| %>
+            <tr>
+              <td>
+                <%= doc.text_field :nom, class: 'input input-bordered input-sm w-full'  %>
+              </td>
+              <td>
+                <%= doc.select :workflow_state, Document.workflow_spec.states.keys.to_a,{}, class: 'select select-bordered select-sm' %>
+              </td>
+              <td>
+                <%= doc.text_field :commentaire, class: 'input input-bordered input-sm w-full' %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
   <% end %>
   
   <%= form.submit class: "btn" %>

@@ -66,12 +66,13 @@ Rails.application.routes.draw do
 
   resources :dossiers do
     member do
-      get :deposer
+      get :deposer_done
       get :envoyer
       get :valider
       get :rejeter
       get :relancer
       get :archiver
+      patch :deposer
     end
   end
 

@@ -84,7 +84,6 @@ end
 
 gem 'font_awesome5_rails'
 
-gem 'bootstrap_form', '~> 4.5'
 gem 'simple_calendar', '2.3.0'
 gem 'devise', '>= 4.7.1'
 gem 'devise-i18n'
