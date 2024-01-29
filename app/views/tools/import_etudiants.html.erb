@@ -1,4 +1,4 @@
-<div class="pb-2 mt-6 mb-2 border-b">
+<div class="pb-2 mt-6 mb-2 border-b pb-4">
   <h3 class="text-2xl"><%= fa_icon 'download' %> Import des étudiants</h3>
 </div>
 <br>
@@ -7,11 +7,11 @@
   <div>
     <h3 class="text-2xl">Cette fonction permet l'importation / màj d'une liste d'étudiants à partir d'une feuille Excel(.xls)</h3>
     <br>
-    <p>
+    <p class="mb-4">
       Les champs attendus sont :
       <%= Etudiant.xls_headers.join(', ') %>
     </p>
-    <p>Les champs obligatoires sont :
+    <p class="mb-4">Les champs obligatoires sont :
       <strong>Civilité, NOM, Prénom, Mail</strong>
     </p>
   </div>

@@ -1,30 +1,30 @@
-<p>
+<p class="mb-4">
   <strong>Il y a :</strong>
   <%= time_ago_in_words @mail_log.created_at %>
 </p>
 
-<p>
+<p class="mb-4">
   <strong>Destinataire :</strong>
   <%= @mail_log.to %>
 </p>
 
-<p>
+<p class="mb-4">
   <strong>Sujet :</strong>
   <%= @mail_log.subject %>
 </p>
 
-<p>
+<p class="mb-4">
   <strong>Date :</strong>
   <%= l @mail_log.created_at %>
 </p>
 
-<p>
+<p class="mb-4">
   <strong>ID du message :</strong>
   <%= @mail_log.message_id %>
 </p>
 
 <% if @mail_log.created_at > 5.days.ago %>
-  <p>
+  <p class="mb-4">
     <strong>Statut :</strong>
     <% if status = @result["items"].find{|item| item["message"]["headers"]["message-id"] == @mail_log.message_id } %>
       <span class="text-error">

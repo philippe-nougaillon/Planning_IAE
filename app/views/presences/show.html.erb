@@ -1,14 +1,14 @@
-<div class="pb-2 mt-6 mb-2 border-b">
+<div class="pb-2 mt-6 mb-2 border-b pb-4">
   <h3 class="text-2xl"><%= fa_icon 'file-signature' %> Émargement</h3>
 </div>
 <br>
 
-<p>
+<p class="mb-4">
   <strong>Il y a :</strong>
   <%= time_ago_in_words @presence.created_at %>
 </p>
 
-<p>
+<p class="mb-4">
   <% if @presence.etudiant_id.present? %>
     <strong>Étudiant :</strong>
     <%= @presence.etudiant.nom_prénom %>
@@ -18,7 +18,7 @@
   <% end %>
 </p>
 
-<p>
+<p class="mb-4">
   <strong>Cours :</strong>
   <b><%= l(@presence.cour.debut, format: :heures_min) %></b> 
   -
@@ -38,7 +38,7 @@
 </p>
 
 <% if @presence.signature %>
-  <p>
+  <p class="mb-4">
     <strong>Signé le : </strong>
     <%= l @presence.signée_le, format: :long %>
     <%= fa_icon 'wifi', class: @presence.wifi_detected? ? 'text-success' : 'text-warning' %>
@@ -47,7 +47,7 @@
   </p>
 <% end %>
 
-<p class='inline'>
+<p class="inline mb-4">
   <strong>État :</strong>
   <h5 class="text-lg inline"><span class="badge <%= @presence.style %> text-white"><%= @presence.workflow_state.humanize %></span></h5>
 </p>

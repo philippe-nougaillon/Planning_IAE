@@ -1,6 +1,6 @@
-<div class="pb-2 mt-6 mb-2 border-b">
+<div class="pb-2 mt-6 mb-2 border-b pb-4">
   <h3 class="text-2xl"><%= fa_icon 'calendar-check' %> Liste des cours "à booker" </h3>
-  <p>
+  <p class="mb-4">
     Liste des cours récemment planifiés (sans salle) et à confirmer.
   </p>
 </div>
@@ -19,7 +19,7 @@
         </div>
 
         <div class="sm:w-1/4 px-4">
-            <p>Trier par</p>
+            <p class="mb-4">Trier par</p>
 
             <label>
                 <%= radio_button_tag :tri, :date_cours, params[:tri] == 'date_cours', onchange:'this.form.submit()' %>

@@ -63,7 +63,7 @@
           <br>
           Il y a <%= time_ago_in_words(@user.current_sign_in_at) %>
         </h4>
-        <p>
+        <p class="mb-4">
           (<%= @user.sign_in_count %> connexions)
           <%= link_to 'Voir', user_path(@user) %>
         </p>

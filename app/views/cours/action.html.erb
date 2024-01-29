@@ -1,4 +1,4 @@
-<div class="pb-2 mt-6 mb-2 border-b">
+<div class="pb-2 mt-6 mb-2 border-b pb-4">
   <h3 class="text-2xl"><%= fa_icon 'exclamation-triangle' %> <%= params[:action_name] %></h3>
 </div>
 <br>
@@ -139,7 +139,7 @@
       </div>
     <% end %>
   <% elsif params[:action_name] == "Inviter" %>
-    <p>
+    <p class="mb-4">
       <b>Intervenant(s) à inviter</b> 
       <br>
       Une proposition par cours et par intervenant sera créée et envoyée.
@@ -239,7 +239,7 @@
     </div>
 
     <% if Invit.where(cour_id: @cours.pluck(:id)).where.not("workflow_state = 'non_retenue' OR  workflow_state = 'confirmée'").any? %>
-      <p>
+      <p class="mb-4">
         <br>
         <b>Attention ! Il y a des invitations en cours...</b>
         <br>
@@ -252,7 +252,7 @@
 
   <% elsif params[:action_name] == "Supprimer" %>
     <div class="sm:w-2/3 px-4">
-      <p>Confirmation :</p>
+      <p class="mb-4">Confirmation :</p>
       <%= check_box_tag :delete %>
       <%= label_tag :delete, "Suppression définitive de tous les cours sélectionnés ?" %>
       <br>
@@ -261,7 +261,7 @@
       <br><br>
 
       <% if Invit.where(cour_id: @cours.pluck(:id)).any? %>
-        <p>
+        <p class="mb-4">
           <strong>Attention ! Il y a des invitations liées à ce.s cours </strong>
           <br>
           <%= hidden_field_tag :invits_en_cours, true %>

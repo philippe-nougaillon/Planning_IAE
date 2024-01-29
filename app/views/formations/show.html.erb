@@ -29,20 +29,20 @@
       </h3>
       
       <% if @formation.archive %>
-        <p><mark>FORMATION ARCHIVEE !</mark></p>
+        <p class="mb-4"><mark>FORMATION ARCHIVEE !</mark></p>
         <br>
       <% end %>
 
       <% if @formation.apprentissage %>
-        <p><mark>Apprentissage</mark></p>
+        <p class="mb-4"><mark>Apprentissage</mark></p>
       <% end %>
       
       <% if @formation.hors_catalogue %>
-        <p><mark>Hors catalogue</mark></p>
+        <p class="mb-4"><mark>Hors catalogue</mark></p>
       <% end %>
 
       <% if @formation.hss? %>
-        <p><mark>Hors états de services</mark></p>
+        <p class="mb-4"><mark>Hors états de services</mark></p>
       <% end %>
 
       <br>
@@ -72,7 +72,7 @@
       <h3 class="text-2xl">
         <small class="text-secondary">Diplôme</small><br>
       </h3>
-      <p>
+      <p class="mb-4">
         <%= @formation.diplome %>
       </p>
 
@@ -86,7 +86,7 @@
       <h3 class="text-2xl">
         <small class="text-secondary">Code Analytique</small><br>
       </h3>
-      <p>
+      <p class="mb-4">
         <%= @formation.code_analytique %>
       </p>
 
@@ -100,7 +100,7 @@
       <h3 class="text-2xl">
         <small class="text-secondary">Nbr Etudiants</small>
       </h3>
-      <p>
+      <p class="mb-4">
         Estimé : <%= @formation.nbr_etudiants %>
         |
         Enregistré : <%= @formation.etudiants.size %>

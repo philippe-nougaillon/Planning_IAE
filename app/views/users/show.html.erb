@@ -1,4 +1,4 @@
-<div class="pb-2 mt-6 mb-2 border-b">
+<div class="pb-2 mt-6 mb-2 border-b pb-4">
 
 	<% if current_user.try(:admin?) %>	
 		<div class="buttons-group float-right">
@@ -39,14 +39,14 @@
 </p>
 <br>
 
-<p>
+<p class="mb-4">
 	Compte créé : 
 	le <%= l(@user.created_at) %> 
 	| Il y a <%= time_ago_in_words(@user.created_at) %>
 </p>
 
 <% if @user.discarded_at %>
-	<p class="font-bold ">
+	<p class="mb-4 font-bold">
 		Compte désactivé : 
 		le <%= l(@user.discarded_at) %> 
 		| Il y a <%= time_ago_in_words(@user.discarded_at) %>
@@ -67,7 +67,7 @@
 		le <%= l(@user.last_sign_in_at) %> 
 		| Il y a <%= time_ago_in_words(@user.last_sign_in_at) %>
 	</p>
-	<p>
+	<p class="mb-4">
 		Nbr connexions: <%= @user.sign_in_count %> 
 	</p>
 <% end %>

@@ -17,23 +17,23 @@
 </div>
 
 
-<p>
+<p class="mb-4">
   <strong>Nom:</strong>
   <%= @salle.nom %>
 </p>
 
-<p>
+<p class="mb-4">
   <strong>Bloc:</strong>
   <%= @salle.bloc %>
 </p>
 
-<p>
+<p class="mb-4">
   <strong>Places:</strong>
   <%= @salle.places %>
 </p>
 
 <% if @salle.bloc != "Z" %>
-  <p>
+  <p class="mb-4">
     <strong>Taux d'occupation estimé :</strong>
     <div class="overflow-x-auto">
       <table class="table">

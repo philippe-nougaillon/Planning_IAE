@@ -1,4 +1,4 @@
-<div class="pb-2 mt-6 mb-2 border-b">
+<div class="pb-2 mt-6 mb-2 border-b pb-4">
   <h3 class="text-2xl"><%= fa_icon 'tachometer-alt' %> Taux d'occupation jours</h3>
 </div>
 <br>
@@ -6,7 +6,7 @@
 <div>
     <h3 class="text-2xl">Calcule le taux d'occupation des salles pour chaque jours d'une période donnée</h3>
     <br>
-    <p>
+    <p class="mb-4">
         Salles prises en compte les jours de la semaine: <%= Salle.salles_de_cours.pluck(:nom).join(', ') %><br>
         Salles prises en compte le samedi: <%= Salle.salles_de_cours_du_samedi.pluck(:nom).join(', ') %><br>
         Nombre d'heures de disponibilité par salle: <%= Salle.nb_heures_journée %>h en journée / <%= Salle.nb_heures_soirée %>h en soirée<br>

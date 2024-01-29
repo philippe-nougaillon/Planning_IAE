@@ -71,7 +71,7 @@
           <small class='text-secondary'>Dernière connexion</small>
         </h3>
         Il y a <%= time_ago_in_words(@user.current_sign_in_at) %>
-        <p>
+        <p class="mb-4">
           (<%= @user.sign_in_count %> connexions)
           <%= link_to 'Voir', user_path(@user) %>
         </p>
@@ -112,7 +112,7 @@
       </small>
     </h3>
 
-    <p>
+    <p class="mb-4">
       <% @formations.each_with_index do |formation, index| %>
         <%= link_to formation.nom, 
                     cours_path(formation_id: formation, 

@@ -1,20 +1,20 @@
-<div class="pb-2 mt-6 mb-2 border-b">
+<div class="pb-2 mt-6 mb-2 border-b pb-4">
   <h3 class="text-2xl"><%= fa_icon 'inbox' %> Import log #<%= @import_log.id %></h3>
 </div>
 
 <dl class="flex flex-wrap">
   <div class="relative flex-grow max-w-full flex-1">
     <strong>Le</strong>
-    <p><%= @import_log.created_at.in_time_zone('Paris') %></p>
+    <p class="mb-4"><%= @import_log.created_at.in_time_zone('Paris') %></p>
 
     <strong>Type</strong>
-    <p><%= @import_log.model_type %></p>
+    <p class="mb-4"><%= @import_log.model_type %></p>
 
     <strong>Par</strong>
-    <p><%= @import_log.user.username if @import_log.user %></p>
+    <p class="mb-4"><%= @import_log.user.username if @import_log.user %></p>
 
     <strong>Fichier</strong>
-    <p>
+    <p class="mb-4">
         <%= @import_log.fichier %> |
         <%= link_to "Télécharger", download_imported_file_import_log_path(@import_log), class: 'link' %>
     </p>
@@ -23,7 +23,7 @@
 
   <div class="relative flex-grow max-w-full flex-1">
     <strong>Etat</strong>
-    <p>
+    <p class="mb-4">
       <%= fa_icon @import_log.icon_etat, class: @import_log.icon_color %>
       <%= @import_log.etat.humanize %>
     </p>
@@ -31,13 +31,13 @@
     <div class="flex flex-wrap">
       <div class="relative flex-grow max-w-full flex-1">
         <strong>Nbr lignes à importer</strong>
-        <p><%= link_to @import_log.nbr_lignes, import_log_path(@import_log), class: 'link' %></p>
+        <p class="mb-4"><%= link_to @import_log.nbr_lignes, import_log_path(@import_log), class: 'link' %></p>
       </div>
 
       <div class="relative flex-grow max-w-full flex-1">
         <% if @import_log.etat == "warning" %>
           <strong>Rejetées</strong>
-          <p>
+          <p class="mb-4">
             <%= link_to @import_log.nbr_lignes - @import_log.lignes_importees, import_log_path(@import_log, filter: true) %> 
           </p>
         <% end %>
@@ -45,12 +45,12 @@
 
       <div class="relative flex-grow max-w-full flex-1">
         <strong>Importées</strong>
-        <p><%= @import_log.lignes_importees %></p>
+        <p class="mb-4"><%= @import_log.lignes_importees %></p>
       </div>
     </div>
 
     <strong>Message</strong>
-    <p class=<%= @import_log.icon_color %>><%= @import_log.message %></p>
+    <p class="<%= @import_log.icon_color %> mb-4"><%= @import_log.message %></p>
 </dl>
 
 <div class="overflow-x-auto">

@@ -32,7 +32,7 @@
         <strong>U.E. :</strong>
         <%= Unite.find(@invit.ue).num_nom unless @invit.ue.blank? %>
       </p>
-      <p>
+      <p class="mb-4">
         <strong>Intitulé :</strong>
         <%= @invit.nom %>
       </p>
@@ -85,7 +85,7 @@
           </table>
         </div>
       <% else %>
-        <p>
+        <p class="mb-4">
           Vous n'avez pas encore de cours programmés ce jour là... 
         </p>
       <% end %>
@@ -94,7 +94,7 @@
 
   <div class="flex flex-wrap gap-8">
     <div class="relative flex-grow max-w-full flex-1">
-      <p>
+      <p class="mb-4">
         <strong>Message du gestionnaire de formation</strong>
         <br>
         <div class="py-8 px-4 md:py-16 md:px-8 mb-8 rounded bg-base-200">
@@ -104,7 +104,7 @@
     </div>
 
     <div class="relative flex-grow max-w-full flex-1">
-      <p>
+      <p class="mb-4">
         <% if @invit.can_valider? || @invit.can_rejeter? %>
           <strong>Votre réponse</strong>
           <br>
