@@ -18,25 +18,25 @@
             <%= text_field_tag :end_date, params[:end_date], type:'date', class:"input input-bordered input-sm w-full", onchange:'this.form.submit()' %>
         </div>
 
-        <div class="sm:w-1/4 px-4">
-            <p class="mb-4">Trier par</p>
+        <div class="sm:w-1/3 px-4">
+            <label class="mb-4">Trier par</label>
 
-            <label>
+            <div>
                 <%= radio_button_tag :tri, :date_cours, params[:tri] == 'date_cours', onchange:'this.form.submit()' %>
                 Date du cours
-            </label>
+            </div>
 
-            <label>
+            <div>
                 <%= radio_button_tag :tri, :date_création, params[:tri] == 'date_création', onchange:'this.form.submit()' %>
                 Date de création
-            </label>
+            </div>
 
         </div>
 
     </div>
 <% end %>
 
-<div class="overflow-x-auto">
+<div class="overflow-x-auto mt-4">
     <table class="table table-sm">
         <thead class="shadow">
             <tr>    
