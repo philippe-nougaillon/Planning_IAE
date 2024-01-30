@@ -5,7 +5,7 @@ const application = Application.start()
 application.register('notification', Notification)
 
 // Connects to data-controller="notification"
-// export default class extends Controller {
-//   connect() {
-//   }
-// }
+export default class extends Controller {
+  connect() {
+  }
+}
