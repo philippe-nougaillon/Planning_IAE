@@ -42,7 +42,7 @@
               <% day_style_class = 'shadow alert-error' if Fermeture.find_by(date: day) %>
               
               <%= content_tag :td, class: day_style_class do %>
-                <% block.call day, sorted_events.fetch(day, []) %>
+                <% passed_block.call day, sorted_events.fetch(day, []) %>
               <% end %>
             <% end %>  
           <% end %>

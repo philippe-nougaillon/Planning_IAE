@@ -56,7 +56,6 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
-  gem 'listen', '~> 3.2'
 
   # Add speed badges [https://github.com/MiniProfiler/rack-mini-profiler]
   # gem "rack-mini-profiler"
@@ -73,7 +72,7 @@ end
 
 group :test do
   # Adds support for Capybara system testing and selenium driver
-  gem 'capybara', '>= 2.15'
+  gem 'capybara', '>= 3.40'
   gem 'selenium-webdriver'
   # Easy installation and use of web drivers to run system tests with browsers
   gem 'webdrivers'
@@ -84,7 +83,7 @@ end
 
 gem 'font_awesome5_rails'
 
-gem 'simple_calendar', '2.3.0'
+gem 'simple_calendar', '~>3.0'
 gem 'devise', '>= 4.7.1'
 gem 'devise-i18n'
 gem 'audited', '~> 5.4'
