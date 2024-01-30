@@ -84,15 +84,15 @@ end
 gem 'font_awesome5_rails'
 
 gem 'simple_calendar', '~>3.0'
-gem 'devise', '>= 4.7.1'
-gem 'devise-i18n'
+gem 'devise', '>= 4.9'
+gem 'devise-i18n', '~> 1.12'
 gem 'audited', '~> 5.4'
 gem 'capture_stdout'
 gem 'will_paginate'
 gem 'pundit'
 
 # PDF
-gem 'prawn', '~> 2.2'
+gem 'prawn', '~> 2.4'
 gem 'prawn-table', '~> 0.2'
 
 # XLSX sheet
@@ -109,7 +109,7 @@ gem 'icalendar'
 gem 'rack-cors'
 
 # Sucker Punch is a single-process Ruby asynchronous processing library.
-gem 'sucker_punch', '~> 2.0'
+gem 'sucker_punch', '~> 3.0'
 
 # Ruby finite-state-machine-inspired API for modeling workflow 
 gem 'workflow'
@@ -121,7 +121,7 @@ gem 'roadie-rails', '~> 3.1'
 gem 'exception_notification'
 
 # UDID
-gem 'friendly_id', '~> 5.2.4'
+gem 'friendly_id', '~> 5.5'
 
 # Cloud file storage service Amazon’s S3.
 gem 'aws-sdk-s3', require: false
@@ -133,12 +133,12 @@ gem 'sitemap_generator'
 gem 'pg_search'
 
 # Soft deletes for ActiveRecord done right.
-gem 'discard', '~> 1.2'
+gem 'discard', '~> 1.3'
 
 # CSS styled emails without the hassle.
 gem 'premailer-rails'
 
-gem "scenic", "~> 1.6"
+gem "scenic", "~> 1.7"
 
 gem "mailgun-ruby", "~> 1.2"
 

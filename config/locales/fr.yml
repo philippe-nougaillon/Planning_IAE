@@ -265,7 +265,8 @@ fr:
       perso: "%d/%m/%Y %Hh%M"
     pm: pm
   will_paginate:
-    next_label: →
+    next_label: "→"
+    next_aria_label: "Prochaine page"
     page_entries_info:
       multi_page: "%{model} %{from} - %{to} sur %{count} au total"
       multi_page_html: "%{model} <strong>%{from} - %{to}</strong> sur <strong>%{count}</strong> au total"
@@ -277,6 +278,7 @@ fr:
         other: "%{count} %{model} affiché(e)s"
     page_gap: "&hellip;"
     previous_label: "←"
+    previous_aria_label: "Page précédente"
   devise:
     sessions:
       new:
