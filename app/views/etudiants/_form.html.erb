@@ -13,7 +13,7 @@
   <% end %>
 
   <div class="flex flex-wrap mt-12">
-    <div class="sm:w-1/2 px-4">
+    <div class="relative flex-grow max-w-full flex-1 flex flex-col gap-4 pr-4">
       <div class="form-control">
         <%= f.label :civilité, "Civilité *" %>
         <%= f.text_field :civilité, required: true, class: 'input input-bordered input-sm w-full' %>
@@ -48,7 +48,7 @@
 
     </div>
 
-    <div class="sm:w-1/2 px-4">
+    <div class="relative flex-grow max-w-full flex-1 flex flex-col gap-4 pl-4">
       <div class="form-control">
         <%= f.label :formation_id, "Formation" %>
         <%= f.collection_select(:formation_id, Formation.unscoped.all, :id, :nom, {include_blank: true}, class:"slim-select") %>

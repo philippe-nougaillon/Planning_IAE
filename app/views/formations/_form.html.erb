@@ -15,7 +15,7 @@
   <% end %>
 
   <div class="flex shadow p-4 gap-32 mb-8">
-    <div class="relative flex-grow max-w-full flex-1">
+    <div class="relative flex-grow max-w-full flex-1 flex flex-col gap-4">
       <div class="form-control">
         <%= f.label :nom, "Nom *" %>
         <%= f.text_field :nom, required: true, class: 'input input-bordered input-sm w-full' %>
@@ -75,11 +75,11 @@
         </div>
       </div>
 
-      <%= f.submit class: "btn btn-primary text-white mt-4" %>     
+      <%= f.submit class: "btn btn-primary text-white mt-4", 'data-turbo': false %>     
 
     </div>
 
-    <div class="relative flex-grow max-w-full flex-1">
+    <div class="relative flex-grow max-w-full flex-1 flex flex-col gap-4">
       <div class="form-control">
         <%= f.label :user_id, "Gestionnaire de formation (User) *" %>
         <%= f.collection_select :user_id, User.where.not(nom: nil).order(:nom), :id, :nom_et_prénom, {required: true, include_blank: true}, class:"slim-select" %>

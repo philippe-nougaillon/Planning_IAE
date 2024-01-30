@@ -13,36 +13,36 @@
     <br>
   </div>
   
-  <div class="flex flex-wrap">
-    <div class="sm:w-1/3 px-4">
+  <div class="flex flex-col sm:w-1/3 gap-4">
+    <div>
       <%= label_tag :formation_id %>
       <%= select_tag :formation_id, 
             options_from_collection_for_select(@formations, :id, :nom, params[:formation_id]), 
               class:"slim-select", include_blank: true %>
-
-      <div class="mt-6">
-        <%= label_tag :intervenant_id %>
-        <%= select_tag :intervenant_id, 
-              options_from_collection_for_select(@intervenants, :id, :nom_prenom, params[:intervenant_id]), 
-                class:"slim-select", include_blank: true %>
-      </div>
-
-      <div class="flex justify-between mt-6">
-        <div>
-          <%= label_tag :du, "Période du" %>
-          <%= text_field_tag :du, params[:du], type: 'date', class: 'input input-bordered input-sm w-full' %>
-        </div>
-        <div>
-          <%= label_tag :au %>
-          <%= text_field_tag :au, params[:au], type: 'date', class: 'input input-bordered input-sm w-full' %>
-        </div>
-      </div>
-      <small>Laissez vide pour le rappel des cours du mois suivant</small>
     </div>
+
+    <div>
+      <%= label_tag :intervenant_id %>
+      <%= select_tag :intervenant_id, 
+            options_from_collection_for_select(@intervenants, :id, :nom_prenom, params[:intervenant_id]), 
+              class:"slim-select", include_blank: true %>
+    </div>
+
+    <div class="flex justify-between">
+      <div>
+        <%= label_tag :du, "Période du" %>
+        <%= text_field_tag :du, params[:du], type: 'date', class: 'input input-bordered input-sm w-full' %>
+      </div>
+      <div>
+        <%= label_tag :au %>
+        <%= text_field_tag :au, params[:au], type: 'date', class: 'input input-bordered input-sm w-full' %>
+      </div>
+    </div>
+    <small>Laissez vide pour le rappel des cours du mois suivant</small>
   </div>
   
-  <div class="flex items-center mt-6" style="gap: 1rem">
+  <div class="flex items-center mt-4" style="gap: 1rem">
     <%= submit_tag "Ajouter à la file d'attente", class: "btn btn-success text-white" %>
-    <%= link_to "Voir la file d'attente", envoi_logs_path %>
+    <%= link_to "Voir la file d'attente", envoi_logs_path, class: 'link' %>
   </div>
 <% end %>
