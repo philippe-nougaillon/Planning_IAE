@@ -39,32 +39,22 @@
                     number_of_days: 6 do |date, meetings| %>
 
         <% meetings.each do |meeting| %>
-          <!--- chercher si conflit de salle ! -->
-          <% if current_user %>
-            <% unless meeting.salle.places.zero? %>
-                <% if Cour.where("cours.id <> ? AND salle_id = ? AND (((debut BETWEEN ? AND ?) OR (fin BETWEEN ? AND ?)) OR (debut < ? AND fin > ?))", 
-                          meeting.id, salle.id, meeting.debut, meeting.fin, meeting.debut, meeting.fin, meeting.fin, meeting.debut)
-                          .where.not(debut:meeting.fin)
-                          .where.not(fin:meeting.debut)
-                          .any? %>
-                  <span style="background-color:black;color:yellow;">CONFLIT SALLE !</span>
-                <% end %>
-            <% else %>
-              <% if Cour.where("cours.id <> ? AND (intervenant_id = ? OR intervenant_binome_id = ?) AND (((debut BETWEEN ? AND ?) OR (fin BETWEEN ? AND ?)) OR (debut < ? AND fin > ?))", 
-                        meeting.id, meeting.intervenant_id, meeting.intervenant_id, meeting.debut, meeting.fin, meeting.debut, meeting.fin, meeting.fin, meeting.debut)
-                        .where.not(debut:meeting.fin)
-                        .where.not(fin:meeting.debut)
-                        .any? %>
-                <% unless meeting.intervenant.try(:doublon) || meeting.intervenant_binome.try(:boublon) %>
-                  <span style="background-color: red; color: white;">CONFLIT INTERVENANT !</span>
-                <% end %>
+          <% if current_user && meeting.salle.bloc != 'Z' %>
+            <!--- chercher si conflit d'intervenant ! -->
+            <% if Cour.where("cours.id <> ? AND (intervenant_id = ? OR intervenant_binome_id = ?) AND (((debut BETWEEN ? AND ?) OR (fin BETWEEN ? AND ?)) OR (debut < ? AND fin > ?))", 
+                      meeting.id, meeting.intervenant_id, meeting.intervenant_id, meeting.debut, meeting.fin, meeting.debut, meeting.fin, meeting.fin, meeting.debut)
+                      .where.not(debut:meeting.fin)
+                      .where.not(fin:meeting.debut)
+                      .any? %>
+              <% unless meeting.intervenant.try(:doublon) || meeting.intervenant_binome.try(:boublon) %>
+                <span style="background-color: red; color: white;">CONFLIT INTERVENANT !</span>
               <% end %>
             <% end %>
           <% end %>  
 
           <% formation = Formation.unscoped.find(meeting.formation_id) %>
-          <div class="shadow-lg p-2 mb-2 bg-base-100" style="height:<%= 120 + (10 * meeting.duree) %>px; border-left:6px; border-left-style:solid; border-left-color:<%= formation.color %>; padding-left:5px;">
-            <%= link_to meeting do %>
+          <div class="shadow-lg p-2 mb-2 bg-base-100 text-lg" style="min-height:<%= 120 + (10 * meeting.duree) %>px; border-left:6px; border-left-style:solid; border-left-color:<%= formation.color %>; padding-left:5px;">
+            <%= link_to meeting, class: 'text-success' do %>
               <b><%= l(meeting.debut, format: :heures_min) %></b>  
               - <%= l(meeting.fin, format: :heures_min) %>
               <br>
