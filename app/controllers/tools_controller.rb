@@ -843,7 +843,7 @@ class ToolsController < ApplicationController
   def audits
     @audits = Audited::Audit.order("id DESC")
     @types  = @audits.pluck(:auditable_type).uniq.sort
-    @actions= @audits.pluck(:action).uniq
+    @actions= %w[update create destroy]
     
     unless params[:start_date].blank? && params[:end_date].blank? 
       @audits = @audits.where("created_at BETWEEN (?) AND (?)", params[:start_date], params[:end_date])
@@ -862,7 +862,7 @@ class ToolsController < ApplicationController
     end
 
     unless params[:search].blank?
-      @audits = @audits.where("LOWER(audited_changes) like ?", "%#{params[:search]}%".downcase)
+      @audits = @audits.where("audited_changes ILIKE ?", "%#{params[:search]}%")
     end
 
     unless params[:chgt_salle].blank?
@@ -873,15 +873,6 @@ class ToolsController < ApplicationController
     end
 
     @audits = @audits.includes(:user).paginate(page: params[:page], per_page: 20)
-
-    # if params[:commit] == "Exporter"
-    #   book = CustomAudit.generate_xls(@audits)  
-    #   file_contents = StringIO.new
-    #   book.write file_contents # => Now file_contents contains the rendered file output
-    #   filename = "Export_Audits.xls"
-    #   send_data file_contents.string.force_encoding('binary'), filename: filename
-    # end
-
   end
 
   def taux_occupation_jours
