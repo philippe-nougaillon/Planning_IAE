@@ -1,6 +1,6 @@
 <div class="flex flex-col vh-100 justify-center items-center">
   <%= image_tag "logo@2000.png", style: "width: 100%; max-width: 500px;" %>
-  <div class="border border-gray-900 rounded shadow p-12 w-full" style="max-width: 500px">
+  <div class="border border-gray-900 rounded shadow p-6 w-full" style="max-width: 500px">
     <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
       <h1 class="text-4xl text-center border-b mb-4 pb-4">
         <%= t('.forgot_your_password') %>
@@ -12,7 +12,7 @@
         </div>
       </div>
 
-      <%= f.submit "Envoyez-moi les instructions", class: "btn btn-primary btn-outline w-full mt-4" %>
+      <%= f.submit "Envoyez-moi les instructions", class: "btn btn-primary btn-outline w-full mt-4", 'data-turbo': false %>
     <% end %>
   </div>
 </div>

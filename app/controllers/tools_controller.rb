@@ -168,7 +168,7 @@ class ToolsController < ApplicationController
       flash[:notice] = "L'importation a bien été exécutée"
       redirect_to import_logs_path
     else
-      flash[:error] = "Manque le fichier source ou la formation pour pouvoir lancer l'importation !"
+      flash[:alert] = "Manque le fichier source ou la formation pour pouvoir lancer l'importation !"
       redirect_to action: 'import'
     end  
   end
@@ -257,7 +257,7 @@ class ToolsController < ApplicationController
       flash[:notice] = "L'importation a bien été exécutée"
       redirect_to import_logs_path
     else
-      flash[:error] = "Manque le fichier source pour pouvoir lancer l'importation !"
+      flash[:alert] = "Manque le fichier source pour pouvoir lancer l'importation !"
       redirect_to action: 'import'
     end
 
@@ -356,7 +356,7 @@ class ToolsController < ApplicationController
       flash[:notice] = "L'importation a bien été exécutée"
       redirect_to import_logs_path
     else
-      flash[:error] = "Manque le fichier source pour pouvoir lancer l'importation !"
+      flash[:alert] = "Manque le fichier source pour pouvoir lancer l'importation !"
       redirect_to action: 'import_utilisateurs_roles'
     end 
   end
@@ -480,7 +480,7 @@ class ToolsController < ApplicationController
       flash[:notice] = "L'importation a bien été exécutée"
       redirect_to import_logs_path
     else
-      flash[:error] = "Manque le fichier source pour pouvoir lancer l'importation !"
+      flash[:alert] = "Manque le fichier source pour pouvoir lancer l'importation !"
       redirect_to action: 'import'
     end
 
@@ -515,7 +515,7 @@ class ToolsController < ApplicationController
       end
 
     else
-      flash[:error] = "Manque les intervenants afin de lancer la modification !"
+      flash[:alert] = "Manque les intervenants afin de lancer la modification !"
       redirect_to action: 'swap_intervenant'
     end  
 
@@ -892,7 +892,7 @@ class ToolsController < ApplicationController
       @start_date = params[:start_date]
       @end_date = params[:end_date]
     else
-      flash[:error] = "Il manque les dates..."
+      flash[:alert] = "Il manque les dates..."
       redirect_to tools_taux_occupation_jours_path
       return
     end
@@ -954,7 +954,7 @@ class ToolsController < ApplicationController
       @start_date = params[:start_date]
       @end_date = params[:end_date]
     else
-      flash[:error] = "Il manque les dates..."
+      flash[:alert] = "Il manque les dates..."
       redirect_to tools_taux_occupation_salles_path
       return
     end
@@ -1085,12 +1085,12 @@ class ToolsController < ApplicationController
       end
 
       if @errors.count > 0
-        flash[:error] = "#{ @errors.count } erreurs empêchent la création de cours !"
+        flash[:alert] = "#{ @errors.count } erreurs empêchent la création de cours !"
       end 
 
       flash[:notice] = "#{ @ids_ok.count } cours créés"
     else
-      flash[:error] = "L'intervenant générique 'A CONFIRMER' (445) doit exister !"
+      flash[:alert] = "L'intervenant générique 'A CONFIRMER' (445) doit exister !"
     end
 
   end

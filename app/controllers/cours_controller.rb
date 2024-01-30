@@ -329,7 +329,7 @@ class CoursController < ApplicationController
         salle = !params[:salle_id].blank? ? Salle.find(params[:salle_id]) : nil
         @cours.each do |c|
           c.salle = salle
-          flash[:error] = c.errors.messages unless c.save
+          flash[:alert] = c.errors.messages unless c.save
         end
 
       when "Changer d'état"
@@ -365,10 +365,10 @@ class CoursController < ApplicationController
           end
           if add_n_days.present? || new_date.present?
             unless c.save
-              flash[:error] = c.errors.messages
+              flash[:alert] = c.errors.messages
             end
           else
-            flash[:error] = "Aucun cours mis à jour"
+            flash[:alert] = "Aucun cours mis à jour"
           end
         end
 
@@ -401,7 +401,7 @@ class CoursController < ApplicationController
         if invits_créées > 0
           @message_complémentaire = "#{ invits_créées } invitation.s créée.s avec succès"
         else
-          flash[:error] = "Action annulée"
+          flash[:alert] = "Action annulée"
         end
 
       when 'Intervertir'
@@ -445,7 +445,7 @@ class CoursController < ApplicationController
             cours_B.update_columns(salle_id: salle_A)
           end
         else
-          flash[:error] = "Il faut deux cours à intervertir ! Opération annulée"
+          flash[:alert] = "Il faut deux cours à intervertir ! Opération annulée"
         end
 
       when "Supprimer"
@@ -456,15 +456,15 @@ class CoursController < ApplicationController
                 c.invits.destroy_all
                 c.destroy
               else
-                flash[:error] = "Vous ne pouvez pas supprimer ce cours (##{c.id}) ! Opération annulée"
+                flash[:alert] = "Vous ne pouvez pas supprimer ce cours (##{c.id}) ! Opération annulée"
                 next
               end
             end
           else
-            flash[:error] = "Suppression annulée"
+            flash[:alert] = "Suppression annulée"
           end
         else
-          flash[:error] = "Suppression annulée"
+          flash[:alert] = "Suppression annulée"
         end
       when "Exporter vers Excel"
         request.format = 'xls'
@@ -486,10 +486,10 @@ class CoursController < ApplicationController
               MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: étudiant.email, subject: "Convocation")
             end
           else
-            flash[:error] = "Aucun étudiant n'a été sélectionné, il ne s'est rien passé"
+            flash[:alert] = "Aucun étudiant n'a été sélectionné, il ne s'est rien passé"
           end
         else
-          flash[:error] = 'Il y a plusieurs cours sélectionnés ou le cours n\'est pas un examen'
+          flash[:alert] = 'Il y a plusieurs cours sélectionnés ou le cours n\'est pas un examen'
         end
     end
 
@@ -497,7 +497,7 @@ class CoursController < ApplicationController
 
     respond_to do |format|
       format.html do
-        unless flash[:error]
+        unless flash[:alert]
           flash[:notice] = "Action '#{action_name}' appliquée à #{params.permit![:cours_id].keys.size} cours. #{ @message_complémentaire if @message_complémentaire }"
         end
         redirect_to cours_path

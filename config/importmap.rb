@@ -10,3 +10,6 @@ pin "trix", to: "https://ga.jspm.io/npm:trix@2.0.8/dist/trix.esm.min.js"
 pin "@rails/ujs", to: "@rails--ujs.js" # @7.1.3
 pin "stimulus-rails-nested-form" # @4.1.0
 pin "stimulus-checkbox-select-all", to: "https://ga.jspm.io/npm:stimulus-checkbox-select-all@5.3.0/dist/stimulus-checkbox-select-all.mjs"
+pin "stimulus-notification" # @2.2.0
+pin "hotkeys-js" # @3.13.5
+pin "stimulus-use" # @0.51.3
