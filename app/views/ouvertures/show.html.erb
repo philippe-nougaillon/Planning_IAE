@@ -1,4 +1,4 @@
-<p class="mb-4">
+<p class="my-4">
   <strong>Bloc:</strong>
   <%= @ouverture.bloc %>
 </p>
@@ -10,13 +10,13 @@
 
 <p class="mb-4">
   <strong>Début:</strong>
-  <%= @ouverture.début %>
+  <%= l @ouverture.début %>
 </p>
 
 <p class="mb-4">
   <strong>Fin:</strong>
-  <%= @ouverture.fin %>
+  <%= l @ouverture.fin %>
 </p>
 
-<%= link_to 'Voir', edit_ouverture_path(@ouverture) %> |
-<%= link_to 'Retour', ouvertures_path %>
+<%= link_to 'Voir', edit_ouverture_path(@ouverture), class: 'link' %> |
+<%= link_to 'Retour', ouvertures_path, class: 'link' %>

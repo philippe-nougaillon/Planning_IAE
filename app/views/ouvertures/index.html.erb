@@ -11,7 +11,7 @@
 </div>
 
 <div class="overflow-x-auto">
-  <table class="table table-sm table-zebra table-bordered">
+  <table class="table table-xs table-zebra table-bordered">
     <thead>
       <tr>
         <th>Bloc</th>
@@ -30,10 +30,10 @@
           <td><%= ouverture.début.strftime("%Hh%M") %></td>
           <td><%= ouverture.fin.strftime("%Hh%M") %></td>
           <td>
-            <%= link_to edit_ouverture_path(ouverture), class: 'btn btn-ghost' do %>
+            <%= link_to edit_ouverture_path(ouverture), class: 'btn btn-xs btn-ghost' do %>
               <%= fa_icon 'edit' %>
             <% end %>
-            <%= link_to(ouverture, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: 'btn btn-ghost') do %>
+            <%= link_to(ouverture, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: 'btn btn-xs btn-ghost') do %>
               <%= fa_icon 'trash' %>
             <% end %>
           </td>

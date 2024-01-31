@@ -7,51 +7,51 @@
 </div>
 
 <%= form_tag(request.path, method: :get) do %>
-  <div class="flex flex-wrap">
-      <div class="sm:w-2/5 px-4">
-          <%= label_tag :saison, "Année scolaire" %>
-          <%= select_tag :saison, 
-              options_for_select(@years, params[:saison]), include_blank:true, class:"select select-bordered select-sm w-full", onchange:'this.form.submit()' %>
+  <div class="flex flex-col flex-wrap sm:w-2/5 gap-4">
+    <div class="form-control">
+      <%= label_tag :saison, "Année scolaire" %>
+      <%= select_tag :saison, 
+          options_for_select(@years, params[:saison]), include_blank:true, class:"select select-bordered select-sm w-full", onchange:'this.form.submit()' %>
+    </div>
 
-          <% if @formations.present? %>    
-            <%= label_tag :formation %>    
-            <%= select_tag :formation_id, 
-                options_from_collection_for_select(@formations, :id, :nom_promo_full, params[:formation_id]), class:"slim-select", include_blank:true, onchange:'this.form.submit()' %>
-                    
-          <% end %>
-          <div class="actions" style="display:none">
-            <%= submit_tag "Afficher", class: "btn btn-success text-white" %>
-          </div>
+    <% if @formations.present? %>  
+      <div class="form-control">
+        <%= label_tag :formation %>    
+        <%= select_tag :formation_id, 
+            options_from_collection_for_select(@formations, :id, :nom_promo_full, params[:formation_id]), class:"slim-select", include_blank:true, onchange:'this.form.submit()' %>
       </div>
+    <% end %>
+    <div class="actions" style="display:none">
+      <%= submit_tag "Afficher", class: "btn btn-success text-white" %>
+    </div>
   </div>
 <% end %>
 
 <% if @jours %>
-  <div class="flex flex-wrap">
-    <div class="sm:w-1/2 px-4">
-      <%= form_tag({action: "nouvelle_saison_create", method: :post}) do %>
+  <%= form_tag({action: "nouvelle_saison_create", method: :post}) do %>
+    <div class="flex flex-col flex-wrap sm:w-1/2 gap-4 mt-4">
+      <%= hidden_field_tag :date_debut, @date_debut %>
+      <%= hidden_field_tag :date_fin, @date_fin %>
+      <%= hidden_field_tag :formation_id, @formation_id %>
 
-        <%= hidden_field_tag :date_debut, @date_debut %>
-        <%= hidden_field_tag :date_fin, @date_fin %>
-        <%= hidden_field_tag :formation_id, @formation_id %>
+      <div>
+        <%= label_tag "Jours de présence", nil %>
+        <br><br>
+        <%= check_box_tag :lundi, '1', true %> 
+        <%= label_tag :lundi, nil, class: 'mr-2' %>
+        <%= check_box_tag :mardi, '1', true %>
+        <%= label_tag :mardi, nil, class: 'mr-2' %>
+        <%= check_box_tag :mercredi, '1', true %>
+        <%= label_tag :mercredi, nil, class: 'mr-2' %>
+        <%= check_box_tag :jeudi,  '1', true %>
+        <%= label_tag :jeudi, nil, class: 'mr-2' %>
+        <%= check_box_tag :vendredi, '1', true %>
+        <%= label_tag :vendredi, nil, class: 'mr-2' %>
+        <%= check_box_tag :samedi,  '1', false %>
+        <%= label_tag :samedi %>
+      </div>
 
-        <div class="field">
-            <%= label_tag "Jours de présence", nil %><br>
-            <%= check_box_tag :lundi, '1', true %> 
-            <%= label_tag :lundi %>
-            <%= check_box_tag :mardi, '1', true %>
-            <%= label_tag :mardi %>
-            <%= check_box_tag :mercredi, '1', true %>
-            <%= label_tag :mercredi %>
-            <%= check_box_tag :jeudi,  '1', true %>
-            <%= label_tag :jeudi %>
-            <%= check_box_tag :vendredi, '1', true %>
-            <%= label_tag :vendredi %>
-            <%= check_box_tavg :samedi,  '1', false %>
-            <%= label_tag :samedi %>
-        </div>
-        <br>
-
+      <div class="form-control">
         <%= label_tag "Semaines de présence", nil %><br>
         <div class="overflow-x-auto">
           <table class="table table-zebra table-bordered table-sm">
@@ -69,26 +69,26 @@
               <% end %>
           </table>
         </div>
+      </div>
 
+      <div class="form-control">
         <%= label_tag :salle_id %>    
         <%= select_tag :salle_id, 
                         options_from_collection_for_select(Salle.order(:nom), :id, :nom_places, params[:salle_id]), 
                         include_blank:true, class:"slim-select" %>
-        <br>
+      </div>
 
-        <div class="field">
-          <b>Enregistrer les changements ?</b> <br>
-          <%= label :save, "Oui", :value => "true" %>
-          <%= radio_button_tag :save, true %>
-          <%= label :save, "Non", :value => "false" %>
-          <%= radio_button_tag :save, false, :checked => true %>
-          <br><i>Choisissez 'Non' pour tester votre création car <b>elle est irréversible !</b></i><br />
-        </div>
-        <br>
+      <div class="field">
+        <b>Enregistrer les changements ?</b> <br>
+        <%= label :save, "Oui", :value => "true" %>
+        <%= radio_button_tag :save, true %>
+        <%= label :save, "Non", :value => "false" %>
+        <%= radio_button_tag :save, false, :checked => true %>
+        <br><i>Choisissez 'Non' pour tester votre création car <b>elle est irréversible !</b></i><br />
+      </div>
 
-        <%= submit_tag "Lancer la création", class: "btn btn-success text-white" %>
-      <% end %>
+      <%= submit_tag "Lancer la création", class: "btn btn-success text-white", 'data-turbo': false %>
     </div>
-  </div>
+  <% end %>
 <% end %>
 <br>

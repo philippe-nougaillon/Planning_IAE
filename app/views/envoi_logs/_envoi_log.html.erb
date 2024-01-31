@@ -22,7 +22,7 @@
   </td>
   <td>
     <% if envoi_log.prêt? %>
-      <%= link_to suspendre_envoi_log_path(envoi_log), class: "btn btn-sm btn-secondary", title: "Passe en état 'Pause'. La notification ne sera pas exécutée" do %>
+      <%= link_to suspendre_envoi_log_path(envoi_log), class: "btn btn-sm", title: "Passe en état 'Pause'. La notification ne sera pas exécutée" do %>
         <%= fa_icon 'pause', text: ' Pause' %> 
       <% end %>
     <% elsif envoi_log.pause? %>

@@ -1,4 +1,4 @@
-<p class="mb-4">
+<p class="my-4">
   <strong>Début d'affichage :</strong>
   <%= l @alert.debut %>
 </p>
@@ -23,5 +23,5 @@
   <%= @alert.etat.humanize %>
 </p>
 
-<%= link_to 'Modifier', edit_alert_path(@alert) %> |
-<%= link_to 'Retour', alerts_path %>
+<%= link_to 'Modifier', edit_alert_path(@alert), class: 'link' %> |
+<%= link_to 'Retour', alerts_path, class: 'link' %>
