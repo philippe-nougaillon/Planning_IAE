@@ -16,10 +16,6 @@ class IntervenantMailerPreview < ActionMailer::Preview
                                         false)
     end
 
-    def notifier_srh
-        IntervenantMailer.notifier_srh(Intervenant.last)
-    end
-
     def welcome_intervenant
         IntervenantMailer.with(user: User.find(1), password: SecureRandom.hex(10)).welcome_intervenant
     end

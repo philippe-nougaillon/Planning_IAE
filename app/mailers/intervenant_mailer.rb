@@ -24,11 +24,6 @@ class IntervenantMailer < ApplicationMailer
         end
     end
 
-    def notifier_srh(intervenant)
-        @intervenant = intervenant
-        mail(to: 'srh.iae@univ-paris1.fr', subject: "[PLANNING] Un nouvel intervenant nommé '#{intervenant.nom_prenom}' vient d'être créé")
-    end
-
     def welcome_intervenant
         @user = params[:user]
         @password = params[:password]
