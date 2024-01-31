@@ -18,7 +18,7 @@
 
   <progress class="progress progress-info opacity-50 mt-2" value="<%= cour.progress_bar_pct3 %>" max="100"></progress>
 
-  <h6 class='mt-6 mb-0'>Signatures présences :</h6>
+  <h6 class="mt-6 mb-0">Signatures présences :</h6>
     <% presences = cour.presences.where.not(etudiant_id: nil) %>
     <% if presences.any? %>
       <h5 class="text-lg mt-4">

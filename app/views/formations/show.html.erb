@@ -1,5 +1,5 @@
 <div class="card shadow p-4 my-8" style="border-left: .3rem solid <%= @formation.try(:positive_color) %>">
-  <div class='mb-6'>
+  <div class="mb-6">
     <div class="join float-right">
       <% if policy(@formation).edit? %>
         <%= link_to edit_formation_path(@formation), class: 'btn btn-sm btn-primary btn-outline join-item' do %>

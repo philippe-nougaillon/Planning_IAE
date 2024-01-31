@@ -1,5 +1,5 @@
 <div class="card shadow p-4 my-8">
-  <div class='mb-6'>
+  <div class="mb-6">
     <div class="join float-right">
       <%= link_to edit_etudiant_path(@etudiant), class: 'btn btn-sm btn-primary btn-outline join-item' do %>
         <%= fa_icon 'edit' %> Modifier
@@ -13,7 +13,7 @@
 
   <div class="flex flex-wrap">
     <div class="sm:w-1/6 px-4">
-      <h2 class='text-center'>
+      <h2 class="text-center">
         <%= fa_icon 'graduation-cap 3x' %>
       </h2>
     </div>
@@ -59,7 +59,7 @@
 
       <% if @user && @user.sign_in_count.positive? %>
         <h4 class="text-xl">
-          <small class='text-secondary'>Dernière connexion</small>
+          <small class="text-secondary">Dernière connexion</small>
           <br>
           Il y a <%= time_ago_in_words(@user.current_sign_in_at) %>
         </h4>
