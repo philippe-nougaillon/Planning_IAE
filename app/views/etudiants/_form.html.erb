@@ -1,16 +1,5 @@
 <%= form_for(@etudiant) do |f| %>
-  <% if @etudiant.errors.any? %>
-    <div class="alert alert-error" role="alert">
-      <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-      <h4 class="text-xl"><%= pluralize(@etudiant.errors.count, "erreur empêche", plural: 'erreurs empêchent') %> d'enregistrer cet étudiant :</h4>
-
-      <ul>
-      <% @etudiant.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+<%= render partial: 'partials/errors', locals: { record: @etudiant } %>
 
   <div class="flex flex-wrap mt-12">
     <div class="relative flex-grow max-w-full flex-1 flex flex-col gap-4 pr-4">

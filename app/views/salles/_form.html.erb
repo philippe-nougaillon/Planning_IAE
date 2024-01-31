@@ -1,32 +1,20 @@
 <%= form_for(@salle) do |f| %>
-  <% if @salle.errors.any? %>
-    <div class="alert alert-error" role="alert">
-      <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-  
-      <h3 class="text-2xl"><%= t('activerecord.errors.template.header',
-                  model: Salle.model_name.human, count: @salle.errors.count) %></h3>
-      <ul>
-      <% @salle.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <%= render partial: 'partials/errors', locals: { record: @salle } %>
 
   <div class="flex flex-col sm:w-1/4 gap-4">
     <div class="form-control">
       <%= f.label :nom %>
-      <%= f.text_field :nom, class: 'input input-bordered input-sm w-full' %>
+      <%= f.text_field :nom, class: 'input input-bordered input-sm w-full', required: true %>
     </div>
 
     <div class="form-control">
       <%= f.label :bloc %>
-      <%= f.text_field :bloc, class: 'input input-bordered input-sm w-full' %>
+      <%= f.text_field :bloc, class: 'input input-bordered input-sm w-full', required: true %>
     </div>
     
     <div class="form-control">
       <%= f.label :places, 'Nombre de places' %>
-      <%= f.number_field :places, class: 'input input-bordered input-sm w-full' %>
+      <%= f.number_field :places, class: 'input input-bordered input-sm w-full', required: true %>
       <div class="label">
         <span class="label-text-alt">Entrez 0 pour autoriser les doublons</span>
       </div>
