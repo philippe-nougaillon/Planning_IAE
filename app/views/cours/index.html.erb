@@ -26,19 +26,19 @@
 <div class="bs-container p-4 shadow">
   <%= form_tag cours_path, method: :get do %>
     <div class="flex flex-wrap">
-      <div class="sm:w-2/5 px-4">
+      <div class="sm:w-5/12 pr-2">
         <%= label_tag :formation %>   
         <%= select_tag :formation, grouped_options_for_select(Formation.for_select, params[:formation]), class: 'slim-select',
                         include_blank:true, onchange: 'this.form.submit()' %>
       </div>
 
-      <div class="sm:w-1/5 px-4">
+      <div class="sm:w-2/12 px-2">
         <%= label_tag :ue, "U.E." %>   
-        <%= select_tag :ue, options_for_select((0..20), params[:ue]), class: 'slim-select',
+        <%= select_tag :ue, options_for_select((0..20), params[:ue]), class:'slim-select',
                         include_blank:true, onchange: 'this.form.submit()' %>
       </div>
       <% if user_signed_in? %>
-        <div class="sm:w-2/5 px-4">
+        <div class="sm:w-5/12 pl-2">
           <%= label_tag :intervenant %>
           <div class="join w-full">
             <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
@@ -54,7 +54,7 @@
           </div>
         </div>
       <% else %>
-        <div class="sm:w-2/5 px-4">
+        <div class="sm:w-5/12 pl-2">
           <%= label_tag :intervenant %>
           <%= select_tag :intevenant, nil, class: "slim-select" %>
         </div>
@@ -63,25 +63,25 @@
     <br>
 
     <div class="flex flex-wrap">
-      <div class="sm:w-1/12 px-4">
+      <div class="sm:w-1/12 pr-2">
         <%= label_tag :semaine %>    
         <%= select_tag :semaine, 
                 options_for_select(@week_numbers, params[:semaine]), 
                   include_blank:true, onchange:'this.form.submit()', class:"select select-bordered select-sm w-full" %>
       </div>
 
-      <div class="sm:w-1/6 px-4">
+      <div class="sm:w-2/12 px-2">
         <%= label_tag :start_date, "A partir du" %>    
         <%= text_field_tag :start_date, params[:start_date], type:'date', onchange:'this.form.submit()', class:"input input-bordered input-sm w-full" %>
       </div>
 
-      <div class="sm:w-1/6 px-4">
+      <div class="sm:w-2/12 px-2">
         <%= label_tag :etat, "Etat" %>
         <%= select_tag :etat, options_for_select(Cour.etats, params[:etat]), include_blank:true,
                 class:"select select-bordered select-sm w-full", onchange:'this.form.submit()' %>
       </div>
 
-      <div class="relative flex-grow max-w-full flex-1">
+      <div class="relative flex-grow max-w-full flex-1 px-2">
         <%= label_tag :filter, "Cours" %>
         <br> 
         <%= radio_button_tag :filter, "upcoming", (params[:filter]=='upcoming'), onchange:'this.form.submit()' %>
@@ -90,7 +90,7 @@
         Tous 
       </div>
 
-      <div class="sm:w-1/4 px-3">
+      <div class="sm:w-3/12 px-2">
         <%= label_tag :view, "Vue" %>
         <br>
         <%= radio_button_tag :view, "list", (params[:view]=='list'), onchange:'this.form.submit()' %>
@@ -104,7 +104,7 @@
       </div>
 
       <% if params[:view] == 'list' %>
-        <div class="sm:w-1/6 px-4">
+        <div class="sm:w-2/12 pl-2">
           <%= label_tag :paginate, "Afficher" %>
           <br> 
           <%= radio_button_tag :paginate, "pages", (params[:paginate]=='pages'), onchange:'this.form.submit()' %>
