@@ -1,29 +1,33 @@
 <%= form_for(@fermeture) do |f| %>
   <%= render partial: 'partials/errors', locals: { record: @fermeture } %>
 
-  <div class="form-control">
-    <%= f.label :date, "Début de la période de fermeture" %>
-    <%= f.text_field :date, 
-                      value: !@fermeture.new_record? ? @fermeture.date.strftime("%Y-%m-%dT%H:%M") : nil, 
-                      type: 'datetime-local', # datetime-local et pas date à cause de Firefox
-                      class: 'input input-bordered input-sm w-full sm:w-1/4' %>
-  </div>
-
-  <% if @fermeture.new_record? %>
+  <div class="flex flex-col sm:w-1/4 mt-4 gap-4">
     <div class="form-control">
-      <%= label_tag :date_fin, 'Fin de la période' %>
-      <%= text_field_tag :date_fin,
-                          :date_fin,
-                          type: 'datetime-local', # datetime-local et pas date à cause de Firefox
-                          class: 'input input-bordered input-sm w-full sm:w-1/4' %>
+      <%= f.label :date, "Début de la période de fermeture" %>
+      <%= f.text_field :date, 
+                        value: !@fermeture.new_record? ? @fermeture.date.strftime("%Y-%m-%dT%H:%M") : nil, 
+                        type: 'datetime-local', # datetime-local et pas date à cause de Firefox
+                        class: 'input input-bordered input-sm w-full' %>
     </div>
-  <% end %>
 
-  <div class="form-control">
-    <%= f.label :nom %>
-    <%= f.text_field :nom, class: 'input input-bordered input-sm w-full sm:w-1/4' %>
+    <% if @fermeture.new_record? %>
+      <div class="form-control">
+        <%= label_tag :date_fin, 'Fin de la période' %>
+        <%= text_field_tag :date_fin,
+                            :date_fin,
+                            type: 'datetime-local', # datetime-local et pas date à cause de Firefox
+                            class: 'input input-bordered input-sm w-full' %>
+      </div>
+    <% end %>
+
+    <div class="form-control">
+      <%= f.label :nom %>
+      <%= f.text_field :nom, class: 'input input-bordered input-sm w-full' %>
+    </div>
+
+    <%= f.submit class: "btn btn-primary text-white mt-4" %>
+
   </div>
 
-  <%= f.submit class: "btn btn-primary text-white mt-4" %>
 
 <% end %>

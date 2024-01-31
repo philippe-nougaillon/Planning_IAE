@@ -20,15 +20,9 @@
           </div>
 
           <% if devise_mapping.rememberable? %>
-            <%= f.check_box :remember_me, class: 'toggle' %>
+            <%= f.check_box :remember_me %>
             <%= f.label :remember_me %>
           <% end %>
-          <div class="form-control">
-            <label class="label cursor-pointer">
-              <span class="label-text">Remember me</span> 
-              <input type="checkbox" class="toggle" checked />
-            </label>
-          </div>
           <div data-turbo="false">
             <%= f.submit t('.sign_in'), class: "btn btn-primary text-white w-full mt-2 mb-4" %>
             <br>
