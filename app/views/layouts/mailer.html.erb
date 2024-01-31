@@ -6,10 +6,10 @@
     <%= stylesheet_link_tag "mailer" %>
   </head>
 
-  <body>
-    <div class="bs-container">
-      <%= image_tag 'logo_iae@195.png' %>
-      <hr>
+  <body style="background: #f7f7f7; font-family: sans-serif">
+    <div style="border: solid; border-width: thin; border-color: #cccccc; border-radius: 8px; padding: 1.25rem;">
+      <%= image_tag '1200px-Logo_iae.png', width: 300, style: 'display: block; margin-left: auto; margin-right: auto;' %>
+      <hr style="margin-top: 30px; border: 1px solid #ccc">
       <div>
         <%= yield %>
       </div>

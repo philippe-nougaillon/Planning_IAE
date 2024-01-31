@@ -69,7 +69,7 @@
     <div class="relative flex-grow max-w-full flex-1 flex flex-col gap-4">
       <div class="form-control">
         <%= f.label :user_id, "Gestionnaire de formation (User) *" %>
-        <%= f.collection_select :user_id, User.where.not(nom: nil).order(:nom), :id, :nom_et_prénom, {required: true, include_blank: true}, class:"slim-select" %>
+        <%= f.collection_select :user_id, User.where.not(nom: nil).order(:nom), :id, :nom_et_prénom, {include_blank: true}, class:"slim-select" %>
       </div>
       <div class="flex flex-wrap gap-4">
         <div class="relative flex-grow max-w-full flex-1 gap-4">

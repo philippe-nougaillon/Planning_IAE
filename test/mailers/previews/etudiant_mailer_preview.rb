@@ -5,4 +5,14 @@ class EtudiantMailerPreview < ActionMailer::Preview
     EtudiantMailer.with(to: "test@gmail.com").notifier_modification_cours(Etudiant.first, Cour.find(23173))
   end
 
+  def welcome_student
+    EtudiantMailer.welcome_student(User.first)
+  end
+
+  def convocation
+    pdf = ExportPdf.new
+    pdf.convocation(Cour.last, Etudiant.last, true, false, false)
+    EtudiantMailer.convocation(Etudiant.last, pdf)
+  end
+
 end

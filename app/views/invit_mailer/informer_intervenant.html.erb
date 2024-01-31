@@ -1,9 +1,9 @@
-<p class="mb-4">
+<p style="margin-bottom: 0.5rem">
   Bonjour <%= @intervenant.prenom_nom %>
 </p>
-<p class="mb-4">
-    Suite aux disponibilités que vous nous avez communiquées, 
-    nous avons le plaisir de vous confirmer les cours suivants à l’IAE Paris-Sorbonne :
+<p style="margin-bottom: 0.5rem">
+  Suite aux disponibilités que vous nous avez communiquées, 
+  nous avons le plaisir de vous confirmer les cours suivants à l’IAE Paris-Sorbonne :
 </p>
 <br>
 
@@ -29,16 +29,16 @@
   <% @gestionnaire_email = invit.formation.user.email %>
 <% end %>
 
-<p class="mb-4">
+<p style="margin-bottom: 0.5rem">
   Pour ajouter vos cours dans votre agenda, cliquer ici: 
   <%= link_to "Ajouter à mon calendrier", cours_url(format: :ics, ids: @invits.pluck(:cour_id)) %>
 </p>
 
-<p class="mb-4">
+<p style="margin-bottom: 0.5rem">
   En cas de problème, merci de contacter par retour votre gestionnaire de formation : 
   <%= mail_to @gestionnaire_email %>
 </p>
 
-<p class="mb-4"> 
+<p style="margin-bottom: 0.5rem">
   L’IAE Paris-Sorbonne vous remercie de votre implication. 
 </p>
