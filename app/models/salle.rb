@@ -10,7 +10,7 @@ class Salle < ApplicationRecord
 	default_scope { kept }	
 	default_scope { order(:bloc, :nom) } 
 
-	validates :nom, :places, presence: true
+	validates :nom, :bloc, :places, presence: true
 	validates :nom, uniqueness: true
 	
 

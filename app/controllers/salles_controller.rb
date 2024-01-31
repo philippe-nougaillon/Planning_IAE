@@ -131,7 +131,7 @@ class SallesController < ApplicationController
         format.html { redirect_to @salle, notice: 'Salle ajoutée.' }
         format.json { render :show, status: :created, location: @salle }
       else
-        format.html { render :new }
+        format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @salle.errors, status: :unprocessable_entity }
       end
     end

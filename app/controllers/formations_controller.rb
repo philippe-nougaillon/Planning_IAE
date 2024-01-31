@@ -92,7 +92,7 @@ class FormationsController < ApplicationController
         format.html { redirect_to @formation, notice: 'Formation ajoutée' }
         format.json { render :show, status: :created, location: @formation }
       else
-        format.html { render :new }
+        format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @formation.errors, status: :unprocessable_entity }
       end
     end

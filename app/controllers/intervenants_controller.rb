@@ -95,7 +95,7 @@ class IntervenantsController < ApplicationController
         format.html { redirect_to @intervenant, notice: 'Intervenant ajouté.' }
         format.json { render :show, status: :created, location: @intervenant }
       else
-        format.html { render :new }
+        format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @intervenant.errors, status: :unprocessable_entity }
       end
     end
