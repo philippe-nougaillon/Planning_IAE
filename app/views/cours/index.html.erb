@@ -34,7 +34,7 @@
 
       <div class="sm:w-1/5 px-4">
         <%= label_tag :ue, "U.E." %>   
-        <%= select_tag :ue, options_for_select((0..20), params[:ue]), class:'slim-select',
+        <%= select_tag :ue, options_for_select((0..20), params[:ue]), class: 'slim-select',
                         include_blank:true, onchange: 'this.form.submit()' %>
       </div>
       <% if user_signed_in? %>

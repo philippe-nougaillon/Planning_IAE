@@ -62,7 +62,7 @@
 
             <b>
               <% if formation.abrg %>
-                <%= link_to_if user_signed_in?, formation.nom_abrg_nbr_etudiants, edit_cour_path(meeting, from: 'planning_salles'), title: meeting.nom_et_étudiants, target: '_blank', class:'text-base-content' %>
+                <%= link_to_if user_signed_in?, formation.nom_abrg_nbr_etudiants, edit_cour_path(meeting, from: 'planning_salles'), title: meeting.nom_et_étudiants, target: '_blank', class: 'text-base-content' %>
               <% else %>
                 <%= link_to_if user_signed_in?, formation.nom, meeting, class:"text-base-content" %>
               <% end %>

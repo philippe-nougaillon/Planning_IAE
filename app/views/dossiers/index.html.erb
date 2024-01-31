@@ -116,6 +116,6 @@
   <%= will_paginate @dossiers %>
 </div>
 <br>
-<%= link_to 'Export XLS', url_for(params.permit(:nom, :période, :workflow_state).merge(format: :xls)), class:'link' %>
+<%= link_to 'Export XLS', url_for(params.permit(:nom, :période, :workflow_state).merge(format: :xls)), class: 'link' %>
 
 

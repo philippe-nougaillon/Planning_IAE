@@ -3,7 +3,7 @@
 
 <tr class="hover shadow <%= formation_cours_planifié_count != 0 ? 'bg-warning' : '' %>">
     <td style="border-left: .3rem solid <%= formation.try(:positive_color) %>">
-        <%= link_to formation.nom, formation, class:'font-bold' %>
+        <%= link_to formation.nom, formation, class: 'font-bold' %>
     </td>
     <td><%= formation.abrg %></td>
     <td><%= formation.nbr_etudiants %></td>
