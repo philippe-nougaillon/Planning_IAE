@@ -5,7 +5,7 @@ module ApplicationHelper
         render(inline: %{
             <li>
                 <%= link_to '#{ url_for(path) }', 
-                            class: 'text-#{ is_active ? 'success font-bold' : 'base-content' }' do %>
+                            class: 'text-#{ is_active ? 'primary font-bold' : 'base-content' }' do %>
                     <%= fa_icon '#{ icon }' %>
                     #{ label ? label : name.humanize }
                 <% end %>
