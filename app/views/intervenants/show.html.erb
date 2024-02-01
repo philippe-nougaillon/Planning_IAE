@@ -215,7 +215,7 @@
         </thead>
 
         <tbody>
-          <%= render partial: 'tools/audit', collection: @intervenant.audits %>
+          <%= render partial: 'tools/audit', collection: @intervenant.audits.reorder(id: :desc) %>
         </tbody>
 
       </table>

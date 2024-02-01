@@ -18,15 +18,15 @@
       </h2>
     </div>
 
-    <div class="sm:w-1/2 px-4">
+    <div class="flex flex-col flex-wrap sm:w-1/2 gap-4 mb-8">
       <h3 class="text-2xl">
         <small class="text-secondary">Civilité</small><br>
         <%= @etudiant.civilité %>
       </h3>
-      <h1 class="text-4xl">
+      <h3 class="text-2xl">
         <small class="text-secondary">Nom</small><br>
         <%= @etudiant.nom %>
-      </h1>
+      </h3>
       <h3 class="text-2xl">
         <small class="text-secondary">Prénom</small><br>
         <%= @etudiant.prénom %>
@@ -43,8 +43,8 @@
 
     </div>
 
-    <div class="sm:w-1/3 px-4">
-      <h4 class="text-xl">
+    <div class="flex flex-col flex-wrap sm:w-1/3 gap-4">
+      <h3 class="text-2xl">
         <small class="text-secondary">Formation</small><br>
         <% if @etudiant.formation_id %>
             <% formation = Formation.unscoped.find(@etudiant.formation_id) %>
@@ -58,14 +58,14 @@
       <br>
 
       <% if @user && @user.sign_in_count.positive? %>
-        <h4 class="text-xl">
+        <h3 class="text-2xl">
           <small class="text-secondary">Dernière connexion</small>
           <br>
           Il y a <%= time_ago_in_words(@user.current_sign_in_at) %>
-        </h4>
+        </h3>
         <p class="mb-4">
           (<%= @user.sign_in_count %> connexions)
-          <%= link_to 'Voir', user_path(@user) %>
+          <%= link_to 'Voir', user_path(@user), class: 'link' %>
         </p>
       <% end %>
     </div>
@@ -86,7 +86,7 @@
           <th>Modifications</th>
         </thead>
         <tbody>
-          <%= render partial: 'tools/audit', collection: @etudiant.audits %>
+          <%= render partial: 'tools/audit', collection: @etudiant.audits.reorder(id: :desc) %>
         </tbody>
       </table>
     </div>

@@ -88,7 +88,7 @@
 					<th>Action</th>
 					<th>Modifications</th>
 				</thead>
-				<%= render partial: 'tools/audit', collection: @user.audits %>
+				<%= render partial: 'tools/audit', collection: @user.audits.reorder(id: :desc) %>
 			</table>
 		</div>
 	</div>

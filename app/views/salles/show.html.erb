@@ -69,7 +69,7 @@
         <th>Modifications</th>
       </thead>
       <tbody>
-        <%= render partial: 'tools/audit', collection: @salle.audits.includes(:user).reverse %>
+        <%= render partial: 'tools/audit', collection: @salle.audits.includes(:user).reorder(id: :desc) %>
       </tbody>
     </table>
   </div>

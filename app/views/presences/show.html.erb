@@ -78,7 +78,7 @@
         </thead>
 
         <tbody>
-          <%= render partial: 'tools/audit', collection: @presence.audits %>
+          <%= render partial: 'tools/audit', collection: @presence.audits.reorder(id: :desc) %>
         </tbody>
 
       </table>

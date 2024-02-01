@@ -185,7 +185,7 @@
             <th>Modifications</th>
           </thead>
 
-          <%= render partial: 'tools/audit', collection: @invit.audits %>
+          <%= render partial: 'tools/audit', collection: @invit.audits.reorder(id: :desc) %>
 
         </table>
       </div>

@@ -123,7 +123,7 @@
             <th>Modifications</th>
           </thead>
 
-          <%= render partial: 'tools/audit', collection: @cour.audits %>
+          <%= render partial: 'tools/audit', collection: @cour.audits.reorder(id: :desc) %>
 
         </table>
       </div>

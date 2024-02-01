@@ -133,7 +133,7 @@
         <th>Action</th>
         <th>Modifications</th>
       </thead>
-      <%= render partial: 'tools/audit', collection: @dossier.own_and_associated_audits %>
+      <%= render partial: 'tools/audit', collection: @dossier.own_and_associated_audits.reorder(id: :desc) %>
     </table>
   </div>
   <br>

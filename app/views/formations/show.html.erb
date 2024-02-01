@@ -261,7 +261,7 @@
             <th>Modifications</th>
           </thead>
 
-          <%= render partial: 'tools/audit', collection: @formation.audits %>
+          <%= render partial: 'tools/audit', collection: @formation.audits.reorder(id: :desc) %>
 
         </table>
       <% end %>

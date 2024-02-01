@@ -1,6 +1,8 @@
 <tr class="hover">
   <td>
-    <%= l(audit.created_at, format: :perso) %>
+    Il y a <%= time_ago_in_words(audit.created_at) %>
+    <br>
+    (<%= l(audit.created_at, format: :perso) %>)
   </td>
   <td>
     <% if audit.user_id %>
