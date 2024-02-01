@@ -35,14 +35,14 @@
 </div>
 
 <%= form_tag tools_acces_intervenants_do_path, method: :post do %>
-  <div data-controller="check-all action">
+  <div data-controller="checkbox-select-all action">
     <div class="overflow-x-auto">
       <table class="table table-zebra table-bordered">
         <thead>
           <tr>
             <th>
               <span data-action="click->action#click">
-                <input type="checkbox" data-action-target="source" data-target="check-all.all">
+                <input type="checkbox" data-action-target="source" data-checkbox-select-all-target="checkboxAll">
               </span>
             </th>
             <th>Nom/Prénom</th>
@@ -58,7 +58,7 @@
             <tr class="hover">
               <td>
                 <span data-action="click->action#click">
-                  <%= check_box_tag "intervenants_id[#{intervenant.id}]", 'yes', false, data: {"action-target": "source"} %>
+                  <%= check_box_tag "intervenants_id[#{intervenant.id}]", 'yes', false, data: {"action-target": "source", 'checkbox-select-all-target': "checkbox"} %>
                 </span>
               </td>
               <td><%= intervenant.nom_prenom %></td>
