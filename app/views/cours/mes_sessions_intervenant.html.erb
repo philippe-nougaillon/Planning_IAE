@@ -5,11 +5,12 @@
     <%= render partial: 'ma_session_intervenant', locals: {cour: cour} %>
   <% end %>
 <% else %>
-  <div class="alert alert-info">
-    <h4 class="text-xl alert-heading">Aucun cours aujourd'hui !</h4>
-    <p class="mb-4">
+  <div class="chat chat-start my-4">
+    <div class="chat-bubble chat-bubble-primary text-white">
+      <b>Aucun cours aujourd'hui !</b>
+      <br>
       Vous n'avez pas de cours planifiés pour aujourd'hui.
-    </p>
+    </div>
   </div>
 <% end %>
 

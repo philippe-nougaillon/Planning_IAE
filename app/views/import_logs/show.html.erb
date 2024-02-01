@@ -5,7 +5,7 @@
 <dl class="flex flex-wrap">
   <div class="relative flex-grow max-w-full flex-1">
     <strong>Le</strong>
-    <p class="mb-4"><%= @import_log.created_at.in_time_zone('Paris') %></p>
+    <p class="mb-4"><%= l(@import_log.created_at.in_time_zone('Paris')) %></p>
 
     <strong>Type</strong>
     <p class="mb-4"><%= @import_log.model_type %></p>
@@ -38,7 +38,7 @@
         <% if @import_log.etat == "warning" %>
           <strong>Rejetées</strong>
           <p class="mb-4">
-            <%= link_to @import_log.nbr_lignes - @import_log.lignes_importees, import_log_path(@import_log, filter: true) %> 
+            <%= link_to @import_log.nbr_lignes - @import_log.lignes_importees, import_log_path(@import_log, filter: true), class: 'link' %> 
           </p>
         <% end %>
       </div>
