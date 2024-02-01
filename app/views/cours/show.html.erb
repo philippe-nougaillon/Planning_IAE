@@ -7,7 +7,7 @@
         <% end %>
       <% end %>
       <% if policy(@cour).destroy? %>
-        <%= link_to(@cour,'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ? la suppression définitive de ce cours ?', class: 'btn btn-sm btn-primary btn-outline join-item' ) do %>
+        <%= link_to(@cour,'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous la suppression définitive de ce cours ?', class: 'btn btn-sm btn-primary btn-outline join-item' ) do %>
           <%= fa_icon 'trash-alt' %> Supprimer
         <% end %>
       <% end %>
@@ -18,19 +18,21 @@
     </div>
   </div>
 
-  <div class="flex flex-wrap mt-4">
-    <div class="sm:w-1/12 px-4">
-      <h2 class="text-3xl">
-        <span style="opacity: 80%;">
-          <%= fa_icon 'calendar-day 2x' %>
-        </span>
-      </h2>
-    </div>    
+  <div class="flex flex-wrap items-center mt-4">
+    <div class="relative flex-grow max-w-full flex-1 flex items-center">
+      <div class="sm:w-1/6">
+        <h2 class="text-3xl">
+          <span style="opacity: 80%;">
+            <%= fa_icon 'calendar-day 2x' %>
+          </span>
+        </h2>
+      </div>    
 
-    <div class="sm:w-2/5 px-4">
-      <h3 class="text-2xl">
-        <%= l(@cour.debut, format: :long) %>
-      </h3>
+      <div class="flex-1">
+        <h3 class="text-2xl">
+          <%= l(@cour.debut, format: :long) %>
+        </h3>
+      </div>
     </div>
   
     <div class="relative flex-grow max-w-full flex-1">
@@ -106,7 +108,7 @@
   <hr>
 
   <% if @cour.audits.any? %>
-    <div tabindex="0" class="collapse collapse-arrow border border-base-300 bg-base-100">
+    <div tabindex="0" class="collapse collapse-arrow border border-base-300 bg-base-100 mt-4">
       <div class="collapse-title">
         Audit des modifications
       </div>

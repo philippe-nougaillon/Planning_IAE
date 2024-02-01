@@ -37,7 +37,7 @@
     </div>
   </div>
 
-  <hr>
+  <hr class="">
   
   <div class="flex flex-wrap mb-4">
     <div class="sm:w-1/4 px-4">
@@ -91,7 +91,9 @@
       <div class="flex flex-wrap items-center gap-2">
         <% @salles_habituelles.each do |salle_id, count| %>
           <% salle = Salle.find(salle_id) %>
-          <span class="badge badge-sm badge-success text-white" style="font-size: calc( .25rem + <%= [1.5, (count.fdiv(@average_count))].min %>rem); padding: calc( <%= [1.5, (count.fdiv(@average_count))].min %>rem) calc( <%= [0.75, (count.fdiv(@average_count)) / 2].min %>rem);" title="Salle <%= salle.nom %> a été utilisée <%= count %> fois">
+          <span class="text-success"
+          style="font-size: calc( .25rem + <%= [1.5, (count.fdiv(@average_count))].min %>rem); " 
+                title="Salle <%= salle.nom %> a été utilisée <%= count %> fois">
             <%= salle.nom.first(2) %>
           </span>
         <% end %>
@@ -102,8 +104,8 @@
   <hr>
 
   <% if @formations.any? %>
-    <h3 class="text-2xl mt-8">
-        <small class="text-secondary">
+    <h3 class="text-2xl mt-8 mb-4">
+      <small class="text-secondary">
         <%= "Formation".pluralize(@formations.size) %>
         <%= "dispensée".pluralize(@formations.size) %>
         <span class="badge badge-info text-white">
