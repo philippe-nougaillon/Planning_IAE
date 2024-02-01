@@ -46,7 +46,7 @@
                             include_blank:true,
                             onchange: 'this.form.submit()' %>
             <% if params.values.count(nil) < 5 %>
-              <%= button_tag name: 'commit', value: 'RàZ', class: "btn btn-active btn-sm join-item", title: "Remise à zéro des filtres" do %>
+              <%= button_tag name: 'commit', value: 'RàZ', class: "btn btn-ghost btn-sm join-item", title: "Remise à zéro des filtres" do %>
                 <i class="fas fa-times"></i> 
                 RàZ
               <% end %>
@@ -234,7 +234,7 @@
   <% else %>
     Aucun résultat à afficher... 
     <%= link_to "Effacer les filtres pour voir tous les cours", 
-                  url_for(params.permit!.merge(commit: 'RàZ filtres')) %>
+                  url_for(params.permit!.merge(commit: 'RàZ filtres')), class: 'link' %>
   <% end %>
 <% else %>
   <%= render partial: params[:view] %>
