@@ -472,7 +472,7 @@ class ExportPdf
         end
     end
 
-    def pochette_examen(cours, papier, calculatrice, outils)
+    def pochette_examen(cours, étudiants_count, papier, calculatrice, ordi_tablette, téléphone, dictionnaire)
         font "OpenSans"
         
         cours.each_with_index do |cour, index|
@@ -492,10 +492,9 @@ class ExportPdf
 
             data = [ ["<color rgb='032E4D'>Date</color>", "<color rgb='032E4D'><b>#{I18n.l(cour.debut.to_date)}</b></color>"],
                     ["<color rgb='032E4D'>Formation(s)</color>","<color rgb='032E4D'><b>#{cour.formation.nom}</b></color>"],
-                    ["<color rgb='032E4D'>Examen(s)</color>","<color rgb='032E4D'><b>UE#{cour.code_ue}</b></color>"],
+                    ["<color rgb='032E4D'>#{cour.intervenant_binome.nom_prenom}</color>","<color rgb='032E4D'><b>UE#{cour.code_ue} - #{cour.nom_ou_ue}</b></color>"],
                     ["<color rgb='032E4D'>Horaires de surveillance   (nbre d’heures rémunérées)</color>",
-                    "<color rgb='032E4D'><b>#{cour.debut.strftime('%Hh%M')}-#{cour.fin.strftime('%Hh%M')} (#{((cour.fin - cour.debut) / 1.hour).truncate} heure.s)</b></color>"],
-                    ["<color rgb='032E4D'>Taux horaire de vacation en vigueur au 01/05/2023</color>","<color rgb='032E4D'><b>11,52 €</b></color>"] ]
+                    "<color rgb='032E4D'><b>#{cour.debut.strftime('%Hh%M')}-#{cour.fin.strftime('%Hh%M')} (#{cour.duree + 1} heure.s)</b></color>"],]
 
             table(data, 
                 header: true, 
@@ -505,7 +504,7 @@ class ExportPdf
                 position: :center)
 
             move_down @margin_down * 3
-            data2 = [ ["<color rgb='032E4D'>Cadre réservé au \n<b>Surveillant</b></color>"], ["<color rgb='032E4D'>Date :  ……./………/2023 \n\n Signature : \n\n\n\n\n\n\n\n\n\n</color>"]]
+            data2 = [ ["<color rgb='032E4D'>Cadre réservé au \n<b>Surveillant</b></color>"], ["<color rgb='032E4D'>Date :  ………/………/……………… \n\n Signature : \n\n\n\n\n\n\n\n\n\n</color>"]]
                 table(data2, 
                     header: true, 
                     column_widths: [300],
@@ -537,7 +536,7 @@ class ExportPdf
             move_down @margin_down * 3
 
             data3 = [ ["<color rgb='032E4D'>Cadre réservé au \n<b>Surveillant</b></color>", "<color rgb='032E4D'>Cadre réservé à \n<b>l’Administration</b></color>"]]
-            data3 += [ ["<color rgb='032E4D'>\n\nDate :  ……./………/2023 \n\n Signature : \n\n\n\n\n\n\n</color>", "<color rgb='032E4D'>\n\nSaisie dans l’Outil Planning le \n\n\n ……./………/2023 \n\n\n\n\n\n</color>"] ]
+            data3 += [ ["<color rgb='032E4D'>\n\nDate :  ………/………/……………… \n\n Signature : \n\n\n\n\n\n\n</color>", "<color rgb='032E4D'>\n\nSaisie dans l’Outil Planning le \n\n\n ………/………/……………… \n\n\n\n\n\n</color>"] ]
 
             move_down @margin_down
             table(data3, 
@@ -573,7 +572,7 @@ class ExportPdf
                 ["<color rgb='032E4D'>•</color>", "<color rgb='032E4D'><b>Salle : #{cour.salle.nom}</b></color>"] ],
                 cell_style: { borders: [], inline_format: true })
             move_down @margin_down / 2
-            table([ ["<color rgb='032E4D'>•</color>", "<color rgb='032E4D'><b>Nombre d’étudiants inscrits : #{cour.formation.nbr_etudiants} à vérifer !!!</b></color>"],
+            table([ ["<color rgb='032E4D'>•</color>", "<color rgb='032E4D'><b>Nombre d’étudiants inscrits : #{étudiants_count}</b></color>"],
                     ["<color rgb='032E4D'>•</color>", "<color rgb='032E4D'>Nombre de copies rendues : ....................................</color>"] ],
                     cell_style: { borders: [], inline_format: true })
             move_down @margin_down / 2
@@ -632,17 +631,15 @@ class ExportPdf
             text "<color rgb='E68824'><b>#{cour.formation.nom}</b></color>", inline_format: true, size: 16
             text "<color rgb='E68824'>#{'Formation en apprentissage' if cour.formation.apprentissage}</b></color>", inline_format: true, size: 16
             move_down @margin_down * 2
-            text "<color rgb='032E4D'>Enseignant : #{Intervenant.find_by(id: cour.intervenant_binome_id).nom}</color>", inline_format: true
+            text "<color rgb='032E4D'>Enseignant : #{Intervenant.find_by(id: cour.intervenant_binome_id).nom_prenom}</color>", inline_format: true
             move_down @margin_down
-            text "<color rgb='032E4D'>Durée : #{((cour.fin - cour.debut) / 1.hour).truncate}h (#{(((cour.fin - cour.debut) / 1.hour).truncate) + 1}h pour le tiers temps)</color>", inline_format: true
+            text "<color rgb='032E4D'>Durée : #{cour.duree}h (#{cour.duree + 1}h pour le tiers temps)</color>", inline_format: true
             move_down @margin_down
             text "<color rgb='032E4D'>> Documents papier #{papier ? "autorisés" : "interdits"}</color>", inline_format: true
             text "<color rgb='032E4D'>> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission #{calculatrice ? "autorisée" : "interdite"}</color>", inline_format: true
-            text "<color rgb='032E4D'>> Les ordinateurs, tablettes et téléphones portables sont #{outils ? "autorisés" : "interdits"}</color>", inline_format: true
-
-            move_down @margin_down * 3
-
-            text "<color rgb='032E4D'>Promotion #{cour.formation.promo}</color>", inline_format: true, align: :right
+            text "<color rgb='032E4D'>> Les ordinateurs et tablettes sont #{ordi_tablette ? "autorisés" : "interdits"}</color>", inline_format: true
+            text "<color rgb='032E4D'>> Les téléphones portables sont #{téléphone ? "autorisés" : "interdits"}</color>", inline_format: true
+            text "<color rgb='032E4D'>> Les dictionnaires sont #{dictionnaire ? "autorisés" : "interdits"}</color>", inline_format: true
 
             start_new_page
 
@@ -661,17 +658,16 @@ class ExportPdf
             text "<color rgb='E68824'><b>#{cour.formation.nom}</b></color>", inline_format: true, size: 16
             text "<color rgb='E68824'>#{'Formation en apprentissage' if cour.formation.apprentissage}</b></color>", inline_format: true, size: 16
             move_down @margin_down * 2
-            text "<color rgb='032E4D'>Enseignant : #{Intervenant.find_by(id: cour.intervenant_binome_id).nom}</color>", inline_format: true, size: 16
+            text "<color rgb='032E4D'>Enseignant : #{Intervenant.find_by(id: cour.intervenant_binome_id).nom_prenom}</color>", inline_format: true, size: 16
             move_down @margin_down
-            text "<color rgb='032E4D'>Durée : #{((cour.fin - cour.debut) / 1.hour).truncate}h</color>", inline_format: true
+            text "<color rgb='032E4D'>Durée : #{cour.duree}h</color>", inline_format: true
             move_down @margin_down
             text "<color rgb='032E4D'>> Documents papier #{papier ? "autorisés" : "interdits"}</color>", inline_format: true
             text "<color rgb='032E4D'>> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission #{calculatrice ? "autorisée" : "interdite"}</color>", inline_format: true
-            text "<color rgb='032E4D'>> Les ordinateurs, tablettes et téléphones portables sont #{outils ? "autorisés" : "interdits"}</color>", inline_format: true
+            text "<color rgb='032E4D'>> Les ordinateurs et tablettes sont #{ordi_tablette ? "autorisés" : "interdits"}</color>", inline_format: true
+            text "<color rgb='032E4D'>> Les téléphones portables sont #{téléphone ? "autorisés" : "interdits"}</color>", inline_format: true
+            text "<color rgb='032E4D'>> Les dictionnaires sont #{dictionnaire ? "autorisés" : "interdits"}</color>", inline_format: true
 
-            move_down @margin_down * 3
-
-            text "<color rgb='032E4D'>Promotion #{cour.formation.promo}</color>", inline_format: true, align: :right
         end
     end
 

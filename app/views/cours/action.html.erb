@@ -264,7 +264,7 @@
       <% end %>
 
     </div>
-  <% elsif params[:action_name] == "Générer Feuille émargement PDF" && @cours.count == 1 && @cours.first.examen? %>
+  <% elsif ["Générer Feuille émargement PDF","Générer Pochette Examen PDF"].include?(params[:action_name]) && @cours.count == 1 && @cours.first.examen? %>
     <h3>Sélectionnez les étudiants</h3>
     <br>
     <div data-controller="check-all action">
@@ -282,22 +282,28 @@
         <% end %>
       <% end %>
     </div>
-    <div class="row my-4">
-      <div class="col-sm-4">
-        <%= check_box_tag :table %>
-        <%= label_tag :table, "Ajouter une colonne N° Table" %>
+    <% if params[:action_name] == "Générer Feuille émargement PDF" %>
+      <div class="row my-4">
+        <div class="col-sm-4">
+          <%= check_box_tag :table %>
+          <%= label_tag :table, "Ajouter une colonne N° Table" %>
+        </div>
       </div>
-    </div>
-  <% elsif params[:action_name] == "Générer Pochette Examen PDF" && @cours.count == 1 && @cours.first.examen? %>
-    <h3>Sélectionnez les options d'examens</h3>
-    <i>Cochez les options autorisées. Non cochée = option interdite</i>
-    <br><br>
-    <%= check_box_tag :papier %> Papiers autorisés ?
-    <br>
-    <%= check_box_tag :calculatrice %> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyende transmission autorisés ?
-    <br>
-    <%= check_box_tag :outils %> Ordinateurs, tablettes et téléphones portables autorisés ?
-    <br><br>
+    <% elsif params[:action_name] == "Générer Pochette Examen PDF" %>
+      <h3>Sélectionnez les options d'examens</h3>
+      <i>Cochez les options autorisées. Non cochée = option interdite</i>
+      <br><br>
+      <%= check_box_tag :papier %> Papiers autorisés ?
+      <br>
+      <%= check_box_tag :calculatrice %> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission autorisés ?
+      <br>
+      <%= check_box_tag :ordi_tablette %> Ordinateurs et tablettes autorisés ?
+          <br>
+      <%= check_box_tag :téléphone %> Téléphones portables autorisés ?
+      <br>
+      <%= check_box_tag :dictionnaire %> Dictionnaires autorisés ?
+      <br><br>
+    <% end %>
   <% elsif params[:action_name] == "Convocation étudiants PDF" && @cours.count == 1 && @cours.first.examen? %>
     <h3>Sélectionnez les étudiants</h3>
     <br>
@@ -323,7 +329,7 @@
     <br><br>
     <%= check_box_tag :papier %> Papiers autorisés ?
     <br>
-    <%= check_box_tag :calculatrice %> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyende transmission autorisés ?
+    <%= check_box_tag :calculatrice %> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission autorisés ?
     <br>
     <%= check_box_tag :outils %> Ordinateurs, tablettes et téléphones portables autorisés ?
     <br><br>
