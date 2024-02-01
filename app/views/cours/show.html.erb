@@ -19,7 +19,7 @@
   </div>
 
   <div class="flex flex-wrap mt-4">
-    <div class="sm:w-1/6 px-4">
+    <div class="sm:w-1/12 px-4">
       <h2 class="text-3xl">
         <span style="opacity: 80%;">
           <%= fa_icon 'calendar-day 2x' %>
@@ -106,22 +106,25 @@
   <hr>
 
   <% if @cour.audits.any? %>
-    <br>
-    <h4 class="text-xl">Audit des modifications</h4>
-    <div class="overflow-x-auto">
-      <table class="table table-bordered table-xs">
-        <thead>
-          <th>Date</th>
-          <th>Utilisateur</th>            
-          <th>Type</th>
-          <th>Record_id</th>
-          <th>Action</th>
-          <th>Modifications</th>
-        </thead>
+    <div tabindex="0" class="collapse collapse-arrow border border-base-300 bg-base-100">
+      <div class="collapse-title">
+        Audit des modifications
+      </div>
+      <div class="overflow-x-auto collapse-content bg-base-100"> 
+        <table class="table table-bordered table-xs">
+          <thead>
+            <th>Date</th>
+            <th>Utilisateur</th>            
+            <th>Type</th>
+            <th>Record_id</th>
+            <th>Action</th>
+            <th>Modifications</th>
+          </thead>
 
-        <%= render partial: 'tools/audit', collection: @cour.audits %>
+          <%= render partial: 'tools/audit', collection: @cour.audits %>
 
-      </table>
+        </table>
+      </div>
     </div>
   <% end %>
 </div>
