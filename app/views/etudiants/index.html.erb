@@ -1,4 +1,4 @@
-<div class="pb-2 mt-6 mb-2 border-b pb-4">
+<div class="border-b mt-6 mb-2 pb-4">
   <% if policy(Etudiant).new? %>
     <%= link_to new_etudiant_path, class: 'text-primary float-right' do %>
       <%= fa_icon 'plus-circle' %> Etudiant
@@ -7,32 +7,29 @@
   <h3 class="text-2xl"><%= fa_icon 'graduation-cap' %> Liste des étudiants</h3>
 </div>
 
-<div class="bs-container mx-auto sm:px-4 max-w-full p-4 shadow">
-    <%= form_tag request.path, method: :get do %>
-      <div class="flex flex-wrap">
-
-        <div class="sm:w-1/3 px-4">
-          <%= label_tag :search, "Nom/Prénom/Email" %>
-          <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class: 'input input-bordered input-sm w-full' %>
-        </div>
-
-        <div class="sm:w-1/2 px-4">
-          <%= label_tag :formation_id %>
-          <div class="join w-full">
-            <%= select_tag :formation_id, 
-                                options_from_collection_for_select(Formation.unscoped.all, :id, :nom, params[:formation_id]), 
-                                class: 'slim-select join-item', 
-                                include_blank: true, 
-                                onchange: 'this.form.submit()' %>
-
-            <%= submit_tag 'Filtrer', class: 'btn btn-sm btn-success text-white text-white join-item' %>
-          </div> 
-        </div>
-        
+<div class="bs-container p-4 shadow mb-4">
+  <%= form_tag request.path, method: :get do %>
+    <div class="flex flex-wrap">
+      <div class="sm:w-1/3 pr-4">
+        <%= label_tag :search, "Nom/Prénom/Email" %>
+        <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class: 'input input-bordered input-sm w-full' %>
       </div>
-    <% end %>
+
+      <div class="sm:w-1/2 pl-4">
+        <%= label_tag :formation_id %>
+        <div class="join w-full">
+          <%= select_tag :formation_id, 
+                              options_from_collection_for_select(Formation.unscoped.all, :id, :nom, params[:formation_id]), 
+                              class: 'slim-select join-item', 
+                              include_blank: true, 
+                              onchange: 'this.form.submit()' %>
+
+          <%= submit_tag 'Filtrer', class: 'btn btn-sm btn-success text-white text-white join-item' %>
+        </div> 
+      </div>
+    </div>
+  <% end %>
 </div>
-<br>
 
 <div class="overflow-x-auto">
   <table class="table table-bordered table-zebra">

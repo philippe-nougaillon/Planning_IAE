@@ -1,4 +1,4 @@
-<div class="pb-2 mt-6 mb-2 border-b pb-4">
+<div class="border-b mt-6 mb-2 pb-4">
     <h2 class="text-3xl">
         <%= fa_icon 'list-alt' %> 
         Liste des surveillances d'examens
@@ -10,12 +10,12 @@
 
 <%= form_tag(request.path, method: :get) do %>
     <div class="flex flex-wrap">
-        <div class="sm:w-1/4 px-4">
+        <div class="sm:w-1/4 pr-4">
             <%= label_tag :start_date, "Cours du" %>
             <%= text_field_tag :start_date, params[:start_date], type: 'date', class: "input input-bordered input-sm w-full", required: true  %>
         </div>
 
-        <div class="sm:w-1/4 px-4">
+        <div class="sm:w-1/4 pr-4">
             <%= label_tag :end_date, "Au" %>
             <%= text_field_tag :end_date, params[:end_date], type: 'date', class: "input input-bordered input-sm w-full", required: true %>
         </div>
@@ -56,7 +56,7 @@
                         <% durée = exam.duree + ((exam.intervenant_id == 1314) ? 0 : 1) %>
                         <% @cumuls[surveillant] ? @cumuls[surveillant] += durée : @cumuls[surveillant] = durée %>
                         <tr class="hover">
-                            <td><%= link_to l(exam.debut, format: :long), cour_path(exam.id) %></td>
+                            <td><%= link_to l(exam.debut, format: :long), cour_path(exam.id), class: 'link' %></td>
                             <td><%= exam.formation.nom %></td>
                             <td><b><%= surveillant %></b></td>
                             <td><%= exam.duree %> h</td>

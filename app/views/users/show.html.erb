@@ -1,4 +1,4 @@
-<div class="pb-2 mt-6 mb-2 border-b pb-4">
+<div class="border-b mt-6 mb-2 pb-4">
 
 	<% if current_user.try(:admin?) %>	
 		<div class="buttons-group float-right">
@@ -50,7 +50,7 @@
 		Compte désactivé : 
 		le <%= l(@user.discarded_at) %> 
 		| Il y a <%= time_ago_in_words(@user.discarded_at) %>
-		| Vous pouvez réactiver ce compte en cliquant <%= link_to "ici", reactivate_user_path(@user) %>.
+		| Vous pouvez réactiver ce compte en cliquant <%= link_to "ici", reactivate_user_path(@user), class: 'link' %>.
 	</p>
 <% end %>
 

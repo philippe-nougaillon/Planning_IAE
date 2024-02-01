@@ -10,7 +10,7 @@
   <% end %>
 <% end %>
 
-<div class="pb-2 mt-6 mb-2 border-b pb-4">
+<div class="border-b mt-6 mb-2 pb-4">
   <% if policy(Cour).new? %>
 
     <%= link_to new_cour_path(formation: session[:formation], 
@@ -23,7 +23,7 @@
   <h3 class="text-2xl"><%= fa_icon 'calendar-alt' %> Planning des cours</h3>
 </div>
 
-<div class="bs-container p-4 shadow">
+<div class="bs-container p-4 shadow mb-4">
   <%= form_tag cours_path, method: :get do %>
     <div class="flex flex-wrap">
       <div class="sm:w-5/12 pr-2">
@@ -116,7 +116,6 @@
     </div>
   <% end %>
 </div>
-<br>
 
 <% if params[:view] == 'list' %>
   <% if @cours.size > 0 %>

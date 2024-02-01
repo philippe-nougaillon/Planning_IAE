@@ -11,25 +11,31 @@
         <div class="relative flex-grow max-w-full flex-1">
           <div class="form-control">
             <%= f.label :email, label: "Email *" %>
-            <%= f.email_field :email, autofocus: true, required: true, class: "input input-bordered input-sm w-full" %>
+            <%= f.email_field :email, autofocus: true, required: true, class: "input input-bordered w-full mt-2" %>
           </div>
 
           <div class="form-control my-4">
             <%= f.label :password, label: "Mot de passe *" %>
-            <%= f.password_field :password, autocomplete: "off", required: true, class: "input input-bordered input-sm w-full" %>
+            <%= f.password_field :password, autocomplete: "off", required: true, class: "input input-bordered w-full mt-2" %>
           </div>
 
-          <% if devise_mapping.rememberable? %>
-            <div class="flex items-center gap-2 mb-4">
-              <%= f.check_box :remember_me, class: 'toggle' %>
-              <%= f.label :remember_me %>
-            </div>
-          <% end %>
+          <div class="flex justify-between mt-4">
+            <% if devise_mapping.rememberable? %>
+              <div class="flex items-center gap-2 mb-4">
+                <%= f.check_box :remember_me, class: 'toggle' %>
+                <%= f.label :remember_me %>
+              </div>
+            <% end %>
+            <%- if devise_mapping.recoverable? && controller_name != 'passwords' %>
+              <%= link_to "Mot de passe oublié ?", new_password_path(resource_name), class: 'hover:underline' %>
+            <% end -%>
+          </div>
           <div data-turbo="false">
             <%= f.submit t('.sign_in'), class: "btn btn-primary text-white w-full mt-2 mb-4" %>
-            <br>
-            <%= render "devise/shared/links" %>
           </div>
+          <%- if devise_mapping.registerable? && controller_name != 'registrations' %>
+            <%= link_to "S'inscrire", new_registration_path(resource_name), class: 'float-right hover:underline' %>
+          <% end -%>
         </div>
       </div>
     <% end %>

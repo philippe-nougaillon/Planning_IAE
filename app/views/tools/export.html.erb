@@ -1,49 +1,46 @@
-<div class="pb-2 mt-6 mb-2 border-b pb-4">
+<div class="border-b mt-6 mb-2 pb-4">
   <h3 class="text-2xl"><%= fa_icon 'upload' %> Export de cours</h3>
 </div>
 <br>
 
-<div>
-  <h4 class="text-xl">Cette fonction permet la création d'une feuille Excel à partir des cours sélectionnés ci-dessous</h4>
-</div>
+<h4 class="text-xl mb-4">Cette fonction permet la création d'une feuille Excel à partir des cours sélectionnés ci-dessous</h4>
 
 <%= form_tag({action: "export_do", method: :post}) do %>
-
-  <div class="flex flex-wrap">
-    <div class="sm:w-2/5 px-4">
-
-      <div class="flex flex-wrap">
-          <div class="sm:w-1/2 pr-4">
-            <%= label_tag :start_date, "Du" %>    
-            <%= text_field_tag :start_date, params[:start_date], type:'date', class:"input input-bordered input-sm w-full", required: true %>
-          </div>
-
-          <div class="sm:w-1/2 pl-4">
-            <%= label_tag :end_date, "Au" %>    
-            <%= text_field_tag :end_date, params[:end_date], type:'date', class:"input input-bordered input-sm w-full", required: true %>
-          </div>
+  <div class="flex flex-col sm:w-2/5 gap-4">
+    <div class="flex flex-wrap">
+      <div class="sm:w-1/2 pr-4">
+        <%= label_tag :start_date, "Du" %>    
+        <%= text_field_tag :start_date, params[:start_date], type:'date', class:"input input-bordered input-sm w-full", required: true %>
       </div>
 
+      <div class="sm:w-1/2 pl-4">
+        <%= label_tag :end_date, "Au" %>    
+        <%= text_field_tag :end_date, params[:end_date], type:'date', class:"input input-bordered input-sm w-full", required: true %>
+      </div>
+    </div>
+
+    <div>
       <%= label_tag :etat, "Etat" %>
       <%= select_tag :etat, options_for_select(Cour.etats, params[:etat]), include_blank:true, class:"select select-bordered select-sm w-full" %>
-      <br>
+    </div>
 
+    <div>
       <%= label_tag :formation %>    
       <%= select_tag :formation_id, 
             options_from_collection_for_select(Formation.all, :id, :nom_promo), include_blank:true, class:"slim-select" %>
-      <br>
+    </div>
 
+    <div>
       <%= label_tag :intervenant_id %>
       <%= select_tag :intervenant_id,
             options_from_collection_for_select(Intervenant.all, :id, :nom_prenom), include_blank:true, class:"slim-select" %>
 
-      <%= check_box_tag :binome, true, true %>
-      <%= label_tag :binome, "Exporter les binômes ?" %>
-      
-      <br><br>      
-
-      <%= submit_tag "Exporter", { class: "btn btn-success text-white", 'data-turbo': false } %>
+      <div class="flex items-center gap-1">
+        <%= check_box_tag :binome, true, true %>
+        <%= label_tag :binome, "Exporter les binômes ?" %>
+      </div>
     </div>
-  </div>
 
+    <%= submit_tag "Exporter", { class: "btn btn-success text-white", 'data-turbo': false } %>
+  </div>
 <% end %>

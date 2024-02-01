@@ -1,120 +1,122 @@
-<div class="pb-2 mt-6 mb-2 border-b pb-4">
+<div class="border-b mt-6 mb-2 pb-4">
   <h3 class="text-2xl"><%= fa_icon 'calendar-check' %> Liste des cours "à booker" </h3>
-  <p class="mb-4">
+  <p>
     Liste des cours récemment planifiés (sans salle) et à confirmer.
   </p>
 </div>
 
-<%= form_tag request.path, method: :get do %>
+<div class="bs-container p-4 shadow mb-4">
+  <%= form_tag request.path, method: :get do %>
     <div class="flex flex-wrap">
 
-        <div class="sm:w-1/4 px-4">
-            <%= label_tag :start_date, "Période du" %>    
-            <%= text_field_tag :start_date, params[:start_date], type:'date', class:"input input-bordered input-sm w-full" %>
+      <div class="sm:w-1/4 pr-4">
+        <%= label_tag :start_date, "Période du" %>
+        <%= text_field_tag :start_date, params[:start_date], type:'date', class:"input input-bordered input-sm w-full" %>
+      </div>
+
+      <div class="sm:w-1/4 px-4">
+        <%= label_tag :end_date, "au" %>
+        <%= text_field_tag :end_date, params[:end_date], type:'date', class:"input input-bordered input-sm w-full", onchange:'this.form.submit()' %>
+      </div>
+
+      <div class="sm:w-1/3 px-4">
+        <label class="mb-4">Trier par</label>
+
+        <div>
+          <%= radio_button_tag :tri, :date_cours, params[:tri] == 'date_cours', onchange:'this.form.submit()' %>
+          Date du cours
         </div>
 
-        <div class="sm:w-1/4 px-4">
-            <%= label_tag :end_date, "au" %>    
-            <%= text_field_tag :end_date, params[:end_date], type:'date', class:"input input-bordered input-sm w-full", onchange:'this.form.submit()' %>
+        <div>
+          <%= radio_button_tag :tri, :date_création, params[:tri] == 'date_création', onchange:'this.form.submit()' %>
+          Date de création
         </div>
 
-        <div class="sm:w-1/3 px-4">
-            <label class="mb-4">Trier par</label>
-
-            <div>
-                <%= radio_button_tag :tri, :date_cours, params[:tri] == 'date_cours', onchange:'this.form.submit()' %>
-                Date du cours
-            </div>
-
-            <div>
-                <%= radio_button_tag :tri, :date_création, params[:tri] == 'date_création', onchange:'this.form.submit()' %>
-                Date de création
-            </div>
-
-        </div>
+      </div>
 
     </div>
-<% end %>
+  <% end %>
+</div>
 
 <div class="overflow-x-auto mt-4">
-    <table class="table table-sm">
-        <thead class="shadow">
-            <tr>    
-                <th>Semaine</th>
-                <th>Date</th>
-                <th>Heure</th>
-                <th>Formation</th>
-                <th>Intervenant</th>
-                <th colspan="2">UE/Intitulé du cours</th>
-                <th>Etat</th>
-                <th>Depuis</th>
-                <th>Par</th>
-                <th></th>
-            </tr>
-        </thead>
+  <table class="table table-sm">
+    <thead class="shadow">
+      <tr>  
+        <th>Semaine</th>
+        <th>Date</th>
+        <th>Heure</th>
+        <th>Formation</th>
+        <th>Intervenant</th>
+        <th colspan="2">UE/Intitulé du cours</th>
+        <th>Etat</th>
+        <th>Depuis</th>
+        <th>Par</th>
+        <th></th>
+      </tr>
+    </thead>
 
-        <% @cours.each do | cours | %>
-            <tr class="hover shadow">
-                <td class="text-center">
-                    <%= link_to cours_url(start_date: cours.debut.to_date.beginning_of_week, view: 'calendar_rooms'), target: '_blank' do %>
-                        <%= cours.debut.to_date.strftime('%-V') %>
-                    <% end %>
-                </td>
-                <td>
-                    <h5 class="text-lg">
-                        <% color = 'warning' if (cours.debut.to_date - Date.today) <= 30 %>
-                        <% color = 'error' if (cours.debut.to_date - Date.today) <= 7 %>
-                        <span class="badge badge-<%= color %> text-white">
-                            <b><%= l cours.debut.to_date %></b>
-                        </span>
-                    </h5>
-                </td>
-                <td>
-                    <b><%= l(cours.debut, format: :heures_min) %></b> 
-                    <%= l(cours.fin, format: :heures_min) %>
-                </td>
-                <td>
-                    <span style="background-color:<%= cours.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
-                    <%= link_to cours.formation.nom_nbr_etudiants, cours.formation %>
-                </td>
-                <td>
-                    <%= cours.intervenant.nom_prenom %>
-                    <% if cours.intervenant_binome %>
-                        <br>
-                        <%= cours.intervenant_binome.nom_prenom %>
-                    <% end %>
-                </td>
-                <td>
-                    <%= cours.try(:ue) %>
-                </td>
-                <td>
-                    <%= cours.nom_ou_ue %>
-                </td>
-                <td style="white-space: nowrap;">
-                    <%= cours.etat.humanize %>
+    <% @cours.each do | cours | %>
+      <tr class="hover shadow">
+        <td class="text-center">
+          <%= link_to cours_url(start_date: cours.debut.to_date.beginning_of_week, view: 'calendar_rooms'), target: '_blank' do %>
+            <%= cours.debut.to_date.strftime('%-V') %>
+          <% end %>
+        </td>
+        <td>
+          <h5 class="text-lg">
+            <% color = 'warning' if (cours.debut.to_date - Date.today) <= 30 %>
+            <% color = 'error' if (cours.debut.to_date - Date.today) <= 7 %>
+            <span class="badge badge-<%= color %> text-white">
+              <b><%= l cours.debut.to_date %></b>
+            </span>
+          </h5>
+        </td>
+        <td>
+          <b><%= l(cours.debut, format: :heures_min) %></b>
+          <%= l(cours.fin, format: :heures_min) %>
+        </td>
+        <td>
+          <span style="background-color:<%= cours.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
+          <%= link_to cours.formation.nom_nbr_etudiants, cours.formation %>
+        </td>
+        <td>
+          <%= cours.intervenant.nom_prenom %>
+          <% if cours.intervenant_binome %>
+            <br>
+            <%= cours.intervenant_binome.nom_prenom %>
+          <% end %>
+        </td>
+        <td>
+          <%= cours.try(:ue) %>
+        </td>
+        <td>
+          <%= cours.nom_ou_ue %>
+        </td>
+        <td style="white-space: nowrap;">
+          <%= cours.etat.humanize %>
 
-                    <% unless cours.commentaires.blank? %>
-                        <%= fa_icon 'comment-dots' %>         
-                        <%= cours.commentaires %>
-                    <% end %>
-                </td>
+          <% unless cours.commentaires.blank? %>
+            <%= fa_icon 'comment-dots' %>
+            <%= cours.commentaires %>
+          <% end %>
+        </td>
 
-                <td style="white-space: nowrap;">                
-                    <%= time_ago_in_words cours.audits.first.created_at %>
-                </td>
+        <td style="white-space: nowrap;">
+          <%= time_ago_in_words cours.audits.first.created_at %>
+        </td>
 
-                <td>
-                    <%= cours.audits.first.user.nom_et_prénom %>
-                </td>
-                
-                <td>
-                    <%= link_to edit_cour_path(cours), target: '_blank', class: "btn btn-ghost text-base-content" do %>
-                        <%= fa_icon 'edit '%>
-                    <% end %>
-                </td>
-            </tr>
-        <% end %>
-    </table>
+        <td>
+          <%= cours.audits.first.user.nom_et_prénom %>
+        </td>
+        
+        <td>
+          <%= link_to edit_cour_path(cours), target: '_blank', class: "btn btn-ghost text-base-content" do %>
+            <%= fa_icon 'edit '%>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
 </div>
 
 <%= "Affichage de #{ @cours.length } cours au total" %>

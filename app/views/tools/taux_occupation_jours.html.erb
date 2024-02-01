@@ -1,4 +1,4 @@
-<div class="pb-2 mt-6 mb-2 border-b pb-4">
+<div class="border-b mt-6 mb-2 pb-4">
   <h3 class="text-2xl"><%= fa_icon 'tachometer-alt' %> Taux d'occupation jours</h3>
 </div>
 <br>
@@ -17,12 +17,12 @@
 
 <%= form_tag({action: "taux_occupation_jours_do", method: :post}) do %>
     <div class="flex flex-wrap">
-        <div class="sm:w-1/5 px-4">
+        <div class="sm:w-1/5 pr-4">
             <%= label_tag :start_date, "Période du" %>    
             <%= text_field_tag :start_date, params[:start_date], type:'date', class:"input input-bordered input-sm w-full" %>
         </div>
 
-        <div class="sm:w-1/5 px-4">
+        <div class="sm:w-1/5 pr-4">
             <%= label_tag :end_date, "Au" %>    
             <%= text_field_tag :end_date, params[:end_date], type:'date', class:"input input-bordered input-sm w-full" %>
         </div>
