@@ -17,15 +17,11 @@
 
       <div class="sm:w-1/2 pl-4">
         <%= label_tag :formation_id %>
-        <div class="join w-full">
-          <%= select_tag :formation_id, 
-                              options_from_collection_for_select(Formation.unscoped.all, :id, :nom, params[:formation_id]), 
-                              class: 'slim-select join-item', 
-                              include_blank: true, 
-                              onchange: 'this.form.submit()' %>
-
-          <%= submit_tag 'Filtrer', class: 'btn btn-sm btn-success text-white text-white join-item' %>
-        </div> 
+        <%= select_tag :formation_id, 
+                            options_from_collection_for_select(Formation.unscoped.all, :id, :nom, params[:formation_id]), 
+                            class: 'slim-select', 
+                            include_blank: true, 
+                            onchange: 'this.form.submit()' %>
       </div>
     </div>
   <% end %>

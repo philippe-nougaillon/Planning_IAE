@@ -12,10 +12,7 @@
     <div class="flex flex-wrap">
       <div class="sm:w-2/5 pr-4">
         <%= label_tag :nom, "Nom/Abrg./Code/Promo" %>
-        <div class="join w-full">    
-          <%= text_field_tag :nom, params[:nom], include_blank:true, onchange:'this.form.submit()', class:"input input-bordered input-sm w-full join-item" %>
-          <%= submit_tag 'Filtrer', class:"btn btn-sm btn-success text-white join-item" %>
-        </div> 
+        <%= text_field_tag :nom, params[:nom], include_blank:true, onchange:'this.form.submit()', class:"input input-bordered input-sm w-full" %>
       </div>
 
       <div class="sm:w-1/4 px-4">
