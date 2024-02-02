@@ -19,9 +19,9 @@
             <%= f.password_field :password, autocomplete: "off", required: true, class: "input input-bordered w-full mt-2" %>
           </div>
 
-          <div class="flex justify-between mt-4">
+          <div class="flex flex-wrap justify-between my-4 gap-2">
             <% if devise_mapping.rememberable? %>
-              <div class="flex items-center gap-2 mb-4">
+              <div class="flex items-center gap-2">
                 <%= f.check_box :remember_me, class: 'toggle' %>
                 <%= f.label :remember_me %>
               </div>
