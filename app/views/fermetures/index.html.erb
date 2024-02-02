@@ -80,11 +80,12 @@
   </table>
 </div>
 
-<div class="page_info">
-  <%= page_entries_info @fermetures %>
-</div>
+<% if params[:paginate] == 'pages' %>
+  <div class="page_info">
+    <%= page_entries_info @fermetures %>
+  </div>
 
-<div class="planning_pagination">
-  <%= will_paginate @fermetures %>
-</div>
-
+  <div class="planning_pagination">
+    <%= will_paginate @fermetures %>
+  </div>
+<% end %>
