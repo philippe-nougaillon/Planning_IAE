@@ -9,32 +9,29 @@
 <% end %>
 
 <%= form_tag request.path, method: :get do %>
-
-  <%= label_tag :start_date, "Cours à partir du" %>
-  <%= text_field_tag :start_date, params[:start_date], type: 'date', onchange: 'this.form.submit()', class: "input input-bordered input-sm w-full" %>
-  
-  <%= label_tag :formation %>    
-  <%= select_tag :formation, options_for_select(@formations, params[:formation]), 
-                  class: "slim-select",
-                  include_blank: true, onchange: 'this.form.submit()' %>
-
-  <% if user_signed_in? %>
-    <%= label_tag :intervenant %>
-    <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
+  <div class="flex flex-col gap-2">
+    <div>
+      <%= label_tag :start_date, "Cours à partir du" %>
+      <%= text_field_tag :start_date, params[:start_date], type: 'date', onchange: 'this.form.submit()', class: "input input-bordered input-sm w-full" %>
+    </div>
+    
+    <div>
+      <%= label_tag :formation %>    
+      <%= select_tag :formation, options_for_select(@formations, params[:formation]), 
                       class: "slim-select",
-                      include_blank: true,
-                      onchange:'this.form.submit()' %>
-  <% end %>
+                      include_blank: true, onchange: 'this.form.submit()' %>
+    </div>
 
-  <%= button_tag name: 'commit', value: 'Filtrer', class: "btn btn-success text-white btn-sm mt-4" do %>
-    <i class="fas fa-filter"></i> 
-    Filtrer
-  <% end %>
-  <% if params.values.count(nil) < 5 %>
-    <%= button_tag name: 'commit', value: 'RàZ', class: "btn btn-light btn-sm" do %>
-      <i class="far fa-trash-alt"></i>
+    <% if user_signed_in? %>
+      <div>
+        <%= label_tag :intervenant %>
+        <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
+                          class: "slim-select",
+                          include_blank: true,
+                          onchange:'this.form.submit()' %>
+      </div>
     <% end %>
-  <% end %>
+  </div>
 <% end %>
 
 <% current_date = '' %>
