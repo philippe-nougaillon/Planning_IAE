@@ -44,6 +44,6 @@
       <%= f.select :etat, Alert.etats.keys.to_a, {}, class: 'select select-bordered select-sm w-full' %>
     </div>
 
-    <%= f.submit class: "btn btn-primary text-white" %>
+    <%= f.submit class: "btn btn-primary text-white", 'data-turbo': false %>
   </div>
 <% end %>

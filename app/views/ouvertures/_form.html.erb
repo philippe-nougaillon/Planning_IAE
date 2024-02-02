@@ -32,7 +32,7 @@
       <%= form.text_field :fin, type: 'time', value: (ouverture.new_record? ? '20:00' : ouverture.fin.strftime("%H:%M")), class: 'input input-bordered input-sm w-full' %>
     </div>
 
-    <%= form.submit class: 'btn btn-primary text-white mt-4' %>
+    <%= form.submit class: 'btn btn-primary text-white mt-4', 'data-turbo': false %>
   </div>
 
 <% end %>

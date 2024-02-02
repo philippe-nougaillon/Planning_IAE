@@ -37,7 +37,7 @@
             <%= f.password_field :password_confirmation, autocomplete: "off", class: "input input-bordered input-sm w-full" %>
           </div>
           <div>
-            <%= f.submit t('.sign_up'), class: "btn btn-primary text-white w-full my-4" %>
+            <%= f.submit t('.sign_up'), class: "btn btn-primary text-white w-full my-4", 'data-turbo': false %>
             <br>
             <%= render "devise/shared/links" %>
           </div>

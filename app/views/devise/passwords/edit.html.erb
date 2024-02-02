@@ -27,7 +27,7 @@
         <%= f.password_field :password_confirmation, autocomplete: "off", class: "input input-bordered input-sm w-full" %>
       </div>
 
-      <%= f.submit t('.change_my_password'), class: "btn btn-primary text-white" %>
+      <%= f.submit t('.change_my_password'), class: "btn btn-primary text-white", 'data-turbo': false %>
     </div>
   </div>
 <% end %>

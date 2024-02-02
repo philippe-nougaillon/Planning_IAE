@@ -137,10 +137,10 @@
     <div class="flex flex-wrap">
       <div class="sm:w-1/5"></div>
         <div class="sm:w-1/2">
-          <%= f.submit "Enregistrer", class: "btn btn-primary text-white" %>
+          <%= f.submit "Enregistrer", class: "btn btn-primary text-white", 'data-turbo': false %>
           <%= link_to "Annuler", cours_path, class: "btn btn-light" %>
           <% if @cour.new_record? %>
-            <%= f.submit "Enregistrer et en saisir une autre", name: 'create_and_add', class: 'btn btn-primary btn-outline' %>
+            <%= f.submit "Enregistrer et en saisir une autre", name: 'create_and_add', class: 'btn btn-primary btn-outline', 'data-turbo': false %>
           <% end %>
         </div>
       </div>
