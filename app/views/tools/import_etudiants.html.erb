@@ -19,13 +19,13 @@
   
   <div class="flex flex-wrap">
     <div class="sm:w-1/3">
-      <%= label_tag :formation_id %>    
+      <%= label_tag :formation_id, "Formation *" %>    
       <%= select_tag :formation_id, 
             options_from_collection_for_select(Formation.all, :id, :nom, params[:formation_id]), 
-              class:"slim-select", include_blank: true, required: true %>
+              class:"slim-select", include_blank: true %>
       <br>
       <div class="field">
-        <%= label :filename, "Fichier source" %>
+        <%= label :filename, "Fichier source *" %>
         <%= file_field_tag 'upload', accept: 'application/vnd.ms-excel', class: 'file-input file-input-bordered file-input-sm w-full' %>
       </div>
     </div>
@@ -48,5 +48,5 @@
   </div>
   <br>
   
-  <%= submit_tag "Lancer l'import", class: "btn btn-success text-white mb-4", 'data-turbo': false %>
+  <%= submit_tag "Lancer l'import", class: "btn btn-primary text-white mb-4", 'data-turbo': false %>
 <% end %>

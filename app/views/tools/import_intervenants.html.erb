@@ -7,7 +7,7 @@
   <h3 class="text-2xl">Cette fonction permet l'importation des intervenants à partir d'une feuille Excel</h3>
   <br>
 
-  <%= label :filename, "Fichier source" %>
+  <%= label :filename, "Fichier source *" %>
   <%= file_field_tag 'upload', accept: 'application/vnd.ms-excel', class: 'file-input file-input-bordered file-input-sm w-full' %>
   <br>
   <br>
@@ -20,5 +20,5 @@
   <br><i>Choisissez 'Non' pour tester votre import car <b>il est irréversible !</b></i><br />
   <br>
   
-  <%= submit_tag "Lancer l'import", class: "btn btn-success text-white mb-4", 'data-turbo': false %>
+  <%= submit_tag "Lancer l'import", class: "btn btn-primary text-white mb-4", 'data-turbo': false %>
 <% end %>

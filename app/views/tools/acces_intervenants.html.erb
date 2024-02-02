@@ -13,12 +13,9 @@
 
       <div class="sm:w-1/4 px-4">
         <%= label_tag :status, "Statut" %>
-        <div class="join w-full">
-          <%= select_tag :status, options_for_select(Intervenant.statuses, 
-                params[:status]), include_blank:true,
-                class: 'select select-bordered select-sm w-full', onchange: 'this.form.submit()' %>
-          <%= submit_tag 'Filtrer', class: "btn btn-sm btn-success text-white join-item" %>
-        </div>
+        <%= select_tag :status, options_for_select(Intervenant.statuses, 
+              params[:status]), include_blank:true,
+              class: 'select select-bordered select-sm w-full', onchange: 'this.form.submit()' %>
       </div>
 
       <div class="sm:w-1/5 pl-4">

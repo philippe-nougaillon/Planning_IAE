@@ -24,7 +24,7 @@
       <%= select_tag :role, 
             options_for_select(User.roles.keys), class:"select select-bordered select-sm w-full", include_blank: true %>
       <div class="field mt-4">
-        <%= label :filename, "Fichier.xls" %>
+        <%= label :filename, "Fichier.xls *" %>
         <%= file_field_tag 'upload', accept: 'application/vnd.ms-excel', class: 'file-input file-input-bordered file-input-sm w-full' %>
       </div>
     </div>
@@ -42,5 +42,5 @@
   </div>
   <br>
   
-  <%= submit_tag "Lancer l'import", class: "btn btn-success text-white mb-4" %>
+  <%= submit_tag "Lancer l'import", class: "btn btn-primary text-white mb-4" %>
 <% end %>
