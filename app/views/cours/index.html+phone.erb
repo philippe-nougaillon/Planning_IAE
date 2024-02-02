@@ -1,19 +1,17 @@
 <% if @alert %>
   <%= content_tag :div, 
-      class: "alert mt-4 alert-#{@alert.etat}",
+      class: "chat chat-start my-4",
       role: "alert" do %>
-    <button type="button" class="close" data-dismiss="alert" aria-label="bouton du menu">
-      <span aria-hidden="true">&times;</span>
-      <span class="sr-only">Close</span>
-    </button>
-    <%= @alert.message %>
+    <div class="chat-bubble chat-bubble-<%= @alert.etat %> text-white">
+      <%= @alert.message %>
+    </div>
   <% end %>
 <% end %>
 
 <%= form_tag request.path, method: :get do %>
 
   <%= label_tag :start_date, "Cours à partir du" %>
-  <%= text_field_tag :start_date, params[:start_date], type: 'date', onchange: 'this.form.submit()', class: "input input-bordered input-sm w-full", id: 'Cours___partir_du' %>
+  <%= text_field_tag :start_date, params[:start_date], type: 'date', onchange: 'this.form.submit()', class: "input input-bordered input-sm w-full" %>
   
   <%= label_tag :formation %>    
   <%= select_tag :formation, options_for_select(@formations, params[:formation]), 
