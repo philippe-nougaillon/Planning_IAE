@@ -34,5 +34,19 @@
         </tr>
       <% end %>
     </tbody>
+
+    <tfoot>
+      <tr>
+        <td colspan="7"></td>
+      </tr>
+    </tfoot>
   </table>
+</div>
+
+<div class="page_info">
+  <%= page_entries_info @import_logs %>
+</div>
+
+<div class="planning_pagination">
+  <%= will_paginate @import_logs %>
 </div>

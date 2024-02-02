@@ -6,6 +6,7 @@ class ImportLogsController < ApplicationController
   # GET /import_logs.json
   def index
     @import_logs = ImportLog.includes(:user).order(:id).reverse_order
+    @import_logs = @import_logs.paginate(page: params[:page])
   end
 
   # GET /import_logs/1
