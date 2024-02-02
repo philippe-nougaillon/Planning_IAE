@@ -357,7 +357,7 @@ class ToolsController < ApplicationController
       redirect_to import_logs_path
     else
       flash[:alert] = "Manque le fichier source pour pouvoir lancer l'importation !"
-      redirect_to action: 'import_utilisateurs_roles'
+      redirect_to action: 'import_utilisateurs'
     end 
   end
 
