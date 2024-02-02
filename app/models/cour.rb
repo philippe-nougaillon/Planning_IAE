@@ -40,7 +40,7 @@ class Cour < ApplicationRecord
   self.per_page = 20
 
   def self.styles
-    ['info', 'warning', 'success', 'error', 'error', 'default']
+    ['info', 'warning', 'success', 'error', 'error', 'secondary']
   end
 
   def style

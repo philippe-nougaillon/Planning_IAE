@@ -1,9 +1,4 @@
 <tr class="hover shadow">
-    <td>
-        <% if intervenant.photo %>
-            <%= image_tag intervenant.photo, class: 'card', width: 75 %>
-        <% end %>
-    </td>
     <td><b><%= link_to intervenant.nom, intervenant %></b></td>
     <td><b><%= intervenant.prenom %></b></td>
     <td><%= intervenant.try(:status) %></td>

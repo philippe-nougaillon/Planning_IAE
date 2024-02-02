@@ -49,7 +49,7 @@
 
 <% if @formations.any? %>
   <div class="overflow-x-auto">
-    <table class="table table-zebra table-bordered">
+    <table class="table table-zebra">
       <thead>
         <tr>
           <th><%= sort_link 'formations.nom', 'Nom' %></th>
@@ -63,15 +63,15 @@
         </tr>
       </thead>
 
+      <tbody>
+        <%= render @formations.includes(:cours) %>
+      </tbody>
+
       <tfoot>
         <tr>
           <th colspan=9></th>
         </tr>
       </tfoot>
-
-      <tbody>
-        <%= render @formations.includes(:cours) %>
-      </tbody>
 
     </table>
   </div>

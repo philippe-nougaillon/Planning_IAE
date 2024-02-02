@@ -37,10 +37,9 @@
 
 <% if @intervenants.any? %>
   <div class="overflow-x-auto">
-    <table class="table table-zebra table-bordered">
+    <table class="table table-zebra">
       <thead>
         <tr>
-          <th></th>
           <th><%= sort_link 'intervenants.nom', 'Nom' %></th>
           <th>Prénom</th>
           <th><%= sort_link 'intervenants.status', 'Statut' %></th>
@@ -57,6 +56,12 @@
         <%= render @intervenants %>
       </tbody>
 
+      <tfoot>
+        <tr>
+          <td colspan="9">
+          </td>
+        </tr>
+      </tfoot>
     </table>
   </div>
 

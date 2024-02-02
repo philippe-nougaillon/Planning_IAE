@@ -32,7 +32,7 @@
 </div>
 
 <div class="overflow-x-auto">
-  <table class="table table-bordered table-zebra">
+  <table class="table table-zebra">
     <thead>
       <tr>
         <th><%= sort_link 'etudiants.nom', 'Nom' %></th>
@@ -44,22 +44,16 @@
       </tr>
     </thead>
 
-    <tfoot>
-      <tr>
-        <th colspan=8></th>
-      </tr>
-    </tfoot>
-
     <tbody>
       <%= render @etudiants %>
     </tbody>
   </table>
+</div>
 
-  <div class="page_info">
-    <%= page_entries_info @etudiants %>
-  </div>
+<div class="page_info">
+  <%= page_entries_info @etudiants %>
+</div>
 
-  <div class="planning_pagination">
-    <%= will_paginate @etudiants %>
-  </div>
+<div class="planning_pagination">
+  <%= will_paginate @etudiants %>
 </div>
