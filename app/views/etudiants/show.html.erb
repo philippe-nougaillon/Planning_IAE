@@ -48,12 +48,14 @@
         <small class="text-secondary">Formation</small><br>
         <% if @etudiant.formation_id %>
             <% formation = Formation.unscoped.find(@etudiant.formation_id) %>
-            <%= link_to formation.nom, formation %>
+            <span class="pl-2" style="border-left: .3rem solid <%= @etudiant.formation.try(:positive_color) %>">
+              <%= link_to formation.nom, formation %>
+            </span>
         <% end %>
       </h3>
       <h3 class="text-2xl">
         <small class="text-secondary">Statut</small><br>
-        <%= @etudiant.workflow_state %>
+        <%= @etudiant.workflow_state.humanize %>
       </h3>
       <br>
 
@@ -72,7 +74,7 @@
   </div>
 
   <div tabindex="0" class="collapse collapse-arrow border border-base-300 bg-base-100">
-    <div class="collapse-title">
+    <div class="collapse-title text-xl text-secondary">
       Audit des modifications
     </div>
     <div class="overflow-x-auto collapse-content bg-base-100"> 

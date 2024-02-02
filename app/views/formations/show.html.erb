@@ -122,7 +122,7 @@
   </div>
 
   <% if @formation.unites.any? %>
-    <h3 class="text-2xl mt-8">
+    <h3 class="text-xl text-secondary my-4">
       Unités d'enseignements
     </h3>
     
@@ -180,8 +180,8 @@
   <% end %>
 
   <% if @formation.etudiants.any? %>
-    <h3 class="text-2xl">
-      <small class="text-secondary">Etudiants</small>
+    <h3 class="text-xl text-secondary my-4">
+      Etudiants
     </h3>
     
     <div class="overflow-x-auto">
@@ -220,7 +220,7 @@
   <% if @formation.vacations.any? %>
     <hr class="mt-4">
     <div class="mt-8">
-      <h2 class="text-3xl">
+      <h3 class="text-xl text-secondary my-4">
         <%= fa_icon 'user-md' %>
         Vacations
       </h2>
@@ -246,7 +246,7 @@
   <% end %>
 
   <div tabindex="0" class="collapse collapse-arrow border border-base-300 bg-base-100 mt-8">
-    <div class="collapse-title">
+    <div class="collapse-title text-xl text-secondary">
       Audit des modifications
     </div>
     <div class="overflow-x-auto collapse-content bg-base-100"> 
