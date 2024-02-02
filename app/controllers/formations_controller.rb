@@ -77,9 +77,6 @@ class FormationsController < ApplicationController
 
   # GET /formations/1/edit
   def edit
-    5.times { @formation.unites.build }
-    5.times { @formation.etudiants.build } 
-    10.times { @formation.vacations.build }
   end
 
   # POST /formations

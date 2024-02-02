@@ -82,7 +82,6 @@ class IntervenantsController < ApplicationController
 
   # GET /intervenants/1/edit
   def edit
-    3.times { @intervenant.responsabilites.build }
   end
 
   # POST /intervenants

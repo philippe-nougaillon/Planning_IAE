@@ -1,6 +1,5 @@
-<%= form_for(@intervenant) do |f| %>
+<%= form_for(@intervenant, data: { controller: 'nested-form', nested_form_wrapper_selector_value: '.nested-form-wrapper' }) do |f| %>
   <%= render partial: 'partials/errors', locals: { record: @intervenant } %>
-
   <div class="flex flex-wrap gap-32">
     <div class="relative flex-grow max-w-full flex-1 flex flex-col gap-4">
       <div class="form-control">
@@ -47,6 +46,8 @@
           </div>
         </div>
       </div>
+
+      <%= f.submit class: "btn btn-primary text-white mt-4", 'data-turbo': false %>
     </div>
 
     <div class="relative flex-grow max-w-full flex-1 flex flex-col gap-4">
@@ -54,7 +55,7 @@
         <div class="relative flex-grow max-w-full flex-1">
           <div class="form-control">
             <%= f.label :status, 'Statut *' %>
-            <%= f.select :status, Intervenant.statuses.keys.to_a, {include_blank: true}, required: true, class: 'select select-bordered select-sm w-full' %>
+            <%= f.select :status, Intervenant.statuses.keys.to_a, {include_blank: true}, class: 'select select-bordered select-sm w-full' %>
           </div>
         </div>
 
@@ -133,57 +134,29 @@
   </div>
 
   <% if policy(:tool).can_see_RHGroup_private_tool? %>
-    <h4 class="text-xl">Responsabilités</h4>
+    <p class="text-xl text-secondary mt-8 mb-4">
+      <%= fa_icon 'file-contract' %>
+      Responsabilités
+    </p>
     <hr>
-    <%= f.fields_for :responsabilites do |r| %>
-      <div class="flex flex-wrap shadow py-4 mb-4">
-        <div class="sm:w-1/6 px-4">
-          <div class="form-control">
-            <%= r.label :debut, 'Date' %>
-            <%= r.date_field :debut, class: 'input input-bordered input-sm w-full' %>
-          </div>
-        </div>
+    <template data-nested-form-target="template">
+      <%= f.fields_for :responsabilites, Responsabilite.new, child_index: 'NEW_RECORD' do |responsabilite_fields| %>
+        <%= render "responsabilite_form", f: responsabilite_fields %>
+      <% end %>
+    </template>
 
-        <div class="sm:w-2/5 px-4">
-          <div class="form-control">
-            <%= r.label :titre %>
-            <%= r.select :titre, Intervenant.liste_responsabilites, {include_blank: true}, class: 'slim-select' %>
-          </div>
-        </div>
-
-        <div class="sm:w-1/4 px-4">
-          <div class="form-control">
-            <%= r.label :formation_id, 'Formation/EOTP' %>
-            <%= r.collection_select :formation_id, 
-                    Formation.where(hors_catalogue: false), 
-                    :id,
-                    :nom_eotp,
-                    {include_blank: true},
-                    class: 'slim-select' %>
-          </div>
-        </div>  
-  
-        <div class="sm:w-1/6 px-4">
-          <div class="form-control">
-            <%= r.label :heures, 'Forfait' %>
-            <%= r.text_field :heures, class: 'input input-bordered input-sm w-full' %>
-          </div>
-        </div>
-
-        <div class="sm:w-4/5 px-4">
-          <div class="form-control">
-            <%= r.label :commentaires %>
-            <%= r.text_field :commentaires, class: 'input input-bordered input-sm w-full' %>
-          </div>
-        </div>
-
-        <div class="sm:w-1/5 px-4 self-end">
-          <%= r.check_box :_destroy %>
-          <%= r.label :_destroy, 'Supprimer ?' %>
-        </div>
-      </div>
+    <%= f.fields_for :responsabilites do |responsabilite_fields| %>
+      <%= render "responsabilite_form", f: responsabilite_fields %>
     <% end %>
-  <% end %>
 
-  <%= f.submit class: "btn btn-primary text-white mt-4", 'data-turbo': false %>
+    <div data-nested-form-target="target"></div>
+
+    <div class="mb-4">
+      <%= f.submit class: "btn btn-primary text-white mt-4", 'data-turbo': false %>
+      <button type="button" data-action="nested-form#add" class="btn">
+        <%= fa_icon 'plus-circle' %>
+        Ajouter responsabilité
+      </button>
+    </div>
+  <% end %>
 <% end %>

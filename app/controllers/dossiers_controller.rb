@@ -77,7 +77,6 @@ class DossiersController < ApplicationController
     
     @dossier = Dossier.new
     @dossier.période = période
-    3.times { @dossier.documents.build }
   end
 
   # GET /dossiers/1/edit

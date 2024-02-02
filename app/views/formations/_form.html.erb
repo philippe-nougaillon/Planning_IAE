@@ -119,159 +119,85 @@
   </div>
 
   <div id="UE" data-reveal-target="pannel_ue" tabindex="0" class="hidden shadow p-6">
-    <p class="text-xl font-bold mb-8">
+    <p class="text-xl text-secondary mb-8">
       <%= fa_icon 'book' %>
       Unités d'enseignements
     </p>
     <hr>
 
-    <%= f.fields_for :unites do |ue| %>
-      <div class="flex flex-wrap items-end shadow pb-4 mb-4">
-        <div class="sm:w-1/6 px-4">
-          <div class="form-control">
-            <%= ue.label :code %>
-            <%= ue.number_field :code, class: 'input input-bordered input-sm w-full' %>
-          </div>
-        </div>  
-        <div class="sm:w-1/2 px-4">
-          <div class="form-control">
-            <%= ue.label :nom %>
-            <%= ue.text_field :nom, class: 'input input-bordered input-sm w-full' %>
-          </div>
-        </div>
-        <div class="sm:w-1/12 px-4">
-          <div class="form-control">
-            <%= ue.label :séance %>
-            <%= ue.number_field :séances, class: 'input input-bordered input-sm w-full' %>
-          </div>
-        </div>  
-        <div class="sm:w-1/12 px-4">
-          <div class="form-control">
-            <%= ue.label :heures %>
-            <%= ue.number_field :heures, class: 'input input-bordered input-sm w-full' %>
-          </div>
-        </div>  
-        <div class="sm:w-1/6 px-4">
-          <%= ue.check_box :_destroy %>
-          <%= ue.label :_destroy, 'Supprimer ?' %>
-        </div>
-      </div>
-    <% end %>
+    <div data-controller="nested-form" nested-form-wrapper-selector-value=".nested-form-wrapper">
+      <template data-nested-form-target="template">
+        <%= f.fields_for :unites, Unite.new, child_index: 'NEW_RECORD' do |unite_fields| %>
+          <%= render "unite_form", f: unite_fields %>
+        <% end %>
+      </template>
 
-    <%= f.submit "Enregistrer", class: "btn btn-primary text-white", 'data-turbo': false %>
+      <%= f.fields_for :unites do |unite_fields| %>
+        <%= render "unite_form", f: unite_fields %>
+      <% end %>
+
+      <div data-nested-form-target="target"></div>
+
+      <%= f.submit "Enregistrer", class: "btn btn-primary text-white", 'data-turbo': false %>
+      <button type="button" data-action="nested-form#add" class="btn">
+        <%= fa_icon 'plus-circle' %>
+        Ajouter unité
+      </button>
+    </div>
   </div>
   
   <div id="Etudiants" data-reveal-target="pannel_etudiants" class="hidden shadow p-6">
-    <p class="text-xl font-bold mb-8">
+    <p class="text-xl text-secondary mb-8">
       <%= fa_icon 'graduation-cap' %>
       Etudiants
     </h4>
     <hr>
+    <div data-controller="nested-form" nested-form-wrapper-selector-value=".nested-form-wrapper">
+      <template data-nested-form-target="template">
+        <%= f.fields_for :etudiants, Etudiant.new, child_index: 'NEW_RECORD' do |etudiant_fields| %>
+          <%= render "etudiant_form", f: etudiant_fields %>
+        <% end %>
+      </template>
 
-    <%= f.fields_for :etudiants do |etudiant| %>
-      <div class="flex flex-wrap items-end shadow pb-4 mb-4">
-        <div class="sm:w-1/5 px-4">
-          <div class="form-control">
-            <%= etudiant.label :nom, 'Nom *' %>
-            <%= etudiant.text_field :nom, class: 'input input-bordered input-sm w-full' %>
-          </div>
-        </div>  
-        <div class="sm:w-1/5 px-4">
-          <div class="form-control">
-            <%= etudiant.label :prénom, 'Prénom *' %>
-            <%= etudiant.text_field :prénom, class: 'input input-bordered input-sm w-full' %>
-          </div>
-        </div>
-        <div class="sm:w-1/12 px-4">
-          <div class="form-control">
-            <%= etudiant.label :civilité, 'Civilité *', class: 'whitespace-nowrap' %>
-            <%= etudiant.text_field :civilité, class: 'input input-bordered input-sm w-full' %>
-          </div>
-        </div>
-        <div class="sm:w-1/4 px-4">
-          <div class="form-control">
-            <%= etudiant.label :email, 'Email *' %>
-            <%= etudiant.email_field :email, class: 'input input-bordered input-sm w-full' %>
-          </div>
-        </div>
-        <div class="sm:w-1/6 px-4">
-          <div class="form-control">
-            <%= etudiant.label :mobile %>
-            <%= etudiant.text_field :mobile, class: 'input input-bordered input-sm w-full' %>
-          </div>
-        </div>
-        <div>
-          <%= etudiant.check_box :_destroy %>
-          <%= etudiant.label :_destroy, 'Suppr?' %>
-        </div>
-      </div>
-    <% end %>
+      <%= f.fields_for :etudiants do |etudiant_fields| %>
+        <%= render "etudiant_form", f: etudiant_fields %>
+      <% end %>
 
-    <%= f.submit class: "btn btn-primary text-white", 'data-turbo': false %>
+      <div data-nested-form-target="target"></div>
+
+      <%= f.submit "Enregistrer", class: "btn btn-primary text-white", 'data-turbo': false %>
+      <button type="button" data-action="nested-form#add" class="btn">
+        <%= fa_icon 'plus-circle' %>
+        Ajouter étudiant
+      </button>
+    </div>
   </div>
 
   <div id="Vacations" data-reveal-target="pannel_vacations" class="hidden shadow p-6">
-    <p class="text-xl font-bold mb-8">
+    <p class="text-xl text-secondary mb-8">
       <%= fa_icon 'user-md' %>
       Vacations ou autres activités
     </h4>
     <hr>
+    <div data-controller="nested-form" nested-form-wrapper-selector-value=".nested-form-wrapper">
+      <template data-nested-form-target="template">
+        <%= f.fields_for :vacations, Vacation.new, child_index: 'NEW_RECORD' do |vacation_fields| %>
+          <%= render "vacation_form", f: vacation_fields %>
+        <% end %>
+      </template>
 
-    <%= f.fields_for :vacations do |vacation| %>
-      <div class="flex flex-wrap shadow pb-4 mb-4">
-        <div class="sm:w-1/6 px-4">
-          <div class="form-control">
-            <%= vacation.label :date, 'Date *' %>
-            <%= vacation.date_field :date, class: 'input input-bordered input-sm w-full' %>
-          </div>
-        </div>
+      <%= f.fields_for :vacations do |vacation_fields| %>
+        <%= render "vacation_form", f: vacation_fields %>
+      <% end %>
 
-        <div class="sm:w-1/4 px-4">
-          <div class="form-control">
-            <%= vacation.label :intervenant_id, 'Intervenant *' %>
-            <%= vacation.collection_select :intervenant_id, 
-                                            Intervenant.where.not(doublon: true),
-                                            :id,
-                                            :nom_prenom,
-                                            {include_blank: true}, class: "slim-select" %>
-          </div>
-        </div>  
+      <div data-nested-form-target="target"></div>
 
-        <div class="sm:w-1/3 px-4">
-          <div class="form-control">
-            <%= vacation.label :titre, 'Activité *' %>
-            <%= vacation.select :titre, Vacation.activités, {include_blank: true}, class: "select select-bordered select-sm w-full" %>
-          </div>
-        </div>
-
-        <div class="sm:w-1/12 px-4">
-          <div class="form-control">
-            <%= vacation.label :qte, "Qté *" %>
-            <%= vacation.number_field :qte, class: 'input input-bordered input-sm w-full' %>
-          </div>
-        </div>
-
-        <div class="sm:w-1/6 px-4">
-          <div class="form-control">
-            <%= vacation.label :forfaithtd, 'Forfait HTD *' %>
-            <%= vacation.select :forfaithtd, Vacation.forfaits_htd, {include_blank: true}, class: "select select-bordered select-sm w-full" %>
-          </div>
-        </div>
-
-        <div class="sm:w-3/4 px-4">
-          <div class="form-control">
-            <%= vacation.label :commentaires %>
-            <%= vacation.text_area :commentaires, class: 'textarea textarea-bordered textarea-sm w-full' %>
-          </div>
-        </div>
-        
-        <div class="sm:w-1/5 px-4 self-end">
-          <%= vacation.check_box :_destroy %>
-          <%= vacation.label :_destroy, 'Supprimer ?' %>
-        </div>
-      </div>
-    <% end %>
-    <%= f.submit class: "btn btn-primary text-white", 'data-turbo': false %>
+      <%= f.submit "Enregistrer", class: "btn btn-primary text-white", 'data-turbo': false %>
+      <button type="button" data-action="nested-form#add" class="btn">
+        <%= fa_icon 'plus-circle' %>
+        Ajouter vacation
+      </button>
+    </div>
   </div>
 
 <% end %>
