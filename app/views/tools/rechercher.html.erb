@@ -5,41 +5,38 @@
 <div class="bs-container p-4 shadow mb-4">
   <%= form_tag tools_rechercher_path, method: :get do %>
     <div class="flex flex-wrap mb-4">
-      <%= label_tag :nom, "Entrez un terme à rechercher dans toute l'application" %>
+      <%= label_tag :nom, "Entrez un terme à rechercher dans toutes les données de l'application" %>
       <div class="join w-full">
         <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class:"input input-bordered input-sm w-full join-item" %>
         <%= button_tag name: 'commit', value: 'Go', class: "btn btn-sm btn-success text-white join-item", 'data-turbo': false do %>
-          <%= fa_icon 'search-plus' %>
+          <%= fa_icon 'search' %>
         <% end %>
       </div>
     </div>
 
     <div class="flex flex-wrap">
-      <div class="relative flex-grow max-w-full flex-1">
-        <span>
-          Inclure :
-        </span>
-        <%= check_box_tag :search_cours, '1', params[:search_cours] == '1' %>
+      <div class="relative flex-grow max-w-full flex-1 flex gap-1 items-center">
+        <%= check_box_tag :search_cours, '1', params[:search_cours] == '1', class: 'checkbox checkbox-xs checkbox-primary' %>
         <%= label_tag :search_cours, "Cours" %>
       </div>
-      <div class="relative flex-grow max-w-full flex-1">
-        <%= check_box_tag :search_formations, '1', params[:search_formations] == '1' %>
+      <div class="relative flex-grow max-w-full flex-1 flex gap-1 items-center">
+        <%= check_box_tag :search_formations, '1', params[:search_formations] == '1', class: 'checkbox checkbox-xs checkbox-primary' %>
         <%= label_tag :search_formations, "Formations" %>
       </div>
-      <div class="relative flex-grow max-w-full flex-1">
-        <%= check_box_tag :search_intervenants, '1', params[:search_intervenants] == '1' %>
+      <div class="relative flex-grow max-w-full flex-1 flex gap-1 items-center">
+        <%= check_box_tag :search_intervenants, '1', params[:search_intervenants] == '1', class: 'checkbox checkbox-xs checkbox-primary' %>
         <%= label_tag :search_intervenants, "Intervenants" %>
       </div>
-      <div class="relative flex-grow max-w-full flex-1">
-        <%= check_box_tag :search_etudiants, '1', params[:search_etudiants] == '1' %>
+      <div class="relative flex-grow max-w-full flex-1 flex gap-1 items-center">
+        <%= check_box_tag :search_etudiants, '1', params[:search_etudiants] == '1', class: 'checkbox checkbox-xs checkbox-primary' %>
         <%= label_tag :search_etudiants, "Étudiants" %>
       </div>
-      <div class="relative flex-grow max-w-full flex-1">
-        <%= check_box_tag :search_users, '1', params[:search_users] == '1' %>
+      <div class="relative flex-grow max-w-full flex-1 flex gap-1 items-center">
+        <%= check_box_tag :search_users, '1', params[:search_users] == '1', class: 'checkbox checkbox-xs checkbox-primary' %>
         <%= label_tag :search_users, "Utilisateurs" %>
       </div>
-      <div class="w-1/6">
-        <%= check_box_tag :search_ue, '1', params[:search_ue] == '1' %>
+      <div class="relative flex-grow max-w-full flex-1 flex gap-1 items-center">
+        <%= check_box_tag :search_ue, '1', params[:search_ue] == '1', class: 'checkbox checkbox-xs checkbox-primary' %>
         <%= label_tag :search_ue, "U.E." %>
       </div>
     </div>

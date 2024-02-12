@@ -9,7 +9,7 @@
     <%= form_tag request.path, method: :get do %>
       <div class="flex flex-wrap">
         <div class="sm:w-1/5">
-          <%= label_tag :salle_id %>    
+          <%= label_tag :salle_id, "Rechercher" %>    
             <%= select_tag :salle_id, 
                     options_from_collection_for_select(Salle.order(:nom), :id, :nom, params[:salle_id]), 
                       include_blank:true, onchange:'this.form.submit()', class:"input input-bordered input-sm w-full" %>
