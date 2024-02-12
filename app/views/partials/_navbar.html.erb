@@ -52,7 +52,7 @@
           <%= current_user.username %>
           <% if current_page? root_path %>
             <br>
-            <%= current_user.current_sign_in_at_with_ip %>
+            Dernière connexion : <%= time_ago_in_words current_user.last_sign_in_at %>
           <% end %>
         </li>
         <% if policy(current_user).right_navbar? %>
