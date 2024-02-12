@@ -39,6 +39,10 @@
         <%= check_box_tag :search_ue, '1', params[:search_ue] == '1', class: 'checkbox checkbox-xs checkbox-primary' %>
         <%= label_tag :search_ue, "U.E." %>
       </div>
+      <div class="relative flex-grow max-w-full flex-1 flex gap-1 items-center">
+        <%= check_box_tag :search_mail_logs, '1', params[:search_mail_logs] == '1', class: 'checkbox checkbox-xs checkbox-primary' %>
+        <%= label_tag :search_mail_logs, "MailLogs" %>
+      </div>
     </div>
   <% end %>
 </div>

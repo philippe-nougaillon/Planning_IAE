@@ -1223,6 +1223,9 @@ class ToolsController < ApplicationController
       unless params[:search_users]
         @results = @results.where.not(searchable_type: 'User')
       end
+      unless params[:search_mail_logs]
+        @results = @results.where.not(searchable_type: 'MailLog')
+      end
 
       @results = @results.paginate(page: params[:page])
     else
@@ -1232,6 +1235,7 @@ class ToolsController < ApplicationController
       params[:search_intervenants] ||= '1'
       params[:search_etudiants] ||= '1'
       params[:search_users] ||= '1'
+      params[:search_mail_logs] ||= '1'
     end
   end
 
