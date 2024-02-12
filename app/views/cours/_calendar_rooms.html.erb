@@ -54,22 +54,20 @@
 
           <% formation = Formation.unscoped.find(meeting.formation_id) %>
           <div class="shadow-lg p-2 mb-2 bg-base-100 text-lg" style="min-height:<%= 120 + (10 * meeting.duree) %>px; border-left:6px; border-left-style:solid; border-left-color:<%= formation.color %>; padding-left:5px;">
-            <%= link_to meeting, class: 'text-success' do %>
+            <%= link_to meeting, class: 'text-primary' do %>
               <b><%= l(meeting.debut, format: :heures_min) %></b>  
               - <%= l(meeting.fin, format: :heures_min) %>
               <br>
             <% end %>
 
-            <b>
-              <% if formation.abrg %>
-                <%= link_to_if user_signed_in?, formation.nom_abrg_nbr_etudiants, edit_cour_path(meeting, from: 'planning_salles'), title: meeting.nom_et_étudiants, target: '_blank', class: 'text-base-content' %>
-              <% else %>
-                <%= link_to_if user_signed_in?, formation.nom, meeting, class:"text-base-content" %>
-              <% end %>
-            </b>
+            <% if formation.abrg %>
+              <%= link_to_if user_signed_in?, formation.nom_abrg_nbr_etudiants, edit_cour_path(meeting, from: 'planning_salles'), title: meeting.nom_et_étudiants, target: '_blank', class: 'text-base-content' %>
+            <% else %>
+              <%= link_to_if user_signed_in?, formation.nom, meeting, class:"text-base-content" %>
+            <% end %>
             <br>
             <% if user_signed_in? %>
-              <small><%= meeting.intervenant.nom_prenom %></small>
+              <%= meeting.intervenant.nom_prenom %>
               <br>
             <% end %>
 

@@ -4,15 +4,14 @@
       <tr>
         <th></th>
         <% date_range.slice(0, 6).each do |day| %>
-          <th class="text-lg" style="width: 160px;">
-            <b><%= l(day, format: :short) %></b>
-            <br>
+          <th style="width: 160px;">
+            <p class="text-lg text-neutral"><%= l(day, format: :short) %></p>
             <% if @salle %>
               <% if Ouverture.where(bloc: @salle.bloc, jour: day.wday).any? %>
                 <% if ouverture = Ouverture.where(jour: day.wday).find_by(bloc: @salle.bloc) %>
-                  <small style="color: green">
+                  <p class="text-success">
                     <%= ouverture.horaires %>
-                  </small>
+                  </p>
                 <% end %>
               <% end %>
             <% end %>
