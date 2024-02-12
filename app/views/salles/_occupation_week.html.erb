@@ -1,6 +1,6 @@
 <div class="overflow-x-auto">
   <table class="table table-sm">
-    <thead>
+    <thead class="bg-base-200 border">
       <tr>
         <th>Salle</th>
         <th>Places</th>
@@ -28,7 +28,7 @@
         <% if salle.bloc != bloc %>
           <% bloc = salle.bloc %>
           <thead>
-            <tr>
+            <tr class="bg-base-200 border">
               <th></th><th></th><th></th>
               <% (@date..@date_fin).each do |d| %>
                 <th>
@@ -40,7 +40,7 @@
           </thead>
         <% end %>
 
-        <tr class="hover shadow">
+        <tr class="hover border">
           <td><b><%= salle.nom %></b></td>
           <td class="text-center"><%= salle.places %></td>
           <td class="text-center">

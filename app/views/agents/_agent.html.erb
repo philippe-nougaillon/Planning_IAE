@@ -1,13 +1,13 @@
-<tr class="hover">
+<tr class="hover border">
     <td><b><%= agent.nom %></b></td>
     <td><%= agent.prénom %></td>
     <td><%= agent.catégorie %></td>
     <td><%= time_ago_in_words(agent.created_at) %></td>
     <td>
-        <%= link_to edit_agent_path(agent), class: "btn btn-ghost" do %>
+        <%= link_to edit_agent_path(agent), class: "btn btn-ghost btn-xs" do %>
             <%= fa_icon 'edit' %>
         <% end %>
-        <%= link_to(agent, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: "btn btn-ghost") do %>
+        <%= link_to(agent, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: "btn btn-ghost btn-xs") do %>
             <%= fa_icon 'trash-alt' %>
         <% end %>
     </td>

@@ -13,8 +13,8 @@
     <% nbr_heures_statutaire = intervenant.nbr_heures_statutaire || 0 %>
 
     <div class="overflow-x-auto">
-        <table class="table table-zebra table-sm">
-            <thead>
+        <table class="table table-sm">
+            <thead class="bg-base-200 border">
                 <tr>
                     <th>Type</th>
                     <th>Date</th>
@@ -44,7 +44,7 @@
 
                 <% formation = Formation.unscoped.find(c.formation_id) %>
 
-                <tr class="hover">
+                <tr class="hover border">
                     <td>C</td>
                     <td><%= link_to l(c.debut.to_date), cours_path(start_date: c.debut.to_date) %></td>
                     <td class="text-right"><%= c.debut.strftime("%k:%M") %></td>
@@ -87,7 +87,7 @@
                 </tr>
             <% end %>
 
-            <tr class="hover">
+            <tr class="hover border">
                 <th>C</th>
                 <th colspan="5"><%= cours_ids.count %> cours au total</th>
                 <th />
@@ -107,7 +107,7 @@
                 <% end %>
                 <% cumul_vacations += montant_vacation %>
                 <% formation = Formation.unscoped.find(vacation.formation_id) %> 
-                <tr class="hover">
+                <tr class="hover border">
                     <td>V</td>
                     <td><%= l vacation.date %></td>
                     <td />
@@ -134,7 +134,7 @@
                 </tr>
 
                 <% if index == @vacations.size - 1 %>
-                    <tr class="hover">
+                    <tr class="hover border">
                         <th>V</th>
                         <th colspan="10"><%= pluralize(@vacations.size, 'vacation', plural: 'vacations') %> au total</th>
                         <th class="text-right"><%= number_to_currency(cumul_vacations) %></th>
@@ -149,7 +149,7 @@
                 <% cumul_hetd += resp.heures %>
                 <% formation = Formation.unscoped.find(resp.formation_id) %>
 
-                <tr class="hover">
+                <tr class="hover border">
                     <td>R</td>
                     <td><%= l resp.debut %></td>
                     <td />
@@ -169,7 +169,7 @@
                     </td>
                 </tr>
                 <% if index == @responsabilites.size - 1 %>
-                    <tr class="hover">
+                    <tr class="hover border">
                         <th>R</th>
                         <th colspan="10"><%= pluralize(@responsabilites.count, 'responsabilité') %> au total</th>
                         <th class="text-right"><%= number_to_currency(cumul_resps) %></th>

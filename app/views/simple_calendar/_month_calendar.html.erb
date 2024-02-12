@@ -16,8 +16,8 @@
   </div>
 
   <div class="overflow-x-auto">
-    <table class="table table-zebra">
-      <thead>
+    <table class="table">
+      <thead class="bg-base-200 border">
         <tr>
           <% date_range.slice(0, 7).each do |day| %>
             <% unless day.sunday? %>
@@ -29,7 +29,7 @@
 
       <tbody>
         <% date_range.each_slice(7) do |week| %>
-          <tr class="hover">
+          <tr class="hover border">
             <% week.each do |day| %>
               <% unless day.sunday? %>
                 <%= content_tag :td, class: calendar.td_classes_for(day) do %>

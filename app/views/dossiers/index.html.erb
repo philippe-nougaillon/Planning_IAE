@@ -58,8 +58,8 @@
 <br>
 
 <div class="overflow-x-auto">
-  <table class="table table-zebra">
-    <thead>
+  <table class="table">
+    <thead class="bg-base-200 border">
       <tr>
         <th>Période</th>
         <th>Intervenant</th>
@@ -72,7 +72,7 @@
 
     <tbody>
       <% @dossiers.each do |dossier| %>
-        <tr class="hover">
+        <tr class="hover border">
           <td><%= dossier.période %></td>
           <td><%= dossier.intervenant.nom_prenom %></td>
           <td>

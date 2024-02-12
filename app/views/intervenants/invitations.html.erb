@@ -34,8 +34,8 @@
 <br>
 
 <div class="overflow-x-auto">
-  <table class="table table-zebra">
-    <thead>
+  <table class="table">
+    <thead class="bg-base-200 border">
       <tr>
         <th>Date</th>
         <th>Formation</th>
@@ -51,7 +51,7 @@
       <%= current_date = '' %>
       <% @invits.each do |invit| %>
         <% if invit.cour.debut.to_date != current_date %>
-          <tr class="hover shadow bg-base-200">
+          <tr class="hover border bg-base-200">
             <th colspan=9>
               <%= fa_icon 'calendar-check' %>
               <b><%= l(invit.cour.debut.to_date, format: :long).humanize %></b> 
@@ -60,7 +60,7 @@
           <% current_date = invit.cour.debut.to_date %>
         <% end %>  
 
-        <tr>
+        <tr class="hover border">
           <td>
             <%= link_to invit do %>
               <b><%= l(invit.cour.debut, format: :heures_min) %></b> 

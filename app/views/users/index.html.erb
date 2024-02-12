@@ -34,7 +34,7 @@
 
       <div class="sm:w-1/4 px-4">
         <br>
-        <%= check_box_tag :mauvais_email, 1, params[:mauvais_email], onchange: 'this.form.submit()', class: 'checkbox' %>
+        <%= check_box_tag :mauvais_email, 1, params[:mauvais_email], onchange: 'this.form.submit()' %>
         <%= label_tag :mauvais_email, "Comptes à vérifier ?" %>
       </div>
 
@@ -43,8 +43,8 @@
 </div>
 
 <div class="overflow-x-auto">
-  <table class="table table-zebra">
-    <thead>
+  <table class="table">
+    <thead class="bg-base-200 border">
       <tr>
         <th><%= sort_link 'users.nom', 'Nom' %></th>
         <th>Prénom</th>
@@ -64,7 +64,7 @@
 
     <tbody>
       <% @users.each do |user| %>
-        <tr class="hover shadow">
+        <tr class="hover border">
           <td><b><%= link_to user.nom, user %></b></td>
           <td><%= user.prénom %></td>
           <td>
@@ -79,11 +79,11 @@
           <td><%= time_ago_in_words user.current_sign_in_at if user.current_sign_in_at %></td>
           <td ><%= user.sign_in_count %></td>
           <td>
-            <%= link_to edit_user_path(user), class: "btn btn-ghost" do %>
+            <%= link_to edit_user_path(user), class: "btn btn-ghost btn-xs" do %>
               <%= fa_icon 'edit' %>
             <% end %>
             <% unless user.discarded? %>
-              <%= link_to(user, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous la désactivation de cet utilisateur ?', class: "btn btn-ghost", title: "Désactiver cet utilisateur") do %>
+              <%= link_to(user, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous la désactivation de cet utilisateur ?', class: "btn btn-ghost btn-xs", title: "Désactiver cet utilisateur") do %>
                 <%= fa_icon 'trash' %>
               <% end %>
             <% else %>

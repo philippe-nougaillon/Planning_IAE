@@ -1,6 +1,6 @@
 <div class="overflow-x-auto">
   <table class="table table-sm">
-    <thead>
+    <thead class="bg-base-200 border">
       <tr>
         <th>Salle</th>
         <th>Places</th>
@@ -10,6 +10,7 @@
           <th class="<%= 'bg-amber-100' if ((@date == Date.today) && (heure == time_in_paris.hour)) %>"><%= heure %>h</th>
           <% if [4,9].include?(index) %><th></th><th></th><% end %>
         <% end %>
+        <th></th>
       </tr>
     </thead>
 
@@ -26,17 +27,18 @@
         <% if params[:bloc].blank? && salle.bloc != bloc %>
           <% bloc = salle.bloc %>
           <thead>
-            <tr>
+            <tr class="bg-base-200 border">
               <th colspan=4></th>
               <% @etendue_horaire.each_with_index do |heure, index| %>
                 <th class="<%= 'bg-amber-100' if ((@date == Date.today) && (heure == time_in_paris.hour)) %>"><%= heure %>h</th>
                 <% if [4,9].include?(index) %><th></th><th></th><% end %>
               <% end %>
+              <th></th>
             </tr>
           </thead>
         <% end %>
 
-        <tr class="hover shadow">
+        <tr class="hover border">
           <td><b><%= salle.nom[0..7] %></b></td>
           <td class="text-right"><%= salle.places %></td>
           <td>

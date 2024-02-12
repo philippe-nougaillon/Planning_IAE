@@ -48,8 +48,8 @@
 </div>
 
 <div class="overflow-x-auto mb-4">
-  <table class="table table-zebra">
-    <thead>
+  <table class="table">
+    <thead class="bg-base-200 border">
       <tr>
         <th><%= fermetures_sort_link 'fermetures.date', 'Date' %></th>
         <th>Jour</th>
@@ -61,16 +61,16 @@
 
     <tbody>
       <% @fermetures.each do |fermeture| %>
-        <tr class="hover">
+        <tr class="hover border">
           <td><b><%= l fermeture.date %></b></td>
           <td><%= l fermeture.date, format: :long %></td>
           <td><%= fermeture.nom %></td>
           <td>il y a <%= time_ago_in_words fermeture.updated_at %></td>
           <td>
-            <%= link_to edit_fermeture_path(fermeture), class: 'btn btn-ghost' do %>
+            <%= link_to edit_fermeture_path(fermeture), class: 'btn btn-ghost btn-xs' do %>
               <%= fa_icon 'edit' %>
             <% end %>
-            <%= link_to(fermeture, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: 'btn btn-ghost') do %>
+            <%= link_to(fermeture, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: 'btn btn-ghost btn-xs') do %>
               <%= fa_icon 'trash' %>
             <% end %>
           </td>

@@ -9,8 +9,8 @@
 
 <% if @agents.any? %>
   <div class="overflow-x-auto">
-    <table class="table table-zebra">
-      <thead>
+    <table class="table">
+      <thead class="bg-base-200 border">
         <tr>
           <th><%= sort_link 'agents.nom', 'Nom' %></th>
           <th><%= sort_link 'agents.prénom', 'Prénom' %></th>

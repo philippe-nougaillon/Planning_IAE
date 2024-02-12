@@ -11,8 +11,8 @@
 </div>
 
 <div class="overflow-x-auto">
-  <table class="table table-xs table-zebra">
-    <thead>
+  <table class="table table-xs">
+    <thead class="bg-base-200 border">
       <tr>
         <th>Bloc</th>
         <th>Jour</th>
@@ -24,7 +24,7 @@
 
     <tbody>
       <% @ouvertures.each do |ouverture| %>
-        <tr class="hover">
+        <tr class="hover border">
           <td><b><%= ouverture.bloc %></b></td>
           <td><%= ouverture.jour.humanize %></td>
           <td><%= ouverture.début.strftime("%Hh%M") %></td>

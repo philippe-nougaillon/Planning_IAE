@@ -13,8 +13,8 @@
 </h5>
 
 <div class="overflow-x-auto">
-  <table class="table table-zebra table-sm">
-    <thead>
+  <table class="table table-sm">
+    <thead class="bg-base-200 border">
       <tr>
         <th><%= sortable :debut do %>Début d'affichage<% end %></th>
         <th><%= sortable :fin do %>Fin d'affichage<% end %></th>
@@ -27,7 +27,7 @@
 
     <tbody>
       <% @alerts.each do |alert| %>
-        <tr class="hover">
+        <tr class="hover border">
           <td><%= l(alert.debut, format: :short) %></td>
           <td><%= l(alert.fin, format: :short) %></td>
           <td><%= 'OUI' if alert.visible? %></td>

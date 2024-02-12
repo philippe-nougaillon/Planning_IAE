@@ -1,4 +1,4 @@
-<tr class="hover">
+<tr class="hover border">
     <td style="white-space: nowrap;">
         <% case result.searchable_type when 'Cour' %>
             <%= fa_icon 'calendar-day', title: "Cour" %>
@@ -85,7 +85,7 @@
                             target: '_blank' %>
     </td>
     <td style="white-space: nowrap;">
-        <p class="mb-4">
+        <p>
             il y a
             <%= time_ago_in_words result.updated_at %>
         </p>

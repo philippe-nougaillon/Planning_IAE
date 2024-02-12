@@ -10,8 +10,8 @@
   <h3 class="text-2xl">Cours sélectionnés</h3>
 
   <div class="overflow-x-auto">
-    <table class="table table-zebra table-sm">
-      <thead>
+    <table class="table table-sm">
+      <thead class="bg-base-200 border">
         <tr>
           <td></td>
           <td>Date</td>
@@ -27,7 +27,7 @@
       </thead>
       <tbody>
         <% @cours.each do |cours| %>
-          <tr class="hover">
+          <tr class="hover border">
             <td><%= check_box_tag "cours_id[#{cours.id}]", true, true %></td>                
             <td><%= l(cours.debut.to_date) %></td>
             <td><%= "#{l(cours.debut, format: :heures_min)}-#{l(cours.fin, format: :heures_min)}" %></td>

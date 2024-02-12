@@ -129,8 +129,8 @@
     </h3>
     
     <div class="overflow-x-auto">
-      <table class="table table-zebra table-sm">
-        <thead>
+      <table class="table table-sm">
+        <thead class="bg-base-200 border">
           <tr>
             <th>Code</th>
             <th>Intitulé</th>
@@ -146,7 +146,7 @@
           <% total_ue_prévu = total_prévu = 0.0 %>
           <% total_ue_réalisé = total_réalisé = 0.0 %>
           <% @formation.unites.each do | unite | %>
-            <tr class="hover">
+            <tr class="hover border">
               <% cours = @formation.cours.where(code_ue: unite.code) %>
               <td style="text-align: right;"><%= link_to unite.code, cours_path(formation_id: @formation, ue: unite.num) %></td>
               <td><%= unite.nom %></td>
@@ -187,8 +187,8 @@
     </h3>
     
     <div class="overflow-x-auto">
-      <table class="table table-zebra table-sm">
-        <thead>
+      <table class="table table-sm">
+        <thead class="bg-base-200 border">
           <tr>
             <th>Nom</th>
             <th>Prénom</th>
@@ -200,7 +200,7 @@
 
         <tbody>
           <% @formation.etudiants.each do | etudiant | %>
-            <tr class="hover">
+            <tr class="hover border">
               <td><%= etudiant.nom %></td>
               <td><%= etudiant.prénom %></td>
               <td><%= etudiant.civilité %></td>
@@ -228,8 +228,8 @@
       </h2>
 
       <div class="overflow-x-auto">
-        <table class="table table-zebra table-sm">
-          <thead>
+        <table class="table table-sm">
+          <thead class="bg-base-200 border">
             <th>Date</th>
             <th>Formation</th>
             <th>Activité</th>
@@ -254,7 +254,7 @@
     <div class="overflow-x-auto collapse-content bg-base-100"> 
       <% if @formation.audits.any? %>
         <table class="table table-xs">
-          <thead>
+          <thead class="bg-base-200 border">
             <th>Date</th>
             <th>Utilisateur</th>            
             <th>Type</th>

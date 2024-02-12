@@ -32,8 +32,8 @@
 </h4>
 
 <div class="overflow-x-auto">
-    <table class="table table-sm table-zebra">
-        <thead>
+    <table class="table table-sm">
+        <thead class="bg-base-200 border">
             <th>Le</th>
             <th>Formation</th>
             <th>Surveillant</th>
@@ -55,7 +55,7 @@
                         <% surveillant = item.gsub(']', '').delete("\r\n\\") %>
                         <% durée = exam.duree + ((exam.intervenant_id == 1314) ? 0 : 1) %>
                         <% @cumuls[surveillant] ? @cumuls[surveillant] += durée : @cumuls[surveillant] = durée %>
-                        <tr class="hover">
+                        <tr class="hover border">
                             <td><%= link_to l(exam.debut, format: :long), cour_path(exam.id), class: 'link' %></td>
                             <td><%= exam.formation.nom %></td>
                             <td><b><%= surveillant %></b></td>
@@ -76,17 +76,18 @@
 </h4>
 
 <div class="overflow-x-auto">
-    <table class="table table-sm table-zebra" style="width: 70%">
-        <thead>
+    <table class="table table-sm" style="width: 70%">
+        <thead class="bg-base-200 border">
             <th>Nom</th>
             <th>Total durée payée</th>
+            <th></th>
         </thead>
         <tfoot>
-            <tr><th></th><th></th></tr>
+            <tr><th colspan="3"></th></tr>
         </tfoot>
         <tbody>
             <% @cumuls.keys.sort.each do | k | %>
-                <tr class="hover">
+                <tr class="hover border">
                     <td><%= k %></td>
                     <td><%= @cumuls[k] %> h</td>
                     <td><%= link_to 'Exporter en PDF', url_for(params.permit!.merge(format: :pdf, surveillant: k)), class: 'link' %>

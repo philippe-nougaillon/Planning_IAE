@@ -34,8 +34,8 @@
 <%= form_tag tools_acces_intervenants_do_path, method: :post do %>
   <div data-controller="checkbox-select-all action">
     <div class="overflow-x-auto">
-      <table class="table table-zebra">
-        <thead>
+      <table class="table">
+        <thead class="bg-base-200 border">
           <tr>
             <th>
               <span data-action="click->action#click">
@@ -52,7 +52,7 @@
 
         <tbody>
           <% @intervenants.each do |intervenant| %>
-            <tr class="hover">
+            <tr class="hover border">
               <td>
                 <span data-action="click->action#click">
                   <%= check_box_tag "intervenants_id[#{intervenant.id}]", 'yes', false, data: {"action-target": "source", 'checkbox-select-all-target': "checkbox"} %>

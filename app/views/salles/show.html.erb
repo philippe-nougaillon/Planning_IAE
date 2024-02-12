@@ -60,7 +60,7 @@
   </div>
   <div class="overflow-x-auto collapse-content bg-base-100"> 
     <table class="table table-xs">
-      <thead>
+      <thead class="bg-base-200 border">
         <th>Date</th>
         <th>Utilisateur</th>            
         <th>Type</th>
@@ -80,8 +80,8 @@
     Audit des attributions
   </div>
   <div class="overflow-x-auto collapse-content bg-base-100"> 
-    <table class="table table-zebra table-xs">
-      <thead>
+    <table class="table table-xs">
+      <thead class="bg-base-200 border">
         <th>Date</th>
         <th>Qui</th>
         <th>Cours</th>
@@ -92,7 +92,7 @@
       <% @audits.includes(:user).limit(1000).each do |audit| %>
           <% if extract_salle_id(audit) == @salle.id %>
               <% if cour = Cour.where(id: audit.auditable_id).first %>
-                <tr class="hover">
+                <tr class="hover border">
                   <td><%= l(audit.created_at, format: :perso) %></td>
                   <td><%= audit.try(:user).try(:email) %></td>
                   <td><%= link_to audit.auditable_id, cour_path(cour) %></td>

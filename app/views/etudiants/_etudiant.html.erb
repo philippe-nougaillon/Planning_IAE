@@ -1,4 +1,4 @@
-<tr class="hover shadow">
+<tr class="hover border">
     <td><b><%= link_to etudiant.nom, etudiant %></b></td>
     <td><%= etudiant.prénom %></td>
     <td>
@@ -20,12 +20,12 @@
     </td>
     <td>
         <% if policy(Etudiant).edit? %>
-            <%= link_to edit_etudiant_path(etudiant), class:"btn btn-ghost" do %>
+            <%= link_to edit_etudiant_path(etudiant), class:"btn btn-ghost btn-xs" do %>
                 <%= fa_icon 'edit '%>
             <% end %>
         <% end %>
         <% if policy(Etudiant).destroy? %>
-            <%= link_to(etudiant, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: 'btn btn-ghost') do %>
+            <%= link_to(etudiant, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: 'btn btn-ghost btn-xs') do %>
                 <%= fa_icon 'trash' %>
             <% end %>
         <% end %>

@@ -4,8 +4,8 @@
 <br>
 
 <div class="overflow-x-auto">
-  <table class="table table-zebra">
-    <thead>
+  <table class="table">
+    <thead class="bg-base-200 border">
       <tr>
         <th></th>
         <th>Le</th>
@@ -19,7 +19,7 @@
 
     <tbody>
       <% @import_logs.each do |import_log| %>
-        <tr class="hover">
+        <tr class="hover border">
           <td><%= fa_icon import_log.icon_etat, class: import_log.icon_color %></td>
           <td><%= l(import_log.created_at.in_time_zone('Paris'), format: :short) %></td>
           <td><%= import_log.model_type %></td>

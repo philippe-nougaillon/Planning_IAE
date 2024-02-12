@@ -1,7 +1,7 @@
 <% formation_cours = formation.cours %>
 <% formation_cours_planifié_count = formation_cours.planifié.count %>
 
-<tr class="hover shadow <%= formation_cours_planifié_count != 0 ? 'bg-warning' : '' %>">
+<tr class="hover border <%= formation_cours_planifié_count != 0 ? 'bg-info' : '' %>">
     <td style="border-left: .3rem solid <%= formation.try(:positive_color) %>">
         <%= link_to formation.nom, formation, class: 'font-bold' %>
     </td>
@@ -20,13 +20,13 @@
         <%= link_to_unless (formation.archive || formation_cours_réalisé_count.zero?), formation_cours_réalisé_count, cours_path(ids:formation_cours.réalisé.pluck(:id), filter:'all') %>
     </td>
     <td>
-        <%= link_to edit_formation_path(formation), class: "btn btn-ghost" do %>
+        <%= link_to edit_formation_path(formation), class: "btn btn-ghost btn-xs" do %>
             <%= fa_icon 'edit' %>
         <% end %>
     </td>
     <td>
         <% unless formation_cours.any? %>
-            <%= link_to(formation, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: "btn btn-ghost") do %>
+            <%= link_to(formation, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: "btn btn-ghost btn-xs") do %>
                 <%= fa_icon 'trash-alt' %>
             <% end %>
         <% end %>

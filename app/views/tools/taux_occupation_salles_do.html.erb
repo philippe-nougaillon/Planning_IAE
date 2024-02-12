@@ -7,8 +7,8 @@
 </div>
 
 <div class="overflow-x-auto">
-  <table class="table table-zebra">
-    <thead>
+  <table class="table">
+    <thead class="bg-base-200 border">
       <th>Salle</th>
       <th>Nbr heures de cours</th>
       <th>Nbr heures dispo par salle</th>
@@ -19,7 +19,7 @@
     </tfoot>
     <tbody>
       <% @results.sort.each do |r| %>
-        <tr class="hover">
+        <tr class="hover border">
           <td><b><%= r.first %></b></td>
           <td><%= r.last %></td>
           <td><%= @nbr_heures_dispo_salle %></td>
