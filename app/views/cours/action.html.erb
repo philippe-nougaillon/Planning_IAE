@@ -82,25 +82,24 @@
 
   <% elsif params[:action_name] == "Changer de date" %>
     <div class="flex flex-wrap">
-      <div class="sm:w-1/5 px-4">
+      <div class="sm:w-1/5">
         <%= label_tag :new_date, "Nouvelle date" %>    
         <%= text_field_tag :new_date, params[:new_date], type:'date', class:"input input-bordered input-sm w-full" %>
       </div>
 
       <div class="sm:w-1/6 px-4">ou</div>
-      <div class="sm:w-1/2 px-4">
+      <div class="sm:w-1/2">
         <%= label_tag :add_n_days, "Décaler de x jours" %><br>
         <%= number_field_tag :add_n_days, nil, class: "input input-bordered input-sm w-full" %>
       </div>
     </div>
 
   <% elsif params[:action_name] == "Changer d'intervenant" %>
-    <div class="sm:w-1/2 px-4">
+    <div class="sm:w-1/2">
       <%= label_tag :intervenant_id, "Nouvel intervenant" %>    
       <%= select_tag :intervenant_id, 
                       options_from_collection_for_select(Intervenant.all, :id, :nom_prenom, params[:intervenant_id]), 
                       include_blank:true, class:"slim-select" %>
-      <br><br>
     </div>
 
   <% elsif params[:action_name] == "Intervertir" %>
@@ -251,7 +250,7 @@
     <br>
 
   <% elsif params[:action_name] == "Supprimer" %>
-    <div class="sm:w-2/3 px-4">
+    <div class="sm:w-2/3">
       <p class="mb-4">Confirmation :</p>
       <%= check_box_tag :delete %>
       <%= label_tag :delete, "Suppression définitive de tous les cours sélectionnés ?" %>
@@ -342,7 +341,7 @@
     <br><br>
   <% end %>
 
-  <div class="flex flex-wrap mb-12">
+  <div class="flex flex-wrap mb-12 mt-4">
     <div class="sm:w-full">
       <%= submit_tag 'Appliquer', class:"btn btn-primary text-white", 'data-turbo': false %>
       <%= link_to 'Annuler', root_url, class:"btn btn-light" %>
