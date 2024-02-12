@@ -1,7 +1,7 @@
 <tr class="hover border">
     <% if policy(Cour).action? %>
         <td>
-            <span data-action="click->action#click">
+            <span class="flex" data-action="click->action#click">
                 <%= check_box_tag "cours_id[#{cours.id}]", 'yes', false, data: {"action-target": "source", "checkbox-select-all-target": "checkbox"} %>
             </span>
         </td>

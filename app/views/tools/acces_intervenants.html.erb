@@ -38,7 +38,7 @@
         <thead class="bg-base-200 border">
           <tr>
             <th>
-              <span data-action="click->action#click">
+              <span class="flex" data-action="click->action#click">
                 <input type="checkbox" data-action-target="source" data-checkbox-select-all-target="checkboxAll">
               </span>
             </th>
@@ -54,7 +54,7 @@
           <% @intervenants.each do |intervenant| %>
             <tr class="hover border">
               <td>
-                <span data-action="click->action#click">
+                <span class="flex" data-action="click->action#click">
                   <%= check_box_tag "intervenants_id[#{intervenant.id}]", 'yes', false, data: {"action-target": "source", 'checkbox-select-all-target': "checkbox"} %>
                 </span>
               </td>
