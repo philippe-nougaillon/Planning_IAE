@@ -1,6 +1,5 @@
 class Vacation < ApplicationRecord
-
-  audited
+  audited associated_with: :formation
 
   belongs_to :formation
   belongs_to :intervenant

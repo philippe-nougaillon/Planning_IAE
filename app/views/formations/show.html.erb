@@ -252,7 +252,7 @@
       Audit des modifications
     </div>
     <div class="overflow-x-auto collapse-content bg-base-100"> 
-      <% if @formation.audits.any? %>
+      <% if @formation.own_and_associated_audits.any? %>
         <table class="table table-xs">
           <thead class="bg-base-200 border">
             <th>Date</th>
@@ -263,7 +263,7 @@
             <th>Modifications</th>
           </thead>
 
-          <%= render partial: 'tools/audit', collection: @formation.audits.reorder(id: :desc) %>
+          <%= render partial: 'tools/audit', collection: @formation.own_and_associated_audits.reorder(id: :desc) %>
 
         </table>
       <% end %>
