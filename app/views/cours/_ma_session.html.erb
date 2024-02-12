@@ -39,7 +39,7 @@
     <% end %>
   <% end %>
   <% if action_name == 'mes_sessions_etudiant' %>
-    <% if ([258, 599, 671, 683, 687].include?(cour.formation_id)) && cour.signable_etudiant? && ( cour.presences.where(etudiant_id: @etudiant.id).empty? || cour.presences.where(etudiant_id: @etudiant.id, workflow_state: 'attente signature').any? ) %>
+    <% if ([258, 599, 671, 672, 683, 687].include?(cour.formation_id)) && cour.signable_etudiant? && ( cour.presences.where(etudiant_id: @etudiant.id).empty? || cour.presences.where(etudiant_id: @etudiant.id, workflow_state: 'attente signature').any? ) %>
       <%= link_to 'Signer la feuille de présence', signature_etudiant_cours_path(cour_id: cour.id), class: 'btn btn-warning btn-lg mt-4' %>
     <% end %>
   <% end %>
