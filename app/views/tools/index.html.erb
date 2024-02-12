@@ -182,12 +182,13 @@
 				</li>
 				<br>
 
-
-				<li>
-					<%= fa_icon 'search' %>
-					<%= link_to 'Audit des cours récemment planifiés', tools_audit_cours_path %>
-				</li>
-				<br>
+				<% if policy(:tool).audit_cours? %>
+					<li>
+						<%= fa_icon 'search' %>
+						<%= link_to 'Cours à booker', tools_audit_cours_path %>
+					</li>
+					<br>
+				<% end %>
 
 				<li>
 					<%= fa_icon 'umbrella-beach' %>
