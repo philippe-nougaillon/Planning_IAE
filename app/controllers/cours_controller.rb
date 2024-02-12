@@ -559,7 +559,7 @@ class CoursController < ApplicationController
   # GET /cours/new
   def new
     @cour = Cour.new
-    @formations = Formation.unscoped.order(:nom, :promo)
+    @formations = Formation.order(:nom, :promo)
     @salles = Salle.all
 
     if current_user.partenaire_qse?
