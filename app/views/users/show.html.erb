@@ -50,7 +50,7 @@
 		Compte désactivé : 
 		le <%= l(@user.discarded_at) %> 
 		| Il y a <%= time_ago_in_words(@user.discarded_at) %>
-		| Vous pouvez réactiver ce compte en cliquant <%= link_to "ici", reactivate_user_path(@user), class: 'link' %>.
+		| Vous pouvez réactiver ce compte en cliquant <%= link_to "ici", reactivate_user_path(@user), class: 'text-primary hover:underline' %>.
 	</p>
 <% end %>
 

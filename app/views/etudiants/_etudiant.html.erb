@@ -1,5 +1,5 @@
 <tr class="hover border">
-    <td><b><%= link_to etudiant.nom, etudiant %></b></td>
+    <td><b><%= link_to etudiant.nom, etudiant, class: 'text-primary hover:underline' %></b></td>
     <td><%= etudiant.prénom %></td>
     <td>
         <%= etudiant.email %>
@@ -12,7 +12,7 @@
     <td style="border-left: .3rem solid <%= etudiant.formation.try(:positive_color) %>">
         <% if etudiant.formation_id %>
             <% formation = Formation.unscoped.find(etudiant.formation_id) %>
-            <%= link_to formation.nom, formation %>
+            <%= link_to formation.nom, formation, class: 'text-primary hover:underline' %>
         <% end %>
     </td>
     <td>

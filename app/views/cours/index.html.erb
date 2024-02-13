@@ -231,7 +231,7 @@
   <% else %>
     Aucun résultat à afficher... 
     <%= link_to "Effacer les filtres pour voir tous les cours", 
-                  url_for(params.permit!.merge(commit: 'RàZ filtres')), class: 'link' %>
+                  url_for(params.permit!.merge(commit: 'RàZ filtres')), class: 'text-primary hover:underline' %>
   <% end %>
 <% else %>
   <%= render partial: params[:view] %>

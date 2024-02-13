@@ -22,5 +22,5 @@
   </td>
   <td><% if presence.signature %><img src=<%= presence.signature %> style="width: 50px;"><% end %></td>
   <td><span class="badge <%= presence.style %> text-white"><%= presence.workflow_state.humanize %></span></td>
-  <td><%= link_to 'Voir', presence, class: 'link' %></td>
+  <td><%= link_to 'Voir', presence, class: 'text-primary hover:underline' %></td>
 </tr>

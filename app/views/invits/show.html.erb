@@ -56,7 +56,7 @@
               <% @cours.each do |c| %>
                 <tr>
                   <td>
-                    <%= link_to c, class: 'link' do %>
+                    <%= link_to c, class: 'text-primary hover:underline' do %>
                       <%= l(c.debut, format: :heures_min) %>
                       -
                       <%= l(c.fin, format: :heures_min) %>
@@ -166,7 +166,7 @@
   <br>
   <br>
   <% if user_signed_in? %>
-    <%= link_to 'Retour', invits_path, class: 'link' %>
+    <%= link_to 'Retour', invits_path, class: 'text-primary hover:underline' %>
   <% end %>
   <br>
 

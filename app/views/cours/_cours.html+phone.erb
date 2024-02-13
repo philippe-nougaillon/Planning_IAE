@@ -32,7 +32,7 @@
     <% end %>
 
     <% if cours.url? && cours.elearning? %>
-      <%= link_to cours.nom.split(' ').first, target:"_blank" do %>
+      <%= link_to cours.nom.split(' ').first, target:"_blank", class: 'text-primary hover:underline' do %>
           <%= cours.nom.split(' ').last %>
           <%= fa_icon 'link' %>
       <% end %>

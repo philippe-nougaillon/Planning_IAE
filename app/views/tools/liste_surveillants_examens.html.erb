@@ -56,7 +56,7 @@
                         <% durée = exam.duree + ((exam.intervenant_id == 1314) ? 0 : 1) %>
                         <% @cumuls[surveillant] ? @cumuls[surveillant] += durée : @cumuls[surveillant] = durée %>
                         <tr class="hover border">
-                            <td><%= link_to l(exam.debut, format: :long), cour_path(exam.id), class: 'link' %></td>
+                            <td><%= link_to l(exam.debut, format: :long), cour_path(exam.id), class: 'text-primary hover:underline' %></td>
                             <td><%= exam.formation.nom %></td>
                             <td><b><%= surveillant %></b></td>
                             <td><%= exam.duree %> h</td>
@@ -90,7 +90,7 @@
                 <tr class="hover border">
                     <td><%= k %></td>
                     <td><%= @cumuls[k] %> h</td>
-                    <td><%= link_to 'Exporter en PDF', url_for(params.permit!.merge(format: :pdf, surveillant: k)), class: 'link' %>
+                    <td><%= link_to 'Exporter en PDF', url_for(params.permit!.merge(format: :pdf, surveillant: k)), class: 'text-primary hover:underline' %>
                 </tr>
             <% end %>
         </tbody>

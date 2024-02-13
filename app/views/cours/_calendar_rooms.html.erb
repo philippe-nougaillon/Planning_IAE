@@ -13,10 +13,10 @@
       <br>
       <% if meeting.try(:formation).try(:abrg) %>
         <% if meeting.salle_id == nil %>
-          <%= link_to meeting.formation.nom_abrg_nbr_etudiants, edit_cour_path(meeting, from:'planning_salles'), title:meeting.nom %>
+          <%= link_to meeting.formation.nom_abrg_nbr_etudiants, edit_cour_path(meeting, from:'planning_salles'), title:meeting.nom, class: 'text-primary hover:underline' %>
         <% end %>
       <% else %>
-        <%= link_to_if user_signed_in?, meeting.try(:formation).try(:nom), meeting %>
+        <%= link_to_if user_signed_in?, meeting.try(:formation).try(:nom), meeting, class: 'text-primary hover:underline' %>
       <% end %>
     </div>
   <% end %>
@@ -54,16 +54,16 @@
 
           <% formation = Formation.unscoped.find(meeting.formation_id) %>
           <div class="shadow-lg p-2 mb-2 bg-base-100 text-lg" style="min-height:<%= 120 + (10 * meeting.duree) %>px; border-left:6px; border-left-style:solid; border-left-color:<%= formation.color %>; padding-left:5px;">
-            <%= link_to meeting, class: 'text-primary' do %>
+            <%= link_to meeting, class: 'text-primary hover:underline' do %>
               <b><%= l(meeting.debut, format: :heures_min) %></b>  
               - <%= l(meeting.fin, format: :heures_min) %>
               <br>
             <% end %>
 
             <% if formation.abrg %>
-              <%= link_to_if user_signed_in?, formation.nom_abrg_nbr_etudiants, edit_cour_path(meeting, from: 'planning_salles'), title: meeting.nom_et_étudiants, target: '_blank', class: 'text-base-content' %>
+              <%= link_to_if user_signed_in?, formation.nom_abrg_nbr_etudiants, edit_cour_path(meeting, from: 'planning_salles'), title: meeting.nom_et_étudiants, target: '_blank', class: 'text-base-content hover:underline' %>
             <% else %>
-              <%= link_to_if user_signed_in?, formation.nom, meeting, class:"text-base-content" %>
+              <%= link_to_if user_signed_in?, formation.nom, meeting, class:"text-base-content hover:underline" %>
             <% end %>
             <br>
             <% if user_signed_in? %>

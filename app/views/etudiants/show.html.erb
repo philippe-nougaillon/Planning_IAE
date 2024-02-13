@@ -49,7 +49,7 @@
         <% if @etudiant.formation_id %>
             <% formation = Formation.unscoped.find(@etudiant.formation_id) %>
             <span class="pl-2" style="border-left: .3rem solid <%= @etudiant.formation.try(:positive_color) %>">
-              <%= link_to formation.nom, formation %>
+              <%= link_to formation.nom, formation, class: 'text-primary hover:underline' %>
             </span>
         <% end %>
       </h3>
@@ -67,7 +67,7 @@
         </h4>
         <p class="mb-4">
           (<%= @user.sign_in_count %> connexions)
-          <%= link_to 'Voir', user_path(@user), class: 'link' %>
+          <%= link_to 'Voir', user_path(@user), class: 'text-primary hover:underline' %>
         </p>
       <% end %>
     </div>

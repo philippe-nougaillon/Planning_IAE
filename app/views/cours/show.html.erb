@@ -53,7 +53,7 @@
     <div class="relative flex-grow max-w-full flex-1">
       <h4 class="text-xl">
         <small class="text-secondary">Intervenant</small><br>
-        <%= link_to @cour.intervenant.nom_prenom, @cour.intervenant %>
+        <%= link_to @cour.intervenant.nom_prenom, @cour.intervenant, class: 'text-primary hover:underline' %>
       </h4>
     </div>
   </div>

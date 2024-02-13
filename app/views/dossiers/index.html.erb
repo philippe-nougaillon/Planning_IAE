@@ -94,9 +94,9 @@
           </td>
           <td><%= time_ago_in_words dossier.created_at %></td>
           <td><%= time_ago_in_words dossier.updated_at %></td>
-          <td><%= link_to 'Voir', dossier, class: 'link' %></td>
-          <td><%= link_to 'Modifier', edit_dossier_path(dossier), class: 'link' %></td>
-          <td><%= link_to '[X]', dossier, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?' %></td>
+          <td><%= link_to 'Voir', dossier, class: 'text-primary hover:underline' %></td>
+          <td><%= link_to 'Modifier', edit_dossier_path(dossier), class: 'text-primary hover:underline' %></td>
+          <td><%= link_to '[X]', dossier, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: 'text-primary hover:underline' %></td>
         </tr>
       <% end %>
     </tbody>
@@ -116,6 +116,6 @@
   <%= will_paginate @dossiers %>
 </div>
 <br>
-<%= link_to 'Export XLS', url_for(params.permit(:nom, :période, :workflow_state).merge(format: :xls)), class: 'link' %>
+<%= link_to 'Export XLS', url_for(params.permit(:nom, :période, :workflow_state).merge(format: :xls)), class: 'text-primary hover:underline' %>
 
 

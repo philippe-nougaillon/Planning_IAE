@@ -31,5 +31,5 @@
     <%= fa_icon('comment-alt', title: invit.reponse) unless invit.reponse.blank? %>
   </td>
   <td><%= time_ago_in_words invit.updated_at %></td>
-  <td><%= link_to 'Voir', invit, class: 'link' %></td>
+  <td><%= link_to 'Voir', invit, class: 'text-primary hover:underline' %></td>
 </tr>

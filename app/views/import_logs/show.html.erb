@@ -16,7 +16,7 @@
     <strong>Fichier</strong>
     <p class="mb-4">
         <%= @import_log.fichier %> |
-        <%= link_to "Télécharger", download_imported_file_import_log_path(@import_log), class: 'link' %>
+        <%= link_to "Télécharger", download_imported_file_import_log_path(@import_log), class: 'text-primary hover:underline' %>
     </p>
 
   </div>
@@ -31,14 +31,14 @@
     <div class="flex flex-wrap">
       <div class="relative flex-grow max-w-full flex-1">
         <strong>Nbr lignes à importer</strong>
-        <p class="mb-4"><%= link_to @import_log.nbr_lignes, import_log_path(@import_log), class: 'link' %></p>
+        <p class="mb-4"><%= link_to @import_log.nbr_lignes, import_log_path(@import_log), class: 'text-primary hover:underline' %></p>
       </div>
 
       <div class="relative flex-grow max-w-full flex-1">
         <% if @import_log.etat == "warning" %>
           <strong>Rejetées</strong>
           <p class="mb-4">
-            <%= link_to @import_log.nbr_lignes - @import_log.lignes_importees, import_log_path(@import_log, filter: true), class: 'link' %> 
+            <%= link_to @import_log.nbr_lignes - @import_log.lignes_importees, import_log_path(@import_log, filter: true), class: 'text-primary hover:underline' %> 
           </p>
         <% end %>
       </div>

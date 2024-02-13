@@ -17,4 +17,4 @@
   </div>
 <% end %>
 
-<%= link_to 'Voir mes prochains cours...', cours_path(start_date: Date.tomorrow, formation_id: @etudiant.formation.id), class: 'link' %>
+<%= link_to 'Voir mes prochains cours...', cours_path(start_date: Date.tomorrow, formation_id: @etudiant.formation.id), class: 'text-primary hover:underline' %>

@@ -2,7 +2,7 @@
   <td><b><%= document.nom %></b></td>
   <td>
     <% if document.fichier.attached? %>
-    <%= link_to document.fichier.filename, url_for(document.fichier), target: '_blank' %>
+    <%= link_to document.fichier.filename, url_for(document.fichier), target: '_blank', class: 'text-primary hover:underline' %>
     <% end %>
   </td>
   <td>
@@ -17,7 +17,7 @@
   <td><%= time_ago_in_words(document.created_at) %></td>
   <td class="text-right">
     <% if user_signed_in? && current_user.admin? && @dossier.can_déposer? %>
-      <%= link_to '[X]', document, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?' %>
+      <%= link_to '[X]', document, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: 'text-primary hover:underline' %>
     <% end %>
   </td>
 </tr>

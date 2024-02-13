@@ -60,7 +60,7 @@
 <% end %>
 
 <% if user_signed_in? %>
-  <%= link_to 'Retour', current_user.intervenant? ? mes_sessions_intervenant_path : presences_path, class: 'link pb-6' %>
+  <%= link_to 'Retour', current_user.intervenant? ? mes_sessions_intervenant_path : presences_path, class: 'text-primary hover:underline pb-6' %>
 <% end %>
 
 <% if user_signed_in? && (current_user.gestionnaire? || current_user.admin?) %>
