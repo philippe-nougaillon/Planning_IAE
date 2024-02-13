@@ -101,16 +101,16 @@
         Mois 
       </div>
 
-      <% if params[:view] == 'list' %>
-        <div class="sm:w-2/12 pl-2">
+      <div class="sm:w-2/12 pl-2">
+        <% if params[:view] == 'list' %>
           <%= label_tag :paginate, "Afficher" %>
           <br> 
           <%= radio_button_tag :paginate, "pages", (params[:paginate]=='pages'), onchange:'this.form.submit()' %>
           Pages 
           <%= radio_button_tag :paginate, "all", (params[:paginate]=='all'), onchange:'this.form.submit()' %>
           Tout 
-        </div>
-      <% end %>
+        <% end %>
+      </div>
     </div>
   <% end %>
 </div>
