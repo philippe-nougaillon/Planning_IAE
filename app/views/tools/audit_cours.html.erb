@@ -58,7 +58,7 @@
     <% @cours.each do | cours | %>
       <tr class="hover shadow">
         <td class="text-center">
-          <%= link_to cours_url(start_date: cours.debut.to_date.beginning_of_week, view: 'calendar_rooms'), target: '_blank' do %>
+          <%= link_to cours_url(start_date: cours.debut.to_date.beginning_of_week, view: 'calendar_rooms'), target: '_blank', class: 'text-primary hover:underline' do %>
             <%= cours.debut.to_date.strftime('%-V') %>
           <% end %>
         </td>
@@ -77,7 +77,7 @@
         </td>
         <td>
           <span style="background-color:<%= cours.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
-          <%= link_to cours.formation.nom_nbr_etudiants, cours.formation %>
+          <%= link_to cours.formation.nom_nbr_etudiants, cours.formation, class: 'text-primary hover:underline' %>
         </td>
         <td>
           <%= cours.intervenant.nom_prenom %>

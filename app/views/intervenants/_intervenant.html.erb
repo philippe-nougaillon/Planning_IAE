@@ -1,5 +1,5 @@
 <tr class="hover border">
-    <td><b><%= link_to intervenant.nom, intervenant %></b></td>
+    <td><b><%= link_to intervenant.nom, intervenant, class: 'text-primary hover:underline' %></b></td>
     <td><b><%= intervenant.prenom %></b></td>
     <td><%= intervenant.try(:status) %></td>
     <td>

@@ -4,7 +4,7 @@
 
 <% if cours_ids %>
     <div class="page-header"> 
-        <h2 class="text-3xl"><%= link_to intervenant.nom_prenom, intervenant, target:"_new" %></h2>
+        <h2 class="text-3xl"><%= link_to intervenant.nom_prenom, intervenant, target:"_new", class: 'text-primary hover:underline' %></h2>
     </div> 
 
     <% @vacations = intervenant.vacations.where("date BETWEEN ? AND ?", @start_date, @end_date) %>
@@ -46,11 +46,11 @@
 
                 <tr class="hover border">
                     <td>C</td>
-                    <td><%= link_to l(c.debut.to_date), cours_path(start_date: c.debut.to_date) %></td>
+                    <td><%= link_to l(c.debut.to_date), cours_path(start_date: c.debut.to_date), class: 'text-primary hover:underline' %></td>
                     <td class="text-right"><%= c.debut.strftime("%k:%M") %></td>
-                    <td><%= link_to formation.abrg, formation_path(formation), target:"_new", title: formation.nom_promo %></td>
+                    <td><%= link_to formation.abrg, formation_path(formation), target:"_new", title: formation.nom_promo, class: 'text-primary hover:underline' %></td>
                     <td><%= formation.code_analytique_avec_indice(c.debut) %></td>
-                    <td><%= link_to "#{c.ue} #{c.nom_ou_ue}", edit_cour_path(c), target:"_new" %></td>
+                    <td><%= link_to "#{c.ue} #{c.nom_ou_ue}", edit_cour_path(c), target:"_new", class: 'text-primary hover:underline' %></td>
                     <td class="text-center">
                         <% unless c.commentaires.blank? %>
                             <span title="<%= c.commentaires %>">
@@ -111,7 +111,7 @@
                     <td>V</td>
                     <td><%= l vacation.date %></td>
                     <td />
-                    <td><%= link_to formation.nom, formation, target:"_new" %></td>
+                    <td><%= link_to formation.nom, formation, target:"_new", class: 'text-primary hover:underline' %></td>
                     <td><%= formation.code_analytique_avec_indice(vacation.date) %></td>
                     <td><%= vacation.titre %></td>
                     <td />
@@ -153,7 +153,7 @@
                     <td>R</td>
                     <td><%= l resp.debut %></td>
                     <td />
-                    <td><%= link_to formation.nom, formation, target:"_new" %></td>
+                    <td><%= link_to formation.nom, formation, target:"_new", class: 'text-primary hover:underline' %></td>
                     <td><%= formation.code_analytique_avec_indice(resp.debut) %></td>
                     <td><%= resp.titre %></td>
                     <td />

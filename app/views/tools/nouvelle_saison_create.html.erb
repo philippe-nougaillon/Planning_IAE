@@ -16,5 +16,5 @@
 <% end %>
 
 <% if @ids_ok.any? %>
-  <%= link_to 'Afficher les cours créés', cours_path(ids: @ids_ok) %>
+  <%= link_to 'Afficher les cours créés', cours_path(ids: @ids_ok), class: 'text-primary hover:underline' %>
 <% end %>

@@ -52,7 +52,7 @@
           </td>
           <td class="text-right">
             <%= link_to_unless cours_count.zero?, cours_count, 
-                              cours_path(ids:cours.pluck(:id), view:'list', from:'occupation') %>
+                              cours_path(ids:cours.pluck(:id), view:'list', from:'occupation'), class: 'text-primary hover:underline' %>
           </td>
 
           <% if @date %>

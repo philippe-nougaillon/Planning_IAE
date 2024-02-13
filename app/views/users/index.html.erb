@@ -65,7 +65,7 @@
     <tbody>
       <% @users.each do |user| %>
         <tr class="hover border">
-          <td><b><%= link_to user.nom, user %></b></td>
+          <td><b><%= link_to user.nom, user, class: 'text-primary hover:underline' %></b></td>
           <td><%= user.prénom %></td>
           <td>
             <%= user.email %>

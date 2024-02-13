@@ -62,7 +62,7 @@
 
         <tr class="hover border">
           <td>
-            <%= link_to invit do %>
+            <%= link_to invit, class: 'text-primary hover:underline' do %>
               <b><%= l(invit.cour.debut, format: :heures_min) %></b> 
               <br>
               <%= l(invit.cour.fin, format: :heures_min) %>
@@ -95,7 +95,7 @@
               <%= link_to "Je ne suis pas disponible", rejeter_invit_path(invit), class: 'btn btn-sm btn-error btn-outline' %>
             <% end %>
           </td>
-          <td><%= link_to 'Commentaires', invit %></td>
+          <td><%= link_to 'Commentaires', invit, class: 'text-primary hover:underline' %></td>
         </tr>
       <% end %>
     </tbody>

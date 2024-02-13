@@ -73,7 +73,7 @@
         Il y a <%= time_ago_in_words(@user.current_sign_in_at) %>
         <p class="mb-4">
           (<%= @user.sign_in_count %> connexions)
-          <%= link_to 'Voir', user_path(@user) %>
+          <%= link_to 'Voir', user_path(@user), class: 'text-primary hover:underline' %>
         </p>
       <% end %>
     </div>
@@ -120,7 +120,7 @@
                     cours_path(formation_id: formation, 
                                 intervenant_id: @intervenant.id, 
                                 intervenant: @intervenant.nom_prenom,
-                                filter: 'all') %><%= ',' if index != @formations.size - 1 %>
+                                filter: 'all'), class: 'text-primary hover:underline' %><%= ',' if index != @formations.size - 1 %>
       <% end %>
     </p>
 
@@ -151,7 +151,7 @@
                     <%= l r.debut %>
                   </td>
                   <td>
-                    <%= link_to(Formation.unscoped.find(r.formation_id).nom, formations_path(r.formation_id)) %>
+                    <%= link_to(Formation.unscoped.find(r.formation_id).nom, formations_path(r.formation_id), class: 'text-primary hover:underline') %>
                   </td>
                   <td>
                     <%= r.titre %>

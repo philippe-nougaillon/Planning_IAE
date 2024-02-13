@@ -5,7 +5,7 @@
     </span>
   </td>
   <td>
-    <%= link_to invit do %>
+    <%= link_to invit, class: 'text-primary hover:underline' do %>
       <b><%= l(invit.cour.debut, format: :heures_min) %></b> 
       <br>
       <%= l(invit.cour.fin, format: :heures_min) %>

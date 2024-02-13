@@ -95,7 +95,7 @@
                 <tr class="hover border">
                   <td><%= l(audit.created_at, format: :perso) %></td>
                   <td><%= audit.try(:user).try(:email) %></td>
-                  <td><%= link_to audit.auditable_id, cour_path(cour) %></td>
+                  <td><%= link_to audit.auditable_id, cour_path(cour), class: 'text-primary hover:underline' %></td>
                   <td><%= cour.try(:formation).try(:nom) %></td>
                   <td><%= l(cour.debut, format: :perso) %></td>
                   <td><%= convertir_id_salles(audit) %></td>

@@ -3,7 +3,7 @@
         <%= l vacation.date if vacation.date %>
     </td>
     <td>
-        <%= link_to(Formation.unscoped.find(vacation.formation_id).nom, Formation.unscoped.find(vacation.formation_id)) %>
+        <%= link_to(Formation.unscoped.find(vacation.formation_id).nom, Formation.unscoped.find(vacation.formation_id), class: 'text-primary hover:underline') %>
     </td>
     <td>
         <%= vacation.titre %>
