@@ -1,0 +1,16 @@
+<script>
+  function refreshProgressBar() {
+    const elements = document.getElementsByClassName("progress");
+    for(const element of elements){
+      const debut = parseInt(element.dataset.debut);
+      const fin = parseInt(element.dataset.fin);
+      const duree_totale = fin - debut;
+      const duree_ecoulee = parseInt((Date.now() + 3600000) / 1000) - debut;
+
+      // mettre à jour le pourcentage de la barre de progression
+      element.value = parseInt((duree_ecoulee / duree_totale) * 100);
+    }
+  }
+
+  setInterval(function() {refreshProgressBar()}, 60000);
+</script>

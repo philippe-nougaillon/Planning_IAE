@@ -237,3 +237,5 @@
   <%= render partial: params[:view] %>
 <% end %>
 <br>
+
+<%= render partial: 'partials/script_progress_bar' if params[:view] == 'list' %>
