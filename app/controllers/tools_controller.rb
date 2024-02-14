@@ -842,7 +842,7 @@ class ToolsController < ApplicationController
 
   def audits
     @audits = Audited::Audit.order("id DESC")
-    @types  = @audits.pluck(:auditable_type).uniq.sort
+    @types  = Audited::Audit.pluck(:auditable_type).uniq.sort
     @actions= %w[update create destroy]
     
     unless params[:start_date].blank? && params[:end_date].blank? 
