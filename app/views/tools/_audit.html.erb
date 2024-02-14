@@ -6,16 +6,13 @@
   </td>
   <td>
     <% if audit.user_id %>
-      <% if User.all.exists?(id: audit.user_id) %>
-        <% user = User.all.find(audit.user_id) %>
-        <%= user.email %>
-        (#<%= user.id %>)
+      <% if audit.user %>
+        <%= audit.user.email %>
+        (#<%= audit.user.id %>)
         <br>
-        <%= user.role.upcase %>
-      <% else %>
-        Utilisateur supprimé (#<%= audit.user_id %>)
+        <%= audit.user.role.upcase %>
+        <br>
       <% end %>
-      <br>
       IP: <%= audit.remote_address %>
     <% else %>
       SYSTEM CONSOLE
