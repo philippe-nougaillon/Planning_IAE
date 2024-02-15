@@ -317,11 +317,10 @@
       </div>
       <% @cours.each do |c| %>
         <% c.formation.etudiants.order(:nom, :prénom).each do |etudiant| %>
-          <span class="flex" data-action="click->action#click">
+          <span class="flex gap-1" data-action="click->action#click">
             <%= check_box_tag "etudiants_id[#{etudiant.id}]", true, false, data: {"action-target": "source", "checkbox-select-all-target": "checkbox"} %>
+            <%= etudiant.nom_prénom %>
           </span>
-          <%= etudiant.nom_prénom %>
-          <br>
         <% end %>
       <% end %>
     </div>
