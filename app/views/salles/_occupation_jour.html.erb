@@ -27,7 +27,7 @@
         <% if params[:bloc].blank? && salle.bloc != bloc %>
           <% bloc = salle.bloc %>
           <thead>
-            <tr class="bg-base-200 border">
+            <tr class="bg-slate-100 border">
               <th colspan=4></th>
               <% @etendue_horaire.each_with_index do |heure, index| %>
                 <th class="<%= 'bg-amber-100' if ((@date == Date.today) && (heure == time_in_paris.hour)) %>"><%= heure %>h</th>
