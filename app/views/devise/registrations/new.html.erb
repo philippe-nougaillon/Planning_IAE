@@ -14,27 +14,27 @@
 
           <div class="form-control">
             <%= f.label :nom %>
-            <%= f.text_field :nom, autofocus: true, class: "input input-bordered input-sm w-full" %>
+            <%= f.text_field :nom, autofocus: true, class: "input input-bordered input-sm w-full", required: true %>
           </div>
 
           <div class="form-control my-4">
             <%= f.label :prénom %>
-            <%= f.text_field :prénom, class: "input input-bordered input-sm w-full" %>
+            <%= f.text_field :prénom, class: "input input-bordered input-sm w-full", required: true %>
           </div>
 
           <div class="form-control">
             <%= f.label :email %>
-            <%= f.email_field :email, class: "input input-bordered input-sm w-full" %>
+            <%= f.email_field :email, class: "input input-bordered input-sm w-full", required: true %>
           </div>
 
           <div class="form-control my-4">
             <%= f.label :password %>
-            <%= f.password_field :password, autocomplete: "off", class: "input input-bordered input-sm w-full" %>
+            <%= f.password_field :password, autocomplete: "off", class: "input input-bordered input-sm w-full", required: true %>
           </div>
 
           <div class="form-control">
             <%= f.label :password_confirmation %>
-            <%= f.password_field :password_confirmation, autocomplete: "off", class: "input input-bordered input-sm w-full" %>
+            <%= f.password_field :password_confirmation, autocomplete: "off", class: "input input-bordered input-sm w-full", required: true %>
           </div>
           <div>
             <%= f.submit t('.sign_up'), class: "btn btn-primary text-white w-full my-4", 'data-turbo': false %>
