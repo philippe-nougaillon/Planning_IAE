@@ -13,7 +13,7 @@
         const duree_totale = fin - debut;
         const duree_ecoulee = now - debut;
         // mettre à jour le pourcentage de la barre de progression
-        element.value = parseInt((duree_ecoulee / duree_totale) * 100);
+        element.value = (duree_ecoulee / duree_totale) * 100;
       }
     }
   }
