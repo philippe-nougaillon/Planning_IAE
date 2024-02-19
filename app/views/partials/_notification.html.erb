@@ -1,8 +1,8 @@
 <% flash.each do |type, msg| %>
   <% if ["notice","alert"].include?(type) %>
-    <div data-controller="notification" data-notification-delay-value="5000" class="transition transform duration-1000 hidden fixed bottom-0 right-0 flex items-end justify-center px-4 py-6 pointer-events-none sm:p-6 sm:pt-16 sm:items-start sm:justify-end z-50 mt-8 w-full" data-transition-enter-from="opacity-0 translate-x-6" data-transition-enter-to="opacity-100 translate-x-0" data-transition-leave-from="opacity-100 translate-x-0" data-transition-leave-to="opacity-0 translate-x-6">
+    <div data-controller="notification" data-notification-delay-value="5000" class="transition transform duration-1000 hidden fixed bottom-0 right-0 flex items-end justify-center px-4 py-6 pointer-events-none sm:p-6 sm:pt-16 sm:items-start sm:justify-end z-50 mt-8 w-full" data-transition-enter-from="opacity-0 translate-x-96" data-transition-enter-to="opacity-100 translate-x-0" data-transition-leave-from="opacity-100 translate-x-0" data-transition-leave-to="opacity-0 translate-x-96">
       <div class="max-w-md w-full bg-slate-100 shadow-lg rounded-lg pointer-events-auto rounded-lg shadow-xs overflow-hidden p-4">
-        <div class="flex items-start">
+        <div class="flex items-center">
           <% if type == "notice" %>
             <svg class="h-6 w-6 text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBow="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -13,7 +13,7 @@
             </svg>
           <% end %>
           <div class="ml-3 w-0 flex-1 pt-0.5">
-            <p class="text-sm font-medium text-gray-900"><%= notice || alert %></p>
+            <p class="text-sm"><%= notice || alert %></p>
           </div>
           <div class="ml-4 flex-shrink-0 flex">
             <button data-action="notification#hide" class="bg-white rounded-md inline-flex text-gray-400 hover:text-gray-(àà focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
