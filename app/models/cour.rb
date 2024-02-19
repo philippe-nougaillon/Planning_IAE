@@ -255,7 +255,7 @@ class Cour < ApplicationRecord
   def progress_bar_pct3
     # calcul le % de réalisation du cours
     now = ApplicationController.helpers.time_in_paris_selon_la_saison
-    pct = ((now.to_f - self.debut.in_time_zone('Paris').to_f) / (self.fin.in_time_zone('Paris').to_f - self.debut.in_time_zone('Paris').to_f) * 100).to_i
+    pct = ((now.to_f - self.debut.in_time_zone('Paris').to_f) / (self.fin.in_time_zone('Paris').to_f - self.debut.in_time_zone('Paris').to_f) * 100).to_f
   end
 
   def range
