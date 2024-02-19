@@ -675,9 +675,18 @@ class ToolsController < ApplicationController
     date_debut = params[:date_debut]
     date_fin = params[:date_fin]
 
-    unless date_debut.blank? and date_fin.blank?
-      intervenants_id = Cour.where("debut BETWEEN (?) AND (?)", date_debut, date_fin).pluck(:intervenant_id).uniq
+    if date_debut.present? && date_fin.present?
+      intervenants_id = Cour.where("debut BETWEEN ? AND ?", date_debut, date_fin).pluck(:intervenant_id).uniq
+    elsif date_debut.present?
+      intervenants_id = Cour.where("debut > ?", date_debut).pluck(:intervenant_id).uniq
+    elsif date_fin.present?
+      intervenants_id = Cour.where("debut < ?", date_fin).pluck(:intervenant_id).uniq
+    end
+
+    if intervenants_id
       intervenants = intervenants.where(id: intervenants_id)
+    else
+      intervenants = Intervenant.all
     end
 
     unless params[:status].blank?

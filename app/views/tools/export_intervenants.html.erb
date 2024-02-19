@@ -4,18 +4,22 @@
 <br>
 
 <h3 class="text-2xl mb-4">Cette fonction permet la création d'une feuille Excel contenant tous les intervenants</h3>
+<ul class="mb-4">
+  <li>Si aucune date n'est remplie, tous les intervenants seront sélectionnés.</li>
+  <li>S'il y a une date, seul les intervenants qui auront réalisé un cours à partir de jusqu'à cette date seront sélectionnés</li>
+</ul>
 
 <%= form_tag({action: "export_intervenants_do", method: :post}) do %>
 
   <div class="flex flex-wrap gap-4">
     <div class="sm:w-1/5">
       <%= label_tag :date_debut, "Intervenus du" %>
-      <%= text_field_tag :date_debut, params[:date_debut], type: 'date', class: 'input input-bordered input-sm w-full', required: true %>
+      <%= text_field_tag :date_debut, params[:date_debut], type: 'date', class: 'input input-bordered input-sm w-full' %>
     </div>
 
     <div class="sm:w-1/5">
       <%= label_tag :date_fin, "au" %>
-      <%= text_field_tag :date_fin, params[:date_fin], type: 'date', class: 'input input-bordered input-sm w-full', required: true %>
+      <%= text_field_tag :date_fin, params[:date_fin], type: 'date', class: 'input input-bordered input-sm w-full' %>
     </div>
 
     <div class="sm:w-1/4">

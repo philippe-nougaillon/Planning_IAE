@@ -102,9 +102,16 @@ class Intervenant < ApplicationRecord
 		
 		index = 1
 		intervenants.each do |i|
-			if date_debut.present?
-				nbr_heures_cours = i.cours.where("debut BETWEEN (?) AND (?)", date_debut, date_fin).sum(:duree).to_f
+			if date_debut.present? && date_fin.present?
+				cours = i.cours.where("debut BETWEEN ? AND ?", date_debut, date_fin)
+			elsif date_debut.present?
+				cours = i.cours.where("debut > ?", date_debut)
+			elsif date_fin.present?
+				cours = i.cours.where("debut < ?", date_fin)
+			else
+				cours = i.cours
 			end
+			nbr_heures_cours = cours.sum(:duree).to_f
 
 			fields_to_export = [
 				i.id, 
@@ -126,7 +133,7 @@ class Intervenant < ApplicationRecord
 				i.created_at, 
 				i.updated_at,
 				i.notifier?,
-				nbr_heures_cours.present? ? nbr_heures_cours : nil
+				nbr_heures_cours
 			]
 			sheet.row(index).replace fields_to_export
 			index += 1
