@@ -52,7 +52,7 @@
           <% end %>  
 
           <% formation = Formation.unscoped.find(meeting.formation_id) %>
-          <div class="shadow-lg p-2 mb-2 bg-base-100 leading-6" style="min-height:<%= 120 + (10 * meeting.duree) %>px; border-left:6px; border-left-style:solid; border-left-color:<%= formation.color %>; padding-left:5px;">
+          <div class="shadow-xl p-2 mb-2 bg-base-100 leading-6" style="min-height:<%= 120 + (10 * meeting.duree) %>px; border-left:6px; border-left-style:solid; border-left-color:<%= formation.color %>; padding-left:5px;">
             <%= link_to meeting, class: 'text-primary hover:underline' do %>
               <b><%= l(meeting.debut, format: :heures_min) %></b>  
               - <%= l(meeting.fin, format: :heures_min) %>
