@@ -2,13 +2,19 @@
   function refreshProgressBar() {
     const elements = document.getElementsByClassName("progress");
     for(const element of elements){
+      // heure d'hiver
+      const now = parseInt((Date.now() + 3600000) / 1000)
+      // heure d'été
+      // const now = parseInt((Date.now() + 7200000) / 1000)
       const debut = parseInt(element.dataset.debut);
       const fin = parseInt(element.dataset.fin);
-      const duree_totale = fin - debut;
-      const duree_ecoulee = parseInt((Date.now() + 3600000) / 1000) - debut;
 
-      // mettre à jour le pourcentage de la barre de progression
-      element.value = parseInt((duree_ecoulee / duree_totale) * 100);
+      if (now > debut && now < fin) {
+        const duree_totale = fin - debut;
+        const duree_ecoulee = now - debut;
+        // mettre à jour le pourcentage de la barre de progression
+        element.value = parseInt((duree_ecoulee / duree_totale) * 100);
+      }
     }
   }
 

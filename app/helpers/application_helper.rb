@@ -29,6 +29,10 @@ module ApplicationHelper
     end
 
     def time_in_paris_selon_la_saison
+        #
+        # penser à changer refreshProgressBar()
+        #
+
         # Heure d'hiver
         DateTime.now.in_time_zone('Europe/Paris') + 1.hours
 
