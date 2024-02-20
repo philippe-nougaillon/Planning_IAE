@@ -1,3 +1,4 @@
+<hr>
 <%= calendar partial: 'simple_calendar/week_rooms_calendar', 
               start_date_param: :calendar_rooms_starts_at,
               events: @cours.planifié.where(salle_id: nil), 
@@ -5,29 +6,28 @@
               number_of_days: 6 do |date, meetings| %>
 
   <% meetings.each do |meeting| %>
-    <div class="shadow-sm p-1 <%= meeting.formation.nbr_etudiants > 30 ? 'border-bottom border-danger' : '' %>" style="border-width: 5px !important;">
-      <span class="badge badge-<%= meeting.style %>"><%= meeting.etat.humanize %></span><br>
+    <div class="shadow p-1 <%= meeting.formation.nbr_etudiants > 30 ? 'border-b border-red-600' : '' %>" style="border-width: 5px !important;">
+      <span class="badge badge-<%= meeting.style %> text-white"><%= meeting.etat.humanize %></span><br>
       <b><%= l(meeting.debut, format: :heures_min) %></b>
         - <%= l(meeting.fin, format: :heures_min) %>
       <br>
       <% if meeting.try(:formation).try(:abrg) %>
         <% if meeting.salle_id == nil %>
-          <%= link_to meeting.formation.nom_abrg_nbr_etudiants, edit_cour_path(meeting, from:'planning_salles'), title:meeting.nom %>
+          <%= link_to meeting.formation.nom_abrg_nbr_etudiants, edit_cour_path(meeting, from:'planning_salles'), title:meeting.nom, class: 'text-primary hover:underline' %>
         <% end %>
       <% else %>
-        <%= link_to_if user_signed_in?, meeting.try(:formation).try(:nom), meeting %>
+        <%= link_to_if user_signed_in?, meeting.try(:formation).try(:nom), meeting, class: 'text-primary hover:underline' %>
       <% end %>
     </div>
   <% end %>
 <% end %>
   
-<div class="row">
-  <div class="col">
+<div class="flex flex-wrap">
+  <div class="relative flex-grow max-w-full flex-1">
     <% bloc = 'A' %> 
     <% Salle.all.reorder(:bloc, :nom).each do |salle| %>
       <% @salle = salle %>
       <% if bloc != salle.nom[0] %>
-        <br><br>
         <% bloc = salle.nom[0] %>
       <% end %>
 
@@ -38,47 +38,35 @@
                     number_of_days: 6 do |date, meetings| %>
 
         <% meetings.each do |meeting| %>
-          <!--- chercher si conflit de salle ! -->
-          <% if current_user %>
-            <% unless meeting.salle.places.zero? %>
-                <% if Cour.where("cours.id <> ? AND salle_id = ? AND (((debut BETWEEN ? AND ?) OR (fin BETWEEN ? AND ?)) OR (debut < ? AND fin > ?))", 
-                          meeting.id, salle.id, meeting.debut, meeting.fin, meeting.debut, meeting.fin, meeting.fin, meeting.debut)
-                          .where.not(debut:meeting.fin)
-                          .where.not(fin:meeting.debut)
-                          .any? %>
-                  <span style="background-color:black;color:yellow;">CONFLIT SALLE !</span>
-                <% end %>
-            <% else %>
-              <% if Cour.where("cours.id <> ? AND (intervenant_id = ? OR intervenant_binome_id = ?) AND (((debut BETWEEN ? AND ?) OR (fin BETWEEN ? AND ?)) OR (debut < ? AND fin > ?))", 
-                        meeting.id, meeting.intervenant_id, meeting.intervenant_id, meeting.debut, meeting.fin, meeting.debut, meeting.fin, meeting.fin, meeting.debut)
-                        .where.not(debut:meeting.fin)
-                        .where.not(fin:meeting.debut)
-                        .any? %>
-                <% unless meeting.intervenant.try(:doublon) || meeting.intervenant_binome.try(:boublon) %>
-                  <span style="background-color: red; color: white;">CONFLIT INTERVENANT !</span>
-                <% end %>
+          <% if current_user && meeting.salle.bloc != 'Z' %>
+            <!--- chercher si conflit d'intervenant ! -->
+            <% if Cour.where("cours.id <> ? AND (intervenant_id = ? OR intervenant_binome_id = ?) AND (((debut BETWEEN ? AND ?) OR (fin BETWEEN ? AND ?)) OR (debut < ? AND fin > ?))", 
+                      meeting.id, meeting.intervenant_id, meeting.intervenant_id, meeting.debut, meeting.fin, meeting.debut, meeting.fin, meeting.fin, meeting.debut)
+                      .where.not(debut:meeting.fin)
+                      .where.not(fin:meeting.debut)
+                      .any? %>
+              <% unless meeting.intervenant.try(:doublon) || meeting.intervenant_binome.try(:boublon) %>
+                <span style="background-color: red; color: white;">CONFLIT INTERVENANT !</span>
               <% end %>
             <% end %>
           <% end %>  
 
           <% formation = Formation.unscoped.find(meeting.formation_id) %>
-          <div class="shadow p-2 mb-2 bg-white" style="height:<%= 120 + (10 * meeting.duree) %>px; border-left:6px; border-left-style:solid; border-left-color:<%= formation.color %>; padding-left:5px;">
-            <%= link_to meeting do %>
+          <div class="shadow-xl p-2 mb-2 bg-base-100 leading-6" style="min-height:<%= 120 + (10 * meeting.duree) %>px; border-left:6px; border-left-style:solid; border-left-color:<%= formation.color %>; padding-left:5px;">
+            <%= link_to meeting, class: 'text-primary hover:underline' do %>
               <b><%= l(meeting.debut, format: :heures_min) %></b>  
               - <%= l(meeting.fin, format: :heures_min) %>
               <br>
             <% end %>
 
-            <b>
-              <% if formation.abrg %>
-                <%= link_to_if user_signed_in?, formation.nom_abrg_nbr_etudiants, edit_cour_path(meeting, from: 'planning_salles'), title: meeting.nom_et_étudiants, target: '_blank', class:'text-dark' %>
-              <% else %>
-                <%= link_to_if user_signed_in?, formation.nom, meeting, class:"text-dark" %>
-              <% end %>
-            </b>
+            <% if formation.abrg %>
+              <%= link_to_if user_signed_in?, formation.nom_abrg_nbr_etudiants, edit_cour_path(meeting, from: 'planning_salles'), title: meeting.nom_et_étudiants, target: '_blank', class: 'text-base-content font-bold hover:underline' %>
+            <% else %>
+              <%= link_to_if user_signed_in?, formation.nom, meeting, class:"text-base-content hover:underline" %>
+            <% end %>
             <br>
             <% if user_signed_in? %>
-              <small><%= meeting.intervenant.nom_prenom %></small>
+              <%= meeting.intervenant.nom_prenom %>
               <br>
             <% end %>
 

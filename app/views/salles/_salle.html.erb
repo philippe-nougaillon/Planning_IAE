@@ -1,10 +1,10 @@
-<tr>
-    <td><%= link_to salle.nom, salle %></td>
+<tr class="hover border">
+    <td><b><%= link_to salle.nom, salle, class: 'text-primary hover:underline' %></b></td>
     <td><%= salle.places %></td>
     <td><%= salle.bloc %></td>
     <td class="text-center">
         <% unless Cour.where(salle_id: salle).any? %>
-            <%= link_to(salle, method: :delete, data: {confirm: 'Confirmez-vous ?'}, class: "btn btn-default") do %>
+            <%= link_to(salle, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: "btn btn-ghost") do %>
                 <%= fa_icon 'trash' %>
             <% end %>
         <% end %>

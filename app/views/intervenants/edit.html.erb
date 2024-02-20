@@ -1,15 +1,15 @@
-<div class="pb-2 mt-4 mb-2 border-bottom">
-	<div class="btn-group float-right">
-		<%= link_to @intervenant, class: 'btn btn-sm btn-outline-primary' do %>
+<div class="border-b mt-6 mb-2 pb-4">
+	<div class="join float-right">
+		<%= link_to @intervenant, class: 'btn btn-sm btn-primary btn-outline join-item' do %>
 			<%= fa_icon 'eye' %> Voir
 		<% end %>
 
-		<%= link_to intervenants_path, class: 'btn btn-sm btn-outline-primary' do %>
+		<%= link_to intervenants_path, class: 'btn btn-sm btn-primary btn-outline join-item' do %>
 			<%= fa_icon 'list' %> Retour
 		<% end %>
 
 	</div>
-  	<h3><%= fa_icon 'chalkboard-teacher' %> Modification d'un intervenant</h3>
+	<h1 class="text-3xl"><%= fa_icon 'chalkboard-teacher' %> Modification d'un intervenant</h1>
 </div>
 
 <%= render 'form' %>

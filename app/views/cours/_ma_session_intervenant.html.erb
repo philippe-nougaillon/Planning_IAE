@@ -1,34 +1,29 @@
-<div class="card shadow-sm p-2 mb-4" style="border-left:6px; border-left-style:solid; border-left-color:<%= cour.formation.color %>;">
-  <div class="d-flex justify-content-between">
+<div class="card shadow p-2 mb-6" style="border-left:6px; border-left-style:solid; border-left-color:<%= cour.formation.color %>;">
+  <div class="flex justify-between">
     <p class="mb-0"><b><%= l(cour.debut, format: :heures_min) %></b> - <%= l(cour.fin, format: :heures_min) %></p>
     <br><br>
     <% if cour.salle %>
       <p class="mb-0">
-        <span class="badge badge-pill badge-<%= cour.style %>">
+        <span class="badge badge-<%= cour.style %> text-white">
           <%= cour.salle.nom %>
         </span>
       </p>
     <% end %>
   </div>
   <div class="mb-2">
-    <p class="mb-0 font-weight-bold"><%= cour.formation.nom.humanize %></p>
+    <p class="mb-0 font-bold"><%= cour.formation.nom.humanize %></p>
     <p class="mb-0"><%= cour.nom_ou_ue %></p>
     <p class="mb-0">(<%= cour.etudiants.count %> étudiants prévus)</p>
   </div>
 
-  <div class="progress mt-2" style="width: 100%">
-    <div class="progress-bar bg-primary" 
-        role="progressbar" aria-valuemin="0" aria-valuemax="100" 
-        style="width: <%= cour.progress_bar_pct3 %>%; opacity: 0.3;">
-    </div>
-  </div>
+  <progress data-debut="<%= cour.debut.to_i %>" data-fin="<%= cour.fin.to_i %>" class="progress progress-primary opacity-50 mt-2" value="<%= cour.progress_bar_pct3 %>" max="100"></progress>
 
-  <h6 class='mt-4 mb-0'>Signatures présences :</h6>
+  <h6 class="mt-6 mb-0">Signatures présences :</h6>
     <% presences = cour.presences.where.not(etudiant_id: nil) %>
     <% if presences.any? %>
-      <h5 class='mt-3'>
+      <h5 class="text-lg mt-4">
         <% Presence.workflow_states_count(presences).each do |state| %>
-          <span class="badge <%= Presence.workflow_spec.states[state.first.to_sym].meta[:style] %>">
+          <span class="badge text-white font-bold <%= Presence.workflow_spec.states[state.first.to_sym].meta[:style] %>">
             <%= state.first.humanize %> : <%= state.last %>
           </span>
         <% end %>
@@ -36,28 +31,30 @@
     <% end %>
 
   <% if action_name == 'mes_sessions_intervenant' %>
-    <div class="d-flex flex-wrap justify-content-between justify-content-sm-start mt-2">
+    <div class="flex flex-wrap justify-between sm:justify-start mt-2">
       <% cour.etudiants.order(:nom).each do |etudiant| %>
         <% presence = cour.presences.find_by(etudiant_id: etudiant.id) %>
         <% if presence.present? %>
           <%= link_to presence_path(presence) do %>
-            <h5 class='mr-1'>
-              <span class="badge <%= presence.style %> font-weight-normal">
+            <h5 class="text-lg mr-1">
+              <span class="badge <%= presence.style %> text-white font-bold">
                 <%= presence.etudiant.nom.upcase %>
                 <%= fa_icon 'wifi' if presence.wifi_detected? %>
               </span>
             </h5>
           <% end %>
         <% else %>
-          <h5 class='mr-1'>
-            <span class="badge badge-light font-weight-normal"><%= etudiant.nom.upcase %></span>
+          <h5 class="text-lg mr-1">
+            <span class="badge"><%= etudiant.nom.upcase %></span>
           </h5>
         <% end %>
       <% end %>
     </div>
 
     <% if cour.signable_intervenant? && params[:presence_slug].present? && cour.presences.where(intervenant_id: @intervenant.id).where.not(workflow_state: 'attente signature').empty? %>
-      <%= link_to 'Signer la feuille de présence', signature_intervenant_cours_path(presence_slug: params[:presence_slug]), class: 'btn btn-warning btn-lg mt-4' %>
+      <%= link_to 'Signer la feuille de présence', signature_intervenant_cours_path(presence_slug: params[:presence_slug]), class: 'btn btn-warning btn-lg mt-6' %>
     <% end %>
   <% end %>
 </div>
+
+<%= render partial: 'partials/script_progress_bar' %>

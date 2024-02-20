@@ -1,8 +1,8 @@
-<div class="pb-2 mt-4 mb-2 border-bottom">
-	<%= link_to salles_path, class: 'btn text-primary float-right' do %>
+<div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
+	<h1 class="text-3xl"><%= fa_icon 'chalkboard' %> Ajouter une salle</h1>
+	<%= link_to salles_path, class: 'text-primary' do %>
 		<%= fa_icon 'list-alt' %> Retour
 	<% end %>
-	<h3><%= fa_icon 'chalkboard' %> Ajouter une salle</h3>
 </div>
 
 <%= render 'form' %>

@@ -1,32 +1,32 @@
-<div class="pb-2 mt-4 mb-2 border-bottom">
-  <h3><%= fa_icon 'download' %> Import des étudiants</h3>
+<div class="border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'download' %> Import des étudiants</h1>
 </div>
 <br>
 
 <%= form_tag({action: "import_etudiants_do", method: :post}, multipart: true) do %>
   <div>
-    <h3>Cette fonction permet l'importation / màj d'une liste d'étudiants à partir d'une feuille Excel(.xls)</h3>
+    <h3 class="text-2xl">Cette fonction permet l'importation / màj d'une liste d'étudiants à partir d'une feuille Excel(.xls)</h3>
     <br>
-    <p>
+    <p class="mb-4">
       Les champs attendus sont :
       <%= Etudiant.xls_headers.join(', ') %>
     </p>
-    <p>Les champs obligatoires sont :
+    <p class="mb-4">Les champs obligatoires sont :
       <strong>Civilité, NOM, Prénom, Mail</strong>
     </p>
   </div>
   <br>
   
-  <div class="row">
-    <div class="col-sm-4">
-      <%= label_tag "Formation" %>    
+  <div class="flex flex-wrap">
+    <div class="sm:w-1/3">
+      <%= label_tag :formation_id, "Formation *" %>    
       <%= select_tag :formation_id, 
             options_from_collection_for_select(Formation.all, :id, :nom, params[:formation_id]), 
-              class:"form-control select2", include_blank: true, required: true %>
+              class:"slim-select", include_blank: true %>
       <br>
       <div class="field">
-        <%= label :filename, "Fichier source" %>
-        <%= file_field_tag 'upload', accept: 'application/vnd.ms-excel', class: 'form-control pb-5 pt-3' %>
+        <%= label :filename, "Fichier source *" %>
+        <%= file_field_tag 'upload', accept: 'application/vnd.ms-excel', class: 'file-input file-input-bordered file-input-sm w-full' %>
       </div>
     </div>
   </div>
@@ -43,12 +43,10 @@
   <br>
 
   <div class="field">
-    <%= check_box_tag :notify %> <b>Créer un compte d'accès et en informer les étudiants ?</b>
+    <%= check_box_tag :notify %>
+    <%= label_tag :notify, "Créer un compte d'accès et en informer les étudiants ?", class: 'font-bold' %>
   </div>
   <br>
   
-  <div class="actions">
-    <%= submit_tag "Lancer l'import", class: "btn btn-success" %>
-  </div>
+  <%= submit_tag "Lancer l'import", class: "btn btn-primary text-white mb-4", 'data-turbo': false %>
 <% end %>
-<br>

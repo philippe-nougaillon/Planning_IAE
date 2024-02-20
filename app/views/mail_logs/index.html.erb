@@ -1,45 +1,38 @@
-<h1>Mail Logs</h1>
-<p>Historique des mails envoyés via MailGun, avec Statut et État consultables pendant 5 jours.</p>
+<div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'envelope' %> Mail Logs</h1>
+</div>
+<p class="mb-4">Historique des mails envoyés via MailGun, avec Statut et État consultables pendant 5 jours.</p>
 
 <% if @result_failed && @result_failed['items'].size.positive? %>
-  <p class="text-danger">Il y a actuellement <%= @result_failed['items'].count %> envois en Statut 'KO'</p>
+  <p class="text-error mb-4">Il y a actuellement <%= @result_failed['items'].count %> envois en Statut 'KO'</p>
 <% end %>
 
-<div class="container-fluid p-3 shadow-sm">
+<div class="bs-container p-4 shadow mb-4">
   <%= form_tag request.path, method: :get do %>
-    <div class="form-group">
-      <div class="row">
+    <div class="flex flex-wrap">
 
-        <div class="col-sm-3">
-          <%= label_tag :search, "Destinataire" %>
-          <div class="input-group">
-            <%= text_field_tag :search, params[:search], include_blank: true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
-          </div>
-        </div>
-
-        <div class="col">
-          <%= label_tag :search_subject, "Sujet" %>
-          <div class="input-group">
-            <%= select_tag :search_subject, options_for_select(MailLog.all.pluck(:subject).uniq.sort, params[:search_subject]), include_blank: true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
-            <span class="input-group-btn">
-                <%= submit_tag 'Filtrer', class:"btn btn-sm btn-success" %>
-            </span>
-          </div> 
-        </div>
-
-        <div class="col-sm-3">
-          <%= label_tag :ko, "Afficher que les KO ?" %>
-          <br>
-          <%= check_box_tag :ko, 1, params[:ko], onchange:'this.form.submit()' %>
-        </div>
-        
+      <div class="sm:w-1/4 pr-4">
+        <%= label_tag :search, "Destinataire" %>
+        <%= text_field_tag :search, params[:search], include_blank: true, onchange:'this.form.submit()', class:"input input-bordered input-sm w-full" %>
       </div>
+
+      <div class="relative flex-grow max-w-full flex-1">
+        <%= label_tag :search_subject, "Sujet" %>
+        <%= select_tag :search_subject, options_for_select(MailLog.all.pluck(:subject).uniq.sort, params[:search_subject]), include_blank: true, onchange:'this.form.submit()', class:"select select-bordered select-sm w-full" %>
+      </div>
+
+      <div class="sm:w-1/4 px-4">
+        <%= label_tag :ko, "Afficher que les KO ?" %>
+        <br>
+        <%= check_box_tag :ko, 1, params[:ko], onchange:'this.form.submit()' %>
+      </div>
+      
     </div>
   <% end %>
 </div>
 
-<div style="overflow-x: auto;">
-  <table class="table table-hover table-sm">
+<div class="overflow-x-auto">
+  <table class="table table-sm">
     <thead>
       <tr>
         <th><%= sortable :user_id do %>De<% end %></th>
@@ -62,6 +55,12 @@
 
       <% end %>
     </tbody>
+
+    <tfoot>
+      <tr>
+        <th colspan="7"></th>
+      </tr>
+    </tfoot>
   </table>
 </div>
 
@@ -70,5 +69,7 @@
     <%= page_entries_info @mail_logs %>
   </div>
 
-  <%= will_paginate @mail_logs, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+  <div class="planning_pagination">
+    <%= will_paginate @mail_logs %>
+  </div>
 <% end %>

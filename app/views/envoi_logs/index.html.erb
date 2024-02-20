@@ -1,55 +1,57 @@
-<div class="pb-2 mt-4 mb-2 border-bottom">
+<div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'bell' %> Rappel des cours (file d'attente)</h1>
   <% if policy(EnvoiLog).new? %>
-    <%= link_to tools_rappel_des_cours_path, class: 'btn text-primary float-right' do %>
+    <%= link_to tools_rappel_des_cours_path, class: 'text-primary' do %>
       <%= fa_icon 'plus-circle' %> Rappel
     <% end %>
   <% end %>
-  <h3><%= fa_icon 'bell' %> Rappel des cours (file d'attente)</h3>
 </div>
 
-<div class="container-fluid p-3 shadow-sm mb-4">
+<div class="bs-container p-4 shadow mb-4">
   <%= form_tag request.path, method: :get do %>
-    <div class="form-group">
-      <div class="row">
-        <div class="col-sm-2">
-          <%= label_tag :workflow_state, "État" %>
-          <%= select_tag :workflow_state, options_for_select(EnvoiLog.workflow_spec.states.keys, params[:workflow_state]), include_blank:true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
-        </div>
+    <div class="flex flex-wrap">
+      <div class="sm:w-1/5 pr-4">
+        <%= label_tag :workflow_state, "État" %>
+        <%= select_tag :workflow_state, options_for_select(EnvoiLog.workflow_spec.states.keys, params[:workflow_state]), include_blank:true, onchange:'this.form.submit()', class:"select select-bordered select-sm w-full" %>
       </div>
     </div>
   <% end %>
 </div>
 
-<table class="table table-bordered table-striped table-hover table-sm">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>MÀJ</th>
-      <th>Destinataire(s)</th>
-      <th>Période</th>
-      <th>État</th>
-      <th></th>
-      <th>Envoyé</th>
-      <th>Mails</th>
-      <th></th>
-    </tr>
-  </thead>
+<div class="overflow-x-auto">
+  <table class="table table-sm">
+    <thead class="bg-slate-100 border">
+      <tr>
+        <th>ID</th>
+        <th>MÀJ</th>
+        <th>Destinataire(s)</th>
+        <th>Période</th>
+        <th>État</th>
+        <th></th>
+        <th>Envoyé</th>
+        <th>Mails</th>
+        <th></th>
+      </tr>
+    </thead>
 
-  <tbody>
-    <%= render @envoi_logs %>
-  </tbody>
+    <tbody>
+      <%= render @envoi_logs %>
+    </tbody>
 
-</table>
+  </table>
+</div>
 
 <div class="page_info">
   <%= page_entries_info @envoi_logs %>
 </div>
 
-<%= will_paginate @envoi_logs, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+<div class="planning_pagination">
+  <%= will_paginate @envoi_logs %>
+</div>
 
 <% if params[:workflow_state] == "prêt" %>
-  <div class="d-flex mt-4" style="gap: 1rem">
+  <div class="flex mt-6" style="gap: 1rem">
     <%= link_to "Envoyer les rappels 'prêts' aux testeurs (mode test)", envoyer_envoi_logs_path(test: true), class: 'btn btn-warning' %>
-    <%= link_to "Envoyer le rappel des cours 'prêts'", envoyer_envoi_logs_path, class: 'btn btn-danger' %>
+    <%= link_to "Envoyer le rappel des cours 'prêts'", envoyer_envoi_logs_path, class: 'btn btn-error' %>
   </div>
 <%end %>

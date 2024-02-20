@@ -1,16 +1,11 @@
-import { Controller } from "stimulus"
+import { Controller } from "@hotwired/stimulus"
 import Rails from "@rails/ujs";
-import $ from 'jquery';
 
 export default class extends Controller {
   static targets = [ 'id', 'date', 'duree', 'formation_id', 'intervenant_id', 'salles' ]
 
   connect() {
-    $("#intervenant_id").on('select2:select', function () {
-        //console.log("list item selected");
-        let event = new Event('change', { bubbles: true }) // fire a native event
-        this.dispatchEvent(event);
-    });
+    // console.log("dispo controller connected...");
   }
 
   show_dispo() {
@@ -35,7 +30,7 @@ export default class extends Controller {
       }
     })
   }
-  
+
   refreshDropdownValues(data) {
     this.sallesTarget.innerHTML = ""
 

@@ -9,7 +9,7 @@ class DocumentsController < ApplicationController
         if @document.save 
           flash[:notice] = "Document ajouté"
         else
-          flash[:error] = "Votre document n'a pas été ajouté !"
+          flash[:alert] = "Votre document n'a pas été ajouté !"
         end
         redirect_to @document.dossier
     end

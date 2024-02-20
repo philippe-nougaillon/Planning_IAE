@@ -78,12 +78,10 @@ class IntervenantsController < ApplicationController
     @intervenant = Intervenant.new
     @intervenant.notifier = true
     @intervenant.année_entrée = Date.today.year
-    10.times { @intervenant.responsabilites.build }
   end
 
   # GET /intervenants/1/edit
   def edit
-    3.times { @intervenant.responsabilites.build }
   end
 
   # POST /intervenants
@@ -96,7 +94,7 @@ class IntervenantsController < ApplicationController
         format.html { redirect_to @intervenant, notice: 'Intervenant ajouté.' }
         format.json { render :show, status: :created, location: @intervenant }
       else
-        format.html { render :new }
+        format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @intervenant.errors, status: :unprocessable_entity }
       end
     end

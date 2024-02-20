@@ -1,4 +1,4 @@
-<tr>
+<tr class="hover border">
     <td style="white-space: nowrap;">
         <% case result.searchable_type when 'Cour' %>
             <%= fa_icon 'calendar-day', title: "Cour" %>
@@ -10,9 +10,9 @@
                 <br>
                 <span style="background-color:<%= Formation.unscoped.find(Cour.find(result.searchable_id).formation_id).color %>;padding-left: 5px;margin-right: 5px;"></span>
                 <%= Formation.unscoped.find(cours.formation_id).nom %>
-                <p class="mx-2 d-inline">|</p>
+                <p class="mx-2 inline mb-4">|</p>
                 <%= cours.nom_ou_ue %>
-                <p class="mx-2 d-inline">|</p>
+                <p class="mx-2 inline mb-4">|</p>
                 <%= cours.intervenant.nom_prenom %>
                 <% if !cours.commentaires.blank? %>
                     <br>
@@ -36,9 +36,9 @@
                 <td>
                     <% intervenant = Intervenant.find(result.searchable_id) %>
                     <%= intervenant.nom_prenom %>
-                    <p class="mx-2 d-inline">|</p>
+                    <p class="mx-2 inline mb-4">|</p>
                     <%= intervenant.email %>
-                    <p class="mx-2 d-inline">|</p>
+                    <p class="mx-2 inline mb-4">|</p>
                     <%= intervenant.status %>
                 </td>
             <% when 'Etudiant' %>
@@ -48,9 +48,9 @@
                 <td>
                     <% etudiant = Etudiant.find(result.searchable_id) %>
                     <%= "#{etudiant.nom} #{etudiant.prénom}" %>
-                    <p class="mx-2 d-inline">|</p>
+                    <p class="mx-2 inline mb-4">|</p>
                     <%= etudiant.email %>
-                    <p class="mx-2 d-inline">|</p>
+                    <p class="mx-2 inline mb-4">|</p>
                     <%= etudiant.mobile %>
                 </td>
             <% when 'Unite' %>
@@ -60,9 +60,9 @@
                 <td>
                     <% unite = Unite.find(result.searchable_id) %>
                     <%= unite.num %>
-                    <p class="mx-2 d-inline">|</p>
+                    <p class="mx-2 inline mb-4">|</p>
                     <%= unite.nom %>
-                    <p class="mx-2 d-inline">|</p>
+                    <p class="mx-2 inline mb-4">|</p>
                     <span style="background-color:<%= Formation.unscoped.find(unite.formation_id).color %>;padding-left: 5px;margin-right: 5px;"></span>
                     <%= Formation.unscoped.find(unite.formation_id).nom %>
                 </td>
@@ -73,16 +73,28 @@
                 <td>
                     <% user = User.find(result.searchable_id)%>
                     <%= user.nom_et_prénom %>
-                    <p class="mx-2 d-inline">|</p>
+                    <p class="mx-2 inline mb-4">|</p>
                     <%= user.email %>
+                </td>
+            <% when 'MailLog' %>
+                <%= fa_icon 'envelope', title: "MailLog" %>
+                MailLog
+                </td>
+                <td>
+                    <% mail_log = MailLog.find(result.searchable_id)%>
+                    <%= mail_log.to %>
+                    <p class="mx-2 inline mb-4">|</p>
+                    <%= mail_log.subject %>
                 </td>
         <% end %>
     <td>
-        <%= link_to fa_icon('eye'),
-                    url_for(controller: result.searchable_type.pluralize.downcase, 
-                            action: 'show', 
-                            id: result.searchable_id),
-                            target: '_blank' %>
+        <% if result.searchable_type != 'MailLog' %>
+            <%= link_to fa_icon('eye'),
+                        url_for(controller: result.searchable_type.pluralize.downcase, 
+                                action: 'show', 
+                                id: result.searchable_id),
+                                target: '_blank' %>
+        <% end %>
     </td>
     <td style="white-space: nowrap;">
         <p>

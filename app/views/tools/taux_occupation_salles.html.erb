@@ -1,36 +1,30 @@
-<div class="pb-2 mt-4 mb-2 border-bottom">
-  <h3><%= fa_icon 'tachometer-alt' %> Taux d'occupation salles</h3>
+<div class="border-b mt-6 mb-2 pb-4">
+    <h1 class="text-3xl"><%= fa_icon 'tachometer-alt' %> Taux d'occupation salles</h1>
 </div>
 <br>
 
 <div>
-    <h3>Calcule le taux d'occupation par salle sur une période donnée</h3>
-    <p>
+    <h3 class="text-2xl">Calcule le taux d'occupation par salle sur une période donnée</h3>
+    <p class="mb-4">
         Nombre d'heures de disponibilité par salle: <%= Salle.nb_heures_journée %>h en journée / <%= Salle.nb_heures_soirée %>h en soirée<br>
         Les samedis soir, les dimanches et les jours de fermeture n'entrent pas dans le calcul du nombre d'heures disponibles par salle<br>
     </p>
 </div>
 
 <%= form_tag({action: "taux_occupation_salles_do", method: :post}) do %>
+    <div class="flex flex-wrap">
+        <div class="sm:w-1/5 pr-4">
+            <%= label_tag :start_date, "Période du" %>    
+            <%= text_field_tag :start_date, params[:start_date], type:'date', class:"input input-bordered input-sm w-full" %>
+        </div>
 
-    <div class="form-group">
-        <div class="row">
-            <div class="col-sm-2">
-                <%= label_tag "Période du" %>    
-                <%= text_field_tag :start_date, params[:start_date], type:'date', class:"form-control" %>
-            </div>
-
-            <div class="col-sm-2">
-                <%= label_tag "Au" %>    
-                <%= text_field_tag :end_date, params[:end_date], type:'date', class:"form-control" %>
-            </div>
-            <br>
+        <div class="sm:w-1/5 pr-4">
+            <%= label_tag :end_date, "Au" %>    
+            <%= text_field_tag :end_date, params[:end_date], type:'date', class:"input input-bordered input-sm w-full" %>
         </div>
         <br>
-        
-        <div class="actions">
-            <%= submit_tag "Valider", class: "btn btn-success" %>
-        </div>
     </div>
-  
+    <br>
+
+    <%= submit_tag "Valider", class: "btn btn-primary text-white", 'data-turbo': false %>
 <% end %>

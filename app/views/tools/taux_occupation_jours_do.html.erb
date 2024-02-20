@@ -1,31 +1,33 @@
 <div class="page-header">
-  <h1>
+  <h1 class="text-4xl">
   	Taux d'occupation jours
     du <%= l(@start_date.to_date) %> au <%= l(@end_date.to_date) %>
   </h1>
 </div>
 
-<table class="table table-striped table-hover">
-  <thead>
-    <th>Date</th>
-    <th>Taux journée</th>
-    <th>Taux soirée</th>
-  </thead>
-  <tfoot>
-    <th /><th /><th />
-  </tfoot>
-  <tbody>
-    <% @results.each do |r| %>
-      <tr>
-        <td><%= r[0] %></td>
-        <td><%= r[1] %>%</td>
-        <td><%= r[2] %>%</td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<div class="overflow-x-auto">
+  <table class="table">
+    <thead class="bg-slate-100 border">
+      <th>Date</th>
+      <th>Taux journée</th>
+      <th>Taux soirée</th>
+    </thead>
+    <tfoot>
+      <th /><th /><th />
+    </tfoot>
+    <tbody>
+      <% @results.each do |r| %>
+        <tr class="hover border">
+          <td><%= r[0] %></td>
+          <td><%= r[1] %>%</td>
+          <td><%= r[2] %>%</td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
 
-<h4>
+<h4 class="text-xl">
   Nombre de jours: <%= @nbr_jours %> |
   Moyenne journée: <%= (@total_jour / @nbr_jours).to_i %>% |
   Moyenne soirée:  <%= (@total_soir / @nbr_jours).to_i %>%

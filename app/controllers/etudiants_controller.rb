@@ -63,7 +63,7 @@ class EtudiantsController < ApplicationController
         format.html { redirect_to @etudiant, notice: "Etudiant créé avec succès. #{'Accès créé, étudiant informé' if params[:notify] }" }
         format.json { render :show, status: :created, location: @etudiant }
       else
-        format.html { render :new }
+        format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @etudiant.errors, status: :unprocessable_entity }
       end
     end

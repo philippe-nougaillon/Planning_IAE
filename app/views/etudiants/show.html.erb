@@ -1,97 +1,96 @@
-<div class="card shadow-sm p-3 mt-3">
-  <div class='mb-4'>
-    <div class="btn-group float-right">
-      <%= link_to edit_etudiant_path(@etudiant), class: 'btn btn-sm btn-outline-primary' do %>
+<div class="card shadow p-4 my-8">
+  <div class="mb-6">
+    <div class="join float-right">
+      <%= link_to edit_etudiant_path(@etudiant), class: 'btn btn-sm btn-primary btn-outline join-item' do %>
         <%= fa_icon 'edit' %> Modifier
       <% end %>
 
-      <a href="#audit" data-toggle="collapse" class='btn btn-sm btn-outline-primary'>
-        <%= fa_icon 'search' %> Audit
-      </a>
-
-      <%= link_to etudiants_path, class: 'btn btn-sm btn-outline-primary' do %>
+      <%= link_to etudiants_path, class: 'btn btn-sm btn-primary btn-outline join-item' do %>
         <%= fa_icon 'list' %> Retour
       <% end %>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-sm-2">
-      <h2 class='text-center'>
-        <%= fa_icon 'graduation-cap 3x' %>
+  <div class="flex flex-wrap">
+    <div class="sm:w-1/6 px-4">
+      <h2 class="text-center">
+        <%= fa_icon 'graduation-cap 5x' %>
       </h2>
     </div>
 
-    <div class="col-sm-6">
-      <h3>
-        <small class="text-muted">Civilité</small><br>
+    <div class="flex flex-col flex-wrap sm:w-1/2 gap-4 mb-8">
+      <h3 class="text-2xl">
+        <small class="text-secondary">Civilité</small><br>
         <%= @etudiant.civilité %>
       </h3>
-      <h1>
-        <small class="text-muted">Nom</small><br>
+      <h3 class="text-2xl">
+        <small class="text-secondary">Nom</small><br>
         <%= @etudiant.nom %>
-      </h1>
-      <h3>
-        <small class="text-muted">Prénom</small><br>
+      </h3>
+      <h3 class="text-2xl">
+        <small class="text-secondary">Prénom</small><br>
         <%= @etudiant.prénom %>
       </h3>
-      <h3>
-        <small class="text-muted">Email</small><br>
+      <h3 class="text-2xl">
+        <small class="text-secondary">Email</small><br>
         <%= @etudiant.email %>
       </h3>
 
-      <h3>
-        <small class="text-muted">Mobile</small><br>
+      <h3 class="text-2xl">
+        <small class="text-secondary">Mobile</small><br>
         <%= @etudiant.mobile %>
       </h3>
 
     </div>
 
-    <div class="col-sm-4">
-      <h4>
-        <small class="text-muted">Formation</small><br>
+    <div class="flex flex-col flex-wrap sm:w-1/3 gap-4">
+      <h3 class="text-2xl">
+        <small class="text-secondary">Formation</small><br>
         <% if @etudiant.formation_id %>
             <% formation = Formation.unscoped.find(@etudiant.formation_id) %>
-            <%= link_to formation.nom, formation %>
+            <span class="pl-2" style="border-left: .3rem solid <%= @etudiant.formation.try(:positive_color) %>">
+              <%= link_to formation.nom, formation, class: 'text-primary hover:underline' %>
+            </span>
         <% end %>
       </h3>
-      <h3>
-        <small class="text-muted">Statut</small><br>
-        <%= @etudiant.workflow_state %>
+      <h3 class="text-2xl">
+        <small class="text-secondary">Statut</small><br>
+        <%= @etudiant.workflow_state.humanize %>
       </h3>
       <br>
 
       <% if @user && @user.sign_in_count.positive? %>
-        <h4>
-          <small class='text-muted'>Dernière connexion</small>
+        <h4 class="text-xl">
+          <small class="text-secondary">Dernière connexion</small>
           <br>
           Il y a <%= time_ago_in_words(@user.current_sign_in_at) %>
         </h4>
-        <p>
+        <p class="mb-4">
           (<%= @user.sign_in_count %> connexions)
-          <%= link_to 'Voir', user_path(@user) %>
+          <%= link_to 'Voir', user_path(@user), class: 'text-primary hover:underline' %>
         </p>
       <% end %>
     </div>
   </div>
 
-  <div id="audit" class="collapse">
-    <br><br>
-
-    <h4></span> Audit des modifications</h4>
-
-    <table class="table table-bordered table-hover table-condensed">
-      <thead>
-        <th>Date</th>
-        <th>Utilisateur</th>
-        <th>Type</th>
-        <th>Record_id</th>
-        <th>Action</th>
-        <th>Modifications</th>
-      </thead>
-      <tbody>
-        <%= render partial: 'tools/audit', collection: @etudiant.audits %>
-      </tbody>
-    </table>
+  <div tabindex="0" class="collapse collapse-arrow border border-base-300 bg-base-100">
+    <div class="collapse-title text-lg">
+      Audit des modifications
+    </div>
+    <div class="overflow-x-auto collapse-content bg-base-100"> 
+      <table class="table table-xs">
+        <thead class="bg-slate-100 border">
+          <th>Date</th>
+          <th>Utilisateur</th>
+          <th>Type</th>
+          <th>Record_id</th>
+          <th>Action</th>
+          <th>Modifications</th>
+        </thead>
+        <tbody>
+          <%= render partial: 'tools/audit', collection: @etudiant.audits.reorder(id: :desc) %>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

@@ -1,16 +1,16 @@
-<div class="shadow-sm p-3" style="border-left: .3rem solid <%= cours.try(:formation).try(:positive_color) %>">
-  <div class="row">
+<div class="shadow p-4" style="border-left: .3rem solid <%= cours.try(:formation).try(:positive_color) %>">
+  <div class="flex flex-wrap">
     
-    <div class="col">
+    <div class="relative flex-grow max-w-full flex-1">
       <b><%= l(cours.debut, format: :heures_min) %></b>
       <small>- <%= l(cours.fin, format: :heures_min) %></small>
     </div>
 
-    <div class="col text-right">
+    <div class="relative flex-grow max-w-full flex-1 text-right">
       <% if cours.salle %>
-        <h5>
-          <span class="badge badge-pill badge-<%= cours.style %>">
-            <%= link_to cours.salle.nom, image_path("Plan_d_acces_Campus_BioPark_-_IAE_Paris.pdf"), style: "color: white", title: "Plan d'accès au campus BioPark" %>
+        <h5 class="text-lg">
+          <span class="badge badge-<%= cours.style %> text-white font-bold">
+            <%= cours.salle.nom %>
           </span>
         </h5>
       <% end %>
@@ -32,7 +32,7 @@
     <% end %>
 
     <% if cours.url? && cours.elearning? %>
-      <%= link_to cours.nom.split(' ').first, target:"_blank" do %>
+      <%= link_to cours.nom.split(' ').first, target:"_blank", class: 'text-primary hover:underline' do %>
           <%= cours.nom.split(' ').last %>
           <%= fa_icon 'link' %>
       <% end %>
@@ -45,11 +45,6 @@
 
   <% if cours.debut.to_date == Date.today %>
     <br>
-    <div class="progress" style="width: 100%">
-      <div class="progress-bar bg-primary" 
-          role="progressbar" aria-valuemin="0" aria-valuemax="100" 
-          style="width: <%= cours.progress_bar_pct3 %>%; opacity: 0.3;">
-      </div>
-    </div>
+    <progress data-debut="<%= cours.debut.to_i %>" data-fin="<%= cours.fin.to_i %>" class="progress progress-primary opacity-50" value="<%= cours.progress_bar_pct3 %>" max="100"></progress>
   <% end %>
 </div>

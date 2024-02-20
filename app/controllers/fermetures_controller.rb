@@ -89,7 +89,7 @@ class FermeturesController < ApplicationController
         format.html { redirect_to fermetures_path, notice: 'Jour(s) de fermeture ajouté(s)' }
         format.json { render :show, status: :created, location: @fermeture }
       else
-        format.html { render :new }
+        format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @fermeture.errors, status: :unprocessable_entity }
       end
     end

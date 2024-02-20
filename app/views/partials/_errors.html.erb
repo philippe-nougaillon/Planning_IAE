@@ -1,0 +1,12 @@
+<% if record.errors.any? %>
+  <div class="mb-4 text-error">
+    <h3 class="text-2xl font-bold mb-4">
+      <%= t('activerecord.errors.template.header', model: record.class.model_name.human, count: record.errors.count) %>
+    </h3>
+    <ul>
+      <% record.errors.each do |error| %>
+        <li><%= error.full_message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

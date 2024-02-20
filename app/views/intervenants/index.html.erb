@@ -1,51 +1,41 @@
-<div class="pb-2 mt-4 mb-2 border-bottom">
+<div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'chalkboard-teacher' %> Liste des intervenants</h1>
   <% if policy(Intervenant).new? %>
-    <%= link_to new_intervenant_path, class: 'btn text-primary float-right' do %>
+    <%= link_to new_intervenant_path, class: 'text-primary' do %>
       <%= fa_icon 'plus-circle' %> Intervenant
     <% end %>
   <% end %>
-  <h3><%= fa_icon 'chalkboard-teacher' %> Liste des intervenants</h3>
 </div>
 
-<div class="container-fluid p-3 shadow-sm shadow-sm">
+<div class="bs-container p-4 shadow mb-4">
   <%= form_tag request.path, method: :get do %>
-    <div class="form-group">
-      <div class="row">
-        <div class="col-sm-4">
-          <%= label_tag :nom, "Nom/Prénom" %>    
-          <%= text_field_tag :nom, params[:nom], include_blank:true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
-        </div>
-        
-        <div class="col-sm-3">
-          <%= label_tag :status, "Statut" %>
-          <div class="input-group">
-            <%= select_tag :status, options_for_select(Intervenant.statuses, 
-                  params[:status]), include_blank:true,
-                  class: 'form-control form-control-sm', onchange: 'this.form.submit()' %>
-            <span class="input-group-btn">
-              <%= submit_tag 'Filtrer', class: "btn btn-sm btn-success" %>
-            </span>
-          </div>
-        </div>
-
-        <div class="col-sm-3">
-          <%= label_tag :doublon, "Doublons autorisés ?" %>
-          <br>    
-          <%= check_box_tag :doublon, 1, params[:doublon], onchange:'this.form.submit()' %>
-        </div>
-        
+    <div class="flex flex-wrap">
+      <div class="sm:w-1/3 pr-4">
+        <%= label_tag :nom, "Nom/Prénom" %>    
+        <%= text_field_tag :nom, params[:nom], include_blank:true, onchange:'this.form.submit()', class:"input input-bordered input-sm w-full" %>
       </div>
-    </div>  
+
+      <div class="sm:w-1/5 px-4">
+        <%= label_tag :status, "Statut" %>
+        <%= select_tag :status, options_for_select(Intervenant.statuses, 
+              params[:status]), include_blank:true,
+              class: 'select select-bordered select-sm w-full', onchange: 'this.form.submit()' %>
+      </div>
+
+      <div class="sm:w-1/4 pl-4">
+        <%= label_tag :doublon, "Doublons autorisés ?" %>
+        <br>    
+        <%= check_box_tag :doublon, 1, params[:doublon], onchange:'this.form.submit()' %>
+      </div>
+    </div>
   <% end %>
 </div>
-<br>
 
 <% if @intervenants.any? %>
-  <div class="table-responsive">
-    <table class="table table-hover table-striped table-bordered">
-      <thead>
+  <div class="overflow-x-auto">
+    <table class="table">
+      <thead class="bg-slate-100 border">
         <tr>
-          <th></th>
           <th><%= sort_link 'intervenants.nom', 'Nom' %></th>
           <th>Prénom</th>
           <th><%= sort_link 'intervenants.status', 'Statut' %></th>
@@ -62,14 +52,21 @@
         <%= render @intervenants %>
       </tbody>
 
+      <tfoot>
+        <tr>
+          <td colspan="9">
+          </td>
+        </tr>
+      </tfoot>
     </table>
+  </div>
 
-    <div class="page_info">
-      <%= page_entries_info @intervenants %>
-    </div>
+  <div class="page_info">
+    <%= page_entries_info @intervenants %>
+  </div>
 
-    <%= will_paginate @intervenants, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
-
+  <div class="planning_pagination">
+    <%= will_paginate @intervenants %>
   </div>
 <% end %>
 

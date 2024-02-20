@@ -1,33 +1,32 @@
-<div class="pb-2 mt-4 mb-2 border-bottom">
-  <h3><%= fa_icon 'chalkboard' %> Occupation des salles</h3>
+<div class="border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'chalkboard' %> Occupation des salles</h1>
 </div>
 
-<div class="container-fluid p-3 shadow-sm">
-
+<div class="bs-container p-4 shadow mb-4">
   <%= form_tag request.path, method: :get do %>
-    <div class="row">
+    <div class="flex flex-wrap gap-4">
 
-      <div class="col-sm-3">
-        <%= label_tag "Date" %>    
-        <%= text_field_tag :start_date, params[:start_date], type:'date', onchange:'this.form.submit()', class:"form-control form-control-sm" %>
+      <div class="w-full sm:w-1/4">
+        <%= label_tag :start_date, "Date" %>    
+        <%= text_field_tag :start_date, params[:start_date], type:'date', onchange:'this.form.submit()', class:"input input-bordered input-sm w-full" %>
       </div>
 
-      <div class="col-sm-2">
-        <%= label_tag "Batiment" %>
+      <div class="w-full sm:w-1/5">
+        <%= label_tag :bloc, "Batiment" %>
         <%= select_tag :bloc, 
                     options_for_select(Salle.blocs, params[:bloc]), 
-                    include_blank:true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
+                    include_blank:true, onchange:'this.form.submit()', class:"select select-bordered select-sm w-full" %>
       </div>
 
-      <div class="col-sm-2">
-        <%= label_tag "Salle" %>
+      <div class="w-full sm:w-1/5">
+        <%= label_tag :salle_id %>
         <%= select_tag :salle_id, 
                     options_from_collection_for_select((params[:bloc].blank? ? Salle.all : Salle.where(bloc: params[:bloc])), :id, :nom, params[:salle_id]), 
-                    include_blank:true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
+                    include_blank:true, onchange:'this.form.submit()', class:"slim-select" %>
       </div>
 
-      <div class="col-sm-3">
-        <%= label_tag "Vue" %>
+      <div class="w-full sm:w-1/4">
+        <%= label_tag :vue %>
         <br> 
         <%= radio_button_tag :vue, "jour", (params[:vue]=='jour'), onchange:'this.form.submit()' %>
         Journée 
@@ -38,6 +37,5 @@
     </div>
   <% end %>
 </div>
-<br>
 
 <%= render partial: "occupation_#{ params[:vue] }" %>

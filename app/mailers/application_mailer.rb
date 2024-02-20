@@ -1,4 +1,4 @@
-# app/mailers/application_mailer.rb
 class ApplicationMailer < ActionMailer::Base
-  layout 'mailer'
+  default from: 'IAE-Paris <planning-iae@philnoug.com>'
+  layout "mailer"
 end

@@ -187,7 +187,7 @@ class InvitsController < ApplicationController
   
       flash[:notice] = "Invitation confirmée. Intervenant affecté."
     else
-      flash[:error] = "L'intervenant n'a pas pu être modifié. #{ cours.errors.full_messages }"
+      flash[:alert] = "L'intervenant n'a pas pu être modifié. #{ cours.errors.full_messages }"
     end
     redirect_to invits_path
   end

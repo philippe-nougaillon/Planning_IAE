@@ -1,15 +1,16 @@
-<div class="table-responsive">
-  <table class="table table-sm table-hover">
-    <thead>
+<div class="overflow-x-auto">
+  <table class="table table-sm">
+    <thead class="bg-slate-100 border">
       <tr>
         <th>Salle</th>
         <th>Places</th>
         <th>Formations</th> 
         <th>Cours</th>
         <% @etendue_horaire.each_with_index do |heure, index| %>
-          <th class="<%= 'alert alert-warning' if ((@date == Date.today) && (heure == time_in_paris.hour)) %>"><%= heure %>h</th>
+          <th class="<%= 'bg-amber-100 text-black font-black' if ((@date == Date.today) && (heure == time_in_paris.hour)) %>"><%= heure %>h</th>
           <% if [4,9].include?(index) %><th></th><th></th><% end %>
         <% end %>
+        <th></th>
       </tr>
     </thead>
 
@@ -26,31 +27,34 @@
         <% if params[:bloc].blank? && salle.bloc != bloc %>
           <% bloc = salle.bloc %>
           <thead>
-            <tr>
+            <tr class="bg-slate-100 border">
               <th colspan=4></th>
               <% @etendue_horaire.each_with_index do |heure, index| %>
-                <th class="<%= 'alert alert-warning' if ((@date == Date.today) && (heure == time_in_paris.hour)) %>"><%= heure %>h</th>
+                <th class="<%= 'bg-amber-100 text-black font-black' if ((@date == Date.today) && (heure == time_in_paris.hour)) %>"><%= heure %>h</th>
                 <% if [4,9].include?(index) %><th></th><th></th><% end %>
               <% end %>
+              <th></th>
             </tr>
           </thead>
         <% end %>
 
-        <tr class="shadow-sm">
+        <tr class="hover border">
           <td><b><%= salle.nom[0..7] %></b></td>
           <td class="text-right"><%= salle.places %></td>
           <td>
             <% cours.pluck(:formation_id).uniq.each do |id| %> 
-                <% formation = Formation.unscoped.find(id) %> 
+              <% formation = Formation.unscoped.find(id) %> 
+              <div>
                 <span style="background-color:<%= formation.color %>;padding-left: 7px;"></span> 
                 <span style="padding-left:5px;"></span> 
                 <%= formation.nom_abrg_nbr_etudiants %> 
-                <span style="padding-right:10px;"></span> 
+                <span style="padding-right:10px;"></span>
+              </div>
             <% end %> 
           </td>
           <td class="text-right">
             <%= link_to_unless cours_count.zero?, cours_count, 
-                              cours_path(ids:cours.pluck(:id), view:'list', from:'occupation') %>
+                              cours_path(ids:cours.pluck(:id), view:'list', from:'occupation'), class: 'text-primary hover:underline' %>
           </td>
 
           <% if @date %>
@@ -59,15 +63,19 @@
             <% map = @etendue_horaire.map {|i| range.include?(i) ? 'red' : 'lightgreen' } %>
             
             <% map.each_with_index do |color, index| %>
-              <td class="<%= 'text-center alert alert-warning' if ((@date == Date.today) && ((index + 8) == time_in_paris.hour)) %>">
+              <td class="<%= 'text-center bg-amber-100' if ((@date == Date.today) && ((index + 8) == time_in_paris.hour)) %>">
                 <% if color == 'lightgreen' %>
                   <%= link_to new_cour_path(debut: @date, heure: (index + 8), salle_id: salle.id, from: 'occupation') do %>
                     <span style="background-color:<%= color %>;padding-left: 15px;"></span>
                   <% end %>
                 <% else %>
-                  <% debut_cours = DateTime.parse("#{@date} #{index + 8}:00") %>
-                  <% nom_formation = Formation.select(:nom).joins(:cours).where('cours.debut <= ?', debut_cours).where('cours.fin >= ?', debut_cours).where('cours.salle_id': salle.id).limit(1).pluck(:nom) %>
-                  <%= link_to '#', title: nom_formation do %>
+                  <% nom_formation = [] %>
+                  <% cours.each do |cour| %>
+                    <% if (cour.debut.hour <= index + 8) && (cour.fin.hour >= index + 8) %>
+                      <% nom_formation << cour.formation.nom %>
+                    <% end %>
+                  <% end %>
+                  <%= link_to edit_cour_path(cours.first, from: "occupation"), title: nom_formation.join(' | '), data: { turbo_method: :get, turbo_confirm: "Voulez-vous modifier ce cours ?" }  do %>
                     <span style="background-color: <%= color %>;padding-left: 15px;"></span> 
                   <% end %>
                 <% end %>
@@ -82,38 +90,37 @@
       <% end %>
     </tbody>
   </table>
+</div>
 
-  <% if current_user && current_user.admin? && (!params[:salle_id] || params[:salle_id].blank?) %>
-    <div class="row">
-      <div class="col-sm-6">
-        <h5>
-          Heures de cours planifiées jour: <%= @nombre_heures_cours.first %>h <br>
-          Heures de salles disponibles jour: <%= @heures_dispo_salles.first %>h
-           (<%= @salles_dispo %> salles * <%= @nb_heures_journée %>h)<br>
-        </h5>
-      </div>
-      <div class="col-sm-6">
-        <h4>
-          Taux d'occupation jour: <%= @taux_occupation.first.to_i %>%
-        </h4>
-      </div>
-    </h4>
+<% if current_user && current_user.admin? && (!params[:salle_id] || params[:salle_id].blank?) %>
+  <div class="flex flex-wrap mt-8">
+    <div class="sm:w-1/2 pr-4">
+      <p>
+        Heures de cours planifiées jour: <%= @nombre_heures_cours.first %>h <br>
+        Heures de salles disponibles jour: <%= @heures_dispo_salles.first %>h
+          (<%= @salles_dispo %> salles * <%= @nb_heures_journée %>h)<br>
+      </p>
+    </div>
+    <div class="sm:w-1/2 pr-4">
+      <p>
+        Taux d'occupation jour: <%= @taux_occupation.first.to_i %>%
+      </p>
+    </div>
   </div>
 
-  <div class="row">
-    <div class="col-sm-6">
-      <h5>
-          Heures de cours planifiées soir: <%= @nombre_heures_cours.last %>h <br>
-          Heures de salles disponibles soir: <%= @heures_dispo_salles.last %>h
-           (<%= @salles_dispo %> salles * <%= @nb_heures_soirée %>h)<br>
-        </h5>
-      </div>
-      <div class="col-sm-6">
-        <h4>
-          Taux d'occupation soir: <%= @taux_occupation.try(:last).try(:to_i) %>%
-        </h4>
-      </div>
-    </h4>
+  <div class="flex flex-wrap">
+    <div class="sm:w-1/2 pr-4">
+      <p>
+        Heures de cours planifiées soir: <%= @nombre_heures_cours.last %>h <br>
+        Heures de salles disponibles soir: <%= @heures_dispo_salles.last %>h
+        (<%= @salles_dispo %> salles * <%= @nb_heures_soirée %>h)<br>
+      </p>
+    </div>
+    <div class="sm:w-1/2 pr-4">
+      <p>
+        Taux d'occupation soir: <%= @taux_occupation.try(:last).try(:to_i) %>%
+      </p>
+    </div>
   </div>
 <% end %>
 <br>

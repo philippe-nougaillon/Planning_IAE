@@ -73,16 +73,10 @@ class FormationsController < ApplicationController
   # GET /formations/new
   def new
     @formation = Formation.new
-    15.times { @formation.unites.build }
-    10.times { @formation.etudiants.build } 
-    10.times { @formation.vacations.build }
   end
 
   # GET /formations/1/edit
   def edit
-    5.times { @formation.unites.build }
-    5.times { @formation.etudiants.build } 
-    10.times { @formation.vacations.build }
   end
 
   # POST /formations
@@ -95,7 +89,7 @@ class FormationsController < ApplicationController
         format.html { redirect_to @formation, notice: 'Formation ajoutée' }
         format.json { render :show, status: :created, location: @formation }
       else
-        format.html { render :new }
+        format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @formation.errors, status: :unprocessable_entity }
       end
     end

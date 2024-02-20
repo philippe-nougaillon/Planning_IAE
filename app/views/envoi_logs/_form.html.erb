@@ -1,7 +1,7 @@
-<%= bootstrap_form_with(model: envoi_log, local: true) do |form| %>
+<%= form_with(model: envoi_log, local: true) do |form| %>
   <% if envoi_log.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(envoi_log.errors.count, "error") %> empêche cet enregistrement d'être enregistré :</h2>
+      <h2 class="text-3xl"><%= pluralize(envoi_log.errors.count, "error") %> empêche cet enregistrement d'être enregistré :</h2>
 
       <ul>
         <% envoi_log.errors.full_messages.each do |message| %>
@@ -11,15 +11,19 @@
     </div>
   <% end %>
 
-  <div class="row">
-    <div class="col-sm-3">
-      <%= form.text_field :date_prochain, type: :date, value: envoi_log.date_prochain.to_date, label: 'Date prévue' %>
+  <div class="flex flex-wrap">
+    <div class="sm:w-1/4">
+      <div class="form-control">
+        <%= form.label :date_prochain, "Date prévue" %>
+        <%= form.text_field :date_prochain, type: :date, value: envoi_log.date_prochain.to_date, class: "input input-bordered input-sm w-full" %>
+      </div>
     </div>
   </div>
 
-  <%= form.rich_text_area :msg, label: "Message (apparaît en bas du corps du mail)", class: "customized-min-height" %>
-  
-  <div class="actions">
-    <%= form.submit "Enregistrer" %>
+  <div class="form-control mt-4">
+    <%= form.label :msg, "Message (apparaît en bas du corps du mail)" %>
+    <%= form.rich_text_area :msg, class: "customized-min-height" %>
   </div>
+  
+  <%= form.submit "Enregistrer", class: "btn btn-primary text-white mt-4", 'data-turbo': false %>
 <% end %>

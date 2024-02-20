@@ -1,0 +1,38 @@
+<div class="nested-form-wrapper" data-new-record="<%= f.object.new_record? %>">
+  <div class="flex flex-wrap items-end shadow pb-4 mb-4">
+    <div class="sm:w-1/5 px-4">
+      <div class="form-control">
+        <%= f.label :nom, 'Nom *' %>
+        <%= f.text_field :nom, class: 'input input-bordered input-sm w-full' %>
+      </div>
+    </div>  
+    <div class="sm:w-1/5 px-4">
+      <div class="form-control">
+        <%= f.label :prénom, 'Prénom *' %>
+        <%= f.text_field :prénom, class: 'input input-bordered input-sm w-full' %>
+      </div>
+    </div>
+    <div class="sm:w-1/12 px-4">
+      <div class="form-control">
+        <%= f.label :civilité, 'Civilité *', class: 'whitespace-nowrap' %>
+        <%= f.text_field :civilité, class: 'input input-bordered input-sm w-full' %>
+      </div>
+    </div>
+    <div class="sm:w-1/4 px-4">
+      <div class="form-control">
+        <%= f.label :email, 'Email *' %>
+        <%= f.email_field :email, class: 'input input-bordered input-sm w-full' %>
+      </div>
+    </div>
+    <div class="sm:w-1/6 px-4">
+      <div class="form-control">
+        <%= f.label :mobile %>
+        <%= f.text_field :mobile, class: 'input input-bordered input-sm w-full' %>
+      </div>
+    </div>
+    <div class="px-4">
+      <button type="button" data-action="nested-form#remove" class="btn btn-sm">[X]</button>
+      <%= f.hidden_field :_destroy %>
+    </div>
+  </div>
+</div>

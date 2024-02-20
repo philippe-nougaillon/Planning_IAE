@@ -20,7 +20,7 @@ class Document < ApplicationRecord
     state VALIDE, meta: {style: 'badge-success'} do
       event :archiver, transitions_to: ARCHIVE
     end
-    state REJETE, meta: {style: 'badge-danger'} do
+    state REJETE, meta: {style: 'badge-error'} do
       event :archiver, transitions_to: ARCHIVE
     end
     state ARCHIVE, meta: {style: 'badge-secondary'}

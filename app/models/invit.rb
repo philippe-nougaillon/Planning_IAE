@@ -58,7 +58,7 @@ class Invit < ApplicationRecord
       event :archiver, transitions_to: ARCHIVE
     end
 
-    state REJETE, meta: {style: 'badge-danger'} do
+    state REJETE, meta: {style: 'badge-error'} do
       event :archiver, transitions_to: ARCHIVE
     end
 

@@ -635,12 +635,23 @@ class ExportPdf
             move_down @margin_down
             text "<color rgb='032E4D'>Durée : #{cour.duree}h (#{cour.duree + 1}h pour le tiers temps)</color>", inline_format: true
             move_down @margin_down
-            text "<color rgb='032E4D'>> Documents papier #{papier ? "autorisés" : "interdits"}</color>", inline_format: true
-            text "<color rgb='032E4D'>> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission #{calculatrice ? "autorisée" : "interdite"}</color>", inline_format: true
-            text "<color rgb='032E4D'>> Les ordinateurs et tablettes sont #{ordi_tablette ? "autorisés" : "interdits"}</color>", inline_format: true
-            text "<color rgb='032E4D'>> Les téléphones portables sont #{téléphone ? "autorisés" : "interdits"}</color>", inline_format: true
-            text "<color rgb='032E4D'>> Les dictionnaires sont #{dictionnaire ? "autorisés" : "interdits"}</color>", inline_format: true
 
+            autorisations = {papier:, calculatrice:, ordi_tablette:, téléphone:, dictionnaire:}
+            autorisations_sorted = autorisations.sort_by{|i| i.last ? 1 : 0 }
+            autorisations_sorted.each do |autorisation|
+                case autorisation.first
+                when :papier
+                    text "<color rgb='032E4D'>> Documents papier #{papier ? "autorisés" : "interdits"}</color>", inline_format: true, style: papier ? nil : :bold
+                when :calculatrice
+                    text "<color rgb='032E4D'>> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission #{calculatrice ? "autorisée" : "interdite"}</color>", inline_format: true, style: calculatrice ? nil : :bold
+                when :ordi_tablette
+                    text "<color rgb='032E4D'>> Les ordinateurs et tablettes sont #{ordi_tablette ? "autorisés" : "interdits"}</color>", inline_format: true, style: ordi_tablette ? nil : :bold
+                when :téléphone
+                    text "<color rgb='032E4D'>> Les téléphones portables sont #{téléphone ? "autorisés" : "interdits"}</color>", inline_format: true, style: téléphone ? nil : :bold
+                when :dictionnaire
+                    text "<color rgb='032E4D'>> Les dictionnaires sont #{dictionnaire ? "autorisés" : "interdits"}</color>", inline_format: true, style: dictionnaire ? nil : :bold
+                end
+            end
             start_new_page
 
             image "#{@image_path}/logo_iae_2.png", :height => 60
@@ -662,16 +673,25 @@ class ExportPdf
             move_down @margin_down
             text "<color rgb='032E4D'>Durée : #{cour.duree}h</color>", inline_format: true
             move_down @margin_down
-            text "<color rgb='032E4D'>> Documents papier #{papier ? "autorisés" : "interdits"}</color>", inline_format: true
-            text "<color rgb='032E4D'>> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission #{calculatrice ? "autorisée" : "interdite"}</color>", inline_format: true
-            text "<color rgb='032E4D'>> Les ordinateurs et tablettes sont #{ordi_tablette ? "autorisés" : "interdits"}</color>", inline_format: true
-            text "<color rgb='032E4D'>> Les téléphones portables sont #{téléphone ? "autorisés" : "interdits"}</color>", inline_format: true
-            text "<color rgb='032E4D'>> Les dictionnaires sont #{dictionnaire ? "autorisés" : "interdits"}</color>", inline_format: true
+            autorisations_sorted.each do |autorisation|
+                case autorisation.first
+                when :papier
+                    text "<color rgb='032E4D'>> Documents papier #{papier ? "autorisés" : "interdits"}</color>", inline_format: true, style: papier ? nil : :bold
+                when :calculatrice
+                    text "<color rgb='032E4D'>> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission #{calculatrice ? "autorisée" : "interdite"}</color>", inline_format: true, style: calculatrice ? nil : :bold
+                when :ordi_tablette
+                    text "<color rgb='032E4D'>> Les ordinateurs et tablettes sont #{ordi_tablette ? "autorisés" : "interdits"}</color>", inline_format: true, style: ordi_tablette ? nil : :bold
+                when :téléphone
+                    text "<color rgb='032E4D'>> Les téléphones portables sont #{téléphone ? "autorisés" : "interdits"}</color>", inline_format: true, style: téléphone ? nil : :bold
+                when :dictionnaire
+                    text "<color rgb='032E4D'>> Les dictionnaires sont #{dictionnaire ? "autorisés" : "interdits"}</color>", inline_format: true, style: dictionnaire ? nil : :bold
+                end
+            end
 
         end
     end
 
-    def convocation(cour, étudiant, papier, calculatrice, outils)
+    def convocation(cour, étudiant, papier, calculatrice, ordi_tablette, téléphone, dictionnaire)
         font "OpenSans"
 
         image "#{@image_path}/logo_iae_2.png", :height => 60, :position => :center
@@ -697,22 +717,29 @@ class ExportPdf
         move_down @margin_down * 2
         text "<color rgb='032E4D'><b>Vous devez :</b></color>", inline_format: true
         move_down @margin_down
-            text "<color rgb='032E4D'><b>-    vous munir de votre carte d'étudiant</b></color>", inline_format: true
+        text "<color rgb='032E4D'><b>-    vous munir de votre carte d'étudiant</b></color>", inline_format: true
         move_down @margin_down
-            text "<color rgb='032E4D'><b>-    vous présenter dans la salle d'examen 15 minutes avant le début de l'épreuve</b></color>", inline_format: true
+        text "<color rgb='032E4D'><b>-    vous présenter dans la salle d'examen 15 minutes avant le début de l'épreuve</b></color>", inline_format: true
 
         move_down @margin_down * 2
         text "<color rgb='032E4D'><b>Consignes :</b></color>", inline_format: true
         move_down @margin_down
-        if papier
-            text "<color rgb='032E4D'> => <b>Documents papier autorisés</b></color>", inline_format: true
-        else
-            text "<color rgb='032E4D'> => <b>Aucun document</b> n'est <b>autorisé</b> pendant l'épreuve</color>", inline_format: true
+        autorisations = {papier:, calculatrice:, ordi_tablette:, téléphone:, dictionnaire:}
+        autorisations_sorted = autorisations.sort_by{|i| i.last ? 1 : 0 }
+        autorisations_sorted.each do |autorisation|
+            case autorisation.first
+            when :papier
+                text "<color rgb='032E4D'>> Documents papier #{papier ? "autorisés" : "interdits"}</color>", inline_format: true, style: papier ? nil : :bold
+            when :calculatrice
+                text "<color rgb='032E4D'>> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission #{calculatrice ? "autorisée" : "interdite"}</color>", inline_format: true, style: calculatrice ? nil : :bold
+            when :ordi_tablette
+                text "<color rgb='032E4D'>> Les ordinateurs et tablettes sont #{ordi_tablette ? "autorisés" : "interdits"}</color>", inline_format: true, style: ordi_tablette ? nil : :bold
+            when :téléphone
+                text "<color rgb='032E4D'>> Les téléphones portables sont #{téléphone ? "autorisés" : "interdits"}</color>", inline_format: true, style: téléphone ? nil : :bold
+            when :dictionnaire
+                text "<color rgb='032E4D'>> Les dictionnaires sont #{dictionnaire ? "autorisés" : "interdits"}</color>", inline_format: true, style: dictionnaire ? nil : :bold
+            end
         end
-        move_down @margin_down
-        text "<color rgb='032E4D'> => <b>Calculatrice</b> de poche (à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission) <b>#{calculatrice ? "autorisée" : "interdite"}</b></color>", inline_format: true
-        move_down @margin_down
-        text "<color rgb='032E4D'> => Les <b>ordinateurs, tablettes</b> et <b>téléphones portables</b> sont <b>#{outils ? "autorisés" : "interdits"}</b></color>", inline_format: true
     end
 
 end

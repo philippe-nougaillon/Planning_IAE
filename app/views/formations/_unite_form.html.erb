@@ -1,0 +1,30 @@
+<div class="nested-form-wrapper flex flex-wrap items-end shadow pb-4 mb-4" data-new-record="<%= f.object.new_record? %>">
+  <div class="sm:w-1/6 px-4">
+    <div class="form-control">
+      <%= f.label :code %>
+      <%= f.number_field :code, class: 'input input-bordered input-sm w-full' %>
+    </div>
+  </div>
+  <div class="sm:w-1/2 px-4">
+    <div class="form-control">
+      <%= f.label :nom %>
+      <%= f.text_field :nom, class: 'input input-bordered input-sm w-full' %>
+    </div>
+  </div>
+  <div class="sm:w-1/12 px-4">
+    <div class="form-control">
+      <%= f.label :séance %>
+      <%= f.number_field :séances, class: 'input input-bordered input-sm w-full' %>
+    </div>
+  </div>  
+  <div class="sm:w-1/12 px-4">
+    <div class="form-control">
+      <%= f.label :heures %>
+      <%= f.number_field :heures, class: 'input input-bordered input-sm w-full' %>
+    </div>
+  </div>  
+  <div class="px-4">
+    <button type="button" data-action="nested-form#remove" class="btn btn-sm">[X]</button>
+    <%= f.hidden_field :_destroy %>
+  </div>
+</div>

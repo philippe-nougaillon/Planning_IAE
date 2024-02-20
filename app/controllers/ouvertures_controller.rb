@@ -26,7 +26,7 @@ class OuverturesController < ApplicationController
 
     respond_to do |format|
       if @ouverture.save
-        format.html { redirect_to ouvertures_path, notice: "L'ouverture a été créée avec succès." }
+        format.html { redirect_to ouvertures_path, notice: "Horaire d'ouverture créée avec succès." }
         format.json { render :show, status: :created, location: @ouverture }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -39,7 +39,7 @@ class OuverturesController < ApplicationController
   def update
     respond_to do |format|
       if @ouverture.update(ouverture_params)
-        format.html { redirect_to ouvertures_path, notice: "L'ouverture modifiée avec succès." }
+        format.html { redirect_to ouvertures_path, notice: "Horaire d'ouverture modifiée avec succès." }
         format.json { render :show, status: :ok, location: @ouverture }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -52,7 +52,7 @@ class OuverturesController < ApplicationController
   def destroy
     @ouverture.destroy
     respond_to do |format|
-      format.html { redirect_to ouvertures_path, notice: "L'ouverture supprimée avec succès." }
+      format.html { redirect_to ouvertures_path, notice: "Horaire d'ouverture supprimée avec succès." }
       format.json { head :no_content }
     end
   end

@@ -18,7 +18,7 @@ class EnvoiLog < ApplicationRecord
             event :suspendre, transitions_to: :pause
         end
 
-        state :annulé, meta: { style: 'badge-danger' }
+        state :annulé, meta: { style: 'badge-error' }
 
         state :envoyé, meta: { style: 'badge-success' }
     end

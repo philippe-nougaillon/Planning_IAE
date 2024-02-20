@@ -1,10 +1,10 @@
-<div class="d-flex flex-column justify-content-center align-items-center mb-5">
+<div class="flex flex-col justify-center items-center mb-12">
   <% unless request.variant.include?(:phone) %>
     <%= image_tag "logo@2000.png", style: "width: 100%; max-width: 500px;" %>
   <% end %>
-  <div class="border border-dark rounded shadow w-100 p-5" style="max-width: 500px">
-<%= bootstrap_form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
-  <h1 class="text-center border-bottom mb-3 pb-3">
+  <div class="border border-gray-900 rounded shadow p-12 w-full" style="max-width: 500px">
+<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
+  <h1 class="text-4xl text-center border-b mb-4 pb-4">
     <%= t('.change_your_password') %>
   </h1>
   <%
@@ -13,16 +13,21 @@
 <%
 =end%>
   
-  <div class="form-group">
-    <div class="row">
-      <div class="col">
-        <%= f.hidden_field :reset_password_token %>
-        <%= f.password_field :password, autocomplete: "off" %>
-        <%= f.password_field :password_confirmation, autocomplete: "off" %>
-        <div class="actions">
-          <%= f.submit t('.change_my_password'), class: "btn btn-primary" %>
-        </div>
+  <div class="flex flex-wrap">
+    <div class="relative flex-grow max-w-full flex-1">
+      <%= f.hidden_field :reset_password_token %>
+
+      <div class="form-control">
+        <%= f.label :password %>
+        <%= f.password_field :password, autocomplete: "off", class: "input input-bordered input-sm w-full" %>
       </div>
+
+      <div class="form-control">
+        <%= f.label :password_confirmation %>
+        <%= f.password_field :password_confirmation, autocomplete: "off", class: "input input-bordered input-sm w-full" %>
+      </div>
+
+      <%= f.submit t('.change_my_password'), class: "btn btn-primary text-white", 'data-turbo': false %>
     </div>
   </div>
 <% end %>

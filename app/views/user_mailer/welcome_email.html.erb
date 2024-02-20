@@ -1,16 +1,8 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
-  </head>
-  <body>
-    <h1>Welcome !</h1>
-    <p>
-      Vous avez désormais accès au planning IAE en utilisant cette adresse email: <%= @user.email %><br>
-      Votre mot de passe est <%= @password %>
-    </p>
-    <p>
-      Pour vous connecter au planning, veuillez suivre ce lien: <%= link_to cours_url, cours_url %>
-    </p>
-  </body>
-</html>
+<h1 style="font-size: 2.25rem; line-height: 2.5rem;">Welcome !</h1>
+<p style="margin-bottom: 0.5rem">
+  Vous avez désormais accès au planning IAE en utilisant cette adresse email: <%= @user.email %><br>
+  Votre mot de passe est <%= @password %>
+</p>
+<p style="margin-bottom: 0.5rem">
+  Pour vous connecter au planning, veuillez suivre ce lien: <%= link_to cours_url, cours_url %>
+</p>

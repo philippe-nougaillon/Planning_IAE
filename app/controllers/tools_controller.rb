@@ -168,7 +168,7 @@ class ToolsController < ApplicationController
       flash[:notice] = "L'importation a bien été exécutée"
       redirect_to import_logs_path
     else
-      flash[:error] = "Manque le fichier source ou la formation pour pouvoir lancer l'importation !"
+      flash[:alert] = "Manque le fichier source ou la formation pour pouvoir lancer l'importation !"
       redirect_to action: 'import'
     end  
   end
@@ -257,8 +257,8 @@ class ToolsController < ApplicationController
       flash[:notice] = "L'importation a bien été exécutée"
       redirect_to import_logs_path
     else
-      flash[:error] = "Manque le fichier source pour pouvoir lancer l'importation !"
-      redirect_to action: 'import'
+      flash[:alert] = "Manque le fichier source pour pouvoir lancer l'importation !"
+      redirect_to action: 'import_intervenants'
     end
 
   end
@@ -356,8 +356,8 @@ class ToolsController < ApplicationController
       flash[:notice] = "L'importation a bien été exécutée"
       redirect_to import_logs_path
     else
-      flash[:error] = "Manque le fichier source pour pouvoir lancer l'importation !"
-      redirect_to action: 'import_utilisateurs_roles'
+      flash[:alert] = "Manque le fichier source pour pouvoir lancer l'importation !"
+      redirect_to action: 'import_utilisateurs'
     end 
   end
 
@@ -480,8 +480,8 @@ class ToolsController < ApplicationController
       flash[:notice] = "L'importation a bien été exécutée"
       redirect_to import_logs_path
     else
-      flash[:error] = "Manque le fichier source pour pouvoir lancer l'importation !"
-      redirect_to action: 'import'
+      flash[:alert] = "Manque le fichier source pour pouvoir lancer l'importation !"
+      redirect_to action: 'import_etudiants'
     end
 
   end
@@ -515,7 +515,7 @@ class ToolsController < ApplicationController
       end
 
     else
-      flash[:error] = "Manque les intervenants afin de lancer la modification !"
+      flash[:alert] = "Manque les intervenants afin de lancer la modification !"
       redirect_to action: 'swap_intervenant'
     end  
 
@@ -675,9 +675,18 @@ class ToolsController < ApplicationController
     date_debut = params[:date_debut]
     date_fin = params[:date_fin]
 
-    unless date_debut.blank? and date_fin.blank?
-      intervenants_id = Cour.where("debut BETWEEN (?) AND (?)", date_debut, date_fin).pluck(:intervenant_id).uniq
+    if date_debut.present? && date_fin.present?
+      intervenants_id = Cour.where("debut BETWEEN ? AND ?", date_debut, date_fin).pluck(:intervenant_id).uniq
+    elsif date_debut.present?
+      intervenants_id = Cour.where("debut > ?", date_debut).pluck(:intervenant_id).uniq
+    elsif date_fin.present?
+      intervenants_id = Cour.where("debut < ?", date_fin).pluck(:intervenant_id).uniq
+    end
+
+    if intervenants_id
       intervenants = intervenants.where(id: intervenants_id)
+    else
+      intervenants = Intervenant.all
     end
 
     unless params[:status].blank?
@@ -842,8 +851,8 @@ class ToolsController < ApplicationController
 
   def audits
     @audits = Audited::Audit.order("id DESC")
-    @types  = @audits.pluck(:auditable_type).uniq.sort
-    @actions= @audits.pluck(:action).uniq
+    @types  = Audited::Audit.pluck(:auditable_type).uniq.sort
+    @actions= %w[update create destroy]
     
     unless params[:start_date].blank? && params[:end_date].blank? 
       @audits = @audits.where("created_at BETWEEN (?) AND (?)", params[:start_date], params[:end_date])
@@ -862,7 +871,7 @@ class ToolsController < ApplicationController
     end
 
     unless params[:search].blank?
-      @audits = @audits.where("LOWER(audited_changes) like ?", "%#{params[:search]}%".downcase)
+      @audits = @audits.where("audited_changes ILIKE ?", "%#{params[:search]}%")
     end
 
     unless params[:chgt_salle].blank?
@@ -873,15 +882,6 @@ class ToolsController < ApplicationController
     end
 
     @audits = @audits.includes(:user).paginate(page: params[:page], per_page: 20)
-
-    # if params[:commit] == "Exporter"
-    #   book = CustomAudit.generate_xls(@audits)  
-    #   file_contents = StringIO.new
-    #   book.write file_contents # => Now file_contents contains the rendered file output
-    #   filename = "Export_Audits.xls"
-    #   send_data file_contents.string.force_encoding('binary'), filename: filename
-    # end
-
   end
 
   def taux_occupation_jours
@@ -892,7 +892,7 @@ class ToolsController < ApplicationController
       @start_date = params[:start_date]
       @end_date = params[:end_date]
     else
-      flash[:error] = "Il manque les dates..."
+      flash[:alert] = "Il manque les dates..."
       redirect_to tools_taux_occupation_jours_path
       return
     end
@@ -954,7 +954,7 @@ class ToolsController < ApplicationController
       @start_date = params[:start_date]
       @end_date = params[:end_date]
     else
-      flash[:error] = "Il manque les dates..."
+      flash[:alert] = "Il manque les dates..."
       redirect_to tools_taux_occupation_salles_path
       return
     end
@@ -1085,12 +1085,12 @@ class ToolsController < ApplicationController
       end
 
       if @errors.count > 0
-        flash[:error] = "#{ @errors.count } erreurs empêchent la création de cours !"
+        flash[:alert] = "#{ @errors.count } erreurs empêchent la création de cours !"
       end 
 
       flash[:notice] = "#{ @ids_ok.count } cours créés"
     else
-      flash[:error] = "L'intervenant générique 'A CONFIRMER' (445) doit exister !"
+      flash[:alert] = "L'intervenant générique 'A CONFIRMER' (445) doit exister !"
     end
 
   end
@@ -1213,7 +1213,7 @@ class ToolsController < ApplicationController
   def rechercher
 
     if !params[:search].blank? && params[:commit] =='Go'
-      @results = PgSearch.multisearch("%#{ params[:search] }%")
+      @results = PgSearch.multisearch("%#{ params[:search] }%").reorder(updated_at: :desc)
       unless params[:search_cours]
         @results = @results.where.not(searchable_type: 'Cour')
       end
@@ -1232,6 +1232,9 @@ class ToolsController < ApplicationController
       unless params[:search_users]
         @results = @results.where.not(searchable_type: 'User')
       end
+      unless params[:search_mail_logs]
+        @results = @results.where.not(searchable_type: 'MailLog')
+      end
 
       @results = @results.paginate(page: params[:page])
     else
@@ -1241,6 +1244,7 @@ class ToolsController < ApplicationController
       params[:search_intervenants] ||= '1'
       params[:search_etudiants] ||= '1'
       params[:search_users] ||= '1'
+      params[:search_mail_logs] ||= '1'
     end
   end
 

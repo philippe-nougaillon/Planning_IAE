@@ -1,6 +1,6 @@
-<h1>Modifier Présence</h1>
+<h1 class="text-4xl">Modifier Présence</h1>
 
 <%= render 'form', presence: @presence %>
 
-<%= link_to 'Voir', @presence %> |
-<%= link_to 'Retour', presences_path %>
+<%= link_to 'Voir', @presence, class: 'text-primary hover:underline' %> |
+<%= link_to 'Retour', presences_path, class: 'text-primary hover:underline' %>

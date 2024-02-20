@@ -1,8 +1,6 @@
 # Encoding: utf-8
 
 class UserMailer < ApplicationMailer
-  default from: 'IAE-Paris <planning-iae@philnoug.com>'
-
   # Send Welcome Email once Member confirms the account
   def welcome_email(user_id, password)
     @user = User.find(user_id)

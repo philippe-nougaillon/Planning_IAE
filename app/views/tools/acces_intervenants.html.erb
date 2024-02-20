@@ -1,93 +1,90 @@
-<div class="pb-2 mt-4 mb-2 border-bottom">
-  <h3><%= fa_icon 'key' %> Liste des intervenants sans accès</h3>
+<div class="border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'key' %> Liste des intervenants sans accès</h1>
 </div>
 
-<div class="container-fluid p-3 shadow-sm shadow-sm">
+<div class="bs-container p-4 shadow mb-4">
   <%= form_tag request.path, method: :get do %>
-    <div class="form-group">
-      <div class="row">
+    <div class="flex flex-wrap">
 
-        <div class="col-sm-4">
-          <%= label_tag :search, "Nom/Prénom/Email" %>
-          <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
-        </div>
-
-        <div class="col-sm-3">
-          <%= label_tag :status, "Statut" %>
-          <div class="input-group">
-            <%= select_tag :status, options_for_select(Intervenant.statuses, 
-                  params[:status]), include_blank:true,
-                  class: 'form-control form-control-sm', onchange: 'this.form.submit()' %>
-            <span class="input-group-btn ml-5">
-              <%= submit_tag 'Filtrer', class: "btn btn-sm btn-success" %>
-            </span>
-          </div>
-        </div>
-
-        <div class="col-sm-2">
-          <%= label_tag "Afficher" %>
-          <br> 
-          <%= radio_button_tag :paginate, "pages", (params[:paginate]=='pages'), onchange:'this.form.submit()' %>
-          Pages 
-          <%= radio_button_tag :paginate, "all", (params[:paginate]=='all'), onchange:'this.form.submit()' %>
-          Tout 
-        </div>
-
+      <div class="sm:w-1/3 pr-4">
+        <%= label_tag :search, "Nom/Prénom/Email" %>
+        <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class:"input input-bordered input-sm w-full" %>
       </div>
+
+      <div class="sm:w-1/4 px-4">
+        <%= label_tag :status, "Statut" %>
+        <%= select_tag :status, options_for_select(Intervenant.statuses, 
+              params[:status]), include_blank:true,
+              class: 'select select-bordered select-sm w-full', onchange: 'this.form.submit()' %>
+      </div>
+
+      <div class="sm:w-1/5 pl-4">
+        <%= label_tag :paginate, "Afficher" %>
+        <br> 
+        <%= radio_button_tag :paginate, "pages", (params[:paginate]=='pages'), onchange:'this.form.submit()' %>
+        Pages 
+        <%= radio_button_tag :paginate, "all", (params[:paginate]=='all'), onchange:'this.form.submit()' %>
+        Tout 
+      </div>
+
     </div>
   <% end %>
 </div>
 
-<%= bootstrap_form_tag url: tools_acces_intervenants_do_path, method: :post do %>
-  <div class="table-responsive" data-controller="check-all action">
-    <table class="table table-hover table-striped table-bordered">
-      <thead>
-        <tr>
-          <th>
-            <span data-action="click->action#click">
-              <input type="checkbox" data-target="check-all.all action.source">
-            </span>
-          </th>
-          <th>Nom/Prénom</th>
-          <th>Status</th>
-          <th>Email</th>
-          <th>Créé il y a</th>
-          <th>Prochain cours</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <% @intervenants.each do |intervenant| %>
+<%= form_tag tools_acces_intervenants_do_path, method: :post do %>
+  <div data-controller="checkbox-select-all action">
+    <div class="overflow-x-auto">
+      <table class="table">
+        <thead class="bg-slate-100 border">
           <tr>
-            <td>
-              <span data-action="click->action#click">
-                <%= check_box_tag "[intervenants_id][#{intervenant.id}]", 'yes', false, data: {"target":"action.source"} %>
+            <th>
+              <span class="flex" data-action="click->action#click">
+                <input type="checkbox" data-action-target="source" data-checkbox-select-all-target="checkboxAll">
               </span>
-            </td>
-            <td><%= intervenant.nom_prenom %></td>
-            <td><%= intervenant.status %></td>
-            <td><%= intervenant.email %></td>
-            <td><%= time_ago_in_words intervenant.created_at %></td>
-            <td>
-              <% if prochain_cours = intervenant.cours.confirmé.where("cours.debut >= ?", DateTime.now).first.try(:debut).try(:to_date) %>
-                <%= l prochain_cours %>
-              <% end %>
-            </td>
+            </th>
+            <th>Nom/Prénom</th>
+            <th>Status</th>
+            <th>Email</th>
+            <th>Créé il y a</th>
+            <th>Prochain cours</th>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
+        </thead>
+
+        <tbody>
+          <% @intervenants.each do |intervenant| %>
+            <tr class="hover border">
+              <td>
+                <span class="flex" data-action="click->action#click">
+                  <%= check_box_tag "intervenants_id[#{intervenant.id}]", 'yes', false, data: {"action-target": "source", 'checkbox-select-all-target': "checkbox"} %>
+                </span>
+              </td>
+              <td><%= intervenant.nom_prenom %></td>
+              <td><%= intervenant.status %></td>
+              <td><%= intervenant.email %></td>
+              <td><%= time_ago_in_words intervenant.created_at %></td>
+              <td>
+                <% if prochain_cours = intervenant.cours.confirmé.where("cours.debut >= ?", DateTime.now).first.try(:debut).try(:to_date) %>
+                  <%= l prochain_cours %>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
   </div>
 
-  <div class="page_info mb-3">
+  <div class="my-4">
     <% if params[:paginate] == 'pages' %>
         <%= page_entries_info @intervenants %>
-        <%= will_paginate @intervenants, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+        <div class="planning_pagination">
+          <%= will_paginate @intervenants %>
+        </div>
     <% else %>
       Nombre d'intervenants : <%= @intervenants.count %>
     <% end %>
   </div>
 
 
-  <%= submit_tag "Créer les accès", class: "btn btn-warning mb-5" %>
+  <%= submit_tag "Créer les accès", class: "btn btn-warning mb-12" %>
 <% end %>

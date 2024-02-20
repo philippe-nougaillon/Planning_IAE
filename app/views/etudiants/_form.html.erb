@@ -1,36 +1,52 @@
-<%=  bootstrap_form_for(@etudiant) do |f| %>
-  <% if @etudiant.errors.any? %>
-    <div class="alert alert-danger alert-dismissable" role="alert">
-      <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-      <h4><%= pluralize(@etudiant.errors.count, "erreur empêche", plural: 'erreurs empêchent') %> d'enregistrer cet étudiant :</h4>
+<%= form_for(@etudiant) do |f| %>
+<%= render partial: 'partials/errors', locals: { record: @etudiant } %>
 
-      <ul>
-      <% @etudiant.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="row mt-5">
-    <div class="col-sm-6">
-      <%= f.text_field :civilité, required: true %>
-      <%= f.text_field :nom, required: true %>
-      <%= f.text_field :prénom, required: true %>
-      <%= f.text_field :email, required: true %>
-      <%= f.text_field :mobile %>
-
-      <div class="field mb-4">
-        <%= check_box_tag :notify %> <b>Créer un compte d'accès et en informer l'étudiant ?</b>
+  <div class="flex flex-wrap mt-12">
+    <div class="relative flex-grow max-w-full flex-1 flex flex-col gap-4 pr-4">
+      <div class="form-control">
+        <%= f.label :civilité, "Civilité *" %>
+        <%= f.text_field :civilité, required: true, class: 'input input-bordered input-sm w-full' %>
       </div>
 
-      <%= f.submit class: "btn btn-primary" %>
+      <div class="form-control">
+        <%= f.label :nom, "Nom *" %>
+        <%= f.text_field :nom, required: true, class: 'input input-bordered input-sm w-full' %>
+      </div>
+
+      <div class="form-control">
+        <%= f.label :prénom, "Prénom *" %>
+        <%= f.text_field :prénom, required: true, class: 'input input-bordered input-sm w-full' %>
+      </div>
+
+      <div class="form-control">
+        <%= f.label :email, "Email *" %>
+        <%= f.email_field :email, required: true, class: 'input input-bordered input-sm w-full' %>
+      </div>
+
+      <div class="form-control">
+        <%= f.label :mobile, "Mobile" %>
+        <%= f.text_field :mobile, class: 'input input-bordered input-sm w-full' %>
+      </div>
+
+      <div class="field mb-6">
+        <%= check_box_tag :notify %>
+        <%= label_tag :notify, "Créer un compte d'accès et en informer l'étudiant ?", class: 'font-bold' %>
+      </div>
+
+      <%= f.submit class: "btn btn-primary text-white", 'data-turbo': false %>
 
     </div>
 
-    <div class="col-sm-6">
-      <%= f.collection_select(:formation_id, Formation.unscoped.all, :id, :nom, {include_blank: true}, class:"select2") %>
-      <%= f.select :workflow_state, Etudiant.workflow_spec.states.keys.to_a, include_blank: true, label: "Statut" %>
+    <div class="relative flex-grow max-w-full flex-1 flex flex-col gap-4 pl-4">
+      <div class="form-control">
+        <%= f.label :formation_id, "Formation *" %>
+        <%= f.collection_select(:formation_id, Formation.unscoped.all, :id, :nom, {include_blank: true}, class:"slim-select") %>
+      </div>
+
+      <div class="form-control">
+        <%= f.label :workflow_state, "Statut" %>
+        <%= f.select :workflow_state, Etudiant.workflow_spec.states.keys.to_a, {include_blank: true}, class: 'select select-bordered select-sm w-full' %>
+      </div>
     </div>
   </div>
 <% end %>

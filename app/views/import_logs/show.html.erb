@@ -1,61 +1,61 @@
-<div class="pb-2 mt-4 mb-2 border-bottom">
-  <h3><%= fa_icon 'inbox' %> Import log #<%= @import_log.id %></h3>
+<div class="border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'inbox' %> Import log #<%= @import_log.id %></h1>
 </div>
 
-<dl class="row">
-  <div class='col'>
-    <dt>Le</dt>
-    <dd><%= @import_log.created_at.in_time_zone('Paris') %></dd>
+<dl class="flex flex-wrap">
+  <div class="relative flex-grow max-w-full flex-1">
+    <strong>Le</strong>
+    <p class="mb-4"><%= l(@import_log.created_at.in_time_zone('Paris')) %></p>
 
-    <dt>Type</dt>
-    <dd><%= @import_log.model_type %></dd>
+    <strong>Type</strong>
+    <p class="mb-4"><%= @import_log.model_type %></p>
 
-    <dt>Par</dt>
-    <dd><%= @import_log.user.username if @import_log.user %></dd>
+    <strong>Par</strong>
+    <p class="mb-4"><%= @import_log.user.username if @import_log.user %></p>
 
-    <dt>Fichier</dt>
-    <dd>
+    <strong>Fichier</strong>
+    <p class="mb-4">
         <%= @import_log.fichier %> |
-        <%= link_to "Télécharger", download_imported_file_import_log_path(@import_log) %>
-    </dd>
+        <%= link_to "Télécharger", download_imported_file_import_log_path(@import_log), class: 'text-primary hover:underline' %>
+    </p>
 
   </div>
 
-  <div class='col'>
-    <dt>Etat</dt>
-    <dd>
+  <div class="relative flex-grow max-w-full flex-1">
+    <strong>Etat</strong>
+    <p class="mb-4">
       <%= fa_icon @import_log.icon_etat, class: @import_log.icon_color %>
       <%= @import_log.etat.humanize %>
-    </dd>
+    </p>
 
-    <div class="row">
-      <div class="col">
-        <dt>Nbr lignes à importer</dt>
-        <dd><%= link_to @import_log.nbr_lignes, import_log_path(@import_log) %></dd>
+    <div class="flex flex-wrap">
+      <div class="relative flex-grow max-w-full flex-1">
+        <strong>Nbr lignes à importer</strong>
+        <p class="mb-4"><%= link_to @import_log.nbr_lignes, import_log_path(@import_log), class: 'text-primary hover:underline' %></p>
       </div>
 
-      <div class="col">
+      <div class="relative flex-grow max-w-full flex-1">
         <% if @import_log.etat == "warning" %>
-          <dt>Rejetées</dt>
-          <dd>
-            <%= link_to @import_log.nbr_lignes - @import_log.lignes_importees, import_log_path(@import_log, filter: true) %> 
-          </dd>
+          <strong>Rejetées</strong>
+          <p class="mb-4">
+            <%= link_to @import_log.nbr_lignes - @import_log.lignes_importees, import_log_path(@import_log, filter: true), class: 'text-primary hover:underline' %> 
+          </p>
         <% end %>
       </div>
 
-      <div class="col">
-        <dt>Importées</dt>
-        <dd><%= @import_log.lignes_importees %></dd>
+      <div class="relative flex-grow max-w-full flex-1">
+        <strong>Importées</strong>
+        <p class="mb-4"><%= @import_log.lignes_importees %></p>
       </div>
     </div>
 
-    <dt>Message</dt>
-    <dd class=<%= @import_log.icon_color %>><%= @import_log.message %></dd>
+    <strong>Message</strong>
+    <p class="<%= @import_log.icon_color %> mb-4"><%= @import_log.message %></p>
 </dl>
 
-<div class="table-responsive">
-  <table class="table table-striped table-bordered table-hover table-sm">
-    <thead>
+<div class="overflow-x-auto">
+  <table class="table table-sm">
+    <thead class="bg-slate-100 border">
       <tr>
         <th>Ligne</th>
         <th>Etat</th>
@@ -66,7 +66,7 @@
 
     <tbody>
       <% @import_log_lines.each do |import_log_line| %>
-        <tr>
+        <tr class="hover border">
           <td><%= import_log_line.num_ligne %></td>
           <td><%= fa_icon import_log_line.icon_etat, class: import_log_line.icon_color %></td>
           <td><%= import_log_line.pretiffy_message.first %></td>
