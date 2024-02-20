@@ -75,7 +75,7 @@
                       <% nom_formation << cour.formation.nom %>
                     <% end %>
                   <% end %>
-                  <%= link_to edit_cour_path(cours.first), title: nom_formation.join(' | ') do %>
+                  <%= link_to edit_cour_path(cours.first, from: "occupation"), title: nom_formation.join(' | '), data: { turbo_method: :get, turbo_confirm: "Voulez-vous modifier ce cours ?" }  do %>
                     <span style="background-color: <%= color %>;padding-left: 15px;"></span> 
                   <% end %>
                 <% end %>
