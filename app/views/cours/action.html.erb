@@ -270,55 +270,71 @@
       <% end %>
 
     </div>
-  <% elsif ["Générer Feuille émargement PDF","Générer Pochette Examen PDF", "Convocation étudiants PDF"].include?(params[:action_name]) && @cours.count == 1 && @cours.first.examen? %>
-    <h3 class="text-2xl">Sélectionnez les étudiants</h3>
-    <br>
-    <div data-controller="checkbox-select-all action">
-      <div data-action="click->action#click">
-        <input id="checkall" type="checkbox" data-checkbox-select-all-target="checkboxAll" data-action-target="source">
-        <label for="checkall">Tous ?</label>
-      </div>
-      <% @cours.each do |c| %>
-        <% c.formation.etudiants.order(:nom, :prénom).each do |etudiant| %>
-          <span class="flex gap-1" data-action="click->action#click">
-            <%= check_box_tag "etudiants_id[#{etudiant.id}]", true, false, data: {"action-target": "source", "checkbox-select-all-target": "checkbox"} %>
-            <%= etudiant.nom_prénom %>
-          </span>
+  <% elsif ["Générer Feuille émargement PDF","Générer Pochette Examen PDF", "Convocation étudiants PDF"].include?(params[:action_name]) %>
+    <% if params[:action_name] == "Générer Feuille émargement PDF" || (@cours.count == 1 && @cours.first.examen?) %>
+      <h3 class="text-2xl">Sélectionnez les étudiants</h3>
+      <br>
+      <div data-controller="checkbox-select-all action">
+        <div data-action="click->action#click" class="mb-4">
+          <input id="checkall" type="checkbox" data-checkbox-select-all-target="checkboxAll" data-action-target="source">
+          <label for="checkall">Tous ?</label>
+        </div>
+        <% @cours.each do |c| %>
+          <h4 class="text-xl font-bold"><%= c.formation.nom %></h4>
+          <% c.formation.etudiants.order(:nom, :prénom).each do |etudiant| %>
+            <span class="flex gap-1" data-action="click->action#click">
+              <%= check_box_tag "etudiants_id[#{etudiant.id}]", true, false, data: {"action-target": "source", "checkbox-select-all-target": "checkbox"} %>
+              <%= etudiant.nom_prénom %>
+            </span>
+          <% end %>
+          <br>
         <% end %>
-      <% end %>
-    </div>
+      </div>
+    <% end %>
     <% if params[:action_name] == "Générer Feuille émargement PDF" %>
       <div class="flex flex-wrap my-6">
-        <div class="sm:w-1/3 px-4">
+        <div class="sm:w-1/3">
           <%= check_box_tag :table %>
           <%= label_tag :table, "Ajouter une colonne N° Table" %>
         </div>
       </div>
     <% else %>
-      <h3 class="text-2xl mt-4">Sélectionnez les options d'examens</h3>
-      <i>Cochez les options autorisées. Non cochée = option interdite</i>
-      <br><br>
-      <%= check_box_tag :papier %> 
-      <%= label_tag :papier, "Papiers autorisés ?" %>
-      <br>
-      <%= check_box_tag :calculatrice %>
-      <%= label_tag :calculatrice, "Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission autorisés ?" %>
-      <br>
-      <%= check_box_tag :ordi_tablette %>
-      <%= label_tag :ordi_tablette, "Ordinateurs et tablettes autorisés ?" %>
-      <br>
-      <%= check_box_tag :téléphone %>
-      <%= label_tag :téléphone, "Téléphones portables autorisés ?" %>
-      <br>
-      <%= check_box_tag :dictionnaire %>
-      <%= label_tag :dictionnaire, "Dictionnaires autorisés ?" %>
-      <br><br>
+      <%# Générer Pochette Examen PDF, Convocation étudiants PDF %>
+      <% wrong_parameter = false %>
+      <% if @cours.count == 1 && @cours.first.examen? %>
+        <h3 class="text-2xl mt-4">Sélectionnez les options d'examens</h3>
+        <i>Cochez les options autorisées. Non cochée = option interdite</i>
+        <br><br>
+        <%= check_box_tag :papier %> 
+        <%= label_tag :papier, "Papiers autorisés ?" %>
+        <br>
+        <%= check_box_tag :calculatrice %>
+        <%= label_tag :calculatrice, "Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission autorisés ?" %>
+        <br>
+        <%= check_box_tag :ordi_tablette %>
+        <%= label_tag :ordi_tablette, "Ordinateurs et tablettes autorisés ?" %>
+        <br>
+        <%= check_box_tag :téléphone %>
+        <%= label_tag :téléphone, "Téléphones portables autorisés ?" %>
+        <br>
+        <%= check_box_tag :dictionnaire %>
+        <%= label_tag :dictionnaire, "Dictionnaires autorisés ?" %>
+        <br><br>
+      <% else %>
+        <% wrong_parameter = true %>
+        <% if @cours.count > 1 %>
+          <p class="text-error">Vous ne pouvez pas sélectionner plusieurs cours en même temps</p>
+        <% end %>
+        <% if !@cours.first.examen? %>
+          <p class="text-error">Le cours sélectionné n'est pas un examen</p>
+        <% end %>
+      <% end %>
     <% end %>
   <% end %>
 
   <div class="flex flex-wrap mb-12 mt-4">
     <div class="sm:w-full">
-      <%= submit_tag 'Appliquer', class:"btn btn-primary text-white", 'data-turbo': false %>
+      <%= submit_tag 'Appliquer', class:"btn btn-primary text-white", 'data-turbo': false, disabled: wrong_parameter %>
       <%= link_to 'Annuler', root_url, class:"btn btn-light" %>
     </div>
   </div>
