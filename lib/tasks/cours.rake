@@ -99,7 +99,7 @@ namespace :cours do
   task envoyer_sessions_intervenants: :environment do
     now = ApplicationController.helpers.time_in_paris_selon_la_saison
 
-    cours = Cour.where(formation_id: [258, 671]).confirmé.where("DATE(debut) = ?", Date.today)
+    cours = Cour.where(formation_id: [258, 599, 671, 672, 683, 687]).confirmé.where("DATE(debut) = ?", Date.today)
     # cours = Cour.confirmé.where("DATE(debut) = ?", Date.today)
     cours.each do |cour|
       if now > cour.debut + 30.minute && now < cour.debut + 40.minute

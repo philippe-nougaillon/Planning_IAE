@@ -481,7 +481,7 @@ class CoursController < ApplicationController
           if étudiants.any?
             étudiants.each do |étudiant|
               pdf = ExportPdf.new
-              pdf.convocation(@cours.first, étudiant, params[:papier], params[:calculatrice], params[:outils])
+              pdf.convocation(@cours.first, étudiant, params[:papier], params[:calculatrice], params[:ordi_tablette], params[:téléphone], params[:dictionnaire])
               mailer_response = EtudiantMailer.convocation(étudiant, pdf).deliver_now
               MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: étudiant.email, subject: "Convocation")
             end
@@ -541,7 +541,7 @@ class CoursController < ApplicationController
         when "Générer Pochette Examen PDF"
           filename = "Pochette_Examen_#{ Date.today }.pdf"
           pdf = ExportPdf.new
-          pdf.pochette_examen(@cours, params[:papier], params[:calculatrice], params[:outils])
+          pdf.pochette_examen(@cours, params[:etudiants_id].try(:keys).count, params[:papier], params[:calculatrice], params[:ordi_tablette], params[:téléphone], params[:dictionnaire])
 
           send_data pdf.render, filename: filename, type: 'application/pdf'
         end
