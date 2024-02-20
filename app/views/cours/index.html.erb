@@ -8,17 +8,15 @@
   <% end %>
 <% end %>
 
-<div class="border-b mt-6 mb-2 pb-4">
+<div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'calendar-alt' %> Planning des cours</h1>
   <% if policy(Cour).new? %>
-
     <%= link_to new_cour_path(formation: session[:formation], 
                               debut: DateTime.now), 
-                              class: 'text-primary float-right' do %>
+                              class: 'text-primary' do %>
       <%= fa_icon 'plus-circle' %> Cours
     <% end %>
-
   <% end %>
-  <h3 class="text-3xl"><%= fa_icon 'calendar-alt' %> Planning des cours</h3>
 </div>
 
 <div class="bs-container p-4 shadow mb-4">

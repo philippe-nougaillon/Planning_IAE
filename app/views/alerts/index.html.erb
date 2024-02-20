@@ -1,10 +1,10 @@
-<div class="pb-2 mt-6 mb-2">
+<div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'exclamation' %> Liste des Alertes</h1>
   <% if policy(Alert).new? %>
-    <%= link_to new_alert_path(debut: Time.now, fin: Time.now), class: 'text-primary float-right' do %>
+    <%= link_to new_alert_path(debut: Time.now, fin: Time.now), class: 'text-primary' do %>
       <%= fa_icon 'plus-circle' %> Alerte
     <% end %>
   <% end %>
-  <h3 class="text-3xl"><%= fa_icon 'exclamation' %> Liste des Alertes</h3>
 </div>
 
 <h5 class="text-lg mb-6">

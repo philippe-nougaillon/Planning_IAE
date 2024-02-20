@@ -7,7 +7,7 @@
         <th>Formations</th> 
         <th>Cours</th>
         <% @etendue_horaire.each_with_index do |heure, index| %>
-          <th class="<%= 'bg-amber-100' if ((@date == Date.today) && (heure == time_in_paris.hour)) %>"><%= heure %>h</th>
+          <th class="<%= 'bg-amber-100 text-black font-black' if ((@date == Date.today) && (heure == time_in_paris.hour)) %>"><%= heure %>h</th>
           <% if [4,9].include?(index) %><th></th><th></th><% end %>
         <% end %>
         <th></th>
@@ -30,7 +30,7 @@
             <tr class="bg-slate-100 border">
               <th colspan=4></th>
               <% @etendue_horaire.each_with_index do |heure, index| %>
-                <th class="<%= 'bg-amber-100' if ((@date == Date.today) && (heure == time_in_paris.hour)) %>"><%= heure %>h</th>
+                <th class="<%= 'bg-amber-100 text-black font-black' if ((@date == Date.today) && (heure == time_in_paris.hour)) %>"><%= heure %>h</th>
                 <% if [4,9].include?(index) %><th></th><th></th><% end %>
               <% end %>
               <th></th>

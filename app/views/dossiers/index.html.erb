@@ -1,13 +1,10 @@
-<div class="border-b mt-6 mb-2 pb-4">
+<div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'folder' %> Liste des dossiers de candidature </h1>
   <% if policy(Dossier).new? %>
-    <%= link_to new_dossier_path, class: 'text-primary float-right' do %>
+    <%= link_to new_dossier_path, class: 'text-primary' do %>
       <%= fa_icon 'plus-circle' %> Dossier
     <% end %>
   <% end %>
-  <h3 class="text-2xl">
-    <%= fa_icon 'folder' %> 
-    Liste des dossiers de candidature 
-  </h3>
 </div>
 
 <div class="bs-container mx-auto sm:px-4 max-w-full p-4 shadow">

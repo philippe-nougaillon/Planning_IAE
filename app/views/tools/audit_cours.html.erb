@@ -1,8 +1,5 @@
 <div class="border-b mt-6 mb-2 pb-4">
-  <h3 class="text-3xl"><%= fa_icon 'calendar-check' %> Liste des cours "à booker" </h3>
-  <p>
-    Liste des cours récemment planifiés (sans salle) et à confirmer.
-  </p>
+  <h1 class="text-3xl"><%= fa_icon 'calendar-check' %> Liste des cours "à booker" </h1>
 </div>
 
 <div class="bs-container p-4 shadow mb-4">
@@ -39,8 +36,8 @@
 </div>
 
 <div class="overflow-x-auto mt-4">
-  <table class="table table-sm">
-    <thead class="shadow">
+  <table class="table border">
+    <thead class="bg-slate-100">
       <tr>  
         <th>Semaine</th>
         <th>Date</th>
@@ -119,5 +116,5 @@
   </table>
 </div>
 
-<%= "Affichage de #{ @cours.length } cours au total" %>
+<%= "Affichage de #{ @cours.length } cours au total (cours récemment planifiés (sans salle) et à confirmer)" %>
 <br>

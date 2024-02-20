@@ -63,7 +63,7 @@
             <% if user_signed_in? && !(current_user.étudiant?) %>
                 <% if cours.formation && (cours.formation.nbr_etudiants > cours.salle.places) && cours.salle.bloc != 'Z' %>
                     <i title="Manque <%= cours.formation.nbr_etudiants - cours.salle.places %> place.s">
-                        <%= fa_icon 'exclamation-circle' %>
+                        <%= fa_icon 'exclamation-circle', class: 'mt-2' %>
                     </i>
                 <% end %>
             <% end %>
