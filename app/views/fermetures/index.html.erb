@@ -1,58 +1,55 @@
-<div class="pb-2 mt-4 mb-2 border-bottom">
+<div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'umbrella-beach' %> Liste des jours de fermeture</h1>
   <% if policy(Fermeture).new? %>
-    <%= link_to new_fermeture_path, class: 'btn text-primary float-right' do %>
+    <%= link_to new_fermeture_path, class: 'text-primary' do %>
       <%= fa_icon 'plus-circle' %> Fermeture
     <% end %>
   <% end %>
-  <h3><%= fa_icon 'umbrella-beach' %> Liste des jours de fermeture</h3>
 </div>
 
-<div class='container-fluid'>
+<div class="bs-container p-4 shadow mb-4">
   <%= form_tag request.path, method: :get do %>
-    <div class="form-group">
-      <div class="row">
+    <div class="flex flex-wrap">
 
-        <div class="col-sm-2">
-          <%= label_tag "Période" %>    
-          <%= select_tag :nom, options_for_select(@noms_périodes, params[:nom]), {include_blank: true, class: 'form-control', onchange: 'this.form.submit()'} %>
-        </div>
-
-        <div class="col-sm-3">
-          <%= label_tag "Du" %>    
-          <%= text_field_tag :date_debut, params[:date_debut], type:'date', onchange:'this.form.submit()', class:"form-control" %>
-        </div>
-
-        <div class="col-sm-3">
-          <%= label_tag "Au" %>    
-          <%= text_field_tag :date_fin, params[:date_fin], type:'date', onchange:'this.form.submit()', class:"form-control" %>
-        </div>
-
-        <div class="col-sm-2">
-          <%= label_tag "Fermetures" %>
-          <br> 
-          <%= radio_button_tag :futur, 'oui', (params[:futur]=='oui'), onchange:'this.form.submit()' %>
-          A venir
-          <%= radio_button_tag :futur, 'non', (params[:futur]=='non'), onchange:'this.form.submit()' %>
-          Toutes 
-        </div>
-
-        <div class="col-sm-2">
-          <%= label_tag "Afficher" %>
-          <br> 
-          <%= radio_button_tag :paginate, "pages", (params[:paginate]=='pages'), onchange:'this.form.submit()' %>
-          Pages 
-          <%= radio_button_tag :paginate, "all", (params[:paginate]=='all'), onchange:'this.form.submit()' %>
-          Tout 
-        </div>
-
+      <div class="sm:w-1/5 pr-4">
+        <%= label_tag :nom, "Période" %>    
+        <%= select_tag :nom, options_for_select(@noms_périodes, params[:nom]), {include_blank: true, class: 'input input-bordered input-sm w-full', onchange: 'this.form.submit()'} %>
       </div>
-    </div>  
+
+      <div class="sm:w-1/5 px-4">
+        <%= label_tag :date_debut, "Du" %>    
+        <%= text_field_tag :date_debut, params[:date_debut], type:'date', onchange:'this.form.submit()', class:"input input-bordered input-sm w-full" %>
+      </div>
+
+      <div class="sm:w-1/5 px-4">
+        <%= label_tag :date_fin, "Au" %>    
+        <%= text_field_tag :date_fin, params[:date_fin], type:'date', onchange:'this.form.submit()', class:"input input-bordered input-sm w-full" %>
+      </div>
+
+      <div class="sm:w-1/5 px-4">
+        <%= label_tag :futur, "Fermetures" %>
+        <br> 
+        <%= radio_button_tag :futur, 'oui', (params[:futur]=='oui'), onchange:'this.form.submit()' %>
+        A venir
+        <%= radio_button_tag :futur, 'non', (params[:futur]=='non'), onchange:'this.form.submit()' %>
+        Toutes 
+      </div>
+
+      <div class="sm:w-1/5 pl-4">
+        <%= label_tag :paginate, "Afficher" %>
+        <br> 
+        <%= radio_button_tag :paginate, "pages", (params[:paginate]=='pages'), onchange:'this.form.submit()' %>
+        Pages 
+        <%= radio_button_tag :paginate, "all", (params[:paginate]=='all'), onchange:'this.form.submit()' %>
+        Tout 
+      </div>
+    </div>
   <% end %>
 </div>
 
-<div class="table-responsive">
-  <table class="table table-striped table-bordered table-hover">
-    <thead>
+<div class="overflow-x-auto mb-4">
+  <table class="table">
+    <thead class="bg-slate-100 border">
       <tr>
         <th><%= fermetures_sort_link 'fermetures.date', 'Date' %></th>
         <th>Jour</th>
@@ -64,16 +61,16 @@
 
     <tbody>
       <% @fermetures.each do |fermeture| %>
-        <tr>
+        <tr class="hover border">
           <td><b><%= l fermeture.date %></b></td>
           <td><%= l fermeture.date, format: :long %></td>
           <td><%= fermeture.nom %></td>
           <td>il y a <%= time_ago_in_words fermeture.updated_at %></td>
           <td>
-            <%= link_to edit_fermeture_path(fermeture), class: 'btn btn-default' do %>
+            <%= link_to edit_fermeture_path(fermeture), class: 'btn btn-ghost btn-xs' do %>
               <%= fa_icon 'edit' %>
             <% end %>
-            <%= link_to(fermeture, method: :delete, data: {confirm: 'Confirmez-vous ?'}, class: 'btn btn-default') do %>
+            <%= link_to(fermeture, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: 'btn btn-ghost btn-xs') do %>
               <%= fa_icon 'trash' %>
             <% end %>
           </td>
@@ -81,11 +78,14 @@
       <% end %>
     </tbody>
   </table>
+</div>
 
+<% if params[:paginate] == 'pages' %>
   <div class="page_info">
     <%= page_entries_info @fermetures %>
   </div>
 
-  <%= will_paginate @fermetures, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
-
-</div>
+  <div class="planning_pagination">
+    <%= will_paginate @fermetures %>
+  </div>
+<% end %>

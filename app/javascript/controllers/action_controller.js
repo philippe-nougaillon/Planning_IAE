@@ -1,4 +1,4 @@
-import { Controller } from "stimulus"
+import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
     static targets = [ 'source', 'selector' ]
@@ -9,8 +9,9 @@ export default class extends Controller {
     }
 
     connect() {
-        //console.log("Hello, Stimulus!", this.element)
+        // console.log("Hello, Stimulus! Action_controller", this.element)
     }
+
     click() {
         var check_boxes = this.sourceTargets;
         var enabled = check_boxes.filter(myFunction);
@@ -19,7 +20,7 @@ export default class extends Controller {
           return value.checked;
         } 
  
-        //console.log(`Clicks = ${enabled.length}`)
+        // console.log(`Clicks = ${enabled.length}`)
         
         if (enabled.length == 0 ) {
             //this.selectorTarget.style.visibility = 'hidden';

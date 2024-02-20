@@ -1,23 +1,25 @@
-<%= bootstrap_form_for(@agent) do |f| %>
-  <% if @agent.errors.any? %>
-    <div class="alert alert-danger alert-dismissable" role="alert">
-      <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h3><%= t('activerecord.errors.template.header',
-                  model: Agent.model_name.human, count: @agent.errors.count) %></h3>
-      <ul>
-      <% @agent.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
+<%= form_for(@agent) do |f| %>
+  <%= render partial: 'partials/errors', locals: { record: @agent } %>
+
+  <div class="flex flex-col gap-4">
+    <div class="form-control">
+      <%= f.label :nom, 'Nom *' %>
+      <%= f.text_field :nom, class: 'input input-primary w-full', required: true %>
     </div>
-  <% end %>
+    <div class="form-control">
+      <%= f.label :prénom, 'Prénom *' %>
+      <%= f.text_field :prénom, class: 'input input-bordered input-sm w-full', required: true %>
+    </div>
 
-  <%= f.text_field :nom, required: true %>
-  <%= f.text_field :prénom, required: true %>
-  <%= f.select :catégorie,
-                            options_for_select(%w{A B C}, @agent.catégorie), 
-                            {label: "Catégorie"}, 
-                            required: true %>
+    <div class="form-control">
+      <%= f.label :Catégorie, 'Catégorie *' %>
+      <%= f.select :catégorie,
+        options_for_select(%w{A B C}, @agent.catégorie),
+        {},
+        class: 'select select-bordered w-full',
+        required: true %>
+    </div>
 
-  <%= f.submit class: "btn btn-primary" %>
+    <%= f.submit class: "btn btn-primary text-white", 'data-turbo': false %>
+  </div>
 <% end %>

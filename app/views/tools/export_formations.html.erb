@@ -1,21 +1,17 @@
-<div class="pb-2 mt-4 mb-2 border-bottom">
-  <h3><%= fa_icon 'upload' %> Export des formations </h3>
+<div class="border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'upload' %> Export des formations </h1>
 </div>
 <br>
 
 <div>
-  <h3>Cette fonction permet la création d'une feuille Excel contenant toutes les formations</h3>
+  <h3 class="text-2xl">Cette fonction permet la création d'une feuille Excel contenant toutes les formations</h3>
 </div>
 
 <%= form_tag({action: "export_formations_do", method: :post}) do %>
-
-  <div class="form-group">
-    <%= check_box_tag :archive, class: 'form-control' %>
+  <div class="my-4">
+    <%= check_box_tag :archive %>
     <%= label_tag :archive, "Ajouter les archivés ?" %>
   </div>
 
-  <div class="actions">
-    <%= submit_tag "Exporter", class: "btn btn-success" %>
-  </div>
-
+  <%= submit_tag "Exporter", class: "btn btn-primary text-white", 'data-turbo': false %>
 <% end %>

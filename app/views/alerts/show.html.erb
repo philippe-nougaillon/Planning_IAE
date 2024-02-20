@@ -1,27 +1,27 @@
-<p>
+<p class="my-4">
   <strong>Début d'affichage :</strong>
   <%= l @alert.debut %>
 </p>
 
-<p>
+<p class="mb-4">
   <strong>Fin d'affichage :</strong>
   <%= l @alert.fin %>
 </p>
 
-<p>
+<p class="mb-4">
   <strong>Visible ? :</strong>
   <%= 'OUI' if @alert.visible? %>
 </p>
 
-<p>
+<p class="mb-4">
   <strong>Message :</strong>
   <%= @alert.message %>
 </p>
 
-<p>
+<p class="mb-4">
   <strong>Style :</strong>
   <%= @alert.etat.humanize %>
 </p>
 
-<%= link_to 'Modifier', edit_alert_path(@alert) %> |
-<%= link_to 'Retour', alerts_path %>
+<%= link_to 'Modifier', edit_alert_path(@alert), class: 'text-primary hover:underline' %> |
+<%= link_to 'Retour', alerts_path, class: 'text-primary hover:underline' %>

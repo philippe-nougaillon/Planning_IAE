@@ -1,13 +1,13 @@
-<tr class="shadow-sm">
+<tr class="hover border">
     <% if policy(Cour).action? %>
         <td>
-            <span data-action="click->action#click">
-                <%= check_box_tag "[cours_id][#{cours.id}]", 'yes', false, data: {"target":"action.source"} %>
+            <span class="flex" data-action="click->action#click">
+                <%= check_box_tag "cours_id[#{cours.id}]", 'yes', false, data: {"action-target": "source", "checkbox-select-all-target": "checkbox"} %>
             </span>
         </td>
     <% end %>
     <td>
-        <%= link_to cours do %>
+        <%= link_to cours, class: 'text-primary hover:underline' do %>
             <b><%= l(cours.debut, format: :heures_min) %></b> 
             <br>
             <%= l(cours.fin, format: :heures_min) %>
@@ -16,28 +16,22 @@
     <td>
         <%= number_with_precision(cours.duree, precision: 1, strip_insignificant_zeros: true) %> h
         <% if cours.debut.to_date == Date.today %>
-            <div class="progress mt-1" style="width: 100%">
-                <div class="progress-bar bg-primary" 
-                    role="progressbar" aria-valuemin="0" aria-valuemax="100" 
-                    style="width: <%= cours.progress_bar_pct3 %>%; opacity: 0.5;">
-                </div>
-            </div>
+            <progress data-debut="<%= cours.debut.to_i %>" data-fin="<%= cours.fin.to_i %>" class="progress progress-primary opacity-50 mt-1" value="<%= cours.progress_bar_pct3 %>" max="100"></progress>
         <% end %>
     </td>
     <td style="border-left: .3rem solid <%= cours.formation.try(:positive_color) %>">
         <% if policy(Cour).action? %>
-            <%= link_to cours.formation.try(:nom_nbr_etudiants), cours.formation %>
+            <%= link_to cours.formation.try(:nom_nbr_etudiants), cours.formation, class: 'text-primary hover:underline' %>
         <% else %>
-            <%= link_to cours.formation.try(:nom), cours.formation %>
+            <%= link_to cours.formation.try(:nom), cours.formation, class: 'text-primary hover:underline' %>
         <% end %>
     </td>
     <td>
         <% if user_signed_in? %>
-            <%= link_to cours.intervenant.nom_prenom, cours.intervenant %>
-
+            <%= link_to cours.intervenant.nom_prenom, cours.intervenant, class: 'text-primary hover:underline' %>
             <% if binome = cours.intervenant_binome %>
                 <br>
-                <%= link_to binome.nom_prenom, cours.intervenant_binome %>
+                <%= link_to binome.nom_prenom, cours.intervenant_binome, class: 'text-primary hover:underline' %>
             <% end %>
         <% end %>
 
@@ -45,13 +39,13 @@
             <% unless cours.invits.where.not("workflow_state = 'non_retenue' OR workflow_state = 'confirmée'").count.zero? %>
                 <br>
                 <%= fa_icon 'calendar-check' %>
-                <%= link_to 'Invitations en cours', invits_path(cours_id: cours.id) %>
+                <%= link_to 'Invitations en cours', invits_path(cours_id: cours.id), class: 'text-primary hover:underline' %>
             <% end %>
         <% end %>
     </td>
     <td>
         <% if cours.code_ue %>
-            <%= link_to "##{ cours.code_ue }", cours_path(ue: cours.code_ue) %>
+            <%= link_to "##{ cours.code_ue }", cours_path(ue: cours.code_ue), class: 'text-primary hover:underline' %>
         <% end %>
     </td>
     <td>
@@ -61,15 +55,15 @@
     </td>
     <td style="white-space: nowrap;">
         <% if cours.salle %>
-            <h5>
-                <span class="badge badge-pill badge-<%= cours.style %>">
+            <h5 class="text-lg">
+                <span class="badge badge-<%= cours.style %> text-white font-bold">
                     <%= cours.salle.nom %>
                 </span>
             </h5>
             <% if user_signed_in? && !(current_user.étudiant?) %>
                 <% if cours.formation && (cours.formation.nbr_etudiants > cours.salle.places) && cours.salle.bloc != 'Z' %>
                     <i title="Manque <%= cours.formation.nbr_etudiants - cours.salle.places %> place.s">
-                        <%= fa_icon 'exclamation-circle' %>
+                        <%= fa_icon 'exclamation-circle', class: 'mt-2' %>
                     </i>
                 <% end %>
             <% end %>
@@ -78,7 +72,7 @@
 
                 <% if étudiants_présents > 0 %>
                     <%= fa_icon 'file-signature' %>
-                    <%= link_to presences_path(cours_id: cours.id), title: 'présences signées / nbr étudiants' do %>
+                    <%= link_to presences_path(cours_id: cours.id), title: 'présences signées / nbr étudiants', class: 'text-primary hover:underline' do %>
                         <%= étudiants_présents %> / <%= cours.etudiants.count %>
                     <% end %>
                 <% end %>
@@ -89,8 +83,8 @@
                     <%= fa_icon 'exclamation-circle' %>
                 </i>
             <% else %>
-                <h5>
-                    <span class="badge badge-pill badge-<%= cours.style %>">
+                <h5 class="text-lg">
+                    <span class="badge badge-<%= cours.style %> text-white font-bold">
                         <%= cours.etat.humanize %>
                     </span>
                 </h5>
@@ -106,7 +100,7 @@
 
     <% if policy(cours).edit? %>
         <td>
-            <%= link_to edit_cour_path(cours, from: params[:from]), class: "btn btn-sm btn-outline-light text-dark" do %>
+            <%= link_to edit_cour_path(cours, from: params[:from]), class: "btn btn-sm btn-ghost text-base-content" do %>
                 <%= fa_icon 'edit '%>
             <% end %>
         </td>

@@ -1,14 +1,12 @@
 class DossiersController < ApplicationController
-  skip_before_action :authenticate_user!, only: %i[ show deposer]
-  before_action :set_dossier, only: %i[ show edit update destroy envoyer deposer valider rejeter relancer archiver ]
-  before_action :is_user_authorized
+  skip_before_action :authenticate_user!, only: %i[ show deposer deposer_done ]
+  before_action :set_dossier, only: %i[ show edit update destroy envoyer deposer deposer_done valider rejeter relancer archiver ]
+  before_action :is_user_authorized, except: %i[ show ]
 
   layout :determine_layout
 
   # GET /dossiers or /dossiers.json
   def index
-    authorize Dossier
-
     params[:période] ||= '2023/2024' 
     params[:order_by]||= 'dossiers.updated_at'
 
@@ -52,7 +50,7 @@ class DossiersController < ApplicationController
 
   # GET /dossiers/1 or /dossiers/1.json
   def show
-    #authorize @dossier
+    authorize @dossier
   end
 
   # GET /dossiers/new
@@ -79,7 +77,6 @@ class DossiersController < ApplicationController
     
     @dossier = Dossier.new
     @dossier.période = période
-    3.times { @dossier.documents.build }
   end
 
   # GET /dossiers/1/edit
@@ -140,7 +137,12 @@ class DossiersController < ApplicationController
   end
 
   def deposer
+    @dossier.update(dossier_params)
     @dossier.déposer!
+    redirect_to deposer_done_dossier_path(@dossier)
+  end
+
+  def deposer_done
   end
 
   def valider

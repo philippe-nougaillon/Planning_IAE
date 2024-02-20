@@ -1,0 +1,8 @@
+<div class="nested-form-wrapper flex gap-1 mb-2" data-new-record="<%= f.object.new_record? %>">
+  <%= f.select :nom, options_for_select(Document.types, params[:nom]),{}, class: 'select select-bordered select-sm' %>
+  <%= f.file_field :fichier, required: true, label: 'Fichier PDF', accept: 'application/pdf', class: 'file-input file-input-bordered file-input-sm file-input-success flex-1' %>
+
+  <button type="button" data-action="nested-form#remove" class="btn btn-sm">[X]</button>
+
+  <%= f.hidden_field :_destroy %>
+</div>

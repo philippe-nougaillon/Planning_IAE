@@ -10,11 +10,15 @@ class DossierPolicy < ApplicationPolicy
   end
 
   def show?
-    true
+    record.can_déposer? || (user && (user.rh? || user.admin?))
   end
 
   def new?
     user.rh? || user.admin?
+  end
+
+  def update?
+    new?
   end
 
   def edit?
@@ -22,11 +26,7 @@ class DossierPolicy < ApplicationPolicy
   end
 
   def create?
-    index?
-  end
-
-  def update?
-    index?
+    edit?
   end
 
   def destroy?
@@ -39,6 +39,10 @@ class DossierPolicy < ApplicationPolicy
 
   def deposer?
     true
+  end
+
+  def deposer_done?
+    deposer?
   end
 
   def envoyer?

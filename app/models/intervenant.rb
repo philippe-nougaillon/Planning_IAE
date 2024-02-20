@@ -34,7 +34,6 @@ class Intervenant < ApplicationRecord
 	default_scope { order(:nom, :prenom) } 
 
 	before_create :nom_with_underscore
-	# after_create :envoyer_mail
 	after_create :create_user_access
 
 	def self.for_select
@@ -103,9 +102,16 @@ class Intervenant < ApplicationRecord
 		
 		index = 1
 		intervenants.each do |i|
-			if date_debut.present?
-				nbr_heures_cours = i.cours.where("debut BETWEEN (?) AND (?)", date_debut, date_fin).sum(:duree).to_f
+			if date_debut.present? && date_fin.present?
+				cours = i.cours.where("debut BETWEEN ? AND ?", date_debut, date_fin)
+			elsif date_debut.present?
+				cours = i.cours.where("debut > ?", date_debut)
+			elsif date_fin.present?
+				cours = i.cours.where("debut < ?", date_fin)
+			else
+				cours = i.cours
 			end
+			nbr_heures_cours = cours.sum(:duree).to_f
 
 			fields_to_export = [
 				i.id, 
@@ -127,7 +133,7 @@ class Intervenant < ApplicationRecord
 				i.created_at, 
 				i.updated_at,
 				i.notifier?,
-				nbr_heures_cours.present? ? nbr_heures_cours : nil
+				nbr_heures_cours
 			]
 			sheet.row(index).replace fields_to_export
 			index += 1
@@ -152,12 +158,6 @@ class Intervenant < ApplicationRecord
   end
 
 	private
-	def envoyer_mail
-		if self.status == 'CEV' and self.doublon == false 
-			IntervenantMailer.notifier_srh(self).deliver_later
-		end
-	end
-
 	# only one candidate for an nice id; one random UDID
 	def slug_candidates
 		[SecureRandom.uuid]

@@ -1,97 +1,131 @@
-<%= bootstrap_form_for(@intervenant) do |f| %>
-  <% if @intervenant.errors.any? %>
-    <div class="alert alert-danger alert-dismissable" role="alert">
-      <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h3><%= t('activerecord.errors.template.header',
-                  model: Intervenant.model_name.human, count: @intervenant.errors.count) %></h3>
-      <ul>
-      <% @intervenant.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
+<%= form_for(@intervenant, data: { controller: 'nested-form', nested_form_wrapper_selector_value: '.nested-form-wrapper' }) do |f| %>
+  <%= render partial: 'partials/errors', locals: { record: @intervenant } %>
+  <div class="flex flex-wrap gap-32">
+    <div class="relative flex-grow max-w-full flex-1 flex flex-col gap-4">
+      <div class="form-control">
+        <%= f.label :nom, 'Nom *' %>
+        <%= f.text_field :nom, required: true, class: 'input input-bordered input-sm w-full' %>
+      </div>
+
+      <div class="form-control">
+        <%= f.label :prenom, 'Prénom *' %>
+        <%= f.text_field :prenom, required: true, class: 'input input-bordered input-sm w-full' %>
+      </div>
+
+      <div class="form-control">
+        <%= f.label :email, 'Email *' %>
+        <%= f.email_field :email, required: true, class: 'input input-bordered input-sm w-full' %>
+      </div>
+
+      <div class="flex flex-wrap gap-4">        
+        <div class="relative flex-grow max-w-full flex-1">
+          <div class="form-control">
+            <%= f.label :titre1, 'Titre' %>
+            <%= f.text_field :titre1, class: 'input input-bordered input-sm w-full' %>
+          </div>
+        </div>
+        <div class="relative flex-grow max-w-full flex-1">
+          <div class="form-control">
+            <%= f.label :bureau %>
+            <%= f.text_field :bureau, class: 'input input-bordered input-sm w-full' %>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-4">        
+        <div class="relative flex-grow max-w-full flex-1">
+          <div class="form-control">
+            <%= f.label :téléphone_fixe %>
+            <%= f.text_field :téléphone_fixe, class: 'input input-bordered input-sm w-full' %>
+          </div>
+        </div>
+        <div class="relative flex-grow max-w-full flex-1">
+          <div class="form-control">
+            <%= f.label :téléphone_mobile %>
+            <%= f.text_field :téléphone_mobile, class: 'input input-bordered input-sm w-full' %>
+          </div>
+        </div>
+      </div>
+
+      <%= f.submit class: "btn btn-primary text-white mt-4", 'data-turbo': false %>
     </div>
-  <% end %>
 
-  <div class="row">
-    <div class="col-sm-5">
-      <%= f.text_field :nom, required: true %>
-      <%= f.text_field :prenom, label:"Prénom", required: true %>
-      <%= f.text_field :email, required: true %>
-      <div class="row">        
-        <div class="col">
-          <%= f.text_field :titre1, label:"Titre" %>
-        </div>
-        <div class="col">
-          <%= f.text_field :bureau %>
-        </div>
-      </div>
-
-      <div class="row">        
-        <div class="col">
-          <%= f.text_field :téléphone_fixe %>
-        </div>
-        <div class="col">
-          <%= f.text_field :téléphone_mobile %>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-sm-1">
-    </div>
-
-    <div class="col-sm-6">
-      <div class="row">
-        <div class="col">
-          <%= f.select :status, Intervenant.statuses.keys.to_a, {include_blank: true, label: 'Statut'}, required: true %>
+    <div class="relative flex-grow max-w-full flex-1 flex flex-col gap-4">
+      <div class="flex flex-wrap gap-4">
+        <div class="relative flex-grow max-w-full flex-1">
+          <div class="form-control">
+            <%= f.label :status, 'Statut *' %>
+            <%= f.select :status, Intervenant.statuses.keys.to_a, {include_blank: true}, class: 'select select-bordered select-sm w-full' %>
+          </div>
         </div>
 
-        <div class="col-5">
-          <%= f.number_field :nbr_heures_statutaire, label:"Nombre heures statutaires" %>
+        <div class="w-2/5">
+          <div class="form-control">
+            <%= f.label :nbr_heures_statutaire, 'Nombre heures statutaires' %>
+            <%= f.number_field :nbr_heures_statutaire, class: 'input input-bordered input-sm w-full' %>
+          </div>
         </div>
 
-        <div class="col">
-          <%= f.number_field :année_entrée, label:"Année d'entrée" %>
+        <div class="relative flex-grow max-w-full flex-1">
+          <div class="form-control">
+            <%= f.label :année_entrée, 'Année d\'entrée' %>
+            <%= f.number_field :année_entrée, class: 'input input-bordered input-sm w-full' %>
+          </div>
         </div>
       </div>
 
-      <div class="row">
-        <div class="col">
-          <%= f.date_field :date_naissance %>
+      <div class="flex flex-wrap gap-4">
+        <div class="relative flex-grow max-w-full flex-1">
+          <div class="form-control">
+            <%= f.label :date_naissance %>
+            <%= f.date_field :date_naissance, class: 'input input-bordered input-sm w-full' %>
+          </div>
         </div>
 
-        <div class="col">
-          <%= f.date_field :remise_dossier_srh, label:"Date remise dossier SRH" %>
+        <div class="relative flex-grow max-w-full flex-1">
+          <div class="form-control">
+            <%= f.label :remise_dossier_srh, 'Date remise dossier SRH' %>
+            <%= f.date_field :remise_dossier_srh, class: 'input input-bordered input-sm w-full' %>
+          </div>
         </div>
       </div>
 
-      <%= f.text_field :photo %>
+      <div class="form-control">
+        <%= f.label :photo %>
+        <%= f.text_field :photo, class: 'input input-bordered input-sm w-full' %>
+      </div>
 
-      <%= f.text_field :adresse %>
+      <div class="form-control">
+        <%= f.label :adresse %>
+        <%= f.text_field :adresse, class: 'input input-bordered input-sm w-full' %>
+      </div>
 
-      <div class="row">        
-        <div class="col-sm-3">
-          <%= f.text_field :cp %>
+      <div class="flex flex-wrap">        
+        <div class="sm:w-1/4 pr-4">
+          <div class="form-control">
+            <%= f.label :cp %>
+            <%= f.text_field :cp, class: 'input input-bordered input-sm w-full' %>
+          </div>
         </div> 
-        <div class="col-sm-9">
-          <%= f.text_field :ville %>
+        <div class="sm:w-3/4 pl-4">
+          <div class="form-control">
+            <%= f.label :ville %>
+            <%= f.text_field :ville, class: 'input input-bordered input-sm w-full' %>
+          </div>
         </div>
       </div>
 
 
       <% if current_user.admin? %>
-        <div class="row">        
-          <div class="col">
-            <%= f.check_box :doublon, 
-                            label:"Autoriser les doublons ?", 
-                            title:"Autorise les doublons de cours sur un même créneau horaire !" 
-            %>
+        <div class="flex flex-wrap gap-4">        
+          <div class="relative flex-grow max-w-full flex-1">
+            <%= f.check_box :doublon, title:"Autorise les doublons de cours sur un même créneau horaire !" %>
+            <%= f.label :doublon, 'Autoriser les doublons ?' %>
           </div>
           
-          <div class="col">
-            <%= f.check_box :notifier, 
-                              label: "Notification planning ?",
-                              title: "Envoyer la liste des cours du mois prochain"
-            %>
+          <div class="relative flex-grow max-w-full flex-1">
+            <%= f.check_box :notifier, title: "Envoyer la liste des cours du mois prochain" %>
+            <%= f.label :notifier, 'Notification planning ?' %>
           </div>
         </div>
       <% end %>
@@ -100,44 +134,29 @@
   </div>
 
   <% if policy(:tool).can_see_RHGroup_private_tool? %>
-    <h4>Responsabilités</h4>
+    <p class="text-xl text-secondary mt-8 mb-4">
+      <%= fa_icon 'file-contract' %>
+      Responsabilités
+    </p>
     <hr>
-    <%= f.fields_for :responsabilites do |r| %>
-      <div class="row shadow-sm p-1 m-1">
-          <div class="col-sm-2">
-            <%= r.date_field :debut, label:"Date" %>
-          </div>
+    <template data-nested-form-target="template">
+      <%= f.fields_for :responsabilites, Responsabilite.new, child_index: 'NEW_RECORD' do |responsabilite_fields| %>
+        <%= render "responsabilite_form", f: responsabilite_fields %>
+      <% end %>
+    </template>
 
-          <div class="col-sm-6">
-            <%= r.select :titre, Intervenant.liste_responsabilites, include_blank: true %>
-          </div>
-
-          <div class="col-sm-3">
-            <%= r.collection_select :formation_id, 
-                    Formation.where(hors_catalogue: false), 
-                    :id, :nom_eotp, {include_blank: true, label: "Formation/EOTP"} %>
-          </div>  
-  
-          <div class="col-sm-1">
-            <%= r.text_field :heures, label:"Forfait" %>
-          </div>
-
-          <div class="col-sm-8">
-            <%= r.text_field :commentaires, label:"Commentaires" %>
-          </div>
-
-          <div class="col-sm-2">
-            <br>
-            <%= r.check_box :_destroy, label:"Supprimer ?" %>
-          </div>
-      </div>
+    <%= f.fields_for :responsabilites do |responsabilite_fields| %>
+      <%= render "responsabilite_form", f: responsabilite_fields %>
     <% end %>
+
+    <div data-nested-form-target="target"></div>
+
+    <div class="mb-4">
+      <%= f.submit class: "btn btn-primary text-white mt-4", 'data-turbo': false %>
+      <button type="button" data-action="nested-form#add" class="btn">
+        <%= fa_icon 'plus-circle' %>
+        Ajouter responsabilité
+      </button>
+    </div>
   <% end %>
-  <br>
-
-  <%= f.submit class: "btn btn-primary" %>
 <% end %>
-<br />
-<br />
-
-

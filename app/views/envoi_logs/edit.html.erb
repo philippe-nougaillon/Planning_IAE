@@ -1,6 +1,6 @@
-<h1>Modifier une planification</h1>
+<h1 class="text-4xl">Modifier une planification</h1>
 
 <%= render 'form', envoi_log: @envoi_log %>
 
-<%= link_to 'Voir', @envoi_log %> |
-<%= link_to 'Retour', envoi_logs_path %>
+<%= link_to 'Voir', @envoi_log, class: 'text-primary hover:underline' %> |
+<%= link_to 'Retour', envoi_logs_path, class: 'text-primary hover:underline' %>

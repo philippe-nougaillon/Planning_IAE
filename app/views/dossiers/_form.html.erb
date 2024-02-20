@@ -1,7 +1,7 @@
-<%= bootstrap_form_with(model: dossier, local: true) do |form| %>
+<%= form_with(model: dossier, local: true) do |form| %>
   <% if dossier.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(dossier.errors.count, "error") %> empêche ce dossier d'être enregistré :</h2>
+      <h2 class="text-3xl"><%= pluralize(dossier.errors.count, "error") %> empêche ce dossier d'être enregistré :</h2>
 
       <ul>
         <% dossier.errors.each do |error| %>
@@ -13,49 +13,70 @@
 
   <%= form.hidden_field :intervenant_id %>
 
-  <div class="row">
-    <div class="col">
-      <% if dossier.new_record? %>
-        <%= form.select :période, options_for_select(Dossier.périodes, dossier.période) %>
-      <% else %>
-        <p>Période</p>
-        
-        <span class="form-control"><%= dossier.période %></span>
-        <br>
-        
-      <% end %>
-      <%= form.select :intervenant_id, 
-                      options_from_collection_for_select(@intervenants, :id, :nom_prenom, @dossier.intervenant_id), 
-                      class: 'form-control select2' %>
+  <div class="flex flex-wrap gap-8">
+    <div class="relative flex-grow max-w-full flex-1">
+      <div class="form-control mb-4">
+        <% if dossier.new_record? %>
+          <%= form.label :période %>
+          <%= form.select :période, options_for_select(Dossier.périodes, dossier.période), {}, class: 'select select-bordered select-sm w-full' %>
+        <% else %>
+          <label>Période</label>
+          <input class="input input-bordered input-sm w-full" value=<%= dossier.période %> disabled=true>
+        <% end %>
+      </div>
+
+      <div class="form-control">
+        <%= form.label :intervenant_id %>
+        <%= form.select :intervenant_id, 
+                        options_from_collection_for_select(@intervenants, :id, :nom_prenom, @dossier.intervenant_id), 
+                        {},
+                        class: 'slim-select' %>
+      </div>
 
     </div>
 
-    <div class="col">
-      <%= form.select :workflow_state, Dossier.workflow_spec.states.keys.to_a, label: "Etat" %>
-      <%= form.text_area :mémo %>
+    <div class="relative flex-grow max-w-full flex-1">
+      <div class="form-control mb-4">
+        <%= form.label :workflow_state %>
+        <%= form.select :workflow_state, Dossier.workflow_spec.states.keys.to_a, {}, class: 'select select-bordered select-sm w-full' %>
+      </div>
+
+      <div class="form-control">
+        <%= form.label :mémo %>
+        <%= form.text_area :mémo, class: 'textarea textarea-bordered textarea-sm w-full' %>
+      </div>
     </div>
   </div>
 
   <% unless dossier.new_record? %>
-    <h5>Pièces justificatives</h5>
-    <%= form.fields_for :documents do |doc| %>
-      <div class="row shadow-sm">
-        <div class="col-sm-3">
-          <%= doc.text_field :nom %>
-        </div>
-        <div class="col-sm-2">
-          <%= doc.select :workflow_state, Document.workflow_spec.states.keys.to_a, label: "Etat" %>
-        </div>
-        <div class="col">
-          <%= doc.text_field :commentaire %>
-        </div>
-      </div>
-    <% end %>
+    <h5 class="text-lg">Pièces justificatives</h5>
+    <div class="overflow-x-auto">
+      <table class="table border">
+        <thead class="bg-slate-100">
+          <tr>
+            <th>Nom</th>
+            <th>État</th>
+            <th>Commentaire</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= form.fields_for :documents do |doc| %>
+            <tr>
+              <td>
+                <%= doc.text_field :nom, class: 'input input-bordered input-sm w-full'  %>
+              </td>
+              <td>
+                <%= doc.select :workflow_state, Document.workflow_spec.states.keys.to_a,{}, class: 'select select-bordered select-sm w-full' %>
+              </td>
+              <td>
+                <%= doc.text_field :commentaire, class: 'input input-bordered input-sm w-full' %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
   <% end %>
-  <br> 
-
-  <div class="actions">
-    <%= form.submit %>
-  </div>
+  
+  <%= form.submit class: "btn my-4", 'data-turbo': false %>
 <% end %>
-

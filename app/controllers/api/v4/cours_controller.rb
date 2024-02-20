@@ -13,7 +13,7 @@ module Api
                 now = ApplicationController.helpers.time_in_paris_selon_la_saison
                 
                 @cours = Cour.where(etat: Cour.etats.values_at(:planifié, :confirmé))
-                             .where("DATE(fin) = ? AND fin > ?", now.to_date, now.to_s(:db))
+                             .where("DATE(fin) = ? AND fin > ?", now.to_date, now.to_formatted_s(:db))
                              .includes(:formation, :intervenant, :salle) 
                              .order(:debut)
             end

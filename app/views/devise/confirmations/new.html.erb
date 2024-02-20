@@ -1,4 +1,4 @@
-<h2><%= t('.resend_confirmation_instructions') %></h2>
+<h2 class="text-3xl"><%= t('.resend_confirmation_instructions') %></h2>
 
 <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
   <%= render "devise/shared/error_messages", resource: resource %>
@@ -8,9 +8,7 @@
     <%= f.email_field :email, autofocus: true, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email) %>
   </div>
 
-  <div class="actions">
-    <%= f.submit t('.resend_confirmation_instructions') %>
-  </div>
+  <%= f.submit t('.resend_confirmation_instructions'), 'data-turbo': false %>
 <% end %>
 
 <%= render "devise/shared/links" %>

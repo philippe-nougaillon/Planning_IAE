@@ -1,11 +1,12 @@
 class ImportLogsController < ApplicationController
-  before_action :set_import_log, only: [:show, :edit, :update, :destroy]
+  before_action :set_import_log, only: %i[ show ]
   before_action :is_user_authorized
 
   # GET /import_logs
   # GET /import_logs.json
   def index
     @import_logs = ImportLog.includes(:user).order(:id).reverse_order
+    @import_logs = @import_logs.paginate(page: params[:page])
   end
 
   # GET /import_logs/1

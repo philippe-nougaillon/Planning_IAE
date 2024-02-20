@@ -1,6 +1,6 @@
-<h1>Modification Ouverture</h1>
+<h1 class="text-4xl">Modification Ouverture</h1>
 
 <%= render 'form', ouverture: @ouverture %>
 
-<%= link_to 'Voir', @ouverture %> |
-<%= link_to 'Retour', ouvertures_path %>
+<%= link_to 'Voir', @ouverture, class: 'text-primary hover:underline' %> |
+<%= link_to 'Retour', ouvertures_path, class: 'text-primary hover:underline' %>

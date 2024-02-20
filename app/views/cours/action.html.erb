@@ -1,58 +1,60 @@
-<div class="pb-2 mt-4 mb-2 border-bottom">
-  <h3><%= fa_icon 'exclamation-triangle' %> <%= params[:action_name] %></h3>
+<div class="border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'exclamation-triangle' %> <%= params[:action_name] %></h1>
 </div>
 <br>
 
-<%= bootstrap_form_tag url:  :action_do_cours do %>
+<%= form_tag :action_do_cours do %>
 
 	<%= hidden_field_tag :action_name, params[:action_name] %>
 
-  <h3>Cours sélectionnés</h3>
+  <h3 class="text-2xl">Cours sélectionnés</h3>
 
-  <table class="table table-hover table-bordered table-striped table-sm">
-    <thead>
-      <tr>
-        <td></td>
-        <td>Date</td>
-        <td>Horaire</td>
-        <td>Formation</td>
-        <td>Intervenant</td>
-        <td>UE</td>
-        <td>Intitulé du cours</td>
-        <td>Etat</td>
-        <td>Salle</td>
-        <td>Crée par</td>
-      </tr>
-    </thead>
-    <tbody>
-      <% @cours.each do |cours| %>
+  <div class="overflow-x-auto">
+    <table class="table table-sm">
+      <thead class="bg-slate-100 border">
         <tr>
-          <td><%= check_box_tag "[cours_id][#{cours.id}]", true, true %></td>                
-          <td><%= l(cours.debut.to_date) %></td>
-          <td><%= "#{l(cours.debut, format: :heures_min)}-#{l(cours.fin, format: :heures_min)}" %></td>
-          <td>
-            <span style="background-color:<%= cours.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
-            <%= cours.try(:formation).try(:nom_promo) %>
-          </td>
-          <td><%= cours.intervenant.nom_prenom %>
-            <% if cours.intervenant_binome %>
-              <%= cours.intervenant_binome.nom_prenom %>
-            <% end %>
-          </td>
-          <td><%= cours.code_ue %></td>
-          <td><%= cours.nom %></td>
-          <td><span class="badge badge-<%= cours.style %>"><%= cours.etat.humanize %></span></td>
-          <td><%= cours.try(:salle).try(:nom)  %></td>
-          <td><%= cours.audits.first.user.try(:email) %></td>
+          <td></td>
+          <td>Date</td>
+          <td>Horaire</td>
+          <td>Formation</td>
+          <td>Intervenant</td>
+          <td>UE</td>
+          <td>Intitulé du cours</td>
+          <td>Etat</td>
+          <td>Salle</td>
+          <td>Crée par</td>
         </tr>
-      <% end %>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        <% @cours.each do |cours| %>
+          <tr class="hover border">
+            <td><%= check_box_tag "cours_id[#{cours.id}]", true, true %></td>                
+            <td><%= l(cours.debut.to_date) %></td>
+            <td><%= "#{l(cours.debut, format: :heures_min)}-#{l(cours.fin, format: :heures_min)}" %></td>
+            <td>
+              <span style="background-color:<%= cours.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
+              <%= cours.try(:formation).try(:nom_promo) %>
+            </td>
+            <td><%= cours.intervenant.nom_prenom %>
+              <% if cours.intervenant_binome %>
+                <%= cours.intervenant_binome.nom_prenom %>
+              <% end %>
+            </td>
+            <td><%= cours.code_ue %></td>
+            <td><%= cours.nom %></td>
+            <td><span class="badge badge-<%= cours.style %> text-white"><%= cours.etat.humanize %></span></td>
+            <td><%= cours.try(:salle).try(:nom)  %></td>
+            <td><%= cours.audits.first.user.try(:email) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
   <br>
 
   <% if params[:action_name] == "Changer de salle" %>  
     <% if @salles_dispos %>
-      <h3>
+      <h3 class="text-2xl">
         Salles disponibles
       </h3>
       <% @salles_dispos.each do |salle| %>
@@ -60,73 +62,73 @@
                     action_do_cours_path(params
                                           .permit!
                                           .merge(salle_id: Salle.find_by(nom: salle))),
-                    method: :post, 
-                    class: "btn btn-outline-success btn-sm mb-1" %>
+                    data: { turbo_method: :post }, 
+                    class: "btn btn-success btn-outline btn-sm mb-1" %>
       <% end %>
       <br><br>
     <% end %>
 
   <% elsif params[:action_name] == "Changer d'état" %>
-    <div class="d-flex align-items-end mb-4" style="gap: 1rem;">
+    <div class="flex items-end mb-6" style="gap: 1rem;">
       <div>
-        <%= label_tag "Nouvel état" %>    
-        <%= select_tag :etat, options_for_select(Cour.etats, params[:etat]), class:"form-control" %>
+        <%= label_tag :etat, "Nouvel état" %>    
+        <%= select_tag :etat, options_for_select(Cour.etats, params[:etat]), class:"select select-bordered select-sm w-full" %>
       </div>
       <div>
-        <%= check_box_tag :notifier %> Notifier les étudiants ?
+        <%= check_box_tag :notifier %>
+        <%= label_tag :notifier, "Notifier les étudiants ?" %>
       </div>
     </div>
 
   <% elsif params[:action_name] == "Changer de date" %>
-    <div class="row">
-      <div class="col-sm-2">
-        <%= label_tag "Nouvelle date" %>    
-        <%= text_field_tag :new_date, params[:new_date], type:'date', class:"form-control" %>
+    <div class="flex flex-wrap">
+      <div class="sm:w-1/5">
+        <%= label_tag :new_date, "Nouvelle date" %>    
+        <%= text_field_tag :new_date, params[:new_date], type:'date', class:"input input-bordered input-sm w-full" %>
       </div>
 
-      <div class="col-sm-1">ou</div>
-      <div class="col-sm-6">
-        <%= label_tag "Décaler de x jours" %><br>
-        <%= number_field_tag :add_n_days, class: "form-control" %>
+      <div class="sm:w-1/6 px-4">ou</div>
+      <div class="sm:w-1/2">
+        <%= label_tag :add_n_days, "Décaler de x jours" %><br>
+        <%= number_field_tag :add_n_days, nil, class: "input input-bordered input-sm w-full" %>
       </div>
     </div>
 
   <% elsif params[:action_name] == "Changer d'intervenant" %>
-    <div class="col-sm-6">
-      <%= label_tag "Nouvel intervenant" %>    
+    <div class="sm:w-1/2">
+      <%= label_tag :intervenant_id, "Nouvel intervenant" %>    
       <%= select_tag :intervenant_id, 
                       options_from_collection_for_select(Intervenant.all, :id, :nom_prenom, params[:intervenant_id]), 
-                      include_blank:true, class:"form-control" %>
-      <br><br>
+                      include_blank:true, class:"slim-select" %>
     </div>
 
   <% elsif params[:action_name] == "Intervertir" %>
-    <h3>Que voulez-vous intervertir ?</h3>
+    <h3 class="text-2xl">Que voulez-vous intervertir ?</h3>
     <br>
-    <div class="row">
-      <div class="col-sm-2">
+    <div class="flex flex-wrap">
+      <div class="sm:w-1/5 px-4">
         <%= check_box_tag :intervertir_intervenants %>
-        <%= label_tag "Intervenants" %>    
+        <%= label_tag :intervertir_intervenants, "Intervenants" %>    
       </div>
 
-      <div class="col-sm-2">
+      <div class="sm:w-1/5 px-4">
         <%= check_box_tag :intervertir_binomes %>
-        <%= label_tag "Binômes" %>    
+        <%= label_tag :intervertir_binomes, "Binômes" %>    
       </div>
 
-      <div class="col-sm-2">
+      <div class="sm:w-1/5 px-4">
         <%= check_box_tag :intervertir_intitulé %>
-        <%= label_tag "Intitulé cours" %>    
+        <%= label_tag :intervertir_intitulé, "Intitulé cours" %>    
       </div>
 
-      <div class="col-sm-2">
+      <div class="sm:w-1/5 px-4">
         <%= check_box_tag :intervertir_ue %>
-        <%= label_tag "UE" %>    
+        <%= label_tag :intervertir_ue, "UE" %>    
       </div>
 
-      <div class="col-sm-2">
+      <div class="sm:w-1/5 px-4">
         <%= check_box_tag :intervertir_salles %>
-        <%= label_tag "Salles" %>    
+        <%= label_tag :intervertir_salles, "Salles" %>    
       </div>
     </div>
     <br>
@@ -136,208 +138,203 @@
       </div>
     <% end %>
   <% elsif params[:action_name] == "Inviter" %>
-    <p>
+    <p class="mb-4">
       <b>Intervenant(s) à inviter</b> 
       <br>
       Une proposition par cours et par intervenant sera créée et envoyée.
     </p>
-    <div class="row">
-      <div class="col-3">
+    <div class="flex flex-wrap">
+      <div class="w-1/4">
         <%= label_tag 'Intervenant *' %>
         <%= select_tag 'invit[intervenant][1]', 
                         options_from_collection_for_select(Intervenant.where.not(doublon:true), :id, :nom_prenom, params[:intervenant_ids]), 
                         include_blank: true,
-                        class: "form-control select2" %>
+                        class: "slim-select" %>
       </div>
-      <div class="col-5">
-        <%= label_tag :ue, "U.E." %>
+      <div class="w-2/5">
+        <%= label_tag "U.E." %>
         <br>
         <%= select_tag 'invit[ue][1]', 
                         options_from_collection_for_select(@cours.first.formation.unites.order(:num), :id, :num_nom, params[:ue]), 
                         include_blank: true,
-                        class: "form-control select2" %>
+                        class: "slim-select" %>
       </div>
-      <div class="col-4">
+      <div class="w-1/3">
         <%= label_tag 'Intitulé du cours' %>
         <br>
-        <%= text_field_tag 'invit[nom][1]', nil, style: 'width: 100%' %>
+        <%= text_field_tag 'invit[nom][1]', nil, class: 'input input-bordered input-sm w-full' %>
       </div>
     </div>
-    <div class="row">
-      <div class="col-3">
+    <div class="flex flex-wrap">
+      <div class="w-1/4">
         <%= label_tag 'Intervenant *' %>
         <%= select_tag 'invit[intervenant][2]', 
                         options_from_collection_for_select(Intervenant.where.not(doublon:true), :id, :nom_prenom, params[:intervenant_ids]), 
                         include_blank: true,
-                        class: "form-control select2" %>
+                        class: "slim-select" %>
       </div>
-      <div class="col-5">
-        <%= label_tag :ue, "U.E." %>
+      <div class="w-2/5">
+        <%= label_tag "U.E." %>
         <br>
         <%= select_tag 'invit[ue][2]', 
                         options_from_collection_for_select(@cours.first.formation.unites.order(:code), :id, :num_nom, params[:ue]), 
                         include_blank: true,
-                        class: "form-control select2" %>
+                        class: "slim-select" %>
       </div>
-      <div class="col-4">
+      <div class="w-1/3">
         <%= label_tag 'Intitulé du cours' %>
         <br>
-        <%= text_field_tag 'invit[nom][2]', nil, style: 'width: 100%' %>
+        <%= text_field_tag 'invit[nom][2]', nil, class: 'input input-bordered input-sm w-full' %>
       </div>
     </div>
-    <div class="row">
-      <div class="col-3">
+    <div class="flex flex-wrap">
+      <div class="w-1/4">
         <%= label_tag 'Intervenant *' %>
         <%= select_tag 'invit[intervenant][3]', 
                         options_from_collection_for_select(Intervenant.where.not(doublon:true), :id, :nom_prenom, params[:intervenant_ids]), 
                         include_blank: true,
-                        class: "form-control select2" %>
+                        class: "slim-select" %>
       </div>
-      <div class="col-5">
-        <%= label_tag :ue, "U.E." %>
+      <div class="w-2/5">
+        <%= label_tag "U.E." %>
         <br>
         <%= select_tag 'invit[ue][3]', 
                         options_from_collection_for_select(@cours.first.formation.unites.order(:num), :id, :num_nom, params[:ue]), 
                         include_blank: true,
-                        class: "form-control select2" %>
+                        class: "slim-select" %>
       </div>
-      <div class="col-4">
+      <div class="w-1/3">
         <%= label_tag 'Intitulé du cours' %>
         <br>
-        <%= text_field_tag 'invit[nom][3]', nil, style: 'width: 100%' %>
+        <%= text_field_tag 'invit[nom][3]', nil, class: 'input input-bordered input-sm w-full' %>
       </div>
     </div>
-    <div class="row">
-      <div class="col-3">
+    <div class="flex flex-wrap">
+      <div class="w-1/4">
         <%= label_tag 'Intervenant *' %>
         <%= select_tag 'invit[intervenant][4]', 
                         options_from_collection_for_select(Intervenant.where.not(doublon:true), :id, :nom_prenom, params[:intervenant_ids]), 
                         include_blank: true,
-                        class: "form-control select2" %>
+                        class: "slim-select" %>
       </div>
-      <div class="col-5">
-        <%= label_tag :ue, "U.E." %>
+      <div class="w-2/5">
+        <%= label_tag "U.E." %>
         <br>
         <%= select_tag 'invit[ue][4]', 
                         options_from_collection_for_select(@cours.first.formation.unites.order(:num), :id, :num_nom, params[:ue]), 
                         include_blank: true,
-                        class: "form-control select2" %>
+                        class: "slim-select" %>
       </div>
-      <div class="col-4">
+      <div class="w-1/3">
         <%= label_tag 'Intitulé du cours' %>
         <br>
-        <%= text_field_tag 'invit[nom][4]', nil, style: 'width: 100%' %>
+        <%= text_field_tag 'invit[nom][4]', nil, class: 'input input-bordered input-sm w-full' %>
       </div>
     </div>
-    <br>
-    <%= label_tag "Message" %>
-    <br>
-    <%= text_area_tag :message_invitation,nil, rows: 5, cols:80 %>
-    <br>
+    
+    <div class="my-4">
+      <%= label_tag :message_invitation, "Message" %>
+      <%= text_area_tag :message_invitation,nil, rows: 5, cols:80, class: 'textarea textarea-bordered textarea-sm w-full' %>
+    </div>
+
     <% if Invit.where(cour_id: @cours.pluck(:id)).where.not("workflow_state = 'non_retenue' OR  workflow_state = 'confirmée'").any? %>
-      <p>
+      <p class="mb-4">
         <br>
         <b>Attention ! Il y a des invitations en cours...</b>
         <br>
         <%= hidden_field_tag :invits_en_cours, true %>
-        <%= check_box_tag :confirmation, 'yes' %> Je sais ce que je fais (enfin je crois) !
+        <%= check_box_tag :confirmation, 'yes' %>
+        <%= label_tag :confirmation, "Je sais ce que je fais (enfin je crois) !" %>
       </p>
     <% end %>
     <br>
 
   <% elsif params[:action_name] == "Supprimer" %>
-    <div class="col-sm-8">
-      <%= label_tag "Confirmation :" %><br>
-      <%= check_box_tag :delete %> Suppression définitive de tous les cours sélectionnés ?
+    <div class="sm:w-2/3">
+      <p class="mb-4">Confirmation :</p>
+      <%= check_box_tag :delete %>
+      <%= label_tag :delete, "Suppression définitive de tous les cours sélectionnés ?" %>
       <br>
 
       <i>Notez que les cours ne peuvent être supprimés que par leur créateur, le gestionnaire ou un administrateur</i>
       <br><br>
 
       <% if Invit.where(cour_id: @cours.pluck(:id)).any? %>
-        <p>
+        <p class="mb-4">
           <strong>Attention ! Il y a des invitations liées à ce.s cours </strong>
           <br>
           <%= hidden_field_tag :invits_en_cours, true %>
-          <%= check_box_tag :confirmation, 'yes' %> Supprimer les invitations liées ?
+          <%= check_box_tag :confirmation, 'yes' %>
+          <%= label_tag :confirmation, "Supprimer les invitations liées ?" %>
         </p>
       <% end %>
 
     </div>
-  <% elsif ["Générer Feuille émargement PDF","Générer Pochette Examen PDF"].include?(params[:action_name]) && @cours.count == 1 && @cours.first.examen? %>
-    <h3>Sélectionnez les étudiants</h3>
-    <br>
-    <div data-controller="check-all action">
-      <div data-action="click->action#click">
-        <input id="checkall" type="checkbox" data-target="check-all.all action.source">
-        <label for="checkall">Tous ?</label>
-      </div>
-      <% @cours.each do |c| %>
-        <% c.formation.etudiants.order(:nom, :prénom).each do |etudiant| %>
-          <span data-action="click->action#click">
-            <%= check_box_tag "[etudiants_id][#{etudiant.id}]", true, false, data: {"target":"action.source"} %>
-          </span>
-          <%= etudiant.nom_prénom %>
+  <% elsif ["Générer Feuille émargement PDF","Générer Pochette Examen PDF", "Convocation étudiants PDF"].include?(params[:action_name]) %>
+    <% if params[:action_name] == "Générer Feuille émargement PDF" || (@cours.count == 1 && @cours.first.examen?) %>
+      <h3 class="text-2xl">Sélectionnez les étudiants</h3>
+      <br>
+      <div data-controller="checkbox-select-all action">
+        <div data-action="click->action#click" class="mb-4">
+          <input id="checkall" type="checkbox" data-checkbox-select-all-target="checkboxAll" data-action-target="source">
+          <label for="checkall">Tous ?</label>
+        </div>
+        <% @cours.each do |c| %>
+          <h4 class="text-xl font-bold"><%= c.formation.nom %></h4>
+          <% c.formation.etudiants.order(:nom, :prénom).each do |etudiant| %>
+            <span class="flex gap-1" data-action="click->action#click">
+              <%= check_box_tag "etudiants_id[#{etudiant.id}]", true, false, data: {"action-target": "source", "checkbox-select-all-target": "checkbox"} %>
+              <%= etudiant.nom_prénom %>
+            </span>
+          <% end %>
           <br>
         <% end %>
-      <% end %>
-    </div>
+      </div>
+    <% end %>
     <% if params[:action_name] == "Générer Feuille émargement PDF" %>
-      <div class="row my-4">
-        <div class="col-sm-4">
+      <div class="flex flex-wrap my-6">
+        <div class="sm:w-1/3">
           <%= check_box_tag :table %>
           <%= label_tag :table, "Ajouter une colonne N° Table" %>
         </div>
       </div>
-    <% elsif params[:action_name] == "Générer Pochette Examen PDF" %>
-      <h3>Sélectionnez les options d'examens</h3>
-      <i>Cochez les options autorisées. Non cochée = option interdite</i>
-      <br><br>
-      <%= check_box_tag :papier %> Papiers autorisés ?
-      <br>
-      <%= check_box_tag :calculatrice %> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission autorisés ?
-      <br>
-      <%= check_box_tag :ordi_tablette %> Ordinateurs et tablettes autorisés ?
-          <br>
-      <%= check_box_tag :téléphone %> Téléphones portables autorisés ?
-      <br>
-      <%= check_box_tag :dictionnaire %> Dictionnaires autorisés ?
-      <br><br>
-    <% end %>
-  <% elsif params[:action_name] == "Convocation étudiants PDF" && @cours.count == 1 && @cours.first.examen? %>
-    <h3>Sélectionnez les étudiants</h3>
-    <br>
-    <div data-controller="check-all action">
-      <div data-action="click->action#click">
-        <input id="checkall" type="checkbox" data-target="check-all.all action.source">
-        <label for="checkall">Tous ?</label>
-      </div>
-      <% @cours.each do |c| %>
-        <% c.formation.etudiants.order(:nom, :prénom).each do |etudiant| %>
-          <span data-action="click->action#click">
-            <%= check_box_tag "[etudiants_id][#{etudiant.id}]", true, false, data: {"target":"action.source"} %>
-          </span>
-          <%= etudiant.nom_prénom %>
-          <br>
+    <% else %>
+      <%# Générer Pochette Examen PDF, Convocation étudiants PDF %>
+      <% wrong_parameter = false %>
+      <% if @cours.count == 1 && @cours.first.examen? %>
+        <h3 class="text-2xl mt-4">Sélectionnez les options d'examens</h3>
+        <i>Cochez les options autorisées. Non cochée = option interdite</i>
+        <br><br>
+        <%= check_box_tag :papier %> 
+        <%= label_tag :papier, "Papiers autorisés ?" %>
+        <br>
+        <%= check_box_tag :calculatrice %>
+        <%= label_tag :calculatrice, "Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission autorisés ?" %>
+        <br>
+        <%= check_box_tag :ordi_tablette %>
+        <%= label_tag :ordi_tablette, "Ordinateurs et tablettes autorisés ?" %>
+        <br>
+        <%= check_box_tag :téléphone %>
+        <%= label_tag :téléphone, "Téléphones portables autorisés ?" %>
+        <br>
+        <%= check_box_tag :dictionnaire %>
+        <%= label_tag :dictionnaire, "Dictionnaires autorisés ?" %>
+        <br><br>
+      <% else %>
+        <% wrong_parameter = true %>
+        <% if @cours.count > 1 %>
+          <p class="text-error">Vous ne pouvez pas sélectionner plusieurs cours en même temps</p>
+        <% end %>
+        <% if !@cours.first.examen? %>
+          <p class="text-error">Le cours sélectionné n'est pas un examen</p>
         <% end %>
       <% end %>
-    </div>
-    <br><br>
-
-    <h3>Sélectionnez les options d'examens</h3>
-    <i>Cochez les options autorisées. Non cochée = option interdite</i>
-    <br><br>
-    <%= check_box_tag :papier %> Papiers autorisés ?
-    <br>
-    <%= check_box_tag :calculatrice %> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission autorisés ?
-    <br>
-    <%= check_box_tag :outils %> Ordinateurs, tablettes et téléphones portables autorisés ?
-    <br><br>
+    <% end %>
   <% end %>
 
-  <div class="row mb-5">
-    <div class="col-sm-12">
-      <%= submit_tag 'Appliquer', class:"btn btn-primary" %>
+  <div class="flex flex-wrap mb-12 mt-4">
+    <div class="sm:w-full">
+      <%= submit_tag 'Appliquer', class:"btn btn-primary text-white", 'data-turbo': false, disabled: wrong_parameter %>
       <%= link_to 'Annuler', root_url, class:"btn btn-light" %>
     </div>
   </div>

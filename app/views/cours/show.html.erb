@@ -1,126 +1,133 @@
-<div class="card shadow-sm p-3 mt-3">
+<div class="card shadow p-4 mt-4">
   <div>
-    <div class="btn-group float-right">
+    <div class="join float-right">
       <% if policy(@cour).edit? %>
-        <%= link_to edit_cour_path(@cour), class: 'btn btn-sm btn-outline-primary' do %>
+        <%= link_to edit_cour_path(@cour), class: 'btn btn-sm btn-primary btn-outline join-item' do %>
           <%= fa_icon 'edit' %> Modifier
         <% end %>
       <% end %>
       <% if policy(@cour).destroy? %>
-        <%= link_to(@cour, method: :delete, data:{confirm: 'Confirmez-vous la suppression définitive de ce cours ?'}, class: 'btn btn-sm btn-outline-primary' ) do %>
+        <%= link_to(@cour,'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous la suppression définitive de ce cours ?', class: 'btn btn-sm btn-primary btn-outline join-item' ) do %>
           <%= fa_icon 'trash-alt' %> Supprimer
         <% end %>
       <% end %>
 
-      <%= link_to cours_path, class: 'btn btn-sm btn-outline-primary' do %>
+      <%= link_to cours_path, class: 'btn btn-sm btn-primary btn-outline join-item' do %>
         <%= fa_icon 'list' %> Retour
       <% end %>
     </div>
   </div>
 
-  <div class="row mt-3">
-    <div class="col-sm-1">
-      <h2>
-        <span style="opacity: 80%;">
-          <%= fa_icon 'calendar-day 2x' %>
-        </span>
-      </h2>
-    </div>    
+  <div class="flex flex-wrap items-center mt-4">
+    <div class="relative flex-grow max-w-full flex-1 flex items-center">
+      <div class="sm:w-1/6">
+        <h2 class="text-3xl">
+          <span style="opacity: 80%;">
+            <%= fa_icon 'calendar-day 2x' %>
+          </span>
+        </h2>
+      </div>    
 
-    <div class="col-sm-5">
-      <h3>
-        <%= l(@cour.debut, format: :long) %>
-      </h3>
+      <div class="flex-1">
+        <h3 class="text-2xl">
+          <%= l(@cour.debut, format: :long) %>
+        </h3>
+      </div>
     </div>
   
-    <div class="col">
-      <h3>
+    <div class="relative flex-grow max-w-full flex-1">
+      <h3 class="text-2xl">
         <span style="background-color:<%= @cour.formation.try(:color) %>;padding-left: 5px;margin-right: 5px;"></span>
         <%= @cour.formation.try(:nom_promo) %>
       </h3>
     </div>
   </div>
 
-  <div class="row mt-3">
-    <div class="col">
-      <h4>
-        <small class="text-muted">Intitulé</small><br>
+  <div class="flex flex-wrap mt-4">
+    <div class="relative flex-grow max-w-full flex-1">
+      <h4 class="text-xl">
+        <small class="text-secondary">Intitulé</small><br>
         <%= @cour.nom_ou_ue %>
       </h4>
     </div>
-    <div class="col">
-      <h4>
-        <small class="text-muted">Intervenant</small><br>
-        <%= link_to @cour.intervenant.nom_prenom, @cour.intervenant %>
+    <div class="relative flex-grow max-w-full flex-1">
+      <h4 class="text-xl">
+        <small class="text-secondary">Intervenant</small><br>
+        <%= link_to @cour.intervenant.nom_prenom, @cour.intervenant, class: 'text-primary hover:underline' %>
       </h4>
     </div>
   </div>
 
-  <div class="row mt-3">
-    <div class="col">
-      <h4>
-        <small class="text-muted">Durée</small><br>
+  <div class="flex flex-wrap mt-4">
+    <div class="relative flex-grow max-w-full flex-1">
+      <h4 class="text-xl">
+        <small class="text-secondary">Durée</small><br>
         <%= @cour.duree %>h
       </h4>
     </div>
-    <div class="col">
-      <h4>
-        <small class="text-muted">Fin</small><br>
+    <div class="relative flex-grow max-w-full flex-1">
+      <h4 class="text-xl">
+        <small class="text-secondary">Fin</small><br>
         <%= l(@cour.fin, format: :long) %>
       </h4>
     </div>
   </div>
 
-  <div class="row mt-3">
-    <div class="col">
-      <h4>
-        <small class="text-muted">Salle</small><br>
+  <div class="flex flex-wrap mt-4">
+    <div class="relative flex-grow max-w-full flex-1">
+      <h4 class="text-xl">
+        <small class="text-secondary">Salle</small><br>
         <% if @cour.salle %>
-          <span class="badge badge-pill badge-<%= @cour.style %>">
+          <span class="badge badge-<%= @cour.style %> text-white">
             <%= @cour.salle.nom %>
           </span>             
 
           <% if @cour.formation.try(:nbr_etudiants) && (@cour.formation.try(:nbr_etudiants) > @cour.salle.places) %>
-            <span class="badge" title="Manque <%= @cour.formation.nbr_etudiants - @cour.salle.places %> place.s">
+            <span class="badge text-white" title="Manque <%= @cour.formation.nbr_etudiants - @cour.salle.places %> place.s">
               <%= fa_icon 'exclamation-circle' %>
             </span>
           <% end %>
         <% end %>
       </h4>
     </div>
-    <div class="col">
-      <h4>
-        <small class="text-muted">Etat</small><br>
+    <div class="relative flex-grow max-w-full flex-1">
+      <h4 class="text-xl">
+        <small class="text-secondary">Etat</small><br>
         <span class="label <%= @cour.style %>"><%= @cour.etat.humanize %></span>
       </h4>
     </div>
   </div>
       
-  <h4 class="mt-3">
-    <small class="text-muted">Commentaires</small><br>
+  <h4 class="text-xl mt-4">
+    <small class="text-secondary">Commentaires</small><br>
   </h4>
-  <p>
+  <p class="mb-4">
     <%= @cour.commentaires %>
   </p>
 
   <hr>
 
   <% if @cour.audits.any? %>
-    <br>
-    <h4>Audit des modifications</h4>
-    <table class="table table-bordered table-hover table-condensed">
-      <thead>
-        <th>Date</th>
-        <th>Utilisateur</th>            
-        <th>Type</th>
-        <th>Record_id</th>
-        <th>Action</th>
-        <th>Modifications</th>
-      </thead>
+    <div tabindex="0" class="collapse collapse-arrow border border-base-300 bg-base-100 mt-4">
+      <div class="collapse-title text-lg">
+        Audit des modifications
+      </div>
+      <div class="overflow-x-auto collapse-content bg-base-100"> 
+        <table class="table table-xs">
+          <thead class="bg-slate-100 border">
+            <th>Date</th>
+            <th>Utilisateur</th>            
+            <th>Type</th>
+            <th>Record_id</th>
+            <th>Action</th>
+            <th>Modifications</th>
+          </thead>
 
-      <%= render partial: 'tools/audit', collection: @cour.audits %>
+          <%= render partial: 'tools/audit', collection: @cour.audits.reorder(id: :desc) %>
 
-    </table>
+        </table>
+      </div>
+    </div>
   <% end %>
 </div>
 <br>

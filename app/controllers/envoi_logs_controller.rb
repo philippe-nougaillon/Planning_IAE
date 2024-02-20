@@ -86,7 +86,7 @@ class EnvoiLogsController < ApplicationController
         format.html { redirect_to @envoi_log, notice: 'Planification créée.' }
         format.json { render :show, status: :created, location: @envoi_log }
       else
-        format.html { render :new }
+        format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @envoi_log.errors, status: :unprocessable_entity }
       end
     end

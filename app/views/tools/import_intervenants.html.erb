@@ -1,31 +1,24 @@
-<div class="pb-2 mt-4 mb-2 border-bottom">
-  <h3><%= fa_icon 'download' %> Import des intervenants</h3>
+<div class="border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'download' %> Import des intervenants</h1>
 </div>
 <br>
 
 <%= form_tag({action: "import_intervenants_do", method: :post}, multipart: true) do %>
-  <div>
-    <h3>Cette fonction permet l'importation des intervenants à partir d'une feuille Excel</h3>
-  </div>
+  <h3 class="text-2xl">Cette fonction permet l'importation des intervenants à partir d'une feuille Excel</h3>
   <br>
 
-  <div class="form-group">
-    <%= label :filename, "Fichier source" %>
-    <%= file_field_tag 'upload', accept: 'application/vnd.ms-excel', class: 'col-sm-4 form-control pb-5 pt-3' %>
-    <br>
-    <br>
-    
-    <b>Enregistrer les changements ?</b> <br>
-    <%= label :save, "Oui", :value => "true" %>
-    <%= radio_button_tag :save, true %>
-    <%= label :save, "Non", :value => "false" %>
-    <%= radio_button_tag :save, false, :checked => true %>
-    <br><i>Choisissez 'Non' pour tester votre import car <b>il est irréversible !</b></i><br />
-    <br>
-    
-    <div class="actions">
-      <%= submit_tag "Lancer l'import", class: "btn btn-success"%>
-    </div>
-
-  </div>
+  <%= label :filename, "Fichier source *" %>
+  <%= file_field_tag 'upload', accept: 'application/vnd.ms-excel', class: 'file-input file-input-bordered file-input-sm w-full' %>
+  <br>
+  <br>
+  
+  <b>Enregistrer les changements ?</b> <br>
+  <%= label :save, "Oui", :value => "true" %>
+  <%= radio_button_tag :save, true %>
+  <%= label :save, "Non", :value => "false" %>
+  <%= radio_button_tag :save, false, :checked => true %>
+  <br><i>Choisissez 'Non' pour tester votre import car <b>il est irréversible !</b></i><br />
+  <br>
+  
+  <%= submit_tag "Lancer l'import", class: "btn btn-primary text-white mb-4", 'data-turbo': false %>
 <% end %>

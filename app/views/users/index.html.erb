@@ -1,56 +1,50 @@
-<div class="pb-2 mt-4 mb-2 border-bottom">
-  <% if policy(Formation).new? %>
-    <%= link_to new_user_path, class: 'btn text-primary float-right' do %>
+<div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'users' %> Liste des utilisateurs</h1>
+  <% if policy(User).new? %>
+    <%= link_to new_user_path, class: 'text-primary' do %>
       <%= fa_icon 'plus-circle' %> Utilisateur
     <% end %>
   <% end %>
-  <h3><%= fa_icon 'users' %> Liste des utilisateurs</h3>
 </div>
 
-<div class='container-fluid'>
+<div class="bs-container p-4 shadow mb-4">
   <%= form_tag request.path, method: :get do %>
-    <div class="form-group">
-      <div class="row">
-        <div class="col-sm-4">
-          <%= label_tag :search, "Nom/Prénom/Courriel" %>    
-          <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class:"form-control" %>
-        </div>
-
-        <div class="col-sm-2">
-          <%= label_tag :role, "Rôle" %>
-          <%= select_tag :role, 
-                  options_for_select(User.roles, 
-                  params[:role]), 
-                  include_blank:true,
-                  class: 'form-control', 
-                  onchange: 'this.form.submit()' 
-          %>          
-        </div>
-
-        <div class="col-sm-2">
-            <br>
-            <label>
-              <%= check_box_tag :discarded, 1, params[:discarded], onchange: 'this.form.submit()' %>
-              Désactivés ?
-            </label>
-        </div>
-
-        <div class="col-sm-3">
-          <br>
-          <label>
-            <%= check_box_tag :mauvais_email, 1, params[:mauvais_email], onchange: 'this.form.submit()' %>
-            Comptes à vérifier ?
-          </label>
-        </div>
-
+    <div class="flex flex-wrap">
+      <div class="sm:w-1/3 px-4">
+        <%= label_tag :search, "Nom/Prénom/Courriel" %>    
+        <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class:"input input-bordered input-sm w-full" %>
       </div>
+
+      <div class="sm:w-1/5 px-4">
+        <%= label_tag :role, "Rôle" %>
+        <%= select_tag :role, 
+                options_for_select(User.roles, 
+                params[:role]), 
+                include_blank:true,
+                class: 'select select-bordered select-sm w-full', 
+                onchange: 'this.form.submit()' 
+        %>          
+      </div>
+
+      <div class="sm:w-1/5 px-4">
+        <br>
+        <%= check_box_tag :discarded, 1, params[:discarded], onchange: 'this.form.submit()' %>
+        <%= label_tag :discarded, "Désactivés ?" %>
+      </div>
+
+      <div class="sm:w-1/4 px-4">
+        <br>
+        <%= check_box_tag :mauvais_email, 1, params[:mauvais_email], onchange: 'this.form.submit()' %>
+        <%= label_tag :mauvais_email, "Comptes à vérifier ?" %>
+      </div>
+
     </div>
   <% end %>
 </div>
 
-<div class="table-responsive">
-  <table class="table table-striped table-hover">
-    <thead>
+<div class="overflow-x-auto">
+  <table class="table">
+    <thead class="bg-slate-100 border">
       <tr>
         <th><%= sort_link 'users.nom', 'Nom' %></th>
         <th>Prénom</th>
@@ -70,14 +64,14 @@
 
     <tbody>
       <% @users.each do |user| %>
-        <tr class='shadow-sm'>
-          <td><%= link_to user.nom, user %></td>
+        <tr class="hover border">
+          <td><b><%= link_to user.nom, user, class: 'text-primary hover:underline' %></b></td>
           <td><%= user.prénom %></td>
           <td>
             <%= user.email %>
             <% if user.unlinked? %>
               <%= link_to user.étudiant? ? etudiants_path(search: user.nom) : intervenants_path(nom: user.nom) do %>
-                <%= fa_icon 'question-circle', class: 'text-danger' , title: 'L\'utilisateur n\'a pas de profil étudiant/intervenant associé à cet email' %>
+                <%= fa_icon 'question-circle', class: 'text-error' , title: 'L\'utilisateur n\'a pas de profil étudiant/intervenant associé à cet email' %>
               <% end %>
             <% end %>
           </td>
@@ -85,11 +79,11 @@
           <td><%= time_ago_in_words user.current_sign_in_at if user.current_sign_in_at %></td>
           <td ><%= user.sign_in_count %></td>
           <td>
-            <%= link_to edit_user_path(user), class: "btn btn-default" do %>
+            <%= link_to edit_user_path(user), class: "btn btn-ghost btn-xs" do %>
               <%= fa_icon 'edit' %>
             <% end %>
             <% unless user.discarded? %>
-              <%= link_to(user, method: :delete, data:{confirm: 'Confirmez-vous la désactivation de cet utilisateur ?'}, class: "btn btn-default", title: "Désactiver cet utilisateur") do %>
+              <%= link_to(user, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous la désactivation de cet utilisateur ?', class: "btn btn-ghost btn-xs", title: "Désactiver cet utilisateur") do %>
                 <%= fa_icon 'trash' %>
               <% end %>
             <% else %>
@@ -100,12 +94,12 @@
       <% end %>
     </tbody>
   </table>
-
-  <div class="page_info">
-    <%= page_entries_info @users %>
-  </div>
-
-  <%= will_paginate @users, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
 </div>
-<br>
 
+<div class="page_info">
+  <%= page_entries_info @users %>
+</div>
+
+<div class="planning_pagination">
+  <%= will_paginate @users %>
+</div>

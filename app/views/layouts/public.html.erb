@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-theme="corporate">
   <head>
     <title><%= @sitename %></title>
     <meta name="description" content="Planning des cours de l'IAE de Paris">
@@ -32,8 +32,12 @@
     <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 
-    <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>  
+    <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.5.0/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- sinon l'écran flappote !  -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
@@ -50,15 +54,15 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-expand navbar-light shadow-sm">
+    <nav class="navbar sticky top-0 z-50 shadow <%= ENV["STAGING_COLOR_MODE"].present? ? ENV["STAGING_COLOR_MODE"] : 'bg-base-100' %>">
       <a class="navbar-brand" href="/">
-        <%= image_tag("logo_iae@195.png", height: 50, alt: 'logo IAE') %>
+        <%= image_tag("1200px-Logo_iae.png", width: 175, alt: 'logo IAE') %>
       </a>
     </nav>
 
-    <div class="container">
+    <div class="bs-container">
       <% flash.each do |name, msg| %>
-        <%= content_tag :div, class: "alert alert-#{ (name == "alert" || name == "error") ? "danger" : "success" } alert-dismissable", role: "alert" do %>
+        <%= content_tag :div, class: "alert alert-#{ (name == "alert" || name == "error") ? "error" : "success" }", role: "alert" do %>
           <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
           <%= msg.to_s.html_safe %>
         <% end %>

@@ -1,6 +1,4 @@
 class EtudiantMailer < ApplicationMailer
-    default from: "IAE-Paris <planning-iae@philnoug.com>"
-
     def notifier_modification_cours(etudiant, le_cours)
         @etudiant = etudiant
         @cours = le_cours

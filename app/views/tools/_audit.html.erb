@@ -1,19 +1,18 @@
-<tr>
+<tr class="hover border">
   <td>
-    <%= l(audit.created_at, format: :perso) %>
+    Il y a <%= time_ago_in_words(audit.created_at) %>
+    <br>
+    (<%= l(audit.created_at, format: :perso) %>)
   </td>
   <td>
     <% if audit.user_id %>
-      <% if User.all.exists?(id: audit.user_id) %>
-        <% user = User.all.find(audit.user_id) %>
-        <%= user.email %>
-        (#<%= user.id %>)
+      <% if audit.user %>
+        <%= audit.user.email %>
+        (#<%= audit.user.id %>)
         <br>
-        <%= user.role.upcase %>
-      <% else %>
-        Utilisateur supprimé (#<%= audit.user_id %>)
+        <%= audit.user.role.upcase %>
+        <br>
       <% end %>
-      <br>
       IP: <%= audit.remote_address %>
     <% else %>
       SYSTEM CONSOLE
@@ -23,7 +22,7 @@
     <%= audit.auditable_type %>
   </td>
   <td style="text-align: right;">
-    <%= link_to_if audited_view_path(audit), audit.auditable_id, audited_view_path(audit) %>
+    <%= link_to_if audited_view_path(audit), audit.auditable_id, audited_view_path(audit), class: 'text-primary hover:underline' %>
   </td>
   <td>
     <%= audit.action.humanize %>

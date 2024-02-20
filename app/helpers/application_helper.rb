@@ -1,11 +1,11 @@
 module ApplicationHelper
     
-    def navbar_nav_item(name, icon, path, label = nil, action = nil)
+    def navbar_nav_item(name, icon, path, label = nil, action = nil, classes = nil)
         is_active = action ? action_name == action : controller_name == name
         render(inline: %{
-            <li class="nav-item">
+            <li>
                 <%= link_to '#{ url_for(path) }', 
-                            class: 'nav-link text-#{ is_active ? 'primary' : 'dark' }' do %>
+                            class: 'text-#{ is_active ? 'primary font-bold' : 'base-content' } #{classes}' do %>
                     <%= fa_icon '#{ icon }' %>
                     #{ label ? label : name.humanize }
                 <% end %>
@@ -29,6 +29,10 @@ module ApplicationHelper
     end
 
     def time_in_paris_selon_la_saison
+        #
+        # penser à changer refreshProgressBar()
+        #
+
         # Heure d'hiver
         DateTime.now.in_time_zone('Europe/Paris') + 1.hours
 

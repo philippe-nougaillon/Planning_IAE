@@ -1,11 +1,11 @@
-<div class="pb-2 mt-4 mb-2 border-bottom">
-  <h3><%= fa_icon 'inbox' %> Import logs</h3>
+<div class="border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'inbox' %> Import logs</h1>
 </div>
 <br>
 
-<div class="table-responsive">
-  <table class="table table-striped table-bordered table-hover">
-    <thead>
+<div class="overflow-x-auto">
+  <table class="table">
+    <thead class="bg-slate-100 border">
       <tr>
         <th></th>
         <th>Le</th>
@@ -19,7 +19,7 @@
 
     <tbody>
       <% @import_logs.each do |import_log| %>
-        <tr>
+        <tr class="hover border">
           <td><%= fa_icon import_log.icon_etat, class: import_log.icon_color %></td>
           <td><%= l(import_log.created_at.in_time_zone('Paris'), format: :short) %></td>
           <td><%= import_log.model_type %></td>
@@ -27,12 +27,26 @@
           <td><%= import_log.etat.humanize %></td>
           <td><%= import_log.message %></td>
           <td>
-            <%= link_to import_log, class: "btn btn-outline-primary" do %>
+            <%= link_to import_log, class: "btn btn-primary btn-outline" do %>
               <%= fa_icon 'eye' %>
             <% end %>
           </td>
         </tr>
       <% end %>
     </tbody>
+
+    <tfoot>
+      <tr>
+        <td colspan="7"></td>
+      </tr>
+    </tfoot>
   </table>
+</div>
+
+<div class="page_info">
+  <%= page_entries_info @import_logs %>
+</div>
+
+<div class="planning_pagination">
+  <%= will_paginate @import_logs %>
 </div>

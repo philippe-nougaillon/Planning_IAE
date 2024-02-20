@@ -1,18 +1,18 @@
-<tr class='shadow-sm'>
-    <td><b><%= link_to etudiant.nom, etudiant %></b></td>
+<tr class="hover border">
+    <td><b><%= link_to etudiant.nom, etudiant, class: 'text-primary hover:underline' %></b></td>
     <td><%= etudiant.prénom %></td>
     <td>
         <%= etudiant.email %>
         <% if !etudiant.linked_user && Formation.unscoped.find(etudiant.formation_id).cours.confirmé.count.positive? %>
             <%= link_to users_path(search: etudiant.nom, role: 0) do %>
-                <%= fa_icon 'question-circle', class: 'text-secondary' , title: 'L\'étudiant n\'a pas de compte de connexion (utilisateur) associé à cet email' %>
+                <%= fa_icon 'question-circle', class: 'text-base-content' , title: 'L\'étudiant n\'a pas de compte de connexion (utilisateur) associé à cet email' %>
             <% end %>
         <% end %>
     </td>
     <td style="border-left: .3rem solid <%= etudiant.formation.try(:positive_color) %>">
         <% if etudiant.formation_id %>
             <% formation = Formation.unscoped.find(etudiant.formation_id) %>
-            <%= link_to formation.nom, formation %>
+            <%= link_to formation.nom, formation, class: 'text-primary hover:underline' %>
         <% end %>
     </td>
     <td>
@@ -20,12 +20,12 @@
     </td>
     <td>
         <% if policy(Etudiant).edit? %>
-            <%= link_to edit_etudiant_path(etudiant), class:"btn btn-default" do %>
+            <%= link_to edit_etudiant_path(etudiant), class:"btn btn-ghost btn-xs" do %>
                 <%= fa_icon 'edit '%>
             <% end %>
         <% end %>
         <% if policy(Etudiant).destroy? %>
-            <%= link_to(etudiant, method: :delete, data: {confirm: 'Confirmez-vous ?'}, class: 'btn btn-default') do %>
+            <%= link_to(etudiant, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: 'btn btn-ghost btn-xs') do %>
                 <%= fa_icon 'trash' %>
             <% end %>
         <% end %>

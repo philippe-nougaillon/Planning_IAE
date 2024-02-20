@@ -1,19 +1,20 @@
-<h3 class="mt-4"><%= @cours.first.try(:formation).try(:abrg) %></h3>
-<h4 class="text-dark my-4"><%= fa_icon 'calendar-day' %> <%= l(Date.today, format: :long).humanize %></h4>
+<h3 class="text-2xl mt-6"><%= @cours.first.try(:formation).try(:abrg) %></h3>
+<h4 class="text-xl text-base-content my-6"><%= fa_icon 'calendar-day' %> <%= l(Date.today, format: :long).humanize %></h4>
 
 <% if @cours.any?%>
-  <div class='d-flex flex-wrap' style='gap: 20px;'>
+  <div class="sm:flex sm:flex-wrap w-full gap-6">
     <% @cours.each do |cour| %>
       <%= render partial: 'ma_session', locals: {cour: cour} %>
     <% end %>
   </div>
 <% else %>
-  <div class="alert alert-info">
-    <h4 class="alert-heading">Aucun cours aujourd'hui !</h4>
-    <p>
+  <div class="chat chat-start my-4">
+    <div class="chat-bubble chat-bubble-primary text-white">
+      <b>Aucun cours aujourd'hui !</b>
+      <br>
       Vous n'avez pas de cours planifiés pour aujourd'hui.
-    </p>
+    </div>
   </div>
 <% end %>
 
-<%= link_to 'Voir mes prochains cours...', cours_path(start_date: Date.tomorrow, formation_id: @etudiant.formation.id) %>
+<%= link_to 'Voir mes prochains cours...', cours_path(start_date: Date.tomorrow, formation_id: @etudiant.formation.id), class: 'text-primary hover:underline' %>

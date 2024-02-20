@@ -1,6 +1,7 @@
 # ENCODING: UTF-8
 
 class SallesController < ApplicationController
+  skip_before_action :authenticate_user!, only: %i[ occupation ]
   before_action :set_salle, only: [:show, :edit, :update, :destroy]
   before_action :is_user_authorized, except: %i[ libres ]
 
@@ -130,7 +131,7 @@ class SallesController < ApplicationController
         format.html { redirect_to @salle, notice: 'Salle ajoutée.' }
         format.json { render :show, status: :created, location: @salle }
       else
-        format.html { render :new }
+        format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @salle.errors, status: :unprocessable_entity }
       end
     end
@@ -155,7 +156,7 @@ class SallesController < ApplicationController
   def destroy
     @salle.destroy
     respond_to do |format|
-      format.html { redirect_to salles_path, notice: 'Salle supprimé.' }
+      format.html { redirect_to salles_path, notice: 'Salle supprimée.' }
       format.json { head :no_content }
     end
   end

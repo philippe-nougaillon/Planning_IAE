@@ -1,52 +1,54 @@
-<div class="pb-2 mt-4 mb-2">
+<div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'exclamation' %> Liste des Alertes</h1>
   <% if policy(Alert).new? %>
-    <%= link_to new_alert_path(debut: Time.now, fin: Time.now), class: 'btn text-primary float-right' do %>
+    <%= link_to new_alert_path(debut: Time.now, fin: Time.now), class: 'text-primary' do %>
       <%= fa_icon 'plus-circle' %> Alerte
     <% end %>
   <% end %>
-  <h3><%= fa_icon 'exclamation' %> Liste des Alertes</h3>
 </div>
 
-<h5 class="mb-4">
+<h5 class="text-lg mb-6">
   Pour afficher un message sur le planning (écran / mobile / PC), il faut planifier sa visibilité en entrant une date et heure de début et de fin d'affichage.
-  <span class="text-warning font-weight-light">Attention, sur le serveur il est actuellement <%= l(Time.now.utc, format: "%Hh%M") %></span>
+  <span class="text-warning font-light">Attention, sur le serveur il est actuellement <%= l(Time.now.utc, format: "%Hh%M") %></span>
 </h5>
 
-<table class="table table-bordered table-striped table-hover table-sm">
-  <thead>
-    <tr>
-      <th><%= sortable :debut do %>Début d'affichage<% end %></th>
-      <th><%= sortable :fin do %>Fin d'affichage<% end %></th>
-      <th>Visible?</th>
-      <th><%= sortable :message do %>Message<% end %></th>
-      <th><%= sortable :etat do %>Style<% end %></th>
-      <th colspan="2"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @alerts.each do |alert| %>
+<div class="overflow-x-auto">
+  <table class="table table-sm">
+    <thead class="bg-slate-100 border">
       <tr>
-        <td><%= l(alert.debut, format: :short) %></td>
-        <td><%= l(alert.fin, format: :short) %></td>
-        <td><%= 'OUI' if alert.visible? %></td>
-        <td><%= alert.message %></td>
-        <td><%= alert.etat.humanize %></td>
-        <td><%= link_to 'Voir', alert %></td>
-        <td><%= link_to '[X]', alert, method: :delete, data: { confirm: 'Certain.e ?' } %></td>
+        <th><%= sortable :debut do %>Début d'affichage<% end %></th>
+        <th><%= sortable :fin do %>Fin d'affichage<% end %></th>
+        <th>Visible?</th>
+        <th><%= sortable :message do %>Message<% end %></th>
+        <th><%= sortable :etat do %>Style<% end %></th>
+        <th colspan="2"></th>
       </tr>
-    <% end %>
-  </tbody>
-  <tfoot>
-    <th colspan=7></th>
-  </tfoot>
-</table>
+    </thead>
+
+    <tbody>
+      <% @alerts.each do |alert| %>
+        <tr class="hover border">
+          <td><%= l(alert.debut, format: :short) %></td>
+          <td><%= l(alert.fin, format: :short) %></td>
+          <td><%= 'OUI' if alert.visible? %></td>
+          <td><%= alert.message %></td>
+          <td><%= alert.etat.humanize %></td>
+          <td><%= link_to 'Voir', alert, class: 'text-primary hover:underline' %></td>
+          <td><%= link_to '[X]', alert, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: 'text-primary hover:underline' %></td>
+        </tr>
+      <% end %>
+    </tbody>
+    <tfoot>
+      <th colspan=7></th>
+    </tfoot>
+  </table>
+</div>
 
 <% if @alert %>
-  <footer class="fixed-bottom">
-    <h5>Aperçu de l'alerte visible :</h5>
-    <div class="bg-<%= @alert.etat == "warning" ? 'warning text-black' : @alert.etat + ' text-white' %> text-lg mb-0 p-2">
-      <h3 class="mb-0"><%= truncate(@alert.message, length: 110) %></h3>
+  <footer class="fixed bottom-0 left-0 right-0">
+    <h5 class="text-lg">Aperçu de l'alerte visible :</h5>
+    <div class="alert alert-<%= @alert.etat %> text-lg rounded-none mb-0 p-2">
+      <h3 class="text-2xl mb-0"><%= truncate(@alert.message, length: 110) %></h3>
     </div>
   </footer>
 <% end %>

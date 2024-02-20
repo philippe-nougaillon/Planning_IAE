@@ -42,11 +42,15 @@ class Formation < ApplicationRecord
 	# end
 
 	def nom_nbr_etudiants
-		"#{self.nom} (#{self.etudiants.count} ET.)" 
+		"#{ self.nom } (#{ self.calc_nbr_etudiants } ET.)" 
 	end
 
 	def nom_abrg_nbr_etudiants
-		"#{self.abrg} (#{self.etudiants.count} ET.)" 
+		"#{ self.abrg } (#{ self.calc_nbr_etudiants } ET.)" 
+	end
+
+	def calc_nbr_etudiants
+		self.etudiants.count > 0 ? self.etudiants.count : self.nbr_etudiants
 	end
 
 	def nom_eotp

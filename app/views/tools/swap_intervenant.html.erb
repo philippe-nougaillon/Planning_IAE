@@ -1,39 +1,31 @@
-<div class="pb-2 mt-4 mb-2 border-bottom">
-  <h3><%= fa_icon 'random' %> Intervertir intervenants</h3>
+<div class="border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'random' %> Intervertir intervenants</h1>
 </div>
-<h3>Cette fonction permet de remplacer, sur tous les cours, un intervenant par un autre !</h3>
+<h3 class="text-2xl my-4">Cette fonction permet de remplacer, sur tous les cours, un intervenant par un autre !</h3>
 
 <%= form_tag({action: "swap_intervenant_do", method: :post}, multipart: true) do %>
+  <div class="flex flex-wrap">
+    <div class="sm:w-2/5">
 
-  <div class="form-group">
-    <div class="row">
-      <div class="col-sm-5">
+      <%= label_tag :intervenant_from_id, "Intervenant à remplacer" %>
+      <%= select_tag :intervenant_from_id,
+            options_from_collection_for_select(Intervenant.all, :id, :nom_prenom, Intervenant.all), include_blank:true, class:"slim-select" %>
+      <br>
 
-        <%= label_tag :intervenant_from_id, "Intervenant à remplacer" %>
-        <%= select_tag :intervenant_from_id,
-              options_from_collection_for_select(Intervenant.all, :id, :nom_prenom, Intervenant.all), include_blank:true, class:"form-control" %>
-        <br>
+      <%= label_tag :intervenant_to_id, "Remplacer par" %>
+      <%= select_tag :intervenant_to_id,
+            options_from_collection_for_select(Intervenant.all, :id, :nom_prenom, Intervenant.all), include_blank:true, class:"slim-select" %>
+      <br>
 
-        <%= label_tag :intervenant_to_id, "Remplacer par" %>
-        <%= select_tag :intervenant_to_id,
-              options_from_collection_for_select(Intervenant.all, :id, :nom_prenom, Intervenant.all), include_blank:true, class:"form-control" %>
-        <br>
-
-        <div class="field">
-          <b>Enregistrer les changements ?</b> <br>
-          <%= label :save, "Oui", :value => "true" %>
-          <%= radio_button_tag :save, true %>
-          <%= label :save, "Non", :value => "false" %>
-          <%= radio_button_tag :save, false, :checked => true %>
-          <br><i>Choisissez 'Non' pour tester votre création car <b>elle est irréversible !</b></i><br />
-        </div>
-        <br><br>
-      
-        <div class="actions">
-          <%= submit_tag "Lancer la modification", class: "btn btn-success" %>
-        </div>
-
+      <div class="field">
+        <b>Enregistrer les changements ?</b> <br>
+        <%= label :save, "Oui", :value => "true" %>
+        <%= radio_button_tag :save, true %>
+        <%= label :save, "Non", :value => "false" %>
+        <%= radio_button_tag :save, false, :checked => true %>
+        <br><i>Choisissez 'Non' pour tester votre création car <b>elle est irréversible !</b></i><br />
+      </div>
+      <%= submit_tag "Lancer la modification", class: "btn btn-primary text-white mt-4", 'data-turbo': false %>
     </div>
   </div>
-  
 <% end %>

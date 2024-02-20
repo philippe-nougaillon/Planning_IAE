@@ -17,7 +17,7 @@ class ImportLogLine < ApplicationRecord
     if self.etat == 'succès'
       'text-success'
     else  
-      'text-danger'
+      'text-error'
     end
   end
 

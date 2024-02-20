@@ -1,7 +1,7 @@
 <%= form_with(model: invit) do |form| %>
   <% if invit.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(invit.errors.count, "error") %> prohibited this invit from being saved:</h2>
+      <h2 class="text-3xl"><%= pluralize(invit.errors.count, "error") %> prohibited this invit from being saved:</h2>
 
       <ul>
         <% invit.errors.each do |error| %>
@@ -31,7 +31,5 @@
     <%= form.text_field :workflow_state %>
   </div>
 
-  <div class="actions">
-    <%= form.submit %>
-  </div>
+  <%= form.submit 'data-turbo': false %>
 <% end %>

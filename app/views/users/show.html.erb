@@ -1,95 +1,95 @@
-<div class="pb-2 mt-4 mb-2 border-bottom">
+<div class="border-b mt-6 mb-2 pb-4">
 
 	<% if current_user.try(:admin?) %>	
 		<div class="buttons-group float-right">
-			<%= link_to edit_user_path(@user), class: 'btn btn-default' do %>
+			<%= link_to edit_user_path(@user), class: 'btn btn-ghost' do %>
 				<%= fa_icon 'edit', text: ' Modifier' %>
 			<% end %>
 
-			<a href="#audit" data-toggle="collapse" class='btn btn-default'>
-				<%= fa_icon 'search', text: ' Audit' %>
-			</a>
-
-			<%= link_to users_path, class: 'btn btn-default' do %>
+			<%= link_to users_path, class: 'btn btn-ghost' do %>
 				<%= fa_icon 'list-alt', text: ' Retour' %>
 			<% end %>
 		</div>
 
 	<% end %>
 
-	<h3><%= fa_icon 'user' %> <%= @user.email %></h3>
+	<h1 class="text-3xl"><%= fa_icon 'user' %> <%= @user.email %></h1>
 </div>
 <br>
 
-<p>
+<p class="mb-4">
 	<strong>Nom:</strong>
 	<%= @user.nom %>
 </p>
-<p>
+<p class="mb-4">
 	<strong>Prénom:</strong>
 	<%= @user.prénom %>
 </p>
-<p>
+<p class="mb-4">
 	<strong>Mobile:</strong>
 	<%= @user.mobile %>
 </p>
-<p>
+<p class="mb-4">
 	<strong>Rôle:</strong>
 	<%= @user.role.humanize %>
 </p>
-<p>
+<p class="mb-4">
 	<strong>Email:</strong>
 	<%= @user.email %>
 </p>
 <br>
 
-<p>
+<p class="mb-4">
 	Compte créé : 
 	le <%= l(@user.created_at) %> 
 	| Il y a <%= time_ago_in_words(@user.created_at) %>
 </p>
 
 <% if @user.discarded_at %>
-	<p class="font-weight-bold">
+	<p class="mb-4 font-bold">
 		Compte désactivé : 
 		le <%= l(@user.discarded_at) %> 
 		| Il y a <%= time_ago_in_words(@user.discarded_at) %>
-		| Vous pouvez réactiver ce compte en cliquant <%= link_to "ici", reactivate_user_path(@user) %>.
+		| Vous pouvez réactiver ce compte en cliquant <%= link_to "ici", reactivate_user_path(@user), class: 'text-primary hover:underline' %>.
 	</p>
 <% end %>
 
 <br>
 
 <% unless @user.sign_in_count.zero? %>
-	<p>
+	<p class="mb-4">
 		Connexion actuelle: 
 		le <%= l(@user.current_sign_in_at) %> 
 		| Il y a <%= time_ago_in_words(@user.current_sign_in_at) %>
 	</p>
-	<p>
+	<p class="mb-4">
 		Dernière connexion: 
 		le <%= l(@user.last_sign_in_at) %> 
 		| Il y a <%= time_ago_in_words(@user.last_sign_in_at) %>
 	</p>
-	<p>
+	<p class="mb-4">
 		Nbr connexions: <%= @user.sign_in_count %> 
 	</p>
 <% end %>
 <br>
 
-<div id="audit" class="collapse">
-  <% if current_user.admin? %>
-    <h3>Audit des modifications</h3>
-	<table class="table table-bordered table-hover table-condensed">
-		<thead>
-			<th>Date</th>
-			<th>Utilisateur</th>            
-			<th>Type</th>
-			<th>Record_id</th>
-			<th>Action</th>
-			<th>Modifications</th>
-		</thead>
-		<%= render partial: 'tools/audit', collection: @user.audits %>
-	</table>
-  <% end %>
-</div> 
+<% if current_user.admin? %>
+	<div tabindex="0" class="collapse collapse-arrow border border-base-300 bg-base-100">
+		<div class="collapse-title text-lg">
+			Audit des modifications
+		</div>
+		<div class="overflow-x-auto collapse-content bg-base-100"> 
+			<table class="table table-xs">
+				<thead class="bg-slate-100 border">
+					<th>Date</th>
+					<th>Utilisateur</th>
+					<th>Type</th>
+					<th>Record_id</th>
+					<th>Action</th>
+					<th>Modifications</th>
+				</thead>
+				<%= render partial: 'tools/audit', collection: @user.audits.reorder(id: :desc) %>
+			</table>
+		</div>
+	</div>
+<% end %>

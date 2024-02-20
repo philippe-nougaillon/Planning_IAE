@@ -1,83 +1,79 @@
-<div class="pb-2 mt-4 mb-2 border-bottom">
-  <h3><%= fa_icon 'search' %> Audit des modifications</h3>
+<div class="border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'search' %> Audit des modifications</h1>
 </div>
 
-<div class='container-fluid'>
-    <%= form_tag request.path, method: :get do %>
-        <div class="form-group">
-            <div class="row">
+<div class="bs-container p-4 shadow mb-4">
+  <%= form_tag request.path, method: :get do %>
+    <div class="flex flex-wrap">
 
-              <div class="col-sm-2">
-                  <%= label_tag "Du" %>    
-                  <%= text_field_tag :start_date, params[:start_date], type:'date', class:"form-control" %>
-              </div>
+      <div class="sm:w-1/6 pr-4">
+        <%= label_tag :start_date, "Du" %>    
+        <%= text_field_tag :start_date, params[:start_date], type:'date', class:"input input-bordered input-sm w-full" %>
+      </div>
 
-              <div class="col-sm-2">
-                  <%= label_tag "Au" %>    
-                  <%= text_field_tag :end_date, params[:end_date], type:'date', class:"form-control", onchange:'this.form.submit()' %>
-              </div>
+      <div class="sm:w-1/6 pr-4">
+        <%= label_tag :end_date, "Au" %>    
+        <%= text_field_tag :end_date, params[:end_date], type:'date', class:"input input-bordered input-sm w-full", onchange:'this.form.submit()' %>
+      </div>
 
-              <div class="col-sm-2">
-                <%= label_tag :role, "Rôle" %>
-                <%= select_tag :role,
-                      options_for_select(User.roles, params[:role]), include_blank:true, onchange:'this.form.submit()', class:"form-control" %>
-              </div>
+      <div class="sm:w-1/6 px-4">
+        <%= label_tag :role, "Rôle" %>
+        <%= select_tag :role,
+              options_for_select(User.roles, params[:role]), include_blank:true, onchange:'this.form.submit()', class:"select select-bordered select-sm w-full" %>
+      </div>
 
-              <div class="col-sm-2">
-                <%= label_tag :type, "Type" %>
-                <%= select_tag :type,
-                      options_for_select(@types, params[:type]), include_blank:true, onchange:'this.form.submit()', class:"form-control" %>
-              </div>
+      <div class="sm:w-1/6 px-4">
+        <%= label_tag :type, "Type" %>
+        <%= select_tag :type,
+              options_for_select(@types, params[:type]), include_blank:true, onchange:'this.form.submit()', class:"select select-bordered select-sm w-full" %>
+      </div>
 
-              <div class="col-sm-1">
-                <%= label_tag :action_name, "Action" %>
-                <%= select_tag :action_name,
-                      options_for_select(@actions, params[:action_name]), include_blank:true, onchange:'this.form.submit()', class:"form-control" %>
-              </div>
+      <div class="sm:w-1/12 px-4">
+        <%= label_tag :action_name, "Action" %>
+        <%= select_tag :action_name,
+              options_for_select(@actions, params[:action_name]), include_blank:true, onchange:'this.form.submit()', class:"select select-bordered select-sm w-full" %>
+      </div>
 
-              <div class="col-sm-3">
-                  <%= label_tag "Rechercher" %>
-                  <div class="input-group">       
-                    <%= text_field_tag :search, params[:search], class:"form-control" %>
-                    <span class="input-group-btn">
-                      <%= submit_tag 'GO', class:"btn btn-success" %>
-                    </span>
-                    <span class="input-group-btn">
-                      <%# submit_tag 'Exporter', class:"btn btn-default" %>
-                    </span>
-                  </div>
-              </div>
+      <div class="sm:w-1/5 px-4">
+        <%= label_tag :search, "Rechercher" %>
+        <div class="join w-full">       
+          <%= text_field_tag :search, params[:search], class:"input input-bordered input-sm w-full join-item" %>
+          <%= submit_tag 'GO', class:"btn btn-success text-white btn-sm join-item", 'data-turbo': false %>
+        </div>
+      </div>
 
-              <% if params[:start_date].present? && params[:end_date].present? && params[:type] == 'Cour' %>
-                <div class="col-sm-5">
-                    <br>
-                    <%= check_box_tag :chgt_salle, 1, params[:chgt_salle], onchange:'this.form.submit()' %>
-                    <%= label_tag :chgt_salle, "Ne voir que les changements de salle ?" %>
-                </div>
-              <% end %>    
-            </div>
-        </div>  
-    <% end %>
+      <% if params[:start_date].present? && params[:end_date].present? && params[:type] == 'Cour' %>
+        <div class="sm:w-2/5 px-4">
+          <br>
+          <%= check_box_tag :chgt_salle, 1, params[:chgt_salle], onchange:'this.form.submit()' %>
+          <%= label_tag :chgt_salle, "Ne voir que les changements de salle ?" %>
+        </div>
+      <% end %>    
+    </div>
+  <% end %>
 </div>
 
-<table class="table table-bordered table-hover table-sm">
-    <thead>
-        <tr>
-            <th>Date</th>
-            <th>Utilisateur</th>            
-            <th>Type</th>
-            <th>Id</th>
-            <th>Action</th>
-            <th>Modifications</th>
-        </tr>
+<div class="overflow-x-auto">
+  <table class="table table-sm">
+    <thead class="bg-slate-100 border">
+      <tr>
+        <th>Date</th>
+        <th>Utilisateur</th>
+        <th>Type</th>
+        <th>Id</th>
+        <th>Action</th>
+        <th>Modifications</th>
+      </tr>
     </thead>
 
     <%= render partial: 'audit', collection: @audits %>
-
-</table>
+  </table>
+</div>
 
 <div class="page_info">
   <%= page_entries_info @audits %>
 </div>
 
-<%= will_paginate @audits, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+<div class="planning_pagination">
+  <%= will_paginate @audits %>
+</div>

@@ -1,13 +1,13 @@
 class ApplicationController < ActionController::Base
   
-  include Pundit
+  include Pundit::Authorization
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
     
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  before_action :authenticate_user!, except: [:index_slide, :occupation, :mentions_légales, :mes_sessions_intervenant, :signature_intervenant, :signature_intervenant_do]
+  before_action :authenticate_user!
   before_action :detect_device_format
   before_action :set_layout_variables
   before_action :prepare_exception_notifier
@@ -24,7 +24,7 @@ class ApplicationController < ActionController::Base
   private
     def set_layout_variables
       @sitename ||= request.subdomains.any? ? request.subdomains(0).first.upcase : 'IAE-Planning DEV'
-      @sitename.concat(' v4.27')
+      @sitename.concat(' v5.0')
 
       if user_signed_in? && ( current_user.intervenant?  || current_user.enseignant? )
         @intervenant_user_id = Intervenant.where("LOWER(intervenants.email) = ?", current_user.email.downcase).first.id
@@ -41,7 +41,7 @@ class ApplicationController < ActionController::Base
     end
 
     def user_not_authorized
-      flash[:error] = "Vous n'êtes pas autorisé à effectuer cette action."
+      flash[:alert] = "Vous n'êtes pas autorisé à effectuer cette action."
       redirect_to(request.referrer || root_path)
     end
 

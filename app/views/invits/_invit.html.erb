@@ -1,11 +1,11 @@
 <tr>
   <td>
-      <span data-action="click->action#click">
-          <%= check_box_tag "[invits_id][#{invit.id}]", 'yes', false, data: {"target":"action.source"} %>
-      </span>
+    <span class="flex" data-action="click->action#click">
+      <%= check_box_tag "invits_id[#{invit.id}]", 'yes', false, data: {"action-target": "source"} %>
+    </span>
   </td>
   <td>
-    <%= link_to invit do %>
+    <%= link_to invit, class: 'text-primary hover:underline' do %>
       <b><%= l(invit.cour.debut, format: :heures_min) %></b> 
       <br>
       <%= l(invit.cour.fin, format: :heures_min) %>
@@ -23,7 +23,7 @@
   </td>
   <td><%= invit.intervenant.nom_prenom %></td>
   <td>
-    <span class="badge <%= invit.style %>">
+    <span class="badge <%= invit.style %> text-white">
       <%= invit.workflow_state.humanize %>
     </span>
   </td>
@@ -31,5 +31,5 @@
     <%= fa_icon('comment-alt', title: invit.reponse) unless invit.reponse.blank? %>
   </td>
   <td><%= time_ago_in_words invit.updated_at %></td>
-  <td><%= link_to 'Voir', invit %></td>
+  <td><%= link_to 'Voir', invit, class: 'text-primary hover:underline' %></td>
 </tr>

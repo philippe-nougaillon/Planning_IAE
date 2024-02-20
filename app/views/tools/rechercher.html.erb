@@ -1,50 +1,47 @@
-<div class="pb-2 mt-4 mb-2 border-bottom">
-  <h3><%= fa_icon 'search-plus' %> Chercher</h3>
+<div class="border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'search-plus' %> Chercher</h1>
 </div>
 
-<div class="container-fluid p-3 shadow-sm">
+<div class="bs-container p-4 shadow mb-4">
   <%= form_tag tools_rechercher_path, method: :get do %>
-    <div class="form-group">
-      <div class="row mb-3 px-3">
-        <%= label_tag :nom, "Entrez un terme à rechercher dans toute l'application" %>
-        <div class="input-group">
-          <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class:"form-control form-control-sm" %>
-          <span class="input-group-btn">
-            <%= button_tag name: 'commit', value: 'Go', class: "btn btn-sm btn-success ml-1" do %>
-              <%= fa_icon 'search-plus' %>
-            <% end %>
-          </span>
-        </div>
+    <div class="flex flex-wrap mb-4">
+      <%= label_tag :nom, "Entrez un terme à rechercher dans toutes les données de l'application" %>
+      <div class="join w-full">
+        <%= text_field_tag :search, params[:search], include_blank:true, onchange:'this.form.submit()', class:"input input-bordered input-sm w-full join-item" %>
+        <%= button_tag name: 'commit', value: 'Go', class: "btn btn-sm btn-success text-white join-item", 'data-turbo': false do %>
+          <%= fa_icon 'search' %>
+        <% end %>
       </div>
+    </div>
 
-      <div class="row">
-        <div class="col">
-          <span>
-            Inclure :
-          </span>
-          <%= check_box_tag :search_cours, '1', params[:search_cours] == '1' %>
-          <%= label_tag "Cours" %>
-        </div>
-        <div class="col">
-          <%= check_box_tag :search_formations, '1', params[:search_formations] == '1' %>
-          <%= label_tag "Formations" %>
-        </div>
-        <div class="col">
-          <%= check_box_tag :search_intervenants, '1', params[:search_intervenants] == '1' %>
-          <%= label_tag "Intervenants" %>
-        </div>
-        <div class="col">
-          <%= check_box_tag :search_etudiants, '1', params[:search_etudiants] == '1' %>
-          <%= label_tag "Étudiants" %>
-        </div>
-        <div class="col">
-          <%= check_box_tag :search_users, '1', params[:search_users] == '1' %>
-          <%= label_tag "Utilisateurs" %>
-        </div>
-        <div class="col-1">
-          <%= check_box_tag :search_ue, '1', params[:search_ue] == '1' %>
-          <%= label_tag :ue, "U.E." %>
-        </div>
+    <div class="flex flex-wrap">
+      <div class="relative flex-grow max-w-full flex-1 flex gap-1 items-center">
+        <%= check_box_tag :search_cours, '1', params[:search_cours] == '1', class: 'checkbox checkbox-xs checkbox-primary' %>
+        <%= label_tag :search_cours, "Cours" %>
+      </div>
+      <div class="relative flex-grow max-w-full flex-1 flex gap-1 items-center">
+        <%= check_box_tag :search_formations, '1', params[:search_formations] == '1', class: 'checkbox checkbox-xs checkbox-primary' %>
+        <%= label_tag :search_formations, "Formations" %>
+      </div>
+      <div class="relative flex-grow max-w-full flex-1 flex gap-1 items-center">
+        <%= check_box_tag :search_intervenants, '1', params[:search_intervenants] == '1', class: 'checkbox checkbox-xs checkbox-primary' %>
+        <%= label_tag :search_intervenants, "Intervenants" %>
+      </div>
+      <div class="relative flex-grow max-w-full flex-1 flex gap-1 items-center">
+        <%= check_box_tag :search_etudiants, '1', params[:search_etudiants] == '1', class: 'checkbox checkbox-xs checkbox-primary' %>
+        <%= label_tag :search_etudiants, "Étudiants" %>
+      </div>
+      <div class="relative flex-grow max-w-full flex-1 flex gap-1 items-center">
+        <%= check_box_tag :search_users, '1', params[:search_users] == '1', class: 'checkbox checkbox-xs checkbox-primary' %>
+        <%= label_tag :search_users, "Utilisateurs" %>
+      </div>
+      <div class="relative flex-grow max-w-full flex-1 flex gap-1 items-center">
+        <%= check_box_tag :search_ue, '1', params[:search_ue] == '1', class: 'checkbox checkbox-xs checkbox-primary' %>
+        <%= label_tag :search_ue, "U.E." %>
+      </div>
+      <div class="relative flex-grow max-w-full flex-1 flex gap-1 items-center">
+        <%= check_box_tag :search_mail_logs, '1', params[:search_mail_logs] == '1', class: 'checkbox checkbox-xs checkbox-primary' %>
+        <%= label_tag :search_mail_logs, "MailLogs" %>
       </div>
     </div>
   <% end %>
@@ -52,29 +49,33 @@
 
 <% if defined?(@results) %>
   <% if @results.any? %>
-    <table class="table table-hover">
-      <thead>
-        <tr>
-          <th>Type</th>
-          <th>Contenu</th>
-          <th>Voir</th>
-          <th>MÀJ</th>
-        </tr>
-      </thead>
-      <tbody>
-        <%= render partial: @results, as: :result %>
-      </tbody>
-      <tfoot>
-        <tr><th colspan=4></th></tr>
-      </tfoot>
-    </table>
+    <div class="overflow-x-auto mt-4">
+      <table class="table">
+        <thead class="bg-slate-100 border">
+          <tr>
+            <th>Type</th>
+            <th>Contenu</th>
+            <th>Voir</th>
+            <th>MÀJ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= render partial: @results, as: :result %>
+        </tbody>
+        <tfoot>
+          <tr><th colspan=4></th></tr>
+        </tfoot>
+      </table>
+    </div>
     <div class="page_info">
       <%= page_entries_info @results %>
     </div>
-    <%= will_paginate @results, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
+    <div class="planning_pagination">
+      <%= will_paginate @results %>
+    </div>
     <br>
   <% else %>
-    <p class="title is-4 has-text-centered p-6">
+    <p class="title is-4 has-text-centered p-6 mb-4">
       Aucun résultat trouvé...
     </p>
   <% end %>

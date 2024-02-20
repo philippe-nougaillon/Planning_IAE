@@ -1,39 +1,33 @@
-<%= bootstrap_form_for(@fermeture) do |f| %>
-  <% if @fermeture.errors.any? %>
-    <div class="alert alert-danger alert-dismissable" role="alert">
-      <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+<%= form_for(@fermeture) do |f| %>
+  <%= render partial: 'partials/errors', locals: { record: @fermeture } %>
 
-      <h3><%= t('activerecord.errors.template.header',
-                  model: Fermeture.model_name.human, count: @fermeture.errors.count) %></h3>
-
-      <ul>
-        <% @fermeture.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-  <br>
-
-  <%= f.text_field :date, 
-                    value: !@fermeture.new_record? ? @fermeture.date.strftime("%Y-%m-%dT%H:%M") : nil, 
-                    type: 'datetime-local', # datetime-local et pas date à cause de Firefox
-                    label: 'Début de la période de fermeture', class: 'col-sm-3' %>
-
-  <% if @fermeture.new_record? %>
-    <%= label_tag 'Fin de la période' %>
-    <%= text_field_tag :date_fin,
-                        :date_fin,
+  <div class="flex flex-col sm:w-1/4 mt-4 gap-4">
+    <div class="form-control">
+      <%= f.label :date, "Début de la période de fermeture" %>
+      <%= f.text_field :date, 
+                        value: !@fermeture.new_record? ? @fermeture.date.strftime("%Y-%m-%dT%H:%M") : nil, 
                         type: 'datetime-local', # datetime-local et pas date à cause de Firefox
-                        class: 'form-control col-sm-3' %>
-  <% end %>
-  <br>
+                        class: 'input input-bordered input-sm w-full' %>
+    </div>
 
-  <%= f.text_field :nom, class: 'col-sm-3' %>
-  <br>
+    <% if @fermeture.new_record? %>
+      <div class="form-control">
+        <%= label_tag :date_fin, 'Fin de la période' %>
+        <%= text_field_tag :date_fin,
+                            :date_fin,
+                            type: 'datetime-local', # datetime-local et pas date à cause de Firefox
+                            class: 'input input-bordered input-sm w-full' %>
+      </div>
+    <% end %>
 
-  <%= f.form_group do %>
-    <%= f.submit class: "btn btn-primary" %>
-  <% end %>
+    <div class="form-control">
+      <%= f.label :nom %>
+      <%= f.text_field :nom, class: 'input input-bordered input-sm w-full' %>
+    </div>
+
+    <%= f.submit class: "btn btn-primary text-white mt-4", 'data-turbo': false %>
+
+  </div>
+
 
 <% end %>

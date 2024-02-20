@@ -1,5 +1,5 @@
-<div class="pb-2 mt-4 mb-2 border-bottom">
-  <h2>
+<div class="border-b mt-6 mb-2 pb-4">
+  <h2 class="text-3xl">
     <%= fa_icon 'envelope' %> Notification planning
     <br>
     <small>Envoyer aux intervenants la liste de leurs cours du mois prochain</small>
@@ -8,13 +8,9 @@
 <br>
 
 <%= form_tag({action: "notifier_intervenants_do", method: :post}) do %>
-    <div class="form-group">
+  <%= check_box_tag :draft, "1", true %>
+  <%= label_tag :draft, "Mode DRAFT (Visualisation uniquement. Pas d'envoi de mails)" %>
+  <br /><br />
 
-        <%= check_box_tag :draft, "1", true %> Mode DRAFT (Visualisation uniquement. Pas d'envoi de mails)  
-        <br /><br />
-
-        <div class="actions">
-            <%= submit_tag "Envoyer", class: "btn btn-success" %>
-        </div>
-    </div>
+  <%= submit_tag "Envoyer", class: "btn btn-primary text-white", 'data-turbo': false %>
 <% end %>

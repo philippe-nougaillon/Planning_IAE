@@ -2,7 +2,7 @@
   <div class="calendar-heading">
     <%= link_to url_for(params
                           .permit(:formation, :ue, :intervenant, :semaine, :start_date, :etat, :filter, :view)
-                          .merge(semaine:nil, start_date:params[:start_date].to_date - 1.month)), class: "btn btn-default" do %>
+                          .merge(semaine:nil, start_date:params[:start_date].to_date - 1.month)), class: "btn btn-ghost" do %>
         <%= fa_icon 'chevron-circle-left' %>
     <% end %>
 
@@ -10,40 +10,42 @@
 
     <%= link_to url_for(params
                           .permit(:formation, :ue, :intervenant, :semaine, :start_date, :etat, :filter, :view)
-                          .merge(semaine:nil, start_date:params[:start_date].to_date + 1.month)), class: "btn btn-default" do %>
+                          .merge(semaine:nil, start_date:params[:start_date].to_date + 1.month)), class: "btn btn-ghost" do %>
         <%= fa_icon 'chevron-circle-right' %>
     <% end %>
   </div>
 
-  <table class="table table-hover table-striped">
-    <thead>
-      <tr>
-        <% date_range.slice(0, 7).each do |day| %>
-          <% unless day.sunday? %>
-            <th><%= t('date.abbr_day_names')[day.wday] %></th>
-          <% end %>
-        <% end %>
-      </tr>
-    </thead>
-
-    <tbody>
-      <% date_range.each_slice(7) do |week| %>
+  <div class="overflow-x-auto">
+    <table class="table">
+      <thead class="bg-slate-100 border">
         <tr>
-          <% week.each do |day| %>
+          <% date_range.slice(0, 7).each do |day| %>
             <% unless day.sunday? %>
-              <%= content_tag :td, class: calendar.td_classes_for(day) do %>
-                <div class="shadow-sm p-2 mb-4 bg-white" >
-                  <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(block) %>
-                    <% capture_haml(day, sorted_events.fetch(day, []), &block) %>
-                  <% else %>
-                    <% block.call day, sorted_events.fetch(day, []) %>
-                  <% end %>
-                </div>
-              <% end %>
+              <th><%= t('date.abbr_day_names')[day.wday] %></th>
             <% end %>
           <% end %>
         </tr>
-      <% end %>
-    </tbody>
-  </table>
+      </thead>
+
+      <tbody>
+        <% date_range.each_slice(7) do |week| %>
+          <tr class="hover border">
+            <% week.each do |day| %>
+              <% unless day.sunday? %>
+                <%= content_tag :td, class: calendar.td_classes_for(day) do %>
+                  <div class="shadow-lg p-2 mb-6 bg-base-100" >
+                    <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
+                      <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
+                    <% else %>
+                      <% passed_block.call day, sorted_events.fetch(day, []) %>
+                    <% end %>
+                  </div>
+                <% end %>
+              <% end %>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
 </div>

@@ -1,6 +1,6 @@
-<div class="table-responsive">
-  <table class="table table-hover table-striped table-sm">
-    <thead>
+<div class="overflow-x-auto">
+  <table class="table table-sm">
+    <thead class="bg-slate-100 border">
       <tr>
         <th>Salle</th>
         <th>Places</th>
@@ -28,7 +28,7 @@
         <% if salle.bloc != bloc %>
           <% bloc = salle.bloc %>
           <thead>
-            <tr>
+            <tr class="bg-slate-100 border">
               <th></th><th></th><th></th>
               <% (@date..@date_fin).each do |d| %>
                 <th>
@@ -40,11 +40,11 @@
           </thead>
         <% end %>
 
-        <tr>
+        <tr class="hover border">
           <td><b><%= salle.nom %></b></td>
           <td class="text-center"><%= salle.places %></td>
           <td class="text-center">
-            <%= link_to_if user_signed_in?, @cours.count, cours_path(ids: @cours.pluck(:id), view: 'list', from: 'occupation') %>
+            <%= link_to_if user_signed_in?, @cours.count, cours_path(ids: @cours.pluck(:id), view: 'list', from: 'occupation'), class: 'text-primary hover:underline' %>
           </td>
           <% (@date..@date_fin).each do | d | %>
             <td>

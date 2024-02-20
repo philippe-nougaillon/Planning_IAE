@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* @layer directive {
+  Pour y mettre du css pur, mais ça a moins de priorité que les autres fichiers css
+} 
+*/
+
+/* @layer components {
+} */

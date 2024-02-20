@@ -1,16 +1,16 @@
-<div class="pb-2 mt-4 mb-2 border-bottom">
+<div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'user-secret' %> Agents</h1>
   <% if policy(Agent).new? %>
-    <%= link_to new_agent_path, class: 'btn text-primary float-right' do %>
+    <%= link_to new_agent_path, class: 'text-primary' do %>
       <%= fa_icon 'plus-circle' %> Agent
     <% end %>
   <% end %>
-  <h3><%= fa_icon 'user-secret' %> Agents</h3>
 </div>
 
 <% if @agents.any? %>
-  <div class="table-responsive">
-    <table class="table table-hover table-striped table-bordered">
-      <thead>
+  <div class="overflow-x-auto">
+    <table class="table">
+      <thead class="bg-slate-100 border">
         <tr>
           <th><%= sort_link 'agents.nom', 'Nom' %></th>
           <th><%= sort_link 'agents.prénom', 'Prénom' %></th>
@@ -31,12 +31,13 @@
       </tbody>
 
     </table>
+  </div>
 
-    <div class="page_info">
-      <%= page_entries_info @agents %>
-    </div>
+  <div class="page_info">
+    <%= page_entries_info @agents %>
+  </div>
 
-    <%= will_paginate @agents, renderer: WillPaginate::ActionView::BootstrapLinkRenderer %>
-
+  <div class="planning_pagination">
+    <%= will_paginate @agents %>
   </div>
 <% end %>

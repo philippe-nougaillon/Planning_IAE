@@ -1,9 +1,9 @@
-<h1 class="text-dark">Session</h1>
+<h1 class="text-4xl text-base-content">Session</h1>
 
 <%= render partial: 'ma_session', locals: {cour: @cour} %>
 
-<h2 class="text-dark">Signature présence</h2>
-<h4 class="text-dark"><%= current_user.nom_et_prénom %></h4>
+<h2 class="text-3xl text-base-content">Signature présence</h2>
+<h4 class="text-xl text-base-content"><%= current_user.nom_et_prénom %></h4>
 
 <%= form_with(model: @presence, url: signature_etudiant_do_cours_path) do |form| %>
 
@@ -16,12 +16,12 @@
     </div>
 
     <div style="margin-top: 8px;">
-      <button id="save" class="btn btn-success mr-3">Enregistrer</button>
-      <a id="clear" class='btn btn-light'>Effacer</a>
+      <button id="save" class="btn btn-success text-white mr-4">Enregistrer</button>
+      <a id="clear" class="btn btn-light">Effacer</a>
     </div>
   </div>
 <% end %>
 
-<p class="my-4"><%= link_to 'Retour', mes_sessions_etudiant_path %></p>
+<p class="my-6"><%= link_to 'Retour', mes_sessions_etudiant_path, class: 'text-primary hover:underline' %></p>
 
 <%= render 'signature_pad' %>
