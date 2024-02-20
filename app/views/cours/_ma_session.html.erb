@@ -20,7 +20,7 @@
       <p class="mb-0 font-bold"><%= cour.nom_ou_ue %></p>
     </div>
   </div>
-  <progress data-debut="<%= cour.debut.to_i %>" data-fin="<%= cour.fin.to_i %>" class="progress progress-info opacity-50 mt-2" value="<%= cour.progress_bar_pct3 %>" max="100"></progress>
+  <progress data-debut="<%= cour.debut.to_i %>" data-fin="<%= cour.fin.to_i %>" class="progress progress-primary opacity-50 mt-2" value="<%= cour.progress_bar_pct3 %>" max="100"></progress>
 
   <% if user_signed_in? && current_user.étudiant? && presence = cour.presences.find_by(etudiant_id: @etudiant.id) %>
     <% if presence.validée? || presence.signée? %>

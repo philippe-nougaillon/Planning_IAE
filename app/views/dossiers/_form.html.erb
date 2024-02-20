@@ -15,7 +15,7 @@
 
   <div class="flex flex-wrap gap-8">
     <div class="relative flex-grow max-w-full flex-1">
-      <div class="form-control mb-8">
+      <div class="form-control mb-4">
         <% if dossier.new_record? %>
           <%= form.label :période %>
           <%= form.select :période, options_for_select(Dossier.périodes, dossier.période), {}, class: 'select select-bordered select-sm w-full' %>
@@ -36,7 +36,7 @@
     </div>
 
     <div class="relative flex-grow max-w-full flex-1">
-      <div class="form-control mb-8">
+      <div class="form-control mb-4">
         <%= form.label :workflow_state %>
         <%= form.select :workflow_state, Dossier.workflow_spec.states.keys.to_a, {}, class: 'select select-bordered select-sm w-full' %>
       </div>
@@ -51,8 +51,8 @@
   <% unless dossier.new_record? %>
     <h5 class="text-lg">Pièces justificatives</h5>
     <div class="overflow-x-auto">
-      <table class="table table">
-        <thead>
+      <table class="table border">
+        <thead class="bg-slate-100">
           <tr>
             <th>Nom</th>
             <th>État</th>
@@ -66,7 +66,7 @@
                 <%= doc.text_field :nom, class: 'input input-bordered input-sm w-full'  %>
               </td>
               <td>
-                <%= doc.select :workflow_state, Document.workflow_spec.states.keys.to_a,{}, class: 'select select-bordered select-sm' %>
+                <%= doc.select :workflow_state, Document.workflow_spec.states.keys.to_a,{}, class: 'select select-bordered select-sm w-full' %>
               </td>
               <td>
                 <%= doc.text_field :commentaire, class: 'input input-bordered input-sm w-full' %>
@@ -78,5 +78,5 @@
     </div>
   <% end %>
   
-  <%= form.submit class: "btn", 'data-turbo': false %>
+  <%= form.submit class: "btn my-4", 'data-turbo': false %>
 <% end %>

@@ -43,11 +43,13 @@
           <td class="text-right"><%= salle.places %></td>
           <td>
             <% cours.pluck(:formation_id).uniq.each do |id| %> 
-                <% formation = Formation.unscoped.find(id) %> 
+              <% formation = Formation.unscoped.find(id) %> 
+              <div>
                 <span style="background-color:<%= formation.color %>;padding-left: 7px;"></span> 
                 <span style="padding-left:5px;"></span> 
                 <%= formation.nom_abrg_nbr_etudiants %> 
-                <span style="padding-right:10px;"></span> 
+                <span style="padding-right:10px;"></span>
+              </div>
             <% end %> 
           </td>
           <td class="text-right">
@@ -72,8 +74,8 @@
                     <% if (cour.debut.hour <= index + 8) && (cour.fin.hour >= index + 8) %>
                       <% nom_formation << cour.formation.nom %>
                     <% end %>
-                  <% end%>
-                  <%= link_to '#', title: nom_formation.join(' | ') do %>
+                  <% end %>
+                  <%= link_to edit_cour_path(cours.first), title: nom_formation.join(' | ') do %>
                     <span style="background-color: <%= color %>;padding-left: 15px;"></span> 
                   <% end %>
                 <% end %>

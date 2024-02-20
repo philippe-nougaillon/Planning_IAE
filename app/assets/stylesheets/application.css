@@ -66,6 +66,22 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6 {
     var(--togglehandleborder);
 }
 
+table.table{
+  font-size: 1rem;
+}
+
+table.table :where(thead, tfoot){
+  font-size: .875rem;
+}
+
+table.table-lg :not(thead):not(tfoot) tr {
+  font-size: 1.125rem;
+}
+
+progress.progress {
+  height: 1rem;
+}
+
 
 
 /* Pagination */
