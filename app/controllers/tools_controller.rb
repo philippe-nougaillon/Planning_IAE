@@ -1213,7 +1213,7 @@ class ToolsController < ApplicationController
   def rechercher
 
     if !params[:search].blank? && params[:commit] =='Go'
-      @results = PgSearch.multisearch("%#{ params[:search] }%")
+      @results = PgSearch.multisearch("%#{ params[:search] }%").reorder(updated_at: :desc)
       unless params[:search_cours]
         @results = @results.where.not(searchable_type: 'Cour')
       end
