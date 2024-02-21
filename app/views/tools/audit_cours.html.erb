@@ -35,7 +35,7 @@
   <% end %>
 </div>
 
-<div class="overflow-x-auto mt-4">
+<div class="mt-4">
   <table class="table border">
     <thead class="bg-slate-100">
       <tr>  
@@ -46,6 +46,7 @@
         <th>Intervenant</th>
         <th colspan="2">UE/Intitulé du cours</th>
         <th>Etat</th>
+        <th>Commentaires</th>
         <th>Depuis</th>
         <th>Par</th>
         <th></th>
@@ -61,9 +62,9 @@
         </td>
         <td>
           <h5 class="text-lg">
-            <% color = 'warning' if (cours.debut.to_date - Date.today) <= 30 %>
-            <% color = 'error' if (cours.debut.to_date - Date.today) <= 7 %>
-            <span class="badge badge-<%= color %> text-white">
+            <% color = 'badge-warning text-white' if (cours.debut.to_date - Date.today) <= 30 %>
+            <% color = 'badge-error text-white' if (cours.debut.to_date - Date.today) <= 7 %>
+            <span class="badge <%= color %>">
               <b><%= l cours.debut.to_date %></b>
             </span>
           </h5>
@@ -89,11 +90,11 @@
         <td>
           <%= cours.nom_ou_ue %>
         </td>
-        <td style="white-space: nowrap;">
-          <%= cours.etat.humanize %>
-
+        <td style="white-space: nowrap;"><%= cours.etat.humanize %></td>
+        <td>
           <% unless cours.commentaires.blank? %>
             <%= fa_icon 'comment-dots' %>
+            <br>
             <%= cours.commentaires %>
           <% end %>
         </td>
