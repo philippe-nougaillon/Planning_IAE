@@ -1,5 +1,5 @@
-<div class="overflow-x-auto">
-  <table class="table table-sm">
+<div class="overflow-x-auto lg:overflow-x-visible">
+  <table class="table table-xs">
     <thead class="bg-slate-100 border">
       <tr>
         <th>Salle</th>
@@ -39,7 +39,7 @@
         <% end %>
 
         <tr class="hover border">
-          <td><b><%= salle.nom[0..7] %></b></td>
+          <td class="text-base"><b><%= salle.nom[0..7] %></b></td>
           <td class="text-right"><%= salle.places %></td>
           <td>
             <% cours.pluck(:formation_id).uniq.each do |id| %> 
@@ -85,7 +85,7 @@
           <% else %>
             <td colspan=17></td>
           <% end %>
-          <td><b><%= salle.nom[0..2] %></b></td>
+          <td class="text-base"><b><%= salle.nom[0..2] %></b></td>
         </tr>
       <% end %>
     </tbody>
