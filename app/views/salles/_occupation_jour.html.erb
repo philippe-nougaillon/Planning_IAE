@@ -8,14 +8,14 @@
         <th>Cours</th>
         <% @etendue_horaire.each_with_index do |heure, index| %>
           <th class="<%= 'bg-amber-100 text-black font-black' if ((@date == Date.today) && (heure == time_in_paris.hour)) %>"><%= heure %>h</th>
-          <% if [4,9].include?(index) %><th></th><th></th><% end %>
+          <% if [4,9].include?(index) %><th></th><% end %>
         <% end %>
         <th></th>
       </tr>
     </thead>
 
     <tfoot>
-      <tr><th colspan=22></th></tr>
+      <tr><th colspan=21></th></tr>
     </tfoot>
 
     <tbody>
@@ -31,7 +31,7 @@
               <th colspan=4></th>
               <% @etendue_horaire.each_with_index do |heure, index| %>
                 <th class="<%= 'bg-amber-100 text-black font-black' if ((@date == Date.today) && (heure == time_in_paris.hour)) %>"><%= heure %>h</th>
-                <% if [4,9].include?(index) %><th></th><th></th><% end %>
+                <% if [4,9].include?(index) %><th></th><% end %>
               <% end %>
               <th></th>
             </tr>
@@ -80,10 +80,10 @@
                   <% end %>
                 <% end %>
               </td>
-              <% if [4,9].include?(index) %><th></th><th></th><% end %>
+              <% if [4,9].include?(index) %><th></th><% end %>
             <% end %>
           <% else %>
-            <td colspan=18></td>
+            <td colspan=17></td>
           <% end %>
           <td><b><%= salle.nom[0..2] %></b></td>
         </tr>
