@@ -8,7 +8,7 @@
       </small>
     </h2>
 
-    <progress class="progress opacity-50" value="<%= le_cours.progress_bar_pct2 %>" max="100"></progress>
+    <progress class="progress opacity-50 mt-4" value="<%= le_cours.progress_bar_pct2 %>" max="100"></progress>
   </td>
   
   <td style="border-left: 1rem solid <%= le_cours.formation.color %>">
@@ -38,9 +38,9 @@
     </h3>
   </td>
   
-  <td class="align-middle" style="width:200px">
-    <span class="badge badge-<%= le_cours.style %> text-white mask mask-circle p-8">
-      <h3 class="text-2xl font-bold text-base-100" style="margin: 0"><%= le_cours.try(:salle).try(:nom) %></h3>
+  <td class="align-middle text-center" style="width:200px">
+    <span class="badge badge-<%= le_cours.style %> text-white mask mask-circle p-10">
+      <h3 class="text-4xl font-bold text-base-100" style="margin: 0"><%= le_cours.try(:salle).try(:nom) %></h3>
     </span>
   </td>
 
