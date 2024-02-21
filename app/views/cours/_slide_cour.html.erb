@@ -40,7 +40,7 @@
   
   <td class="align-middle text-center" style="width:200px">
     <span class="badge badge-<%= le_cours.style %> text-white mask mask-circle p-10">
-      <h3 class="text-4xl font-bold text-base-100" style="margin: 0"><%= le_cours.try(:salle).try(:nom) %></h3>
+      <h3 class="text-4xl font-bold text-base-100" style="margin: 0"><%= le_cours.try(:salle).try(:nom).first(3) %></h3>
     </span>
   </td>
 
