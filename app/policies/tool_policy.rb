@@ -198,4 +198,8 @@ class ToolPolicy < ApplicationPolicy
     acces_intervenants?
   end
 
+  def commandes?
+    index?
+  end
+
 end

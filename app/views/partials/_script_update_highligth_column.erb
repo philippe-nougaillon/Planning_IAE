@@ -1,0 +1,29 @@
+<script>
+  function updateHighlightColumn() {
+    let date = new Date();
+
+    // Obtenir l'heure à Paris en utilisant le fuseau horaire 'Europe/Paris'
+    const parisHour = date.toLocaleTimeString('fr-FR', { 
+      timeZone: 'Europe/Paris', 
+      hour: '2-digit', 
+      minute: '2-digit', 
+      hour12: false 
+    }).split(':')[0];
+    
+    for (let i = 8; i <= 22; i++) {
+      if (i == parisHour) {
+        const elements = document.getElementsByClassName(`h-column-${i}`);
+        for(const element of elements){
+          element.classList.add('bg-amber-100', 'text-black', 'font-black');
+        }
+        const previous_elements = document.getElementsByClassName(`h-column-${i - 1}`);
+        for(const previous_element of previous_elements){
+          previous_element.classList.remove('bg-amber-100', 'text-black', 'font-black');
+        }
+        break;
+      }
+    }
+  }
+  updateHighlightColumn()
+  setInterval(function() {updateHighlightColumn()}, 5 * 60 * 1000);
+</script>

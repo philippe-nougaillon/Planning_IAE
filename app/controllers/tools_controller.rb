@@ -1323,6 +1323,10 @@ class ToolsController < ApplicationController
     end
   end
 
+  def commandes
+    @commandes = Cour.confirmé.where("DATE(cours.debut) >= ?", Date.today).where("cours.commentaires LIKE '%+%'").order(:debut)
+  end
+
   private
 
     def is_user_authorized

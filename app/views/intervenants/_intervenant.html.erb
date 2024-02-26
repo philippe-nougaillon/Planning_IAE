@@ -11,7 +11,7 @@
         <% end %>
     </td>
     <td><%= intervenant.doublon ? "Autorisés" : "" %></td>
-    <td><%= intervenant.nbr_heures_statutaire %></td>
+    <td class="text-right"><%= intervenant.nbr_heures_statutaire %></td>
     <td><%= l(intervenant.remise_dossier_srh.to_date) if intervenant.remise_dossier_srh %></td>
     <td><%= time_ago_in_words(intervenant.created_at) %></td>
     <td>

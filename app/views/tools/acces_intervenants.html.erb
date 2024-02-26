@@ -58,7 +58,7 @@
                   <%= check_box_tag "intervenants_id[#{intervenant.id}]", 'yes', false, data: {"action-target": "source", 'checkbox-select-all-target': "checkbox"} %>
                 </span>
               </td>
-              <td><%= intervenant.nom_prenom %></td>
+              <td><b><%= link_to intervenant.nom_prenom, intervenant, class: 'text-primary hover:underline' %></b></td>
               <td><%= intervenant.status %></td>
               <td><%= intervenant.email %></td>
               <td><%= time_ago_in_words intervenant.created_at %></td>

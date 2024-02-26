@@ -3,19 +3,19 @@
 
 <tr class="hover border <%= formation_cours_planifié_count != 0 ? 'bg-info' : '' %>">
     <td style="border-left: .3rem solid <%= formation.try(:positive_color) %>">
-        <%= link_to formation.nom, formation, class: 'text-primary hover:underline' %>
+        <b><%= link_to formation.nom, formation, class: 'text-primary hover:underline' %></b>
     </td>
     <td><%= formation.abrg %></td>
-    <td><%= formation.nbr_etudiants %></td>
+    <td class="text-right"><%= formation.nbr_etudiants %></td>
     <td><%= formation.code_analytique %></td>
-    <td>
+    <td class="text-right">
         <%= link_to_unless formation_cours_planifié_count.zero?, formation_cours_planifié_count, cours_path(ids:formation_cours.planifié.pluck(:id)), class: 'text-primary hover:underline' %>
     </td>
-    <td>
+    <td class="text-right">
         <% formation_cours_confirmé_count = formation_cours.confirmé.count %>
         <%= link_to_unless (formation.archive || formation_cours_confirmé_count.zero?), formation_cours_confirmé_count, cours_path(ids:formation_cours.confirmé.pluck(:id), filter:'all'), class: 'text-primary hover:underline' %>
     </td>
-    <td>
+    <td class="text-right">
         <% formation_cours_réalisé_count = formation_cours.réalisé.count %>
         <%= link_to_unless (formation.archive || formation_cours_réalisé_count.zero?), formation_cours_réalisé_count, cours_path(ids:formation_cours.réalisé.pluck(:id), filter:'all'), class: 'text-primary hover:underline' %>
     </td>

@@ -123,6 +123,7 @@ Rails.application.routes.draw do
     get :rechercher
     get :rappel_des_cours
     get :acces_intervenants
+    get :commandes
 
     post :import_do
     post :creation_cours_do
