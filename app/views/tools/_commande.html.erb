@@ -1,8 +1,8 @@
 <tr class="hover">
-  <td><%= time_ago_in_words commande.debut %></td>
-  <td><b><%= link_to l(commande.debut, format: :short), commande, class: 'text-primary hover:underline' %></b></td>
-  <td><%= commande.formation.nom %></td>
-  <td><%= commande.intervenant.nom %></td>
+  <% color = 'text-warning font-black' if (commande.debut.to_date - Date.today) <= 7 %>
+  <% color = 'text-error font-black' if (commande.debut.to_date - Date.today) <= 2 %>
+  <td class="<%= color %>"><%= time_ago_in_words commande.debut %></td>
+  <td><b><%= link_to l(commande.debut, format: :long), commande, class: 'text-primary hover:underline' %></b></td>
   <td>
     <% if commande.salle %>
       <h5 class="text-lg mb-2">
@@ -17,5 +17,13 @@
       <%= item.humanize %>
       <br>
     <% end %>
+  </td>
+    <td>
+    <%= commande.formation.nom %>
+    <br>
+    <%= commande.intervenant.nom_prenom %>
+  </td>
+  <td>
+    <%= time_ago_in_words commande.created_at %>
   </td>
 </tr>
