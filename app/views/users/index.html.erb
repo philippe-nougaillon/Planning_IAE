@@ -77,7 +77,7 @@
           </td>
           <td><%= user.role.humanize %></td>
           <td><%= time_ago_in_words user.current_sign_in_at if user.current_sign_in_at %></td>
-          <td ><%= user.sign_in_count %></td>
+          <td class="text-right"><%= user.sign_in_count %></td>
           <td>
             <%= link_to edit_user_path(user), class: "btn btn-ghost btn-xs" do %>
               <%= fa_icon 'edit' %>
