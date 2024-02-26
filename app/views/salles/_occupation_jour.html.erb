@@ -7,7 +7,7 @@
         <th>Formations</th> 
         <th>Cours</th>
         <% @etendue_horaire.each_with_index do |heure, index| %>
-          <th class="<%= 'bg-amber-100 text-black font-black' if ((@date == Date.today) && (heure == time_in_paris.hour)) %>"><%= heure %>h</th>
+          <th class="text-center <%= "h-column-#{heure}" if ((@date == Date.today)) %>"><%= heure %>h</th>
           <% if [4,9].include?(index) %><th></th><% end %>
         <% end %>
         <th></th>
@@ -30,7 +30,7 @@
             <tr class="bg-slate-100 border">
               <th colspan=4></th>
               <% @etendue_horaire.each_with_index do |heure, index| %>
-                <th class="<%= 'bg-amber-100 text-black font-black' if ((@date == Date.today) && (heure == time_in_paris.hour)) %>"><%= heure %>h</th>
+                <th class="text-center <%= "h-column-#{heure}" if ((@date == Date.today)) %>"><%= heure %>h</th>
                 <% if [4,9].include?(index) %><th></th><% end %>
               <% end %>
               <th></th>
@@ -63,7 +63,7 @@
             <% map = @etendue_horaire.map {|i| range.include?(i) ? 'red' : 'lightgreen' } %>
             
             <% map.each_with_index do |color, index| %>
-              <td class="<%= 'text-center bg-amber-100' if ((@date == Date.today) && ((index + 8) == time_in_paris.hour)) %>">
+              <td class="text-center <%= "h-column-#{index + 8}" if ((@date == Date.today)) %>">
                 <% if color == 'lightgreen' %>
                   <%= link_to new_cour_path(debut: @date, heure: (index + 8), salle_id: salle.id, from: 'occupation') do %>
                     <span style="background-color:<%= color %>;padding-left: 15px;"></span>
@@ -125,3 +125,4 @@
 <% end %>
 <br>
 
+<%= render partial: 'partials/script_update_highligth_column' %>
