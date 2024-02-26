@@ -60,7 +60,8 @@
           <% if @date %>
             <% range = [] %>
             <% cours.each {|cours| range += cours.range } %>
-            <% map = @etendue_horaire.map {|i| range.include?(i) ? 'red' : 'lightgreen' } %>
+            <% ouverture = Ouverture.find_by(bloc: salle.bloc, jour: @date.wday) %>
+            <% map = @etendue_horaire.map {|i| range.include?(i) ? 'red' : (ouverture && ((ouverture.début.hour > i) || ((ouverture.fin.min == 0 && ouverture.fin.hour <= i) || (ouverture.fin.min > 0 && ouverture.fin.hour <= i - 1))))? 'lightgrey' : 'lightgreen' } %>
             
             <% map.each_with_index do |color, index| %>
               <td class="text-center <%= "h-column-#{index + 8}" if ((@date == Date.today)) %>">
@@ -68,7 +69,7 @@
                   <%= link_to new_cour_path(debut: @date, heure: (index + 8), salle_id: salle.id, from: 'occupation') do %>
                     <span style="background-color:<%= color %>;padding-left: 15px;"></span>
                   <% end %>
-                <% else %>
+                <% elsif color == 'red' %>
                   <% nom_formation = [] %>
                   <% cours.each do |cour| %>
                     <% if (cour.debut.hour <= index + 8) && (cour.fin.hour >= index + 8) %>
@@ -78,6 +79,8 @@
                   <%= link_to edit_cour_path(cours.first, from: "occupation"), title: nom_formation.join(' | '), data: { turbo_method: :get, turbo_confirm: "Voulez-vous modifier ce cours ?" }  do %>
                     <span style="background-color: <%= color %>;padding-left: 15px;"></span> 
                   <% end %>
+                <% else %>
+                  <span style="background-color:<%= color %>;padding-left: 15px;"></span>
                 <% end %>
               </td>
               <% if [4,9].include?(index) %><th></th><% end %>
