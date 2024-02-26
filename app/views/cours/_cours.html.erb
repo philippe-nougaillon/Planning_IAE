@@ -93,7 +93,11 @@
 
         <% if policy(cours).edit? && !cours.commentaires.blank? %>
             <i title="<%= cours.commentaires %>" >
-                <%= fa_icon 'comment-dots' %>         
+                <% if cours.commentaires.include?('+') %>
+                    <%= fa_icon 'mug-hot', class: 'text-amber-800' %>
+                <% else %>
+                    <%= fa_icon 'comment-dots' %>
+                <% end %>
             </i>
         <% end %>
     </td>
