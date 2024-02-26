@@ -539,11 +539,15 @@ class CoursController < ApplicationController
 
           send_data pdf.render, filename: filename, type: 'application/pdf'
         when "Générer Pochette Examen PDF"
-          filename = "Pochette_Examen_#{ Date.today }.pdf"
-          pdf = ExportPdf.new
-          pdf.pochette_examen(@cours, params[:etudiants_id].try(:keys).count, params[:papier], params[:calculatrice], params[:ordi_tablette], params[:téléphone], params[:dictionnaire])
+          if params[:etudiants_id]
+            filename = "Pochette_Examen_#{ Date.today }.pdf"
+            pdf = ExportPdf.new
+            pdf.pochette_examen(@cours, params[:etudiants_id].try(:keys).count, params[:papier], params[:calculatrice], params[:ordi_tablette], params[:téléphone], params[:dictionnaire])
 
-          send_data pdf.render, filename: filename, type: 'application/pdf'
+            send_data pdf.render, filename: filename, type: 'application/pdf'
+          else 
+            redirect_to cours_path, alert: "Aucun étudiant sélectionné, rien n'a été fait"
+          end
         end
       end
 
