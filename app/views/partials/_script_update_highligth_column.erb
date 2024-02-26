@@ -12,7 +12,6 @@
     
     for (let i = 8; i <= 22; i++) {
       if (i == parisHour) {
-        console.log(i)
         const elements = document.getElementsByClassName(`h-column-${i}`);
         for(const element of elements){
           element.classList.add('bg-amber-100', 'text-black', 'font-black');
