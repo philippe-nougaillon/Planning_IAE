@@ -1,4 +1,4 @@
-class CreateFormations < ActiveRecord::Migration
+class CreateFormations < ActiveRecord::Migration[7.1]
   def change
     create_table :formations do |t|
       t.string :nom

@@ -1,4 +1,4 @@
-class AddAvatarToIntervenants < ActiveRecord::Migration
+class AddAvatarToIntervenants < ActiveRecord::Migration[7.1]
   def change
     add_column :intervenants, :photo, :string
   end

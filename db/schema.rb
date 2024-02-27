@@ -10,67 +10,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_11_28_083302) do
-
+ActiveRecord::Schema[7.1].define(version: 2023_11_28_083302) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "action_text_rich_texts", force: :cascade do |t|
-    t.string "name", null: false
-    t.text "body"
-    t.string "record_type", null: false
-    t.bigint "record_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
-  end
-
-  create_table "active_storage_attachments", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "record_type", null: false
-    t.bigint "record_id", null: false
-    t.bigint "blob_id", null: false
-    t.datetime "created_at", null: false
-    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
-    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
-  end
-
-  create_table "active_storage_blobs", force: :cascade do |t|
-    t.string "key", null: false
-    t.string "filename", null: false
-    t.string "content_type"
-    t.text "metadata"
-    t.bigint "byte_size", null: false
-    t.string "checksum", null: false
-    t.datetime "created_at", null: false
-    t.string "service_name", null: false
-    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
-  end
-
-  create_table "active_storage_variant_records", force: :cascade do |t|
-    t.bigint "blob_id", null: false
-    t.string "variation_digest", null: false
-    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
-  end
 
   create_table "agents", force: :cascade do |t|
     t.string "nom"
     t.string "prénom"
     t.string "catégorie"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "alerts", force: :cascade do |t|
-    t.datetime "debut"
-    t.datetime "fin"
+    t.datetime "debut", precision: nil
+    t.datetime "fin", precision: nil
     t.string "message"
     t.integer "etat"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "audits", id: :serial, force: :cascade do |t|
+  create_table "audits", force: :cascade do |t|
     t.integer "auditable_id"
     t.string "auditable_type"
     t.integer "associated_id"
@@ -92,12 +53,12 @@ ActiveRecord::Schema.define(version: 2023_11_28_083302) do
     t.index ["user_id", "user_type"], name: "user_index"
   end
 
-  create_table "cours", id: :serial, force: :cascade do |t|
+  create_table "cours", force: :cascade do |t|
     t.datetime "debut"
     t.datetime "fin"
-    t.integer "formation_id"
-    t.integer "intervenant_id"
-    t.integer "salle_id"
+    t.bigint "formation_id"
+    t.bigint "intervenant_id"
+    t.bigint "salle_id"
     t.string "ue"
     t.string "nom"
     t.datetime "created_at", null: false
@@ -116,43 +77,8 @@ ActiveRecord::Schema.define(version: 2023_11_28_083302) do
     t.index ["salle_id"], name: "index_cours_on_salle_id"
   end
 
-  create_table "documents", force: :cascade do |t|
-    t.bigint "dossier_id", null: false
-    t.string "nom"
-    t.string "workflow_state"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.string "commentaire"
-    t.index ["dossier_id"], name: "index_documents_on_dossier_id"
-  end
-
-  create_table "dossiers", force: :cascade do |t|
-    t.bigint "intervenant_id", null: false
-    t.string "période"
-    t.string "workflow_state"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.string "slug"
-    t.string "mémo"
-    t.index ["intervenant_id"], name: "index_dossiers_on_intervenant_id"
-    t.index ["slug"], name: "index_dossiers_on_slug"
-  end
-
-  create_table "envoi_logs", force: :cascade do |t|
-    t.datetime "date_prochain"
-    t.string "workflow_state"
-    t.string "cible", default: "Testeurs"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.datetime "date_exécution"
-    t.integer "cible_id"
-    t.date "date_début"
-    t.date "date_fin"
-    t.integer "mail_count"
-  end
-
-  create_table "etudiants", id: :serial, force: :cascade do |t|
-    t.integer "formation_id"
+  create_table "etudiants", force: :cascade do |t|
+    t.bigint "formation_id"
     t.string "nom"
     t.string "prénom"
     t.string "email"
@@ -183,15 +109,14 @@ ActiveRecord::Schema.define(version: 2023_11_28_083302) do
     t.index ["workflow_state"], name: "index_etudiants_on_workflow_state"
   end
 
-  create_table "fermetures", id: :serial, force: :cascade do |t|
+  create_table "fermetures", force: :cascade do |t|
     t.date "date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "nom"
     t.index ["date"], name: "index_fermetures_on_date"
   end
 
-  create_table "formations", id: :serial, force: :cascade do |t|
+  create_table "formations", force: :cascade do |t|
     t.string "nom"
     t.string "promo"
     t.string "diplome"
@@ -203,22 +128,22 @@ ActiveRecord::Schema.define(version: 2023_11_28_083302) do
     t.integer "nbr_etudiants", default: 0
     t.integer "nbr_heures"
     t.string "abrg"
-    t.integer "user_id"
+    t.bigint "user_id"
     t.string "color"
-    t.string "forfait_hetd"
-    t.decimal "taux_td", precision: 10, scale: 2, default: "0.0"
-    t.string "code_analytique"
+    t.string "Forfait_HETD"
+    t.string "Taux_TD"
+    t.string "Code_Analytique"
     t.boolean "hors_catalogue", default: false
     t.boolean "archive"
     t.boolean "hss"
     t.string "courriel"
-    t.string "nomtauxtd"
+    t.string "nomTauxTD"
     t.index ["archive"], name: "index_formations_on_archive"
     t.index ["user_id"], name: "index_formations_on_user_id"
   end
 
-  create_table "import_log_lines", id: :serial, force: :cascade do |t|
-    t.integer "import_log_id"
+  create_table "import_log_lines", force: :cascade do |t|
+    t.bigint "import_log_id"
     t.integer "num_ligne"
     t.integer "etat"
     t.text "message"
@@ -227,7 +152,7 @@ ActiveRecord::Schema.define(version: 2023_11_28_083302) do
     t.index ["import_log_id"], name: "index_import_log_lines_on_import_log_id"
   end
 
-  create_table "import_logs", id: :serial, force: :cascade do |t|
+  create_table "import_logs", force: :cascade do |t|
     t.string "model_type"
     t.integer "etat"
     t.integer "nbr_lignes"
@@ -236,11 +161,11 @@ ActiveRecord::Schema.define(version: 2023_11_28_083302) do
     t.string "message"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "user_id"
+    t.bigint "user_id"
     t.index ["user_id"], name: "index_import_logs_on_user_id"
   end
 
-  create_table "intervenants", id: :serial, force: :cascade do |t|
+  create_table "intervenants", force: :cascade do |t|
     t.string "nom"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -274,8 +199,8 @@ ActiveRecord::Schema.define(version: 2023_11_28_083302) do
     t.bigint "intervenant_id", null: false
     t.string "msg"
     t.string "workflow_state"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "reponse"
     t.string "slug"
     t.string "nom"
@@ -291,8 +216,8 @@ ActiveRecord::Schema.define(version: 2023_11_28_083302) do
     t.string "to"
     t.string "subject"
     t.string "message_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "user_id"
   end
 
@@ -301,30 +226,30 @@ ActiveRecord::Schema.define(version: 2023_11_28_083302) do
     t.integer "jour", null: false
     t.time "début", null: false
     t.time "fin", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "pg_search_documents", force: :cascade do |t|
     t.text "content"
     t.string "searchable_type"
     t.bigint "searchable_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable"
   end
 
   create_table "presences", force: :cascade do |t|
     t.bigint "cour_id", null: false
     t.string "signature"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "ip"
     t.integer "code_ue"
     t.string "workflow_state"
     t.bigint "etudiant_id"
     t.bigint "intervenant_id"
-    t.datetime "signée_le"
+    t.datetime "signée_le", precision: nil
     t.string "slug"
     t.index ["cour_id"], name: "index_presences_on_cour_id"
     t.index ["etudiant_id"], name: "index_presences_on_etudiant_id"
@@ -332,32 +257,32 @@ ActiveRecord::Schema.define(version: 2023_11_28_083302) do
     t.index ["slug"], name: "index_presences_on_slug", unique: true
   end
 
-  create_table "responsabilites", id: :serial, force: :cascade do |t|
-    t.integer "intervenant_id"
+  create_table "responsabilites", force: :cascade do |t|
+    t.bigint "intervenant_id"
     t.string "titre"
     t.decimal "heures", precision: 5, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.date "debut"
     t.date "fin"
-    t.integer "formation_id"
+    t.bigint "formation_id"
     t.string "commentaires"
     t.index ["formation_id"], name: "index_responsabilites_on_formation_id"
     t.index ["intervenant_id"], name: "index_responsabilites_on_intervenant_id"
   end
 
-  create_table "salles", id: :serial, force: :cascade do |t|
+  create_table "salles", force: :cascade do |t|
     t.string "nom"
     t.integer "places"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "bloc"
-    t.datetime "discarded_at"
+    t.datetime "discarded_at", precision: nil
     t.index ["discarded_at"], name: "index_salles_on_discarded_at"
   end
 
-  create_table "unites", id: :serial, force: :cascade do |t|
-    t.integer "formation_id"
+  create_table "unites", force: :cascade do |t|
+    t.bigint "formation_id"
     t.string "nom"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -369,7 +294,7 @@ ActiveRecord::Schema.define(version: 2023_11_28_083302) do
     t.index ["num"], name: "index_unites_on_num"
   end
 
-  create_table "users", id: :serial, force: :cascade do |t|
+  create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -380,15 +305,15 @@ ActiveRecord::Schema.define(version: 2023_11_28_083302) do
     t.datetime "last_sign_in_at"
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "admin", default: false
-    t.integer "formation_id"
+    t.bigint "formation_id"
     t.string "nom"
     t.string "prénom"
     t.string "mobile"
     t.boolean "reserver"
-    t.datetime "discarded_at"
+    t.datetime "discarded_at", precision: nil
     t.integer "role", default: 0
     t.index ["discarded_at"], name: "index_users_on_discarded_at"
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -396,9 +321,9 @@ ActiveRecord::Schema.define(version: 2023_11_28_083302) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  create_table "vacations", id: :serial, force: :cascade do |t|
-    t.integer "formation_id"
-    t.integer "intervenant_id"
+  create_table "vacations", force: :cascade do |t|
+    t.bigint "formation_id"
+    t.bigint "intervenant_id"
     t.string "titre"
     t.decimal "forfaithtd", precision: 5, scale: 2
     t.datetime "created_at", null: false
@@ -410,14 +335,25 @@ ActiveRecord::Schema.define(version: 2023_11_28_083302) do
     t.index ["intervenant_id"], name: "index_vacations_on_intervenant_id"
   end
 
-  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "documents", "dossiers"
+  add_foreign_key "cours", "formations"
+  add_foreign_key "cours", "intervenants"
+  add_foreign_key "cours", "salles"
+  add_foreign_key "etudiants", "formations"
+  add_foreign_key "formations", "users"
+  add_foreign_key "import_log_lines", "import_logs"
+  add_foreign_key "import_logs", "users"
   add_foreign_key "invits", "cours"
   add_foreign_key "invits", "intervenants"
   add_foreign_key "invits", "users"
   add_foreign_key "presences", "cours"
   add_foreign_key "presences", "etudiants"
   add_foreign_key "presences", "intervenants"
+  add_foreign_key "responsabilites", "formations"
+  add_foreign_key "responsabilites", "intervenants"
+  add_foreign_key "unites", "formations"
+  add_foreign_key "users", "formations"
+  add_foreign_key "vacations", "formations"
+  add_foreign_key "vacations", "intervenants"
 
   create_view "cours_non_planifies", materialized: true, sql_definition: <<-SQL
       SELECT cours.id

@@ -1,4 +1,4 @@
-class CreateResponsabilites < ActiveRecord::Migration
+class CreateResponsabilites < ActiveRecord::Migration[7.1]
   def change
     create_table :responsabilites do |t|
       t.references :intervenant, index: true, foreign_key: true

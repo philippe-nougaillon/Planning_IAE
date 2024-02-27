@@ -1,4 +1,4 @@
-class CreateFermetures < ActiveRecord::Migration
+class CreateFermetures < ActiveRecord::Migration[7.1]
   def change
     create_table :fermetures do |t|
       t.date :date

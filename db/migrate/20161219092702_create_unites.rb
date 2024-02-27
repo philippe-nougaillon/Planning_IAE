@@ -1,4 +1,4 @@
-class CreateUnites < ActiveRecord::Migration
+class CreateUnites < ActiveRecord::Migration[7.1]
   def change
     create_table :unites do |t|
       t.references :formation, index: true, foreign_key: true

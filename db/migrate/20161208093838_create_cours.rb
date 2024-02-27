@@ -1,4 +1,4 @@
-class CreateCours < ActiveRecord::Migration
+class CreateCours < ActiveRecord::Migration[7.1]
   def change
     create_table :cours do |t|
       t.datetime :debut

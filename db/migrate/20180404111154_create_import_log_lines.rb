@@ -1,4 +1,4 @@
-class CreateImportLogLines < ActiveRecord::Migration
+class CreateImportLogLines < ActiveRecord::Migration[7.1]
   def change
     create_table :import_log_lines do |t|
       t.references :import_log, index: true, foreign_key: true

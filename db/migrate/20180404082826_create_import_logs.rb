@@ -1,4 +1,4 @@
-class CreateImportLogs < ActiveRecord::Migration
+class CreateImportLogs < ActiveRecord::Migration[7.1]
   def change
     create_table :import_logs do |t|
       t.string :type

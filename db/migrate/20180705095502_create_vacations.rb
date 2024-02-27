@@ -1,4 +1,4 @@
-class CreateVacations < ActiveRecord::Migration
+class CreateVacations < ActiveRecord::Migration[7.1]
   def change
     create_table :vacations do |t|
       t.references :formation, index: true, foreign_key: true

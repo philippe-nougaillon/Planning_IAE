@@ -1,6 +1,6 @@
 # Encoding: utf-8
 
-class CreateEtudiants < ActiveRecord::Migration
+class CreateEtudiants < ActiveRecord::Migration[7.1]
   def change
     create_table :etudiants do |t|
       t.references :formation, index: true, foreign_key: true

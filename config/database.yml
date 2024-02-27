@@ -22,6 +22,9 @@ default: &default
 development:
   <<: *default
   database: planning4_pg_development
+  host: 127.0.0.1
+  username: postgres
+  password: secret
 
 
   # The specified database role being used to connect to PostgreSQL.

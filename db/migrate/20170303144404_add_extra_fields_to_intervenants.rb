@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-class AddExtraFieldsToIntervenants < ActiveRecord::Migration
+class AddExtraFieldsToIntervenants < ActiveRecord::Migration[7.1]
   def change
   	add_column :intervenants, :titre1, :string
   	add_column :intervenants, :titre2, :string

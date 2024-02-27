@@ -1,4 +1,4 @@
-class AddExtraFieldsToIntervenant < ActiveRecord::Migration
+class AddExtraFieldsToIntervenant < ActiveRecord::Migration[7.1]
   def change
     add_column :intervenants, :remise_dossier_srh, :datetime
     add_column :intervenants, :adresse, :string
