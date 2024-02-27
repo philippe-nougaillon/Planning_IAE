@@ -613,6 +613,10 @@ class CoursController < ApplicationController
     respond_to do |format|
       if @cour.valid? && @cour.save
         format.html do
+          if @cour.commentaires.include?('+')
+            ToolsMailer.with(cour: @cour).commande.deliver_now
+          end
+
           if params[:create_and_add]
             redirect_to new_cour_path(debut:@cour.debut, fin:@cour.fin,
                         formation_id:@cour.formation_id, intervenant_id:@cour.intervenant_id, ue:@cour.ue, salle_id:@cour.salle_id, nom:@cour.nom),
@@ -648,6 +652,11 @@ class CoursController < ApplicationController
     authorize @cour
     respond_to do |format|
       if @cour.update(cour_params)
+
+        if @cour.commentaires_previously_changed? && @cour.commentaires.include?('+')
+          ToolsMailer.with(cour: @cour, changed: true).commande.deliver_now
+        end
+
         format.html do
           # notifier les étudiants des changements ?
           if params[:notifier]
