@@ -35,8 +35,8 @@ namespace :tools do
 
   desc "Informer des nouvelles commandes (traiteur)"
   task :informer_commandes, [:enregistrer] => :environment do |task, args|
-    if Cour.where("DATE(created_at) = ?", Date.today).where("cours.commentaires LIKE '%+%'").any?
-      ToolsMailer.nouvelle_commande.deliver_now
+    if @cours = Cour.where("DATE(debut) = ?", Date.today + 7.days).where("cours.commentaires LIKE '%+%'")
+      ToolsMailer.with(cours: @cours).commande.deliver_now
     end
   end
 

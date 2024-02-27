@@ -1,0 +1,39 @@
+<p style="margin-bottom: 0.5rem">
+  Bonjour,
+  <br><br>
+  <% if @cour %>
+    <%= params[:changed] ? "Une commande vient d'être modifiée !" : "Une nouvelle commande vient d'arriver pour le <b>#{l @cour.debut, format: :long}</b>".html_safe %>
+    <br><br>
+
+    <%= l @cour.debut, format: :long if params[:changed] %>
+    <%= simple_format @cour.commentaires %>
+    <% if @cour.salle %>
+      Salle : <%= @cour.salle.nom %>
+      <br><br>
+    <% end %>
+    <%= @cour.formation.nom %>
+    <br>
+    <%= @cour.intervenant.nom_prenom %>
+  <% elsif @cours %>
+    Il y a <%= @cours.count %> commmande(s) prévue(s) pour dans 7 jours
+    <br><br>
+    <% @cours.each do |cour| %>
+      <b><%= l cour.debut, format: :long %></b>
+      <br>
+      <%= simple_format cour.commentaires %>
+      <% if cour.salle %>
+        Salle : <%= cour.salle.nom %>
+        <br>
+      <% end %>
+      <br>
+      <%= cour.formation.nom %>
+      <br>
+      <%= cour.intervenant.nom_prenom %>
+      <br><br><br>
+    <% end %>
+  <% end %>
+
+  <br><br>
+  <%= link_to "Voir toutes les commandes", tools_commandes_url %>
+</p>
+
