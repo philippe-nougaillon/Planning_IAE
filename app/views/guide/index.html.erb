@@ -1,54 +1,40 @@
-<div class="bs-container my-12">
-  <h1 class="text-4xl">
+<div class="bs-container mt-6 mb-12 pl-0 border-b pb-4">
+  <h1 class="text-3xl">
     <%= fa_icon 'info-circle' %>
-      Aide-mémoire de l'application Planning
+      Guide
   </h1>
 </div>
 
-<div class="py-8 px-4 md:py-16 md:px-8 mb-8 bg-gray-200 rounded pr-0 pl-0 rounded-none">
-  <div class="bs-container">
-    <h3 class="text-2xl">
-      <%= fa_icon 'bullhorn' %> 
-      Voir les nouveautés
-    </h3>
-    <a  href="https://github.com/philippe-nougaillon/Planning_IAE/wiki"
-        target="_blank"
-        rel="noopener noreferrer">
-        https://github.com/philippe-nougaillon/Planning_IAE/wiki
-    </a>
-  </div>
-</div>
-
-<div class="border-b mt-6 mb-2 pb-4">
+<div class="border-b mt-12 mb-2 pb-4">
   <h2 class="text-3xl"><%= fa_icon 'calendar-alt' %> Planning des cours</h2>
 </div>
-<div class="flex flex-wrap">
+<div class="flex flex-wrap mb-8">
   <div class="md:w-1/3 px-4">
-    <div class="img-thumbnail">
+    <div class="card shadow-lg">
       <a href="/Images/guide/cours1.png">
-        <img src="/Images/guide/cours1.png" alt="Liste des cours à venir" style="width:100%">
+        <img src="/Images/guide/cours1.png" alt="Liste des cours à venir" zstyle="width:100%">
         <div class="caption">
-          <p class="mb-4">Liste des cours à venir</p>
+          <p class="text-center mt-2 mb-4 border-t pt-2">Liste des cours à venir</p>
         </div>
       </a>
     </div>
   </div>
   <div class="md:w-1/3 px-4">
-    <div class="img-thumbnail">
+    <div class="card shadow-lg">
       <a href="/Images/guide/cours_selection.png">
         <img src="/Images/guide/cours_selection.png" alt="Liste des cours d'une formation" style="width:100%">
         <div class="caption">
-          <p class="mb-4">Liste des cours d'une formation</p>
+          <p class="text-center mt-2 mb-4 border-t pt-2">Liste des cours d'une formation</p>
         </div>
       </a>
     </div>
   </div>
   <div class="md:w-1/3 px-4">
-    <div class="img-thumbnail">
+    <div class="card shadow-lg">
       <a href="/Images/guide/cours_new.png">
         <img src="/Images/guide/cours_new.png" alt="Formulaire de réservation de salle" style="width:100%">
         <div class="caption">
-          <p class="mb-4">Formulaire de réservation de salle</p>
+          <p class="text-center mt-2 mb-4 border-t pt-2">Formulaire de réservation de salle</p>
         </div>
       </a>
     </div>
@@ -90,46 +76,36 @@
   <li>Le cours est dans l'état 'Confirmé' mais aucune salle n'a été réservée</li>
 </ul>
 
-<div class="border-b mt-6 mb-2 pb-4">
+<div class="border-b mt-12 mb-2 pb-4">
   <h3 class="text-3xl"><%= fa_icon 'chalkboard' %> Liste des salles</h3>
 </div>
-<div class="flex flex-wrap">
-  <div class="md:w-1/4 px-4">
-    <div class="img-thumbnail">
+<div class="flex flex-wrap mb-8">
+  <div class="md:w-1/3 px-4">
+    <div class="card shadow-lg">
       <a href="/Images/guide/salles1.png">
         <img src="/Images/guide/salles1.png" alt="Occupation des salles (jour)" style="width:100%">
         <div class="caption">
-          <p class="mb-4">Occupation des salles (jour)</p>
+          <p class="text-center mt-2 mb-4 border-t pt-2">Occupation des salles (jour)</p>
         </div>
       </a>
     </div>
   </div>
-  <div class="md:w-1/4 px-4">
-    <div class="img-thumbnail">
+  <div class="md:w-1/3 px-4">
+    <div class="card shadow-lg">
       <a href="/Images/guide/salles2.png">
         <img src="/Images/guide/salles2.png" alt="Occupation des salles (semaine)" style="width:100%">
         <div class="caption">
-          <p class="mb-4">Occupation des salles (semaine)</p>
+          <p class="text-center mt-2 mb-4 border-t pt-2">Occupation des salles (semaine)</p>
         </div>
       </a>
     </div>
   </div>
-  <div class="md:w-1/4 px-4">
-    <div class="img-thumbnail">
+  <div class="md:w-1/3 px-4">
+    <div class="card shadow-lg">
       <a href="/Images/guide/cours3.png">
-        <img src="/Images/guide/cours3.png" alt="Occupation salles en détail (semaine)" style="width:100%">
+        <img src="/Images/guide/cours3.png" alt="Vue Salles (semaine)" style="width:100%">
         <div class="caption">
-          <p class="mb-4">Occupation salles en détail (semaine)</p>
-        </div>
-      </a>
-    </div>
-  </div>
-  <div class="md:w-1/4 px-4">
-    <div class="img-thumbnail">
-      <a href="/Images/guide/cours4.png">
-        <img src="/Images/guide/cours4.png" alt="Occupation salles en détail (semaine)" style="width:100%">
-        <div class="caption">
-          <p class="mb-4">Occupation salles en détail (semaine)</p>
+          <p class="text-center mt-2 mb-4 border-t pt-2">Vue Salles (semaine)</p>
         </div>
       </a>
     </div>
@@ -140,36 +116,36 @@
   <li>Visualisation des créneaux horaires libres/occupés pour une date, une salle</li>
 </ul>
 
-<div class="border-b mt-6 mb-2 pb-4">
+<div class="border-b mt-12 mb-2 pb-4">
   <h3 class="text-3xl"><%= fa_icon 'briefcase' %> Formations</h3>
 </div>
-<div class="flex flex-wrap">
+<div class="flex flex-wrap mb-8">
   <div class="md:w-1/3 px-4">
-    <div class="img-thumbnail">
+    <div class="card shadow-lg">
       <a href="/Images/guide/formations.png">
         <img src="/Images/guide/formations.png" alt="Liste des formations" style="width:100%">
         <div class="caption">
-          <p class="mb-4">Liste des formations</p>
+          <p class="text-center mt-2 mb-4 border-t pt-2">Liste des formations</p>
         </div>
       </a>
     </div>
   </div>
   <div class="md:w-1/3 px-4">
-    <div class="img-thumbnail">
+    <div class="card shadow-lg">
       <a href="/Images/guide/formation.png">
         <img src="/Images/guide/formation.png" alt="Une formation en détail" style="width:100%">
         <div class="caption">
-          <p class="mb-4">Une formation en détail</p>
+          <p class="text-center mt-2 mb-4 border-t pt-2">Une formation en détail</p>
         </div>
       </a>
     </div>
   </div>
   <div class="md:w-1/3 px-4">
-    <div class="img-thumbnail">
+    <div class="card shadow-lg">
       <a href="/Images/guide/formation_form.png">
         <img src="/Images/guide/formation_form.png" alt="Modification d'une formation" style="width:100%">
         <div class="caption">
-          <p class="mb-4">Modification d'une formation</p>
+          <p class="text-center mt-2 mb-4 border-t pt-2">Modification d'une formation</p>
         </div>
       </a>
     </div>
@@ -199,36 +175,26 @@
 </ul>
 
 
-<div class="border-b mt-6 mb-2 pb-4">
+<div class="border-b mt-12 mb-2 pb-4">
   <h3 class="text-3xl"><%= fa_icon 'chalkboard-teacher' %> Intervenants</h3>
 </div>
-<div class="flex flex-wrap">
+<div class="flex flex-wrap mb-8">
   <div class="md:w-1/3 px-4">
-    <div class="img-thumbnail">
+    <div class="card shadow-lg">
       <a href="/Images/guide/intervenant.png">
         <img src="/Images/guide/intervenant.png" alt="Liste des intervenants" style="width:100%">
         <div class="caption">
-          <p class="mb-4">Liste des intervenants</p>
+          <p class="text-center mt-2 mb-4 border-t pt-2">Liste des intervenants</p>
         </div>
       </a>
     </div>
   </div>
   <div class="md:w-1/3 px-4">
-    <div class="img-thumbnail">
-      <a href="/Images/guide/intervenant_show.png">
-        <img src="/Images/guide/intervenant_show.png" alt="Un intervenant" style="width:100%">
-        <div class="caption">
-          <p class="mb-4">Un intervenant</p>
-        </div>
-      </a>
-    </div>
-  </div>
-  <div class="md:w-1/3 px-4">
-    <div class="img-thumbnail">
+    <div class="card shadow-lg">
       <a href="/Images/guide/intervenant_form.png">
         <img src="/Images/guide/intervenant_form.png" alt="Un intervenant en détail" style="width:100%">
         <div class="caption">
-          <p class="mb-4">Un intervenant en détail</p>
+          <p class="text-center mt-2 mb-4 border-t pt-2">Un intervenant en détail</p>
         </div>
       </a>
     </div>
@@ -250,36 +216,26 @@
   <li>La saisie des Responsabilités n'est accessible que par les membres du groupe RH</li>
 </ul>
 
-<div class="border-b mt-6 mb-2 pb-4">
+<div class="border-b mt-12 mb-2 pb-4">
   <h3 class="text-3xl"><%= fa_icon 'graduation-cap' %> Etudiants</h3>
 </div>
-<div class="flex flex-wrap">
+<div class="flex flex-wrap mb-8">
   <div class="md:w-1/3 px-4">
-    <div class="img-thumbnail">
-      <a href="/Images/guide/etudiant.png">
-        <img src="/Images/guide/etudiant.png" alt=Liste des étudiants" style="width:100%">
-        <div class="caption">
-          <p class="mb-4">Liste des étudiants</p>
-        </div>
-      </a>
-    </div>
-  </div>
-  <div class="md:w-1/3 px-4">
-    <div class="img-thumbnail">
+    <div class="card shadow-lg">
       <a href="/Images/guide/etudiant_form.png">
         <img src="/Images/guide/etudiant_form.png" alt="Un étudiant en détail" style="width:100%">
         <div class="caption">
-          <p class="mb-4">Un étudiant en détail</p>
+          <p class="text-center mt-2 mb-4 border-t pt-2">Un étudiant en détail</p>
         </div>
       </a>
     </div>
   </div>
   <div class="md:w-1/3 px-4">
-    <div class="img-thumbnail">
+    <div class="card shadow-lg">
       <a href="/Images/guide/etudiant_show.png">
-        <img src="/Images/guide/etudiant_show.png" alt="Récapitulatif étudiant avec audit des modifications" style="width:100%">
+        <img src="/Images/guide/etudiant_show.png" alt="Récapitulatif étudiant" style="width:100%">
         <div class="caption">
-          <p class="mb-4">Récapitulatif étudiant avec audit des modifications</p>
+          <p class="text-center mt-2 mb-4 border-t pt-2">Récapitulatif étudiant</p>
         </div>
       </a>
     </div>
@@ -290,7 +246,7 @@
     <li>La saisie des coordonnées de l'étudiant permet de lui envoyer une notification par email/SMS en cas d'annulation de cours (option)</li>
 </ul>
 
-<div class="border-b mt-6 mb-2 pb-4">
+<div class="border-b mt-12 mb-2 pb-4">
   <h3 class="text-3xl"><%= fa_icon 'users' %> Utilisateurs</h3>
 </div>
 <ul>
@@ -303,38 +259,38 @@
     </ul>
 </ul>
 
-<div class="border-b mt-6 mb-2 pb-4">
+<div class="border-b mt-12 mb-2 pb-4">
   <h3 class="text-3xl"><%= fa_icon 'wrench' %> Outils</h3>
 </div>
-<div class="flex flex-wrap">
+<div class="flex flex-wrap mb-8">
   <div class="md:w-1/3 px-4">
-    <div class="img-thumbnail">
+    <div class="card shadow-lg">
       <a href="/Images/guide/outils.png">
         <img src="/Images/guide/outils.png" alt="Liste des outils" style="width:100%">
         <div class="caption">
-          <p class="mb-4">Liste des outils</p>
+          <p class="text-center mt-2 mb-4 border-t pt-2">Liste des outils</p>
         </div>
       </a>
     </div>
   </div>
 
   <div class="md:w-1/3 px-4">
-    <div class="img-thumbnail">
+    <div class="card shadow-lg">
       <a href="/Images/guide/imports-log.png">
         <img src="/Images/guide/imports-log.png" alt="Le journal des importations (Imports log)" style="width:100%">
         <div class="caption">
-          <p class="mb-4">Le journal des importations (Imports log)</p>
+          <p class="text-center mt-2 mb-4 border-t pt-2">Le journal des importations (Imports log)</p>
         </div>
       </a>
     </div>
   </div>
 
   <div class="md:w-1/3 px-4">
-    <div class="img-thumbnail">
+    <div class="card shadow-lg">
       <a href="/Images/guide/reservation-saison.png">
         <img src="/Images/guide/reservation-saison.png" alt="Réservation de créneaux horaires pour une saison" style="width:100%">
         <div class="caption">
-          <p class="mb-4">Réservation de créneaux horaires pour une saison</p>
+          <p class="text-center mt-2 mb-4 border-t pt-2">Réservation de créneaux en masse</p>
         </div>
       </a>
     </div>
@@ -357,7 +313,7 @@
   </ul>
 </ul>
 
-<div class="border-b mt-6 mb-2 pb-4">
+<div class="border-b mt-12 mb-2 pb-4">
   <h3 class="text-3xl"><%= fa_icon 'download' %> Importation des données</h3>
 </div>
 <ul>
@@ -393,7 +349,7 @@
     </li>
 </ul>
 
-<div class="border-b mt-6 mb-2 pb-4">
+<div class="border-b mt-12 mb-2 pb-4">
   <h3 class="text-3xl"><%= fa_icon 'upload' %> Exportation des données</h3>
 </div>
 <ul>
@@ -401,36 +357,36 @@
 </ul>
 
 
-<div class="border-b mt-6 mb-2 pb-4">
+<div class="border-b mt-12 mb-2 pb-4">
   <h3 class="text-3xl"><%= fa_icon 'search' %> Audit des modifications</h3>
 </div>
-<div class="flex flex-wrap">
+<div class="flex flex-wrap mb-8">
   <div class="md:w-1/3 px-4">
-    <div class="img-thumbnail">
+    <div class="card shadow-lg">
       <a href="/Images/guide/audit1.png">
         <img src="/Images/guide/audit1.png" alt="Audit des modifications" style="width:100%">
         <div class="caption">
-          <p class="mb-4">Audit des modifications</p>
+          <p class="text-center mt-2 mb-4 border-t pt-2">Audit des modifications</p>
         </div>
       </a>
     </div>
   </div>
   <div class="md:w-1/3 px-4">
-    <div class="img-thumbnail">
+    <div class="card shadow-lg">
       <a href="/Images/guide/audit2.png">
         <img src="/Images/guide/audit2.png" alt="Audit des cours modifiés" style="width:100%">
         <div class="caption">
-          <p class="mb-4">Audit des cours modifiés </p>
+          <p class="text-center mt-2 mb-4 border-t pt-2">Audit des cours modifiés </p>
         </div>
       </a>
     </div>
   </div>
   <div class="md:w-1/3 px-4">
-    <div class="img-thumbnail">
+    <div class="card shadow-lg">
       <a href="/Images/guide/audit3.png">
         <img src="/Images/guide/audit3.png" alt="Audit des changements de salle" style="width:100%">
         <div class="caption">
-          <p class="mb-4">Audit des changements de salle</p>
+          <p class="text-center mt-2 mb-4 border-t pt-2">Audit des changements de salle</p>
         </div>
       </a>
     </div>
@@ -441,7 +397,7 @@
 </ul>
 
 
-<div class="border-b mt-6 mb-2 pb-4">
+<div class="border-b mt-12 mb-2 pb-4">
   <h3 class="text-3xl"><%= fa_icon 'list-alt' %> Etats de services</h3>
 </div>
 <ul>
@@ -450,7 +406,7 @@
     <li>Etat liquidatif en PDF</li>
 </ul>
 
-<div class="border-b mt-6 mb-2 pb-4">
+<div class="border-b mt-12 mb-2 pb-4">
   <h3 class="text-3xl"><%= fa_icon 'exchange-alt' %> API</h3>
 </div>
 <ul>
@@ -458,7 +414,7 @@
     <li>Ex: https://business-school-planning-demo-248ac1f2d92e.herokuapp.com/api/v1/cours.json?d=20190701 </li>
 </ul>
 
-<div class="border-b mt-6 mb-2 pb-4">
+<div class="border-b mt-12 mb-2 pb-4">
   <h3 class="text-3xl"><%= fa_icon 'asterisk' %> Notification</h3>
 </div>
 <ul>
@@ -466,36 +422,36 @@
     <li>Chaque fin de semaine, les intervenants recoivent leur planning de la semaine à venir (option)</li>
 </ul>
 
-<div class="border-b mt-6 mb-2 pb-4">
+<div class="border-b mt-12 mb-2 pb-4">
   <h3 class="text-3xl"><%= fa_icon 'mobile-alt' %> Mobile</h3>
 </div>
-<div class="flex flex-wrap">
+<div class="flex flex-wrap mb-8">
   <div class="md:w-1/3 px-4">
-    <div class="img-thumbnail">
+    <div class="card shadow-lg">
       <a href="/Images/guide/mobile0.png">
         <img src="/Images/guide/mobile0.png" alt="Planning mobile" style="width:100%">
         <div class="caption">
-          <p class="mb-4">Planning mobile</p>
+          <p class="text-center mt-2 mb-4 border-t pt-2">Planning mobile</p>
         </div>
       </a>
     </div>
   </div>
   <div class="md:w-1/3 px-4">
-    <div class="img-thumbnail">
+    <div class="card shadow-lg">
       <a href="/Images/guide/mobile1.png">
         <img src="/Images/guide/mobile1.png" alt="Indicateur d'avancement des cours" style="width:100%">
         <div class="caption">
-          <p class="mb-4">Indicateur d'avancement des cours</p>
+          <p class="text-center mt-2 mb-4 border-t pt-2">Indicateur d'avancement des cours</p>
         </div>
       </a>
     </div>
   </div>
   <div class="md:w-1/3 px-4">
-    <div class="img-thumbnail">
+    <div class="card shadow-lg">
       <a href="/Images/guide/mobileSalles.png">
         <img src="/Images/guide/mobileSalles.png" alt="Planning mobile hebdomadaire" style="width:100%">
         <div class="caption">
-          <p class="mb-4">Planning mobile hebdomadaire</p>
+          <p class="text-center mt-2 mb-4 border-t pt-2">Planning mobile hebdomadaire</p>
         </div>
       </a>
     </div>
@@ -507,33 +463,111 @@
   <li>Adapté au standard PWA (Progressive Web App)</li>
 </ul>
 
-<div class="border-b mt-6 mb-2 pb-4">
+<div class="border-b mt-12 mb-2 pb-4">
   <h3 class="text-3xl"><%= fa_icon 'film' %> Affichage sur panneaux lumineux</h3>
 </div>
-<div class="flex flex-wrap">
+<div class="flex flex-wrap mb-8">
   <div class="md:w-1/2 px-4">
-    <div class="img-thumbnail">
+    <div class="card shadow-lg">
       <a href="/Images/guide/afficheur.png">
         <img src="/Images/guide/afficheur.png" alt="Planning sur afficheur 1/2" style="width:100%">
         <div class="caption">
-          <p class="mb-4">Planning sur afficheur 1/2</p>
+          <p class="text-center mt-2 mb-4 border-t pt-2">Planning sur afficheur 1/2</p>
         </div>
       </a>
     </div>
   </div>
   <div class="md:w-1/2 px-4">
-    <div class="img-thumbnail">
+    <div class="card shadow-lg">
       <a href="/Images/guide/afficheur2.png">
         <img src="/Images/guide/afficheur2.png" alt="Planning sur afficheur 2/2" style="width:100%">
         <div class="caption">
-          <p class="mb-4">Planning sur afficheur 2/2</p>
+          <p class="text-center mt-2 mb-4 border-t pt-2">Planning sur afficheur 2/2</p>
         </div>
       </a>
     </div>
   </div>
 </div>
 <ul>
-    <li>Planning du jour optimisé pour la diffusion sur un grands écrans, généralement installés à l'entrée des salles de cours, dans les couloirs ou à l'accueil</li>
+  <li>Planning du jour optimisé pour la diffusion sur un grands écrans, généralement installés à l'entrée des salles de cours, dans les couloirs ou à l'accueil</li>
 </ul>
 
-<br>
+<div class="border-b mt-12 mb-2 pb-4">
+  <h3 class="text-3xl"><%= fa_icon 'bullhorn' %> Journal des mises à jours</h3>
+</div>
+<h4 class="text-2xl mb-2 mt-4">5.0</h4>
+<ul class="list-disc">
+  <li>Migration vers Ruby 3.3 &amp; Ruby on Rails 7.1.3</li>
+  <li>Actualisation en temps réel des barres de progression des cours</li>
+  <li>Actualisation en temps réel de l'indicateur horaire dans "Occupation des salles"</li>
+  <li>Multiples optimisations du code</li>
+</ul>
+<h4 class="text-2xl mb-2 mt-4">4.27</h4>
+<ul class="list-disc">
+  <li>Gestion des émargements. Les étudiants signent sur leur portable pour justifier de leur présence.</li>
+</ul>
+<h4 class="text-2xl mb-2 mt-4">4.20</h4>
+<ul class="list-disc">
+  <li>Gestion des convocations aux examens. Notification par email.</li>
+</ul>
+<h4 class="text-2xl mb-2 mt-4">4.16</h4>
+<ul class="list-disc">
+<li>Gestion des inscriptions des étudiants et intervenants pour accès complet au Planning</li>
+<li>Ne plus afficher les données nominatives des Intervenants et du détail des cours, pour être en accord avec RGPD</li>
+</ul>
+<h4 class="text-2xl mb-2 mt-4">4.14</h4>
+<ul class="list-disc">
+<li>Etat récapitulatif des surveillances d'examens</li>
+</ul>
+<h4 class="text-2xl mb-2 mt-4">4.12</h4>
+<ul class="list-disc">
+<li>Notification des changements de cours (envoi emails à tous les étudiants)</li>
+<li>Affichage des Alertes. Un message apparaît dans le bas des grands écrans couloirs pour informé tous les étudiants. Ce message apparaît aussi dans l'application. Trois couleurs de messages : (Danger, Warning, Info).</li>
+<li>Import des étudiants : création de comptes d'accès et envoi email avec crédentails</li>
+<li>Feuille d’émargement PDF</li>
+<li>Feuille d’émargement PDF pour les examens</li>
+</ul>
+<h4 class="text-2xl mb-2 mt-4">4.10</h4>
+<ul class="list-disc">
+<li>MailLog : affiche les états (envoyé/ouvert/KO) de tous les emails envoyés par le Planning</li>
+</ul>
+<h4 class="text-2xl mb-2 mt-4">4.8</h4>
+<ul class="list-disc">
+<li>Invitations</li>
+<li>Horaires d'ouverture</li>
+<li>Authentification obligatoire</li>
+<li>Gestion des accès selon le rôle des utilisateurs</li>
+<li>Conversion des UE</li>
+</ul>
+<h4 class="text-2xl mb-2 mt-4">4.5</h4>
+<ul class="list-disc">
+<li>Un utilisateur connecté peut faire une recherche d'un terme parmi les intitulés des Cours, Formation, Intervenant, UE.</li>
+<li>Une fonction 'Rappel des cours' permet d'envoyer le rappel des cours du mois suivant à un intervenant choisi.</li>
+<li>Désactivation des utilisateurs ayants quitté l'établissement.</li>
+<li>Diverses optimisations et améliorations.</li>
+</ul>
+<h4 class="text-2xl mb-2 mt-4">4.4</h4>
+<ul class="list-disc">
+<li>Une vue 'Audit des cours' liste les cours planifiés et non encore confirmés, pas créés par Thierry.D (Gestionnaire du Planning).</li>
+<li>Une alerte affiche dans une bulle rouge le nombre de cours non confirmés, à placer dans les 7 jours.</li>
+</ul>
+<h4 class="text-2xl mb-2 mt-4">4.3</h4>
+<ul class="list-disc">
+  <li>Affichage des salles habituelles par formation et intervenant. Basé sur les données des cours passés. Affiche la Salle et le nombre de cours effectués =&gt; D2(20).</li>
+  <li>Quelques corrections et optimisations</li>
+  <li>Tests automatisés (models &amp; system)</li>
+</ul>
+<h4 class="text-2xl mb-2 mt-4">4.2</h4>
+<ul class="list-disc mb-8">
+  <li>Nouveau cours : une fois la date, la durée, la formation et l'intervenant renseignés, la liste des salles se remplie automatiquement et n'affiche que les salles disponibles.</li>
+  <li>Liste des cours : l'Action 'Intervertir' permet d'échanger facilement les intervenants de deux cours.</li>
+  <li>Notification des étudiants quand il y a un changement dans un cours. (Cochez 'Notifier les étudiants ?' lors de la modification du cours).</li>
+  <li>Le planning d'un intervenant ou d'une formation peut être connecté à Google Calendar. Pour ce faire, allez dans Calendar/Autre agenda/à partir de l’URL/ puis collez l'URL produit lors de l'export des cours au format Calendrier (ICS).</li>
+  <li>Fermetures, on peut donner un nom à une période de fermeture.</li>
+  <li>Nouvelle Saison : choix d’une salle pour l’ensemble des cours créés.</li>
+  <li>Vue occupation des salles : Regroupement des salles par BLOC (les extérieurs sont regroupés ensemble) et amélioration de l'affichage.</li>
+  <li>Affichage du nombre d'étudiants dans le nom de la formation. Ex: 'MBA FI (10 Et.)'.</li>
+  <li>Amélioration de la gestion du rappel des cours pour chaque intervenant (Ajout d'un message par le gestionnaire, Envoi aux Testeurs, Mise en pause). Amélioration de la présentation du mail.</li>
+  <li>Gestion des dossiers CEV. Permet de gérer, grâce à un Workflow, le dépôt des dossiers de candidatures des intervenants CEV.</li>
+  <li>Vue 'Cours récemment planifiés' : Affiche les cours 'Planifiés' créés par un utilisateur autre que le gestionnaire des salles et qui sont à confirmer.</li>
+</ul>
