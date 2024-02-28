@@ -116,14 +116,11 @@ namespace :cours do
 
   desc "Ajouter et retirer des cours pour la démo"
   task add_remove_cours: :environment do
-    if Date.today.wday == 4 # Jeudi
-      # Cour.all.order(:debut).first(2).delete_all
-
-      2.times.each do |i|
-        datetime = (DateTime.civil_from_format :local, Date.today.year, Date.today.month, Date.today.day) + i.day
-        Cour.create(debut: datetime + 10.hours, duree: 0.4e1, etat: "confirmé", formation: Formation.first, intervenant: Intervenant.first, salle: Salle.first, code_ue: 1)
-        Cour.create(debut: datetime + 15.hours, duree: 0.4e1, etat: "confirmé", formation: Formation.last, intervenant: Intervenant.last, salle: Salle.offset(1).first, code_ue: 2)
-      end
+    # Cour.all.order(:debut).first(2).delete_all
+    7.times.each do |i|
+      datetime = (DateTime.civil_from_format :local, Date.today.year, Date.today.month, Date.today.day) + i.day
+      Cour.create(debut: datetime + 9.hours, duree: 0.4e1, etat: "confirmé", formation: Formation.first, intervenant: Intervenant.first, salle: Salle.first, code_ue: 1)
+      Cour.create(debut: datetime + 14.hours, duree: 0.4e1, etat: "confirmé", formation: Formation.last, intervenant: Intervenant.last, salle: Salle.offset(1).first, code_ue: 2)
     end
   end
 
