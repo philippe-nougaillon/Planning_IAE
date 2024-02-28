@@ -1,6 +1,12 @@
 <tr class="hover">
   <% color = 'text-warning font-black' if (commande.debut.to_date - Date.today) <= 7 %>
   <% color = 'text-error font-black' if (commande.debut.to_date - Date.today) <= 2 %>
+
+  <td>
+    <% if commande.commentaires.include?('Fait le') %>
+      <span class="text-success text-xl"><%= fa_icon('check') %></span>
+    <% end %>
+  </td>
   <td class="<%= color %>"><%= time_ago_in_words commande.debut %></td>
   <td><b><%= link_to l(commande.debut, format: :long), commande, class: 'text-primary hover:underline' %></b></td>
   <td>
@@ -13,10 +19,7 @@
     <% end %>
   </td>
   <td class="text-lg">
-    <% commande.commentaires.split('+').each do |item| %>
-      <%= item.humanize %>
-      <br>
-    <% end %>
+    <%= simple_format commande.commentaires.tr('+','') %>
   </td>
     <td>
     <%= commande.formation.nom %>
@@ -25,5 +28,10 @@
   </td>
   <td>
     <%= time_ago_in_words commande.created_at %>
+  </td>
+  <td>
+    <% unless commande.commentaires.include?('Fait le') %>
+      <%= link_to "C'est fait !", tools_commande_fait_path(commande_id: commande.id), class: 'btn btn-sm btn-success btn-outline', data: { turbo_method: :get, turbo_confirm: "Confirmez-vous ?" } %>
+    <% end %>
   </td>
 </tr>
