@@ -114,6 +114,19 @@ namespace :cours do
     end
   end
 
+  desc "Ajouter et retirer des cours pour la démo"
+  task add_remove_cours: :environment do
+    if Date.today.wday == 4 # Jeudi
+      # Cour.all.order(:debut).first(2).delete_all
+
+      2.times.each do |i|
+        datetime = (DateTime.civil_from_format :local, Date.today.year, Date.today.month, Date.today.day) + i.day
+        Cour.create(debut: datetime + 10.hours, duree: 0.4e1, etat: "confirmé", formation: Formation.first, intervenant: Intervenant.first, salle: Salle.first, code_ue: 1)
+        Cour.create(debut: datetime + 15.hours, duree: 0.4e1, etat: "confirmé", formation: Formation.last, intervenant: Intervenant.last, salle: Salle.offset(1).first, code_ue: 2)
+      end
+    end
+  end
+
   def envoyer_liste_cours_a_intervenant(debut, fin, intervenant, cours, gestionnaires, envoi_log_id, test)
     if !intervenant.email.blank? && intervenant.email != '?'
       puts "OK => Planning envoyé à: #{intervenant.email}"
