@@ -81,7 +81,7 @@ class ExportPdf
         nbr_heures_statutaire = intervenant.nbr_heures_statutaire || 0
         cumul_eotp, cumul_eotp_durée = {}, {}
 
-        image "#{@image_path}/logo@100.png", :height => 40, :position => :center
+        image "#{@image_path}/logo_business_school.png", :height => 40, :position => :center
         move_down @margin_down
 
         font "Helvetica"
@@ -267,7 +267,7 @@ class ExportPdf
                             end
         end
 
-        image "#{@image_path}/logo@100.png", :height => 40, :position => :center
+        image "#{@image_path}/logo_business_school.png", :height => 40, :position => :center
         move_down @margin_down
 
         font "Helvetica"
@@ -377,7 +377,7 @@ class ExportPdf
 
             y_position = cursor
             bounding_box([0, y_position], :width => 270) do
-                image "#{@image_path}/logo@100.png", :width => 200
+                image "#{@image_path}/logo_business_school.png", :width => 150
             end
             bounding_box([270, y_position], :width => 270) do
                 move_down @margin_down
@@ -458,7 +458,7 @@ class ExportPdf
         
         cours.each_with_index do |cour, index|
             surveillants = cour.commentaires.tr('[]', '').gsub(/[\r\n]/, ' ').split(' ').to_s.tr('\"[]', '').gsub(/[-]/, ' ')
-            image "#{@image_path}/logo_iae_2.png", :height => 60
+            image "#{@image_path}/logo_business_school_2.png", :height => 60
 
             move_down @margin_down * 2
 
@@ -494,7 +494,7 @@ class ExportPdf
 
             start_new_page
 
-            image "#{@image_path}/logo_iae_2.png", :height => 60
+            image "#{@image_path}/logo_business_school_2.png", :height => 60
 
             move_down @margin_down * 4
 
@@ -528,7 +528,7 @@ class ExportPdf
 
             start_new_page
 
-            image "#{@image_path}/logo@100.png", :height => 60, position: :center
+            image "#{@image_path}/logo_business_school.png", :height => 60, position: :center
 
             move_down @margin_down * 2
             
@@ -600,7 +600,7 @@ class ExportPdf
 
             start_new_page(layout: :portrait)
 
-            image "#{@image_path}/logo_iae_2.png", :height => 60
+            image "#{@image_path}/logo_business_school_2.png", :height => 60
 
             move_down @margin_down * 4
 
@@ -635,7 +635,7 @@ class ExportPdf
             end
             start_new_page
 
-            image "#{@image_path}/logo_iae_2.png", :height => 60
+            image "#{@image_path}/logo_business_school_2.png", :height => 60
 
             move_down @margin_down * 4
 
@@ -675,7 +675,7 @@ class ExportPdf
     def convocation(cour, étudiant, papier, calculatrice, ordi_tablette, téléphone, dictionnaire)
         font "OpenSans"
 
-        image "#{@image_path}/logo_iae_2.png", :height => 60, :position => :center
+        image "#{@image_path}/logo_business_school_2.png", :height => 60, :position => :center
         move_down @margin_down * 3
         text "<color rgb='032E4D'><b>#{cour.formation.nom.upcase}</b></color>", inline_format: true, size: 16, style: :bold, align: :center
         move_down @margin_down

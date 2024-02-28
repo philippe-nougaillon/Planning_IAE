@@ -1,7 +1,7 @@
 <nav class="navbar sticky top-0 z-50 shadow <%= ENV["STAGING_COLOR_MODE"].present? ? ENV["STAGING_COLOR_MODE"] : 'bg-base-100' %>">
   <div class="flex-1">
     <a href="/" aria-label="logo" class="ml-3 mr-6">
-      <%= image_tag("1200px-Logo_iae.png", width: 150, alt: 'logo Business School') %>
+      <%= image_tag("logo_business_school.png", width: 150, alt: 'logo Business School') %>
     </a>
     <ul class="menu menu-horizontal px-1">
       <% if user_signed_in? %>
