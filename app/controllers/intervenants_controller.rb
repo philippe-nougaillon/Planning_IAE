@@ -4,6 +4,7 @@ class IntervenantsController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[ invitations calendrier ]
   before_action :set_intervenant, only: [:show, :invitations, :edit, :update, :destroy, :calendrier]
   before_action :is_user_authorized
+  skip_before_action :authenticate_user!, only: %i[index show]
 
   # check if logged and admin  
   # before_filter do 

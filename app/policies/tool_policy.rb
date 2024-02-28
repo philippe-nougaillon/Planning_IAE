@@ -175,7 +175,7 @@ class ToolPolicy < ApplicationPolicy
   end
 
   def can_see_RHGroup_private_tool?
-    user.rh?
+    user && user.rh?
   end
 
   def envoi_logs?

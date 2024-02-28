@@ -6,7 +6,7 @@ class EtudiantPolicy < ApplicationPolicy
   end
 
   def index?
-    user && user.role_number >= 2
+    true
   end
 
   def show?
@@ -14,7 +14,7 @@ class EtudiantPolicy < ApplicationPolicy
   end
 
   def new?
-    index?
+    user && user.role_number >= 2
   end
 
   def create?
@@ -22,7 +22,7 @@ class EtudiantPolicy < ApplicationPolicy
   end
 
   def edit?
-    index?
+    user && user.role_number >= 2
   end
 
   def update?
@@ -30,7 +30,7 @@ class EtudiantPolicy < ApplicationPolicy
   end
 
   def destroy?
-    index?
+    user && user.role_number >= 2
   end
 
 end

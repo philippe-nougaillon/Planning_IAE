@@ -3,6 +3,7 @@
 class EtudiantsController < ApplicationController
   before_action :set_etudiant, only: [:show, :edit, :update, :destroy]
   before_action :is_user_authorized
+  skip_before_action :authenticate_user!, only: %i[index show]
 
   # GET /etudiants
   # GET /etudiants.json

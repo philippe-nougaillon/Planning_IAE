@@ -14,47 +14,43 @@
         <% else %>
           <%= navbar_nav_item('cours', 'calendar-alt', cours_path, 'Planning') %>
         <% end %>
-        <% unless current_user.étudiant? %>
-          <%= navbar_nav_item('salles', 'chalkboard', occupation_salles_path) %>
-        <% end %>
-        <% if policy(current_user).left_navbar? %>
-          <%= navbar_nav_item('formations', 'briefcase', formations_path) %>
-          <%= navbar_nav_item('intervenants', 'chalkboard-teacher', intervenants_path) %>
-          <%= navbar_nav_item('etudiants', 'graduation-cap', etudiants_path) %>
-        <% end %>
-        
-        <% if current_user.rh? %>
-          <%= navbar_nav_item('dossiers', 'folder', dossiers_path) %>
-        <% end %>
+      <% else %>
+        <%= navbar_nav_item('cours', 'calendar-alt', cours_path, 'Planning', 'index') %>
+      <% end %>
+      <%= navbar_nav_item('salles', 'chalkboard', occupation_salles_path) %>
+      <%= navbar_nav_item('formations', 'briefcase', formations_path) %>
+      <%= navbar_nav_item('intervenants', 'chalkboard-teacher', intervenants_path) %>
+      <%= navbar_nav_item('etudiants', 'graduation-cap', etudiants_path) %>
+      <% if user_signed_in? && current_user.rh? %>
+        <%= navbar_nav_item('dossiers', 'folder', dossiers_path) %>
+      <% end %>
 
-        <% if policy(:tool).audit_cours? %>
-          <li class="nav-item">
-            <% is_active = params[:action] == 'audit_cours' %>
-            <%= link_to tools_audit_cours_path, class: "nav-link text-#{ is_active ? 'primary' : 'base-content' }" do %>
-              <%= fa_icon 'calendar-check' %>
-              À booker
-              <% aplanifier = CoursNonPlanifie.count %>
-              <% if aplanifier > 0 %>
-                <span class="badge badge-error text-white"><%= aplanifier %></span>
-              <% end %>
+      <% if user_signed_in? && policy(:tool).audit_cours? %>
+        <li class="nav-item">
+          <% is_active = params[:action] == 'audit_cours' %>
+          <%= link_to tools_audit_cours_path, class: "nav-link text-#{ is_active ? 'primary' : 'base-content' }" do %>
+            <%= fa_icon 'calendar-check' %>
+            À booker
+            <% aplanifier = CoursNonPlanifie.count %>
+            <% if aplanifier > 0 %>
+              <span class="badge badge-error text-white"><%= aplanifier %></span>
             <% end %>
-          </li>
-        <% end %>
+          <% end %>
+        </li>
+      <% end %>
 
-        <% if current_user.accueil? || current_user.id == 41 %>
-          <li class="nav-item">
-            <% is_active = params[:action] == 'commandes' %>
-            <%= link_to tools_commandes_path, class: "nav-link text-#{ is_active ? 'primary' : 'base-content' }" do %>
-              <%= fa_icon 'mug-hot' %>
-              Commandes
-              <% commandes = Cour.commandes.where.not("commentaires ILIKE ?", '%Fait le%').count %>
-              <% if commandes > 0 %>
-                <span class="badge badge-info text-white"><%= commandes %></span>
-              <% end %>
+      <% if user_signed_in? && (current_user.accueil? || current_user.id == 41) %>
+        <li class="nav-item">
+          <% is_active = params[:action] == 'commandes' %>
+          <%= link_to tools_commandes_path, class: "nav-link text-#{ is_active ? 'primary' : 'base-content' }" do %>
+            <%= fa_icon 'mug-hot' %>
+            Commandes
+            <% commandes = Cour.commandes.where.not("commentaires ILIKE ?", '%Fait le%').count %>
+            <% if commandes > 0 %>
+              <span class="badge badge-info text-white"><%= commandes %></span>
             <% end %>
-          </li>
-        <% end %>
-
+          <% end %>
+        </li>
       <% end %>
     </ul>
   </div>
@@ -72,8 +68,8 @@
         <% if policy(current_user).right_navbar? %>
           <%= navbar_nav_item('', 'wrench', tools_index_path) %>
           <%= navbar_nav_item('', 'search-plus', tools_rechercher_path) %>
-          <%= navbar_nav_item('', 'info-circle', guide_index_path) %>
         <% end %>
+        <%= navbar_nav_item('', 'info-circle', guide_index_path) %>
 
         <li>
           <%= link_to destroy_user_session_path, 'data-turbo-method': :delete, title: "Fermer la session de #{current_user.email}", class: 'p-1.5' do %>
@@ -85,6 +81,7 @@
         </li>
 
       <% else %>
+        <%= navbar_nav_item('guide', 'info-circle', guide_index_path) %>
         <%= navbar_nav_item('Se connecter', 'sign-in-alt', new_user_session_path) %>
       <% end %>
     </ul>

@@ -34,7 +34,7 @@ class SallePolicy < ApplicationPolicy
   end
 
   def occupation?
-    user && user.role_number >= 1
+    true
   end
 
   def libres?

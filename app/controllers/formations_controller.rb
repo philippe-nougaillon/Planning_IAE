@@ -3,6 +3,7 @@
 class FormationsController < ApplicationController
   before_action :set_formation, only: [:show, :edit, :update, :destroy]
   before_action :is_user_authorized
+  skip_before_action :authenticate_user!, only: %i[index show]
 
   # GET /formations
   # GET /formations.json

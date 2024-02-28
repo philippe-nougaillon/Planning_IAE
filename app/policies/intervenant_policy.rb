@@ -6,15 +6,15 @@ class IntervenantPolicy < ApplicationPolicy
   end
 
   def index?
-    user && user.role_number >= 2
+    true
   end
 
   def show?
-    user.role_number >= 2
+    true
   end
 
   def new?
-    user.role_number >= 4
+    user && user.role_number >= 4
   end
 
   def create?
@@ -22,7 +22,7 @@ class IntervenantPolicy < ApplicationPolicy
   end
 
   def edit?
-    user.role_number >= 4
+    user && user.role_number >= 4
   end
 
   def update?
