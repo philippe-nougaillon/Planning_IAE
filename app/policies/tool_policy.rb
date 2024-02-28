@@ -204,6 +204,7 @@ class ToolPolicy < ApplicationPolicy
   end
 
   def commande_fait?
+    # Accueil et Thierry.D
     user && (user.accueil? || user.id == 41)
   end
 
