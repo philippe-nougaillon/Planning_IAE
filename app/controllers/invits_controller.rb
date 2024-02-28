@@ -145,8 +145,8 @@ class InvitsController < ApplicationController
 
   def relancer
     @invit.relancer!
-    InvitMailer.with(invit: @invit).envoyer_invitation.deliver_now
-    redirect_to invits_path, notice: "Invitation relancée avec succès."
+    # InvitMailer.with(invit: @invit).envoyer_invitation.deliver_now
+    # redirect_to invits_path, notice: "Invitation relancée avec succès."
   end
 
   def valider

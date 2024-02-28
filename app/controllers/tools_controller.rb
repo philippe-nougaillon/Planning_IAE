@@ -323,7 +323,7 @@ class ToolsController < ApplicationController
         if user.valid? 
           if params[:save] == 'true'
             user.save
-            UserMailer.welcome_email(user.id, generated_password).deliver_now if new_record
+            # UserMailer.welcome_email(user.id, generated_password).deliver_now if new_record
           end
           _etat = ImportLogLine.etats[:succès]
           @importes += 1
@@ -442,8 +442,8 @@ class ToolsController < ApplicationController
             user = User.new(nom: etudiant.nom, prénom: etudiant.prénom, email: etudiant.email, mobile: etudiant.mobile, password: SecureRandom.hex(10))
             if user.valid?
               user.save
-              mailer_response = EtudiantMailer.welcome_student(user).deliver_now
-              MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: etudiant.email, subject: "Nouvel accès étudiant")
+              # mailer_response = EtudiantMailer.welcome_student(user).deliver_now
+              # MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: etudiant.email, subject: "Nouvel accès étudiant")
             end
           else
             # Mise à jour des étudiants existants
@@ -1310,8 +1310,8 @@ class ToolsController < ApplicationController
       if user.valid?
         user.save
         valids += 1
-        mailer_response = IntervenantMailer.with(user: user, password: new_password).welcome_intervenant.deliver_now
-        MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: user.email, subject: "Nouvel accès intervenant")
+        # mailer_response = IntervenantMailer.with(user: user, password: new_password).welcome_intervenant.deliver_now
+        # MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: user.email, subject: "Nouvel accès intervenant")
       else
         errors += 1
       end

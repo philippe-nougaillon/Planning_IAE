@@ -148,8 +148,8 @@ class Intervenant < ApplicationRecord
 		user = User.new(role: "intervenant", nom: self.nom, prénom: self.prenom, email: self.email, mobile: self.téléphone_mobile, password: new_password)
 		if user.valid?
 			user.save
-			mailer_response = IntervenantMailer.with(user: user, password: new_password).welcome_intervenant.deliver_now
-			MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: user.email, subject: "Nouvel accès intervenant")
+			# mailer_response = IntervenantMailer.with(user: user, password: new_password).welcome_intervenant.deliver_now
+			# MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: user.email, subject: "Nouvel accès intervenant")
 		end
 	end
 

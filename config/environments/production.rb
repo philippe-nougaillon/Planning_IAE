@@ -105,16 +105,16 @@ Rails.application.configure do
   # }
   # ActionMailer::Base.delivery_method = :smtp
 
-  ActionMailer::Base.delivery_method = :mailgun
-  config.action_mailer.mailgun_settings = {
-    :api_key => ENV['MAILGUN_API_KEY'],
-    :domain => ENV['MAILGUN_DOMAIN'],
-    :api_host => 'api.eu.mailgun.net'  # Uncomment this line for EU region domains
-  }
+  # ActionMailer::Base.delivery_method = :mailgun
+  # config.action_mailer.mailgun_settings = {
+  #   :api_key => ENV['MAILGUN_API_KEY'],
+  #   :domain => ENV['MAILGUN_DOMAIN'],
+  #   :api_host => 'api.eu.mailgun.net'  # Uncomment this line for EU region domains
+  # }
 
 
-  config.action_mailer.default_url_options = { host: 'business-school-planning-demo-248ac1f2d92e.herokuapp.com', protocol: 'https' }
-  config.action_mailer.asset_host = 'https://business-school-planning-demo-248ac1f2d92e.herokuapp.com/'
+  # config.action_mailer.default_url_options = { host: 'business-school-planning-demo-248ac1f2d92e.herokuapp.com', protocol: 'https' }
+  # config.action_mailer.asset_host = 'https://business-school-planning-demo-248ac1f2d92e.herokuapp.com/'
 
   # set the session cookie to expire automatically 12.hours after creation
   config.session_store :cookie_store, expire_after: 12.hours

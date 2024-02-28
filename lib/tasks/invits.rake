@@ -30,7 +30,7 @@ namespace :invits do
         if Invit.with_confirmée_state.where("DATE(updated_at) = ?", Date.today).any?
             # envoyer à chaque intervenants la liste des cours confirmés
             Invit.with_confirmée_state.where("DATE(updated_at) = ?", Date.today).pluck(:intervenant_id).uniq.each do | id |
-                InvitMailer.with(intervenant_id: id).informer_intervenant.deliver_now
+                # InvitMailer.with(intervenant_id: id).informer_intervenant.deliver_now
             end
         end    
     end
@@ -48,7 +48,7 @@ namespace :invits do
                     .uniq
                     .each do | gestionnaire_id |
 
-                InvitMailer.with(gestionnaire_id: gestionnaire_id).informer_gestionnaire.deliver_now  
+                # InvitMailer.with(gestionnaire_id: gestionnaire_id).informer_gestionnaire.deliver_now  
                 puts "Envoyé à gestionnaire #" + gestionnaire_id.to_s
             end
         end

@@ -56,8 +56,8 @@ class EtudiantsController < ApplicationController
           user = User.new(nom: @etudiant.nom, prénom: @etudiant.prénom, email: @etudiant.email, mobile: @etudiant.mobile, password: SecureRandom.hex(10))
           if user.valid?
             user.save
-            mailer_response = EtudiantMailer.welcome_student(user).deliver_now
-            MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: @etudiant.email, subject: "Nouvel accès étudiant")
+            # mailer_response = EtudiantMailer.welcome_student(user).deliver_now
+            # MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: @etudiant.email, subject: "Nouvel accès étudiant")
           end
         end
         format.html { redirect_to @etudiant, notice: "Etudiant créé avec succès. #{'Accès créé, étudiant informé' if params[:notify] }" }

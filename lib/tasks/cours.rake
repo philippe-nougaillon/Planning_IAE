@@ -105,8 +105,8 @@ namespace :cours do
       if now > cour.debut + 30.minute && now < cour.debut + 40.minute
         intervenant = cour.intervenant
         presence = Presence.find_or_create_by(cour_id: cour.id, intervenant_id: intervenant.id, code_ue: cour.code_ue)
-        mailer_response = IntervenantMailer.mes_sessions(intervenant, presence.slug, cour.formation.try(:user).try(:email)).deliver_now
-        MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: intervenant.email, subject: "Validation présences")
+        # mailer_response = IntervenantMailer.mes_sessions(intervenant, presence.slug, cour.formation.try(:user).try(:email)).deliver_now
+        # MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: intervenant.email, subject: "Validation présences")
 
         puts "email envoyé à #{intervenant.nom_prenom}, email : #{intervenant.email}"
         puts "slug : #{presence.slug}"
@@ -118,11 +118,11 @@ namespace :cours do
     if !intervenant.email.blank? && intervenant.email != '?'
       puts "OK => Planning envoyé à: #{intervenant.email}"
 
-      mailer_response = IntervenantMailer
-                                        .notifier_cours(debut, fin, intervenant, cours, gestionnaires, envoi_log_id, test)
-                                        .deliver_now
+      # mailer_response = IntervenantMailer
+      #                                   .notifier_cours(debut, fin, intervenant, cours, gestionnaires, envoi_log_id, test)
+      #                                   .deliver_now
 
-      MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: intervenant.email, subject: "Rappel des cours")
+      # MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: intervenant.email, subject: "Rappel des cours")
 
       return true
     else

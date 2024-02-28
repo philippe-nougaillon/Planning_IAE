@@ -638,12 +638,12 @@ class Cour < ApplicationRecord
 
         # envoyer notification au chargé de formation
         if self.formation.user
-          UserMailer.cours_changed(self.id, self.formation.user.email, self.etat).deliver_later
+          # UserMailer.cours_changed(self.id, self.formation.user.email, self.etat).deliver_later
         end
 
         # envoyer à tous les étudiants 
         self.formation.etudiants.each do | etudiant |
-          UserMailer.cours_changed(self.id, etudiant.email, self.etat).deliver_later
+          # UserMailer.cours_changed(self.id, etudiant.email, self.etat).deliver_later
         end
       end
     end  

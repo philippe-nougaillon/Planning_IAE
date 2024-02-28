@@ -393,8 +393,8 @@ class CoursController < ApplicationController
                                     nom: invit[:nom].values.to_a[i])
                 invits_créées += 1
               end
-              mailer_response = InvitMailer.with(invit: Invit.first).envoyer_invitation.deliver_now
-              MailLog.create(user_id: current_user.id, message_id:mailer_response.message_id, to:Invit.first.intervenant.email, subject: "Invitation")
+              # mailer_response = InvitMailer.with(invit: Invit.first).envoyer_invitation.deliver_now
+              # MailLog.create(user_id: current_user.id, message_id:mailer_response.message_id, to:Invit.first.intervenant.email, subject: "Invitation")
             end
           end
         end
@@ -482,8 +482,8 @@ class CoursController < ApplicationController
             étudiants.each do |étudiant|
               pdf = ExportPdf.new
               pdf.convocation(@cours.first, étudiant, params[:papier], params[:calculatrice], params[:ordi_tablette], params[:téléphone], params[:dictionnaire])
-              mailer_response = EtudiantMailer.convocation(étudiant, pdf).deliver_now
-              MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: étudiant.email, subject: "Convocation")
+              # mailer_response = EtudiantMailer.convocation(étudiant, pdf).deliver_now
+              # MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: étudiant.email, subject: "Convocation")
             end
           else
             flash[:alert] = "Aucun étudiant n'a été sélectionné, il ne s'est rien passé"
@@ -614,7 +614,7 @@ class CoursController < ApplicationController
       if @cour.valid? && @cour.save
         format.html do
           if @cour.commentaires.include?('+')
-            ToolsMailer.with(cour: @cour).commande.deliver_now
+            # ToolsMailer.with(cour: @cour).commande.deliver_now
           end
 
           if params[:create_and_add]
@@ -654,7 +654,7 @@ class CoursController < ApplicationController
       if @cour.update(cour_params)
 
         if @cour.commentaires_previously_changed? && @cour.commentaires.include?('+')
-          ToolsMailer.with(cour: @cour, changed: true).commande.deliver_now
+          # ToolsMailer.with(cour: @cour, changed: true).commande.deliver_now
         end
 
         format.html do
