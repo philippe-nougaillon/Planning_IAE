@@ -39,7 +39,20 @@
               <% end %>
             <% end %>
           </li>
-          <%= navbar_nav_item('commandes', 'mug-hot', tools_commandes_path) %>
+        <% end %>
+
+        <% if current_user.accueil? || current_user.id == 41 %>
+          <li class="nav-item">
+            <% is_active = params[:action] == 'commandes' %>
+            <%= link_to tools_commandes_path, class: "nav-link text-#{ is_active ? 'primary' : 'base-content' }" do %>
+              <%= fa_icon 'mug-hot' %>
+              Commandes
+              <% commandes = Cour.commandes.where.not("commentaires ILIKE ?", '%Fait le%').count %>
+              <% if commandes > 0 %>
+                <span class="badge badge-info text-white"><%= commandes %></span>
+              <% end %>
+            <% end %>
+          </li>
         <% end %>
 
       <% end %>

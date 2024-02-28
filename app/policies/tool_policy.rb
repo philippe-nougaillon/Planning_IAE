@@ -199,7 +199,13 @@ class ToolPolicy < ApplicationPolicy
   end
 
   def commandes?
-    index?
+    # Accueil ou gestionnaire ou admin
+    user && ([3,5,6].include?(user.role_number))
+  end
+
+  def commande_fait?
+    # Accueil et Thierry.D
+    user && (user.accueil? || user.id == 41)
   end
 
 end

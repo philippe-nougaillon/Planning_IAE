@@ -1136,7 +1136,7 @@ class ToolsController < ApplicationController
   def audit_cours
     # Afficher les cours 'planifiés' 
     # entre deux dates
-    # créés par un utilisateur autre que Thierry (#41)
+    # créés par un utilisateur autre que Thierry.D (#41)
     
     params[:start_date] ||= Date.today
     params[:end_date] ||= Date.today + 6.months
@@ -1148,7 +1148,7 @@ class ToolsController < ApplicationController
       @date_fin = params[:end_date]
     end
 
-    # ids des cours créés par utilisateur autre que Thierry (#41)
+    # ids des cours créés par utilisateur autre que Thierry.D (#41)
     id_cours = Audited::Audit.where(auditable_type: 'Cour').where.not(user_id: 41).pluck(:auditable_id).uniq
 
     # vérifie que la date de début de cours est dans la période observée
@@ -1324,7 +1324,16 @@ class ToolsController < ApplicationController
   end
 
   def commandes
-    @commandes = Cour.confirmé.where("DATE(cours.debut) >= ?", Date.today).where("cours.commentaires LIKE '%+%'").order(:debut)
+    @commandes = Cour.commandes
+  end
+
+  def commande_fait
+    commande = Cour.find(params[:commande_id])
+    commande.commentaires.concat("\r\n\r\n")
+    commande.commentaires.concat("Fait le #{l DateTime.now, format: :short}, #{current_user.nom_et_prénom}")
+    commande.save
+
+    redirect_to request.referrer, notice: "Commande traitée avec succès"
   end
 
   private

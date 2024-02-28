@@ -99,6 +99,10 @@ class Cour < ApplicationRecord
      '10.0','10.5','11.0','11.5','12.0','12.5','13.0','13.5','14.0']
   end  
 
+  def self.commandes
+    Cour.confirmé.where("DATE(cours.debut) >= ?", Date.today).where("cours.commentaires LIKE '%+%'").order(:debut)
+  end
+
   # Simple_calendar attributes
   def start_time
     self.debut.to_datetime 
@@ -595,7 +599,7 @@ class Cour < ApplicationRecord
   end
 
   # def self.cours_a_planifier
-  #   # ids des cours créés par utilisateur autre que Thierry (#41)
+  #   # ids des cours créés par utilisateur autre que Thierry.D (#41)
   #   # vérifie que la date de début de cours est dans la période observée
   #   Cour.where("id IN (?)", Audited::Audit.where(auditable_type: 'Cour').where.not(user_id: 41).pluck(:auditable_id).uniq)
   #       .planifié

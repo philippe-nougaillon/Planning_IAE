@@ -124,6 +124,7 @@ Rails.application.routes.draw do
     get :rappel_des_cours
     get :acces_intervenants
     get :commandes
+    get :commande_fait
 
     post :import_do
     post :creation_cours_do
