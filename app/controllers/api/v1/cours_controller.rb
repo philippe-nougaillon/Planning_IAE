@@ -38,7 +38,7 @@ module Api
 				# 	render json: [{debut: d, fin: f, duree_json: 1020.0, salle_json: "!", 
 				# 					matiere_json: "Appli en cours de maintenance",
 				# 					intervenant_json: "Retrouvez le planning sur",
-				# 					formation_json: "http://planning.iae-paris.com" }] 
+				# 					formation_json: "https://business-school-planning-demo-248ac1f2d92e.herokuapp.com/" }] 
 			end	
 							
 		    def show

@@ -354,7 +354,7 @@ class Cour < ApplicationRecord
       event.summary = c.try(:formation).try(:nom)
       event.description = c.nom
       event.location = "BioPark #{c.salle.nom if c.salle}"
-      event.url = "https://planning.iae-paris.com/"
+      event.url = "https://business-school-planning-demo-248ac1f2d92e.herokuapp.com/"
       calendar.add_event(event)
     end  
     return calendar

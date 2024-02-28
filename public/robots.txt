@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: /
 
-Sitemap: https://planning.iae-paris.com/sitemap.xml
+Sitemap: https://business-school-planning-demo-248ac1f2d92e.herokuapp.com/sitemap.xml

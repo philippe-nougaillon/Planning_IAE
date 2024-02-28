@@ -1,5 +1,5 @@
 # Set the host name for URL creation
-SitemapGenerator::Sitemap.default_host = "https://planning.iae-paris.com"
+SitemapGenerator::Sitemap.default_host = "https://business-school-planning-demo-248ac1f2d92e.herokuapp.com/"
 
 # Ne pas indéxer la liste des cours
 # SitemapGenerator::Sitemap.include_root = false
