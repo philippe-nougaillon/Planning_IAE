@@ -204,7 +204,7 @@ class ToolPolicy < ApplicationPolicy
   end
 
   def commande_fait?
-    user && user.id == 41
+    user && (user.accueil? || user.id == 41)
   end
 
 end
