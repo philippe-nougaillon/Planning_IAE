@@ -31,7 +31,7 @@
   </td>
   <td>
     <% unless commande.commentaires.include?('Fait le') %>
-      <%= link_to "C'est fait !", tools_commande_fait_path(commande_id: commande.id), class: 'btn btn-sm btn-success btn-outline', data: { turbo_method: :get, turbo_confirm: "Confirmez-vous ?" } %>
+      <%= link_to "C'est fait !", tools_commande_fait_path(commande_id: commande.id), class: 'btn btn-success btn-outline', data: { turbo_method: :get, turbo_confirm: "Confirmez-vous ?" } %>
     <% end %>
   </td>
 </tr>
