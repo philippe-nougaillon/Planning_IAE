@@ -1136,7 +1136,7 @@ class ToolsController < ApplicationController
   def audit_cours
     # Afficher les cours 'planifiés' 
     # entre deux dates
-    # créés par un utilisateur autre que Thierry.D (#41)
+    # créés par un utilisateur autre que le user (#41)
     
     params[:start_date] ||= Date.today
     params[:end_date] ||= Date.today + 6.months
@@ -1148,7 +1148,7 @@ class ToolsController < ApplicationController
       @date_fin = params[:end_date]
     end
 
-    # ids des cours créés par utilisateur autre que Thierry.D (#41)
+    # ids des cours créés par utilisateur autre que le user (#41)
     id_cours = Audited::Audit.where(auditable_type: 'Cour').where.not(user_id: 41).pluck(:auditable_id).uniq
 
     # vérifie que la date de début de cours est dans la période observée

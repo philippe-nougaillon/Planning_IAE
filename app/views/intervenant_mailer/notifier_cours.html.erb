@@ -1,7 +1,7 @@
 <p style="margin-bottom: 0.5rem">
     Bonjour,
     <br><br>
-    L'IAE Paris-Sorbonne a le plaisir de vous transmettre le récapitulatif de vos cours programmés du <%=l @debut %> au <%=l @fin %>
+    La Business School a le plaisir de vous transmettre le récapitulatif de vos cours programmés du <%=l @debut %> au <%=l @fin %>
 </p>
 <br>
 <div style="overflow-x: auto;">
@@ -69,10 +69,9 @@
 <p style="margin-bottom: 0.5rem">
     Bien cordialement,
     <br>
-    IAE Paris
+    Business School
 </p>
 <small>
-    <%= link_to "Plan d'accès au campus Biopark", image_path("Plan_d_acces_Campus_BioPark_-_IAE_Paris.pdf") %>
     <br><br>
     Exporter le planning au format : 
     <%= link_to cours_url(intervenant_id: @intervenant.id, format: :pdf) do %>

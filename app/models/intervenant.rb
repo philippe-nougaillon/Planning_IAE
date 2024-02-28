@@ -62,7 +62,7 @@ class Intervenant < ApplicationRecord
         "Direction du laboratoire de recherche",
         "E-learning (conception, suivi, enregistrement)",
         "Direction de Chaire",
-        "SCORE IAE message",
+        "SCORE Business School message",
         "Co-rédaction d'un cas",
         "Coordination d'une UE (hors MAE)"]
     end

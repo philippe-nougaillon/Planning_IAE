@@ -1,6 +1,4 @@
-![logo](public/logo_iae.png "Logo IAE de Paris")
-
-# Outil Planning de l'IAE de Paris
+# Outil Business School Planning
 *Application web de planification de cours. Collaborative, flexible et simple d'utilisation*
 
 ## Détail des fonctionnalités
@@ -37,7 +35,7 @@
 
 ### Affichage sur panneaux lumineux et smartphones
 - Le planning peut être visualisé sur différents supports (Responsive Design)
-- [Planning du jour optimisé pour les grands écrans](http://planning.iae-paris.com/cours/planning) 
+- [Planning du jour optimisé pour les grands écrans]
 
 ### Notification
 - Les chargés de scolarité et les étudiants peuvent recevoir une notification par email/SMS(à venir) lors de l'annulation de cours

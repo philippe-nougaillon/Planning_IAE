@@ -154,7 +154,7 @@ class ToolPolicy < ApplicationPolicy
   end
 
   def audit_cours?
-    # Accès à la vue 'à booker' que pour Philippe, Barbara et Thierry.D
+    # Accès à la vue 'à booker' que pour ces personnes
     [1,6,41].include?(user.id)
   end
 
@@ -204,7 +204,7 @@ class ToolPolicy < ApplicationPolicy
   end
 
   def commande_fait?
-    # Accueil et Thierry.D
+    # Accueil et user 41
     user && (user.accueil? || user.id == 41)
   end
 

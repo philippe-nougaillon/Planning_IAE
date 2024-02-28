@@ -1,6 +1,5 @@
 class DossierMailer < ApplicationMailer
-    default from: 'IAE-Paris <planning-iae@philnoug.com>', 
-            cc:   'cev.iae@univ-paris1.fr'
+    default from: 'Business School Planning <planning-iae@philnoug.com>'
 
     def dossier_email
         @dossier = params[:dossier]
@@ -10,7 +9,7 @@ class DossierMailer < ApplicationMailer
         attachments['Note réglementaire.pdf']       = File.read('app/assets/attachments/Note sur les conditions de recrutement 2023-2024.pdf')
 
         mail(to: @dossier.intervenant.email, 
-             subject: "[Enseignement IAE-Paris #{ @dossier.période }] Dossier de recrutement")
+             subject: "[Enseignement Business School #{ @dossier.période }] Dossier de recrutement")
 
         @dossier.update!(audit_comment: "Notification 'Nouveau dossier' envoyée par email.")
     end
@@ -19,7 +18,7 @@ class DossierMailer < ApplicationMailer
         @dossier = params[:dossier]
 
         mail(to: @dossier.intervenant.email, 
-             subject: "[Enseignement IAE-Paris #{ @dossier.période }] Dossier de recrutement")
+             subject: "[Enseignement Business School #{ @dossier.période }] Dossier de recrutement")
     
         @dossier.update!(audit_comment: "Notification 'Validation' envoyée par email.")
     end
@@ -28,7 +27,7 @@ class DossierMailer < ApplicationMailer
         @dossier = params[:dossier]
 
         mail(to: @dossier.intervenant.email, 
-             subject: "[Enseignement IAE-Paris #{ @dossier.période }] Dossier de recrutement")
+             subject: "[Enseignement Business School #{ @dossier.période }] Dossier de recrutement")
 
         @dossier.update!(audit_comment: "Notification 'Rejet' envoyée par email.")
     end

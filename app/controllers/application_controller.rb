@@ -23,7 +23,7 @@ class ApplicationController < ActionController::Base
 
   private
     def set_layout_variables
-      @sitename ||= request.subdomains.any? ? request.subdomains(0).first.upcase : 'IAE-Planning DEV'
+      @sitename ||= request.subdomains.any? ? request.subdomains(0).first.upcase : 'Business School Planning'
       @sitename.concat(' v5.1')
 
       if user_signed_in? && ( current_user.intervenant?  || current_user.enseignant? )

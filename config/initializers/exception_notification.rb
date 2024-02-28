@@ -22,8 +22,8 @@ ExceptionNotification.configure do |config|
 
   # Email notifier sends notifications by email.
   config.add_notifier :email, {
-    email_prefix: '[IAE PLANNING ERROR] ',
-    sender_address: %{"IAE Planning Notifier" <planning-iae@philnoug.com>},
+    email_prefix: '[BUSINESS SCHOOL ERROR] ',
+    sender_address: %{"Business School Notifier" <planning-iae@philnoug.com>},
     exception_recipients: %w{philippe.nougaillon@gmail.com, pierreemmanuel.dacquet@gmail.com}
   }
 

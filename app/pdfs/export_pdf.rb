@@ -247,18 +247,8 @@ class ExportPdf
         font "Helvetica"
         font_size 10
 
-        text "Fait à Paris le #{I18n.l(Date.today)}", style: :italic
+        text "Fait le #{I18n.l(Date.today)}", style: :italic
         move_down @margin_down
-
-        y_position = cursor
-        bounding_box([0, y_position], :width => 250, :height => 100) do
-            text "Eric LAMARQUE"
-            text "Directeur de l'IAE de Paris", size: 8
-        end
-        bounding_box([250, y_position], :width => 250) do
-            text "Barbara FITSCH-MOURAS"
-            text "Responsable du service Formation et développement", size: 8 
-        end    
         
     end
 
@@ -359,7 +349,7 @@ class ExportPdf
         font "Helvetica"
         font_size 10
 
-        text "Fait à Paris le #{I18n.l(Date.today)}", style: :italic
+        text "Fait le #{I18n.l(Date.today)}", style: :italic
         move_down @margin_down
 
         y_position = cursor
@@ -374,15 +364,6 @@ class ExportPdf
             bounding_box([333, y_position], :width => 166) do
                 text "Le responsable du service concerné"
                 text "par la vacation, pour accord"
-            end
-        else
-            bounding_box([0, y_position], :width => 250, :height => 100) do
-                text "Eric LAMARQUE"
-                text "Directeur de l'IAE Paris", size: 8
-            end
-            bounding_box([250, y_position], :width => 250) do
-                text is_vacataire ? "" : "Barbara FITSCH-MOURAS"
-                text "Responsable de service", size: 8 
             end
         end
 

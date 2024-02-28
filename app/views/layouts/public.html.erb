@@ -2,7 +2,7 @@
 <html lang="fr" data-theme="corporate">
   <head>
     <title><%= @sitename %></title>
-    <meta name="description" content="Planning des cours de l'IAE de Paris">
+    <meta name="description" content="Planning des cours de la Business School">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -56,7 +56,7 @@
   <body>
     <nav class="navbar sticky top-0 z-50 shadow <%= ENV["STAGING_COLOR_MODE"].present? ? ENV["STAGING_COLOR_MODE"] : 'bg-base-100' %>">
       <a class="navbar-brand" href="/">
-        <%= image_tag("1200px-Logo_iae.png", width: 175, alt: 'logo IAE') %>
+        <%= image_tag("1200px-Logo_iae.png", width: 175, alt: 'logo Business School') %>
       </a>
     </nav>
 

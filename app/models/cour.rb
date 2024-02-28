@@ -593,13 +593,13 @@ class Cour < ApplicationRecord
     return book 
   end
 
-  # Si c'est un examen IAE / examen rattrapage / Tiers-temps
+  # Si c'est un certain id
   def examen?
     [169, 1166, 522].include?(self.intervenant.id)
   end
 
   # def self.cours_a_planifier
-  #   # ids des cours créés par utilisateur autre que Thierry.D (#41)
+  #   # ids des cours créés par utilisateur autre que le user (#41)
   #   # vérifie que la date de début de cours est dans la période observée
   #   Cour.where("id IN (?)", Audited::Audit.where(auditable_type: 'Cour').where.not(user_id: 41).pluck(:auditable_id).uniq)
   #       .planifié
@@ -646,11 +646,6 @@ class Cour < ApplicationRecord
           UserMailer.cours_changed(self.id, etudiant.email, self.etat).deliver_later
         end
       end
-
-      # envoyer un mail à Pascal pour faire la réservation de cours
-      #if self.changes.include?('etat') and (self.etat == 'à_réserver') 
-      #  UserMailer.cours_changed(self.id, "wachnick.iae@univ-paris1.fr").deliver_later
-      #end 
     end  
 
     def reservation_dates_must_make_sense

@@ -6,7 +6,7 @@ class IntervenantMailerPreview < ActionMailer::Preview
     end
 
     def notifier_cours
-        IntervenantMailer.with(to: "philippe.nougaillon@gmail.com", subject:"[PLANNING] Rappel de vos cours à l'IAE Paris")
+        IntervenantMailer.with(to: "philippe.nougaillon@gmail.com", subject:"[PLANNING] Rappel de vos cours à la Business School")
                          .notifier_cours("2022-01-01".to_date, 
                                         "2022-02-01".to_date, 
                                         Intervenant.first, 

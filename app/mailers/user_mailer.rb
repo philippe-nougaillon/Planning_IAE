@@ -5,7 +5,7 @@ class UserMailer < ApplicationMailer
   def welcome_email(user_id, password)
     @user = User.find(user_id)
     @password = password
-    mail(to: @user.email, bcc: 'philippe.nougaillon@gmail.com', subject: "Welcome to IAE-Planning !")
+    mail(to: @user.email, bcc: 'philippe.nougaillon@gmail.com', subject: "Bienvenue sur le Business School Planning !")
   end
 
   def cours_changed(cours_id, email, etat)

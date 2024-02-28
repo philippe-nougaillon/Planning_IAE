@@ -4,7 +4,7 @@ class EtudiantMailer < ApplicationMailer
         @cours = le_cours
         mail(
             to: @etudiant.email,
-            subject:"[PLANNING IAE Paris] Votre cours du #{l(le_cours.debut.to_date, format: :long)} a changé !").tap do |message|
+            subject:"[Business School Planning] Votre cours du #{l(le_cours.debut.to_date, format: :long)} a changé !").tap do |message|
                 message.mailgun_options = {
                     "tag" => [@etudiant.nom, @etudiant.prénom, "cours modifié"]
                 }
@@ -15,7 +15,7 @@ class EtudiantMailer < ApplicationMailer
         @user = user
         mail(
             to: @user.email,
-            subject:"[PLANNING IAE Paris] Bienvenue !").tap do |message|
+            subject:"[Business School Planning] Bienvenue !").tap do |message|
                 message.mailgun_options = {
                     "tag" => [@user.nom, @user.prénom, "nouvel accès étudiant"]
                 }
