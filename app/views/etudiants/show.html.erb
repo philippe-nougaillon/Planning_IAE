@@ -59,17 +59,19 @@
       </h3>
       <br>
 
-      <% if @user && @user.sign_in_count.positive? %>
-        <h4 class="text-xl">
+      <div>
+        <h3 class="text-2xl">
           <small class="text-secondary">Dernière connexion</small>
-          <br>
-          Il y a <%= time_ago_in_words(@user.current_sign_in_at) %>
-        </h4>
-        <p class="mb-4">
-          (<%= @user.sign_in_count %> connexions)
-          <%= link_to 'Voir', user_path(@user), class: 'text-primary hover:underline' %>
-        </p>
-      <% end %>
+        </h3>
+        <% if @user %>
+          <%= "Il y a #{time_ago_in_words(@user.current_sign_in_at)}" if @user.current_sign_in_at %>
+          <p>
+            <%= @user.sign_in_count %> connexions au total
+            <br>
+            <%= link_to 'Voir le compte de connexion', user_path(@user), class: 'text-primary hover:underline' %>
+          </p>
+        <% end %>
+      </div>
     </div>
   </div>
 

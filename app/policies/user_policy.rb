@@ -10,7 +10,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def show?
-    index?
+    user && user.role_number >= 5
   end
 
   def new?
