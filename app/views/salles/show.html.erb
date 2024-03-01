@@ -16,21 +16,30 @@
   </h2>
 </div>
 
+<div class="w-full flex justify-between">
+  <div class="flex-1">
+    <p class="mb-4">
+      <strong>Nom:</strong>
+      <%= @salle.nom %>
+    </p>
 
-<p class="mb-4">
-  <strong>Nom:</strong>
-  <%= @salle.nom %>
-</p>
+    <p class="mb-4">
+      <strong>Bloc:</strong>
+      <%= @salle.bloc %>
+    </p>
 
-<p class="mb-4">
-  <strong>Bloc:</strong>
-  <%= @salle.bloc %>
-</p>
+    <p class="mb-4">
+      <strong>Places:</strong>
+      <%= @salle.places %>
+    </p>
+  </div>
+  <div class="flex-1">
+    <p class="mb-4 w-1/2">
+      <%= raw @qrcode_svg %>
+    </p>
+  </div>
+</div>
 
-<p class="mb-4">
-  <strong>Places:</strong>
-  <%= @salle.places %>
-</p>
 
 <% if @salle.bloc != "Z" %>
   <p class="mb-4">
