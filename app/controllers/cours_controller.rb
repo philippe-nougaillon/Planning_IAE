@@ -475,6 +475,7 @@ class CoursController < ApplicationController
 
       when "Exporter en PDF", "Générer Feuille émargement PDF", "Générer Pochette Examen PDF"
         request.format = 'pdf'
+
       when 'Convocation étudiants PDF'
         if @cours.count == 1 && @cours.first.examen?
           étudiants = Etudiant.where(id: params[:etudiants_id].try(:keys))
@@ -483,7 +484,7 @@ class CoursController < ApplicationController
               pdf = ExportPdf.new
               pdf.convocation(@cours.first, étudiant, params[:papier], params[:calculatrice], params[:ordi_tablette], params[:téléphone], params[:dictionnaire])
               mailer_response = EtudiantMailer.convocation(étudiant, pdf).deliver_now
-              MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: étudiant.email, subject: "Convocation")
+              MailLog.create(subject: "Convocation UE##{@cours.first.code_ue}", user_id: current_user.id, message_id: mailer_response.message_id, to: étudiant.email)
             end
           else
             flash[:alert] = "Aucun étudiant n'a été sélectionné, il ne s'est rien passé"
