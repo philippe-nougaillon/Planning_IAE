@@ -41,7 +41,7 @@
           </li>
         <% end %>
 
-        <% if current_user.accueil? || current_user.id == 41 %>
+        <% if current_user.accueil? || (current_user.id == 41 || current_user.id == 35) %>
           <li class="nav-item">
             <% is_active = params[:action] == 'commandes' %>
             <%= link_to tools_commandes_path, class: "nav-link text-#{ is_active ? 'primary' : 'base-content' }" do %>
