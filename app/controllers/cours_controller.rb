@@ -69,12 +69,8 @@ class CoursController < ApplicationController
 
     # Si N° de semaine, afficher le premier jour de la semaine choisie, sinon date du jour
     unless params[:semaine].blank?
-      if params[:semaine].to_i < Date.today.cweek
-        year =  Date.today.year + 1
-      else
-        year = Date.today.year
-      end
-      @date = Date.commercial(year, params[:semaine].to_i, 1)
+      year, week = params[:semaine].split('-')
+      @date = Date.commercial(year.to_i, week.gsub('W','').to_i, 1)
     else
       unless params[:start_date].blank?
         begin
@@ -176,7 +172,7 @@ class CoursController < ApplicationController
       @cours = @cours.where(etat: Cour.etats.values_at(:à_réserver, :planifié, :confirmé, :annulé, :reporté, :réalisé))
     end
 
-    @week_numbers =  ((Date.today.cweek.to_s..'52').to_a << ('1'..(Date.today.cweek - 1).to_s).to_a).flatten
+    #@week_numbers =  ((Date.today.cweek.to_s..'52').to_a << ('1'..(Date.today.cweek - 1).to_s).to_a).flatten
 
     session[:formation] = params[:formation]
     session[:intervenant] = params[:intervenant]
