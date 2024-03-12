@@ -103,6 +103,11 @@ class Cour < ApplicationRecord
     Cour.confirmé.where("DATE(cours.debut) >= ?", Date.today).where("cours.commentaires LIKE '%+%'").order(:debut)
   end
 
+  def self.commandes_archivées
+    Cour.réalisé.where("DATE(cours.debut) < ?", Date.today).where("cours.commentaires LIKE '%+%'").order(:debut)
+  end
+
+
   # Simple_calendar attributes
   def start_time
     self.debut.to_datetime 
