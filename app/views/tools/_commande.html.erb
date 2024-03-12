@@ -23,7 +23,7 @@
     <%= simple_format commande.commentaires.tr('+','') %>
   </td>
   <td>
-    <%= commande.formation.nom %>
+    <%= commande.formation.try(:nom) %>
     <br>
     <%= commande.intervenant.nom_prenom %>
   </td>
