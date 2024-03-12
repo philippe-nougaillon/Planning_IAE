@@ -197,7 +197,13 @@
                   Choisir une action à exécuter sur les cours sélectionnés
                 </span>
                 <% actions = Cour.actions(current_user) %>
-                <%= select_tag "action_name", options_for_select(actions), include_blank:true, class:"select select-bordered select-sm w-full", onchange:'this.form.submit()' %>
+                <% if current_user.id == 41 %>
+                  <!-- Raccourci vers chgt salle pour Thierry.D -->
+                  <%= select_tag "action_name", options_for_select(actions, 'Changer de salle'), include_blank:true, class:"select select-bordered select-sm w-full", onchange:'this.form.submit()' %>
+                  <%= submit_tag 'Les changer tous de salle !', 'data-turbo': false, class: 'btn btn-sm btn-success btn-outline' %>
+                <% else %>
+                  <%= select_tag "action_name", options_for_select(actions), include_blank:true, class:"select select-bordered select-sm w-full", onchange:'this.form.submit()' %>
+                <% end %>
               <% end %>
             </div>
             <% if user_signed_in? && (params[:formation].present? || params[:intervenant].present?) %>

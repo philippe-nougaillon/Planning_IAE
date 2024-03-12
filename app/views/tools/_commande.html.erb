@@ -1,6 +1,7 @@
 <tr class="hover">
   <% color = 'text-warning font-black' if (commande.debut.to_date - Date.today) <= 7 %>
   <% color = 'text-error font-black' if (commande.debut.to_date - Date.today) <= 2 %>
+  <% color = 'text-base-100' if (commande.debut.to_date < Date.today) %>
 
   <td>
     <% if commande.commentaires.include?('Fait le') %>
@@ -21,8 +22,8 @@
   <td>
     <%= simple_format commande.commentaires.tr('+','') %>
   </td>
-    <td>
-    <%= commande.formation.nom %>
+  <td>
+    <%= commande.formation.try(:nom) %>
     <br>
     <%= commande.intervenant.nom_prenom %>
   </td>

@@ -1324,7 +1324,15 @@ class ToolsController < ApplicationController
   end
 
   def commandes
-    @commandes = Cour.commandes
+    if params[:archive].present?
+      @commandes = Cour.commandes_archivées
+    else
+      @commandes = Cour.commandes
+    end
+
+    if params[:search_cmd].present?
+      @commandes = @commandes.where("cours.commentaires ILIKE ?", "%#{params[:search_cmd]}%")
+    end
   end
 
   def commande_fait
