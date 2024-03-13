@@ -107,6 +107,10 @@ class Cour < ApplicationRecord
     Cour.réalisé.where("DATE(cours.debut) < ?", Date.today).where("cours.commentaires LIKE '+%'").order(debut: :desc)
   end
 
+  def self.etats_humanized
+    self.etats.transform_keys(&:humanize)
+  end
+
 
   # Simple_calendar attributes
   def start_time
