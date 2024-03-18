@@ -1,0 +1,23 @@
+<p style="margin-bottom: 0.5rem">
+  Bonjour,
+  <br><br>
+  Une commande vient d'être supprimée !
+  <br><br>
+
+  <%= l @cour.debut, format: :long %>
+  <%= simple_format @cour.commentaires %>
+  <% if @cour.salle %>
+    Salle : <%= @cour.salle.nom %>
+    <br><br>
+  <% end %>
+  <%= @cour.formation.nom %>
+  <br>
+  <%= @cour.intervenant.nom_prenom %>
+
+  <br><br>
+  Commande supprimée : <%= simple_format @old_commentaires %>
+
+  <br><br>
+  <%= link_to "Voir toutes les commandes", tools_commandes_url %>
+</p>
+

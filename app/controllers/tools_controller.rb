@@ -854,7 +854,7 @@ class ToolsController < ApplicationController
     @types  = Audited::Audit.pluck(:auditable_type).uniq.sort
     @actions= %w[update create destroy]
     
-    unless params[:start_date].blank? && params[:end_date].blank? 
+    if params[:start_date].present? && params[:end_date].present? 
       @audits = @audits.where("created_at BETWEEN (?) AND (?)", params[:start_date], params[:end_date])
     end
 

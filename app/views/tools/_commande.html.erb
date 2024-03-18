@@ -1,14 +1,16 @@
 <tr class="hover">
   <% color = 'text-warning font-black' if (commande.debut.to_date - Date.today) <= 7 %>
   <% color = 'text-error font-black' if (commande.debut.to_date - Date.today) <= 2 %>
-  <% color = 'text-base-100' if (commande.debut.to_date < Date.today) %>
+  <% color = 'text-base-100' if (commande.debut < DateTime.now) %>
 
   <td>
     <% if commande.commentaires.include?('Fait le') %>
       <span class="text-success text-xl"><%= fa_icon('check') %></span>
     <% end %>
   </td>
-  <td class="<%= color %>"><%= time_ago_in_words commande.debut %></td>
+  <td class="<%= color %>">
+    <%= time_ago_in_words commande.debut - 1.hour %>
+  </td>
   <td><b><%= link_to l(commande.debut, format: :long), commande, class: 'text-primary hover:underline' %></b></td>
   <td>
     <% if commande.salle %>

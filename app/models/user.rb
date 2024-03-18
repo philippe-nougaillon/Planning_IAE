@@ -56,7 +56,7 @@ class User < ApplicationRecord
 
   # wish for discarded users to be unable to login and stop their session
   def active_for_authentication?
-    super && !discarded?
+    super && !self.discarded?
   end
 
   def role_number

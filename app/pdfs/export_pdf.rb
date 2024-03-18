@@ -492,7 +492,7 @@ class ExportPdf
 
             data = [ ["<color rgb='032E4D'>Date</color>", "<color rgb='032E4D'><b>#{I18n.l(cour.debut.to_date)}</b></color>"],
                     ["<color rgb='032E4D'>Formation(s)</color>","<color rgb='032E4D'><b>#{cour.formation.nom}</b></color>"],
-                    ["<color rgb='032E4D'>#{cour.intervenant_binome.nom_prenom}</color>","<color rgb='032E4D'><b>UE#{cour.code_ue} - #{cour.nom_ou_ue}</b></color>"],
+                    ["<color rgb='032E4D'>#{cour.intervenant_binome.try(:nom_prenom)}</color>","<color rgb='032E4D'><b>UE#{cour.code_ue} - #{cour.nom_ou_ue}</b></color>"],
                     ["<color rgb='032E4D'>Horaires de surveillance   (nbre d’heures rémunérées)</color>",
                     "<color rgb='032E4D'><b>#{cour.debut.strftime('%Hh%M')}-#{cour.fin.strftime('%Hh%M')} (#{cour.duree + 1} heure.s)</b></color>"],]
 
@@ -631,7 +631,7 @@ class ExportPdf
             text "<color rgb='E68824'><b>#{cour.formation.nom}</b></color>", inline_format: true, size: 16
             text "<color rgb='E68824'>#{'Formation en apprentissage' if cour.formation.apprentissage}</b></color>", inline_format: true, size: 16
             move_down @margin_down * 2
-            text "<color rgb='032E4D'>Enseignant : #{Intervenant.find_by(id: cour.intervenant_binome_id).nom_prenom}</color>", inline_format: true
+            text "<color rgb='032E4D'>Enseignant : #{Intervenant.find_by(id: cour.intervenant_binome_id).try(:nom_prenom)}</color>", inline_format: true
             move_down @margin_down
             text "<color rgb='032E4D'>Durée : #{cour.duree}h (#{cour.duree + 1}h pour le tiers temps)</color>", inline_format: true
             move_down @margin_down
@@ -669,7 +669,7 @@ class ExportPdf
             text "<color rgb='E68824'><b>#{cour.formation.nom}</b></color>", inline_format: true, size: 16
             text "<color rgb='E68824'>#{'Formation en apprentissage' if cour.formation.apprentissage}</b></color>", inline_format: true, size: 16
             move_down @margin_down * 2
-            text "<color rgb='032E4D'>Enseignant : #{Intervenant.find_by(id: cour.intervenant_binome_id).nom_prenom}</color>", inline_format: true, size: 16
+            text "<color rgb='032E4D'>Enseignant : #{Intervenant.find_by(id: cour.intervenant_binome_id).try(:nom_prenom)}</color>", inline_format: true, size: 16
             move_down @margin_down
             text "<color rgb='032E4D'>Durée : #{cour.duree}h</color>", inline_format: true
             move_down @margin_down

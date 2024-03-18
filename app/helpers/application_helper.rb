@@ -31,6 +31,7 @@ module ApplicationHelper
     def time_in_paris_selon_la_saison
         #
         # penser à changer refreshProgressBar()
+        # penser à changer le -1.hour dans _commande.html.erb
         #
 
         # Heure d'hiver
