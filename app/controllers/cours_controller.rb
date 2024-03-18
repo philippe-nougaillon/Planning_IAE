@@ -666,7 +666,7 @@ class CoursController < ApplicationController
         when 'modifiée'
           ToolsMailer.with(cour: @cour, old_commentaires:).commande_modifiée.deliver_now
         when 'supprimée'
-          ToolsMailer.with(cour: @cour).commande_supprimée.deliver_now
+          ToolsMailer.with(cour: @cour, old_commentaires:).commande_supprimée.deliver_now
         when 'ajoutée'
           ToolsMailer.with(cour: @cour).nouvelle_commande.deliver_now
         end
