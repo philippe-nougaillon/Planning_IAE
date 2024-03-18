@@ -96,10 +96,7 @@
             Ajouter un document
           </button>
         </div>
-        <div class="btn btn-success text-white mt-12">
-          <%= fa_icon 'arrow-circle-up' %>
-          <%= f.submit 'Déposer le dossier', 'data-turbo': false %>
-        </div>
+        <%= f.submit 'Déposer le dossier', 'data-turbo': false, class: 'btn btn-success text-white mt-12' %>
       <% end %>
     <% end %>
 

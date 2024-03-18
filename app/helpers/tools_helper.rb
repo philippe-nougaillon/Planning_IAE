@@ -17,14 +17,14 @@ module ToolsHelper
                 ids = audit.audited_changes['formation_id']
                 case ids.class.name
                 when 'Integer'
-                    pretty_changes << "#{key} initialisée à '#{Formation.unscoped.find(ids).nom}'"
+                    pretty_changes << "#{key} initialisée à '#{Formation.unscoped.find_by(id: ids).try(:nom)}'"
                 when 'Array'
                     if ids.first && ids.last 
-                        pretty_changes << "#{key} changée de '#{Formation.unscoped.find(ids.first).nom}' à '#{Formation.unscoped.find(ids.last).nom}'"
+                        pretty_changes << "#{key} changée de '#{Formation.unscoped.find_by(id: ids.first).try(:nom)}' à '#{Formation.unscoped.find(ids.last).nom}'"
                     elsif ids.first 
-                        pretty_changes << "#{key} changée de '#{Formation.unscoped.find(ids.first).nom}' à 'nil'"
+                        pretty_changes << "#{key} changée de '#{Formation.unscoped.find_by(id: ids.first).try(:nom)}' à 'nil'"
                     else
-                        pretty_changes << "#{key} changée de 'nil' à '#{Formation.unscoped.find(ids.last).nom}'"
+                        pretty_changes << "#{key} changée de 'nil' à '#{Formation.unscoped.find_by(id: ids.first).try(:nom)}'"
                     end
                 end 
             when 'Intervenant'

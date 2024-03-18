@@ -137,9 +137,13 @@ class DossiersController < ApplicationController
   end
 
   def deposer
-    @dossier.update(dossier_params)
-    @dossier.déposer!
-    redirect_to deposer_done_dossier_path(@dossier)
+    if params[:dossier]
+      @dossier.update(dossier_params)
+      @dossier.déposer!
+      redirect_to deposer_done_dossier_path(@dossier)
+    else 
+      redirect_to request.referrer, alert: "Il faut ajouter au moins un document"
+    end
   end
 
   def deposer_done
