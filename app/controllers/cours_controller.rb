@@ -611,7 +611,7 @@ class CoursController < ApplicationController
       if @cour.valid? && @cour.save
         format.html do
           if @cour.commentaires.include?('+')
-            ToolsMailer.with(cour: @cour).commande.deliver_now
+            ToolsMailer.with(cour: @cour).nouvelle_commande.deliver_now
           end
 
           if params[:create_and_add]
@@ -648,10 +648,27 @@ class CoursController < ApplicationController
   def update
     authorize @cour
     respond_to do |format|
+
+      commande_status = ""
+      new_commentaires = params[:cour][:commentaires]
+      if @cour.commentaires != new_commentaires
+        if @cour.commentaires.include?('+')
+          commande_status = new_commentaires.include?('+') ? 'modifiée' : 'supprimée'
+          old_commentaires = @cour.commentaires
+        elsif new_commentaires.include?('+')
+          commande_status = "ajoutée"
+        end
+      end
+
       if @cour.update(cour_params)
 
-        if @cour.commentaires_previously_changed? && @cour.commentaires.include?('+')
-          ToolsMailer.with(cour: @cour, changed: true).commande.deliver_now
+        case commande_status 
+        when 'modifiée'
+          ToolsMailer.with(cour: @cour, old_commentaires:).commande_modifiée.deliver_now
+        when 'supprimée'
+          ToolsMailer.with(cour: @cour).commande_supprimée.deliver_now
+        when 'ajoutée'
+          ToolsMailer.with(cour: @cour).nouvelle_commande.deliver_now
         end
 
         format.html do
