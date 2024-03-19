@@ -12,18 +12,17 @@
     
     for (let i = 8; i <= 22; i++) {
       if (i == parisHour) {
-        const elements = document.getElementsByClassName(`h-column-${i}`);
-        for(const element of elements){
-          element.classList.add('bg-amber-100', 'text-black', 'font-black');
-        }
-        const previous_elements = document.getElementsByClassName(`h-column-${i - 1}`);
-        for(const previous_element of previous_elements){
-          previous_element.classList.remove('bg-amber-100', 'text-black', 'font-black');
+        let elements = document.getElementsByClassName(`h-column-${i}`);
+        let previous_elements = document.getElementsByClassName(`h-column-${i - 1}`);
+
+        for(let j = 0; j < elements.length; j++){
+          elements[j].classList.add('bg-amber-100', 'text-black', 'font-black');
+          previous_elements[j].classList.remove('bg-amber-100', 'text-black', 'font-black');
         }
         break;
       }
     }
   }
   updateHighlightColumn()
-  setInterval(function() {updateHighlightColumn()}, 5 * 60 * 1000);
+  setInterval(function() {updateHighlightColumn()}, 2 * 60 * 1000);
 </script>

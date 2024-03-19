@@ -29,6 +29,9 @@ class Cour < ApplicationRecord
   before_save :change_etat_si_salle
   before_save :annuler_salle_si_cours_est_annulé
 
+  around_update :check_send_commande_email
+  after_create :check_send_new_commande_email
+
   # Mettre à jour les SCENIC VIEWS
   after_commit {
     CoursNonPlanifie.refresh
@@ -750,6 +753,40 @@ class Cour < ApplicationRecord
     def check_invits_en_cours
       if self.invits.where.not("workflow_state = 'non_retenue' OR  workflow_state = 'confirmée'").any? && self.intervenant != 445
         errors.add(:cours, 'a des invitations en cours !')
+      end
+    end
+
+    def check_send_commande_email
+      old_commentaires = commentaires_was
+      yield
+      commande_status = determine_statut_commande(old_commentaires, commentaires)
+      send_email_commande(commande_status, old_commentaires)
+    end
+
+    def determine_statut_commande(old_commentaires, new_commentaires)
+      if old_commentaires && old_commentaires.include?('+')
+        new_commentaires.include?('+') ? 'modifiée' : 'supprimée'
+      elsif new_commentaires.include?('+')
+        'ajoutée'
+      else
+        ''
+      end
+    end
+
+    def send_email_commande(commande_status, old_commentaires)
+      case commande_status
+      when 'modifiée'
+        ToolsMailer.with(cour: self, old_commentaires: old_commentaires).commande_modifiée.deliver_now
+      when 'supprimée'
+        ToolsMailer.with(cour: self, old_commentaires: old_commentaires).commande_supprimée.deliver_now
+      when 'ajoutée'
+        ToolsMailer.with(cour: self).nouvelle_commande.deliver_now
+      end
+    end
+
+    def check_send_new_commande_email
+      if self.commentaires.include?('+')
+        ToolsMailer.with(cour: self).nouvelle_commande.deliver_now
       end
     end
 end
