@@ -610,10 +610,6 @@ class CoursController < ApplicationController
     respond_to do |format|
       if @cour.valid? && @cour.save
         format.html do
-          if @cour.commentaires.include?('+')
-            ToolsMailer.with(cour: @cour).nouvelle_commande.deliver_now
-          end
-
           if params[:create_and_add]
             redirect_to new_cour_path(debut:@cour.debut, fin:@cour.fin,
                         formation_id:@cour.formation_id, intervenant_id:@cour.intervenant_id, ue:@cour.ue, salle_id:@cour.salle_id, nom:@cour.nom),
@@ -648,29 +644,7 @@ class CoursController < ApplicationController
   def update
     authorize @cour
     respond_to do |format|
-
-      commande_status = ""
-      new_commentaires = params[:cour][:commentaires]
-      if @cour.commentaires != new_commentaires
-        if @cour.commentaires && @cour.commentaires.include?('+')
-          commande_status = new_commentaires.include?('+') ? 'modifiée' : 'supprimée'
-          old_commentaires = @cour.commentaires
-        elsif new_commentaires.include?('+')
-          commande_status = "ajoutée"
-        end
-      end
-
       if @cour.update(cour_params)
-
-        case commande_status 
-        when 'modifiée'
-          ToolsMailer.with(cour: @cour, old_commentaires:).commande_modifiée.deliver_now
-        when 'supprimée'
-          ToolsMailer.with(cour: @cour, old_commentaires:).commande_supprimée.deliver_now
-        when 'ajoutée'
-          ToolsMailer.with(cour: @cour).nouvelle_commande.deliver_now
-        end
-
         format.html do
           # notifier les étudiants des changements ?
           if params[:notifier]
