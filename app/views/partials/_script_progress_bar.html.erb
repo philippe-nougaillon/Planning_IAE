@@ -6,15 +6,18 @@
     // const now = parseInt((Date.now() + 7200000) / 1000)
     const elements = document.getElementsByClassName("progress");
 
-    for(const element of elements){
-      const debut = parseInt(element.dataset.debut);
-      const fin = parseInt(element.dataset.fin);
+    for(let element of elements){
+      let debut = parseInt(element.dataset.debut);
+      let fin = parseInt(element.dataset.fin);
 
       if (now > debut && now < fin) {
-        const duree_totale = fin - debut;
-        const duree_ecoulee = now - debut;
+        let duree_totale = fin - debut;
+        let duree_ecoulee = now - debut;
         // mettre à jour le pourcentage de la barre de progression
         element.value = (duree_ecoulee / duree_totale) * 100;
+      }
+      else if (now > fin && element.value < 100) {
+        element.value = 100;
       }
     }
   }
