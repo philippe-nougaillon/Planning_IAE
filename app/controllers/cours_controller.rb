@@ -652,7 +652,7 @@ class CoursController < ApplicationController
       commande_status = ""
       new_commentaires = params[:cour][:commentaires]
       if @cour.commentaires != new_commentaires
-        if @cour.commentaires.include?('+')
+        if @cour.commentaires && @cour.commentaires.include?('+')
           commande_status = new_commentaires.include?('+') ? 'modifiée' : 'supprimée'
           old_commentaires = @cour.commentaires
         elsif new_commentaires.include?('+')
