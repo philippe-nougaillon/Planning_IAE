@@ -25,7 +25,7 @@
   <% if user_signed_in? && current_user.étudiant? && presence = cour.presences.find_by(etudiant_id: @etudiant.id) %>
     <% if presence.validée? || presence.signée? %>
       <div class="alert alert-success mt-4 mb-0" role="alert">
-        Présence signée à <%= l presence.signée_le, format: :heures_log %>
+        Présence signée <%= "à #{l presence.signée_le, format: :heures_log}" if presence.signée_le %>
       </div>
     <% elsif presence.manquante? || presence.rejetée? %>
       <div class="alert alert-error mt-4 mb-0" role="alert">
