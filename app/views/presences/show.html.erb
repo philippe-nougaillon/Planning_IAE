@@ -52,12 +52,10 @@
   <h5 class="text-lg inline"><span class="badge <%= @presence.style %> text-white"><%= @presence.workflow_state.humanize %></span></h5>
 </p>
 
-<% if @presence.can_valider? || @presence.can_rejeter? %>
-  <div class="flex justify-around lg:justify-start mb-6">
-    <%= link_to_if @presence.can_valider?, 'Valider', valider_presence_path(@presence), class: 'btn btn-lg btn-success text-white flex-grow-1 flex-sm-grow-0' %>
-    <%= link_to_if @presence.can_rejeter?, 'Rejeter', rejeter_presence_path(@presence), class: 'btn btn-lg btn-error text-white flex-grow-1 flex-sm-grow-0' %>
-  </div>
-<% end %>
+<div class="flex justify-around lg:justify-start my-6 gap-4">
+  <%= link_to 'Valider', valider_presence_path(@presence), class: 'btn btn-lg btn-success text-white flex-grow-1 flex-sm-grow-0', disabled: !@presence.can_valider? %>
+  <%= link_to 'Rejeter', rejeter_presence_path(@presence), class: 'btn btn-lg btn-error text-white flex-grow-1 flex-sm-grow-0', disabled: !@presence.can_rejeter? %>
+</div>
 
 <% if user_signed_in? %>
   <%= link_to 'Retour', current_user.intervenant? ? mes_sessions_intervenant_path : presences_path, class: 'text-primary hover:underline pb-6' %>
