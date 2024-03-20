@@ -5,6 +5,7 @@
       <h1 class="text-4xl text-center border-b mb-4 pb-4">
         <%= t('.forgot_your_password') %>
       </h1>
+      <%= render "devise/shared/error_messages", resource: resource %> 
       <div class="flex flex-wrap">
         <div class="form-control w-full">
           <%= f.label :email, 'Email *' %>

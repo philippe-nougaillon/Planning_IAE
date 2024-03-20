@@ -7,11 +7,8 @@
   <h1 class="text-4xl text-center border-b mb-4 pb-4">
     <%= t('.change_your_password') %>
   </h1>
-  <%
-=begin%>
- <%= render "devise/shared/error_messages", resource: resource %> 
-<%
-=end%>
+  
+  <%= render "devise/shared/error_messages", resource: resource %> 
   
   <div class="flex flex-wrap">
     <div class="relative flex-grow max-w-full flex-1">
@@ -19,12 +16,12 @@
 
       <div class="form-control">
         <%= f.label :password %>
-        <%= f.password_field :password, autocomplete: "off", class: "input input-bordered input-sm w-full" %>
+        <%= f.password_field :password, autocomplete: "off", class: "input input-bordered input-sm w-full", required: true %>
       </div>
 
-      <div class="form-control">
+      <div class="form-control my-4">
         <%= f.label :password_confirmation %>
-        <%= f.password_field :password_confirmation, autocomplete: "off", class: "input input-bordered input-sm w-full" %>
+        <%= f.password_field :password_confirmation, autocomplete: "off", class: "input input-bordered input-sm w-full", required: true %>
       </div>
 
       <%= f.submit t('.change_my_password'), class: "btn btn-primary text-white", 'data-turbo': false %>
