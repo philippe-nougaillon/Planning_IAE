@@ -68,12 +68,16 @@ class Intervenant < ApplicationRecord
     end
 	
 
-		def nom_prenom
+	def nom_prenom
 		self.prenom.blank? ? self.nom.upcase : "#{self.nom} #{self.prenom}" 
 	end
 
 	def prenom_nom
 		"#{self.try(:prenom)} #{self.nom}" 
+	end
+
+	def academ_nom
+		"#{self.prenom.first}#{self.nom}"
 	end
 
 	def nom_du_status
