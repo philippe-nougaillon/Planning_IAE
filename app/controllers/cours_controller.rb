@@ -31,12 +31,11 @@ class CoursController < ApplicationController
           params[:intervenant] = intervenant.nom + " " + intervenant.prenom
         end
       elsif current_user.étudiant?
-        if formation = Etudiant
-                      .where("LOWER(etudiants.email) = ?", current_user.email.downcase)
-                      .first
-                      .formation
-          params[:formation_id] = formation.id
-          params[:formation] = formation.nom
+        if etudiant = Etudiant.find_by("LOWER(etudiants.email) = ?", current_user.email.downcase)
+          if formation = etudiant.formation
+            params[:formation_id] = formation.id
+            params[:formation] = formation.nom
+          end
         end
       end
     end
@@ -695,12 +694,16 @@ class CoursController < ApplicationController
 
   def mes_sessions_etudiant
     @etudiant = Etudiant.find_by("LOWER(etudiants.email) = ?", current_user.email.downcase)
-    @cours = @etudiant
-            .formation
-            .cours
-            .confirmé
-            .where("DATE(debut) = ?", Date.today)
-            .order(:debut)
+    if @etudiant
+      @cours = @etudiant
+              .formation
+              .cours
+              .confirmé
+              .where("DATE(debut) = ?", Date.today)
+              .order(:debut)
+    else
+      redirect_to root_path
+    end
   end
 
   def mes_sessions_intervenant
