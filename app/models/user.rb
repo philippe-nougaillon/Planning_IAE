@@ -9,9 +9,9 @@ class User < ApplicationRecord
   audited
   
   # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable,
+  # :confirmable, :lockable and :omniauthable,
   devise :database_authenticatable,
-         :recoverable, :rememberable, :trackable, :validatable, :registerable
+         :recoverable, :rememberable, :trackable, :validatable, :registerable, :timeoutable
 
   belongs_to :formation, optional: true   
 
@@ -77,4 +77,9 @@ class User < ApplicationRecord
     return ( self.étudiant? && Etudiant.find_by("LOWER(etudiants.email) = ?", self.email.downcase).nil? ) || ( (self.intervenant? || self.enseignant?) && Intervenant.find_by("LOWER(intervenants.email) = ?", self.email.downcase).nil? )
   end
 
+  private
+
+    def timeout_in
+      self.étudiant? ? 4.hours : 24.hours
+    end
 end
