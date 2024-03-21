@@ -39,9 +39,9 @@ class IntervenantMailer < ApplicationMailer
         @intervenant = intervenant
         @presence_slug = presence_slug
         mail(to: @intervenant.email, cc: gestionnaire_email,
-            subject:"[PLANNING] Validation des présences pour la session en cours").tap do |message|
+            subject:"[PLANNING] Validation des émargements pour la session en cours").tap do |message|
                 message.mailgun_options = {
-                    "tag" => [@intervenant.nom, @intervenant.prenom, "presences"]
+                    "tag" => [@intervenant.nom, @intervenant.prenom, "émargements"]
                 }
         end
     end

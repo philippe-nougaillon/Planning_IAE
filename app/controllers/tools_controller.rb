@@ -659,7 +659,11 @@ class ToolsController < ApplicationController
       cours = cours.where(etat:params[:etat])
     end
 
-    book = Cour.generate_xls(cours, params[:binome].present?, true)  
+    unless params[:academ].blank?
+      book = Cour.generate_academ_xls(cours.réalisé)
+    else
+      book = Cour.generate_xls(cours, params[:binome].present?, true)  
+    end
     file_contents = StringIO.new
     book.write file_contents # => Now file_contents contains the rendered file output
     filename = "Export_Cours.xls"
