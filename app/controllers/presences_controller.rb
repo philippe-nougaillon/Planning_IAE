@@ -7,8 +7,18 @@ class PresencesController < ApplicationController
   def index
     @presences = Presence.ordered
 
+    params[:search] ||= session[:emargement_search]
+    params[:formation_id] ||= session[:emargement_formation_id]
+    params[:ue] ||= session[:emargement_ue]
+    params[:intervenant] ||= session[:emargement_intervenant]
+    params[:workflow_state] ||= session[:emargement_workflow_state]
+
     if params[:search].present?
-      @presences = @presences.joins(:etudiant).where("etudiants.nom ILIKE :search OR etudiants.prénom ILIKE :search", { search: "%#{params[:search]}%" })
+      if params[:search].include?("cours:")
+        @presences = @presences.where(cour_id: params[:search].split(':').last)
+      else
+        @presences = @presences.joins(:etudiant).where("etudiants.nom ILIKE :search OR etudiants.prénom ILIKE :search", { search: "%#{params[:search]}%" })
+      end
     end
 
     if params[:formation_id].present?
@@ -25,15 +35,18 @@ class PresencesController < ApplicationController
       @presences = @presences.joins(:cour).where('cour.intervenant_id': intervenant_id)
     end
 
-    if params[:cours_id].present?
-      @presences = @presences.where(cour_id: params[:cours_id])
-    end
-
     if params[:workflow_state].present?
       @presences = @presences.where(workflow_state: params[:workflow_state])
     end
 
     @presences = @presences.paginate(page: params[:page], per_page: 20)
+
+    session[:emargement_search] = params[:search]
+    session[:emargement_formation_id] = params[:formation_id]
+    session[:emargement_ue] = params[:ue]
+    session[:emargement_intervenant] = params[:intervenant]
+    session[:emargement_workflow_state] = params[:workflow_state]
+
   end
 
   # GET /presences/1 or /presences/1.json
