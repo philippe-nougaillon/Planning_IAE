@@ -42,7 +42,7 @@
           <td class="text-base"><b><%= salle.nom[0..7] %></b></td>
           <td class="text-right"><%= salle.places %></td>
           <td>
-            <% cours.pluck(:formation_id).uniq.each do |id| %> 
+            <% cours.order(:debut).pluck(:formation_id).uniq.each do |id| %> 
               <% formation = Formation.unscoped.find(id) %> 
               <div>
                 <span style="background-color:<%= formation.color %>;padding-left: 7px;"></span> 
@@ -76,7 +76,7 @@
                       <% nom_formation << cour.formation.nom %>
                     <% end %>
                   <% end %>
-                  <%= link_to edit_cour_path(cours.first, from: "occupation"), title: nom_formation.join(' | '), data: { turbo_method: :get, turbo_confirm: "Voulez-vous modifier ce cours ?" }  do %>
+                  <%= link_to edit_cour_path(cours.first, from: "occupation"), title: nom_formation.join(' -----> '), data: { turbo_method: :get, turbo_confirm: "Voulez-vous modifier ce cours ?" }  do %>
                     <span style="background-color: <%= color %>;padding-left: 15px;"></span> 
                   <% end %>
                 <% else %>
