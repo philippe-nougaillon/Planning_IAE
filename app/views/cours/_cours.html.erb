@@ -67,12 +67,12 @@
                     </i>
                 <% end %>
             <% end %>
-            <% if user_signed_in? && (current_user.gestionnaire? || current_user.admin?) &&  %>
+            <% if user_signed_in? && (current_user.gestionnaire? || current_user.admin?)  %>
                 <% étudiants_présents = cours.presences.where.not(etudiant_id: nil).where(workflow_state: ['signée', 'validée']).count %>
 
                 <% if étudiants_présents > 0 %>
                     <%= fa_icon 'file-signature' %>
-                    <%= link_to presences_path(cours_id: cours.id), title: 'présences signées / nbr étudiants', class: 'text-primary hover:underline' do %>
+                    <%= link_to presences_path(search: "cours:#{cours.id}"), title: 'présences signées / nbr étudiants', class: 'text-primary hover:underline' do %>
                         <%= étudiants_présents %> / <%= cours.etudiants.count %>
                     <% end %>
                 <% end %>
