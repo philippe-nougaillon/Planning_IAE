@@ -73,7 +73,7 @@
                   <% nom_formation = [] %>
                   <% cours.each do |cour| %>
                     <% if (cour.debut.hour <= index + 8) && (cour.fin.hour >= index + 8) %>
-                      <% nom_formation << cour.formation.nom %>
+                      <% nom_formation << cour.formation.try(:nom) %>
                     <% end %>
                   <% end %>
                   <%= link_to edit_cour_path(cours.first, from: "occupation"), title: nom_formation.join(' -----> '), data: { turbo_method: :get, turbo_confirm: "Voulez-vous modifier ce cours ?" }  do %>
