@@ -810,7 +810,7 @@ class Cour < ApplicationRecord
     def determine_statut_commande(old_commentaires, new_commentaires)
       if old_commentaires && old_commentaires.include?('+')
         new_commentaires.include?('+') ? 'modifiée' : 'supprimée'
-      elsif new_commentaires.include?('+')
+      elsif new_commentaires && new_commentaires.include?('+')
         'ajoutée'
       else
         ''

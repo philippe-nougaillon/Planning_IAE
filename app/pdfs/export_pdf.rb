@@ -476,7 +476,7 @@ class ExportPdf
         font "OpenSans"
         
         cours.each_with_index do |cour, index|
-            surveillants = cour.commentaires.tr('[]', '').gsub(/[\r\n]/, ' ').split(' ').to_s.tr('\"[]', '').gsub(/[-]/, ' ')
+            surveillants = cour.commentaires.tr(']', '').split('[').drop(1).join(', ').gsub(/[-]/, ' ')
             image "#{@image_path}/logo_iae_2.png", :height => 60
 
             move_down @margin_down * 2

@@ -88,5 +88,9 @@ class Formation < ApplicationRecord
 		%w[M1QSE M2QSE].include?(self.abrg[0..4])
 	end
 
+	def self.cobayes_émargement
+		[258, 599, 671, 672, 683, 687]
+	end
+
 end
 
