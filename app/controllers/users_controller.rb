@@ -100,7 +100,8 @@ class UsersController < ApplicationController
   # DELETE /users/1.json
   def destroy
     @user.discard
-    @user.forget_me! if @user.remember_created_at
+    # à décommenter uniquement lorsqu'il y a :rememberable d'activé, sinon ceux qui essayeront de se connecter avec le compte discarded auront l'erreur 'Stack level too deep'
+    # @user.forget_me! if @user.remember_created_at
     respond_to do |format|
       format.html { redirect_to users_path, notice: 'Utilisateur désactivé !' }
       format.json { head :no_content }
