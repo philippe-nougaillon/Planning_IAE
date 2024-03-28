@@ -829,7 +829,7 @@ class Cour < ApplicationRecord
     end
 
     def check_send_new_commande_email
-      if self.commentaires.include?('+')
+      if self.commentaires && self.commentaires.include?('+')
         ToolsMailer.with(cour: self).nouvelle_commande.deliver_now
       end
     end
