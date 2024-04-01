@@ -35,10 +35,10 @@ module ApplicationHelper
         #
 
         # Heure d'hiver
-        DateTime.now.in_time_zone('Europe/Paris') + 1.hours
+        #DateTime.now.in_time_zone('Europe/Paris') + 1.hours
 
         # Heure d'été
-        #DateTime.now.in_time_zone('Europe/Paris') + 2.hours
+        DateTime.now.in_time_zone('Europe/Paris') + 2.hours
     end
 
     def clean_page(page)
