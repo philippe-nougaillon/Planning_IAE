@@ -270,7 +270,7 @@
       <% end %>
 
     </div>
-  <% elsif ["Générer Feuille émargement PDF","Générer Pochette Examen PDF", "Convocation étudiants PDF"].include?(params[:action_name]) %>
+  <% elsif ["Générer Feuille émargement PDF", "Générer Feuille émargement signée PDF","Générer Pochette Examen PDF", "Convocation étudiants PDF"].include?(params[:action_name]) %>
     <% if params[:action_name] == "Générer Feuille émargement PDF" || (@cours.count == 1 && @cours.first.examen?) %>
       <h3 class="text-2xl">Sélectionnez les étudiants</h3>
       <br>
@@ -298,8 +298,7 @@
           <%= label_tag :table, "Ajouter une colonne N° Table" %>
         </div>
       </div>
-    <% else %>
-      <%# Générer Pochette Examen PDF, Convocation étudiants PDF %>
+    <% elsif ["Générer Pochette Examen PDF", "Convocation étudiants PDF"].include?(params[:action_name]) %>
       <% wrong_parameter = false %>
       <% if @cours.count == 1 && @cours.first.examen? %>
         <h3 class="text-2xl mt-4">Sélectionnez les options d'examens</h3>

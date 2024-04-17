@@ -742,4 +742,82 @@ class ExportPdf
         end
     end
 
+    def generate_feuille_emargement_signée(cours)
+        cour = cours.first
+
+        font_size 14
+
+        y_position = cursor
+        bounding_box([0, y_position], :width => 270) do
+            image "#{@image_path}/logo@100.png", :width => 200
+        end
+        bounding_box([270, y_position], :width => 270) do
+            move_down @margin_down
+            text cour.formation.nom, style: :bold, align: :right
+        end
+
+        move_down @margin_down * 4
+        text "ÉMARGEMENT PRÉSENCE", size: 16, style: :bold, align: :center
+        move_down @margin_down
+
+        font_size 12
+
+        move_down @margin_down
+        y_position = cursor
+        bounding_box([0, y_position], :width => 250, :height => 100) do
+            text "Date : #{I18n.l(cour.debut.to_date)}", style: :bold
+        end
+        bounding_box([250, y_position], :width => 250) do
+            
+            text "Horaire : #{I18n.l(cour.debut, format: :heures_min)} - #{I18n.l(cour.fin, format: :heures_min)}", style: :bold
+
+        end
+        move_down @margin_down
+        text "Enseignant : #{cour.intervenant.nom_prenom}", style: :bold
+        move_down @margin_down
+        text "UE : #{cour.code_ue} - #{cour.nom_ou_ue}", style: :bold
+        move_down @margin_down
+        text "Signature :", style: :bold
+        move_down @margin_down
+
+        stroke_horizontal_rule
+
+        font_size 14
+
+        array = cour.formation.etudiants.order(:nom, :prénom).pluck(:id)
+
+        (0..array.length - 1).step(2).each do |index|
+            move_down @margin_down
+
+            etudiant = Etudiant.find(array[index])
+            presence = Presence.find_by(cour_id: cour.id, etudiant_id: etudiant.id)
+
+            if index < array.length - 1
+                next_etudiant = Etudiant.find(array[index + 1])
+                presence_next_etudiant = Presence.find_by(cour_id: cour.id, etudiant_id: next_etudiant.id)
+            end
+
+            y_position = cursor
+            bounding_box([0, y_position], :width => 270) do
+                text "<b>#{etudiant.nom.upcase}</b> #{etudiant.prénom.humanize}", inline_format: true
+                if presence && presence.validée?
+                    svg Base64.decode64(presence.signature.split(',')[1]), width: 50
+                else
+                    text "Absent"
+                end
+            end
+            bounding_box([270, y_position], :width => 270) do
+                text "<b>#{next_etudiant.nom.upcase}</b> #{next_etudiant.prénom.humanize}", inline_format: true
+                if presence_next_etudiant && presence_next_etudiant.validée?
+                    svg Base64.decode64(presence_next_etudiant.signature.split(',')[1]), width: 50
+                else
+                    text "Absent"
+                end
+            end
+
+            move_down @margin_down
+            stroke_horizontal_rule
+        end
+    end
+
 end
