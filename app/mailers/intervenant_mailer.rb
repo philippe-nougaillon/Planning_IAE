@@ -15,7 +15,7 @@ class IntervenantMailer < ApplicationMailer
         @cours = cours
         @gestionnaires = gestionnaires
         @intervenant = intervenant
-        @message = EnvoiLog.find(envoi_log_id).msg
+        @message = EnvoiLog.find(envoi_log_id).message
         if test
             mail(to: "fitsch-mouras.iae@univ-paris1.fr", cc: "philippe.nougaillon@gmail.com, pierreemmanuel.dacquet@gmail.com",
                 subject:"[PLANNING] TEST / Rappel des cours de #{@intervenant.nom_prenom} du #{l @debut} au #{l @fin}")

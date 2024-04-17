@@ -21,8 +21,8 @@
   </div>
 
   <div class="form-control mt-4">
-    <%= form.label :msg, "Message (apparaît en bas du corps du mail)" %>
-    <%= form.rich_text_area :msg, class: "customized-min-height" %>
+    <%= form.label :message, "Message (apparaît en bas du corps du mail)" %>
+    <%= form.text_field :message, class: "input input-bordered input-sm w-full" %>
   </div>
   
   <%= form.submit "Enregistrer", class: "btn btn-primary text-white mt-4", 'data-turbo': false %>
