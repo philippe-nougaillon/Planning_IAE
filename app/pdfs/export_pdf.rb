@@ -787,6 +787,8 @@ class ExportPdf
         array = cour.formation.etudiants.order(:nom, :prénom).pluck(:id)
 
         (0..array.length - 1).step(2).each do |index|
+            # Multiple de deux parce qu'il y a un step(2)
+            start_new_page if (index%10 == 6)
             move_down @margin_down
 
             etudiant = Etudiant.find(array[index])
@@ -800,18 +802,29 @@ class ExportPdf
             y_position = cursor
             bounding_box([0, y_position], :width => 270) do
                 text "<b>#{etudiant.nom.upcase}</b> #{etudiant.prénom.humanize}", inline_format: true
-                if presence && presence.validée?
-                    svg Base64.decode64(presence.signature.split(',')[1]), width: 50
+                if presence
+                    if presence.signature
+                        svg Base64.decode64(presence.signature.split(',')[1]), height: 50
+                    end
+                    move_down @margin_down
+                    text presence.workflow_state.humanize
                 else
-                    text "Absent"
+                    move_down @margin_down * 5
                 end
             end
-            bounding_box([270, y_position], :width => 270) do
-                text "<b>#{next_etudiant.nom.upcase}</b> #{next_etudiant.prénom.humanize}", inline_format: true
-                if presence_next_etudiant && presence_next_etudiant.validée?
-                    svg Base64.decode64(presence_next_etudiant.signature.split(',')[1]), width: 50
-                else
-                    text "Absent"
+
+            if next_etudiant
+                bounding_box([270, y_position], :width => 270) do
+                    text "<b>#{next_etudiant.nom.upcase}</b> #{next_etudiant.prénom.humanize}", inline_format: true
+                    if presence_next_etudiant
+                        if presence_next_etudiant.signature
+                            svg Base64.decode64(presence_next_etudiant.signature.split(',')[1]), height: 50
+                        end
+                        move_down @margin_down
+                        text presence_next_etudiant.workflow_state.humanize
+                    else
+                        move_down @margin_down * 6
+                    end
                 end
             end
 
