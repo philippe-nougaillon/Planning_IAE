@@ -89,7 +89,7 @@ class Formation < ApplicationRecord
 	end
 
 	def self.cobayes_émargement
-		[258, 599, 671, 672, 683, 687]
+		[258, 599, 671, 672, 683, 687, 695]
 	end
 
 end
