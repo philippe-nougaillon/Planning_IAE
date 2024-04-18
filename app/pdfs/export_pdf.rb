@@ -805,11 +805,13 @@ class ExportPdf
                 if presence
                     if presence.signature
                         svg Base64.decode64(presence.signature.split(',')[1]), height: 50
+                    else
+                        move_down @margin_down * 3.4
                     end
                     move_down @margin_down
                     text presence.workflow_state.humanize
                 else
-                    move_down @margin_down * 5
+                    move_down @margin_down * 6
                 end
             end
 
@@ -819,6 +821,8 @@ class ExportPdf
                     if presence_next_etudiant
                         if presence_next_etudiant.signature
                             svg Base64.decode64(presence_next_etudiant.signature.split(',')[1]), height: 50
+                        else
+                            move_down @margin_down * 3.4
                         end
                         move_down @margin_down
                         text presence_next_etudiant.workflow_state.humanize
