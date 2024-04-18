@@ -1,10 +1,8 @@
 class EnvoiLog < ApplicationRecord
     include Workflow
     include WorkflowActiverecord
-  
+
     audited
-    
-    has_rich_text :msg
 
     validates :date_prochain, :workflow_state, presence: true
 

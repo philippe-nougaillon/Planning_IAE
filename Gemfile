@@ -92,6 +92,7 @@ gem 'will_paginate'
 gem 'pundit'
 
 # PDF
+gem "prawn-svg", "~> 0.34.2"
 gem 'prawn', '~> 2.4'
 gem 'prawn-table', '~> 0.2'
 
