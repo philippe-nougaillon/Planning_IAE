@@ -714,13 +714,18 @@ class CoursController < ApplicationController
 
   def mes_sessions_intervenant
     if params[:presence_slug].present?
-      presence = Presence.find_by(slug: params[:presence_slug]) 
-      @intervenant = presence.intervenant
-    else
+      if presence = Presence.find_by(slug: params[:presence_slug]) 
+        @intervenant = presence.intervenant
+      end
+    elsif user_signed_in?
       @intervenant = Intervenant.find_by("LOWER(intervenants.email) = ?", current_user.email.downcase)
     end
-
-    @cours = @intervenant.cours.confirmé.where("DATE(debut) = ?", Date.today).order(:debut)
+    
+    if @intervenant
+      @cours = @intervenant.cours.confirmé.where("DATE(debut) = ?", Date.today).order(:debut)
+    else
+      redirect_to root_path, alert: "Vous devez vous connecter ou cliquer sur le lien reçu par email pour accéder à cette page"
+    end
   end
 
   def signature_etudiant
