@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_17_120843) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_25_083312) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -179,6 +179,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_17_120843) do
     t.string "cp_entreprise"
     t.string "ville_entreprise"
     t.string "workflow_state"
+    t.integer "table", default: 0
     t.index ["formation_id"], name: "index_etudiants_on_formation_id"
     t.index ["workflow_state"], name: "index_etudiants_on_workflow_state"
   end

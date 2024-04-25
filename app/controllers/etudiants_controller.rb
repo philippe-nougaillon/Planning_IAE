@@ -118,7 +118,7 @@ class EtudiantsController < ApplicationController
                     :lieu_naissance, :pays_naissance, :nationalité, :adresse, :cp, :ville, :dernier_ets, 
                     :dernier_diplôme, :cat_diplôme, :num_sécu, 
                     :num_apogée, :poste_occupé, :nom_entreprise, :adresse_entreprise, :cp_entreprise, :ville_entreprise,
-                    :workflow_state)
+                    :workflow_state, :table)
     end
 
     def is_user_authorized
