@@ -10,6 +10,7 @@ class EtudiantsController < ApplicationController
 
     params[:column] ||= session[:column]
     params[:direction_etudiants] ||= session[:direction_etudiants]
+    params[:paginate] ||= 'pages'
 
     @etudiants = Etudiant.all
 
@@ -23,9 +24,11 @@ class EtudiantsController < ApplicationController
 
     session[:column] = params[:column]
     session[:direction_etudiants] = params[:direction_etudiants]
-
+    
     @etudiants = @etudiants.reorder("#{sort_column} #{sort_direction}")
-    @etudiants = @etudiants.paginate(page: params[:page], per_page: 20)
+    if (params[:paginate] == 'pages')
+      @etudiants = @etudiants.paginate(page: params[:page], per_page: 20)
+    end
   end
 
   # GET /etudiants/1
@@ -91,6 +94,37 @@ class EtudiantsController < ApplicationController
       format.html { redirect_to etudiants_path, notice: 'Etudiant supprimé avec succès' }
       format.json { head :no_content }
     end
+  end
+
+  def action
+    unless params[:etudiants_id].blank? or params[:action_name].blank?
+      @etudiants = Etudiant.where(id: params[:etudiants_id].keys)
+
+      case params[:action_name]
+      when "Changer de formation"
+      end
+    else
+      redirect_to etudiants_path, alert:'Veuillez choisir des étudiants et une action à appliquer !'
+    end
+  end
+
+  def action_do
+    action_name = params[:action_name]
+
+    @etudiants = Etudiant.where(id: params[:etudiants_id].keys)
+
+    case action_name
+    when "Changer de formation"
+      @etudiants.each do |etudiant|
+        etudiant.formation_id = params[:formation_id].to_i
+        etudiant.save
+      end
+    end
+
+    unless flash[:alert]
+      flash[:notice] = "Action '#{action_name}' appliquée à #{params.permit![:etudiants_id].keys.size} étudiant.s."
+    end
+    redirect_to cours_path
   end
 
   private

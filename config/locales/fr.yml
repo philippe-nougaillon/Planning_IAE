@@ -360,6 +360,8 @@ fr:
       title: Nouvel étudiant
     edit:
       title: Modification d'un étudiant
+    action:
+      title: Action groupée étudiants
   guide:
     index:
       title: Aide-mémoire de l'application Planning
