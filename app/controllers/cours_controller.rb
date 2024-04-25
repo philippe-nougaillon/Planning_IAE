@@ -658,6 +658,12 @@ class CoursController < ApplicationController
             end
           end
 
+          # notifier l'accueil s'il y a un bypass
+          if @cour.commentaires.include?("BYPASS=#{@cour.id}")
+            mailer_response = AccueilMailer.notifier_cours_bypass(@cour).deliver_now
+            MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: "accueil@iae.pantheonsorbonne.fr", subject: "Cours bypass")
+          end
+
           # repartir à la page où a eu lieu la demande de modification
           if params[:from] == 'planning_salles'
             redirect_to cours_path(view:"calendar_rooms", start_date:@cour.debut)
