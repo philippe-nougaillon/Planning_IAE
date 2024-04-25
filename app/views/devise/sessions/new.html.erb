@@ -11,12 +11,12 @@
         <div class="relative flex-grow max-w-full flex-1">
           <div class="form-control">
             <%= f.label :email, label: "Email *" %>
-            <%= f.email_field :email, autofocus: true, required: true, class: "input input-bordered w-full mt-2" %>
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", required: true, class: "input input-bordered w-full mt-2" %>
           </div>
 
           <div class="form-control my-4">
             <%= f.label :password, label: "Mot de passe *" %>
-            <%= f.password_field :password, autocomplete: "off", required: true, class: "input input-bordered w-full mt-2" %>
+            <%= f.password_field :password, autocomplete: "current-password", required: true, class: "input input-bordered w-full mt-2" %>
           </div>
 
           <%= f.submit t('.sign_in'), class: "btn btn-primary text-white w-full mt-2 mb-4", 'data-turbo': false %>
