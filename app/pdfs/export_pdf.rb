@@ -431,17 +431,16 @@ class ExportPdf
 
             if examen = cour.examen?
                 if table
-                    data = [ ['<i>NOM PRÉNOM</i>', 'N° Table', '<i>SIGNATURE DÉBUT ÉPREUVE</i>', '<i>SIGNATURE REMISE COPIE</i>'] ]
+                    data = [ ['<i>NOM PRÉNOM</i>', 'Table n°', '<i>SIGNATURE DÉBUT ÉPREUVE</i>', '<i>SIGNATURE REMISE COPIE</i>'] ]
                 else
                     data = [ ['<i>NOM PRÉNOM</i>', '<i>SIGNATURE DÉBUT ÉPREUVE</i>', '<i>SIGNATURE REMISE COPIE</i>'] ]
                 end
                 (0..array.length - 1).each do |index|
                     etudiant = Etudiant.find(array[index])
-                    data += [ [
-                        "<b>#{etudiant.nom.upcase}</b> #{etudiant.prénom.humanize}",
-                        Array.new(table ? 3 : 2)
-                    ].flatten
-                    ]
+                    row = ["<b>#{etudiant.nom.upcase}</b> #{etudiant.prénom.humanize}"]
+                    row += ["#{etudiant.table.zero? ? '' : etudiant.table}"] if table
+                    row += [Array.new(2)]
+                    data += [row.flatten]
                 end
             else
                 data = [ ['<i>NOM PRÉNOM</i>', '<i>SIGNATURE</i>', '<i>NOM PRÉNOM</i>', '<i>SIGNATURE</i>'] ]
@@ -466,7 +465,9 @@ class ExportPdf
             table(data, 
                 header: true,
                 column_widths: examen ? (table ? [160, 60, 160, 160] : [180,180,180]) : [150, 120, 150, 120] ,
-                cell_style: { :inline_format => true, height: 35 })
+                cell_style: { :inline_format => true, height: 35 }) do
+                    column(1).style(:align => :center) if table
+                end
 
             start_new_page unless index == cours.size - 1
         end
