@@ -478,76 +478,83 @@ class ExportPdf
         
         cours.each_with_index do |cour, index|
             surveillants = cour.commentaires.tr(']', '').split('[').drop(1).join(', ').gsub(/[-]/, ' ')
-            image "#{@image_path}/logo_iae_2.png", :height => 60
 
-            move_down @margin_down * 2
+            surveillants.split(', ').each do |surveillant|
+                #1ère page
+                image "#{@image_path}/logo_iae_2.png", :height => 60
 
-            infos = [ ["<b><color rgb='E68824'>EMARGEMENT POUR SURVEILLANCE D’EXAMEN</color></b> \n <color rgb='032E4D'>(Exemplaire à conserver par le surveillant)</color>"] ]
-            table(infos, cell_style: {inline_format: true, border_color: "E68824", align: :center})
+                move_down @margin_down * 2
 
-            move_down @margin_down * 2
-            text "<color rgb='032E4D'>NOM – Prénom du surveillant : <b>#{surveillants}</b></color>", inline_format: true
+                infos = [ ["<b><color rgb='E68824'>EMARGEMENT POUR SURVEILLANCE D’EXAMEN</color></b> \n <color rgb='032E4D'>(Exemplaire à conserver par le surveillant)</color>"] ]
+                table(infos, cell_style: {inline_format: true, border_color: "E68824", align: :center})
+
+                move_down @margin_down * 2
+                text "<color rgb='032E4D'>NOM – Prénom du surveillant : <b>#{surveillant}</b></color>", inline_format: true
 
 
-            move_down @margin_down * 2
+                move_down @margin_down * 2
 
-            data = [ ["<color rgb='032E4D'>Date</color>", "<color rgb='032E4D'><b>#{I18n.l(cour.debut.to_date)}</b></color>"],
-                    ["<color rgb='032E4D'>Formation(s)</color>","<color rgb='032E4D'><b>#{cour.formation.nom}</b></color>"],
-                    ["<color rgb='032E4D'>#{cour.intervenant_binome.try(:nom_prenom)}</color>","<color rgb='032E4D'><b>UE#{cour.code_ue} - #{cour.nom_ou_ue}</b></color>"],
-                    ["<color rgb='032E4D'>Horaires de surveillance   (nbre d’heures rémunérées)</color>",
-                    "<color rgb='032E4D'><b>#{cour.debut.strftime('%Hh%M')}-#{cour.fin.strftime('%Hh%M')} (#{cour.duree + 1} heure.s)</b></color>"],]
+                data = [ ["<color rgb='032E4D'>Date</color>", "<color rgb='032E4D'><b>#{I18n.l(cour.debut.to_date)}</b></color>"],
+                        ["<color rgb='032E4D'>Formation</color>","<color rgb='032E4D'><b>#{cour.formation.nom}</b></color>"],
+                        ["<color rgb='032E4D'>Examen</color>","<color rgb='032E4D'><b>UE#{cour.code_ue} - #{cour.nom_ou_ue} / #{cour.intervenant_binome.try(:nom_prenom)}</b></color>"],
+                        ["<color rgb='032E4D'>Horaires de surveillance </color>","<color rgb='032E4D'><b>#{cour.debut.strftime('%Hh%M')}-#{cour.fin.strftime('%Hh%M')}</b></color>"],
+                        ["<color rgb='032E4D'>Nbre d'heures rémunérées</color>","<color rgb='032E4D'><b>#{cour.duree + 1} heure.s</b></color>"]
+                    ]
 
-            table(data, 
-                header: true, 
-                column_widths: [150, 350], 
-                row_colors: ["FFEAD5", "FFFFFF"],
-                cell_style: { inline_format: true},
-                position: :center)
-
-            move_down @margin_down * 3
-            data2 = [ ["<color rgb='032E4D'>Cadre réservé au \n<b>Surveillant</b></color>"], ["<color rgb='032E4D'>Date :  ………/………/……………… \n\n Signature : \n\n\n\n\n\n\n\n\n\n</color>"]]
-                table(data2, 
+                table(data, 
                     header: true, 
-                    column_widths: [300],
-                    cell_style: { inline_format: true, width: 300, align: :center, color: "032E4D"},
+                    column_widths: [150, 350], 
+                    row_colors: ["FFEAD5", "FFFFFF"],
+                    cell_style: { inline_format: true},
                     position: :center)
 
-            start_new_page
+                move_down @margin_down * 3
+                data2 = [ ["<color rgb='032E4D'>Cadre réservé au \n<b>Surveillant</b></color>"], ["<color rgb='032E4D'>Date :  ………/………/……………… \n\n Signature : \n\n\n\n\n\n\n\n\n\n</color>"]]
+                    table(data2, 
+                        header: true, 
+                        column_widths: [300],
+                        cell_style: { inline_format: true, width: 300, align: :center, color: "032E4D"},
+                        position: :center)
 
-            image "#{@image_path}/logo_iae_2.png", :height => 60
+                # 2ème page
+                start_new_page
 
-            move_down @margin_down * 4
+                image "#{@image_path}/logo_iae_2.png", :height => 60
 
-            infos = [ ["<color rgb='E68824'><b>EMARGEMENT POUR SURVEILLANCE D’EXAMEN</b></color> \n<color rgb='032E4D'> (Exemplaire à remettre à l’Administration)</color>"] ]
-            table(infos, cell_style: {inline_format: true, border_color: "E68824", align: :center})
+                move_down @margin_down * 4
 
-            move_down @margin_down
+                infos = [ ["<color rgb='E68824'><b>EMARGEMENT POUR SURVEILLANCE D’EXAMEN</b></color> \n<color rgb='032E4D'> (Exemplaire à remettre à l’Administration)</color>"] ]
+                table(infos, cell_style: {inline_format: true, border_color: "E68824", align: :center})
 
-            text "<color rgb='032E4D'>NOM – Prénom du surveillant : <b>#{surveillants}</b></color>", inline_format: true
+                move_down @margin_down
 
-            move_down @margin_down
+                text "<color rgb='032E4D'>NOM – Prénom du surveillant : <b>#{surveillant}</b></color>", inline_format: true
 
-            table(data, 
-                header: true, 
-                column_widths: [150, 350], 
-                row_colors: ["FFEAD5", "FFFFFF"],
-                cell_style: { inline_format: true},
-                position: :center)
+                move_down @margin_down
 
-            move_down @margin_down * 3
+                table(data, 
+                    header: true, 
+                    column_widths: [150, 350], 
+                    row_colors: ["FFEAD5", "FFFFFF"],
+                    cell_style: { inline_format: true},
+                    position: :center)
 
-            data3 = [ ["<color rgb='032E4D'>Cadre réservé au \n<b>Surveillant</b></color>", "<color rgb='032E4D'>Cadre réservé à \n<b>l’Administration</b></color>"]]
-            data3 += [ ["<color rgb='032E4D'>\n\nDate :  ………/………/……………… \n\n Signature : \n\n\n\n\n\n\n</color>", "<color rgb='032E4D'>\n\nSaisie dans l’Outil Planning le \n\n\n ………/………/……………… \n\n\n\n\n\n</color>"] ]
+                move_down @margin_down * 3
 
-            move_down @margin_down
-            table(data3, 
-                header: true, 
-                column_widths: [250, 250],
-                cell_style: { inline_format: true, align: :center},
-                position: :center)
+                data3 = [ ["<color rgb='032E4D'>Cadre réservé au \n<b>Surveillant</b></color>", "<color rgb='032E4D'>Cadre réservé à \n<b>l’Administration</b></color>"]]
+                data3 += [ ["<color rgb='032E4D'>\n\nDate :  ………/………/……………… \n\n Signature : \n\n\n\n\n\n\n</color>", "<color rgb='032E4D'>\n\nSaisie dans l’Outil Planning le \n\n\n ………/………/……………… \n\n\n\n\n\n</color>"] ]
 
-            start_new_page
+                move_down @margin_down
+                table(data3, 
+                    header: true, 
+                    column_widths: [250, 250],
+                    cell_style: { inline_format: true, align: :center},
+                    position: :center)
 
+                start_new_page
+            end
+
+            # 3ème page
             image "#{@image_path}/logo@100.png", :height => 60, position: :center
 
             move_down @margin_down * 2
@@ -601,6 +608,7 @@ class ExportPdf
                 text "<color rgb='032E4D'>Signature de l’étudiant impliqué \ndans l’incident, le cas échéant</color>", inline_format: true
             end    
 
+            # 4ème page
             start_new_page(layout: :landscape)
 
             text "<color rgb='032E4D'><b>#{cour.formation.nom}</b></color>", inline_format: true, align: :center, size: 32
@@ -618,6 +626,7 @@ class ExportPdf
             move_down @margin_down * 2
             text "<color rgb='FF0000'>=>   <b><u>En fin d’épreuve</u>, merci de remettre l’enveloppe contenant les copies à l’accueil.</b></color>", inline_format: true, size: 24
 
+            # 5ème page
             start_new_page(layout: :portrait)
 
             image "#{@image_path}/logo_iae_2.png", :height => 60
@@ -653,6 +662,8 @@ class ExportPdf
                     text "<color rgb='032E4D'>> Les dictionnaires sont #{dictionnaire ? "autorisés" : "interdits"}</color>", inline_format: true, style: dictionnaire ? nil : :bold
                 end
             end
+
+            # 6ème page (étudiant)
             start_new_page
 
             image "#{@image_path}/logo_iae_2.png", :height => 60
