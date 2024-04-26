@@ -195,6 +195,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :notes
+
   controller :pages do
     get 'mentions_légales', to: 'pages#mentions_légales', as: :mentions_legales
   end

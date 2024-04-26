@@ -1,0 +1,15 @@
+<%= form_with(model: note, class: "contents") do |form| %>
+
+  <div class="my-5">
+    <%= form.text_field :titre, class: "input input-bordered input-sm w-full", required: true, placeholder: 'Titre*' %>
+    <%= form.text_area :texte, class: "textarea textarea-bordered textarea-sm w-full", rows: 5 %>
+  </div>
+
+  <div class="my-5">
+    <%= form.color_field :couleur %>
+  </div>
+
+  <div class="inline">
+    <%= form.submit class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
+  </div>
+<% end %>

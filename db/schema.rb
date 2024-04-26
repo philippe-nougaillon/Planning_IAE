@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_25_083312) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_26_074358) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -297,6 +297,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_25_083312) do
     t.integer "user_id"
   end
 
+  create_table "notes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "titre"
+    t.string "texte"
+    t.string "couleur"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_notes_on_user_id"
+  end
+
   create_table "ouvertures", force: :cascade do |t|
     t.string "bloc", null: false
     t.integer "jour", null: false
@@ -416,6 +426,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_25_083312) do
   add_foreign_key "invits", "cours"
   add_foreign_key "invits", "intervenants"
   add_foreign_key "invits", "users"
+  add_foreign_key "notes", "users"
   add_foreign_key "presences", "cours"
   add_foreign_key "presences", "etudiants"
   add_foreign_key "presences", "intervenants"

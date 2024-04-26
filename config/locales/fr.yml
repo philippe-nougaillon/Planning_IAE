@@ -504,3 +504,8 @@ fr:
       title: Nouveau dossier
     edit:
       title: Modification Dossier
+  notes:
+    index:
+      title: "Mes notes (mémos)"
+    show: 
+      title: "Note"
