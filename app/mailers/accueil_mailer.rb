@@ -3,7 +3,7 @@ class AccueilMailer < ApplicationMailer
         @cours = cours
         mail(
             to: "accueil@iae.pantheonsorbonne.fr",
-            subject:"[PLANNING IAE Paris] Un bypass sur un cours a été utilisé").tap do |message|
+            subject:"[PLANNING IAE Paris] Un BYPASS sur un cours a été utilisé").tap do |message|
                 message.mailgun_options = {
                     "tag" => ["cours bypass"]
                 }

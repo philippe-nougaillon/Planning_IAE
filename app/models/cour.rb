@@ -18,7 +18,7 @@ class Cour < ApplicationRecord
   validates :debut, :formation_id, :intervenant_id, :duree, presence: true
   validate :check_chevauchement_intervenant
   validate :check_chevauchement, if: Proc.new { |cours| cours.salle_id && !(cours.commentaires && cours.commentaires.include?("BYPASS=#{cours.id}")) }
-  validate :jour_fermeture, unless: Proc.new {|cours| cours.commentaires && cours.commentaires.include?("BYPASS=#{cours.id}")}
+  validate :jour_fermeture, if: Proc.new {|cours| !(cours.commentaires && cours.commentaires.include?("BYPASS=#{cours.id}"))}
   validate :reservation_dates_must_make_sense
   validate :jour_ouverture, if: Proc.new { |cours| cours.salle && cours.salle.bloc != 'Z' && !(cours.commentaires && cours.commentaires.include?("BYPASS=#{cours.id}")) }
   validate :check_invits_en_cours
