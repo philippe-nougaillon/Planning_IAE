@@ -478,7 +478,7 @@ class CoursController < ApplicationController
             étudiants.each do |étudiant|
               pdf = ExportPdf.new
               pdf.convocation(@cours.first, étudiant, params[:papier], params[:calculatrice], params[:ordi_tablette], params[:téléphone], params[:dictionnaire])
-              mailer_response = EtudiantMailer.convocation(étudiant, pdf).deliver_now
+              mailer_response = EtudiantMailer.convocation(étudiant, pdf, @cours.first).deliver_now
               MailLog.create(subject: "Convocation UE##{@cours.first.code_ue}", user_id: current_user.id, message_id: mailer_response.message_id, to: étudiant.email)
             end
           else

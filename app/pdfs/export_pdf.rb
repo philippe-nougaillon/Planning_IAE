@@ -646,21 +646,22 @@ class ExportPdf
             text "<color rgb='032E4D'>Durée : #{cour.duree}h (#{cour.duree + 1}h pour le tiers temps)</color>", inline_format: true
             move_down @margin_down
 
-            autorisations = {papier:, calculatrice:, ordi_tablette:, téléphone:, dictionnaire:}
-            autorisations_sorted = autorisations.sort_by{|i| i.last ? 1 : 0 }
-            autorisations_sorted.each do |autorisation|
-                case autorisation.first
-                when :papier
-                    text "<color rgb='032E4D'>> Documents papier #{papier ? "autorisés" : "interdits"}</color>", inline_format: true, style: papier ? nil : :bold
-                when :calculatrice
-                    text "<color rgb='032E4D'>> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission #{calculatrice ? "autorisée" : "interdite"}</color>", inline_format: true, style: calculatrice ? nil : :bold
-                when :ordi_tablette
-                    text "<color rgb='032E4D'>> Les ordinateurs et tablettes sont #{ordi_tablette ? "autorisés" : "interdits"}</color>", inline_format: true, style: ordi_tablette ? nil : :bold
-                when :téléphone
-                    text "<color rgb='032E4D'>> Les téléphones portables sont #{téléphone ? "autorisés" : "interdits"}</color>", inline_format: true, style: téléphone ? nil : :bold
-                when :dictionnaire
-                    text "<color rgb='032E4D'>> Les dictionnaires sont #{dictionnaire ? "autorisés" : "interdits"}</color>", inline_format: true, style: dictionnaire ? nil : :bold
-                end
+            move_down @margin_down
+            text "<color rgb='032E4D'>Consignes :</color>", inline_format: true
+            if papier
+                text "<color rgb='032E4D'>> Documents papier autorisés</color>", inline_format: true, style: :bold
+            end
+            if calculatrice
+                text "<color rgb='032E4D'>> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission autorisée</color>", inline_format: true, style: :bold
+            end
+            if ordi_tablette
+                text "<color rgb='032E4D'>> Les ordinateurs et tablettes sont autorisés</color>", inline_format: true, style: :bold
+            end
+            if téléphone
+                text "<color rgb='032E4D'>> Les téléphones portables sont autorisés</color>", inline_format: true, style: :bold
+            end
+            if dictionnaire
+                text "<color rgb='032E4D'>> Les dictionnaires sont autorisés</color>", inline_format: true, style: :bold
             end
 
             # 6ème page (étudiant)
@@ -685,6 +686,9 @@ class ExportPdf
             move_down @margin_down
             text "<color rgb='032E4D'>Durée : #{cour.duree}h</color>", inline_format: true
             move_down @margin_down
+
+            autorisations = {papier:, calculatrice:, ordi_tablette:, téléphone:, dictionnaire:}
+            autorisations_sorted = autorisations.sort_by{|i| i.last ? 1 : 0 }
             autorisations_sorted.each do |autorisation|
                 case autorisation.first
                 when :papier
