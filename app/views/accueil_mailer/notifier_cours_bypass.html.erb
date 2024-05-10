@@ -1,6 +1,13 @@
 <p style="margin-bottom: 0.5rem">
   Bonjour,
   <br><br>
-  Un BYPASS sur un cours a été utilisé.
-  <%= link_to "Voir", cour_url(@cours) %>
+  Un <b>BYPASS</b> a été utilisé sur le cours :
+  <br><br>
+  <b><%= "#{@cours.nom_ou_ue} - #{@cours.formation.nom}" %></b>
+  <br><br>
+  Prévu du <b><%= l(@cours.debut, format: :long) %></b> au <b><%= l(@cours.fin, format: :long) %></b>
+  <br><br>
+  Salle : <b><%= @cours.salle.nom %></b>
+  <br><br>
+  <%= link_to "Voir les détails du cours", cour_url(@cours) %>
 </p>
