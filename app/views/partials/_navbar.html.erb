@@ -75,7 +75,7 @@
               <i class="far fa-lightbulb"></i>
               <% notes = current_user.notes.count %>
               <% if notes > 0 %>
-                <span class="indicator-item badge"><%= notes %></span> 
+                <span class="indicator-item badge badge-warning"><%= notes %></span> 
               <% end %>
             <% end%>
           </li>
