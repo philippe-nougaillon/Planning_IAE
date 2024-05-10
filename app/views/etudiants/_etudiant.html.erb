@@ -1,4 +1,11 @@
 <tr class="hover border">
+    <% if policy(Etudiant).action? %>
+        <td>
+            <span class="flex" data-action="click->action#click">
+            <%= check_box_tag "etudiants_id[#{etudiant.id}]", 'yes', false, data: {"action-target": "source", "checkbox-select-all-target": "checkbox"} %>
+            </span>
+        </td>
+    <% end %>
     <td><b><%= link_to etudiant.nom, etudiant, class: 'text-primary hover:underline' %></b></td>
     <td><%= etudiant.prénom %></td>
     <td>

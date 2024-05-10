@@ -19,13 +19,8 @@
       </div>
 
       <div class="form-control">
-        <%= f.label :email, "Email *" %>
-        <%= f.email_field :email, required: true, class: 'input input-bordered input-sm w-full' %>
-      </div>
-
-      <div class="form-control">
-        <%= f.label :mobile, "Mobile" %>
-        <%= f.text_field :mobile, class: 'input input-bordered input-sm w-full' %>
+        <%= f.label :table, "N° Table" %>
+        <%= f.number_field :table, class: 'input input-bordered input-sm w-full' %>
       </div>
 
       <div class="field mb-6">
@@ -44,8 +39,13 @@
       </div>
 
       <div class="form-control">
-        <%= f.label :workflow_state, "Statut" %>
-        <%= f.select :workflow_state, Etudiant.workflow_spec.states.keys.to_a, {include_blank: true}, class: 'select select-bordered select-sm w-full' %>
+        <%= f.label :email, "Email *" %>
+        <%= f.email_field :email, required: true, class: 'input input-bordered input-sm w-full' %>
+      </div>
+
+      <div class="form-control">
+        <%= f.label :mobile, "Mobile" %>
+        <%= f.text_field :mobile, class: 'input input-bordered input-sm w-full' %>
       </div>
     </div>
   </div>

@@ -414,6 +414,7 @@ class ToolsController < ApplicationController
         etudiant.prénom = row[headers.index 'Prénom'].try(:strip)
         etudiant.email = row[headers.index 'Mail']
         etudiant.mobile = row[headers.index 'Mobile']
+        etudiant.table = row[headers.index 'Table'] || 0
         # etudiant.date_de_naissance = date_de_naissance
         # etudiant.lieu_naissance = row[headers.index 'Lieu de naissance']
         # etudiant.pays_naissance = row[headers.index 'Pays de la ville de naissance'] 

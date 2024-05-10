@@ -14,6 +14,7 @@ class User < ApplicationRecord
          :recoverable, :trackable, :validatable, :registerable, :timeoutable
 
   belongs_to :formation, optional: true   
+  has_many :notes
 
   validates :nom, :prénom, :role, presence: true    
 

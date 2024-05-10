@@ -1,0 +1,8 @@
+<%= link_to note do %>
+  <div id="<%= dom_id note %>" style="background-color: <%= note.couleur %>" class="w-72 h-72 py-4 px-8 shadow-xl hover:shadow-2xl">
+  <span class="text-2xl font-black my-5"><%= truncate(note.titre, length: 80) %></span>
+  <p class="my-5">
+    <%= truncate(note.texte, length: 40) %>
+  </div>
+  </p>
+<% end %>

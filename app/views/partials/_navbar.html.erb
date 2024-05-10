@@ -69,6 +69,17 @@
             Dernière connexion il y a <%= time_ago_in_words current_user.last_sign_in_at %>
           <% end %>
         </li>
+        <% if policy(Note).index? %>
+          <li class="nav-item indicator mr-4">
+            <%= link_to notes_path, class: "nav-link" do %>
+              <i class="far fa-lightbulb"></i>
+              <% notes = current_user.notes.count %>
+              <% if notes > 0 %>
+                <span class="indicator-item badge badge-warning"><%= notes %></span> 
+              <% end %>
+            <% end%>
+          </li>
+        <% end %>
         <% if policy(current_user).right_navbar? %>
           <%= navbar_nav_item('', 'wrench', tools_index_path) %>
           <%= navbar_nav_item('', 'search-plus', tools_rechercher_path) %>

@@ -1,0 +1,18 @@
+<div class="mb-12">
+  <div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
+    <h1 class="text-3xl"><i class="far fa-lightbulb"></i> Mes notes & mémos</h1>
+    <% if policy(Note).new? %>
+      <button onclick="my_modal_1.showModal()">
+        <%= fa_icon 'plus-circle', class: 'fa-2x' %>
+      </button>
+    <% end %>
+  </div>
+
+  <div id="notes" class="flex flex-wrap gap-8 mt-12">
+    <%= render @notes %>
+  </div>
+
+  <dialog id="my_modal_1" class="modal bg-white w-96 mx-auto h-96 my-auto px-8">
+    <%= render "form", note: @note %>
+  </dialog>
+</div>

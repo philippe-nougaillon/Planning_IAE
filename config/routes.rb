@@ -36,7 +36,12 @@ Rails.application.routes.draw do
   end
 
   resources :fermetures
-  resources :etudiants
+  resources :etudiants do
+    collection do
+      post :action
+      post :action_do
+    end
+  end
   resources :documents
   resources :unites
 
@@ -189,6 +194,8 @@ Rails.application.routes.draw do
       post :action
     end
   end
+
+  resources :notes
 
   controller :pages do
     get 'mentions_légales', to: 'pages#mentions_légales', as: :mentions_legales

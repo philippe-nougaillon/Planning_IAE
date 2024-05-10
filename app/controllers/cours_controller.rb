@@ -478,7 +478,7 @@ class CoursController < ApplicationController
             étudiants.each do |étudiant|
               pdf = ExportPdf.new
               pdf.convocation(@cours.first, étudiant, params[:papier], params[:calculatrice], params[:ordi_tablette], params[:téléphone], params[:dictionnaire])
-              mailer_response = EtudiantMailer.convocation(étudiant, pdf).deliver_now
+              mailer_response = EtudiantMailer.convocation(étudiant, pdf, @cours.first).deliver_now
               MailLog.create(subject: "Convocation UE##{@cours.first.code_ue}", user_id: current_user.id, message_id: mailer_response.message_id, to: étudiant.email)
             end
           else
@@ -658,6 +658,12 @@ class CoursController < ApplicationController
             end
           end
 
+          # notifier l'accueil s'il y a un bypass
+          if @cour.commentaires.include?("BYPASS=#{@cour.id}")
+            mailer_response = AccueilMailer.notifier_cours_bypass(@cour, current_user.email).deliver_now
+            MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: "accueil@iae.pantheonsorbonne.fr", subject: "BYPASS")
+          end
+
           # repartir à la page où a eu lieu la demande de modification
           if params[:from] == 'planning_salles'
             redirect_to cours_path(view:"calendar_rooms", start_date:@cour.debut)
@@ -714,13 +720,18 @@ class CoursController < ApplicationController
 
   def mes_sessions_intervenant
     if params[:presence_slug].present?
-      presence = Presence.find_by(slug: params[:presence_slug]) 
-      @intervenant = presence.intervenant
-    else
+      if presence = Presence.find_by(slug: params[:presence_slug]) 
+        @intervenant = presence.intervenant
+      end
+    elsif user_signed_in?
       @intervenant = Intervenant.find_by("LOWER(intervenants.email) = ?", current_user.email.downcase)
     end
-
-    @cours = @intervenant.cours.confirmé.where("DATE(debut) = ?", Date.today).order(:debut)
+    
+    if @intervenant
+      @cours = @intervenant.cours.confirmé.where("DATE(debut) = ?", Date.today).order(:debut)
+    else
+      redirect_to root_path, alert: "Vous devez vous connecter ou cliquer sur le lien reçu par email pour accéder à cette page"
+    end
   end
 
   def signature_etudiant

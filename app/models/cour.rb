@@ -17,10 +17,10 @@ class Cour < ApplicationRecord
 
   validates :debut, :formation_id, :intervenant_id, :duree, presence: true
   validate :check_chevauchement_intervenant
-  validate :check_chevauchement, if: Proc.new { |cours| cours.salle_id }
-  validate :jour_fermeture
+  validate :check_chevauchement, if: Proc.new { |cours| cours.salle_id && !(cours.bypass?) }
+  validate :jour_fermeture, if: Proc.new {|cours| !(cours.bypass?)}
   validate :reservation_dates_must_make_sense
-  validate :jour_ouverture, if: Proc.new { |cours| cours.salle && cours.salle.bloc != 'Z' }
+  validate :jour_ouverture, if: Proc.new { |cours| cours.salle && cours.salle.bloc != 'Z' && !(cours.bypass?) }
   validate :check_invits_en_cours
 
   before_validation :update_date_fin
@@ -671,6 +671,10 @@ class Cour < ApplicationRecord
   def signable_intervenant?
     now = ApplicationController.helpers.time_in_paris_selon_la_saison
     (now > self.debut + 30.minutes)
+  end
+
+  def bypass?
+    (self.commentaires && self.commentaires.include?("BYPASS=#{self.id}"))
   end
 
   private

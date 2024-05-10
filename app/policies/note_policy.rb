@@ -1,4 +1,4 @@
-class EtudiantPolicy < ApplicationPolicy
+class NotePolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
       scope
@@ -6,11 +6,11 @@ class EtudiantPolicy < ApplicationPolicy
   end
 
   def index?
-    user && user.role_number >= 2
+    user && user.role_number >= 3
   end
 
   def show?
-    index?
+    index? && record.user_id == user.id
   end
 
   def new?
@@ -22,7 +22,7 @@ class EtudiantPolicy < ApplicationPolicy
   end
 
   def edit?
-    index?
+    show?
   end
 
   def update?
@@ -30,15 +30,7 @@ class EtudiantPolicy < ApplicationPolicy
   end
 
   def destroy?
-    index?
-  end
-
-  def action?
-    user && user.role_number >= 5
-  end
-
-  def action_do?
-    action?
+    show?
   end
 
 end

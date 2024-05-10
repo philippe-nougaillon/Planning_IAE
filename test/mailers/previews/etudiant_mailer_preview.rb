@@ -12,7 +12,7 @@ class EtudiantMailerPreview < ActionMailer::Preview
   def convocation
     pdf = ExportPdf.new
     pdf.convocation(Cour.last, Etudiant.last, true, false, false, true, false)
-    EtudiantMailer.convocation(Etudiant.last, pdf)
+    EtudiantMailer.convocation(Etudiant.last, pdf, Cour.last)
   end
 
 end

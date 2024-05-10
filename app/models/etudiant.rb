@@ -38,7 +38,7 @@ class Etudiant < ApplicationRecord
     #   'Nom Entreprise', 'Adresse entreprise', 'CP entreprise', 'Ville entreprise',
     #   'Formation_ID','Formation','created_at', 'updated_at'  
     # ]
-    [ 'Civilité', 'NOM', 'Prénom', 'Mail', 'Mobile']
+    [ 'Civilité', 'NOM', 'Prénom', 'Mail', 'Mobile', 'Table']
   end
 
 	def self.generate_xls(etudiants)
