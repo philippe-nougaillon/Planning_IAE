@@ -661,9 +661,9 @@ class ToolsController < ApplicationController
     end
 
     unless params[:academ].blank?
-      book = Cour.generate_academ_xls(cours.réalisé)
+      book = CoursAcademToXls.new(cours.réalisé).call
     else
-      book = Cour.generate_xls(cours, params[:binome].present?, true)  
+      book = CoursToXls.new(cours, params[:binome].present?, true).call
     end
     file_contents = StringIO.new
     book.write file_contents # => Now file_contents contains the rendered file output
@@ -698,7 +698,7 @@ class ToolsController < ApplicationController
       intervenants = intervenants.where("status = ?", params[:status])
     end
 
-    book = Intervenant.generate_xls(intervenants, date_debut, date_fin)  
+    book = IntervenantsToXls.new(intervenants, date_debut, date_fin).call
     file_contents = StringIO.new
     book.write file_contents # => Now file_contents contains the rendered file output
     filename = "Export_Intervenants_#{Date.today.to_s}.xls"
@@ -722,9 +722,6 @@ class ToolsController < ApplicationController
     send_data file_contents.string.force_encoding('binary'), filename: filename 
   end
 
-  def etudiants
-  end
-
   def export_etudiants
   end
 
@@ -735,7 +732,7 @@ class ToolsController < ApplicationController
       etudiants = etudiants.where(formation_id: params[:formation_id])
     end
 
-    book = Etudiant.generate_xls(etudiants)  
+    book = EtudiantsToXls.new(etudiants).call
     file_contents = StringIO.new
     book.write file_contents # => Now file_contents contains the rendered file output
     filename = "Export_Etudiants_#{Date.today.to_s}.xls"
@@ -819,18 +816,10 @@ class ToolsController < ApplicationController
     @cumul_hetd = @cumul_vacations = @cumul_resps = 0
 
     respond_to do |format|
-      
       format.html
 
-      format.csv do
-        @csv_string = Cour.generate_etats_services_csv(@cours, @intervenants, @start_date, @end_date)
-        filename = "Etats_de_services_#{Date.today.to_s}"
-        response.headers['Content-Disposition'] = 'attachment; filename="' + filename + '.csv"'
-        render "tools/etats_services.csv.erb"
-      end
-
       format.xls do
-        book = Cour.generate_etats_services_xls(@cours, @intervenants, @start_date, @end_date)
+        book = CoursEtatsServicesToXls.new(@cours, @intervenants, @start_date, @end_date).call
         file_contents = StringIO.new
         book.write file_contents # => Now file_contents contains the rendered file output
         filename = "Export_Cours.xls"
@@ -1192,14 +1181,6 @@ class ToolsController < ApplicationController
 
     respond_to do |format|
       format.html
-  
-      # format.xls do
-      #   book = Cour.generate_etats_services_xls(@cours, @intervenants, @start_date, @end_date)
-      #   file_contents = StringIO.new
-      #   book.write file_contents # => Now file_contents contains the rendered file output
-      #   filename = "Export_Cours.xls"
-      #   send_data file_contents.string.force_encoding('binary'), filename: filename 
-      # end
 
       format.pdf do
         filename = "Vacations_administratives_#{ surveillant }_du_#{ @start_date }_au_#{ @end_date }"

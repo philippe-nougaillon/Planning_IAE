@@ -187,7 +187,7 @@ class CoursController < ApplicationController
       format.html
 
       format.xls do
-        book = Cour.generate_xls(@cours, !params[:intervenant])
+        book = CoursToXls.new(@cours, !params[:intervenant]).call
         file_contents = StringIO.new
         book.write file_contents # => Now file_contents contains the rendered file output
         filename = "Export_Cours.xls"
@@ -505,7 +505,7 @@ class CoursController < ApplicationController
       end
 
       format.xls do
-        book = Cour.generate_xls(@cours, !params[:intervenant])
+        book = CoursToXls.new(@cours, !params[:intervenant]).call
         file_contents = StringIO.new
         book.write file_contents # => Now file_contents contains the rendered file output
         filename = "Export_Cours.xls"
