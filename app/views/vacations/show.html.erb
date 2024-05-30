@@ -21,7 +21,7 @@
       <p class="mb-4">
         <strong>Intervenant</strong>
         <br>
-        <%= link_to @vacation.intervenant.nom_prenom, intervenant_path(@vacation.intervenant.slug || @vacation.intervenant.id), class: 'text-primary hover:underline' %>
+        <%= link_to @vacation.intervenant.nom_prenom, intervenant_path(@vacation.intervenant.slug || @vacation.intervenant.id), class: 'text-primary hover:underline font-bold' %>
       </p>
 
       <p class="mb-4">

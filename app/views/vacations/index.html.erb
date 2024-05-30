@@ -55,7 +55,7 @@
         <th>Date</th>
         <th>Activité</th>
         <th>Quantité</th>
-        <th>ForfaitHTD</th>
+        <th>Forfait HTD</th>
         <th></th>
       </tr>
     </thead>
@@ -64,14 +64,14 @@
       <% @vacations.includes(:formation, :intervenant).each do |vacation| %>
         <tr class="hover border">
           <td><%= time_ago_in_words vacation.updated_at %></td>
-          <td><%= link_to vacation.intervenant.nom_prenom, intervenant_path(vacation.intervenant.slug || vacation.intervenant.id), class: 'text-primary hover:underline' %></td>
+          <td><%= link_to vacation.intervenant.nom_prenom, intervenant_path(vacation.intervenant.slug || vacation.intervenant.id), class: 'text-primary hover:underline font-bold' %></td>
           <td style="border-left: .3rem solid <%= vacation.formation.try(:positive_color) %>">
             <%= vacation.formation.try(:nom) %>
           </td>
           <td><%= l(vacation.date) %></td>
           <td><%= vacation.titre %></td>
-          <td><%= vacation.qte %></td>
-          <td><%= vacation.forfaithtd %></td>
+          <td class="text-right"><%= vacation.qte %></td>
+          <td class="text-right"><%= vacation.forfaithtd %></td>
           <td><%= link_to 'Voir', vacation_path(vacation), class: 'text-primary hover:underline' %></td>
         </tr>
       <% end %>
