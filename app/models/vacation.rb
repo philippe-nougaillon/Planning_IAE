@@ -21,15 +21,15 @@ class Vacation < ApplicationRecord
 
   def self.forfaits_htd
     [
-      0,
+      0.0,
       0.25,
       0.75,
-      1,
-      2,
-      3,
-      4,
+      1.0,
+      2.0,
+      3.0,
+      4.0,
       7.5,
-      10
+      10.0
     ]
   end
 
