@@ -509,3 +509,10 @@ fr:
       title: "Mes notes (mémos)"
     show: 
       title: "Note"
+  vacations:
+    index:
+      title: "Liste des vacations"
+    show:
+      title: "Vacation"
+    edit:
+      title: "Modification Vacation"

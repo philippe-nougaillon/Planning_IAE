@@ -171,33 +171,38 @@
     <% end %>
   <% end %>
 
-  <% if @intervenant.vacations.any? %>
-    <div class="mt-8">
-      <h3 class="text-xl text-secondary my-4">
-        <%= fa_icon 'user-md' %>
-        Vacations
-      </h2>
+  <div class="mt-8">
+    <h3 class="text-xl text-secondary my-4">
+      <%= fa_icon 'user-md' %>
+      Vacations
+    </h2>
 
-      <div class="overflow-x-auto">
-        <table class="table table-sm ">
-          <thead class="bg-slate-100 border">
-            <th>Date</th>
-            <th>Formation</th>
-            <th>Activité</th>
-            <th>Intervenant</th>
-            <th>Qté</th>
-            <th>Forfait_HTD</th>
-            <th>Commentaires</th>
-          </thead>
+    <div class="overflow-x-auto">
+      <table class="table table-sm ">
+        <thead class="bg-slate-100 border">
+          <th>Date</th>
+          <th>Formation</th>
+          <th>Activité</th>
+          <th>Intervenant</th>
+          <th>Qté</th>
+          <th>Forfait_HTD</th>
+          <th>Commentaires</th>
+        </thead>
 
+        <% if @intervenant.vacations.any? %>
           <% @intervenant.vacations.each do |vacation| %>
             <%= render vacation %>
           <% end %>
-        </table>
-      </div>
+        <% else %>
+          <tr class="hover border">
+            <td colspan="7" class="text-center">
+              Aucune vacation
+            </td>
+          </tr>
+        <% end %>
+      </table>
     </div>
-
-  <% end %>
+  </div>
 
   <div tabindex="0" class="collapse collapse-arrow border border-base-300 bg-base-100 mt-8">
     <div class="collapse-title text-lg">

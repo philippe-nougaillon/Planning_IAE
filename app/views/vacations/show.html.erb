@@ -1,0 +1,89 @@
+<h1 class="text-2xl mt-6">
+  <%= fa_icon 'user-md' %>
+  Vacation 
+</h1>
+
+<div class="card shadow p-4 mb-8">
+  <div>
+    <div class="join float-right">
+      <%= link_to edit_vacation_path(@vacation), class: 'btn btn-sm btn-primary btn-outline join-item' do %>
+        <%= fa_icon 'edit' %> Modifier
+      <% end %>
+
+      <%= link_to vacations_path, class: 'btn btn-sm btn-primary btn-outline join-item' do %>
+        <%= fa_icon 'list' %> Retour
+      <% end %>
+    </div>
+  </div>
+
+  <div class="flex flex-wrap gap-6">
+    <div>
+      <p class="mb-4">
+        <strong>Intervenant</strong>
+        <br>
+        <%= link_to @vacation.intervenant.nom_prenom, intervenant_path(@vacation.intervenant.slug || @vacation.intervenant.id), class: 'text-primary hover:underline' %>
+      </p>
+
+      <p class="mb-4">
+        <strong>Date</strong>
+        <br>
+        <%= l(@vacation.date, format: :long) %>
+      </p>
+
+      <p class="mb-4">
+        <strong>Quantité</strong>
+        <br>
+        <%= @vacation.qte %>
+      </p>
+
+    </div>
+
+    <div>
+      <p class="mb-4">
+        <strong>Formation</strong>
+        <br>
+        <span class="pl-2" style="border-left: .3rem solid <%= @vacation.formation.try(:positive_color) %>">
+          <%= link_to(Formation.unscoped.find(@vacation.formation_id).nom, Formation.unscoped.find(@vacation.formation_id), class: 'text-primary hover:underline') %>
+        </span>
+      </p>
+
+      <p class="mb-4">
+        <strong>Activité</strong>
+        <br>
+        <%= @vacation.titre %>
+      </p>
+
+      <p class="mb-4">
+        <strong>Forfait HTD</strong>
+        <br>
+        <%= @vacation.forfaithtd %>
+      </p>
+    </div>
+    <div>
+      <p class="mb-4">
+        <strong>Commentaires</strong>
+        <br>
+        <%= @vacation.commentaires %>
+      </p>
+    </div>
+  </div>
+</div>
+
+
+<br>
+<h4 class="text-xl mb-4">Audit des modifications</h4>
+
+<div class="overflow-x-auto">
+  <table class="table table-xs">
+    <thead class="bg-slate-100 border">
+      <th>Date</th>
+      <th>Utilisateur</th>            
+      <th>Type</th>
+      <th>Id</th>
+      <th>Action</th>
+      <th>Modifications</th>
+    </thead>
+    <%= render partial: 'tools/audit', collection: @vacation.own_and_associated_audits.reorder(id: :desc) %>
+  </table>
+</div>
+<br>
