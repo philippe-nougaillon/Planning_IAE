@@ -197,6 +197,8 @@ Rails.application.routes.draw do
 
   resources :notes
 
+  resources :vacations, only: %i[ index show edit update]
+
   controller :pages do
     get 'mentions_légales', to: 'pages#mentions_légales', as: :mentions_legales
   end

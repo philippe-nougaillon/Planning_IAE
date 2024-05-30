@@ -25,6 +25,7 @@
         
         <% if current_user.rh? %>
           <%= navbar_nav_item('dossiers', 'folder', dossiers_path) %>
+          <%= navbar_nav_item('vacations', 'user-md', vacations_path) %>
         <% end %>
 
         <% if policy(:tool).audit_cours? %>
