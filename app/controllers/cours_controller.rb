@@ -46,7 +46,7 @@ class CoursController < ApplicationController
       session[:intervenant_id] = params[:intervenant_id] = nil
       session[:intervenant_nom] = params[:intervenant_nom] = nil
       session[:ue] = params[:ue] = nil
-      session[:semaine] = params[:semaine] = nil
+      session[:week_number] = params[:week_number] = nil
       session[:start_date] = params[:start_date] = Date.today.to_s
       session[:etat] = params[:etat] = nil
       session[:view] = params[:view] = 'list'
@@ -67,8 +67,8 @@ class CoursController < ApplicationController
     @cours = Cour.order(:debut)
 
     # Si N° de semaine, afficher le premier jour de la semaine choisie, sinon date du jour
-    unless params[:semaine].blank?
-      year, week = params[:semaine].split('-')
+    unless params[:week_number].blank?
+      year, week = params[:week_number].split('-')
       @date = Date.commercial(year.to_i, week.gsub('W','').to_i, 1)
     else
       unless params[:start_date].blank?
@@ -87,7 +87,7 @@ class CoursController < ApplicationController
       when 'list'
         @alert = Alert.visibles.first
         unless params[:filter] == 'all'
-          unless params[:semaine].blank?
+          unless params[:week_number].blank?
             @cours = @cours.where("cours.debut BETWEEN DATE(?) AND DATE(?)", @date, @date + 7.day)
           else
             @cours = @cours.where("cours.debut >= DATE(?)", @date)
