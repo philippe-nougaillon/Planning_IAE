@@ -10,6 +10,7 @@
             <tr>
                 <th colspan=2>Date</th>
                 <th>Formation</th>
+                <th>Intervenant</th>
                 <th>Intitulé du cours</th>
                 <th>Salle</th>
             </tr>
@@ -25,6 +26,18 @@
                         - <%= I18n.l(c.fin, format: :heures_min) %>
                     </td>
                     <td><%= c.try(:formation).try(:nom) %></td>
+                    <td>
+                        <% if c.intervenant.nom_prenom.include?('EXAMEN') %>
+                            <i><b><%= c.intervenant.nom_prenom %></b></i>
+                        <% else %>
+                            <%= c.intervenant.nom_prenom %>
+                        <% end %>
+
+                        <% if c.intervenant_binome %>
+                            <br>
+                            <%= c.intervenant_binome.nom_prenom %>
+                        <% end %>
+                    </td>
                     <td><%= c.nom_ou_ue %></td>
                     <td><%= c.try(:salle).try(:nom) %></td>
                 </tr>
