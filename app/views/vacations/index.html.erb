@@ -64,7 +64,7 @@
         <th>Activité</th>
         <th>Quantité</th>
         <th>Forfait HTD</th>
-        <th>Montant</th>
+        <th>Montant_€</th>
         <th></th>
       </tr>
     </thead>
@@ -82,7 +82,7 @@
           <td><%= vacation.titre %></td>
           <td class="text-right"><%= vacation.qte %></td>
           <td class="text-right"><%= vacation.forfaithtd %></td>
-          <td class="text-right" style="width: 110px">
+          <td class="text-right">
             <% if vacation.forfaithtd > 0 %>
               <%= number_to_currency(((Cour.Tarif * vacation.forfaithtd) * vacation.qte).round(2)) %>
             <% else %>
