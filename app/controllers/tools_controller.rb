@@ -755,20 +755,44 @@ class ToolsController < ApplicationController
   end
 
   def export_vacations
+    @activités = Vacation.pluck(:titre).uniq.sort
+    @intervenants = Intervenant.all
+
+    if params[:status].present?
+      @intervenants = @intervenants.where(status: params[:status])
+    end
   end
 
   def export_vacations_do
     vacations = Vacation.all
+    @intervenants = Intervenant.all
 
-    unless params[:formation_id].blank?
+    if params[:status].present?
+      vacations = vacations.joins(:intervenant).where("intervenants.status = ?", params[:status])
+      @intervenants = @intervenants.where("status = ?", params[:status])
+    end
+
+    if params[:intervenant_id].present?
+      vacations = vacations.where(intervenant_id: params[:intervenant_id])
+    end
+
+    if params[:formation_id].present?
       vacations = vacations.where(formation_id: params[:formation_id])
     end
 
-    book = VacationsToXls.new(vacations.includes(:formation, :intervenant)).call
-    file_contents = StringIO.new
-    book.write file_contents # => Now file_contents contains the rendered file output
-    filename = "Export_Vacations_#{Date.today.to_s}.xls"
-    send_data file_contents.string.force_encoding('binary'), filename: filename
+    if params[:activité].present?
+      vacations = vacations.where(titre: params[:activité])
+    end
+
+    if params[:commit] == "Exporter"
+      book = VacationsToXls.new(vacations.includes(:formation, :intervenant)).call
+      file_contents = StringIO.new
+      book.write file_contents # => Now file_contents contains the rendered file output
+      filename = "Export_Vacations_#{Date.today.to_s}.xls"
+      send_data file_contents.string.force_encoding('binary'), filename: filename
+    else
+      redirect_to tools_export_vacations_path(status: params[:status], formation_id: params[:formation_id], activité: params[:activité])
+    end
   end
 
   def etats_services
