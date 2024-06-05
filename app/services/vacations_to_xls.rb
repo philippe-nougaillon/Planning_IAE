@@ -21,6 +21,7 @@ class VacationsToXls < ApplicationService
                 "vacation.titre",
                 "vacation.qte",
                 "vacation.forfaithtd",
+                "vacation.montant",
                 "vacation.commentaires",
                 "vacation.created_at",
                 "vacation.updated_at",
@@ -33,7 +34,7 @@ class VacationsToXls < ApplicationService
                 "formation.abrg",
                 "formation.gestionnaire",
                 "formation.Mail de la formation",
-                "formation.code_analytique",
+                "formation.code_analytique (EOTP)",
                 "formation.hors_catalogue",
                 "formation.archive",
                 "formation.hss",
@@ -45,6 +46,12 @@ class VacationsToXls < ApplicationService
     index = 1
     @vacations.each do | vacation |
         next unless vacation.formation
+
+        if vacation.forfaithtd > 0
+          montant_vacation = ((Cour.Tarif * vacation.forfaithtd) * vacation.qte).round(2)
+        else
+          montant_vacation = vacation.tarif * vacation.qte
+        end
         fields_to_export = [
           vacation.formation.id, 
           vacation.formation.nom,
@@ -54,6 +61,7 @@ class VacationsToXls < ApplicationService
           vacation.titre,
           vacation.qte,
           vacation.forfaithtd,
+          ActionController::Base.helpers.number_to_currency(montant_vacation),
           vacation.commentaires,
           vacation.created_at, 
           vacation.updated_at,

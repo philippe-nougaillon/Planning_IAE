@@ -11,6 +11,7 @@ class VacationsController < ApplicationController
       params[:start_date] = nil
       params[:end_date] = nil
       params[:activité] = nil
+      params[:status] = nil
     end
 
     if params[:formation].present?
@@ -30,6 +31,10 @@ class VacationsController < ApplicationController
 
     if params[:activité].present?
       @vacations = @vacations.where(titre: params[:activité])
+    end
+
+    if params[:status].present?
+      @vacations = @vacations.joins(:intervenant).where("intervenants.status = ?", params[:status])
     end
 
     respond_to do |format|

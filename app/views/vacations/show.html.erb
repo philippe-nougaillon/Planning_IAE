@@ -16,7 +16,7 @@
     </div>
   </div>
 
-  <div class="flex flex-wrap gap-6">
+  <div class="flex flex-wrap gap-24">
     <div>
       <p class="mb-4">
         <strong>Intervenant</strong>
@@ -40,11 +40,9 @@
 
     <div>
       <p class="mb-4">
-        <strong>Formation</strong>
+        <strong>Statut</strong>
         <br>
-        <span class="pl-2" style="border-left: .3rem solid <%= @vacation.formation.try(:positive_color) %>">
-          <%= link_to(Formation.unscoped.find(@vacation.formation_id).nom, Formation.unscoped.find(@vacation.formation_id), class: 'text-primary hover:underline') %>
-        </span>
+        <%= @vacation.intervenant.status %>
       </p>
 
       <p class="mb-4">
@@ -59,13 +57,31 @@
         <%= @vacation.forfaithtd %>
       </p>
     </div>
-    <div>
+    <div class="flex flex-col justify-between">
       <p class="mb-4">
-        <strong>Commentaires</strong>
+        <strong>Formation</strong>
         <br>
-        <%= @vacation.commentaires %>
+        <span class="pl-2" style="border-left: .3rem solid <%= @vacation.formation.try(:positive_color) %>">
+          <%= link_to(Formation.unscoped.find(@vacation.formation_id).nom, Formation.unscoped.find(@vacation.formation_id), class: 'text-primary hover:underline') %>
+        </span>
+      </p>
+      <p class="mb-4">
+        <strong>Montant</strong>
+        <br>
+        <% if @vacation.forfaithtd > 0 %>
+          <%= number_to_currency(((Cour.Tarif * @vacation.forfaithtd) * @vacation.qte).round(2)) %>
+        <% else %>
+          <%= number_to_currency(@vacation.tarif * @vacation.qte) %>
+        <% end %>
       </p>
     </div>
+  </div>
+  <div>
+    <p class="mb-4">
+      <strong>Commentaires</strong>
+      <br>
+      <%= @vacation.commentaires %>
+    </p>
   </div>
 </div>
 

@@ -6,7 +6,7 @@ class VacationPolicy < ApplicationPolicy
   end
 
   def index?
-    user && user.rh?
+    user && (user.rh? || user.administrateur?) 
   end
 
   def show?
