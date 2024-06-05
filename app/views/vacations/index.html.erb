@@ -31,6 +31,13 @@
           </div>
         </div>
 
+        <div class="sm:w-4/12 pr-2">
+          <%= label_tag :status, "Statut" %>
+          <%= select_tag :status, options_for_select(Intervenant.statuses, 
+                params[:status]), include_blank:true,
+                class: 'select select-bordered select-sm w-full', onchange: 'this.form.submit()' %>
+        </div>
+
         <div class="sm:w-1/5 pr-2">
           <%= label_tag :start_date, "Période du" %>
           <%= text_field_tag :start_date, params[:start_date], type:'date', class:"input input-bordered input-sm w-full" %>
@@ -51,11 +58,13 @@
       <tr>
         <th>MàJ</th>
         <th>Intervenant</th>
+        <th>Status</th>
         <th>Formation</th>
         <th>Date</th>
         <th>Activité</th>
         <th>Quantité</th>
         <th>Forfait HTD</th>
+        <th>Montant</th>
         <th></th>
       </tr>
     </thead>
@@ -65,6 +74,7 @@
         <tr class="hover border">
           <td><%= time_ago_in_words vacation.updated_at %></td>
           <td><%= link_to vacation.intervenant.nom_prenom, intervenant_path(vacation.intervenant.slug || vacation.intervenant.id), class: 'text-primary hover:underline font-bold' %></td>
+          <td><%= vacation.intervenant.status %></td>
           <td style="border-left: .3rem solid <%= vacation.formation.try(:positive_color) %>">
             <%= vacation.formation.try(:nom) %>
           </td>
@@ -72,6 +82,14 @@
           <td><%= vacation.titre %></td>
           <td class="text-right"><%= vacation.qte %></td>
           <td class="text-right"><%= vacation.forfaithtd %></td>
+          <td class="text-right" style="width: 110px">
+            <% if vacation.forfaithtd > 0 %>
+              <%= number_to_currency(((Cour.Tarif * vacation.forfaithtd) * vacation.qte).round(2)) %>
+            <% else %>
+              <%= number_to_currency(vacation.tarif * vacation.qte) %>
+            <% end %>
+
+          </td>
           <td><%= link_to 'Voir', vacation_path(vacation), class: 'text-primary hover:underline' %></td>
         </tr>
       <% end %>
