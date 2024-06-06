@@ -13,18 +13,11 @@ class VacationsToXls < ApplicationService
     sheet = book.create_worksheet name: 'Vacations'
     bold = Spreadsheet::Format.new :weight => :bold, :size => 11
 
-    headers = ["formation.id",
-                "vacation.formation.nom",
-                "vacation.id",
-                "vacation.date",
-                "vacation.intervenant",
-                "vacation.titre",
-                "vacation.qte",
-                "vacation.forfaithtd",
-                "vacation.montant",
-                "vacation.commentaires",
-                "vacation.created_at",
-                "vacation.updated_at",
+    headers = ["intervenant.id",
+                "intervenant.nom_prénom",
+                "intervenant.statut",
+                "formation.id",
+                "formation.nom",
                 "formation.promo",
                 "formation.diplome",
                 "formation.domaine", 
@@ -38,51 +31,61 @@ class VacationsToXls < ApplicationService
                 "formation.hors_catalogue",
                 "formation.archive",
                 "formation.hss",
-                "formation.memo"]
+                "formation.memo",
+                "vacation.id",
+                "vacation.date",
+                "vacation.titre",
+                "vacation.qte",
+                "vacation.forfaithtd",
+                "vacation.montant",
+                "vacation.commentaires",
+                "vacation.created_at",
+                "vacation.updated_at"]
 
     sheet.row(0).concat headers
     sheet.row(0).default_format = bold
 
     index = 1
     @vacations.each do | vacation |
-        next unless vacation.formation
+      next unless vacation.formation
 
-        if vacation.forfaithtd > 0
-          montant_vacation = ((Cour.Tarif * vacation.forfaithtd) * vacation.qte).round(2)
-        else
-          montant_vacation = vacation.tarif * vacation.qte
-        end
-        fields_to_export = [
-          vacation.formation.id, 
-          vacation.formation.nom,
-          vacation.id,
-          vacation.date,
-          vacation.try(:intervenant).nom_prenom,
-          vacation.titre,
-          vacation.qte,
-          vacation.forfaithtd,
-          ActionController::Base.helpers.number_to_currency(montant_vacation),
-          vacation.commentaires,
-          vacation.created_at, 
-          vacation.updated_at,
-          vacation.formation.promo,
-          vacation.formation.diplome,
-          vacation.formation.domaine,
-          vacation.formation.apprentissage,
-          vacation.formation.nbr_etudiants,
-          vacation.formation.nbr_heures, 
-          vacation.formation.abrg,
-          vacation.formation.try(:user).try(:email),
-          vacation.formation.courriel,
-          vacation.formation.code_analytique,
-          vacation.formation.hors_catalogue,
-          vacation.formation.archive,
-          vacation.formation.hss,
-          vacation.formation.memo
-          
-        ]
-        sheet.row(index).replace fields_to_export
-        index += 1
+      if vacation.forfaithtd > 0
+        montant_vacation = ((Cour.Tarif * vacation.forfaithtd) * vacation.qte).round(2)
+      else
+        montant_vacation = vacation.tarif * vacation.qte
+      end
+      fields_to_export = [
+        vacation.intervenant.try(:id),
+        vacation.intervenant.try(:nom_prenom),
+        vacation.intervenant.try(:status),
+        vacation.formation.id, 
+        vacation.formation.nom,
+        vacation.formation.promo,
+        vacation.formation.diplome,
+        vacation.formation.domaine,
+        vacation.formation.apprentissage,
+        vacation.formation.nbr_etudiants,
+        vacation.formation.nbr_heures, 
+        vacation.formation.abrg,
+        vacation.formation.user.email,
+        vacation.formation.courriel,
+        vacation.formation.code_analytique,
+        vacation.formation.hors_catalogue,
+        vacation.formation.archive,
+        vacation.formation.hss,
+        vacation.formation.memo,
+        vacation.id,
+        vacation.date,
+        vacation.titre,
+        vacation.qte,
+        vacation.forfaithtd,
+        ActionController::Base.helpers.number_to_currency(montant_vacation),
+        vacation.commentaires,
+        vacation.created_at, 
+        vacation.updated_at
+      ]
+      sheet.row(index).replace fields_to_export
+      index += 1
     end
 
     return book

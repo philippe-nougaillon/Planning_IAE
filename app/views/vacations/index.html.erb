@@ -113,7 +113,7 @@
   <%= will_paginate @vacations %>
 </div>
 <br>
-<%= link_to url_for(params.permit(:formation, :intervenant, :start_date, :end_date).merge(format: :xls)), class: 'btn btn-sm btn-success btn-outline mb-12' do %>
+<%= link_to url_for(params.permit(:formation, :intervenant, :start_date, :end_date, :status, :activité).merge(format: :xls)), class: 'btn btn-sm btn-success btn-outline mb-12' do %>
   <%= fa_icon 'file-excel' %>
   Exporter vers Excel
 <% end %>
