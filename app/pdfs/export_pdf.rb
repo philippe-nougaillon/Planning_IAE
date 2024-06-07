@@ -577,7 +577,7 @@ class ExportPdf
             table([ ["<color rgb='032E4D'>•</color>", "<color rgb='032E4D'><b>Formation : #{cour.formation.nom}</b></color>"],
                 ["<color rgb='032E4D'>•</color>", "<color rgb='032E4D'><b>Date : #{I18n.l(cour.debut.to_date)}</b></color>"],
                 ["<color rgb='032E4D'>•</color>", "<color rgb='032E4D'><b>Horaires : #{cour.debut.strftime('%Hh%M')}-#{cour.fin.strftime('%Hh%M')}</b></color>"],
-                ["<color rgb='032E4D'>•</color>", "<color rgb='032E4D'><b>Salle : #{cour.salle.nom}</b></color>"] ],
+                ["<color rgb='032E4D'>•</color>", "<color rgb='032E4D'><b>Salle : #{cour.salle.try(:nom) }</b></color>"] ],
                 cell_style: { borders: [], inline_format: true })
             move_down @margin_down / 2
             table([ ["<color rgb='032E4D'>•</color>", "<color rgb='032E4D'><b>Nombre d’étudiants inscrits : #{étudiants_count}</b></color>"],
@@ -621,7 +621,7 @@ class ExportPdf
             text "<color rgb='032E4D'>Examen <b>UE#{cour.code_ue} #{cour.nom_ou_ue}</b></color>", inline_format: true, size: 24
             text "<color rgb='032E4D'>Le <b>#{I18n.l(cour.debut.to_date)}</b></color>", inline_format: true, size: 24
             text "<color rgb='032E4D'>De <b>#{cour.debut.strftime('%Hh%M')} à #{cour.fin.strftime('%Hh%M')}</b></color>", inline_format: true, size: 24
-            text "<color rgb='032E4D'>Salle <b>#{cour.salle.nom}</b></color>", inline_format: true, size: 24
+            text "<color rgb='032E4D'>Salle <b>#{cour.salle.try(:nom)}</b></color>", inline_format: true, size: 24
 
             move_down @margin_down * 2
             text "<color rgb='FF0000'>=>   <b><u>En fin d’épreuve</u>, merci de remettre l’enveloppe contenant les copies à l’accueil.</b></color>", inline_format: true, size: 24
@@ -729,7 +729,7 @@ class ExportPdf
         move_down @margin_down * 2
         text "<color rgb='E68824'><b>Examen de l'UE n°#{cour.code_ue} : #{cour.nom_ou_ue}</b></color>", inline_format: true, size: 16, align: :center
         move_down @margin_down
-        text "<color rgb='E68824'><b>Le #{I18n.l cour.debut.to_date} de #{cour.debut.strftime('%Hh%M')} à #{cour.fin.strftime('%Hh%M')} en salle #{cour.salle.nom}</b></color>", inline_format: true, size: 16, align: :center
+        text "<color rgb='E68824'><b>Le #{I18n.l cour.debut.to_date} de #{cour.debut.strftime('%Hh%M')} à #{cour.fin.strftime('%Hh%M')} #{'en salle ' cour.salle.nom if cour.salle}</b></color>", inline_format: true, size: 16, align: :center
 
         move_down @margin_down * 2
         text "<color rgb='032E4D'><b>Vous devez :</b></color>", inline_format: true

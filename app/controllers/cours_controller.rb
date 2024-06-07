@@ -706,7 +706,7 @@ class CoursController < ApplicationController
 
   def mes_sessions_etudiant
     @etudiant = Etudiant.find_by("LOWER(etudiants.email) = ?", current_user.email.downcase)
-    if @etudiant
+    if @etudiant && @etudiant.formation
       @cours = @etudiant
               .formation
               .cours
