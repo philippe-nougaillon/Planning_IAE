@@ -64,7 +64,9 @@ class Intervenant < ApplicationRecord
         "Direction de Chaire",
         "SCORE IAE message",
         "Co-rédaction d'un cas",
-        "Coordination d'une UE (hors MAE)"]
+        "Coordination d'une UE (hors MAE)",
+		"Coordination pédagogique en appui de la direction de programme (groupe > 40 étudiants à Paris)"
+		]
     end
 	
 
