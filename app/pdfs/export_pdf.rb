@@ -738,27 +738,49 @@ class ExportPdf
         move_down @margin_down
         text "<color rgb='032E4D'><b>-    vous présenter dans la salle d'examen 15 minutes avant le début de l'épreuve</b></color>", inline_format: true
 
-        if papier || calculatrice || ordi_tablette || téléphone || dictionnaire
-            move_down @margin_down * 2
-            text "<color rgb='032E4D'><b>Consignes :</b></color>", inline_format: true
-        end
+        move_down @margin_down * 2
+        text "<color rgb='032E4D'><b>CONSIGNES :</b></color>", inline_format: true
+        move_down @margin_down 
 
+        text "<color rgb='032E4D'><i>Sont autorisés :</i></color>", inline_format: true
         move_down @margin_down
+
         if papier
-            text "<color rgb='032E4D'>> Documents papier autorisés</color>", inline_format: true, style: :bold
+            text "<color rgb='032E4D'> - Documents papier</color>", inline_format: true, style: :bold
         end
         if calculatrice
-            text "<color rgb='032E4D'>> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission autorisée</color>", inline_format: true, style: :bold
+            text "<color rgb='032E4D'> - Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission</color>", inline_format: true, style: :bold
         end
         if ordi_tablette
-            text "<color rgb='032E4D'>> Les ordinateurs et tablettes sont autorisés</color>", inline_format: true, style: :bold
+            text "<color rgb='032E4D'> - Les ordinateurs et tablettes</color>", inline_format: true, style: :bold
         end
         if téléphone
-            text "<color rgb='032E4D'>> Les téléphones portables sont autorisés</color>", inline_format: true, style: :bold
+            text "<color rgb='032E4D'> - Les téléphones portables</color>", inline_format: true, style: :bold
         end
         if dictionnaire
-            text "<color rgb='032E4D'>> Les dictionnaires sont autorisés</color>", inline_format: true, style: :bold
+            text "<color rgb='032E4D'> - Les dictionnaires</color>", inline_format: true, style: :bold
         end
+        move_down @margin_down
+
+        text "<color rgb='032E4D'><i>Sont interdits :</i></color>", inline_format: true
+        move_down @margin_down
+
+        if !papier
+            text "<color rgb='032E4D'> - Documents papier</color>", inline_format: true, style: :bold
+        end
+        if !calculatrice
+            text "<color rgb='032E4D'> - Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission</color>", inline_format: true, style: :bold
+        end
+        if !ordi_tablette
+            text "<color rgb='032E4D'> - Les ordinateurs et tablettes</color>", inline_format: true, style: :bold
+        end
+        if !téléphone
+            text "<color rgb='032E4D'> - Les téléphones portables</color>", inline_format: true, style: :bold
+        end
+        if !dictionnaire
+            text "<color rgb='032E4D'> - Les dictionnaires</color>", inline_format: true, style: :bold
+        end
+
     end
 
     def generate_feuille_emargement_signée(cours)
