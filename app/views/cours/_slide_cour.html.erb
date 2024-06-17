@@ -41,14 +41,14 @@
   <td class="align-middle text-center" style="width:200px">
     <% if le_cours.salle %>
       <% if le_cours.salle.bloc != 'Z' %>
-        <span class="badge badge-<%= le_cours.style %> text-white mask mask-circle p-10">
-          <h3 class="text-4xl font-bold text-base-100" style="margin: 0">
+        <span class="p-10">
+          <h3 class="text-4xl font-bold text-base-100" style="margin: 0; color: #00AA00;">
             <%= le_cours.salle.nom %>
           </h3>
         </span>
       <% else %>
-        <span class="badge badge-primary text-white p-10">
-          <h3 class="text-4xl font-bold">
+        <span class="p-10">
+          <h3 class="text-4xl font-bold" style="color: #4444FF;">
             <%= le_cours.salle.nom %>
           </h3>
         </span>
