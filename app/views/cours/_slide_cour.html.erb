@@ -1,4 +1,4 @@
-<tr style="height:110px; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);">
+<tr style="height:110px; border-width: 5px;">
 
   <td style="vertical-align: middle;">
     <h2 style="font-size: 1.875rem; line-height: 2.25rem;">
@@ -53,12 +53,12 @@
   <td style="width:200px; vertical-align: middle; text-align: center;">
     <% if le_cours.salle %>
       <% if le_cours.salle.bloc != 'Z' %>
-        <h3 style="margin: 0; color: #00AA00; font-weigth: bold; font-size: 2.25rem; line-height: 2.5rem;">
-          <%= le_cours.salle.nom %>
+        <h3 style="margin: 0; color: #00AA00; font-size: 2.25rem; line-height: 2.5rem;">
+          <b><%= le_cours.salle.nom %></b>
         </h3>
       <% else %>
-        <h3 style="color: #4444FF; font-weigth: bold; font-size: 2.25rem; line-height: 2.5rem;">
-          <%= le_cours.salle.nom %>
+        <h3 style="color: #4444FF; font-size: 2.25rem; line-height: 2.5rem;">
+          <b><%= le_cours.salle.nom %></b>
         </h3>
       <% end %>
     <% end %>
