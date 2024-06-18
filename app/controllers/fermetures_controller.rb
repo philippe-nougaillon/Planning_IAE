@@ -66,7 +66,7 @@ class FermeturesController < ApplicationController
     @fermeture = Fermeture.new(fermeture_params)
     
     respond_to do |format|
-      if @fermeture.save
+      if params[:confirm].present? && @fermeture.save
 
         # Créer chaque jour de la période
         if params[:date_fin].present?
@@ -79,16 +79,20 @@ class FermeturesController < ApplicationController
             current_date = start_date + 1.day
             ndays = (end_date - start_date).to_i
     
+            fermetures_created = 1
             ndays.times do
-              f = Fermeture.create(date: current_date, nom: nom)
+              if Fermeture.create(date: current_date, nom: nom)
+                fermetures_created += 1
+              end
               current_date = current_date + 1.day
             end
           end
         end
     
-        format.html { redirect_to fermetures_path, notice: 'Jour(s) de fermeture ajouté(s)' }
+        format.html { redirect_to fermetures_path, notice: "#{fermetures_created} jour(s) de fermeture ajouté(s)" }
         format.json { render :show, status: :created, location: @fermeture }
       else
+        flash[:alert] = 'Vous devez confirmer la création des fermetures !' unless params[:confirm].present?
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @fermeture.errors, status: :unprocessable_entity }
       end

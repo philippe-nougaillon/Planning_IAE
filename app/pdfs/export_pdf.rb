@@ -724,7 +724,9 @@ class ExportPdf
         bounding_box([350, y_position], :width => 190) do
             text "<color rgb='032E4D'><b>Prénom : #{étudiant.prénom}</b></color>", inline_format: true, size: 16
         end
-        text "<color rgb='032E4D'><b>Table n° #{étudiant.table}</b></color>", inline_format: true, size: 16, align: :center
+        unless étudiant.table.zero?
+            text "<color rgb='032E4D'><b>Table n° #{étudiant.table}</b></color>", inline_format: true, size: 16, align: :center
+        end
 
         move_down @margin_down * 2
         text "<color rgb='E68824'><b>Examen de l'UE n°#{cour.code_ue} : #{cour.nom_ou_ue}</b></color>", inline_format: true, size: 16, align: :center
