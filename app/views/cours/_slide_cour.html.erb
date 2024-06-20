@@ -1,6 +1,6 @@
-<tr style="height:110px; border-width: 5px;">
+<tr style="height:110px; border-width: 5px; border-color: #EBEBEB;">
 
-  <td style="vertical-align: middle;">
+  <td style="vertical-align: middle; padding: .75rem 1rem;">
     <h2 style="font-size: 1.875rem; line-height: 2.25rem;">
       <%= l(le_cours.debut, format: :heures_min) %>
       <small>
@@ -17,13 +17,13 @@
     overflow: hidden;
     height: .5rem;
     border-radius: var(--rounded-box, 1rem);
-    background-color: var(--fallback-bc, oklch(var(--bc) / .2));
+    background-color: grey;
     opacity: 0.5;
     margin-top: 1rem;
     height: 1rem;"></progress>
   </td>
   
-  <td style="border-left: 1rem solid <%= le_cours.formation.try(:positive_color) %>">
+  <td style="padding: .75rem 1rem; border-left: 1rem solid <%= le_cours.formation.try(:positive_color) %>">
     <div>
       <h3 style="font-size: 1.875rem; line-height: 2.25rem">
         
@@ -41,7 +41,7 @@
     </div>
   </td>
 
-  <td style="vertical-align: middle;">
+  <td style="vertical-align: middle; padding: .75rem 1rem;">
     <h3 style="font-size: 1.5rem; line-height: 2rem;">
       <%= le_cours.intervenant.nom_prenom %>
       <% if le_cours.intervenant_binome_id %>
@@ -50,7 +50,7 @@
     </h3>
   </td>
   
-  <td style="width:200px; vertical-align: middle; text-align: center;">
+  <td style="width:200px; vertical-align: middle; text-align: center; padding: .75rem 1rem;">
     <% if le_cours.salle %>
       <% if le_cours.salle.bloc != 'Z' %>
         <h3 style="margin: 0; color: #00AA00; font-size: 2.25rem; line-height: 2.5rem;">
