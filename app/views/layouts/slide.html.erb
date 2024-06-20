@@ -20,6 +20,59 @@
 
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.2/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      ::-webkit-progress-value {
+        background-color: #6666ff;
+      }
+      ::-webkit-progress-bar {
+        background-color: #CCCCCC;
+      }
+
+      .alert {
+        display: grid;
+        width: 100%;
+        grid-auto-flow: row;
+        align-content: flex-start;
+        align-items: center;
+        justify-items: center;
+        gap: 1rem;
+        text-align: center;
+        border-radius: var(--rounded-box, 1rem);
+        border-width: 1px;
+        --tw-border-opacity: 1;
+        border-color: var(--fallback-b2, oklch(var(--b2) / var(--tw-border-opacity)));
+        padding: 1rem;
+        --tw-text-opacity: 1;
+        color: var(--fallback-bc, oklch(var(--bc) / var(--tw-text-opacity)));
+        --alert-bg: var(--fallback-b2, oklch(var(--b2)/1));
+        --alert-bg-mix: var(--fallback-b1, oklch(var(--b1)/1));
+        background-color: var(--alert-bg);
+      }
+
+      .alert-info{
+        border-color: var(--fallback-in, oklch(var(--in) / .2));
+        --tw-text-opacity: 1;
+        color: var(--fallback-inc, oklch(var(--inc) / var(--tw-text-opacity)));
+        --alert-bg: var(--fallback-in, oklch(var(--in)/1));
+        --alert-bg-mix: var(--fallback-b1, oklch(var(--b1)/1));
+      }
+
+      .alert-success{
+        border-color: var(--fallback-su, oklch(var(--su) / .2));
+        --tw-text-opacity: 1;
+        color: var(--fallback-suc, oklch(var(--suc) / var(--tw-text-opacity)));
+        --alert-bg: var(--fallback-su, oklch(var(--su)/1));
+        --alert-bg-mix: var(--fallback-b1, oklch(var(--b1)/1));
+      }
+
+      .alert-warning{
+        border-color: var(--fallback-er, oklch(var(--er) / .2));
+        --tw-text-opacity: 1;
+        color: var(--fallback-erc, oklch(var(--erc) / var(--tw-text-opacity)));
+        --alert-bg: var(--fallback-er, oklch(var(--er)/1));
+        --alert-bg-mix: var(--fallback-b1, oklch(var(--b1)/1));
+      }
+    </style>
   </head>
 
   <body>
