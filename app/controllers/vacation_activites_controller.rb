@@ -3,7 +3,7 @@ class VacationActivitesController < ApplicationController
 
   # GET /vacation_activites or /vacation_activites.json
   def index
-    @vacation_activites = VacationActivite.all
+    @vacation_activites = VacationActivite.all.reorder("#{sort_column} #{sort_direction}")  
   end
 
   # GET /vacation_activites/1 or /vacation_activites/1.json
@@ -61,6 +61,18 @@ class VacationActivitesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_vacation_activite
       @vacation_activite = VacationActivite.find(params[:id])
+    end
+
+    def sortable_columns
+      ['vacation_activites.nature','vacation_activites.nom','vacation_activite_tarif.statut']
+    end
+
+    def sort_column
+      sortable_columns.include?(params[:column]) ? params[:column] : "nom"
+    end
+
+    def sort_direction
+      %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
     end
 
     # Only allow a list of trusted parameters through.

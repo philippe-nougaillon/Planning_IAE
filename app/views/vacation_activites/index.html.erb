@@ -8,7 +8,23 @@
     <%= link_to "New vacation activite", new_vacation_activite_path, class: "rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium" %>
   </div>
 
-  <div id="vacation_activites" class="min-w-full">
-    <%= render @vacation_activites %>
+  <div class="overflow-x-auto">
+    <table class="table">
+      <thead class="bg-slate-100 border">
+        <tr>
+          <th><%= sort_link 'vacation_activites.nature', 'Nature des activités' %></th>
+          <th><%= sort_link 'vacation_activites.nom', 'Type activités' %></th>
+          <th>CEV Enseignant</th>
+          <th>CEV Titulaire</th>
+          <th>CEV Salarié</th>
+          <th>PERMANENTS</th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <%= render @vacation_activites %>
+      </tbody>
+    </table>
   </div>
 </div>

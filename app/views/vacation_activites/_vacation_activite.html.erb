@@ -1,27 +1,28 @@
-<div id="<%= dom_id vacation_activite %>">
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Nature:</strong>
-    <%= vacation_activite.nature %>
-  </p>
-
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Nom:</strong>
-    <%= vacation_activite.nom %>
-  </p>
-
-  <p class="my-5">
-    <strong class="block font-medium mb-1">Rémunérations :</strong>
-    <% vacation_activite.vacation_activite_tarifs.each do |tarif| %>
-      <%= tarif.statut %>
-      <%= tarif.qté %>
-      <%= tarif.HETD %>
-      <br>
+<tr class="hover border">
+  <td><%= vacation_activite.nature %></td>
+  <td><%= vacation_activite.nom %></td>
+  <td>
+    <% if tarif = vacation_activite.vacation_activite_tarifs.find_by(statut: 9) %>
+      <%= tarif.qté_ou_HETD %>
     <% end %>
-  </p>
-
-  <% if action_name != "show" %>
-    <%= link_to "Show this vacation activite", vacation_activite, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <%= link_to "Edit this vacation activite", edit_vacation_activite_path(vacation_activite), class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
-    <hr class="mt-6">
-  <% end %>
-</div>
+  </td>
+  <td>
+    <% if tarif = vacation_activite.vacation_activite_tarifs.find_by(statut: 10) %>
+      <%= tarif.qté_ou_HETD %>
+    <% end %>
+  </td>
+  <td>
+    <% if tarif = vacation_activite.vacation_activite_tarifs.find_by(statut: 11) %>
+      <%= tarif.qté_ou_HETD %>
+    <% end %>
+  </td>
+  <td>
+    <% if tarif = vacation_activite.vacation_activite_tarifs.find_by(statut: 1) %>
+      <%= tarif.qté_ou_HETD %>
+    <% end %>
+  </td>
+  <td>
+    <%= link_to "Voir", vacation_activite, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+    <%= link_to "Modifier", edit_vacation_activite_path(vacation_activite), class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
+  </td>
+</tr>

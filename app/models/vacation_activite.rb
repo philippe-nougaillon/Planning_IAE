@@ -1,4 +1,5 @@
 class VacationActivite < ApplicationRecord
+  audited
 
   has_many :vacation_activite_tarifs
 
