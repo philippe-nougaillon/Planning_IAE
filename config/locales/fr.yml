@@ -516,3 +516,6 @@ fr:
       title: "Vacation"
     edit:
       title: "Modification Vacation"
+  vacation_activites:
+    index:
+      title: "Vacation activités"

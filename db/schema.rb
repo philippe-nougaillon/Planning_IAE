@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_26_074358) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_24_083635) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -407,6 +407,23 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_26_074358) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "vacation_activite_tarifs", force: :cascade do |t|
+    t.bigint "vacation_activite_id"
+    t.integer "statut", null: false
+    t.integer "qté", default: 0
+    t.integer "HETD", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["vacation_activite_id"], name: "index_vacation_activite_tarifs_on_vacation_activite_id"
+  end
+
+  create_table "vacation_activites", force: :cascade do |t|
+    t.string "nature", null: false
+    t.string "nom", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "vacations", id: :serial, force: :cascade do |t|
     t.integer "formation_id"
     t.integer "intervenant_id"
@@ -430,6 +447,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_26_074358) do
   add_foreign_key "presences", "cours"
   add_foreign_key "presences", "etudiants"
   add_foreign_key "presences", "intervenants"
+  add_foreign_key "vacation_activite_tarifs", "vacation_activites"
 
   create_view "cours_non_planifies", materialized: true, sql_definition: <<-SQL
       SELECT cours.id
