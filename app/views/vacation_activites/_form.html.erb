@@ -34,9 +34,12 @@
   <!-- Inserted elements will be injected before that target. -->
   <div data-nested-form-target="target"></div>
 
-  <button type="button" data-action="nested-form#add" class="btn btn-success text-white">Ajouter un Tarif</button>
 
   <div class="inline">
     <%= form.submit class: "btn btn-primary text-white my-4" %>
   </div>
+  <button type="button" data-action="nested-form#add" class="btn">
+    <%= fa_icon 'plus-circle' %>
+    Ajouter TARIF
+  </button>
 <% end %>
