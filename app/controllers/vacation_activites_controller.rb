@@ -5,6 +5,18 @@ class VacationActivitesController < ApplicationController
   # GET /vacation_activites or /vacation_activites.json
   def index
     @vacation_activites = VacationActivite.ordered
+
+    @natures = VacationActivite.all.pluck(:nature).uniq.sort
+
+    if params[:nature].present?
+      @vacation_activites = @vacation_activites.where(nature: params[:nature])
+    end
+
+    if params[:statut].present?
+      @vacation_activites = @vacation_activites.joins(:vacation_activite_tarifs).where('vacation_activite_tarifs.statut = ?', params[:statut])
+    end
+
+    @vacation_activites = @vacation_activites.paginate(page: params[:page], per_page: 20)
     # @vacation_activites = @vacation_activites.reorder("#{sort_column} #{sort_direction}")  
   end
 
@@ -27,7 +39,7 @@ class VacationActivitesController < ApplicationController
 
     respond_to do |format|
       if @vacation_activite.save
-        format.html { redirect_to vacation_activite_url(@vacation_activite), notice: "Vacation activite was successfully created." }
+        format.html { redirect_to vacation_activite_url(@vacation_activite), notice: "Activité ajoutée avec succès." }
         format.json { render :show, status: :created, location: @vacation_activite }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -40,7 +52,7 @@ class VacationActivitesController < ApplicationController
   def update
     respond_to do |format|
       if @vacation_activite.update(vacation_activite_params)
-        format.html { redirect_to vacation_activite_url(@vacation_activite), notice: "Vacation activite was successfully updated." }
+        format.html { redirect_to vacation_activite_url(@vacation_activite), notice: "Activité modifiée avec succès." }
         format.json { render :show, status: :ok, location: @vacation_activite }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -54,7 +66,7 @@ class VacationActivitesController < ApplicationController
     @vacation_activite.destroy!
 
     respond_to do |format|
-      format.html { redirect_to vacation_activites_url, notice: "Vacation activite was successfully destroyed." }
+      format.html { redirect_to vacation_activites_url, notice: "Activité supprimée avec succès." }
       format.json { head :no_content }
     end
   end

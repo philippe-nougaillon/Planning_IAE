@@ -1,5 +1,5 @@
 class VacationActiviteTarif < ApplicationRecord
-  audited
+  audited associated_with: :vacation_activite
 
   belongs_to :vacation_activite
 
@@ -11,7 +11,7 @@ class VacationActiviteTarif < ApplicationRecord
 
   def prix_ou_HETD
     if self.prix.positive?
-      "Prix : <b>#{self.prix}</b> €" 
+      "<b>#{self.prix}</b> €" 
     elsif self.forfait_hetd.positive?
       "<b>#{self.forfait_hetd}</b> HETD"
     end

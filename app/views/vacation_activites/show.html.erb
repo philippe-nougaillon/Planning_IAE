@@ -1,4 +1,4 @@
-<div class="mx-auto md:w-2/3 w-full flex">
+<div class="mx-auto md:w-2/3 w-full flex mt-8">
   <div class="mx-auto">
     
     <h1 class="text-4xl font-black">
@@ -12,14 +12,16 @@
       <br>
       <b><%= tarif.statut %></b>
       <%= simple_format(tarif.prix_ou_HETD) %>
-      <%= ", Maximum #{tarif.max}" if tarif.max %>
+      <% if tarif.max %>
+        <span class="text-error">
+          <%= "#{tarif.max} Maximum" %>
+        </span>
+      <% end %>
       <br>
     <% end %>
     <br>
     <%= link_to "Modifier", edit_vacation_activite_path(@vacation_activite), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <div class="inline-block ml-2">
-      <%= button_to "[X]", vacation_activite_path(@vacation_activite), method: :delete, class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 font-medium" %>
-    </div>
+    <%= link_to '[X]', @vacation_activite, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: 'ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium' %>
     <%= link_to "Retour", vacation_activites_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
   </div>
 </div>
