@@ -410,8 +410,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_24_083635) do
   create_table "vacation_activite_tarifs", force: :cascade do |t|
     t.bigint "vacation_activite_id"
     t.integer "statut", null: false
-    t.integer "qté", default: 0
-    t.integer "HETD", default: 0
+    t.integer "prix", default: 0
+    t.integer "forfait_hetd", default: 0
+    t.integer "max"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["vacation_activite_id"], name: "index_vacation_activite_tarifs_on_vacation_activite_id"

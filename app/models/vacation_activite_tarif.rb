@@ -3,13 +3,17 @@ class VacationActiviteTarif < ApplicationRecord
 
   belongs_to :vacation_activite
 
+  enum statut: [:CEV_ENS_C_CONTRACTUEL, :CEV_TIT_CONT_FP, :CEV_SAL_PRIV_IND, :Permanent]
+
+  default_scope {order(:statut)}
+
   validates :statut, uniqueness: {scope: [:vacation_activite_id]}
 
-  def qté_ou_HETD
-    if self.qté.positive?
-      "Qté : #{self.qté}" 
-    elsif self.HETD.positive?
-      "#{self.HETD} HETD"
+  def prix_ou_HETD
+    if self.prix.positive?
+      "Prix : <b>#{self.prix}</b> €" 
+    elsif self.forfait_hetd.positive?
+      "<b>#{self.forfait_hetd}</b> HETD"
     end
   end
 end

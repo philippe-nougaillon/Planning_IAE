@@ -1,27 +1,27 @@
 <tr class="hover border">
-  <td><%= vacation_activite.nature %></td>
+  <td><b><%= vacation_activite.nature %></b></td>
   <td><%= vacation_activite.nom %></td>
   <td>
-    <% if tarif = vacation_activite.vacation_activite_tarifs.find_by(statut: 9) %>
-      <%= tarif.qté_ou_HETD %>
-    <% end %>
-  </td>
-  <td>
-    <% if tarif = vacation_activite.vacation_activite_tarifs.find_by(statut: 10) %>
-      <%= tarif.qté_ou_HETD %>
-    <% end %>
-  </td>
-  <td>
-    <% if tarif = vacation_activite.vacation_activite_tarifs.find_by(statut: 11) %>
-      <%= tarif.qté_ou_HETD %>
+    <% if tarif = vacation_activite.vacation_activite_tarifs.find_by(statut: 0) %>
+      <%= simple_format(tarif.prix_ou_HETD) %>
     <% end %>
   </td>
   <td>
     <% if tarif = vacation_activite.vacation_activite_tarifs.find_by(statut: 1) %>
-      <%= tarif.qté_ou_HETD %>
+      <%= simple_format(tarif.prix_ou_HETD) %>
     <% end %>
   </td>
   <td>
+    <% if tarif = vacation_activite.vacation_activite_tarifs.find_by(statut: 2) %>
+      <%= simple_format(tarif.prix_ou_HETD) %>
+    <% end %>
+  </td>
+  <td>
+    <% if tarif = vacation_activite.vacation_activite_tarifs.find_by(statut: 3) %>
+      <%= simple_format(tarif.prix_ou_HETD) %>
+    <% end %>
+  </td>
+  <td style="white-space: nowrap">
     <%= link_to "Voir", vacation_activite, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
     <%= link_to "Modifier", edit_vacation_activite_path(vacation_activite), class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
   </td>

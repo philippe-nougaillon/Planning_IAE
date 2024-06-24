@@ -13,6 +13,14 @@ class VacationActivitePolicy < ApplicationPolicy
     index?
   end
 
+  def new?
+    index?
+  end
+
+  def create?
+    new?
+  end
+
   def edit?
     index?
   end
@@ -21,4 +29,7 @@ class VacationActivitePolicy < ApplicationPolicy
     edit?
   end
 
+  def destroy?
+    index?
+  end
 end

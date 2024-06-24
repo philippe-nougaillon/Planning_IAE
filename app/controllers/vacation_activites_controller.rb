@@ -1,9 +1,11 @@
 class VacationActivitesController < ApplicationController
   before_action :set_vacation_activite, only: %i[ show edit update destroy ]
+  before_action :is_user_authorized
 
   # GET /vacation_activites or /vacation_activites.json
   def index
-    @vacation_activites = VacationActivite.all.reorder("#{sort_column} #{sort_direction}")  
+    @vacation_activites = VacationActivite.ordered
+    # @vacation_activites = @vacation_activites.reorder("#{sort_column} #{sort_direction}")  
   end
 
   # GET /vacation_activites/1 or /vacation_activites/1.json
@@ -63,20 +65,24 @@ class VacationActivitesController < ApplicationController
       @vacation_activite = VacationActivite.find(params[:id])
     end
 
-    def sortable_columns
-      ['vacation_activites.nature','vacation_activites.nom','vacation_activite_tarif.statut']
-    end
+    # def sortable_columns
+    #   ['vacation_activites.nature','vacation_activites.nom','vacation_activite_tarif.statut']
+    # end
 
-    def sort_column
-      sortable_columns.include?(params[:column]) ? params[:column] : "nom"
-    end
+    # def sort_column
+    #   sortable_columns.include?(params[:column]) ? params[:column] : "nature"
+    # end
 
-    def sort_direction
-      %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
-    end
+    # def sort_direction
+    #   %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
+    # end
 
     # Only allow a list of trusted parameters through.
     def vacation_activite_params
-      params.require(:vacation_activite).permit(:nature, :nom, vacation_activite_tarifs_attributes: [:id, :_destroy, :statut, :qté, :HETD])
+      params.require(:vacation_activite).permit(:nature, :nom, vacation_activite_tarifs_attributes: [:id, :_destroy, :statut, :prix, :forfait_hetd, :max])
+    end
+
+    def is_user_authorized
+      authorize VacationActivite
     end
 end

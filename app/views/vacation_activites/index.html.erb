@@ -1,30 +1,28 @@
-<div class="w-full">
-  <% if notice.present? %>
-    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
+<div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'user-md' %> Liste des activités</h1>
+  <% if policy(VacationActivite).new? %>
+    <%= link_to new_vacation_activite_path, class: 'text-primary' do %>
+      <%= fa_icon 'plus-circle' %> Activité
+    <% end %>
   <% end %>
+</div>
 
-  <div class="flex justify-between items-center">
-    <h1 class="font-bold text-4xl">Vacation activites</h1>
-    <%= link_to "New vacation activite", new_vacation_activite_path, class: "rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium" %>
-  </div>
+<div class="overflow-x-auto">
+  <table class="table">
+    <thead class="bg-slate-100 border">
+      <tr>
+        <th>Nature activité</th>
+        <th>Type activité</th>
+        <th>CEV Enseignant</th>
+        <th>CEV Titulaire</th>
+        <th>CEV Salarié</th>
+        <th>PERMANENT</th>
+        <th></th>
+      </tr>
+    </thead>
 
-  <div class="overflow-x-auto">
-    <table class="table">
-      <thead class="bg-slate-100 border">
-        <tr>
-          <th><%= sort_link 'vacation_activites.nature', 'Nature des activités' %></th>
-          <th><%= sort_link 'vacation_activites.nom', 'Type activités' %></th>
-          <th>CEV Enseignant</th>
-          <th>CEV Titulaire</th>
-          <th>CEV Salarié</th>
-          <th>PERMANENTS</th>
-          <th></th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <%= render @vacation_activites %>
-      </tbody>
-    </table>
-  </div>
+    <tbody>
+      <%= render @vacation_activites %>
+    </tbody>
+  </table>
 </div>
