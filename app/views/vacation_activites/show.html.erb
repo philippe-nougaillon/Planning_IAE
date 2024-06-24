@@ -8,21 +8,23 @@
       <%= @vacation_activite.nom %>
     </h2>
 
-    <h2 class="text-2xl mt-8 border-b mb-4">
+    <h2 class="text-2xl mt-8 mb-4">
       Tarifs
     </h2>
     <% @vacation_activite.vacation_activite_tarifs.order(:statut).each do |tarif| %>
-      <h3 class="text-xl font-black"><%= tarif.statut %></h3>
+      <hr class="my-2">
+      <h3 class="text-xl"><%= tarif.statut %></h3>
       <%= simple_format(tarif.prix_ou_HETD) %>
       <% if tarif.max %>
         <span class="text-error">
           <%= "#{tarif.max} Maximum" %>
         </span>
       <% end %>
-      <br><br>
     <% end %>
-    <%= link_to "Modifier", edit_vacation_activite_path(@vacation_activite), class: "btn" %>
-    <%= link_to '[X]', @vacation_activite, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: 'btn' %>
-    <%= link_to "Retour", vacation_activites_path, class: "btn" %>
+    <div class="mt-8">
+      <%= link_to "Modifier", edit_vacation_activite_path(@vacation_activite), class: "btn" %>
+      <%= link_to '[X]', @vacation_activite, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: 'btn' %>
+      <%= link_to "Retour", vacation_activites_path, class: "btn" %>
+    </div>
   </div>
 </div>

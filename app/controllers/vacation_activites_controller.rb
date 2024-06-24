@@ -27,6 +27,7 @@ class VacationActivitesController < ApplicationController
   # GET /vacation_activites/new
   def new
     @vacation_activite = VacationActivite.new
+    @vacation_activite.vacation_activite_tarifs.build
   end
 
   # GET /vacation_activites/1/edit
