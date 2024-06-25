@@ -2,12 +2,12 @@
   <td><b><%= vacation_activite.nature %></b></td>
   <td><%= vacation_activite.nom %></td>
   <% VacationActiviteTarif.statuts.each do |statut| %>
-    <td>
+    <td class="align-top">
       <% if tarif = vacation_activite.vacation_activite_tarifs.find_by(statut:) %>
         <%= simple_format(tarif.prix_ou_HETD) %>
         <% if tarif.max %>
           <span class="text-error">
-            <%= "#{tarif.max} Maximum" %>
+            <%= "x#{tarif.max} max" %>
           </span>
         <% end %>
       <% end %>

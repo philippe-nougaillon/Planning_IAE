@@ -79,6 +79,9 @@
 
     <tbody>
       <% @vacations.includes(:formation, :intervenant).each do |vacation| %>
+        <% if vacation.vacation_activite_id %>
+          <% tarif = vacation.vacation_activite.vacation_activite_tarifs.find_by(statut: VacationActiviteTarif.statuts[vacation.intervenant.status]) %>
+        <% end %>
         <tr class="hover border">
           <td><%= time_ago_in_words vacation.updated_at %></td>
           <td><%= link_to vacation.intervenant.nom_prenom, intervenant_path(vacation.intervenant.slug || vacation.intervenant.id), class: 'text-primary hover:underline font-bold' %></td>
@@ -96,11 +99,20 @@
               <span class="text-secondary"><%= vacation.titre %></span>
             <% end %>
           </td>
-          <td class="text-right"><%= vacation.qte %></td>
+          <td class="text-right">
+            <% if (tarif && tarif.max && tarif.max < vacation.qte) %>
+              <span class="text-error font-black">
+                <%= vacation.qte %>
+                <%= fa_icon 'exclamation-circle', title: "La quantité dépasse le maximum autorisé (#{tarif.max})" %>
+              </span>
+            <% else %>
+              <%= vacation.qte %>
+            <% end %>
+          </td>
           <td class="text-right text-secondary"><%= vacation.forfaithtd %></td>
           <td class="text-right">
             <% if vacation.vacation_activite_id %>
-              <% if tarif = vacation.vacation_activite.vacation_activite_tarifs.find_by(statut: VacationActiviteTarif.statuts[vacation.intervenant.status]) %>
+              <% if tarif %>
                 <% if tarif.forfait_hetd > 0 %>
                   <%= number_to_currency(((Cour.Tarif * tarif.forfait_hetd) * vacation.qte).round(2)) %>
                 <% else %>
