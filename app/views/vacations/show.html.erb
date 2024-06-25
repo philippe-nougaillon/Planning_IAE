@@ -67,11 +67,7 @@
         <p class="mb-4">
           <strong>Montant</strong>
           <br>
-          <% if @vacation.forfaithtd > 0 %>
-            <%= number_to_currency(((Cour.Tarif * @vacation.forfaithtd) * @vacation.qte).round(2)) %>
-          <% else %>
-            <%= number_to_currency(@vacation.tarif * @vacation.qte) %>
-          <% end %>
+          <%= number_to_currency(@vacation.montant || @vacation.calcul_montant) %>
         </p>
       </div>
     </div>

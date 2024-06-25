@@ -9,6 +9,7 @@ class Vacation < ApplicationRecord
   validate :check_if_activite_belongs_to_intervenant_status
   validate :check_if_maximum_is_not_exceeded
 
+  before_save :calcul_montant
 
   def self.activités
     [
@@ -47,6 +48,29 @@ class Vacation < ApplicationRecord
     else
       0
     end
+  end
+
+  def calcul_montant
+    montant = 0
+    if self.vacation_activite_id 
+      if tarif = self.vacation_activite.vacation_activite_tarifs.find_by(statut: VacationActiviteTarif.statuts[self.intervenant.status])
+        if tarif.forfait_hetd > 0 
+          montant = ((Cour.Tarif * tarif.forfait_hetd) * self.qte).round(2)
+        else 
+          montant = tarif.prix * self.qte
+        end 
+      else 
+        montant = 0
+      end 
+    else
+      if self.forfaithtd > 0 
+        montant = ((Cour.Tarif * self.forfaithtd) * self.qte).round(2)
+      else 
+        montant = self.tarif * self.qte
+      end
+    end
+
+    self.montant = montant
   end
 
 

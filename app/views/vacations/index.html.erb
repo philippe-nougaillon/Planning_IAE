@@ -100,36 +100,10 @@
             <% end %>
           </td>
           <td class="text-right">
-            <% if (tarif && tarif.max && tarif.max < vacation.qte) %>
-              <span class="text-error font-black">
-                <%= vacation.qte %>
-                <%= fa_icon 'exclamation-circle', title: "La quantité dépasse le maximum autorisé (#{tarif.max})" %>
-              </span>
-            <% else %>
-              <%= vacation.qte %>
-            <% end %>
+            <%= vacation.qte %>
           </td>
           <td class="text-right text-secondary"><%= vacation.forfaithtd %></td>
-          <td class="text-right">
-            <% if vacation.vacation_activite_id %>
-              <% if tarif %>
-                <% if tarif.forfait_hetd > 0 %>
-                  <%= number_to_currency(((Cour.Tarif * tarif.forfait_hetd) * vacation.qte).round(2)) %>
-                <% else %>
-                  <%= number_to_currency(tarif.prix * vacation.qte) %>
-                <% end %>
-              <% else %>
-                ?
-              <% end %>
-            <% else %>
-              <% if vacation.forfaithtd > 0 %>
-                <%= number_to_currency(((Cour.Tarif * vacation.forfaithtd) * vacation.qte).round(2)) %>
-              <% else %>
-                <%= number_to_currency(vacation.tarif * vacation.qte) %>
-              <% end %>
-            <% end %>
-
-          </td>
+          <td class="text-right"><%= number_to_currency(vacation.montant || vacation.calcul_montant) %></td>
           <td><%= link_to 'Voir', vacation_path(vacation), class: 'text-primary hover:underline' %></td>
         </tr>
       <% end %>

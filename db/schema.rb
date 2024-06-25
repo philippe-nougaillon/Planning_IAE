@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_25_083412) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_25_134610) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -436,6 +436,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_25_083412) do
     t.integer "qte"
     t.string "commentaires"
     t.bigint "vacation_activite_id"
+    t.decimal "montant", precision: 6, scale: 2
     t.index ["formation_id"], name: "index_vacations_on_formation_id"
     t.index ["intervenant_id"], name: "index_vacations_on_intervenant_id"
     t.index ["vacation_activite_id"], name: "index_vacations_on_vacation_activite_id"
