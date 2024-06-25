@@ -177,6 +177,7 @@
       Vacations
     </h2>
 
+    <%# À mettre dans un partial (pareil que dans formation/show) %>
     <div class="overflow-x-auto">
       <table class="table table-sm ">
         <thead class="bg-slate-100 border">
@@ -185,8 +186,9 @@
           <th>Activité</th>
           <th>Intervenant</th>
           <th>Qté</th>
-          <th>Forfait_HTD</th>
           <th>Commentaires</th>
+          <th>Activité antérieure</th>
+          <th>Forfait HTD</th>
         </thead>
 
         <% if @intervenant.vacations.any? %>
