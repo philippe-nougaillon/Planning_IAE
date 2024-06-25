@@ -4,6 +4,8 @@ class Vacation < ApplicationRecord
   belongs_to :formation
   belongs_to :intervenant
 
+  belongs_to :vacation_activite, optional: true
+
 
   def self.activités
     [

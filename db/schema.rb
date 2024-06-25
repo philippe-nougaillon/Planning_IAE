@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_24_083635) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_25_083412) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -435,8 +435,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_24_083635) do
     t.date "date"
     t.integer "qte"
     t.string "commentaires"
+    t.bigint "vacation_activite_id"
     t.index ["formation_id"], name: "index_vacations_on_formation_id"
     t.index ["intervenant_id"], name: "index_vacations_on_intervenant_id"
+    t.index ["vacation_activite_id"], name: "index_vacations_on_vacation_activite_id"
   end
 
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
@@ -449,6 +451,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_24_083635) do
   add_foreign_key "presences", "etudiants"
   add_foreign_key "presences", "intervenants"
   add_foreign_key "vacation_activite_tarifs", "vacation_activites"
+  add_foreign_key "vacations", "vacation_activites"
 
   create_view "cours_non_planifies", materialized: true, sql_definition: <<-SQL
       SELECT cours.id

@@ -144,7 +144,7 @@ class FormationsController < ApplicationController
                     :abrg, :user_id, :color, :Forfait_HETD, :hors_catalogue, :nomtauxtd, :code_analytique, :catalogue, :archive, :hss, :courriel,
                     unites_attributes: [:id, :code, :nom, :séances, :heures, :destroy],
                     etudiants_attributes: [:id, :nom, :prénom, :civilité, :email, :mobile, :_destroy],
-                    vacations_attributes: [:id, :date, :intervenant_id, :titre, :qte, :forfaithtd, :commentaires, :_destroy])
+                    vacations_attributes: [:id, :date, :intervenant_id, :titre, :qte, :forfaithtd, :commentaires, :vacation_activite_id, :_destroy])
     end
 
     def is_user_authorized

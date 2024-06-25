@@ -6,7 +6,7 @@
         <%= link_to(Formation.unscoped.find(vacation.formation_id).nom, Formation.unscoped.find(vacation.formation_id), class: 'text-primary hover:underline') %>
     </td>
     <td>
-        <%= vacation.titre %>
+        <%= vacation.vacation_activite.try(:nom) %>
     </td>
     <td>
         <%= vacation.intervenant.nom %>
@@ -15,9 +15,12 @@
         <%= vacation.qte %>
     </td>
     <td>
-        <%= vacation.forfaithtd %> h
+        <%= vacation.commentaires %>
     </td>
     <td>
-        <%= vacation.commentaires %>
+        <%= vacation.titre %>
+    </td>
+    <td>
+        <%= vacation.forfaithtd %> h
     </td>
 </tr>
