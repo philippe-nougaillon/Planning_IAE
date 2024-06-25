@@ -11,14 +11,14 @@
     <div class="flex-1">
       <div class="form-control">
         <%= f.label :prix, "Prix (€)" %>
-        <%= f.number_field :prix, class: 'input input-bordered input-sm w-full' %>
+        <%= f.number_field :prix, class: 'input input-bordered input-sm w-full', required: true %>
       </div>
     </div>
 
     <div class="flex-1">
       <div class="form-control">
         <%= f.label :forfait_hetd, 'Forfait HETD' %>
-        <%= f.number_field :forfait_hetd, class: 'input input-bordered input-sm w-full' %>
+        <%= f.number_field :forfait_hetd, class: 'input input-bordered input-sm w-full', required: true %>
       </div>
     </div>
 
