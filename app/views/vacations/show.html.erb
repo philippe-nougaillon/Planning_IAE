@@ -41,9 +41,11 @@
       <p class="mb-4 max-w-xs">
         <strong>Activité</strong>
         <br>
-        <span title="<%= @vacation.vacation_activite.nom %>">
-          <%= @vacation.vacation_activite.nom %>
-        </span>
+        <% if @vacation.vacation_activite %>
+          <span title="<%= @vacation.vacation_activite.nom %>">
+            <%= @vacation.vacation_activite.nom %>
+          </span>
+        <% end %>
       </p>
     </div>
     <div>
@@ -81,7 +83,7 @@
       <%= @vacation.commentaires %>
     </p>
   </div>
-  <div class="flex gap-24">
+  <div class="flex gap-24 mt-6">
     <p class="mb-4 text-secondary">
       <strong>Activité antérieure</strong>
       <br>
