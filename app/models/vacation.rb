@@ -6,6 +6,9 @@ class Vacation < ApplicationRecord
 
   belongs_to :vacation_activite, optional: true
 
+  validate :check_if_activite_belongs_to_intervenant_status
+  validate :check_if_maximum_is_not_exceeded
+
 
   def self.activités
     [
@@ -43,6 +46,22 @@ class Vacation < ApplicationRecord
       15
     else
       0
+    end
+  end
+
+
+  private 
+
+  def check_if_activite_belongs_to_intervenant_status
+    unless self.vacation_activite.vacation_activite_tarifs.pluck(:statut).include?(self.intervenant.status)
+      errors.add(:activité, " ne correspond pas au statut de l'intervenant")
+    end
+  end
+
+  def check_if_maximum_is_not_exceeded
+    tarif = self.vacation_activite.vacation_activite_tarifs.find_by(statut: self.intervenant.status)
+    if tarif && tarif.max && (self.qte > tarif.max)
+      errors.add(:quantité, " dépasse le maximum")
     end
   end
 
