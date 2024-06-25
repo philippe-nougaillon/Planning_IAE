@@ -100,7 +100,15 @@
           <td class="text-right text-secondary"><%= vacation.forfaithtd %></td>
           <td class="text-right">
             <% if vacation.vacation_activite_id %>
-              <%# Nouvelle méthode %>
+              <% if tarif = vacation.vacation_activite.vacation_activite_tarifs.find_by(statut: VacationActiviteTarif.statuts[vacation.intervenant.status]) %>
+                <% if tarif.forfait_hetd > 0 %>
+                  <%= number_to_currency(((Cour.Tarif * tarif.forfait_hetd) * vacation.qte).round(2)) %>
+                <% else %>
+                  <%= number_to_currency(tarif.prix * vacation.qte) %>
+                <% end %>
+              <% else %>
+                ?
+              <% end %>
             <% else %>
               <% if vacation.forfaithtd > 0 %>
                 <%= number_to_currency(((Cour.Tarif * vacation.forfaithtd) * vacation.qte).round(2)) %>
