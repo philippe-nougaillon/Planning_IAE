@@ -37,16 +37,16 @@
       <tr>
         <th>Nature</th>
         <th>Type</th>
-        <th>CEV Enseignant</th>
-        <th>CEV Titulaire</th>
-        <th>CEV Salarié</th>
+        <th>Enseignant</th>
+        <th>Titulaire</th>
+        <th>Salarié</th>
         <th>Permanent</th>
         <th></th>
       </tr>
     </thead>
 
     <tbody>
-      <%= render @vacation_activites %>
+      <%= render partial: "vacation_activite", collection: @vacation_activites, locals: {nature: nil} %>
     </tbody>
   </table>
 </div>

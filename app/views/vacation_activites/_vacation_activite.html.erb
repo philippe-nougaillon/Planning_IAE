@@ -1,5 +1,11 @@
 <tr class="hover border">
-  <td><b><%= vacation_activite.nature %></b></td>
+  <td>
+    <% if nature != vacation_activite.nature %>
+      <b><%= vacation_activite.nature %></b>
+      <% local_assigns[:nature] = vacation_activite.nature %>
+    <% end %>
+  </td>
+    
   <td><%= vacation_activite.nom %></td>
   <% VacationActiviteTarif.statuts.each do |statut| %>
     <td class="align-top">
