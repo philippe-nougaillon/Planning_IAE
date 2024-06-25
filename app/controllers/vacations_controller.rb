@@ -3,7 +3,7 @@ class VacationsController < ApplicationController
   before_action :is_user_authorized
   def index
     @vacations = Vacation.all.order(updated_at: :desc)
-    @activités = Vacation.pluck(:titre).uniq.sort
+    @activités = Vacation.pluck(:titre).uniq.compact_blank.sort
 
     if params[:commit] && params[:commit][0..2] == 'RàZ'
       params[:formation] = nil
@@ -11,6 +11,7 @@ class VacationsController < ApplicationController
       params[:start_date] = nil
       params[:end_date] = nil
       params[:activité] = nil
+      params[:activité_antérieure] = nil
       params[:status] = nil
     end
 
@@ -30,7 +31,11 @@ class VacationsController < ApplicationController
     end
 
     if params[:activité].present?
-      @vacations = @vacations.where(titre: params[:activité])
+      @vacations = @vacations.where(vacation_activite_id: params[:activité])
+    end
+
+    if params[:activité_antérieure].present?
+      @vacations = @vacations.where(titre: params[:activité_antérieure])
     end
 
     if params[:status].present?

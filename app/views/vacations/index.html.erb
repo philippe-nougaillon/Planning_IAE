@@ -28,6 +28,11 @@
             <% end %>
           </div>
         </div>
+        <div class="sm:w-4/12">
+          <%= label_tag :activité, "Activité" %>
+          <%= select_tag :activité, grouped_options_for_select(VacationActivite.for_select, params[:activité]), class: 'slim-select', include_blank: true, onchange: 'this.form.submit()' %>
+
+        </div>
       </div>
 
       <div class="flex flex-wrap">
@@ -35,21 +40,20 @@
           <%= label_tag :intervenant %>
           <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
                           class: "slim-select join-item",
-                          include_blank:true,
+                          include_blank: true,
                           onchange: 'this.form.submit()' %>
         </div>
         <div class="sm:w-4/12 pr-2">
           <%= label_tag :formation %>
           <%= select_tag :formation, grouped_options_for_select(Formation.for_select, params[:formation]), class: 'slim-select',
-                          include_blank:true, onchange: 'this.form.submit()' %>
+                          include_blank: true, onchange: 'this.form.submit()' %>
         </div>
 
 
         <div class="sm:w-4/12">
-          <%= label_tag :activité, "Activité" %>
-          <%= select_tag :activité, options_for_select(@activités, params[:activité]), class: 'slim-select',
-                        include_blank:true, onchange: 'this.form.submit()' %>
-
+          <%= label_tag :activité_antérieure, "Activité antérieure", class: 'text-secondary' %>
+          <%= select_tag :activité_antérieure, options_for_select(@activités, params[:activité_antérieure]), class: 'slim-select',
+                        include_blank: true, onchange: 'this.form.submit()' %>
         </div>
       </div>
     <% end %>
@@ -68,7 +72,7 @@
         <th>Activité</th>
         <th>Quantité</th>
         <th>Forfait HTD</th>
-        <th>Montant_€</th>
+        <th>Montant Euros</th>
         <th></th>
       </tr>
     </thead>
@@ -80,17 +84,29 @@
           <td><%= link_to vacation.intervenant.nom_prenom, intervenant_path(vacation.intervenant.slug || vacation.intervenant.id), class: 'text-primary hover:underline font-bold' %></td>
           <td><%= vacation.intervenant.status %></td>
           <td style="border-left: .3rem solid <%= vacation.formation.try(:positive_color) %>">
-            <%= vacation.formation.try(:nom) %>
+            <%= vacation.formation.try(:abrg) %>
           </td>
           <td><%= l(vacation.date) %></td>
-          <td><%= vacation.titre %></td>
-          <td class="text-right"><%= vacation.qte %></td>
-          <td class="text-right"><%= vacation.forfaithtd %></td>
-          <td class="text-right">
-            <% if vacation.forfaithtd > 0 %>
-              <%= number_to_currency(((Cour.Tarif * vacation.forfaithtd) * vacation.qte).round(2)) %>
+          <td>
+            <% if vacation.vacation_activite_id %>
+              <span title="<%= vacation.vacation_activite.nom %>">
+                <%= truncate(vacation.vacation_activite.nom, length: 30) %>
+              </span>
             <% else %>
-              <%= number_to_currency(vacation.tarif * vacation.qte) %>
+              <span class="text-secondary"><%= vacation.titre %></span>
+            <% end %>
+          </td>
+          <td class="text-right"><%= vacation.qte %></td>
+          <td class="text-right text-secondary"><%= vacation.forfaithtd %></td>
+          <td class="text-right">
+            <% if vacation.vacation_activite_id %>
+              <%# Nouvelle méthode %>
+            <% else %>
+              <% if vacation.forfaithtd > 0 %>
+                <%= number_to_currency(((Cour.Tarif * vacation.forfaithtd) * vacation.qte).round(2)) %>
+              <% else %>
+                <%= number_to_currency(vacation.tarif * vacation.qte) %>
+              <% end %>
             <% end %>
 
           </td>
