@@ -172,38 +172,7 @@
   <% end %>
 
   <div class="mt-8">
-    <h3 class="text-xl text-secondary my-4">
-      <%= fa_icon 'user-md' %>
-      Vacations
-    </h2>
-
-    <%# À mettre dans un partial (pareil que dans formation/show) %>
-    <div class="overflow-x-auto">
-      <table class="table table-sm ">
-        <thead class="bg-slate-100 border">
-          <th>Date</th>
-          <th>Formation</th>
-          <th>Activité</th>
-          <th>Intervenant</th>
-          <th>Qté</th>
-          <th>Commentaires</th>
-          <th>Activité antérieure</th>
-          <th>Forfait HTD</th>
-        </thead>
-
-        <% if @intervenant.vacations.any? %>
-          <% @intervenant.vacations.each do |vacation| %>
-            <%= render vacation %>
-          <% end %>
-        <% else %>
-          <tr class="hover border">
-            <td colspan="7" class="text-center">
-              Aucune vacation
-            </td>
-          </tr>
-        <% end %>
-      </table>
-    </div>
+    <%= render partial: "partials/vacations", locals: {vacations: @intervenant.vacations} %>
   </div>
 
   <div tabindex="0" class="collapse collapse-arrow border border-base-300 bg-base-100 mt-8">

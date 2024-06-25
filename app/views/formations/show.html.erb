@@ -222,30 +222,7 @@
   <% if @formation.vacations.any? %>
     <hr class="mt-4">
     <div class="mt-8">
-      <h3 class="text-xl text-secondary my-4">
-        <%= fa_icon 'user-md' %>
-        Vacations
-      </h2>
-
-      <%# À mettre dans un partial (pareil que dans intervenant/show) %>
-      <div class="overflow-x-auto">
-        <table class="table table-sm">
-          <thead class="bg-slate-100 border">
-            <th>Date</th>
-            <th>Formation</th>
-            <th>Activité</th>
-            <th>Intervenant</th>
-            <th>Qté</th>
-            <th>Commentaires</th>
-            <th>Activité antérieure</th>
-            <th>Forfait HTD</th>
-          </thead>
-
-          <% @formation.vacations.each do |vacation| %>
-            <%= render vacation %>
-          <% end %>
-        </table>
-      </div>
+      <%= render partial: "partials/vacations", locals: {vacations: @formation.vacations} %>
     </div>
   <% end %>
 
