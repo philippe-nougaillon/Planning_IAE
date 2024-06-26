@@ -39,11 +39,6 @@ class VacationsToXls < ApplicationService
     @vacations.each do | vacation |
       next unless vacation.formation
 
-      if vacation.forfaithtd > 0
-        montant_vacation = ((Cour.Tarif * vacation.forfaithtd) * vacation.qte).round(2)
-      else
-        montant_vacation = vacation.tarif * vacation.qte
-      end
       fields_to_export = [
         vacation.intervenant.try(:id),
         vacation.intervenant.try(:nom_prenom),
@@ -59,7 +54,7 @@ class VacationsToXls < ApplicationService
         vacation.titre,
         vacation.qte,
         vacation.forfaithtd,
-        ActionController::Base.helpers.number_to_currency(montant_vacation),
+        ActionController::Base.helpers.number_to_currency(vacation.montant),
         vacation.commentaires,
         vacation.created_at, 
         vacation.updated_at

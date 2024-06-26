@@ -103,7 +103,7 @@
             <%= vacation.qte %>
           </td>
           <td class="text-right text-secondary"><%= vacation.forfaithtd %></td>
-          <td class="text-right"><%= number_to_currency(vacation.montant || vacation.calcul_montant) %></td>
+          <td class="text-right"><%= number_to_currency(vacation.montant) %></td>
           <td><%= link_to 'Voir', vacation_path(vacation), class: 'text-primary hover:underline' %></td>
         </tr>
       <% end %>

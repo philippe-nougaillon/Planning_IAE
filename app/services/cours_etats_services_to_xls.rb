@@ -77,12 +77,13 @@ class CoursEtatsServicesToXls < ApplicationService
       end 
 
       @vacations.each do |vacation|
-        if vacation.forfaithtd > 0
-          montant_vacation = ((Cour.Tarif * vacation.forfaithtd) * vacation.qte).round(2)
-          cumul_hetd += (vacation.qte * vacation.forfaithtd)
-        else
-          montant_vacation = vacation.tarif * vacation.qte
+        if vacation.vacation_activite
+          tarif = vacation.vacation_activite.vacation_activite_tarifs.find_by(statut: VacationActiviteTarif.statuts[vacation.intervenant.status])
+          if tarif && tarif.forfait_hetd
+            cumul_hetd += tarif.forfait_hetd
+          end
         end
+
         formation = Formation.unscoped.find(vacation.formation_id)
         
         fields_to_export = [
@@ -98,7 +99,7 @@ class CoursEtatsServicesToXls < ApplicationService
               nil, nil, nil, 
               'TD', 1,
               vacation.forfaithtd,
-              montant_vacation,
+              vacation.montant,
               cumul_hetd,
               ((nbr_heures_statutaire > 0) && (cumul_hetd >= nbr_heures_statutaire) ? cumul_hetd - nbr_heures_statutaire : nil)
             ]

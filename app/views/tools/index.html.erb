@@ -37,6 +37,12 @@
 				</li>
 				<br>
 				<li>
+					<%= fa_icon 'user-md' %>
+					<%= link_to "Activités", vacation_activites_path, class: 'text-primary hover:underline' %>
+				</li>
+				<br>
+				<br>
+				<li>
 					<%= fa_icon 'list-alt' %>
 					<%= link_to "Liste des surveillances d'examens", tools_liste_surveillants_examens_path, class: 'text-primary hover:underline' %>
 				</li>
@@ -44,11 +50,6 @@
 				<li>
 					<%= fa_icon 'user-secret' %>
 					<%= link_to "Agents", agents_path, class: 'text-primary hover:underline' %>
-				</li>
-				<br>
-				<li>
-					<%= fa_icon 'user-md' %>
-					<%= link_to "Activités", vacation_activites_path, class: 'text-primary hover:underline' %>
 				</li>
 				<br>
 				<br>
@@ -71,6 +72,7 @@
 				<%= fa_icon 'mug-hot' %>
 				<%= link_to 'Commandes', tools_commandes_path, class: 'text-primary hover:underline' %>
 			</li>
+			<br>
 		</ul>
 	</div>
 	

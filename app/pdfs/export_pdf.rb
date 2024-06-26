@@ -142,13 +142,14 @@ class ExportPdf
 
         # Vacations
         vacations.each_with_index do | vacation, index |
-            if vacation.forfaithtd > 0
-                montant_vacation = ((Cour.Tarif * vacation.forfaithtd) * vacation.qte).round(2)
-                cumul_hetd += (vacation.qte * vacation.forfaithtd)
-            else
-                montant_vacation = vacation.tarif * vacation.qte
+            if vacation.vacation_activite
+                tarif = vacation.vacation_activite.vacation_activite_tarifs.find_by(statut: VacationActiviteTarif.statuts[vacation.intervenant.status])
+                if tarif && tarif.forfait_hetd
+                    cumul_hetd += tarif.forfait_hetd
+                end
             end
-            cumul_vacations += montant_vacation
+            cumul_vacations += vacation.montant || 0
+
             formation = Formation.unscoped.find(vacation.formation_id) 
             
             data += [ [
@@ -161,7 +162,7 @@ class ExportPdf
                 vacation.qte,
                 nil, nil,
                 vacation.forfaithtd,
-                number_to_currency(montant_vacation)
+                number_to_currency(vacation.montant)
             ] ] 
     
             if index == vacations.size - 1
