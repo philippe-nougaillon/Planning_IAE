@@ -1,18 +1,17 @@
-<br>
-<p class="text-2xl font-bold">
+<p class="text-2xl font-bold text-success mt-12">
     Dossier déposé avec succès. Merci.
 </p>
 <br>
 
 <p class="mb-4">
-    Déposé le: <%= l DateTime.now.to_date %>
+    Déposé le : <b><%= l DateTime.now.to_date %></b>
 </p>
 
-<p class="mb-4">
-    Référence: <%= @dossier.slug %> 
+<p class="mb-8">
+    Référence : <b><%= @dossier.slug %></b>
 </p>
 
-<p class="alert alert-success text-white font-bold mb-4">
+<p class="alert alert-success text-white mb-4">
     Votre gestionnaire va traiter votre dossier dans les meilleurs délais.
-    Vous pouvez maintenant fermer cette fenêtre.
+    <b>Vous pouvez maintenant fermer cette fenêtre.</b>
 </p>
