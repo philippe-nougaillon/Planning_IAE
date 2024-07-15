@@ -1,0 +1,8 @@
+<div class="mx-auto md:w-2/3 w-full mt-8">
+  <h1 class="font-bold text-4xl">Modification Activité</h1>
+
+  <%= render "form", vacation_activite: @vacation_activite %>
+
+  <%= link_to "Voir", @vacation_activite, class: "btn" %>
+  <%= link_to "Retour", vacation_activites_path, class: "btn" %>
+</div>

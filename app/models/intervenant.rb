@@ -29,7 +29,7 @@ class Intervenant < ApplicationRecord
 
 	validates_uniqueness_of :email, case_sensitive: false
 	
-  	enum status: [:CEV, :Permanent, :PR, :MCF, :MCF_HDR, :PAST, :PRAG, :Admin, :CEV_HSS, :CEV_ENS_C_CONTRACTUEL, :CEV_TIT_CONT_FP, :CEV_SAL_PRIV_IND]
+	enum status: [:CEV, :Permanent, :PR, :MCF, :MCF_HDR, :PAST, :PRAG, :Admin, :CEV_HSS, :CEV_ENS_C_CONTRACTUEL, :CEV_TIT_CONT_FP, :CEV_SAL_PRIV_IND]
 
 	default_scope { order(:nom, :prenom) } 
 
@@ -38,8 +38,8 @@ class Intervenant < ApplicationRecord
 
 	def self.for_select
 		{
-		  'Groupes (Doublons autorisés)' => where(doublon:true).map { |i| "#{i.nom} #{i.prenom}" },
-		  'Individus' => where("intervenants.doublon = ? OR intervenants.doublon is null", false).map { |i| "#{i.nom} #{i.prenom}"  }
+			'Groupes (Doublons autorisés)' => where(doublon:true).map { |i| "#{i.nom} #{i.prenom}" },
+			'Individus' => where("intervenants.doublon = ? OR intervenants.doublon is null", false).map { |i| "#{i.nom} #{i.prenom}"  }
 		}
 	end
 

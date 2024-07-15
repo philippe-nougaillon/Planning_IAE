@@ -13,9 +13,9 @@ module ApplicationHelper
         })
     end
 
-    def page_entries_info(collection)
-        model_name = collection.respond_to?(:human_name) ? collection.model_name.human : (collection.first&.model_name&.human || '')
-    
+    def page_entries_info(collection, entry_name = nil)
+        model_name = entry_name || (collection.respond_to?(:human_name) ? collection.model_name.human : (collection.first&.model_name&.human || ''))
+
         sanitize "Affichage de  #{model_name} " +
           tag.b("#{collection.offset + 1} - #{[collection.per_page * collection.current_page, collection.total_entries].min}") +
           ' sur ' + tag.b(collection.total_entries) +
