@@ -1,0 +1,31 @@
+<h3 class="text-xl text-secondary my-4">
+  <%= fa_icon 'user-md' %>
+  Vacations
+</h3>
+
+<div class="overflow-x-auto">
+  <table class="table table-sm ">
+    <thead class="bg-slate-100 border">
+      <th>Date</th>
+      <th>Formation</th>
+      <th>Activité</th>
+      <th>Intervenant</th>
+      <th>Qté</th>
+      <th>Commentaires</th>
+      <th>Activité antérieure</th>
+      <th>Forfait HTD</th>
+    </thead>
+
+    <% if vacations.any? %>
+      <% vacations.each do |vacation| %>
+        <%= render vacation %>
+      <% end %>
+    <% else %>
+      <tr class="hover border">
+        <td colspan="7" class="text-center">
+          Aucune vacation
+        </td>
+      </tr>
+    <% end %>
+  </table>
+</div>

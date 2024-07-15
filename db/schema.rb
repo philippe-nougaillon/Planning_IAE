@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_26_074358) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_25_134610) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -407,6 +407,24 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_26_074358) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "vacation_activite_tarifs", force: :cascade do |t|
+    t.bigint "vacation_activite_id"
+    t.integer "statut", null: false
+    t.integer "prix", default: 0
+    t.integer "forfait_hetd", default: 0
+    t.integer "max"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["vacation_activite_id"], name: "index_vacation_activite_tarifs_on_vacation_activite_id"
+  end
+
+  create_table "vacation_activites", force: :cascade do |t|
+    t.string "nature", null: false
+    t.string "nom", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "vacations", id: :serial, force: :cascade do |t|
     t.integer "formation_id"
     t.integer "intervenant_id"
@@ -417,8 +435,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_26_074358) do
     t.date "date"
     t.integer "qte"
     t.string "commentaires"
+    t.bigint "vacation_activite_id"
+    t.decimal "montant", precision: 6, scale: 2
     t.index ["formation_id"], name: "index_vacations_on_formation_id"
     t.index ["intervenant_id"], name: "index_vacations_on_intervenant_id"
+    t.index ["vacation_activite_id"], name: "index_vacations_on_vacation_activite_id"
   end
 
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
@@ -430,6 +451,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_26_074358) do
   add_foreign_key "presences", "cours"
   add_foreign_key "presences", "etudiants"
   add_foreign_key "presences", "intervenants"
+  add_foreign_key "vacation_activite_tarifs", "vacation_activites"
+  add_foreign_key "vacations", "vacation_activites"
 
   create_view "cours_non_planifies", materialized: true, sql_definition: <<-SQL
       SELECT cours.id

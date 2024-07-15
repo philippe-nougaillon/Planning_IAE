@@ -1,0 +1,2 @@
+module VacationActivitesHelper
+end

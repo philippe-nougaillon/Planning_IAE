@@ -29,13 +29,6 @@
         <br>
         <%= l(@vacation.date, format: :long) %>
       </p>
-
-      <p class="mb-4">
-        <strong>Quantité</strong>
-        <br>
-        <%= @vacation.qte %>
-      </p>
-
     </div>
 
     <div>
@@ -45,19 +38,17 @@
         <%= @vacation.intervenant.status %>
       </p>
 
-      <p class="mb-4">
+      <p class="mb-4 max-w-xs">
         <strong>Activité</strong>
         <br>
-        <%= @vacation.titre %>
-      </p>
-
-      <p class="mb-4">
-        <strong>Forfait HTD</strong>
-        <br>
-        <%= @vacation.forfaithtd %>
+        <% if @vacation.vacation_activite %>
+          <span title="<%= @vacation.vacation_activite.nom %>">
+            <%= @vacation.vacation_activite.nom %>
+          </span>
+        <% end %>
       </p>
     </div>
-    <div class="flex flex-col justify-between">
+    <div>
       <p class="mb-4">
         <strong>Formation</strong>
         <br>
@@ -65,15 +56,20 @@
           <%= link_to(Formation.unscoped.find(@vacation.formation_id).nom, Formation.unscoped.find(@vacation.formation_id), class: 'text-primary hover:underline') %>
         </span>
       </p>
-      <p class="mb-4">
-        <strong>Montant</strong>
-        <br>
-        <% if @vacation.forfaithtd > 0 %>
-          <%= number_to_currency(((Cour.Tarif * @vacation.forfaithtd) * @vacation.qte).round(2)) %>
-        <% else %>
-          <%= number_to_currency(@vacation.tarif * @vacation.qte) %>
-        <% end %>
-      </p>
+
+      <div class="flex gap-8">
+        <p class="mb-4">
+          <strong>Quantité</strong>
+          <br>
+          <%= @vacation.qte %>
+        </p>
+
+        <p class="mb-4">
+          <strong>Montant</strong>
+          <br>
+          <%= number_to_currency(@vacation.montant) %>
+        </p>
+      </div>
     </div>
   </div>
   <div>
@@ -81,6 +77,19 @@
       <strong>Commentaires</strong>
       <br>
       <%= @vacation.commentaires %>
+    </p>
+  </div>
+  <div class="flex gap-24 mt-6">
+    <p class="mb-4 text-secondary">
+      <strong>Activité antérieure</strong>
+      <br>
+      <%= @vacation.titre %>
+    </p>
+
+    <p class="mb-4 text-secondary">
+      <strong>Forfait HTD</strong>
+      <br>
+      <%= @vacation.forfaithtd %>
     </p>
   </div>
 </div>

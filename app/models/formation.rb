@@ -15,11 +15,12 @@ class Formation < ApplicationRecord
 									reject_if: lambda {|attributes| attributes['nom'].blank?}
 	has_many :vacations
 	accepts_nested_attributes_for :vacations, allow_destroy:true, 
-									reject_if: lambda {|attributes| attributes['intervenant_id'].blank? || 
-																	attributes['titre'].blank? ||
+									reject_if: lambda {|attributes|
+																	attributes['intervenant_id'].blank? || 
+																	attributes['vacation_activite_id'].blank? ||
 																	attributes['date'].blank? ||
-																	attributes['qte'].blank? ||
-																	attributes['forfaithtd'].blank?	}
+																	attributes['qte'].blank?
+																}
 	belongs_to :user
 
 	validates :nom, :nbr_etudiants, :nbr_heures, :abrg, presence: true
