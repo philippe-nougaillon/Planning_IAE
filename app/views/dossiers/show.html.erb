@@ -34,7 +34,7 @@
 
     <% unless @dossier.mémo.blank? %>
       <p class="mb-4">
-        <p class="alert alert-warning mb-4">
+        <p class="flex flex-col items-start alert alert-error text-white mb-4">
           <strong>Informations :</strong>
           <%= @dossier.mémo %>
         </p>
@@ -52,10 +52,10 @@
           Aucun document pour l'instant.
         </p>
       <% else %>
-        <p class="alert alert-warning mb-4">
+        <p class="alert mb-4">
           Veuillez ajouter les justificatifs correspondants à votre situation 
           (voir le document 'Pièces à fournir.pdf') en utilisant le bouton 'Ajouter un document'.
-          <br>
+          <br><br>
           Quand le dossier est complet et prêt à être déposé, cliquez sur 'Déposer le dossier'.
         </p>
       <% end %>
@@ -91,12 +91,15 @@
           <!-- Inserted elements will be injected before that target. -->
           <div data-nested-form-target="target"></div>
 
-          <button type="button" data-action="nested-form#add" class="btn btn-primary btn-sm mt-4">
+          <button type="button" data-action="nested-form#add" class="btn btn-primary btn-sm text-white mt-4">
             <%= fa_icon 'plus-circle' %>
             Ajouter un document
           </button>
         </div>
-        <%= f.submit 'Déposer le dossier', 'data-turbo': false, class: 'btn btn-success text-white mt-12' %>
+        <button type="submit" name="commit" value="Déposer le dossier" class="btn btn-success btn-wide btn-lg text-white mt-6" data-disable-with="Déposer le dossier" data-turbo-confirm="ATTENTION ! Une fois déposé, vous ne pourrez plus modifier le dossier. Confirmez-vous le dépôt de votre dossier et des pièces justificatives ?">
+          <i class="far fa-arrow-alt-circle-down"></i>
+          Déposer le dossier
+        </button>
       <% end %>
     <% end %>
 
