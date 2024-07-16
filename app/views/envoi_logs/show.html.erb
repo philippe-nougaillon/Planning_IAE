@@ -23,7 +23,7 @@
 
 <p class="mb-4">
   <strong>Destinaire : </strong>
-  <% if (@envoi_log.cible == 'Intervenant') && intervenant = Intervenant.find(@envoi_log.cible_id) %>
+  <% if (['Intervenant', 'Examen'].include?(@envoi_log.cible)) && intervenant = Intervenant.find(@envoi_log.cible_id) %>
     <%= intervenant.nom_prenom %>
   <% else %>
     <%= "#{@envoi_log.cible} #{@envoi_log.cible_id}" %>

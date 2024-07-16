@@ -64,7 +64,7 @@ class EnvoiLogsController < ApplicationController
         EnvoyerNotificationsJob.perform_later(envoi_log.id)
       end
     end
-    redirect_to envoi_logs_path, notice: "Démarrage  de l'envoi des rappels en état 'prêts'."
+    redirect_to envoi_logs_path, notice: "Démarrage de l'envoi des rappels en état 'prêts'."
   end
 
   # GET /envoi_logs/new

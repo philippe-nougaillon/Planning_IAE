@@ -128,6 +128,7 @@ Rails.application.routes.draw do
     get :liste_surveillants_examens
     get :rechercher
     get :rappel_des_cours
+    get :rappel_des_examens
     get :acces_intervenants
     get :commandes
     get :commande_fait
@@ -149,6 +150,7 @@ Rails.application.routes.draw do
     post :nouvelle_saison_create
     post :notifier_intervenants_do
     post :rappel_des_cours_do
+    post :rappel_des_examens_do
     post :acces_intervenants_do
   end
 

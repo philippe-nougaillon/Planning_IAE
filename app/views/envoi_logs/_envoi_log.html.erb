@@ -6,7 +6,7 @@
     <%= "il y a #{time_ago_in_words(envoi_log.updated_at)}" %>
   </td>
   <td>
-    <% if (envoi_log.cible == 'Intervenant') && intervenant = Intervenant.find(envoi_log.cible_id) %>
+    <% if (['Intervenant', 'Examen'].include?(envoi_log.cible)) && intervenant = Intervenant.find(envoi_log.cible_id) %>
       <%= intervenant.nom_prenom %>
     <% elsif envoi_log.cible == 'Formation' %>
       <%= "Formation : #{Formation.find(envoi_log.cible_id).abrg}" %>

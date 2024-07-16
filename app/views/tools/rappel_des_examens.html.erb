@@ -1,0 +1,41 @@
+<div class="border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'bell' %> Rappel des examens</h1>
+</div>
+<br>
+
+<%= form_tag({action: "rappel_des_examens_do", method: :post}, multipart: true) do %>
+  <div>
+    <h4 class="text-xl">
+      Ajouter un rappel des examens dans la file d'attente.
+      <br>
+      <small> Pour tous les types d'examen ou un seul examen, sur une période choisie</small>
+    </h4>
+    <br>
+  </div>
+  
+  <div class="flex flex-col sm:w-1/3 gap-4">
+    <div>
+      <%= label_tag :examen_id %>
+      <%= select_tag :examen_id, 
+            options_from_collection_for_select(@examens, :id, :nom_prenom, params[:examen_id]), 
+              class:"slim-select", include_blank: true %>
+    </div>
+
+    <div class="flex gap-4">
+      <div class="flex-1">
+        <%= label_tag :du, "Période du" %>
+        <%= text_field_tag :du, params[:du], type: 'date', class: 'input input-bordered input-sm w-full' %>
+      </div>
+      <div class="flex-1">
+        <%= label_tag :au %>
+        <%= text_field_tag :au, params[:au], type: 'date', class: 'input input-bordered input-sm w-full' %>
+      </div>
+    </div>
+    <small>Laissez vide pour le rappel des examens du mois suivant</small>
+  </div>
+  
+  <div class="flex items-center mt-4" style="gap: 1rem">
+    <%= submit_tag "Ajouter à la file d'attente", class: "btn btn-primary text-white", 'data-turbo': false %>
+    <%= link_to "Voir la file d'attente", envoi_logs_path, class: 'text-primary hover:underline' %>
+  </div>
+<% end %>

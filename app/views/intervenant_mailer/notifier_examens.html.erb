@@ -1,0 +1,86 @@
+<p style="margin-bottom: 0.5rem">
+    Bonjour,
+    <br><br>
+    L'IAE Paris-Sorbonne a le plaisir de vous transmettre le récapitulatif de vos examens programmés du <%=l @debut %> au <%=l @fin %>
+</p>
+<br>
+<div style="overflow-x: auto;">
+    <table style="border: 1px solid lightgrey;" cellpadding=5 cellspacing=5>
+        <thead>
+            <tr>
+                <th colspan=2>Date</th>
+                <th>Formation</th>
+                <th>Intervenant</th>
+                <th>Intitulé du cours</th>
+                <th>Salle</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @cours.each_with_index do | c, index | %>
+                <tr style="<%= index.even? ? 'background-color: #f2f2f2;' : nil %>" >
+                    <td>
+                        <b><%= I18n.l(c.debut.to_date, format: :day) %> <%= I18n.l(c.debut.to_date) %></b>
+                    </td>
+                    <td>
+                        <b><%= I18n.l(c.debut, format: :heures_min) %></b>
+                        - <%= I18n.l(c.fin, format: :heures_min) %>
+                    </td>
+                    <td><%= c.try(:formation).try(:nom) %></td>
+                    <td>
+                        <% if c.intervenant.nom_prenom.include?('EXAMEN') %>
+                            <i><b><%= c.intervenant.nom_prenom %></b></i>
+                        <% else %>
+                            <%= c.intervenant.nom_prenom %>
+                        <% end %>
+
+                        <% if c.intervenant_binome %>
+                            <br>
+                            <%= c.intervenant_binome.nom_prenom %>
+                        <% end %>
+                    </td>
+                    <td><%= c.nom_ou_ue %></td>
+                    <td><%= c.try(:salle).try(:nom) %></td>
+                </tr>
+            <% end %>
+        </tbody>
+    </table>
+</div>
+
+<p style="margin-bottom: 0.5rem">
+    <b>
+        Nous vous remercions de vérifier ce récapitulatif et de prendre contact 
+        avec votre gestionnaire de formation au plus vite en cas d'erreur/omission/modification.
+    </b>
+    <br>
+</p>
+
+<% if @gestionnaires.any? %>
+    <div style="overflow-x: auto;">
+        <table style="border: 1px solid lightgrey;" cellpadding=5 cellspacing=5>
+            <tbody>
+                <% @gestionnaires.each do | formation, email | %>
+                    <% unless email.blank? %>
+                        <tr>
+                            <td style="border: 1px solid lightgrey;"><%= formation %></td>
+                            <td><%= email %></td>
+                        </tr>
+                    <% end %>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+    <br>
+<% end %>
+
+<% unless @message.blank? %>
+    <div style="padding: 15px; background-color: #f2f2f2;">
+        <b><%= @message %></b>
+    </div>
+    <br>
+<% end %>
+
+<p style="margin-bottom: 0.5rem">
+    Bien cordialement,
+    <br>
+    IAE Paris
+</p>

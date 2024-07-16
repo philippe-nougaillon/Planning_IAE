@@ -24,6 +24,21 @@ class IntervenantMailer < ApplicationMailer
         end
     end
 
+    def notifier_examens(debut, fin, intervenant, cours, gestionnaires, envoi_log_id, test)
+        @debut = debut
+        @fin = fin - 1.day
+        @cours = cours
+        @gestionnaires = gestionnaires
+        @intervenant = intervenant
+        @message = EnvoiLog.find(envoi_log_id).message
+        if test
+            mail(to: "fitsch-mouras.iae@univ-paris1.fr", cc: "philippe.nougaillon@gmail.com, pierreemmanuel.dacquet@gmail.com",
+                subject:"[PLANNING] TEST / Rappel des examens de #{@intervenant.nom_prenom} du #{l @debut} au #{l @fin}")
+        else
+            mail(to: @intervenant.email, subject:"[PLANNING] Rappel de vos examens à l'IAE Paris du #{l @debut} au #{l @fin}")
+        end
+    end
+
     def welcome_intervenant
         @user = params[:user]
         @password = params[:password]

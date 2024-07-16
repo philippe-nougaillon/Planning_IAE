@@ -1290,6 +1290,35 @@ class ToolsController < ApplicationController
     end
   end
 
+  def rappel_des_examens
+    @examens = Intervenant.where(id: [169, 522, 1166])
+    @formations = Formation.all
+  end
+
+  def rappel_des_examens_do
+    unless params[:intervenant_id].blank? && params[:formation_id].blank? && (params[:du].blank? && params[:au].blank?)
+      @envoi_log = EnvoiLog.new
+      @envoi_log.date_prochain = DateTime.now
+
+      if params[:examen_id].present?
+        @envoi_log.cible = "Examen"
+        @envoi_log.cible_id = params[:examen_id]
+      else
+        @envoi_log.cible = "Tous les intervenants"
+      end
+
+      unless params[:du].blank? && params[:au].blank?
+        @envoi_log.date_début = params[:du]
+        @envoi_log.date_fin = params[:au]
+      end
+
+      @envoi_log.workflow_state = "prêt"
+      @envoi_log.save
+
+      redirect_to envoi_logs_path, notice: "Job ajouté à la file d'attente"
+    end
+  end
+
   def acces_intervenants
     params[:paginate] ||= 'pages'
     authorized_intervenants_email = User.intervenant.pluck(:email).map(&:downcase)
