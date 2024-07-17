@@ -49,8 +49,12 @@ namespace :cours do
 
       if envoi_specs.cible != 'Examen'
         cours = cours.where("intervenant_id = ? OR intervenant_binome_id = ?", intervenant.id, intervenant.id)
-      else
+      elsif envoi_specs.cible_id
+        # Examen choisi
         cours = cours.where("intervenant_id = ? AND intervenant_binome_id = ?", envoi_specs.cible_id, intervenant.id)
+      else
+        # Tous les examens
+        cours = cours.where("intervenant_id = ANY ('{169,522,1166}'::int[]) AND intervenant_binome_id = ?", intervenant.id)
       end
 
       cours = cours.order(:debut)

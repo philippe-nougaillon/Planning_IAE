@@ -1300,11 +1300,9 @@ class ToolsController < ApplicationController
       @envoi_log = EnvoiLog.new
       @envoi_log.date_prochain = DateTime.now
 
+      @envoi_log.cible = "Examen"
       if params[:examen_id].present?
-        @envoi_log.cible = "Examen"
         @envoi_log.cible_id = params[:examen_id]
-      else
-        @envoi_log.cible = "Tous les intervenants"
       end
 
       unless params[:du].blank? && params[:au].blank?
