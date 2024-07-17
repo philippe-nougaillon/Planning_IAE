@@ -174,6 +174,14 @@ class ToolPolicy < ApplicationPolicy
     rappel_des_cours?
   end
 
+  def rappel_des_examens?
+    user.admin?
+  end
+
+  def rappel_des_examens_do?
+    rappel_des_examens?
+  end
+
   def can_see_RHGroup_private_tool?
     user.rh?
   end

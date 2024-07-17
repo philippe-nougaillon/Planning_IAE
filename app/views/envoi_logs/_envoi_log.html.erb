@@ -6,10 +6,12 @@
     <%= "il y a #{time_ago_in_words(envoi_log.updated_at)}" %>
   </td>
   <td>
-    <% if (envoi_log.cible == 'Intervenant') && intervenant = Intervenant.find(envoi_log.cible_id) %>
+    <% if envoi_log.cible == 'Intervenant' && intervenant = Intervenant.find(envoi_log.cible_id) %>
       <%= intervenant.nom_prenom %>
     <% elsif envoi_log.cible == 'Formation' %>
       <%= "Formation : #{Formation.find(envoi_log.cible_id).abrg}" %>
+    <% elsif envoi_log.cible == 'Examen' %>
+      <%= "Examen : #{Intervenant.find_by(id: envoi_log.cible_id).try(:nom_prenom) || 'Tous'}" %>
     <% else %>
       Tous
     <% end %>

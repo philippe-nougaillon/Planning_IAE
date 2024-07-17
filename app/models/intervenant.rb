@@ -109,6 +109,10 @@ class Intervenant < ApplicationRecord
     return User.intervenant.or(User.enseignant).find_by("LOWER(users.email) = ?", self.try(:email).try(:downcase))
   end
 
+	def permanent?
+		['Permanent', 'PR','MCF','MCF_HDR','PRAG','PAST'].include?(self.status)
+	end
+
 	private
 	# only one candidate for an nice id; one random UDID
 	def slug_candidates

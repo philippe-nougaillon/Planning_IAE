@@ -52,8 +52,9 @@ class Vacation < ApplicationRecord
 
   def calcul_montant
     montant = 0
-    if self.vacation_activite_id 
-      if tarif = self.vacation_activite.vacation_activite_tarifs.find_by(statut: VacationActiviteTarif.statuts[self.intervenant.status])
+    if self.vacation_activite_id
+      status = self.intervenant.permanent? ? 'Permanent' : self.intervenant.status
+      if tarif = self.vacation_activite.vacation_activite_tarifs.find_by(statut: VacationActiviteTarif.statuts[status])
         if tarif.forfait_hetd > 0 
           montant = ((Cour.Tarif * tarif.forfait_hetd) * self.qte).round(2)
         else 
@@ -77,7 +78,8 @@ class Vacation < ApplicationRecord
   private 
 
   def check_if_activite_belongs_to_intervenant_status
-    unless self.vacation_activite.vacation_activite_tarifs.pluck(:statut).include?(self.intervenant.status)
+    status = self.intervenant.permanent? ? 'Permanent' : self.intervenant.status
+    unless self.vacation_activite.vacation_activite_tarifs.pluck(:statut).include?(status)
       errors.add(:activité, " ne correspond pas au statut de l'intervenant")
     end
   end

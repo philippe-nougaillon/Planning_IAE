@@ -410,6 +410,8 @@ fr:
       title: Réservations en masse
     rappel_des_cours:
       title: Rappel des cours
+    rappel_des_examens:
+      title: Rappel des examens
     audit_cours:
       title: Liste des cours "à booker"
     commandes:
