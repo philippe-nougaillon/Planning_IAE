@@ -1,7 +1,7 @@
 <p style="margin-bottom: 0.5rem">
     Bonjour,
     <br><br>
-    L'IAE Paris-Sorbonne a le plaisir de vous transmettre le récapitulatif de vos examens programmés du <%=l @debut %> au <%=l @fin %>
+    En vue de l'examen de votre UE, et si pas déjà fait, merci de bien vouloir faire parvenir au plus vite et <b>au plus tard 20 jours avant</b> la date de l'examen, votre <b>sujet</b> avec la <b>page de garde</b> (en y indiquant les <b>consignes</b>) en format <b>pdf</b> à votre gestionnaire de formation, afin qu'il/elle puisse envoyer les convocations aux étudiants.
 </p>
 <br>
 <div style="overflow-x: auto;">
@@ -46,38 +46,16 @@
     </table>
 </div>
 
-<p style="margin-bottom: 0.5rem">
-    <b>
-        Nous vous remercions de vérifier ce récapitulatif et de prendre contact 
-        avec votre gestionnaire de formation au plus vite en cas d'erreur/omission/modification.
-    </b>
-    <br>
-</p>
-
-<% if @gestionnaires.any? %>
-    <div style="overflow-x: auto;">
-        <table style="border: 1px solid lightgrey;" cellpadding=5 cellspacing=5>
-            <tbody>
-                <% @gestionnaires.each do | formation, email | %>
-                    <% unless email.blank? %>
-                        <tr>
-                            <td style="border: 1px solid lightgrey;"><%= formation %></td>
-                            <td><%= email %></td>
-                        </tr>
-                    <% end %>
-                <% end %>
-            </tbody>
-        </table>
-    </div>
-    <br>
-<% end %>
-
 <% unless @message.blank? %>
     <div style="padding: 15px; background-color: #f2f2f2;">
         <b><%= @message %></b>
     </div>
     <br>
 <% end %>
+
+<p style="margin-bottom: 0.5rem">
+    Vous remerciant par avance du respect de cette dead line,
+</p>
 
 <p style="margin-bottom: 0.5rem">
     Bien cordialement,

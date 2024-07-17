@@ -11,7 +11,7 @@ class IntervenantMailerPreview < ActionMailer::Preview
                                         "2022-02-01".to_date, 
                                         Intervenant.first, 
                                         Cour.last(20) , 
-                                        [["la formation....", "courriel@lkjlkjl.fr"]], 
+                                        [["la formation incroyable", "courriel@lkjlkjl.fr"]], 
                                         EnvoiLog.first.id,
                                         false)
     end
@@ -21,8 +21,8 @@ class IntervenantMailerPreview < ActionMailer::Preview
                          .notifier_examens("2022-01-01".to_date, 
                                         "2022-02-01".to_date, 
                                         Intervenant.first, 
-                                        Cour.last(20) , 
-                                        [["la formation....", "courriel@lkjlkjl.fr"]], 
+                                        Cour.where(intervenant_id: [169, 522]).last(20) , 
+                                        [["la formation incroyable", "courriel@lkjlkjl.fr"]], 
                                         EnvoiLog.first.id,
                                         false)
     end
