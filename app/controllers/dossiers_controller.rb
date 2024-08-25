@@ -7,7 +7,7 @@ class DossiersController < ApplicationController
 
   # GET /dossiers or /dossiers.json
   def index
-    params[:période] ||= '2023/2024' 
+    params[:période] ||= '2024/2025' 
     params[:order_by]||= 'dossiers.updated_at'
 
     if params[:archive].blank?
@@ -56,9 +56,9 @@ class DossiersController < ApplicationController
   # GET /dossiers/new
   def new
     # Lister toutes les personnes ayant eu cours comme intervenant principal ou en binome
-    période = '2023/2024'
-    début_période = '2023-09-01'
-    fin_période = '2024-08-31'
+    période = '2024/2025'
+    début_période = '2024-09-01'
+    fin_période = '2025-08-31'
 
     # on garde les id des intervenants ayant eu cours sur la période
     intervenants_ids = Cour.where("DATE(cours.debut) BETWEEN ? AND ?", début_période, fin_période).pluck(:intervenant_id)
