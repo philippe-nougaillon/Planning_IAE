@@ -119,6 +119,10 @@ class EtudiantsController < ApplicationController
         etudiant.formation_id = params[:formation_id].to_i
         etudiant.save
       end
+    when "Supprimer"
+      @etudiants.each do |etudiant|
+        etudiant.destroy
+      end
     end
 
     unless flash[:alert]
