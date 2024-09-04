@@ -5,9 +5,10 @@ class DossierMailer < ApplicationMailer
     def dossier_email
         @dossier = params[:dossier]
 
-        attachments['Dossier de recrutement.pdf']   = File.read('app/assets/attachments/Dossier CEV 2023-2024.pdf')
-        attachments['Pièces à fournir.pdf']         = File.read('app/assets/attachments/Pièces à fournir_dossier de recrutement 2023-2024.pdf')
-        attachments['Note réglementaire.pdf']       = File.read('app/assets/attachments/Note sur les conditions de recrutement 2023-2024.pdf')
+        attachments['Dossier de recrutement.pdf']   = File.read('app/assets/attachments/Dossier CEV 2024-2025.pdf')
+        attachments['Pièces à fournir.pdf']         = File.read('app/assets/attachments/Pièces à fournir_dossier de recrutement.pdf')
+        attachments['Note réglementaire.pdf']       = File.read('app/assets/attachments/Note sur les conditions de recrutement.pdf')
+        attachments['Etat prévisionnel.pdf']        = File.read('app/assets/attachments/Etat prévisionnel.pdf')
 
         mail(to: @dossier.intervenant.email, 
              subject: "[Enseignement IAE-Paris #{ @dossier.période }] Dossier de recrutement")
