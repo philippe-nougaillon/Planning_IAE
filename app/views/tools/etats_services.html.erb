@@ -23,7 +23,7 @@
             <%= select_tag :status, 
                 options_for_select(Intervenant.statuses, 
                 params[:status]), include_blank:true,
-                class: "slim-select", multiple: true, onchange: 'this.form.submit()' %>
+                class: "slim-select", onchange: 'this.form.submit()' %>
         </div>
 
         <div class="sm:w-1/3 px-4">
