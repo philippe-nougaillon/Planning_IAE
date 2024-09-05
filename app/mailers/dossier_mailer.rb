@@ -8,7 +8,7 @@ class DossierMailer < ApplicationMailer
         attachments['Dossier de recrutement.pdf']   = File.read('app/assets/attachments/Dossier CEV 2024-2025.pdf')
         attachments['Pièces à fournir.pdf']         = File.read('app/assets/attachments/Pièces à fournir_dossier de recrutement.pdf')
         attachments['Note réglementaire.pdf']       = File.read('app/assets/attachments/Note sur les conditions de recrutement.pdf')
-        attachments['Etat prévisionnel.pdf']        = File.read('app/assets/attachments/Etat prévisionnel.pdf')
+        attachments['Etat prévisionnel.pdf']        = File.read('app/assets/attachments/Formulaire_V02-1.pdf')
 
         mail(to: @dossier.intervenant.email, 
              subject: "[Enseignement IAE-Paris #{ @dossier.période }] Dossier de recrutement")
