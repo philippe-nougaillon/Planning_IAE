@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_25_134610) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_13_080605) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -64,9 +64,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_25_134610) do
     t.datetime "debut", precision: nil
     t.datetime "fin", precision: nil
     t.string "message"
-    t.integer "etat"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "etat"
   end
 
   create_table "audits", id: :serial, force: :cascade do |t|
@@ -411,7 +411,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_25_134610) do
     t.bigint "vacation_activite_id"
     t.integer "statut", null: false
     t.integer "prix", default: 0
-    t.integer "forfait_hetd", default: 0
+    t.decimal "forfait_hetd", precision: 6, scale: 2, default: "0.0"
     t.integer "max"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
