@@ -71,7 +71,7 @@ class DossiersController < ApplicationController
 
     @intervenants = Intervenant
                           .where("id IN(?)", intervenants_ids.uniq)
-                          .where(status: 'CEV')
+                          .where(status: ['CEV','CEV_ENS_C_CONTRACTUEL','CEV_TIT_CONT_FP','CEV_SAL_PRIV_IND'])
                           .where.not(id: intervenants_avec_dossiers_sur_période)
                           .uniq
     
