@@ -91,7 +91,7 @@
             <% end %>
         <% end %>
 
-        <% if policy(cours).edit? && !cours.commentaires.blank? %>
+        <% if (policy(cours).edit? || (current_user && current_user.accueil_vacataire?)) && !cours.commentaires.blank? %>
             <i title="<%= cours.commentaires %>" >
                 <% if cours.commentaires.include?('+') %>
                     <%= link_to tools_commandes_path do %>

@@ -14,7 +14,7 @@ class EtudiantPolicy < ApplicationPolicy
   end
 
   def new?
-    index?
+    index? && !user.accueil_vacataire?
   end
 
   def create?
@@ -22,7 +22,7 @@ class EtudiantPolicy < ApplicationPolicy
   end
 
   def edit?
-    index?
+    index? && !user.accueil_vacataire?
   end
 
   def update?
@@ -30,7 +30,7 @@ class EtudiantPolicy < ApplicationPolicy
   end
 
   def destroy?
-    index?
+    index? && !user.accueil_vacataire?
   end
 
   def action?
