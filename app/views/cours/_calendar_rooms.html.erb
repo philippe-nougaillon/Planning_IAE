@@ -76,7 +76,7 @@
               </i>
             <% end %>
 
-            <% if policy(meeting).edit? && !meeting.commentaires.blank? %>
+            <% if (policy(meeting).edit? || (current_user && current_user.accueil_vacataire?)) && !meeting.commentaires.blank? %>
               <i title="<%= meeting.commentaires %>" >
                 <% if meeting.commentaires.include?('+') %>
                   <%= link_to tools_commandes_path do %>
