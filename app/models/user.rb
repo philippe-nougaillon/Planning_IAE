@@ -78,6 +78,10 @@ class User < ApplicationRecord
     return ( self.étudiant? && Etudiant.find_by("LOWER(etudiants.email) = ?", self.email.downcase).nil? ) || ( (self.intervenant? || self.enseignant?) && Intervenant.find_by("LOWER(intervenants.email) = ?", self.email.downcase).nil? )
   end
 
+  def accueil_vacataire?
+    self.email == "vacaccueil@iae.pantheonsorbonne.fr"
+  end
+
   private
 
     def timeout_in
