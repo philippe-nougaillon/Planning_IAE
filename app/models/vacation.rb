@@ -80,14 +80,14 @@ class Vacation < ApplicationRecord
   def check_if_activite_belongs_to_intervenant_status
     status = self.intervenant.permanent? ? 'Permanent' : self.intervenant.status
     unless self.vacation_activite.vacation_activite_tarifs.pluck(:statut).include?(status)
-      errors.add(:activité, " ne correspond pas au statut de l'intervenant")
+      errors.add(:activite, ": l'activité \"#{self.vacation_activite.nom}\" ne correspond pas au statut de #{self.intervenant.nom_prenom}. L'erreur doit être réglée pour valider l'ensemble des nouvelles vacations/activités.")
     end
   end
 
   def check_if_maximum_is_not_exceeded
     tarif = self.vacation_activite.vacation_activite_tarifs.find_by(statut: self.intervenant.status)
     if tarif && tarif.max && (self.qte > tarif.max)
-      errors.add(:quantité, " dépasse le maximum")
+      errors.add(:quantité, ": la quantité de \"#{self.vacation_activite.nom}\" ne doit pas dépasser #{tarif.max}. L'erreur doit être réglée pour valider l'ensemble des nouvelles vacations/activités.")
     end
   end
 
