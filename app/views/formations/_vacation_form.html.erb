@@ -3,7 +3,7 @@
     <div class="sm:w-2/12 px-4">
       <div class="form-control">
         <%= f.label :date, 'Date *' %>
-        <%= f.date_field :date, class: 'input input-bordered input-sm w-full' %>
+        <%= f.date_field :date, class: 'input input-bordered input-sm w-full', required: true %>
       </div>
     </div>
 
@@ -13,22 +13,23 @@
         <%= f.collection_select :intervenant_id, 
                                         Intervenant.where.not(doublon: true),
                                         :id,
-                                        :nom_prenom,
-                                        {include_blank: true}, class: "select select-bordered select-sm w-full" %>
+                                        :nom_prenom_status,
+                                        {include_blank: true}, class: "select select-bordered select-sm w-full",
+                                        required: true %>
       </div>
     </div> 
 
     <div class="sm:w-6/12 px-4">
       <div class="form-control">
         <%= f.label :vacation_activite_id, 'Activité *' %>
-        <%= f.select :vacation_activite_id, grouped_options_for_select(VacationActivite.for_select, f.object.vacation_activite_id), {include_blank: true}, class: "select select-bordered select-sm w-full" %>
+        <%= f.select :vacation_activite_id, grouped_options_for_select(VacationActivite.for_select, f.object.vacation_activite_id), {include_blank: true}, class: "select select-bordered select-sm w-full", required: true %>
       </div>
     </div> 
 
     <div class="sm:w-1/12 px-4">
       <div class="form-control">
         <%= f.label :qte, "Qté *" %>
-        <%= f.number_field :qte, class: 'input input-bordered input-sm w-full' %>
+        <%= f.number_field :qte, class: 'input input-bordered input-sm w-full', required: true %>
       </div>
     </div>
 

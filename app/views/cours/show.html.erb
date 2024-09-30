@@ -105,6 +105,13 @@
     <%= @cour.commentaires %>
   </p>
 
+  <% if @cour.document.attached? %>
+    <h4 class="text-xl mt-4">
+      <small class="text-secondary">Document</small><br>
+    </h4>
+    <%= link_to @cour.document.filename, url_for(@cour.document), class: 'text-primary hover:underline', target: "_blank" %>
+  <% end %>
+
   <hr>
 
   <% if @cour.audits.any? %>

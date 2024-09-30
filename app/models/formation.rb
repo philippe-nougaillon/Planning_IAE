@@ -58,6 +58,10 @@ class Formation < ApplicationRecord
 		self.code_analytique.blank? ? self.nom : "#{self.nom} -> #{self.code_analytique}"
 	end
 
+	def nom_promo_hss
+		self.promo.blank? ? "#{self.nom} #{'(HSS)' if self.hss}" : "#{self.nom} - #{self.promo} #{'(HSS)' if self.hss}" 
+	end
+
 	def code_analytique_avec_indice(date)
 		code = self.code_analytique || ''
 		if code.last == '?'

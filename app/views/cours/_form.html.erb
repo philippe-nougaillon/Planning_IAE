@@ -32,7 +32,7 @@
         <%= f.collection_select :formation_id, 
                                 @formations, 
                                 :id, 
-                                :nom_promo, 
+                                :nom_promo_hss, 
                                 {include_blank: true},
                                 required: true, 
                                 class: "slim-select sm:w-1/2",
@@ -122,6 +122,18 @@
     <div class="flex flex-wrap">
       <%= f.label :commentaires, class: 'sm:w-1/5' %>
       <%= f.text_area :commentaires, class: "textarea textarea-bordered textarea-sm w-full sm:w-1/2" %>
+    </div>
+
+    <div class="flex items-center">
+      <%= f.label :document, class: 'sm:w-1/5' %>
+      <% if @cour.document.attached? %>
+        <%= link_to @cour.document.filename, url_for(@cour.document), class: 'text-primary hover:underline w-full sm:w-1/2' %>
+        <% if policy(@cour).delete_attachment? %>
+          <%= link_to '[X]', delete_attachment_cour_path(@cour), 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous la suppression du document ?' %>
+        <% end %>
+      <% else %>
+        <%= f.file_field :document, class: "w-full sm:w-1/3", accept: "application/pdf,application.xls,application/xlsx,application/doc,application.docx" %>
+      <% end %>
     </div>
 
     <% unless @cour.new_record? %>

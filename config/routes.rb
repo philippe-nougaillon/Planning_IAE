@@ -56,6 +56,9 @@ Rails.application.routes.draw do
       patch :signature_etudiant_do
       patch :signature_intervenant_do
     end
+    member do
+      delete :delete_attachment
+    end
   end
 
   get :mes_sessions_etudiant, to: 'cours#mes_sessions_etudiant', as: :mes_sessions_etudiant

@@ -102,6 +102,12 @@
                 <% end %>
             </i>
         <% end %>
+        <% if current_user && current_user.role_number >= 1 && cours.document.attached? %>
+            <%= link_to url_for(cours.document), title: cours.document.filename, target: "_blank" do %>
+                <%= fa_icon 'file' %>
+            <% end %>
+        <% end %>
+
     </td>
 
     <% if policy(cours).edit? %>
