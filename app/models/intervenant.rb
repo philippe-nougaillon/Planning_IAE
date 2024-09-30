@@ -86,6 +86,10 @@ class Intervenant < ApplicationRecord
 		self.status
 	end
 
+	def nom_prenom_status
+		self.prenom.blank? ? "#{self.nom.upcase} (#{self.status})" : "#{self.nom} #{self.prenom} (#{self.status})" 
+	end
+
 	def total_cours
 		self.cours.where(etat:Cour.etats[:confirmé]).count
 	end

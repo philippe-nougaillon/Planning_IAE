@@ -13,7 +13,7 @@
         <%= f.collection_select :intervenant_id, 
                                         Intervenant.where.not(doublon: true),
                                         :id,
-                                        :nom_prenom,
+                                        :nom_prenom_status,
                                         {include_blank: true}, class: "select select-bordered select-sm w-full",
                                         required: true %>
       </div>
