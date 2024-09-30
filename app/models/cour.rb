@@ -22,6 +22,7 @@ class Cour < ApplicationRecord
   validate :reservation_dates_must_make_sense
   validate :jour_ouverture, if: Proc.new { |cours| cours.salle && cours.salle.bloc != 'Z' && !(cours.bypass?) }
   validate :check_invits_en_cours
+  validate :check_hss
 
   before_validation :update_date_fin
   before_validation :sunday_morning_praise_the_dawning
@@ -497,6 +498,12 @@ class Cour < ApplicationRecord
     def check_send_new_commande_email
       if self.commentaires && self.commentaires.include?('+')
         ToolsMailer.with(cour: self).nouvelle_commande.deliver_now
+      end
+    end
+
+    def check_hss
+      if self.formation.hss && !self.hors_service_statutaire
+        errors.add(:hors_service_statutaire, 'ne correspond pas à celui de la formation')
       end
     end
 end
