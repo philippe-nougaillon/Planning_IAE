@@ -81,4 +81,8 @@ class CourPolicy < ApplicationPolicy
     signature_intervenant?
   end
 
+  def delete_attachment?
+    user && user.role_number >= 5
+  end
+
 end

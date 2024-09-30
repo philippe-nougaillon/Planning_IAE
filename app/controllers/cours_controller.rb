@@ -4,7 +4,7 @@ class CoursController < ApplicationController
   include ApplicationHelper
 
   skip_before_action :authenticate_user!, only: %i[ index index_slide mes_sessions_intervenant signature_intervenant signature_intervenant_do ]
-  before_action :set_cour, only: [:show, :edit, :update, :destroy]
+  before_action :set_cour, only: [:show, :edit, :update, :destroy, :delete_attachment]
   before_action :is_user_authorized, except: [:show, :edit, :update, :destroy, :signature_etudiant, :signature_etudiant_do]
 
   layout :define_layout
@@ -789,6 +789,11 @@ class CoursController < ApplicationController
     end
   end
 
+  def delete_attachment
+    @cour.document.purge
+    redirect_to @cour, notice: 'Document supprimée.'
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_cour
@@ -800,7 +805,7 @@ class CoursController < ApplicationController
       params.require(:cour).permit(:debut, :fin, :formation_id, :intervenant_id,
                                     :salle_id, :code_ue, :nom, :etat, :duree,
                                     :intervenant_binome_id, :hors_service_statutaire,
-                                    :commentaires, :elearning)
+                                    :commentaires, :elearning, :document)
     end
 
     def is_user_authorized

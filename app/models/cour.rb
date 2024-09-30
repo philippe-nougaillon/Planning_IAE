@@ -15,6 +15,8 @@ class Cour < ApplicationRecord
   has_many :presences
   has_many :etudiants, through: :formation
 
+  has_one_attached :document
+
   validates :debut, :formation_id, :intervenant_id, :duree, presence: true
   validate :check_chevauchement_intervenant
   validate :check_chevauchement, if: Proc.new { |cours| cours.salle_id && !(cours.bypass?) }
