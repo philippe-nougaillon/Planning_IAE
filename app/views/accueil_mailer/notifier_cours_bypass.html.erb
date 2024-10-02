@@ -7,7 +7,9 @@
   <br><br>
   Prévu du <b><%= l(@cours.debut, format: :long) %></b> au <b><%= l(@cours.fin, format: :long) %></b>
   <br><br>
-  Salle : <b><%= @cours.salle.nom %></b>
-  <br><br>
+  <% if @cours.salle %>
+    Salle : <b><%= @cours.salle.nom %></b>
+    <br><br>
+  <% end %>
   <%= link_to "Voir les détails du cours", cour_url(@cours) %>
 </p>

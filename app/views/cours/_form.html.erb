@@ -126,7 +126,7 @@
 
     <div class="flex items-center">
       <%= f.label :document, class: 'sm:w-1/5' %>
-      <% if @cour.document.attached? %>
+      <% if @cour.document.attached? && @cour.document.persisted? %>
         <%= link_to @cour.document.filename, url_for(@cour.document), class: 'text-primary hover:underline w-full sm:w-1/2' %>
         <% if policy(@cour).delete_attachment? %>
           <%= link_to '[X]', delete_attachment_cour_path(@cour), 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous la suppression du document ?' %>
