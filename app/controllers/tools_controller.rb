@@ -755,7 +755,7 @@ class ToolsController < ApplicationController
   end
 
   def export_vacations
-    @activités = Vacation.pluck(:titre).uniq.sort
+    @activités = Vacation.pluck(:titre).uniq.compact_blank.sort
     @intervenants = Intervenant.all
 
     if params[:status].present?
