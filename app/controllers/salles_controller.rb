@@ -188,7 +188,8 @@ class SallesController < ApplicationController
                         duree: params[:duree], 
                         formation_id: params[:formation_id], 
                         intervenant_id: params[:intervenant_id],
-                        salle_id: Salle.first.id)
+                        salle_id: Salle.first.id,
+                        hors_service_statutaire: true)
     end
 
     if cours
