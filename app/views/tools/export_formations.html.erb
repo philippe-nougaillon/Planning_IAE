@@ -10,7 +10,7 @@
 <%= form_tag({action: "export_formations_do", method: :post}) do %>
   <div class="my-4">
     <%= check_box_tag :archive %>
-    <%= label_tag :archive, "Ajouter les archivés ?" %>
+    <%= label_tag :archive, "Inclure les formations archivées ?" %>
   </div>
 
   <%= submit_tag "Exporter", class: "btn btn-primary text-white", 'data-turbo': false %>
