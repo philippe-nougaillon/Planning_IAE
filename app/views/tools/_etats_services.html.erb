@@ -100,6 +100,7 @@
 
             <% @vacations.each_with_index do |vacation, index| %>
                 <% if vacation.vacation_activite %>
+                    <% intitulé = vacation.vacation_activite.nom %>
                     <% tarif = vacation.vacation_activite.vacation_activite_tarifs.find_by(statut: VacationActiviteTarif.statuts[vacation.intervenant.status]) %>
                     <% if tarif && tarif.forfait_hetd %>
                         <% cumul_hetd += tarif.forfait_hetd %>
@@ -113,7 +114,7 @@
                     <td />
                     <td><%= link_to formation.nom, formation, target:"_new", class: 'text-primary hover:underline' %></td>
                     <td><%= formation.code_analytique_avec_indice(vacation.date) %></td>
-                    <td><%= vacation.titre %></td>
+                    <td><%= intitulé || vacation.titre %></td>
                     <td />
                     <td class="text-right"><%= vacation.qte %></td>
                     <td />

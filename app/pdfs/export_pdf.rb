@@ -143,6 +143,7 @@ class ExportPdf
         # Vacations
         vacations.each_with_index do | vacation, index |
             if vacation.vacation_activite
+                intitulé = vacation.vacation_activite.nom
                 tarif = vacation.vacation_activite.vacation_activite_tarifs.find_by(statut: VacationActiviteTarif.statuts[vacation.intervenant.status])
                 if tarif && tarif.forfait_hetd
                     cumul_hetd += tarif.forfait_hetd
@@ -158,7 +159,7 @@ class ExportPdf
                 I18n.l(vacation.date),
                 nil,
                 formation.nom,
-                vacation.titre,
+                intitulé || vacation.titre,
                 vacation.qte,
                 nil, nil,
                 vacation.forfaithtd,

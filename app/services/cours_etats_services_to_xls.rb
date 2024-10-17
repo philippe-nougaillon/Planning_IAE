@@ -78,6 +78,7 @@ class CoursEtatsServicesToXls < ApplicationService
 
       @vacations.each do |vacation|
         if vacation.vacation_activite
+          intitulé = vacation.vacation_activite.nom
           tarif = vacation.vacation_activite.vacation_activite_tarifs.find_by(statut: VacationActiviteTarif.statuts[vacation.intervenant.status])
           if tarif && tarif.forfait_hetd
             cumul_hetd += tarif.forfait_hetd
@@ -93,7 +94,7 @@ class CoursEtatsServicesToXls < ApplicationService
               nil,
               formation.nom,
               formation.code_analytique,
-              vacation.titre,
+              intitulé || vacation.titre,
               nil, nil, 
               vacation.qte,
               nil, nil, nil, 
