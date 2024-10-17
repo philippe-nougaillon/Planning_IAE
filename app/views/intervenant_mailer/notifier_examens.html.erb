@@ -46,6 +46,32 @@
     </table>
 </div>
 
+<p style="margin-bottom: 0.5rem">
+    <b>
+        Nous vous remercions de vérifier ce récapitulatif et de prendre contact 
+        avec votre gestionnaire de formation au plus vite en cas d'erreur/omission/modification.
+    </b>
+    <br>
+</p>
+
+<% if @gestionnaires.any? %>
+    <div style="overflow-x: auto;">
+        <table style="border: 1px solid lightgrey;" cellpadding=5 cellspacing=5>
+            <tbody>
+                <% @gestionnaires.each do | formation, email | %>
+                    <% unless email.blank? %>
+                        <tr>
+                            <td style="border: 1px solid lightgrey;"><%= formation %></td>
+                            <td><%= email %></td>
+                        </tr>
+                    <% end %>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+    <br>
+<% end %>
+
 <% unless @message.blank? %>
     <div style="padding: 15px; background-color: #f2f2f2;">
         <b><%= @message %></b>
