@@ -20,18 +20,18 @@
     <%= "#{l(envoi_log.date_début, default: '')} - #{l(envoi_log.date_fin, default: '')}" %>
   </td>
   <td>
-    <h5 class="text-lg"><span class="badge <%= envoi_log.style %> text-white"><%= envoi_log.workflow_state.humanize %></span></h5>
+    <span class="badge <%= envoi_log.style %> text-white"><%= envoi_log.workflow_state.humanize %></span>
   </td>
   <td>
     <% if envoi_log.prêt? %>
-      <%= link_to suspendre_envoi_log_path(envoi_log), class: "btn btn-sm", title: "Passe en état 'Pause'. La notification ne sera pas exécutée" do %>
+      <%= link_to suspendre_envoi_log_path(envoi_log), class: "btn btn-xs btn-outline font-normal", title: "Passe en état 'Pause'. La notification ne sera pas exécutée" do %>
         <%= fa_icon 'pause', text: ' Pause' %> 
       <% end %>
     <% elsif envoi_log.pause? %>
-      <%= link_to activer_envoi_log_path(envoi_log), class: "btn btn-sm btn-warning", title: "Passe en état 'Prêt'. La notification sera exécutée" do %>
+      <%= link_to activer_envoi_log_path(envoi_log), class: "btn btn-xs btn-outline btn-warning font-normal", title: "Passe en état 'Prêt'. La notification sera exécutée" do %>
         <%= fa_icon 'play', text: ' Activer' %>
       <% end %>
-      <%= link_to annuler_envoi_log_path(envoi_log), class: "btn btn-sm btn-error", title: "Passe en état 'Annulé'. La notification ne sera pas exécutée" do %>
+      <%= link_to annuler_envoi_log_path(envoi_log), class: "btn btn-xs btn-outline btn-error font-normal", title: "Passe en état 'Annulé'. La notification ne sera pas exécutée" do %>
         <%= fa_icon 'times', text: ' Annuler' %>
       <% end %>
     <% end %>
