@@ -23,10 +23,12 @@
         <%= f.number_field :table, class: 'input input-bordered input-sm w-full' %>
       </div>
 
-      <div class="field mb-6">
-        <%= check_box_tag :notify %>
-        <%= label_tag :notify, "Créer un compte d'accès et en informer l'étudiant ?", class: 'font-bold' %>
-      </div>
+      <% if @etudiant.new_record? %>
+        <div class="field mb-6">
+          <%= check_box_tag :notify %>
+          <%= label_tag :notify, "Créer un compte d'accès et en informer l'étudiant ?", class: 'font-bold' %>
+        </div>
+      <% end %>
 
       <%= f.submit class: "btn btn-primary text-white", 'data-turbo': false %>
 
