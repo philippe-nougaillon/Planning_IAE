@@ -99,10 +99,6 @@ class EtudiantsController < ApplicationController
   def action
     unless params[:etudiants_id].blank? or params[:action_name].blank?
       @etudiants = Etudiant.where(id: params[:etudiants_id].keys)
-
-      case params[:action_name]
-      when "Changer de formation"
-      end
     else
       redirect_to etudiants_path, alert:'Veuillez choisir des étudiants et une action à appliquer !'
     end
@@ -123,12 +119,28 @@ class EtudiantsController < ApplicationController
       @etudiants.each do |etudiant|
         etudiant.destroy
       end
+    when "Création de compte d'accès"
+      comptes_créés = 0
+      @etudiants.each do |etudiant|
+        unless User.find_by(email: etudiant.email)
+          user = User.new(nom: etudiant.nom, prénom: etudiant.prénom, email: etudiant.email, mobile: etudiant.mobile, password: SecureRandom.hex(10))
+          if user.valid? && user.email.include?('@etu.univ-paris1.fr')
+            user.save
+            mailer_response = EtudiantMailer.welcome_student(user).deliver_now
+            MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: etudiant.email, subject: "Nouvel accès étudiant")
+            comptes_créés += 1
+          end
+        end
+      end
+      if comptes_créés < @etudiants.count
+        flash[:alert] = "#{@etudiants.count - comptes_créés} créations de compte ont échoués et #{comptes_créés} comptes créés avec succès."
+      end
     end
 
     unless flash[:alert]
       flash[:notice] = "Action '#{action_name}' appliquée à #{params.permit![:etudiants_id].keys.size} étudiant.s."
     end
-    redirect_to cours_path
+    redirect_to etudiants_path
   end
 
   private

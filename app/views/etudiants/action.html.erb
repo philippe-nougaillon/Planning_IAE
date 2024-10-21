@@ -1,7 +1,10 @@
 <div class="border-b mt-6 mb-2 pb-4">
   <h1 class="text-3xl"><%= fa_icon 'exclamation-triangle' %> <%= params[:action_name] %></h1>
 </div>
-<br>
+
+<p class="my-4">
+  Vérifiez que les adresses emails se terminent par '@etu.univ-paris1.fr', ou qu'un compte avec la même adresse email existe
+</p>
 
 <%= form_tag :action_do_etudiants do %>
 
@@ -73,7 +76,7 @@
   <div class="flex flex-wrap mb-12 mt-4">
     <div class="sm:w-full">
       <%= submit_tag 'Appliquer', class:"btn btn-primary text-white", 'data-turbo': false %>
-      <%= link_to 'Annuler', root_url, class:"btn btn-light" %>
+      <%= link_to 'Annuler', etudiants_path, class:"btn btn-light" %>
     </div>
   </div>
 
