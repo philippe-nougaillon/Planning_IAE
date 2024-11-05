@@ -71,7 +71,7 @@ class User < ApplicationRecord
   # Pour donner le role 'gestionnaire' à un partenaire
   # qui pourra modifier que les cours de ses formations
   def partenaire_qse?
-    self.email == "d.gbedemah@icp.fr"
+    ["d.gbedemah@icp.fr","m.danet@icp.fr"].include?(self.email)
   end
 
   def unlinked?
