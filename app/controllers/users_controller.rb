@@ -46,7 +46,7 @@ class UsersController < ApplicationController
     session[:direction] = params[:direction]
 
     @users = @users
-                .reorder("#{sort_column} #{sort_direction}")
+                .reorder(Arel.sql("#{sort_column} #{sort_direction}"))
                 .paginate(page: params[:page], per_page: 10)
   end
 

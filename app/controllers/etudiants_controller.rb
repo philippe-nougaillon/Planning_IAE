@@ -25,7 +25,7 @@ class EtudiantsController < ApplicationController
     session[:column] = params[:column]
     session[:direction_etudiants] = params[:direction_etudiants]
     
-    @etudiants = @etudiants.reorder("#{sort_column} #{sort_direction}")
+    @etudiants = @etudiants.reorder(Arel.sql("#{sort_column} #{sort_direction}"))
     if (params[:paginate] == 'pages')
       @etudiants = @etudiants.paginate(page: params[:page], per_page: 20)
     end
