@@ -143,7 +143,7 @@ class IntervenantsController < ApplicationController
     end
 
     def sortable_columns
-      ['intervenants.nom','intervenants.created_at','intervenants.status','intervenants.nbr_heures_statutaire','intervenants.remise_dossier_srh']
+      ['intervenants.nom','intervenants.created_at','intervenants.status','intervenants.nbr_heures_statutaire','intervenants.remise_dossier_srh', 'intervenants.doublon']
     end
 
     def sort_column
