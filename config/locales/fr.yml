@@ -508,9 +508,11 @@ fr:
       title: Modification Dossier
   notes:
     index:
-      title: "Mes notes (mémos)"
+      title: "Mes mémos"
     show: 
-      title: "Note"
+      title: "Mémo"
+    edit:
+      title: "Modifier mémo"
   vacations:
     index:
       title: "Liste des vacations"

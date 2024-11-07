@@ -1,15 +1,11 @@
-<%= form_with(model: note, class: "contents") do |form| %>
+<%= form_with(model: note) do |form| %>
 
-  <div class="my-5">
-    <%= form.text_field :titre, class: "input input-bordered input-sm w-full", required: true, placeholder: 'Titre*' %>
-    <%= form.text_area :texte, class: "textarea textarea-bordered textarea-sm w-full", rows: 5 %>
-  </div>
+  <%= form.text_field :titre, class: "input input-bordered input w-full mb-8", required: true, placeholder: 'Titre du mémo' %>
+  <%= form.text_area :texte, class: "textarea textarea-bordered w-full", rows: 5 %>
 
-  <div class="my-5">
-    <%= form.color_field :couleur %>
-  </div>
+  <%= form.color_field :couleur, class: 'w-full' %>
 
-  <div class="inline">
-    <%= form.submit class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer mb-4" %>
+  <div class="mt-4">
+    <%= form.submit "Enregistrer", class: "btn btn-primary text-white mx-auto" %>
   </div>
 <% end %>
