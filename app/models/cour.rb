@@ -61,7 +61,7 @@ class Cour < ApplicationRecord
     actions = ["Exporter vers Excel", "Exporter vers iCalendar", "Exporter en PDF"]
 
     if user.partenaire_qse?
-      actions << ["Générer Feuille émargement PDF"]
+      actions << ["Générer Feuille émargement PDF", "Convocation étudiants PDF"]
     else
       actions << ["Supprimer", "Changer de salle", "Changer d'intervenant", "Intervertir"]
     end

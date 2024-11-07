@@ -43,7 +43,7 @@ class FormationsController < ApplicationController
     session[:column] = params[:column]
     session[:direction_formations] = params[:direction_formations]
 
-    @formations = @formations.reorder("#{sort_column} #{sort_direction}") 
+    @formations = @formations.reorder(Arel.sql("#{sort_column} #{sort_direction}"))
     
     @all_formations = @formations
     if params[:paginate] == 'pages'

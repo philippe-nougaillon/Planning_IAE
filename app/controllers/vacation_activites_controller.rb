@@ -17,7 +17,7 @@ class VacationActivitesController < ApplicationController
     end
 
     @vacation_activites = @vacation_activites.paginate(page: params[:page], per_page: 20)
-    # @vacation_activites = @vacation_activites.reorder("#{sort_column} #{sort_direction}")  
+    # @vacation_activites = @vacation_activites.reorder(Arel.sql("#{sort_column} #{sort_direction}"))
   end
 
   # GET /vacation_activites/1 or /vacation_activites/1.json

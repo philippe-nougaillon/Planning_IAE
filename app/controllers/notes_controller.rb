@@ -29,7 +29,7 @@ class NotesController < ApplicationController
     @note.user_id = current_user.id
     respond_to do |format|
       if @note.save
-        format.html { redirect_to notes_url, notice: "Note créée avec succès." }
+        format.html { redirect_to notes_url, notice: "Mémo créé avec succès." }
         format.json { render :show, status: :created, location: @note }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -42,7 +42,7 @@ class NotesController < ApplicationController
   def update
     respond_to do |format|
       if @note.update(note_params)
-        format.html { redirect_to notes_url, notice: "Note modifiée avec succès." }
+        format.html { redirect_to notes_url, notice: "Mémo modifié avec succès." }
         format.json { render :show, status: :ok, location: @note }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -56,7 +56,7 @@ class NotesController < ApplicationController
     @note.destroy!
 
     respond_to do |format|
-      format.html { redirect_to notes_url, notice: "Note supprimée avec succès." }
+      format.html { redirect_to notes_url, notice: "Mémo supprimé avec succès." }
       format.json { head :no_content }
     end
   end

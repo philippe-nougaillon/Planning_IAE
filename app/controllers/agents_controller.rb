@@ -4,11 +4,8 @@ class AgentsController < ApplicationController
 
   # GET /agents or /agents.json
   def index
-    @agents = Agent.all
-
-    @agents = @agents
-                      .reorder("#{sort_column} #{sort_direction}")  
-                      .paginate(page: params[:page], per_page: 10)
+    @agents = Agent.reorder(Arel.sql("#{sort_column} #{sort_direction}"))
+                   .paginate(page: params[:page], per_page: 10)
   end
 
   # GET /agents/1 or /agents/1.json
