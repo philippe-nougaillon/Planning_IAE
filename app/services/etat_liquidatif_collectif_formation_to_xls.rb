@@ -35,6 +35,7 @@ class EtatLiquidatifCollectifFormationToXls < ApplicationService
     formations = Formation.where(id: @cours.pluck(:formation_id).uniq)
     formations.each do | formation |
       cours = @cours.where(formation: formation)
+      any_cours = false
       
       cumul_hetd = cumul_tarif = 0
 
@@ -51,7 +52,7 @@ class EtatLiquidatifCollectifFormationToXls < ApplicationService
         intervenant_cours = cours.where(intervenant_id: intervenant.id).or(cours.where(intervenant_binome_id: intervenant.id))
 
         intervenant_cours.each do |c|
-
+          any_cours = true
           if c.imputable?
             cumul_hetd += c.duree.to_f * c.HETD
             montant_service = c.montant_service.round(2)
@@ -87,7 +88,7 @@ class EtatLiquidatifCollectifFormationToXls < ApplicationService
 
       end
 
-      unless cumul_hetd.zero?
+      if any_cours
         total = [
           # nil,
           "Ss Total N°#{formation.eotp_nom}",nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,
