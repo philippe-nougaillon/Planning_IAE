@@ -3,9 +3,9 @@ class EtatLiquidatifCollectifFormationToXls < ApplicationService
   include ActionView::Helpers::NumberHelper
   attr_reader :cours
 
-  def initialize(cours, formations, start_date, end_date, status)
+  def initialize(cours, interventions, start_date, end_date, status)
     @cours = cours
-    @formations = formations
+    @interventions = interventions
     @start_date = start_date
     @end_date = end_date
     @status = status
@@ -24,7 +24,7 @@ class EtatLiquidatifCollectifFormationToXls < ApplicationService
     sheet.row(2).concat ["Décrets N°87-889 du 29/10/1987 et 88-994 du 18/10/1988 - CAr du 05/12/2023"]
     sheet.row(3).concat ["Du #{I18n.l @start_date.to_date} au #{I18n.l @end_date.to_date}. Statut : #{Intervenant.statuses.keys[@status.to_i]}"]
 
-    sheet.row(5).concat ['Nom', 'Prénom','Formation', 'Intitulé', 'Code', 'Date','Heure','Etat',
+    sheet.row(5).concat ['ID', 'Nom', 'Prénom','Formation', 'Intitulé', 'Code', 'Date','Heure','Etat',
       'Durée','HSS?','E-learning?','Binôme','CM/TD?', 'Taux_TD','HETD','Montant','Cumul_HETD']
 
     sheet.row(5).default_format = bold
@@ -32,15 +32,15 @@ class EtatLiquidatifCollectifFormationToXls < ApplicationService
     index = 6
     total_hetd = 0
 
-    @formations.each do | formation |
+    formations = Formation.where(id: @cours.pluck(:formation_id).uniq)
+    formations.each do | formation |
       cours = @cours.where(formation: formation)
       
       cumul_hetd = cumul_tarif = 0
 
       intervenant_ids = cours.distinct(:intervenant_id).pluck(:intervenant_id)
       intervenant_ids << cours.distinct(:intervenant_binome_id).pluck(:intervenant_binome_id)
-
-      intervenants = Intervenant.where(id: intervenant_ids)
+      intervenants = Intervenant.where(id: intervenant_ids, status: @status)
 
       intervenants.each do |intervenant|
         # Passe au suivant si intervenant est 'A CONFIRMER'
@@ -48,7 +48,9 @@ class EtatLiquidatifCollectifFormationToXls < ApplicationService
 
         # nbr_heures_statutaire = intervenant.nbr_heures_statutaire || 0
 
-        cours.each do |c|
+        intervenant_cours = cours.where(intervenant_id: intervenant.id).or(cours.where(intervenant_binome_id: intervenant.id))
+
+        intervenant_cours.each do |c|
 
           if c.imputable?
             cumul_hetd += c.duree.to_f * c.HETD
@@ -58,6 +60,7 @@ class EtatLiquidatifCollectifFormationToXls < ApplicationService
 
           fields_to_export = [
             # 'C',
+            c.id,
             intervenant.nom,
             intervenant.prenom,
             formation.abrg, 
@@ -84,16 +87,18 @@ class EtatLiquidatifCollectifFormationToXls < ApplicationService
 
       end
 
-      total = [
-        # nil,
-        "Ss Total N°#{formation.eotp_nom}",nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,
-        cumul_tarif,
-        cumul_hetd
-      ]
+      unless cumul_hetd.zero?
+        total = [
+          # nil,
+          "Ss Total N°#{formation.eotp_nom}",nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,
+          cumul_tarif,
+          cumul_hetd
+        ]
 
-      sheet.row(index).replace total
-      sheet.row(index).default_format = bold
-      index += 2
+        sheet.row(index).replace total
+        sheet.row(index).default_format = bold
+        index += 2
+      end
     end
 
     index += 5
