@@ -24,7 +24,7 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
     sheet.row(2).concat ["Décrets N°87-889 du 29/10/1987 et 88-994 du 18/10/1988 - CAr du 05/12/2023"]
     sheet.row(3).concat ["Du #{I18n.l @start_date.to_date} au #{I18n.l @end_date.to_date}. Statut : #{Intervenant.statuses.keys[@status.to_i]}"]
 
-    sheet.row(5).concat ['Nom', 'Prénom','Formation', 'Intitulé', 'Code', 'Date','Heure','Etat',
+    sheet.row(5).concat ['ID', 'Nom', 'Prénom','Formation', 'Intitulé', 'Code', 'Date','Heure','Etat',
       'Durée','HSS?','E-learning?','Binôme','CM/TD?', 'Taux_TD','HETD','Montant','Cumul_HETD','Dépassement']
 
     sheet.row(5).default_format = bold
@@ -61,6 +61,7 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
 
           fields_to_export = [
             # 'C',
+            c.id,
             intervenant.nom,
             intervenant.prenom,
             formation.abrg, 
