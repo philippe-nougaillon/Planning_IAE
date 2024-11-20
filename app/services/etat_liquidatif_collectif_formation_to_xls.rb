@@ -25,7 +25,7 @@ class EtatLiquidatifCollectifFormationToXls < ApplicationService
     sheet.row(3).concat ["Du #{I18n.l @start_date.to_date} au #{I18n.l @end_date.to_date}. Statut : #{Intervenant.statuses.keys[@status.to_i]}"]
 
     sheet.row(5).concat ['Nom', 'Prénom','Formation', 'Intitulé', 'Code', 'Date','Heure','Etat',
-      'Durée','HSS?','E-learning?','Binôme','CM/TD?', 'Taux_TD','HETD','Montant']
+      'Durée','HSS?','E-learning?','Binôme','CM/TD?', 'Taux_TD','HETD','Montant','Cumul_HETD']
 
     sheet.row(5).default_format = bold
 
@@ -74,6 +74,7 @@ class EtatLiquidatifCollectifFormationToXls < ApplicationService
             c.taux_td,
             c.HETD,
             montant_service,
+            cumul_hetd,
             # ((nbr_heures_statutaire > 0) && (cumul_hetd >= nbr_heures_statutaire) ? cumul_hetd - nbr_heures_statutaire : nil)
           ]
 
@@ -85,9 +86,9 @@ class EtatLiquidatifCollectifFormationToXls < ApplicationService
 
       total = [
         # nil,
-        "Ss Total N°#{formation.eotp_nom}",nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,
-        cumul_hetd,
-        cumul_tarif
+        "Ss Total N°#{formation.eotp_nom}",nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,
+        cumul_tarif,
+        cumul_hetd
       ]
 
       sheet.row(index).replace total
