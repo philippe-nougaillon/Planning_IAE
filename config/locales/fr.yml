@@ -378,6 +378,8 @@ fr:
       title: Taux d'occupation salles
     etats_services:
       title: États de services
+    export_etat_liquidatif_collectif:
+      title: Export état liquidatif collectif
     liste_surveillants_examens:
       title: Liste des surveillances d'examens
     import:
