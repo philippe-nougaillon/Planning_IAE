@@ -149,9 +149,9 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
       total = [
         # nil,
         "Ss Total #{intervenant.nom_prenom}",
-        nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,
-        cumul_hetd,
-        cumul_duree + cumul_tarif + cumul_vacations
+        nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,
+        cumul_duree + cumul_tarif + cumul_vacations,
+        cumul_hetd
       ]
 
       sheet.row(index).replace total
