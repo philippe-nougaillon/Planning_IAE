@@ -868,45 +868,46 @@ class ToolsController < ApplicationController
   end
 
   def export_etat_liquidatif_collectif
+    params[:start_date] ||= Date.today.at_beginning_of_month.last_month
+    params[:end_date]   ||= Date.today.last_month.at_end_of_month
   end
 
   def export_etat_liquidatif_collectif_do
-    unless params[:start_date].blank? || params[:end_date].blank?
-      @start_date = params[:start_date]
-      @end_date = params[:end_date]
-    else
-      params[:start_date] ||= Date.today.at_beginning_of_month.last_month
-      params[:end_date]   ||= Date.today.last_month.at_end_of_month
-    end
+    @start_date = params[:start_date]
+    @end_date = params[:end_date]
 
     # Peupler la liste des intervenants ayant eu des cours en principal ou binome
     @cours = Cour
               .where(etat: Cour.etats.values_at(:confirmé, :réalisé))
               .where("debut between ? and ?", @start_date, @end_date)
+              .where.not(intervenant_id: 445)
 
-    ids = @cours.distinct(:intervenant_id).pluck(:intervenant_id)
-    ids << @cours.distinct(:intervenant_binome_id).pluck(:intervenant_binome_id)
+    if params[:group_by] == 'intervenant'
+      ids = @cours.distinct(:intervenant_id).pluck(:intervenant_id)
+      ids << @cours.distinct(:intervenant_binome_id).pluck(:intervenant_binome_id)
+      # Ajouter les vacataires
+      # ids << Vacation
+      #           .where("date between ? and ?", @start_date, @end_date)
+      #           .distinct(:intervenant_id)
+      #           .pluck(:intervenant_id)
+  
+      # # Ajouter les responsables
+  
+      # ids << Responsabilite
+      #           .where("debut between ? and ?", @start_date, @end_date)
+      #           .distinct(:intervenant_id)
+      #           .pluck(:intervenant_id)
+      @intervenants = Intervenant.where(id: ids.flatten).where(status: params[:status])
+      book = EtatLiquidatifCollectifIntervenantToXls.new(@cours, @intervenants, @start_date, @end_date, params[:status]).call
+      filename = "Export_Etat_liquidatif_collectif_intervenant.xls"
+    else
+      @formations = Formation.where(id: @cours.distinct(:formation_id).pluck(:formation_id))
+      book = EtatLiquidatifCollectifFormationToXls.new(@cours, @formations, @start_date, @end_date, params[:status]).call
+      filename = "Export_Etat_liquidatif_collectif_formation.xls"
+    end
 
-    # Ajouter les vacataires
-    ids << Vacation
-              .where("date between ? and ?", @start_date, @end_date)
-              .distinct(:intervenant_id)
-              .pluck(:intervenant_id)
-
-    # Ajouter les responsables
-
-    ids << Responsabilite
-              .where("debut between ? and ?", @start_date, @end_date)
-              .distinct(:intervenant_id)
-              .pluck(:intervenant_id)
-
-    @intervenants = Intervenant.where(id: ids.flatten).where(status: params[:status])
-
-
-    book = EtatLiquidatifCollectifToXls.new(@cours, @intervenants, @start_date, @end_date).call
     file_contents = StringIO.new
     book.write file_contents # => Now file_contents contains the rendered file output
-    filename = "Export_Etat_liquidatif_collectif.xls"
     send_data file_contents.string.force_encoding('binary'), filename: filename
   end
 
