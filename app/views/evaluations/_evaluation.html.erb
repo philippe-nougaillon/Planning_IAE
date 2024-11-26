@@ -1,0 +1,16 @@
+<tr class="hover border">
+  <% unless current_user.étudiant? %>
+    <td><%= evaluation.etudiant.nom_prénom %></td>
+  <% end %>
+  <td><%= evaluation.note %></td>
+  <td><%= evaluation.examen %></td>
+  <td><%= evaluation.matière %></td>
+  <td><%= l(evaluation.date, format: :long) if evaluation.date %></td>
+  <td>
+    <% if policy(Evaluation).edit? %>
+      <%= link_to edit_evaluation_path(evaluation), class:"btn btn-ghost btn-xs" do %>
+        <%= fa_icon 'edit '%>
+      <% end %>
+    <% end %>
+  </td>
+</tr>

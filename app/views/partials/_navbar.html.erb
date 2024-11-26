@@ -7,7 +7,8 @@
       <% if user_signed_in? %>
         <% if current_user.étudiant? %>
           <%= navbar_nav_item('ma journée', 'calendar-day', mes_sessions_etudiant_path, nil, 'mes_sessions_etudiant') %>
-          <%= navbar_nav_item('cours', 'calendar-alt', cours_path, 'Planning', 'index') %>
+          <%= navbar_nav_item('cours', 'calendar-alt', cours_path, 'Planning') %>
+          <%= navbar_nav_item('evaluations', 'graduation-cap', evaluations_path, 'Notes') %>
         <% elsif current_user.intervenant? || current_user.enseignant? %>
           <%= navbar_nav_item('ma journée', 'calendar-day', mes_sessions_intervenant_path, nil, 'mes_sessions_intervenant') %>
           <%= navbar_nav_item('cours', 'calendar-alt', cours_path, 'Planning', 'index') %>

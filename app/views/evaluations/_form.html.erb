@@ -1,0 +1,42 @@
+<%= form_with(model: evaluation, class: "contents") do |form| %>
+  <% if evaluation.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-lg mt-3">
+      <h2><%= pluralize(evaluation.errors.count, "error") %> prohibited this evaluation from being saved:</h2>
+
+      <ul>
+        <% evaluation.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="my-5">
+    <%= form.label :etudiant_id %>
+    <%= form.select :etudiant_id, options_from_collection_for_select(@etudiants, :id, :nom_prénom), {}, class: "select select-bordered select-sm w-full" %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :note %>
+    <%= form.text_field :note, class: "input input-bordered input-sm w-full" %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :examen %>
+    <%= form.text_field :examen, class: "input input-bordered input-sm w-full" %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :matière %>
+    <%= form.text_field :matière, class: "input input-bordered input-sm w-full" %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :date %>
+    <%= form.date_field :date, class: "input input-bordered input-sm w-full" %>
+  </div>
+
+  <div class="inline">
+    <%= form.submit "Enregistrer", class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
+  </div>
+<% end %>

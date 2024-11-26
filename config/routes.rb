@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  resources :vacation_activites
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
 
   devise_for :users, controllers: {
@@ -104,6 +103,9 @@ Rails.application.routes.draw do
   end
 
   resources :mail_logs, only: %i[ index show ]
+
+  resources :evaluations
+  resources :vacation_activites
 
   namespace :tools do
     get :index

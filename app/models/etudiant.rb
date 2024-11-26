@@ -16,6 +16,7 @@ class Etudiant < ApplicationRecord
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP } 
   
   belongs_to :formation
+  has_many :evaluations
 
   before_destroy :delete_user
 

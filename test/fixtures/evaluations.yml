@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  etudiant: one
+  note: 9.99
+
+two:
+  etudiant: two
+  note: 9.99

@@ -529,3 +529,12 @@ fr:
       title: "Nouvelle Activité"
     edit:
       title: "Modification Activité"
+  evaluations:
+    index:
+      title: "Évaluations"
+    show:
+      title: "Évaluation"
+    new: 
+      title: "Nouvelle évaluation"
+    edit:
+      title: "Modification évaluation"

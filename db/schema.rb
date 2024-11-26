@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_13_080605) do
+ActiveRecord::Schema[7.1].define(version: 2024_11_26_165152) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -64,9 +64,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_13_080605) do
     t.datetime "debut", precision: nil
     t.datetime "fin", precision: nil
     t.string "message"
+    t.integer "etat"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "etat"
   end
 
   create_table "audits", id: :serial, force: :cascade do |t|
@@ -182,6 +182,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_13_080605) do
     t.integer "table", default: 0
     t.index ["formation_id"], name: "index_etudiants_on_formation_id"
     t.index ["workflow_state"], name: "index_etudiants_on_workflow_state"
+  end
+
+  create_table "evaluations", force: :cascade do |t|
+    t.bigint "etudiant_id", null: false
+    t.decimal "note"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.date "date"
+    t.string "matière"
+    t.string "examen"
+    t.index ["etudiant_id"], name: "index_evaluations_on_etudiant_id"
   end
 
   create_table "fermetures", id: :serial, force: :cascade do |t|
@@ -444,6 +455,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_13_080605) do
 
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "documents", "dossiers"
+  add_foreign_key "evaluations", "etudiants"
   add_foreign_key "invits", "cours"
   add_foreign_key "invits", "intervenants"
   add_foreign_key "invits", "users"
