@@ -538,3 +538,12 @@ fr:
       title: "Nouvelle évaluation"
     edit:
       title: "Modification évaluation"
+  dossier_étudiants:
+    index:
+      title: "Dossiers étudiants"
+    show:
+      title: "Dossier étudiant"
+    new: 
+      title: "Inscription étudiant"
+    edit:
+      title: "Modification dossier étudiant"

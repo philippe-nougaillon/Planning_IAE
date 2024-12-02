@@ -1,0 +1,17 @@
+<div id="<%= dom_id dossier_etudiant %>">
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Etudiant:</strong>
+    <%= dossier_etudiant.etudiant_id %>
+  </p>
+
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Mode payement:</strong>
+    <%= dossier_etudiant.mode_payement %>
+  </p>
+
+  <% if action_name != "show" %>
+    <%= link_to "Show this dossier etudiant", dossier_etudiant, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+    <%= link_to "Edit this dossier etudiant", edit_dossier_etudiant_path(dossier_etudiant), class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
+    <hr class="mt-6">
+  <% end %>
+</div>

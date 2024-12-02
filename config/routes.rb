@@ -106,6 +106,7 @@ Rails.application.routes.draw do
 
   resources :evaluations
   resources :vacation_activites
+  resources :dossier_etudiants
 
   namespace :tools do
     get :index

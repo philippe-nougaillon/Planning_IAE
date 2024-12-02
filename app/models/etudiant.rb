@@ -17,6 +17,7 @@ class Etudiant < ApplicationRecord
   
   belongs_to :formation
   has_many :evaluations
+  has_one :dossier_etudiant
 
   before_destroy :delete_user
 

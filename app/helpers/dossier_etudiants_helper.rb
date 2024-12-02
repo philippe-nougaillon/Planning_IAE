@@ -1,0 +1,2 @@
+module DossierEtudiantsHelper
+end

@@ -98,6 +98,7 @@
         </li>
 
       <% else %>
+        <%= navbar_nav_item('Inscription étudiant', 'graduation-cap', new_dossier_etudiant_path) %>
         <%= navbar_nav_item('Se connecter', 'sign-in-alt', new_user_session_path) %>
       <% end %>
     </ul>
