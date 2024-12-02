@@ -29,4 +29,8 @@ class EvaluationPolicy < ApplicationPolicy
     edit?
   end
 
+  def destroy?
+    edit?
+  end
+
 end

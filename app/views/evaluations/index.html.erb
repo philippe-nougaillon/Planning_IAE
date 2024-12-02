@@ -18,11 +18,11 @@
       <div class="flex gap-4">
         <div class="flex-1">
           <%= label_tag :du, "Période du" %>
-          <%= text_field_tag :du, params[:du], type: 'date', class: 'input input-bordered input-sm w-full' %>
+          <%= text_field_tag :du, params[:du], type: 'date', class: 'input input-bordered input-sm w-full', onchange: 'this.form.submit()' %>
         </div>
         <div class="flex-1">
           <%= label_tag :au %>
-          <%= text_field_tag :au, params[:au], type: 'date', class: 'input input-bordered input-sm w-full' %>
+          <%= text_field_tag :au, params[:au], type: 'date', class: 'input input-bordered input-sm w-full', onchange: 'this.form.submit()' %>
         </div>
       </div>
 
@@ -45,7 +45,7 @@
     <thead class="bg-slate-100 border">
       <tr>
         <% unless current_user.étudiant? %>
-          <th>Évaluation</th>
+          <th>Étudiant</th>
         <% end %>
         <th>Note</th>
         <th>Examen</th>

@@ -13,7 +13,12 @@
 
   <div class="my-5">
     <%= form.label :etudiant_id %>
-    <%= form.select :etudiant_id, options_from_collection_for_select(@etudiants, :id, :nom_prénom), {}, class: "select select-bordered select-sm w-full" %>
+    <%= form.select :etudiant_id, options_from_collection_for_select(@etudiants, :id, :nom_prénom, @evaluation.etudiant_id), {include_blank: true}, class: "slim-select" %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :date %>
+    <%= form.date_field :date, class: "input input-bordered input-sm w-full" %>
   </div>
 
   <div class="my-5">
@@ -31,10 +36,6 @@
     <%= form.text_field :matière, class: "input input-bordered input-sm w-full" %>
   </div>
 
-  <div class="my-5">
-    <%= form.label :date %>
-    <%= form.date_field :date, class: "input input-bordered input-sm w-full" %>
-  </div>
 
   <div class="inline">
     <%= form.submit "Enregistrer", class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>

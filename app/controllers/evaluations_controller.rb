@@ -5,21 +5,27 @@ class EvaluationsController < ApplicationController
   # GET /evaluations or /evaluations.json
   def index
     case current_user.role when "administrateur"
-      @evaluations = Evaluation.all
+      @evaluations = Evaluation.ordered
 
-      if params[:search].present?
-        @evaluations = @evaluations.where("matière LIKE :search OR examen LIKE :search", {search: "%#{params[:search]}%".downcase})
-      end
       if params[:formation_id].present?
         @evaluations = @evaluations.joins(etudiant: :formation).where(formations: { id: params[:formation_id] })
       end
     when 'étudiant'
       etudiant = Etudiant.find_by("LOWER(etudiants.email) = ?", current_user.email.downcase)
-      @evaluations = etudiant.evaluations
+      @evaluations = etudiant.evaluations.ordered
     end
 
-    if params[:du].present?
+    if params[:search].present?
       @evaluations = @evaluations.where("matière LIKE :search OR examen LIKE :search", {search: "%#{params[:search]}%".downcase})
+    end
+    if params[:du].present?
+      if params[:au].present?
+        @evaluations = @evaluations.where("date BETWEEN ? AND ?", params[:du], params[:au])
+      else
+        @evaluations = @evaluations.where("date = ?", params[:du])
+      end
+    elsif params[:au].present?
+      @evaluations = @evaluations.where("date = ?", params[:au])
     end
   end
 
