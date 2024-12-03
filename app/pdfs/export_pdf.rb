@@ -265,7 +265,7 @@ class ExportPdf
     end
 
     def export_vacations_administratives(examens, start_date, end_date, surveillant)
-        taux_horaire = 11.88
+        taux_horaire = Cour.taux_horaire_vacation
         is_vacataire = false
 
         if agent = Agent.find_by(nom: surveillant.split('-').first, prénom: surveillant.split('-').last)

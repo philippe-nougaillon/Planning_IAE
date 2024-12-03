@@ -226,6 +226,10 @@ class Cour < ApplicationRecord
     43.50
   end
 
+  def self.taux_horaire_vacation
+    11.88
+  end
+
   def taux_td
     case Formation.unscoped.find(self.formation_id).nomtauxtd
     when 'TD'

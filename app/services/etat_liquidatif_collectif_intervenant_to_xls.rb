@@ -20,16 +20,18 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
     
     sheet.row(0).concat ['IAE PARIS']
     sheet.row(0).default_format = Spreadsheet::Format.new :weight => :bold, :size => 20
-    sheet.row(1).concat ["ÉTAT LIQUIDATIF DES VACATIONS D'ENSEIGNEMENTS"]
+    sheet.row(1).concat ["ÉTAT LIQUIDATIF DES VACATIONS D'ENSEIGNEMENTS. Du #{I18n.l @start_date.to_date} au #{I18n.l @end_date.to_date}. Statut : #{Intervenant.statuses.keys[@status.to_i]}"]
+    sheet.row(1).default_format = bold
     sheet.row(2).concat ["Décrets N°87-889 du 29/10/1987 et 88-994 du 18/10/1988 - CAr du 05/12/2023"]
-    sheet.row(3).concat ["Du #{I18n.l @start_date.to_date} au #{I18n.l @end_date.to_date}. Statut : #{Intervenant.statuses.keys[@status.to_i]}"]
+    sheet.row(3).concat ["Décret n°2024-951 du 23/10/2024 relatif au relèvement du salaire minimum de croissance"]
+    sheet.row(4).concat ["Taux horaire en vigueur au 01/11/2024 : #{ Cour.taux_horaire_vacation }€"]
 
-    sheet.row(5).concat ['ID', 'Nom', 'Prénom','Formation', 'Intitulé', 'Code', 'Date','Heure','Etat',
-      'Durée','HSS?','E-learning?','Binôme','CM/TD?', 'Taux_TD','HETD','Montant','Cumul_HETD','Dépassement']
+    sheet.row(6).concat ['ID', 'Nom', 'Prénom','Formation', 'Intitulé', 'Code', 'Date','Heure','Etat',
+      'Durée','HSS?','E-learning?','Binôme','CM/TD?', 'Taux_TD','Sous-total des HETD','Sous-total des montants','Cumul_HETD','Dépassement']
 
-    sheet.row(5).default_format = bold
+    sheet.row(6).default_format = bold
 
-    index = 6
+    index = 7
     total_hetd = 0
 
     @intervenants.each do | intervenant |
@@ -160,9 +162,13 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
       index += 2
     end
 
-    index += 5
+    index += 3
     sheet.row(index).concat ["Fait à Paris le #{I18n.l(Date.today)}"]
-    index += 5
+    index += 3
+    sheet.row(index).concat ['Eric LAMARQUE']
+    index += 1
+    sheet.row(index).concat ["Directeur de l'IAE Paris"]
+    index += 3
     sheet.row(index).concat ['Barbara FITSCH-MOURAS']
     index += 1
     sheet.row(index).concat ['Responsable du service Formation et Développement']
