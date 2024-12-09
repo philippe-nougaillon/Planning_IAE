@@ -108,7 +108,7 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
             else [nil, nil]
           end,
           # Taux TD
-          c.taux_td,
+          Cour.Tarif,
           # Mtnt total HTD
           montant_service
         ]
@@ -124,7 +124,7 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
           nil,nil,nil,nil,nil,nil,nil,nil,
           cumul_cm, # Nbre hres CM
           cumul_td, # Nbre HTD
-          nil,
+          Cour.Tarif,
           cumul_tarif
         ]
 
@@ -235,9 +235,8 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
       end
 
       total = [
-        nil,
         "Total #{intervenant.nom_prenom}",
-        nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,
+        nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,
         cumul_tarif + cumul_vacations + cumul_responsabilites,
       ]
 

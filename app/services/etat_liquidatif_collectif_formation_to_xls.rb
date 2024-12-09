@@ -91,11 +91,17 @@ class EtatLiquidatifCollectifFormationToXls < ApplicationService
         intervenant_responsabilites = intervenant.responsabilites.where(id: responsabilites.pluck(:id), formation_id: formation.id)
 
         intervenant_cours.each do |c|
-          any_cours = true
           if c.imputable?
             cumul_hetd += c.duree.to_f * c.HETD
             montant_service = c.montant_service.round(2)
             cumul_tarif += montant_service
+            case formation.nomtauxtd
+            when 'CM'
+              cumul_cm += c.duree
+              cumul_td += c.duree * 1.5
+            when 'TD' then cumul_td += c.duree
+            when '3xTD' then cumul_td += c.duree * 3
+            end
           end
 
           fields_to_export = [
@@ -116,7 +122,7 @@ class EtatLiquidatifCollectifFormationToXls < ApplicationService
               else [nil, nil]
             end,
             # Taux TD
-            c.taux_td,
+            Cour.Tarif,
             # Mtnt total HTD
             montant_service
           ]
@@ -193,23 +199,20 @@ class EtatLiquidatifCollectifFormationToXls < ApplicationService
 
       end
 
-      if any_cours
-        total = [
-          nil,nil,
-          "Total N°#{formation.eotp_nom}",nil,nil,nil,nil,nil,nil,nil,
-          # Ss Hres CM
-          nil,
-          # SS HTD
-          nil,
-          nil,
-          # SSM TD
-          cumul_tarif + cumul_vacations + cumul_responsabilites,
-        ]
+      total = [
+        "Total N°#{formation.eotp_nom}",nil,nil,nil,nil,nil,nil,nil,nil,nil,
+        # Ss Hres CM
+        cumul_cm,
+        # SS HTD
+        cumul_td,
+        Cour.Tarif,
+        # SSM TD
+        cumul_tarif + cumul_vacations + cumul_responsabilites,
+      ]
 
-        sheet.row(index).replace total
-        sheet.row(index).default_format = bold
-        index += 2
-      end
+      sheet.row(index).replace total
+      sheet.row(index).default_format = bold
+      index += 2
     end
 
     index += 5

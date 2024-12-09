@@ -29,20 +29,20 @@
     </div>
 
     <div class="w-full sm:w-fit">
-      <%= label_tag "Inclure" %>
+      <%= label_tag "Inclure ?" %>
       <div class="relative flex-grow max-w-full flex-1 flex gap-1 items-center">
         <%= check_box_tag :cours, 1, true, class: 'checkbox checkbox-xs checkbox-primary' %>
-        <%= label_tag :cours, "Cours ?", class: 'whitespace-nowrap' %>
+        <%= label_tag :cours, "Cours", class: 'whitespace-nowrap' %>
       </div>
 
       <div class="relative flex-grow max-w-full flex-1 flex gap-1 items-center">
         <%= check_box_tag :vacations, 1, false, class: 'checkbox checkbox-xs checkbox-primary' %>
-        <%= label_tag :vacations, "Vacations ?", class: 'whitespace-nowrap' %>
+        <%= label_tag :vacations, "Vacations", class: 'whitespace-nowrap' %>
       </div>
 
       <div class="relative flex-grow max-w-full flex-1 flex gap-1 items-center">
         <%= check_box_tag :responsabilites, 1, false, class: 'checkbox checkbox-xs checkbox-primary' %>
-        <%= label_tag :responsabilites, "Responsabilités ?", class: 'whitespace-nowrap' %>
+        <%= label_tag :responsabilites, "Responsabilités", class: 'whitespace-nowrap' %>
       </div>
     </div>
 
