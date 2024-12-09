@@ -873,36 +873,14 @@ class ToolsController < ApplicationController
   end
 
   def export_etat_liquidatif_collectif_do
-    @start_date = params[:start_date]
-    @end_date = params[:end_date]
+    start_date = params[:start_date]
+    end_date = params[:end_date]
 
-    # Peupler la liste des intervenants ayant eu des cours en principal ou binome
-    @cours = Cour
-              .where(etat: Cour.etats.values_at(:confirmé, :réalisé))
-              .where("debut between ? and ?", @start_date, @end_date)
-              .where.not(intervenant_id: 445)
-
-    ids = @cours.distinct(:intervenant_id).pluck(:intervenant_id)
-    ids << @cours.distinct(:intervenant_binome_id).pluck(:intervenant_binome_id)
     if params[:group_by] == 'intervenant'
-      # Ajouter les vacataires
-      # ids << Vacation
-      #           .where("date between ? and ?", @start_date, @end_date)
-      #           .distinct(:intervenant_id)
-      #           .pluck(:intervenant_id)
-      
-      # # Ajouter les responsables
-      
-      # ids << Responsabilite
-      #           .where("debut between ? and ?", @start_date, @end_date)
-      #           .distinct(:intervenant_id)
-      #           .pluck(:intervenant_id)
-      @intervenants = Intervenant.where(id: ids.flatten).where(status: params[:status])
-      book = EtatLiquidatifCollectifIntervenantToXls.new(@cours, @intervenants, @start_date, @end_date, params[:status]).call
+      book = EtatLiquidatifCollectifIntervenantToXls.new(start_date, end_date, params[:status], params[:cours], params[:vacations], params[:responsabilites]).call
       filename = "Export_Etat_liquidatif_collectif_intervenant.xls"
     else
-      @intervenants = Intervenant.where(id: ids.flatten).where(status: params[:status])
-      book = EtatLiquidatifCollectifFormationToXls.new(@cours, @intervenants, @start_date, @end_date, params[:status]).call
+      book = EtatLiquidatifCollectifFormationToXls.new(start_date, end_date, params[:status], params[:cours], params[:vacations], params[:responsabilites]).call
       filename = "Export_Etat_liquidatif_collectif_formation.xls"
     end
 
