@@ -37,7 +37,7 @@ class EtatLiquidatifCollectifFormationToXls < ApplicationService
 
     if @cours_showed
       cours = Cour
-                .where(etat: Cour.etats.values_at(:confirmé, :réalisé))
+                .where(etat: Cour.etats.values_at(:réalisé))
                 .where("debut between ? and ?", @start_date, @end_date)
                 .where.not(intervenant_id: 445)
     else
