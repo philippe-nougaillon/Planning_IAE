@@ -3,12 +3,13 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
   include ActionView::Helpers::NumberHelper
   attr_reader :cours
 
-  def initialize(cours, intervenants, start_date, end_date, status)
-    @cours = cours
-    @intervenants = intervenants
+  def initialize(start_date, end_date, status, cours_showed, vacations_showed, responsabilites_showed)
     @start_date = start_date
     @end_date = end_date
     @status = status
+    @cours_showed = cours_showed
+    @vacations_showed = vacations_showed
+    @responsabilites_showed = responsabilites_showed
   end
 
   def call    
@@ -26,135 +27,217 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
     sheet.row(3).concat ["Décret n°2024-951 du 23/10/2024 relatif au relèvement du salaire minimum de croissance"]
     sheet.row(4).concat ["Taux horaire en vigueur au 01/11/2024 : #{ Cour.taux_horaire_vacation }€"]
 
-    sheet.row(6).concat ['ID', 'Nom', 'Prénom','Formation', 'Intitulé', 'Code', 'Date','Heure','Etat',
-      'Durée','HSS?','E-learning?','Binôme','CM/TD?', 'Taux_TD','Sous-total des HETD','Sous-total des montants','Cumul_HETD','Dépassement']
+    sheet.row(6).concat ['Type d\'intervention', 'Nom', 'Prénom','Formation', 'Intitulé', 'Code EOTP', 'Destination Finan.', 'Date',
+      'Durée en Hres','Binôme','Nbre d\'Hres CM', 'Nbre HTD', 'Taux TD','Mtnt total HTD']
 
     sheet.row(6).default_format = bold
 
     index = 7
     total_hetd = 0
 
-    @intervenants.each do | intervenant |
+    # Peupler la liste des intervenants ayant eu des cours en principal ou binome
+    intervenant_ids = []
 
+    if @cours_showed
+      cours = Cour
+                .where(etat: Cour.etats.values_at(:réalisé))
+                .where("debut between ? and ?", @start_date, @end_date)
+                .where.not(intervenant_id: 445)
+    else
+      cours = Cour.none
+    end
+
+    if @vacations_showed
+      vacations = Vacation.where("date BETWEEN ? AND ?", @start_date, @end_date)
+    else
+      vacations = Vacation.none
+    end
+
+    if @responsabilites_showed
+      responsabilites = Responsabilite.where("debut BETWEEN ? AND ?", @start_date, @end_date)
+    else
+      responsabilites = Responsabilite.none
+    end
+
+    intervenants = Intervenant.where(status: @status, id: [cours.pluck(:intervenant_id).uniq, vacations.pluck(:intervenant_id).uniq, responsabilites.pluck(:intervenant_id).uniq].flatten.uniq)
+
+    intervenants.each do | intervenant |
       # Passe au suivant si intervenant est 'A CONFIRMER'
       next if intervenant.id == 445
 
-      nbr_heures_statutaire = intervenant.nbr_heures_statutaire || 0
+      # nbr_heures_statutaire = intervenant.nbr_heures_statutaire || 0
 
-      cours_ids = @cours.where(intervenant: intervenant).order(:debut).pluck(:id)
-      cours_ids << @cours.where(intervenant_binome: intervenant).pluck(:id)
-      cours_ids = cours_ids.flatten
+      # Prendre que les cours / vacations / responsabilités parmi celles sélectionnés, qui sont liés à l'intervenant
+      intervenant_cours = cours.where(intervenant_id: intervenant.id).or(cours.where(intervenant_binome_id: intervenant.id))
+      intervenant_vacations = intervenant.vacations.where(id: vacations.pluck(:id), intervenant_id: intervenant.id)
+      intervenant_responsabilites = intervenant.responsabilites.where(id: responsabilites.pluck(:id), intervenant_id: intervenant.id)
 
-      @vacations = intervenant.vacations.where("date BETWEEN ? AND ?", @start_date, @end_date)
-      @responsabilites = intervenant.responsabilites.where("debut BETWEEN ? AND ?", @start_date, @end_date)
+      cumul_hetd = cumul_vacations = cumul_responsabilites = cumul_tarif = cumul_cm = cumul_td = 0 
 
-      cumul_hetd = cumul_vacations = cumul_resps = cumul_tarif = cumul_duree = 0 
-  
-      cours_ids.each do |id|
-          c = Cour.find(id)
+      intervenant_cours.each do |c|
+        formation = Formation.unscoped.find(c.formation_id)
 
-          if c.imputable?
-            cumul_hetd += c.duree.to_f * c.HETD
-            montant_service = c.montant_service.round(2)
-            cumul_tarif += montant_service
+        if c.imputable?
+          cumul_hetd += c.duree.to_f * c.HETD
+          montant_service = c.montant_service.round(2)
+          cumul_tarif += montant_service
+          case formation.nomtauxtd
+          when 'CM'
+            cumul_cm += c.duree
+            cumul_td += c.duree * 1.5
+          when 'TD' then cumul_td += c.duree
+          when '3xTD' then cumul_td += c.duree * 3
           end
+        end
 
-          formation = Formation.unscoped.find(c.formation_id)
+        fields_to_export = [
+          'C',
+          intervenant.nom,
+          intervenant.prenom,
+          formation.nom_promo_full, 
+          c.nom_ou_ue,
+          formation.code_analytique_avec_indice(c.debut), 
+          formation.code_analytique.include?('DISTR') ? "101PAIE" : "102PAIE",
+          I18n.l(c.debut.to_date),
+          c.duree,
+          (c.intervenant && c.intervenant_binome ? "OUI" : ''),
+          # Jusqu'au dessus c'est bon
+          *case formation.nomtauxtd
+            when "CM" then [c.duree, c.duree * 1.5]
+            when "TD", "3xTD" then [nil, c.duree]
+            else [nil, nil]
+          end,
+          # Taux TD
+          Cour.Tarif,
+          # Mtnt total HTD
+          montant_service
+        ]
 
-          fields_to_export = [
-            # 'C',
-            c.id,
-            intervenant.nom,
-            intervenant.prenom,
-            formation.abrg, 
-            c.nom_ou_ue,
-            formation.code_analytique_avec_indice(c.debut), 
-            I18n.l(c.debut.to_date),
-            c.debut.strftime("%k:%M"), 
-            c.etat,
-            c.duree,
-            (c.hors_service_statutaire ? "OUI" : ''),
-            (c.elearning ? "OUI" : ''), 
-            (c.intervenant && c.intervenant_binome ? "OUI" : ''),
-            formation.nomtauxtd, 
-            c.taux_td,
-            c.HETD,
-            montant_service,
-            cumul_hetd,
-            ((nbr_heures_statutaire > 0) && (cumul_hetd >= nbr_heures_statutaire) ? cumul_hetd - nbr_heures_statutaire : nil)
-          ]
+        sheet.row(index).replace fields_to_export
+        index += 1
+      end
 
-          sheet.row(index).replace fields_to_export
-          index += 1
-      end 
+      if intervenant_cours.any?
+        total_cours = [
+          "C",
+          "#{ intervenant_cours.count } cours au total",
+          nil,nil,nil,nil,nil,nil,nil,nil,
+          cumul_cm, # Nbre hres CM
+          cumul_td, # Nbre HTD
+          Cour.Tarif,
+          cumul_tarif
+        ]
 
-      # @vacations.each do |vacation|
-      #   if vacation.vacation_activite
-      #     intitulé = vacation.vacation_activite.nom
-      #     tarif = vacation.vacation_activite.vacation_activite_tarifs.find_by(statut: VacationActiviteTarif.statuts[vacation.intervenant.status])
-      #     if tarif && tarif.forfait_hetd
-      #       cumul_hetd += tarif.forfait_hetd
-      #     end
-      #   end
+        sheet.row(index).replace total_cours
+        sheet.row(index).default_format = bold
+        index += 1
+      end
 
-      #   cumul_vacations += vacation.montant || 0
+      intervenant_vacations.each do |vacation|
+        if vacation.vacation_activite
+          intitulé = vacation.vacation_activite.nom
+          tarif = vacation.vacation_activite.vacation_activite_tarifs.find_by(statut: VacationActiviteTarif.statuts[vacation.intervenant.status])
+          if tarif && tarif.forfait_hetd
+            cumul_hetd += tarif.forfait_hetd
+          end
+        end
 
-      #   formation = Formation.unscoped.find(vacation.formation_id)
+        cumul_vacations += vacation.montant || 0
+
+        formation = Formation.unscoped.find(vacation.formation_id)
         
-      #   fields_to_export = [
-      #         'V',
-      #         intervenant.nom_prenom,
-      #         I18n.l(vacation.date.to_date),
-      #         nil,
-      #         formation.nom,
-      #         formation.code_analytique,
-      #         intitulé || vacation.titre,
-      #         nil, nil, 
-      #         vacation.qte,
-      #         nil, nil, nil, 
-      #         'TD', 1,
-      #         vacation.forfaithtd,
-      #         vacation.montant,
-      #         cumul_hetd,
-      #         ((nbr_heures_statutaire > 0) && (cumul_hetd >= nbr_heures_statutaire) ? cumul_hetd - nbr_heures_statutaire : nil)
-      #       ]
-      #   sheet.row(index).replace fields_to_export
-      #   index += 1
-      # end
+        fields_to_export = [
+          'V',
+          intervenant.nom,
+          intervenant.prenom,
+          formation.nom_promo_full,
+          intitulé || vacation.titre,
+          formation.code_analytique_avec_indice(vacation.date),
+          formation.code_analytique.include?('DISTR') ? "101PAIE" : "102PAIE",
+          I18n.l(vacation.date),
+          vacation.qte,
+          nil,
+          # Jusqu'au dessus c'est bon
+          # Nbre d'Hres CM
+          nil,
+          # Nbre HTD
+          nil,
+          # Taux TD
+          Cour.Tarif,
+          # Mtnt total HTD
+          vacation.montant,
+        ]
+        sheet.row(index).replace fields_to_export
+        index += 1
+      end
 
-      # @responsabilites.each do |resp|
-      #   montant_responsabilite = (resp.heures * Cour.Tarif).round(2)
-      #   cumul_resps += montant_responsabilite
-      #   cumul_hetd += resp.heures
-      #   formation = Formation.unscoped.find(resp.formation_id)
+      if intervenant_vacations.any?
+        total_vacations = [
+          "V",
+          "#{ intervenant_vacations.count } vacations au total",
+          nil,nil,nil,nil,nil,nil,nil,nil,
+          nil, # Nbre hres CM
+          nil, # Nbre HTD
+          nil,
+          cumul_vacations
+        ]
 
-      #   fields_to_export = [
-      #         'R',
-      #         intervenant.nom_prenom,
-      #         I18n.l(resp.debut),
-      #         nil,
-      #         formation.nom,
-      #         formation.code_analytique,
-      #         resp.titre,
-      #         nil,
-      #         nil, 
-      #         resp.heures, 
-      #         nil, nil, nil,
-      #         'TD', 1, nil,
-      #         montant_responsabilite,
-      #         cumul_hetd,
-      #         ((nbr_heures_statutaire > 0) && (cumul_hetd >= nbr_heures_statutaire) ? cumul_hetd - nbr_heures_statutaire : nil)
-      #   ]
-      #   sheet.row(index).replace fields_to_export
-      #   index += 1
-      # end
+        sheet.row(index).replace total_vacations
+        sheet.row(index).default_format = bold
+        index += 1
+      end
+
+      intervenant_responsabilites.each do |resp|
+        montant_responsabilite = (resp.heures * Cour.Tarif).round(2)
+        cumul_responsabilites += montant_responsabilite
+        cumul_hetd += resp.heures
+        formation = Formation.unscoped.find(resp.formation_id)
+
+        fields_to_export = [
+          'R',
+          intervenant.nom,
+          intervenant.prenom,
+          formation.nom_promo_full,
+          resp.titre,
+          formation.code_analytique_avec_indice(resp.debut),
+          formation.code_analytique.include?('DISTR') ? "101PAIE" : "102PAIE",
+          I18n.l(resp.debut),
+          resp.heures,
+          nil,
+          # Jusqu'au dessus c'est bon
+          # Nbre d'Hres CM
+          nil,
+          # Nbre HTD
+          resp.heures,
+          # Taux TD
+          Cour.Tarif,
+          # Mtnt total HTD
+          montant_responsabilite,
+        ]
+        sheet.row(index).replace fields_to_export
+        index += 1
+      end
+
+      if intervenant_responsabilites.any?
+        total_responsabilites = [
+          "R",
+          "#{ intervenant_responsabilites.count } responsabilités au total",
+          nil,nil,nil,nil,nil,nil,nil,nil,
+          nil, # Nbre hres CM
+          nil, # Nbre HTD
+          nil,
+          cumul_responsabilites
+        ]
+
+        sheet.row(index).replace total_responsabilites
+        sheet.row(index).default_format = bold
+        index += 1
+      end
 
       total = [
-        # nil,
-        "Ss Total #{intervenant.nom_prenom}",
-        nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,
-        cumul_duree + cumul_tarif + cumul_vacations,
-        cumul_hetd
+        "Total #{intervenant.nom_prenom}",
+        nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,
+        cumul_tarif + cumul_vacations + cumul_responsabilites,
       ]
 
       sheet.row(index).replace total
