@@ -1,17 +1,31 @@
 <div id="<%= dom_id dossier_etudiant %>">
   <p class="my-5">
-    <strong class="block font-medium mb-1">Etudiant:</strong>
-    <%= dossier_etudiant.etudiant_id %>
+    <strong class="block font-medium mb-1">Étudiant :</strong>
+    <% if étudiant = Etudiant.find_by(id: dossier_etudiant.etudiant_id) %>
+      <%= étudiant.nom_prénom %>
+    <% else %>
+      <%= dossier_etudiant.nom.upcase %> <%= dossier_etudiant.prénom %>
+    <% end %>
   </p>
 
+  <% if dossier_etudiant.certification.previewable? %>
+    <%= link_to image_tag(dossier_etudiant.certification.preview(resize_to_limit: [150, 150]), class: 'max-w-none shadow-xl'), dossier_etudiant.certification %>
+  <% end %>
+
   <p class="my-5">
-    <strong class="block font-medium mb-1">Mode payement:</strong>
+    <strong class="block font-medium mb-1">Mode payement :</strong>
     <%= dossier_etudiant.mode_payement %>
   </p>
 
+  <span class="badge <%= dossier_etudiant.style %> text-white">
+    <%= dossier_etudiant.workflow_state.humanize %>
+  </span>
+
   <% if action_name != "show" %>
-    <%= link_to "Show this dossier etudiant", dossier_etudiant, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <%= link_to "Edit this dossier etudiant", edit_dossier_etudiant_path(dossier_etudiant), class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
+    <div class="mt-4">
+      <%= link_to "Voir", dossier_etudiant, class: "btn" %>
+      <%= link_to "Modifier", edit_dossier_etudiant_path(dossier_etudiant), class: "btn btn-primary btn-outline" %>
+    </div>
     <hr class="mt-6">
   <% end %>
 </div>

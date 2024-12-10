@@ -7,7 +7,7 @@ class DossierEtudiant < ApplicationRecord
   extend FriendlyId
   friendly_id :slug_candidates, use: :slugged
 
-  belongs_to :etudiant
+  belongs_to :etudiant, optional: :true
   has_one_attached :certification
 
   # WORKFLOW
@@ -37,6 +37,10 @@ class DossierEtudiant < ApplicationRecord
     end
 
     state ARCHIVE, meta: {style: 'badge-dark'}
+  end
+
+  def style
+    self.current_state.meta[:style]
   end
 
   private

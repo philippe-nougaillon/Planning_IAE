@@ -106,7 +106,11 @@ Rails.application.routes.draw do
 
   resources :evaluations
   resources :vacation_activites
-  resources :dossier_etudiants
+  resources :dossier_etudiants do
+    member do
+      get :deposer_done
+    end
+  end
 
   namespace :tools do
     get :index

@@ -6,10 +6,15 @@
 
     <%= render @dossier_etudiant %>
 
-    <%= link_to "Edit this dossier_etudiant", edit_dossier_etudiant_path(@dossier_etudiant), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <div class="inline-block ml-2">
-      <%= button_to "Destroy this dossier_etudiant", dossier_etudiant_path(@dossier_etudiant), method: :delete, class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 font-medium" %>
+    <div class="flex gap-2 mt-4">
+      <% if policy(@dossier_etudiant).edit? %>
+        <%= link_to "Modifier", edit_dossier_etudiant_path(@dossier_etudiant), class: "btn btn-primary btn-outline" %>
+      <% end %>
+      <% if policy(@dossier_etudiant).destroy? %>
+        <%= button_to "Supprimer", dossier_etudiant_path(@dossier_etudiant), method: :delete, class: "btn btn-ghost" %>
+      <% end %>
+
+      <%= link_to "Retour", user_signed_in? ? dossier_etudiants_path : root_path, class: "btn btn-ghost" %>
     </div>
-    <%= link_to "Back to dossier_etudiants", dossier_etudiants_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
   </div>
 </div>

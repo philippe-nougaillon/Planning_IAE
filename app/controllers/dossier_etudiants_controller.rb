@@ -1,6 +1,7 @@
 class DossierEtudiantsController < ApplicationController
-  skip_before_action :authenticate_user!, only: %i[ new create show ]
-  before_action :set_dossier_etudiant, only: %i[ show edit update destroy ]
+  skip_before_action :authenticate_user!, only: %i[ new create show deposer_done ]
+  before_action :set_dossier_etudiant, only: %i[ show edit update destroy deposer_done ]
+  before_action :is_user_authorized
 
   # GET /dossier_etudiants or /dossier_etudiants.json
   def index
@@ -27,13 +28,17 @@ class DossierEtudiantsController < ApplicationController
 
     respond_to do |format|
       if @dossier_etudiant.save
-        format.html { redirect_to dossier_etudiant_url(@dossier_etudiant), notice: "Dossier étudiant créé avec succès." }
+        format.html { redirect_to deposer_done_dossier_etudiant_path(@dossier_etudiant), notice: "Dossier étudiant créé avec succès." }
         format.json { render :show, status: :created, location: @dossier_etudiant }
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @dossier_etudiant.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  def deposer_done
+
   end
 
   # PATCH/PUT /dossier_etudiants/1 or /dossier_etudiants/1.json
@@ -67,6 +72,10 @@ class DossierEtudiantsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def dossier_etudiant_params
-      params.require(:dossier_etudiant).permit(:etudiant_id, :mode_payement, :workflow_state)
+      params.require(:dossier_etudiant).permit(:etudiant_id, :nom, :prénom, :certification, :mode_payement, :workflow_state)
+    end
+
+    def is_user_authorized
+      authorize DossierEtudiant
     end
 end

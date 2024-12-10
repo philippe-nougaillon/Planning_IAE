@@ -12,23 +12,33 @@
   <% end %>
 
   <div class="my-5">
-    <%= form.label :etudiant_id %>
-    <%= form.text_field :etudiant_id, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+    <%= form.label :nom %>
+    <%= form.text_field :nom, class: "input input-bordered input-sm w-full" %>
   </div>
 
   <div class="my-5">
-    <%= form.label :mode_payement %>
-    <%= form.text_field :mode_payement, class: "block shadow rounded-md border border-gray-200 outline-none px-3 py-2 mt-2 w-full" %>
+    <%= form.label :prénom %>
+    <%= form.text_field :prénom, class: "input input-bordered input-sm w-full" %>
   </div>
 
-  <% unless dossier_etudiant.new_record? %>
+  <div class="my-5">
+    <%= form.label :certification, "Certificat Baccalauréat :" %>
+    <%= form.file_field :certification, required: true, label: 'Fichier PDF', accept: 'application/pdf', class: 'file-input file-input-bordered file-input-sm file-input-success' %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :mode_payement, 'Mode de payement : ' %>
+    <%= form.select :mode_payement, options_for_select(['CB', 'Chèque', 'Paypal', 'Virement']), {}, class: "select select-bordered select-sm w-fit" %>
+  </div>
+
+  <% if !dossier_etudiant.new_record? && user_signed_in?  %>
     <div class="form-control mb-4">
       <%= form.label :workflow_state %>
-      <%= form.select :workflow_state, DossierEtudiant.workflow_spec.states.keys.to_a, {}, class: 'select select-bordered select-sm w-full' %>
+      <%= form.select :workflow_state, DossierEtudiant.workflow_spec.states.keys.to_a, {}, class: 'select select-bordered select-sm w-fit' %>
     </div>
   <% end %>
 
   <div class="inline">
-    <%= form.submit class: "rounded-lg py-3 px-5 bg-blue-600 text-white inline-block font-medium cursor-pointer" %>
+    <%= form.submit class: "btn btn-primary btn-outline hover:!text-white" %>
   </div>
 <% end %>
