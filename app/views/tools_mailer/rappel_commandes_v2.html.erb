@@ -6,6 +6,8 @@
   <% @cours.each do |cour| %>
     <b><%= l cour.debut, format: :long %></b>
     <br>
+    Demandé par <%= cour.options.commande.first.user.nom_et_prénom %>
+    <br>
     <%= simple_format cour.options.commande.first.description %>
     <% if cour.salle %>
       Salle : <%= cour.salle.nom %>

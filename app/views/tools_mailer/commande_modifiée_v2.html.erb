@@ -1,7 +1,7 @@
 <p style="margin-bottom: 0.5rem">
   Bonjour,
   <br><br>
-  Une commande vient d'être modifiée par <%= @cour.audits.last.user.try(:nom_et_prénom) %> !
+  Une commande vient d'être modifiée par <%= @cour.own_and_associated_audits.first.user.try(:nom_et_prénom) %> !
   <br><br>
 
   <%= l @cour.debut, format: :long %>
