@@ -1,9 +1,13 @@
-<tr class="hover border">
-  <td>
-    <% if nature != vacation_activite.nature %>
+<% if nature != vacation_activite.nature %>
+  <tr class="hover bg-slate-50 border">
+    <td colspan="8">
       <b><%= vacation_activite.nature %></b>
       <% local_assigns[:nature] = vacation_activite.nature %>
-    <% end %>
+    </td>
+  </tr>
+<% end %>
+<tr class="hover border">
+  <td>
   </td>
     
   <td><%= vacation_activite.nom %></td>

@@ -28,6 +28,9 @@ class Intervenant < ApplicationRecord
 	#validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP } 
 
 	validates_uniqueness_of :email, case_sensitive: false
+
+	normalizes :nom, with: -> nom { nom.strip }
+	normalizes :prenom, with: -> prenom { prenom.strip }
 	
 	enum status: [:CEV, :Permanent, :PR, :MCF, :MCF_HDR, :PAST, :PRAG, :Admin, :CEV_HSS, :CEV_ENS_C_CONTRACTUEL, :CEV_TIT_CONT_FP, :CEV_SAL_PRIV_IND]
 
