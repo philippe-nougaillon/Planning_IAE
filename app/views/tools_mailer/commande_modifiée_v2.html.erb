@@ -1,0 +1,24 @@
+<p style="margin-bottom: 0.5rem">
+  Bonjour,
+  <br><br>
+  Une commande vient d'être modifiée par <%= @cour.audits.last.user.try(:nom_et_prénom) %> !
+  <br><br>
+
+  <%= l @cour.debut, format: :long %>
+  <% if @cour.salle %>
+    Salle : <%= @cour.salle.nom %>
+    <br><br>
+  <% end %>
+  <%= @cour.formation.nom %>
+  <br>
+  <%= @cour.intervenant.nom_prenom %>
+
+  <br><br>
+  Nouvelle commande : <%= simple_format @cour.options.commande.first.description %>
+
+  Ancienne commande : <s><%= @old_commentaires %></s>
+
+  <br><br>
+  <%= link_to "Voir toutes les commandes", tools_commandes_url %>
+</p>
+

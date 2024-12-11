@@ -418,6 +418,8 @@ fr:
       title: Liste des cours "à booker"
     commandes:
       title: Commandes
+    commandes_v2:
+      title: Commandes_v2
   agents:
     index:
       title: Agents

@@ -130,7 +130,7 @@
             <th>Modifications</th>
           </thead>
 
-          <%= render partial: 'tools/audit', collection: @cour.audits.reorder(id: :desc) %>
+          <%= render partial: 'tools/audit', collection: @cour.own_and_associated_audits.reorder(id: :desc) %>
 
         </table>
       </div>

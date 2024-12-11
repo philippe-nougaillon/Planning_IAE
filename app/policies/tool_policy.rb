@@ -224,4 +224,14 @@ class ToolPolicy < ApplicationPolicy
     user && (user.accueil? || (user.id == 41 || user.id == 35))
   end
 
+  def commandes_v2?
+    # Accueil ou gestionnaire ou admin
+    user && ([3,5,6].include?(user.role_number))
+  end
+
+  def commande_fait_v2?
+    # Accueil et Thierry.D ou Thémoline
+    user && (user.accueil? || (user.id == 41 || user.id == 35))
+  end
+
 end

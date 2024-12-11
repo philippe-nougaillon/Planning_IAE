@@ -14,6 +14,10 @@ class Cour < ApplicationRecord
   has_many :invits
   has_many :presences
   has_many :etudiants, through: :formation
+  has_many :options, dependent: :destroy
+  accepts_nested_attributes_for :options,
+                                reject_if: lambda{|attributes| attributes['catégorie'].blank? || attributes['description'].blank?},
+                                allow_destroy:true
 
   has_one_attached :document
 
@@ -111,6 +115,14 @@ class Cour < ApplicationRecord
 
   def self.commandes_archivées
     Cour.réalisé.where("DATE(cours.debut) < ?", Date.today).where("cours.commentaires LIKE '+%'").order(debut: :desc)
+  end
+
+  def self.commandes_v2
+    Cour.confirmé.where("DATE(cours.debut) >= ?", Date.today).joins(:options).where(options: {catégorie: :commande}).order(:debut)
+  end
+
+  def self.commandes_archivées_v2
+    Cour.réalisé.where("DATE(cours.debut) < ?", Date.today).joins(:options).where(options: {catégorie: :commande}).order(debut: :desc)
   end
 
   def self.etats_humanized
