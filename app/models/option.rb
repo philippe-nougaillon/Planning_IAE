@@ -38,21 +38,24 @@ class Option < ApplicationRecord
   def send_email_commande_v2(commande_status, old_commentaires)
     case commande_status
     when 'modifiée'
-      ToolsMailer.with(cour: self.cour, old_commentaires: old_commentaires).commande_modifiée_v2.deliver_now
+      mailer_response = ToolsMailer.with(cour: self.cour, old_commentaires: old_commentaires).commande_modifiée_v2.deliver_now
     when 'supprimée'
-      ToolsMailer.with(cour: self.cour, old_commentaires: old_commentaires).commande_supprimée_v2.deliver_now
+      mailer_response = ToolsMailer.with(cour: self.cour, old_commentaires: old_commentaires).commande_supprimée_v2.deliver_now
     when 'ajoutée'
-      ToolsMailer.with(cour: self.cour).nouvelle_commande_v2.deliver_now
+      mailer_response = ToolsMailer.with(cour: self.cour).nouvelle_commande_v2.deliver_now
     end
+    MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: "logistique@iae.pantheonsorbonne.fr", subject: "Commande #{commande_status}")
   end
 
   def check_send_new_commande_email_v2
-    ToolsMailer.with(cour: self.cour).nouvelle_commande_v2.deliver_now
+    mailer_response = ToolsMailer.with(cour: self.cour).nouvelle_commande_v2.deliver_now
+    MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: "logistique@iae.pantheonsorbonne.fr", subject: "Commande ajoutée")
   end
 
   def send_delete_commande_email_v2
     description = self.description
     yield
-    ToolsMailer.with(cour: self.cour, old_commentaires: description).commande_supprimée_v2.deliver_now
+    mailer_response = ToolsMailer.with(cour: self.cour, old_commentaires: description).commande_supprimée_v2.deliver_now
+    MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: "logistique@iae.pantheonsorbonne.fr", subject: "Commande supprimée")
   end
 end
