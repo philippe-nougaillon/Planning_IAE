@@ -1,20 +1,51 @@
-<div class="mx-auto md:w-2/3 w-full flex">
+<div class="mx-auto w-full flex mt-4">
   <div class="mx-auto">
-    <% if notice.present? %>
-      <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
-    <% end %>
+    <div class="flex flex-col mt-4">
+      <%= render @dossier_etudiant %>
 
-    <%= render @dossier_etudiant %>
+      <div class="flex gap-2 mt-4">
+        <% if policy(@dossier_etudiant).change_workflow? %>
+          <% if @dossier_etudiant.can_valider? %>
+            <%= link_to 'Valider', valider_dossier_etudiant_path(@dossier_etudiant), class: 'btn btn-sm btn-success text-white' %>
+          <% end %>
+          <% if @dossier_etudiant.can_rejeter? %>
+            <%= link_to 'Rejeter', rejeter_dossier_etudiant_path(@dossier_etudiant), class: 'btn btn-sm btn-error text-white' %>
+          <% end %>
+          <% if @dossier_etudiant.can_archiver? %>
+            <%= link_to 'Archiver', archiver_dossier_etudiant_path(@dossier_etudiant), class: 'btn btn-sm btn-secondary text-white' %>
+          <% end %>
+        <% end %>
+      </div>
+      <div class="flex gap-2 mt-8">
+        <% if policy(@dossier_etudiant).edit? %>
+          <%= link_to "Modifier", edit_dossier_etudiant_path(@dossier_etudiant), class: "btn btn-primary btn-outline" %>
+        <% end %>
+        <% if policy(@dossier_etudiant).destroy? %>
+          <%= button_to "Supprimer", dossier_etudiant_path(@dossier_etudiant), method: :delete, class: "btn btn-ghost" %>
+        <% end %>
 
-    <div class="flex gap-2 mt-4">
-      <% if policy(@dossier_etudiant).edit? %>
-        <%= link_to "Modifier", edit_dossier_etudiant_path(@dossier_etudiant), class: "btn btn-primary btn-outline" %>
-      <% end %>
-      <% if policy(@dossier_etudiant).destroy? %>
-        <%= button_to "Supprimer", dossier_etudiant_path(@dossier_etudiant), method: :delete, class: "btn btn-ghost" %>
-      <% end %>
-
-      <%= link_to "Retour", user_signed_in? ? dossier_etudiants_path : root_path, class: "btn btn-ghost" %>
+        <%= link_to "Retour", user_signed_in? ? dossier_etudiants_path : root_path, class: "btn btn-ghost" %>
+      </div>
     </div>
+
+    <% if policy(@dossier_etudiant).audits? %>
+      <br>
+      <h4 class="text-xl mb-4">Audit des modifications</h4>
+
+      <div class="overflow-x-auto">
+        <table class="table table-xs">
+          <thead class="bg-slate-100 border">
+            <th>Date</th>
+            <th>Utilisateur</th>            
+            <th>Type</th>
+            <th>Id</th>
+            <th>Action</th>
+            <th>Modifications</th>
+          </thead>
+          <%= render partial: 'tools/audit', collection: @dossier_etudiant.audits.reorder(id: :desc) %>
+        </table>
+      </div>
+      <br>
+    <% end %>
   </div>
 </div>

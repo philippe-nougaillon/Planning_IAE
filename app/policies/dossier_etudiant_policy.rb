@@ -37,4 +37,29 @@ class DossierEtudiantPolicy < ApplicationPolicy
     create?
   end
 
+  def change_workflow?
+    (user && user.role_number >= 5)
+  end
+
+  def deposer?
+    change_workflow?
+  end
+
+  def valider?
+    change_workflow?
+  end
+
+  def rejeter?
+    change_workflow?
+  end
+
+  def archiver?
+    change_workflow?
+  end
+
+  def audits?
+    (user && user.role_number >= 5)
+  end
+
+
 end

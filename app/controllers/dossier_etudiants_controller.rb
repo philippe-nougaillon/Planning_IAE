@@ -1,11 +1,25 @@
 class DossierEtudiantsController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[ new create show deposer_done ]
-  before_action :set_dossier_etudiant, only: %i[ show edit update destroy deposer_done ]
+  before_action :set_dossier_etudiant, only: %i[ show edit update destroy deposer_done valider rejeter archiver]
   before_action :is_user_authorized
 
   # GET /dossier_etudiants or /dossier_etudiants.json
   def index
-    @dossier_etudiants = DossierEtudiant.all
+    @dossier_etudiants = DossierEtudiant.ordered
+
+    respond_to do |format|
+      format.html do 
+        @dossier_etudiants = @dossier_etudiants.paginate(page: params[:page], per_page: 20)
+      end
+
+      format.xls do
+        book = DossierEtudiant.to_xls(@dossier_etudiants)
+        file_contents = StringIO.new
+        book.write file_contents # => Now file_contents contains the rendered file output
+        filename = 'Dossiers_Étudiants.xls'
+        send_data file_contents.string.force_encoding('binary'), filename: filename 
+      end
+    end
   end
 
   # GET /dossier_etudiants/1 or /dossier_etudiants/1.json
@@ -37,10 +51,6 @@ class DossierEtudiantsController < ApplicationController
     end
   end
 
-  def deposer_done
-
-  end
-
   # PATCH/PUT /dossier_etudiants/1 or /dossier_etudiants/1.json
   def update
     respond_to do |format|
@@ -64,6 +74,29 @@ class DossierEtudiantsController < ApplicationController
     end
   end
 
+  def deposer_done
+  end
+
+  # def deposer
+  #   @dossier_etudiant.deposer!
+  #   redirect_to @dossier_etudiant, notice: "Dossier étudiant déposé avec succès."
+  # end
+
+  def valider
+    @dossier_etudiant.valider!
+    redirect_to @dossier_etudiant, notice: "Dossier étudiant validé avec succès."
+  end
+
+  def rejeter
+    @dossier_etudiant.rejeter
+    redirect_to @dossier_etudiant, notice: "Dossier étudiant rejeté avec succès."
+  end
+
+  def archiver
+    @dossier_etudiant.archiver!
+    redirect_to @dossier_etudiant, notice: "Dossier étudiant archivé avec succès."
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_dossier_etudiant
@@ -72,10 +105,10 @@ class DossierEtudiantsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def dossier_etudiant_params
-      params.require(:dossier_etudiant).permit(:etudiant_id, :nom, :prénom, :certification, :mode_payement, :workflow_state)
+      params.require(:dossier_etudiant).permit(:etudiant_id, :nom, :prénom, :certification, :mode_payement, :workflow_state, :formation, :email, :adresse, :téléphone_fixe, :téléphone_mobile, :pièce_identité )
     end
 
     def is_user_authorized
-      authorize DossierEtudiant
+      authorize @dossier_etudiant? @dossier_etudiant : DossierEtudiant
     end
 end

@@ -9,21 +9,18 @@ class DossierEtudiant < ApplicationRecord
 
   belongs_to :etudiant, optional: :true
   has_one_attached :certification
+  has_one_attached :pièce_identité
+
+  scope :ordered, -> {order(created_at: :desc)}
 
   # WORKFLOW
-
-  NOUVEAU = 'nouveau'
   DEPOSE  = 'déposé'
   VALIDE  = 'validé'
   REJETE  = 'non_conforme'
   ARCHIVE = 'archivé'
 
   workflow do
-    state NOUVEAU, meta: {style: 'badge-info'} do
-      event :deposer, transitions_to: DEPOSE
-    end
-
-    state DEPOSE, meta: {style: 'badge-warning'} do
+    state DEPOSE, meta: {style: 'badge-info'} do
       event :valider, transitions_to: VALIDE
       event :rejeter, transitions_to: REJETE
     end
@@ -36,11 +33,15 @@ class DossierEtudiant < ApplicationRecord
       event :déposer, transitions_to: DEPOSE
     end
 
-    state ARCHIVE, meta: {style: 'badge-dark'}
+    state ARCHIVE, meta: {style: 'badge-secondary'}
   end
 
   def style
     self.current_state.meta[:style]
+  end
+
+  def nom_prénom
+    self.nom + ' ' + self.prénom
   end
 
   private

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_11_26_174148) do
+ActiveRecord::Schema[7.1].define(version: 2024_12_12_153144) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -134,6 +134,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_26_174148) do
     t.string "slug"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "formation"
+    t.string "email"
+    t.string "adresse"
+    t.string "téléphone_fixe"
+    t.string "téléphone_mobile"
     t.index ["etudiant_id"], name: "index_dossier_etudiants_on_etudiant_id"
   end
 
@@ -330,6 +335,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_26_174148) do
     t.index ["user_id"], name: "index_notes_on_user_id"
   end
 
+  create_table "options", force: :cascade do |t|
+    t.bigint "cour_id", null: false
+    t.bigint "user_id", null: false
+    t.integer "catégorie", null: false
+    t.string "description"
+    t.boolean "fait"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cour_id"], name: "index_options_on_cour_id"
+    t.index ["user_id"], name: "index_options_on_user_id"
+  end
+
   create_table "ouvertures", force: :cascade do |t|
     t.string "bloc", null: false
     t.integer "jour", null: false
@@ -473,6 +490,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_11_26_174148) do
   add_foreign_key "invits", "intervenants"
   add_foreign_key "invits", "users"
   add_foreign_key "notes", "users"
+  add_foreign_key "options", "cours"
+  add_foreign_key "options", "users"
   add_foreign_key "presences", "cours"
   add_foreign_key "presences", "etudiants"
   add_foreign_key "presences", "intervenants"

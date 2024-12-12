@@ -12,33 +12,75 @@
   <% end %>
 
   <div class="my-5">
-    <%= form.label :nom %>
-    <%= form.text_field :nom, class: "input input-bordered input-sm w-full" %>
+    <%= form.label :formation, 'Formation souhaitée' %>
+    <%= form.select :formation, options_for_select(['Finance','Marketing','Relations Internationales','Ressources Humaines', 'Commerce International']), {}, class: "select select-bordered select-sm w-full" %>
   </div>
 
-  <div class="my-5">
-    <%= form.label :prénom %>
-    <%= form.text_field :prénom, class: "input input-bordered input-sm w-full" %>
+  <div class="flex gap-4">
+    <div class="w-full my-5">
+      <%= form.label :nom %>
+      <%= form.text_field :nom, class: "input input-bordered input-sm w-full", required: true %>
+    </div>
+
+    <div class="w-full my-5">
+      <%= form.label :prénom, "Prénom(s)" %>
+      <%= form.text_field :prénom, class: "input input-bordered input-sm w-full", required: true %>
+    </div>
   </div>
 
-  <div class="my-5">
-    <%= form.label :certification, "Certificat Baccalauréat :" %>
-    <%= form.file_field :certification, required: true, label: 'Fichier PDF', accept: 'application/pdf', class: 'file-input file-input-bordered file-input-sm file-input-success' %>
+  <div class="flex gap-4">
+    <div class="w-full my-5">
+      <%= form.label :adresse %>
+      <%= form.text_field :adresse, class: "input input-bordered input-sm w-full", required: true %>
+    </div>
+
+    <div class="w-full my-5">
+      <%= form.label :email, "E-mail" %>
+      <%= form.email_field :email, class: "input input-bordered input-sm w-full", required: true %>
+    </div>
   </div>
 
+  <div class="flex gap-4">
+    <div class="w-full my-5">
+      <%= form.label :téléphone_fixe %>
+      <%= form.text_field :téléphone_fixe, class: "input input-bordered input-sm w-full" %>
+    </div>
+
+    <div class="w-full my-5">
+      <%= form.label :téléphone_mobile %>
+      <%= form.text_field :téléphone_mobile, class: "input input-bordered input-sm w-full", required: true %>
+    </div>
+  </div>
+
+  <% if dossier_etudiant.new_record? %>
+    <div class="flex gap-4">
+      <div class="my-5">
+        <%= form.label :certification, "Certificat Baccalauréat :" %>
+        <%= form.file_field :certification, required: true, label: 'Fichier PDF', accept: 'application/pdf', class: 'file-input file-input-bordered file-input-sm file-input-success' %>
+      </div>
+      <div class="my-5">
+        <%= form.label :pièce_identité, "Pièce d'identité :" %>
+        <%= form.file_field :pièce_identité, required: true, label: 'Fichier PDF', accept: 'application/pdf', class: 'file-input file-input-bordered file-input-sm file-input-success' %>
+      </div>
+    </div>
+  <% end %>
+
+
+<!--
   <div class="my-5">
-    <%= form.label :mode_payement, 'Mode de payement : ' %>
+    <%= form.label :mode_payement, 'Mode de paiement :' %>
     <%= form.select :mode_payement, options_for_select(['CB', 'Chèque', 'Paypal', 'Virement']), {}, class: "select select-bordered select-sm w-fit" %>
   </div>
+-->
 
   <% if !dossier_etudiant.new_record? && user_signed_in?  %>
     <div class="form-control mb-4">
-      <%= form.label :workflow_state %>
+      <%= form.label :workflow_state, "État" %>
       <%= form.select :workflow_state, DossierEtudiant.workflow_spec.states.keys.to_a, {}, class: 'select select-bordered select-sm w-fit' %>
     </div>
   <% end %>
 
   <div class="inline">
-    <%= form.submit class: "btn btn-primary btn-outline hover:!text-white" %>
+    <%= form.submit "Enregistrer la demande", class: "btn btn-primary btn-outline hover:!text-white mt-4" %>
   </div>
 <% end %>

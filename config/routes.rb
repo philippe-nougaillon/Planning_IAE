@@ -109,6 +109,11 @@ Rails.application.routes.draw do
   resources :dossier_etudiants do
     member do
       get :deposer_done
+      get :deposer
+      get :valider
+      get :rejeter
+      get :relancer
+      get :archiver
     end
   end
 
