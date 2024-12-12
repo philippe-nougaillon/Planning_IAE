@@ -1242,6 +1242,42 @@ class ToolsController < ApplicationController
 
   end
 
+  def liste_surveillants_examens_v2
+
+    if params[:start_date].blank? || params[:end_date].blank?
+      params[:start_date] ||= Date.today.at_beginning_of_month.last_month
+      params[:end_date]   ||= Date.today.last_month.at_end_of_month
+    end
+
+    @start_date = params[:start_date]
+    @end_date = params[:end_date]
+    surveillant = params[:surveillant]
+    @cumuls = {}
+    @examens = Cour
+                  .where("intervenant_id IN (:surveillants) OR intervenant_binome_id IN (:surveillants)", {surveillants: [169, 1166, 522, 1314]} )
+                  .joins(:options).where(options: {catégorie: :surveillance})
+                  .where("options.description LIKE '%[%'")
+                  .where("debut BETWEEN ? AND ?", @start_date, @end_date.to_date + 1.day)
+                  .includes(:formation)
+                  .order(:debut)
+
+    respond_to do |format|
+      format.html
+
+      format.pdf do
+        filename = "Vacations_administratives_#{ surveillant }_du_#{ @start_date }_au_#{ @end_date }"
+        pdf = ExportPdf.new
+        pdf.export_vacations_administratives_v2(@examens, @start_date, @end_date, surveillant)
+
+        send_data pdf.render,
+                  filename: filename.concat('.pdf'),
+                  type: 'application/pdf',
+                  disposition: 'inline'	
+      end
+    end
+
+  end
+
   def rechercher
 
     if !params[:search].blank? && params[:commit] =='Go'
