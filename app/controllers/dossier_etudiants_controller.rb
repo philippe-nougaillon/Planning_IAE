@@ -5,7 +5,23 @@ class DossierEtudiantsController < ApplicationController
 
   # GET /dossier_etudiants or /dossier_etudiants.json
   def index
-    @dossier_etudiants = DossierEtudiant.ordered
+    params[:order_by] ||= 'updated_at'
+
+    if params[:archive].present?
+      @dossier_etudiants = DossierEtudiant.all
+    else
+      @dossier_etudiants = DossierEtudiant.where.not(workflow_state: "archivé")
+    end
+
+    @dossier_etudiants = @dossier_etudiants.order(params[:order_by])
+
+    if params[:search].present?
+      @dossier_etudiants = @dossier_etudiants.where("nom ILIKE :search OR prénom ILIKE :search OR email ILIKE :search", {search: "%#{params[:search]}%"})
+    end
+
+    if params[:état].present?
+      @dossier_etudiants = @dossier_etudiants.where(workflow_state: params[:état])
+    end
 
     respond_to do |format|
       format.html do 
@@ -88,7 +104,7 @@ class DossierEtudiantsController < ApplicationController
   end
 
   def rejeter
-    @dossier_etudiant.rejeter
+    @dossier_etudiant.rejeter!
     redirect_to @dossier_etudiant, notice: "Dossier étudiant rejeté avec succès."
   end
 
@@ -105,7 +121,7 @@ class DossierEtudiantsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def dossier_etudiant_params
-      params.require(:dossier_etudiant).permit(:etudiant_id, :nom, :prénom, :certification, :mode_payement, :workflow_state, :formation, :email, :adresse, :téléphone_fixe, :téléphone_mobile, :pièce_identité )
+      params.require(:dossier_etudiant).permit(:etudiant_id, :nom, :prénom, :certification, :mode_payement, :workflow_state, :formation, :email, :adresse, :téléphone_fixe, :téléphone_mobile, :pièce_identité, :civilité, :date_naissance, :nationalité, :num_secu, :nom_martial, :nom_père, :prénom_père, :prénom_père, :profession_père, :nom_mère, :prénom_mère, :profession_mère, :lettre_de_motivation, :cv )
     end
 
     def is_user_authorized

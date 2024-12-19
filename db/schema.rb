@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_12_12_153144) do
+ActiveRecord::Schema[7.1].define(version: 2024_12_16_075914) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -139,6 +139,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_12_153144) do
     t.string "adresse"
     t.string "téléphone_fixe"
     t.string "téléphone_mobile"
+    t.string "civilité"
+    t.date "date_naissance"
+    t.string "nationalité"
+    t.string "num_secu"
+    t.string "nom_martial"
+    t.string "nom_père"
+    t.string "prénom_père"
+    t.string "profession_père"
+    t.string "nom_mère"
+    t.string "prénom_mère"
+    t.string "profession_mère"
     t.index ["etudiant_id"], name: "index_dossier_etudiants_on_etudiant_id"
   end
 

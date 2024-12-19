@@ -10,6 +10,8 @@ class DossierEtudiant < ApplicationRecord
   belongs_to :etudiant, optional: :true
   has_one_attached :certification
   has_one_attached :pièce_identité
+  has_one_attached :lettre_de_motivation
+  has_one_attached :cv
 
   scope :ordered, -> {order(created_at: :desc)}
 
@@ -31,6 +33,7 @@ class DossierEtudiant < ApplicationRecord
 
     state REJETE, meta: {style: 'badge-error'} do
       event :déposer, transitions_to: DEPOSE
+      event :archiver, transitions_to: ARCHIVE
     end
 
     state ARCHIVE, meta: {style: 'badge-secondary'}

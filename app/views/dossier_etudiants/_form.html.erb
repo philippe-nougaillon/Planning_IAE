@@ -11,56 +11,121 @@
     </div>
   <% end %>
 
-  <div class="my-5">
-    <%= form.label :formation, 'Formation souhaitée' %>
-    <%= form.select :formation, options_for_select(['Finance','Marketing','Relations Internationales','Ressources Humaines', 'Commerce International']), {}, class: "select select-bordered select-sm w-full" %>
+  <div class="collapse collapse-arrow bg-base-200 mt-4">
+    <input type="radio" name="accordion" />
+    <div class="collapse-title text-xl font-medium">Informations basiques</div>
+    <div class="collapse-content">
+      <div class="my-5">
+        <%= form.label :formation, 'Formation souhaitée' %>
+        <%= form.select :formation, options_for_select(['Finance','Marketing','Relations Internationales','Ressources Humaines', 'Commerce International']), {}, class: "select select-bordered select-sm w-full" %>
+      </div>
+      <div class="flex gap-4">
+        <div class="w-full my-5">
+          <%= form.label :nom %>
+          <%= form.text_field :nom, class: "input input-bordered input-sm w-full", required: true %>
+        </div>
+
+        <div class="w-full my-5">
+          <%= form.label :prénom, "Prénom(s)" %>
+          <%= form.text_field :prénom, class: "input input-bordered input-sm w-full", required: true %>
+        </div>
+      </div>
+
+      <div class="flex gap-4">
+        <div class="w-full my-5">
+          <%= form.label :email, "E-mail" %>
+          <%= form.email_field :email, class: "input input-bordered input-sm w-full", required: true %>
+        </div>
+        <div class="w-full my-5">
+          <%= form.label :adresse %>
+          <%= form.text_field :adresse, class: "input input-bordered input-sm w-full", required: true %>
+        </div>
+
+      </div>
+
+      <div class="flex gap-4">
+        <div class="w-full my-5">
+          <%= form.label :téléphone_fixe %>
+          <%= form.text_field :téléphone_fixe, class: "input input-bordered input-sm w-full" %>
+        </div>
+
+        <div class="w-full my-5">
+          <%= form.label :téléphone_mobile %>
+          <%= form.text_field :téléphone_mobile, class: "input input-bordered input-sm w-full", required: true %>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="flex gap-4">
-    <div class="w-full my-5">
-      <%= form.label :nom %>
-      <%= form.text_field :nom, class: "input input-bordered input-sm w-full", required: true %>
-    </div>
+  <div class="collapse collapse-arrow bg-base-200">
+    <input type="radio" name="accordion" />
+    <div class="collapse-title text-xl font-medium">Parents</div>
+    <div class="collapse-content">
+      <p class="font-bold">Père</p>
+      <div class="flex gap-4">
+        <div class="w-full my-5">
+          <%= form.label :nom_père, "Nom" %>
+          <%= form.text_field :nom_père, class: "input input-bordered input-sm w-full" %>
+        </div>
 
-    <div class="w-full my-5">
-      <%= form.label :prénom, "Prénom(s)" %>
-      <%= form.text_field :prénom, class: "input input-bordered input-sm w-full", required: true %>
-    </div>
-  </div>
+        <div class="w-full my-5">
+          <%= form.label :prénom_père, "Prénom" %>
+          <%= form.text_field :prénom_père, class: "input input-bordered input-sm w-full" %>
+        </div>
 
-  <div class="flex gap-4">
-    <div class="w-full my-5">
-      <%= form.label :adresse %>
-      <%= form.text_field :adresse, class: "input input-bordered input-sm w-full", required: true %>
-    </div>
+        <div class="w-full my-5">
+          <%= form.label :profession_père, "Profession" %>
+          <%= form.text_field :profession_père, class: "input input-bordered input-sm w-full" %>
+        </div>
+      </div>
 
-    <div class="w-full my-5">
-      <%= form.label :email, "E-mail" %>
-      <%= form.email_field :email, class: "input input-bordered input-sm w-full", required: true %>
-    </div>
-  </div>
+      <p class="font-bold">Mère</p>
+      <div class="flex gap-4">
+        <div class="w-full my-5">
+          <%= form.label :nom_mère, "Nom" %>
+          <%= form.text_field :nom_mère, class: "input input-bordered input-sm w-full" %>
+        </div>
 
-  <div class="flex gap-4">
-    <div class="w-full my-5">
-      <%= form.label :téléphone_fixe %>
-      <%= form.text_field :téléphone_fixe, class: "input input-bordered input-sm w-full" %>
-    </div>
+        <div class="w-full my-5">
+          <%= form.label :prénom_mère, "Prénom" %>
+          <%= form.text_field :prénom_mère, class: "input input-bordered input-sm w-full" %>
+        </div>
 
-    <div class="w-full my-5">
-      <%= form.label :téléphone_mobile %>
-      <%= form.text_field :téléphone_mobile, class: "input input-bordered input-sm w-full", required: true %>
+        <div class="w-full my-5">
+          <%= form.label :profession_mère, "Profession" %>
+          <%= form.text_field :profession_mère, class: "input input-bordered input-sm w-full" %>
+        </div>
+      </div>
     </div>
   </div>
 
   <% if dossier_etudiant.new_record? %>
-    <div class="flex gap-4">
-      <div class="my-5">
-        <%= form.label :certification, "Certificat Baccalauréat :" %>
-        <%= form.file_field :certification, required: true, label: 'Fichier PDF', accept: 'application/pdf', class: 'file-input file-input-bordered file-input-sm file-input-success' %>
+    <div class="collapse collapse-arrow bg-base-200">
+      <input type="radio" name="accordion" />
+      <div class="collapse-title text-xl font-medium">
+        Documents
       </div>
-      <div class="my-5">
-        <%= form.label :pièce_identité, "Pièce d'identité :" %>
-        <%= form.file_field :pièce_identité, required: true, label: 'Fichier PDF', accept: 'application/pdf', class: 'file-input file-input-bordered file-input-sm file-input-success' %>
+      <div class="collapse-content">
+        <div class="flex gap-4">
+          <div class="flex-1 my-5">
+            <%= form.label :pièce_identité, "Pièce d'identité :" %>
+            <%= form.file_field :pièce_identité, label: 'Fichier PDF', accept: 'application/pdf', class: 'file-input file-input-bordered file-input-sm file-input-primary w-full' %>
+          </div>
+          <div class="flex-1 my-5">
+            <%= form.label :certification, "Certificat Baccalauréat :" %>
+            <%= form.file_field :certification, label: 'Fichier PDF', accept: 'application/pdf', class: 'file-input file-input-bordered file-input-sm file-input-primary w-full' %>
+          </div>
+        </div>
+        <div class="flex gap-4">
+          <div class="flex-1 my-5">
+            <%= form.label :lettre_de_motivation, "Lettre de motivation :" %>
+            <%= form.file_field :lettre_de_motivation, label: 'Fichier PDF', accept: 'application/pdf', class: 'file-input file-input-bordered file-input-sm file-input-primary w-full' %>
+          </div>
+          <div class="flex-1 my-5">
+            <%= form.label :cv, "CV :" %>
+            <%= form.file_field :cv, label: 'Fichier PDF', accept: 'application/pdf', class: 'file-input file-input-bordered file-input-sm file-input-primary w-full' %>
+          </div>
+        </div>
       </div>
     </div>
   <% end %>
@@ -81,6 +146,6 @@
   <% end %>
 
   <div class="inline">
-    <%= form.submit "Enregistrer la demande", class: "btn btn-primary btn-outline hover:!text-white mt-4" %>
+    <%= form.submit "Enregistrer la demande", class: "btn btn-primary btn-outline hover:!text-white my-4" %>
   </div>
 <% end %>
