@@ -3,13 +3,13 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
   include ActionView::Helpers::NumberHelper
   attr_reader :cours
 
-  def initialize(start_date, end_date, status, cours_showed, vacations_showed, responsabilites_showed)
+  def initialize(start_date, end_date, status, is_cours_showed, is_vacations_showed, is_responsabilites_showed)
     @start_date = start_date
     @end_date = end_date
     @status = status
-    @cours_showed = cours_showed
-    @vacations_showed = vacations_showed
-    @responsabilites_showed = responsabilites_showed
+    @is_cours_showed = is_cours_showed
+    @is_vacations_showed = is_vacations_showed
+    @is_responsabilites_showed = is_responsabilites_showed
   end
 
   def call    
@@ -24,21 +24,19 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
     sheet.row(1).concat ["ÉTAT LIQUIDATIF DES VACATIONS D'ENSEIGNEMENTS. Du #{I18n.l @start_date.to_date} au #{I18n.l @end_date.to_date}. Statut : #{Intervenant.statuses.keys[@status.to_i]}"]
     sheet.row(1).default_format = bold
     sheet.row(2).concat ["Décrets N°87-889 du 29/10/1987 et 88-994 du 18/10/1988 - CAr du 05/12/2023"]
-    sheet.row(3).concat ["Décret n°2024-951 du 23/10/2024 relatif au relèvement du salaire minimum de croissance"]
-    sheet.row(4).concat ["Taux horaire en vigueur au 01/11/2024 : #{ Cour.taux_horaire_vacation }€"]
 
-    sheet.row(6).concat ['Type d\'intervention', 'Nom', 'Prénom','Formation', 'Intitulé', 'Code EOTP', 'Destination Finan.', 'Date',
+    sheet.row(4).concat ['Type d\'intervention', 'Nom', 'Prénom','Formation', 'Intitulé', 'Code EOTP', 'Destination Finan.', 'Date',
       'Durée en Hres','Binôme','Nbre d\'Hres CM', 'Nbre HTD', 'Taux TD','Mtnt total HTD']
 
-    sheet.row(6).default_format = bold
+    sheet.row(4).default_format = bold
 
-    index = 7
+    index = 5
     total_hetd = 0
 
     # Peupler la liste des intervenants ayant eu des cours en principal ou binome
     intervenant_ids = []
 
-    if @cours_showed
+    if @is_cours_showed
       cours = Cour
                 .where(etat: Cour.etats.values_at(:réalisé))
                 .where("debut between ? and ?", @start_date, @end_date)
@@ -47,19 +45,20 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
       cours = Cour.none
     end
 
-    if @vacations_showed
+    if @is_vacations_showed
       vacations = Vacation.where("date BETWEEN ? AND ?", @start_date, @end_date)
     else
       vacations = Vacation.none
     end
 
-    if @responsabilites_showed
+    if @is_responsabilites_showed
       responsabilites = Responsabilite.where("debut BETWEEN ? AND ?", @start_date, @end_date)
     else
       responsabilites = Responsabilite.none
     end
 
     intervenants = Intervenant.where(status: @status, id: [cours.pluck(:intervenant_id).uniq, vacations.pluck(:intervenant_id).uniq, responsabilites.pluck(:intervenant_id).uniq].flatten.uniq)
+    formations_par_eotp = Formation.unscoped.includes(:cours).group_by(&:code_analytique)
 
     intervenants.each do | intervenant |
       # Passe au suivant si intervenant est 'A CONFIRMER'
@@ -68,62 +67,101 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
       # nbr_heures_statutaire = intervenant.nbr_heures_statutaire || 0
 
       # Prendre que les cours / vacations / responsabilités parmi celles sélectionnés, qui sont liés à l'intervenant
-      intervenant_cours = cours.where(intervenant_id: intervenant.id).or(cours.where(intervenant_binome_id: intervenant.id))
+      intervenant_cours = cours.where(intervenant_id: intervenant.id).or(cours.where(intervenant_binome_id: intervenant.id)).includes(:formation)
       intervenant_vacations = intervenant.vacations.where(id: vacations.pluck(:id), intervenant_id: intervenant.id)
       intervenant_responsabilites = intervenant.responsabilites.where(id: responsabilites.pluck(:id), intervenant_id: intervenant.id)
 
-      cumul_hetd = cumul_vacations = cumul_responsabilites = cumul_tarif = cumul_cm = cumul_td = 0 
+      cumul_hetd = cumul_vacations = cumul_responsabilites = cumul_tarif = cumul_cm = 0 
 
-      intervenant_cours.each do |c|
-        formation = Formation.unscoped.find(c.formation_id)
+      # Ce qui a été fait et à faire : 
+      # - regroupement des cours par groupe d'eotp
+      # - dans la colonne K : affichage dans tous les cas de la durée du cours, convertit en CM
+      # - tout n'est pas fini je crois, il faut tester les cumuls quand y'a des TD, des 3xTD, et des CM
+      # - est-ce qu'on affiche dans une colonne quand le cours est imputable ?
+      # - est-ce qu'on affiche le type de taux td (CM/TD/3xTD) dans une colonne ?
+      # - est-ce qu'on affiche le cumul d'heure dans le sous-total et dans le total ?
+      # - est-ce que de base il n'y avait pas un eotp par formation et par année ?
+      # - est-ce qu'il y a besoin de l'export collectif groupé par formation puis intervenant (l'autre type d'export)
 
-        if c.imputable?
-          cumul_hetd += c.duree.to_f * c.HETD
-          montant_service = c.montant_service.round(2)
-          cumul_tarif += montant_service
-          case formation.nomtauxtd
-          when 'CM'
-            cumul_cm += c.duree
-            cumul_td += c.duree * 1.5
-          when 'TD' then cumul_td += c.duree
-          when '3xTD' then cumul_td += c.duree * 3
+
+
+      # V2 : Liste des cours de l'intervenant groupés par code_eotp
+      formations_par_eotp.each do |code_eotp, formation_group|
+        ss_total_cm = ss_total_hetd = ss_total_tarif = 0
+        any_cours_for_eotp = false
+
+        intervenant_cours.select { |c| formation_group.map(&:id).include?(c.formation_id) }.each do |c|
+          formation = formation_group.find { |f| f.id == c.formation_id }
+          any_cours_for_eotp ||= true
+          if c.imputable?
+            montant_service = c.montant_service.round(2)
+            ss_total_tarif += montant_service
+            
+            ss_total_hetd += c.duree.to_f * c.HETD
+            case formation.nomtauxtd
+            when 'CM'
+              ss_total_cm += c.duree
+            when 'TD'
+              ss_total_cm += c.duree / 1.5
+            when '3xTD'
+              ss_total_cm += c.duree * 2
+            end
           end
+
+          fields_to_export = [
+            'C',
+            intervenant.nom,
+            intervenant.prenom,
+            "#{formation.nom_promo_full} (#{formation.nomtauxtd}) [#{c.imputable?}]",
+            c.nom_ou_ue,
+            formation.code_analytique_avec_indice(c.debut),
+            formation.code_analytique.include?('DISTR') ? "101PAIE" : "102PAIE",
+            I18n.l(c.debut.to_date),
+            c.duree,
+            (c.intervenant && c.intervenant_binome ? "OUI" : ''),
+            *case formation.nomtauxtd
+              when "CM" then [c.duree, c.duree * 1.5]
+              when "TD" then [c.duree / 1.5, c.duree]
+              when "3xTD" then [c.duree * 2, c.duree] # Ligne de code modifiée et à vérifier la colonne K pour un 3xTD
+              else ['?', '?']
+            end,
+            Cour.Tarif,
+            montant_service
+          ]
+
+          sheet.row(index).replace fields_to_export
+          index += 1
+        end
+        
+        if any_cours_for_eotp
+          total_eotp = [
+            "C",
+            "Sous total code EOTP #{code_eotp || '???'} : #{intervenant_cours.select { |c| formation_group.map(&:id).include?(c.formation_id) }.count} cours",
+            nil, nil, nil, nil, nil, nil, nil, nil,
+            ss_total_cm,
+            ss_total_hetd,
+            Cour.Tarif,
+            ss_total_tarif
+          ]
+
+          sheet.row(index).replace total_eotp
+          sheet.row(index).default_format = bold
+          index += 1
         end
 
-        fields_to_export = [
-          'C',
-          intervenant.nom,
-          intervenant.prenom,
-          formation.nom_promo_full, 
-          c.nom_ou_ue,
-          formation.code_analytique_avec_indice(c.debut), 
-          formation.code_analytique.include?('DISTR') ? "101PAIE" : "102PAIE",
-          I18n.l(c.debut.to_date),
-          c.duree,
-          (c.intervenant && c.intervenant_binome ? "OUI" : ''),
-          # Jusqu'au dessus c'est bon
-          *case formation.nomtauxtd
-            when "CM" then [c.duree, c.duree * 1.5]
-            when "TD", "3xTD" then [nil, c.duree]
-            else [nil, nil]
-          end,
-          # Taux TD
-          Cour.Tarif,
-          # Mtnt total HTD
-          montant_service
-        ]
-
-        sheet.row(index).replace fields_to_export
-        index += 1
+        cumul_cm += ss_total_cm
+        cumul_hetd += ss_total_hetd
+        cumul_tarif += ss_total_tarif
       end
 
+      # Total des cours de l'intervenant
       if intervenant_cours.any?
         total_cours = [
           "C",
           "#{ intervenant_cours.count } cours au total",
           nil,nil,nil,nil,nil,nil,nil,nil,
           cumul_cm, # Nbre hres CM
-          cumul_td, # Nbre HTD
+          cumul_hetd, # Nbre HETD (ou HTD ou TD)
           Cour.Tarif,
           cumul_tarif
         ]
