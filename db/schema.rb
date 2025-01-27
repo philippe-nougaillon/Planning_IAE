@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_13_080605) do
+ActiveRecord::Schema[7.1].define(version: 2024_12_23_083609) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -64,9 +64,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_13_080605) do
     t.datetime "debut", precision: nil
     t.datetime "fin", precision: nil
     t.string "message"
+    t.integer "etat"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "etat"
   end
 
   create_table "audits", id: :serial, force: :cascade do |t|
@@ -123,6 +123,34 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_13_080605) do
     t.datetime "updated_at", null: false
     t.string "commentaire"
     t.index ["dossier_id"], name: "index_documents_on_dossier_id"
+  end
+
+  create_table "dossier_etudiants", force: :cascade do |t|
+    t.bigint "etudiant_id"
+    t.string "nom"
+    t.string "prénom"
+    t.string "mode_payement"
+    t.string "workflow_state"
+    t.string "slug"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "formation"
+    t.string "email"
+    t.string "adresse"
+    t.string "téléphone_fixe"
+    t.string "téléphone_mobile"
+    t.string "civilité"
+    t.date "date_naissance"
+    t.string "nationalité"
+    t.string "num_secu"
+    t.string "nom_martial"
+    t.string "nom_père"
+    t.string "prénom_père"
+    t.string "profession_père"
+    t.string "nom_mère"
+    t.string "prénom_mère"
+    t.string "profession_mère"
+    t.index ["etudiant_id"], name: "index_dossier_etudiants_on_etudiant_id"
   end
 
   create_table "dossiers", force: :cascade do |t|
@@ -182,6 +210,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_13_080605) do
     t.integer "table", default: 0
     t.index ["formation_id"], name: "index_etudiants_on_formation_id"
     t.index ["workflow_state"], name: "index_etudiants_on_workflow_state"
+  end
+
+  create_table "evaluations", force: :cascade do |t|
+    t.bigint "etudiant_id", null: false
+    t.decimal "note"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.date "date"
+    t.string "matière"
+    t.string "examen"
+    t.index ["etudiant_id"], name: "index_evaluations_on_etudiant_id"
   end
 
   create_table "fermetures", id: :serial, force: :cascade do |t|
@@ -267,6 +306,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_13_080605) do
     t.boolean "notifier"
     t.string "slug"
     t.integer "année_entrée"
+    t.string "email2"
     t.index ["slug"], name: "index_intervenants_on_slug", unique: true
   end
 
@@ -305,6 +345,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_13_080605) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_notes_on_user_id"
+  end
+
+  create_table "options", force: :cascade do |t|
+    t.bigint "cour_id", null: false
+    t.bigint "user_id", null: false
+    t.integer "catégorie", null: false
+    t.string "description"
+    t.boolean "fait"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cour_id"], name: "index_options_on_cour_id"
+    t.index ["user_id"], name: "index_options_on_user_id"
   end
 
   create_table "ouvertures", force: :cascade do |t|
@@ -444,10 +496,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_13_080605) do
 
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "documents", "dossiers"
+  add_foreign_key "dossier_etudiants", "etudiants"
+  add_foreign_key "evaluations", "etudiants"
   add_foreign_key "invits", "cours"
   add_foreign_key "invits", "intervenants"
   add_foreign_key "invits", "users"
   add_foreign_key "notes", "users"
+  add_foreign_key "options", "cours"
+  add_foreign_key "options", "users"
   add_foreign_key "presences", "cours"
   add_foreign_key "presences", "etudiants"
   add_foreign_key "presences", "intervenants"

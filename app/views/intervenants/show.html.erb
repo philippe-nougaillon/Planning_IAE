@@ -66,6 +66,11 @@
       </h3>
       <%= mail_to @intervenant.email %>
 
+      <h3 class="text-2xl">
+        <small class="text-secondary">Courriel 2</small><br>
+      </h3>
+      <%= mail_to @intervenant.email2 %>
+
       <% if @user && @user.sign_in_count.positive? %>
         <h3 class="text-2xl mt-6">
           <small class="text-secondary">Dernière connexion</small>
