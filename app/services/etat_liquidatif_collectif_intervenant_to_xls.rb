@@ -25,8 +25,8 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
     sheet.row(1).default_format = bold
     sheet.row(2).concat ["Décrets N°87-889 du 29/10/1987 et 88-994 du 18/10/1988 - CAr du 05/12/2023"]
 
-    sheet.row(4).concat ['Type d\'intervention', 'Nom', 'Prénom','Formation', 'Intitulé', 'Code EOTP', 'Destination Finan.', 'Date',
-      'Durée en Hres','Binôme','Nbre d\'Hres CM', 'Nbre HTD', 'Taux TD','Mtnt total HTD']
+    sheet.row(4).concat ['Type d\'intervention', 'Nom', 'Prénom','Formation', 'Intitulé', 'Code EOTP', 'Destination Finan.', 'Date', 'Nom Taux',
+      'Durée en Hres','Binôme','HeTD', 'Nbre HTD', 'Taux TD','Mtnt total HTD']
 
     sheet.row(4).default_format = bold
 
@@ -71,28 +71,27 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
       intervenant_vacations = intervenant.vacations.where(id: vacations.pluck(:id), intervenant_id: intervenant.id)
       intervenant_responsabilites = intervenant.responsabilites.where(id: responsabilites.pluck(:id), intervenant_id: intervenant.id)
 
-      cumul_hetd = cumul_vacations = cumul_responsabilites = cumul_tarif = cumul_cm = 0 
+      cumul_hetd = cumul_vacations = cumul_responsabilites = cumul_tarif = cumul_td = 0 
 
       # V2 : Liste des cours de l'intervenant groupés par code_eotp
       formations_par_eotp.each do |code_eotp, formation_group|
-        ss_total_cm = ss_total_hetd = ss_total_tarif = 0
+        ss_total_td = ss_total_hetd = ss_total_tarif = 0
         any_cours_for_eotp = false
 
         intervenant_cours.select { |c| formation_group.map(&:id).include?(c.formation_id) }.each do |c|
           formation = formation_group.find { |f| f.id == c.formation_id }
           any_cours_for_eotp ||= true
           if c.imputable?
-            montant_service = c.montant_service.round(2)
+            montant_service = ((c.duree.to_f * 1.5) * Cour.Tarif).round(2)
             ss_total_tarif += montant_service
             
-            ss_total_hetd += c.duree.to_f * c.HETD
             case formation.nomtauxtd
+            when 'TD', '3xTD'
+              ss_total_hetd += c.duree.to_f
+              ss_total_td += c.duree
             when 'CM'
-              ss_total_cm += c.duree
-            when 'TD'
-              ss_total_cm += c.duree / 1.5
-            when '3xTD'
-              ss_total_cm += c.duree * 2
+              ss_total_hetd += c.duree.to_f * 1.5
+              ss_total_td += c.duree * 1.5
             end
           end
 
@@ -107,12 +106,12 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
             formation.code_analytique_avec_indice(c.debut),
             formation.code_analytique.include?('DISTR') ? "101PAIE" : "102PAIE",
             I18n.l(c.debut.to_date),
+            formation.nomtauxtd,
             c.duree,
             (c.intervenant && c.intervenant_binome ? "OUI" : ''),
             *case formation.nomtauxtd
-              when "CM" then [c.duree, c.duree * 1.5]
-              when "TD" then [c.duree / 1.5, c.duree]
-              when "3xTD" then [c.duree * 2, c.duree * 3]
+              when 'TD', '3xTD' then [c.duree, c.duree]
+              when 'CM' then [c.duree * 1.5, c.duree * 1.5]
               else [0, 0]
             end,
             Cour.Tarif,
@@ -127,8 +126,8 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
           total_eotp = [
             "C",
             "Sous total code EOTP #{code_eotp || '???'} : #{intervenant_cours.select { |c| formation_group.map(&:id).include?(c.formation_id) }.count} cours",
-            nil, nil, nil, nil, nil, nil, nil, nil,
-            ss_total_cm,
+            nil, nil, nil, nil, nil, nil, nil, nil, nil,
+            ss_total_td,
             ss_total_hetd,
             Cour.Tarif,
             ss_total_tarif
@@ -139,7 +138,7 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
           index += 1
         end
 
-        cumul_cm += ss_total_cm
+        cumul_td += ss_total_td
         cumul_hetd += ss_total_hetd
         cumul_tarif += ss_total_tarif
       end
@@ -149,8 +148,8 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
         total_cours = [
           "C",
           "#{ intervenant_cours.count } cours au total",
-          nil,nil,nil,nil,nil,nil,nil,nil,
-          cumul_cm, # Nbre hres CM
+          nil,nil,nil,nil,nil,nil,nil,nil,nil,
+          cumul_td, # Nbre hres CM
           cumul_hetd, # Nbre HETD (ou HTD ou TD)
           Cour.Tarif,
           cumul_tarif
@@ -183,6 +182,7 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
           formation.code_analytique_avec_indice(vacation.date),
           formation.code_analytique.include?('DISTR') ? "101PAIE" : "102PAIE",
           I18n.l(vacation.date),
+          nil,
           vacation.qte,
           nil,
           # Jusqu'au dessus c'est bon
@@ -203,7 +203,7 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
         total_vacations = [
           "V",
           "#{ intervenant_vacations.count } vacations au total",
-          nil,nil,nil,nil,nil,nil,nil,nil,
+          nil,nil,nil,nil,nil,nil,nil,nil,nil,
           nil, # Nbre hres CM
           nil, # Nbre HTD
           nil,
@@ -230,6 +230,7 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
           formation.code_analytique_avec_indice(resp.debut),
           formation.code_analytique.include?('DISTR') ? "101PAIE" : "102PAIE",
           I18n.l(resp.debut),
+          nil,
           resp.heures,
           nil,
           # Jusqu'au dessus c'est bon
@@ -250,7 +251,7 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
         total_responsabilites = [
           "R",
           "#{ intervenant_responsabilites.count } responsabilités au total",
-          nil,nil,nil,nil,nil,nil,nil,nil,
+          nil,nil,nil,nil,nil,nil,nil,nil,nil,
           nil, # Nbre hres CM
           nil, # Nbre HTD
           nil,
@@ -264,7 +265,7 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
 
       total = [
         "Total #{intervenant.nom_prenom}",
-        nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,
+        nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,
         cumul_tarif + cumul_vacations + cumul_responsabilites,
       ]
 
