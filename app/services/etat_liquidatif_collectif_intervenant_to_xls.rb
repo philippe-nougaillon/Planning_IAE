@@ -81,18 +81,20 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
         intervenant_cours.select { |c| formation_group.map(&:id).include?(c.formation_id) }.each do |c|
           formation = formation_group.find { |f| f.id == c.formation_id }
           any_cours_for_eotp ||= true
-          if c.imputable?
-            montant_service = ((c.duree.to_f * 1.5) * Cour.Tarif).round(2)
-            ss_total_tarif += montant_service
-            
+          if c.imputable?            
             case formation.nomtauxtd
             when 'TD', '3xTD'
+              montant_service = (c.duree.to_f * Cour.Tarif).round(2)
               ss_total_hetd += c.duree.to_f
               ss_total_td += c.duree
             when 'CM'
+              montant_service = ((c.duree.to_f * 1.5) * Cour.Tarif).round(2)
               ss_total_hetd += c.duree.to_f * 1.5
               ss_total_td += c.duree * 1.5
+            else
+              montant_service = 0
             end
+            ss_total_tarif += montant_service
           end
 
           fields_to_export = [
