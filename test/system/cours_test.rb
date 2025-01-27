@@ -101,7 +101,7 @@ class CoursTest < ApplicationSystemTestCase
     
     #This sleep to ensure that the download of the file will be completed before the assertion.
     sleep(4)
-    assert File.exists?( File.expand_path "~/Downloads/Export_Cours.xls" )
+    assert File.exist?( File.expand_path "~/Downloads/Export_Cours.xls" )
   end
 
   test "Action: export iCalendar" do
@@ -114,7 +114,7 @@ class CoursTest < ApplicationSystemTestCase
 
     #This sleep makes it possible to be (almost) sure that the download of the file will be completed before the assertion.
     sleep(4)
-    assert File.exists?( File.expand_path "~/Downloads/Export_Planning_2021-08-24.ics" )
+    assert File.exist?( File.expand_path "~/Downloads/Export_Planning_2021-08-24.ics" )
   end
 
   test "Action: export PDF" do
