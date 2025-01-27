@@ -57,7 +57,7 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
       responsabilites = Responsabilite.none
     end
 
-    intervenants = Intervenant.where(status: @status, id: [cours.pluck(:intervenant_id).uniq, vacations.pluck(:intervenant_id).uniq, responsabilites.pluck(:intervenant_id).uniq].flatten.uniq)
+    intervenants = Intervenant.where(status: @status, id: [cours.pluck(:intervenant_id).uniq, cours.pluck(:intervenant_binome_id).uniq, vacations.pluck(:intervenant_id).uniq, responsabilites.pluck(:intervenant_id).uniq].flatten.uniq)
     formations_par_eotp = Formation.unscoped.includes(:cours).group_by(&:code_analytique)
 
     intervenants.each do | intervenant |
@@ -72,18 +72,6 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
       intervenant_responsabilites = intervenant.responsabilites.where(id: responsabilites.pluck(:id), intervenant_id: intervenant.id)
 
       cumul_hetd = cumul_vacations = cumul_responsabilites = cumul_tarif = cumul_cm = 0 
-
-      # Ce qui a été fait et à faire : 
-      # - regroupement des cours par groupe d'eotp
-      # - dans la colonne K : affichage dans tous les cas de la durée du cours, convertit en CM
-      # - tout n'est pas fini je crois, il faut tester les cumuls quand y'a des TD, des 3xTD, et des CM
-      # - est-ce qu'on affiche dans une colonne quand le cours est imputable ?
-      # - est-ce qu'on affiche le type de taux td (CM/TD/3xTD) dans une colonne ?
-      # - est-ce qu'on affiche le cumul d'heure dans le sous-total et dans le total ?
-      # - est-ce que de base il n'y avait pas un eotp par formation et par année ?
-      # - est-ce qu'il y a besoin de l'export collectif groupé par formation puis intervenant (l'autre type d'export)
-
-
 
       # V2 : Liste des cours de l'intervenant groupés par code_eotp
       formations_par_eotp.each do |code_eotp, formation_group|
@@ -112,7 +100,9 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
             'C',
             intervenant.nom,
             intervenant.prenom,
-            "#{formation.nom_promo_full} (#{formation.nomtauxtd}) [#{c.imputable?}]",
+            # Ligne pour avoir plus d'informations, désactivation de la ligne à alterner au besoin avec celle encore en dessous
+            # "#{formation.nom_promo_full} (nom taux td : #{formation.nomtauxtd}) [inputable : #{c.imputable?}] {hss? #{c.hors_service_statutaire || formation.hss}}",
+            "#{formation.nom_promo_full}",
             c.nom_ou_ue,
             formation.code_analytique_avec_indice(c.debut),
             formation.code_analytique.include?('DISTR') ? "101PAIE" : "102PAIE",
@@ -122,8 +112,8 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
             *case formation.nomtauxtd
               when "CM" then [c.duree, c.duree * 1.5]
               when "TD" then [c.duree / 1.5, c.duree]
-              when "3xTD" then [c.duree * 2, c.duree] # Ligne de code modifiée et à vérifier la colonne K pour un 3xTD
-              else ['?', '?']
+              when "3xTD" then [c.duree * 2, c.duree * 3]
+              else [0, 0]
             end,
             Cour.Tarif,
             montant_service
