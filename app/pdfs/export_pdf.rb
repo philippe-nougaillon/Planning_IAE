@@ -624,7 +624,7 @@ class ExportPdf
             text "<color rgb='032E4D'><u>Surveillant.e.s :</u></color>", inline_format: true, size: 24
             text "<color rgb='032E4D'><b>#{surveillants}</b></color>", inline_format: true, size: 24
             move_down @margin_down
-            text "<color rgb='032E4D'>Examen <b>UE#{cour.code_ue} #{cour.nom_ou_ue}</b></color>", inline_format: true, size: 24
+            text "<color rgb='032E4D'>Examen <b>UE#{cour.code_ue} #{cour.nom_ou_ue} - #{cour.intervenant_binome.try(:nom_prenom)}</b></color>", inline_format: true, size: 24
             text "<color rgb='032E4D'>Le <b>#{I18n.l(cour.debut.to_date)}</b></color>", inline_format: true, size: 24
             text "<color rgb='032E4D'>De <b>#{cour.debut.strftime('%Hh%M')} à #{cour.fin.strftime('%Hh%M')}</b></color>", inline_format: true, size: 24
             text "<color rgb='032E4D'>Salle <b>#{cour.salle.try(:nom)}</b></color>", inline_format: true, size: 24
