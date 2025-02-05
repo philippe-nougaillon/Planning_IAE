@@ -12,7 +12,7 @@
   <div class="md:w-1/3 px-4">
     <div class="card shadow-lg">
       <a href="/Images/guide/cours1.png">
-        <img src="/Images/guide/cours1.png" alt="Liste des cours à venir" zstyle="width:100%">
+        <img src="/Images/guide/cours1.png" alt="Liste des cours à venir" style="width:100%">
         <div class="caption">
           <p class="text-center mt-2 mb-4 border-t pt-2">Liste des cours à venir</p>
         </div>
@@ -40,38 +40,32 @@
     </div>
   </div>
 </div>
-<ul>
+<ul class="list-disc">
   <li>Chaque cours est associé à une Formation, un ou deux Intervenants, une Salle et un Etat (Planifié, Confirmé, Reporté, Annulé, Réalisé)</li>
   <li>Affichage des cours sous forme de Liste, de Calendrier (semaine/mois) ou Etat d'Occupation des salles</li>
   <li>Recheche multi-critères (Filtre sur Date, Formation, Intervenant, Etat, Cours passés ou futurs)</li>
   <li>Export des cours vers Excel (CSV), Outlook/Google Agenda(iCal), PDF</li>
   <li>Sélection d'un ensemble de cours pour effectuer une action groupée :</li>
-</ul>
-<ul style="list-style-position: inside; list-style-type: circle;">
-  <li>Changement d'état</li>
-  <li>Changement de salle (avec proposition des salles disponibles)</li>
-  <li>Changement de date</li>
-  <li>Changement d'intervenant</li>
-  <li>Export CSV</li>
-  <li>Export iCal</li>
-  <li>Export PDF</li>
-  <li>Supression (Seul le créateur d'un cours peut le supprimer)</li>
-</ul>
-<ul>
+  <ul class="list-inside" style="list-style-type: circle">
+    <li>Changement d'état</li>
+    <li>Changement de salle (avec proposition des salles disponibles)</li>
+    <li>Changement de date</li>
+    <li>Changement d'intervenant</li>
+    <li>Export CSV</li>
+    <li>Export iCal</li>
+    <li>Export PDF</li>
+    <li>Suppression (Seul le créateur d'un cours peut le supprimer)</li>
+  </ul>
   <li>Saisie d'une réservation :</li>
-</ul>
-<ul style="list-style-position: inside; list-style-type: circle;">
-  <li>Cochez <b>HSS?</b> pour que les heures de cours ne soient pas imputées sur l'état de service de l'intervenant (HSS = Hors Service Statutaire)</li>
-  <li>Cochez <b>E-learning?</b> pour indiquer que ce cours est de l'E-learning</li>
-  <li>Pour signaler que le cours utilise l'outil <b>ZOOM</b>; entrez comme nom de cours le lien ZOOM, puis son intitulé, séparés par un espace. Le lien ZOOM sera alors cliquable dans la liste publique des cours (PC/Mobile)</li>  
-</ul>
-<ul>
+  <ul class="list-inside" style="list-style-type: circle">  
+    <li>Cochez <b>HSS?</b> pour que les heures de cours ne soient pas imputées sur l'état de service de l'intervenant (HSS = Hors Service Statutaire)</li>
+    <li>Cochez <b>E-learning?</b> pour indiquer que ce cours est de l'E-learning</li>
+    <li>Pour signaler que le cours utilise l'outil <b>ZOOM</b>; entrez comme nom de cours le lien ZOOM, puis son intitulé, séparés par un espace. Le lien ZOOM sera alors cliquable dans la liste publique des cours (PC/Mobile)</li>
+  </ul>
   <li>Impossibilité de saisir un nouveau cours ayant lieu un dimanche ou un jour de fermeture de l'établissement</li>
   <li>Pas de chevauchement horaire pour un même intervenant. Il n'est pas possible de saisir un nouveau cours si le formateur intervient déjà sur un autre cours aux mêmes heures (sauf si les doublons sont autorisés pour cet intervenant)</li>
   <li>Pas de chevauchement horaire pour une même salle. <strong>Pour autoriser les doublons : entrez 0 dans la capacité de la salle.</strong></li>
   <li>Affichage d'un pictogramme <%= fa_icon 'exclamation_circle' %> dans les cas suivants :</li>
-</ul>
-<ul style="list-style-position: inside; list-style-type: circle;">
   <li>Dépassement de capacité de la salle (le nbr de places est inférieur au nbr d'étudiants de la formation)</li>
   <li>Le cours est dans l'état 'Confirmé' mais aucune salle n'a été réservée</li>
 </ul>
@@ -111,7 +105,7 @@
     </div>
   </div>
 </div>
-<ul>
+<ul class="list-disc">
   <li>Gestion de la capacité (alerte si dépassement)</li>
   <li>Visualisation des créneaux horaires libres/occupés pour une date, une salle</li>
 </ul>
@@ -151,27 +145,27 @@
     </div>
   </div>
 </div>
-<ul>
-    <li>Chaque formation est associée à un code couleur pour un répérage rapide dans le planning</li>
-    <li>Gestion des UE (une liste d'UE est associée à chaque formation, avec indication du nombre d'heures)</li>
-    <li>Gestion des étudiants liés à la formation</li>
-    <li>Gestion des vacations votées (nom de l'intervenant, nbr heures)</li>
-    <li>Archivage des formations</li>
-    <ul>
-      <li>
-        <b>Pour archiver une formation :</b>    
-        <br>
-        Pour faire disparaitre une formation du planning (sans la supprimer), allez dans Formations/Choisir la formation à archiver/Modifier => Cocher "Archivée" et Enregistrez. Cette formation ne sera plus visible dans toute l'application.
-        Pour faire réapparaitre une formation archivée, allez dans Formations/Cocher Archivées pour filtrer les formations archivées puis modifier la formation à faire réapparaitre, décochez "Archivée ?" et enregistrez. Cette formation est alors de nouveau visible dans toute l'application.
-        <strong>Attention: une formation ayant des cours à venir ne pourra pas être archivée  (l'option sera désactivée)!</strong>
-      </li>     
-    </ul>
+<ul class="list-disc">
+  <li>Chaque formation est associée à un code couleur pour un répérage rapide dans le planning</li>
+  <li>Gestion des UE (une liste d'UE est associée à chaque formation, avec indication du nombre d'heures)</li>
+  <li>Gestion des étudiants liés à la formation</li>
+  <li>Gestion des vacations votées (nom de l'intervenant, nbr heures)</li>
+  <li>Archivage des formations</li>
+  <ul class="list-disc">
     <li>
-      Code Analytique (EOTP): Quand il s'agit d'une formation de plusieurs années civiles, il faut saisir la racine du code EOTP plus "?" (ex:7322PLHCOFCDFINS?). Le système remplacera le '?' par l'indice (1,2 ou 3) selon l'année de début début des cours de cette promotion (indice = année_du_premier_cours - année_en_cours + 1)  ((2018 - 2018) +1 ) = 1.  
-    </li>
-    <li>
-       Flag HSS?: L'activer permet de ne pas imputer aux états de sercices les cours liés à cette formation.
-    </li>
+      <b>Pour archiver une formation :</b>    
+      <br>
+      Pour faire disparaitre une formation du planning (sans la supprimer), allez dans Formations/Choisir la formation à archiver/Modifier => Cocher "Archivée" et Enregistrez. Cette formation ne sera plus visible dans toute l'application.
+      Pour faire réapparaitre une formation archivée, allez dans Formations/Cocher Archivées pour filtrer les formations archivées puis modifier la formation à faire réapparaitre, décochez "Archivée ?" et enregistrez. Cette formation est alors de nouveau visible dans toute l'application.
+      <strong>Attention: une formation ayant des cours à venir ne pourra pas être archivée  (l'option sera désactivée)!</strong>
+    </li>     
+  </ul>
+  <li>
+    Code Analytique (EOTP): Quand il s'agit d'une formation de plusieurs années civiles, il faut saisir la racine du code EOTP plus "?" (ex:7322PLHCOFCDFINS?). Le système remplacera le '?' par l'indice (1,2 ou 3) selon l'année de début début des cours de cette promotion (indice = année_du_premier_cours - année_en_cours + 1)  ((2018 - 2018) +1 ) = 1.  
+  </li>
+  <li>
+    Flag HSS?: L'activer permet de ne pas imputer aux états de sercices les cours liés à cette formation.
+  </li>
 </ul>
 
 
@@ -200,18 +194,19 @@
     </div>
   </div>
 </div>
-<ul>
-    <li>Profil des intervenants avec photo (option), status, formations dispensées (affichage dynamique basé sur les cours enregistrés, avec le nombre d'heures planifiées et la date du premier cours)</li>
-    <li>Gestion des responsabilités (Titre, nbr heures attribuées)</li>
-    <ul>
-      <li>
-        <b>Filtrage des cours par intervenant;</b> Pour que la recherche d'un intervenant soit fructueuse :
-        <br>
-        Comme le système cherche un intervenant qui se nomme NOM + 'Espace' + PRENOM, il ne faut donc pas d’espace, ni dans le nom, ni dans le prénom.
-        Ex: "DE LA MARRE Henry" sera compris comme nom=DE, prénom=LA MARRE Henry. Il convient donc de remplacer l'espace par un '_', ce qui donnera "DE_LA_MARRE Henry".
-        Le nom et le prénom sont obligatoires. Remplissez un champ vide par un point si besoin.
-      </li>
-      <li>Cochez 'Autoriser les doublons' si vous souhaitez que l'intervenant puisse être sur plusieurs cours sur le même créneau horaire. C'est généralement le cas pour les groupes et non les individus.</li>
+
+<ul class="list-disc">
+  <li>Profil des intervenants avec photo (option), status, formations dispensées (affichage dynamique basé sur les cours enregistrés, avec le nombre d'heures planifiées et la date du premier cours)</li>
+  <li>Gestion des responsabilités (Titre, nbr heures attribuées)</li>
+  <ul class="list-disc">
+    <li>
+      <b>Filtrage des cours par intervenant;</b> Pour que la recherche d'un intervenant soit fructueuse :
+      <br>
+      Comme le système cherche un intervenant qui se nomme NOM + 'Espace' + PRENOM, il ne faut donc pas d’espace, ni dans le nom, ni dans le prénom.
+      Ex: "DE LA MARRE Henry" sera compris comme nom=DE, prénom=LA MARRE Henry. Il convient donc de remplacer l'espace par un '_', ce qui donnera "DE_LA_MARRE Henry".
+      Le nom et le prénom sont obligatoires. Remplissez un champ vide par un point si besoin.
+    </li>
+    <li>Cochez 'Autoriser les doublons' si vous souhaitez que l'intervenant puisse être sur plusieurs cours sur le même créneau horaire. C'est généralement le cas pour les groupes et non les individus.</li>
   </ul>
   <li>La saisie des Responsabilités n'est accessible que par les membres du groupe RH</li>
 </ul>
@@ -241,22 +236,30 @@
     </div>
   </div>
 </div>
-<ul>
-    <li>Chaque étudiant est associé à une formation</li>
-    <li>La saisie des coordonnées de l'étudiant permet de lui envoyer une notification par email/SMS en cas d'annulation de cours (option)</li>
+<ul class="list-disc">
+  <li>Chaque étudiant est associé à une formation</li>
+  <li>La saisie des coordonnées de l'étudiant permet de lui envoyer une notification par email/SMS en cas d'annulation de cours (option)</li>
 </ul>
 
 <div class="border-b mt-12 mb-2 pb-4">
   <h3 class="text-3xl"><%= fa_icon 'users' %> Utilisateurs</h3>
 </div>
-<ul>
-    <li>Il existe 4 rôles utilisateur :</li>
-    <ul>
-      <li>Visiteur (utilisateur non authentifié)</li>
-      <li>Utilisateur (utilisateur authentifié, généralement un membre du service Scolarité)</li>
-      <li>Super utilisateur (peut réserver des salles, généralement un membre du service Planning)</li>
-      <li>Admin (peut administrer les cours et les utilisateurs)</li>
-    </ul>
+<ul class="list-disc">
+  <li>Il existe 4 rôles utilisateur :</li>
+  <ul class="list-inside" style="list-style-type: circle">
+    <li>Visiteur (utilisateur non authentifié)</li>
+    <li>Utilisateur (utilisateur authentifié, généralement un membre du service Scolarité)</li>
+    <li>Super utilisateur (peut réserver des salles, généralement un membre du service Planning)</li>
+    <li>Admin (peut administrer les cours et les utilisateurs)</li>
+  </ul>
+</ul>
+
+<div class="border-b mt-12 mb-2 pb-4">
+  <h3 class="text-3xl"><%= fa_icon 'user-secret' %> Agents</h3>
+</div>
+<ul class="list-disc">
+  <li>Un agent est une personne qui peut participer à la surveillance d'un examen et qui a son taux horaire différent d'un non-agent</li>
+  <li>Il a son taux horaire défini en fonction de sa catégorie (A,B,C)</li>
 </ul>
 
 <div class="border-b mt-12 mb-2 pb-4">
@@ -296,19 +299,20 @@
     </div>
   </div>
 </div>
-<ul>
+<ul class="list-disc">
   <li>Gestion des jours de fermeture</li>
   <li>Réservation de créneaux horaires</li>
   <li>Etats de services</li>
   <li>Taux d'occupation jours ou salles</li>
   <li>Import/Export de cours, intervenants, étudiants</li>
   <li>Outils pour le rôle admin :</li>
-  <ul>
+  <ul class="list-inside" style="list-style-type: circle">
     <li>Gestion des Utilisateurs</li>
     <li>Import des utilisateurs</li>
     <li>Intervertir deux intervenants</li>
     <li>Audit des modifications</li>
     <li>Gestion des Salles</li>
+    <li>Gestion des Agents</li>
     <li>Nouvelle saison (Réservation de cours sur une année)</li>
   </ul>
 </ul>
@@ -316,44 +320,42 @@
 <div class="border-b mt-12 mb-2 pb-4">
   <h3 class="text-3xl"><%= fa_icon 'download' %> Importation des données</h3>
 </div>
-<ul>
+<ul class="list-disc">
+  <li><b>Importation de cours à partir d'un fichier Excel :</b></li>
+  <ul class="list-inside" style="list-style-type: circle">
     <li>
-      <b>Importation de cours à partir d'un fichier Excel:</b><br> 
-      <ul>
-        <li>
-          Le fichier source doit contenir <b>les mêmes entêtes de colonnes</b> 
-          que le fichier généré lors de l'export Excel: <br>
-            <%= Cour.xls_headers.join(", ") %>
-        </li>
-        <li>
-          Données obligatoires pour que la ligne soit importée : <br>
-          <b>id, Date_début, Heure_début, Date_fin, Heure_fin, Intervenant, UE, Intitulé</b>
-        </li>
-        <li>
-          Si 'id' est égal à '0', c'est une création de cours. Sinon c'est une mise à jour du cours ayant comme identifiant unique l'id' donné. Si le cours ayant cet 'id' n'existe pas, il sera créé.
-        </li>
-      </ul>
+      Le fichier source doit contenir <b>les mêmes entêtes de colonnes</b> 
+      que le fichier généré lors de l'export Excel: <br>
+        <%= Cour.xls_headers.join(", ") %>
     </li>
-    <br>
-    
     <li>
-      Les formations, intervenants, étudiants peuvent être importés en masse à partir d'un fichier XLS
+      Données obligatoires pour que la ligne soit importée : <br>
+      <b>id, Date_début, Heure_début, Date_fin, Heure_fin, Intervenant, UE, Intitulé</b>
     </li>
+    <li>
+      Si 'id' est égal à '0', c'est une création de cours. Sinon c'est une mise à jour du cours ayant comme identifiant unique l'id' donné. Si le cours ayant cet 'id' n'existe pas, il sera créé.
+    </li>
+  </ul>
+  <br>
+  
+  <li>
+    Les formations, intervenants, étudiants peuvent être importés en masse à partir d'un fichier XLS
+  </li>
 
-  	<br>
-    <li>
-    	<b>Importation d'utilisateurs:</b><br> 
-      - Le fichier source doit contenir les colonnes suivantes: <br>
-    	<pre>email;nom;prénom;mobile</pre>
-  	    <b><i>Chaque nouvel utilisateur sera averti de la création de son compte par l'envoi d'un email contenant un mot de passe unique généré automatiquement</i></b> 
-    </li>
+  <br>
+  <li>
+    <b>Importation d'utilisateurs:</b><br> 
+    - Le fichier source doit contenir les colonnes suivantes: <br>
+    <pre>email;nom;prénom;mobile</pre>
+    <b><i>Chaque nouvel utilisateur sera averti de la création de son compte par l'envoi d'un email contenant un mot de passe unique généré automatiquement</i></b> 
+  </li>
 </ul>
 
 <div class="border-b mt-12 mb-2 pb-4">
   <h3 class="text-3xl"><%= fa_icon 'upload' %> Exportation des données</h3>
 </div>
-<ul>
-    <li>Toutes les données sont exportables au format Microsoft Excel (XLS)</li>
+<ul class="list-disc">
+  <li>Toutes les données sont exportables au format Microsoft Excel (XLS)</li>
 </ul>
 
 
@@ -392,7 +394,7 @@
     </div>
   </div>
 </div>
-<ul>
+<ul class="list-disc">
     <li>Chaque modification apportée aux données est enregistrée dans un journal, avec la date, l'utilisateur, la table, le champs et la valeur avant/après modification</li>
 </ul>
 
@@ -400,7 +402,7 @@
 <div class="border-b mt-12 mb-2 pb-4">
   <h3 class="text-3xl"><%= fa_icon 'list-alt' %> Etats de services</h3>
 </div>
-<ul>
+<ul class="list-disc">
     <li>Récapitule les cours <b>réalisés</b> par un intervenant sur une période donnée </li>
     <li>Visualisation des états de services par statut</li>
     <li>Etat liquidatif en PDF</li>
@@ -409,7 +411,7 @@
 <div class="border-b mt-12 mb-2 pb-4">
   <h3 class="text-3xl"><%= fa_icon 'exchange-alt' %> API</h3>
 </div>
-<ul>
+<ul class="list-disc">
     <li>Une API fournit les données du Planning au format JSON</li>
     <li>Ex: https://planning.iae-paris.com/api/v1/cours.json?d=20190701 </li>
 </ul>
@@ -417,7 +419,7 @@
 <div class="border-b mt-12 mb-2 pb-4">
   <h3 class="text-3xl"><%= fa_icon 'asterisk' %> Notification</h3>
 </div>
-<ul>
+<ul class="list-disc">
     <li>Les chargés de scolarité et les étudiants peuvent recevoir une notification par email/SMS(à venir) lors de l'annulation de cours(option)</li>
     <li>Chaque fin de semaine, les intervenants recoivent leur planning de la semaine à venir (option)</li>
 </ul>
@@ -457,7 +459,7 @@
     </div>
   </div>
 </div>
-<ul>    
+<ul class="list-disc">    
   <li>Le planning peut être visualisé sur différents supports (Responsive Design)</li>
   <li>Vue planning adaptée aux écrans de smartphones</li>
   <li>Adapté au standard PWA (Progressive Web App)</li>
@@ -488,13 +490,51 @@
     </div>
   </div>
 </div>
-<ul>
+<ul class="list-disc">
   <li>Planning du jour optimisé pour la diffusion sur un grands écrans, généralement installés à l'entrée des salles de cours, dans les couloirs ou à l'accueil</li>
 </ul>
 
 <div class="border-b mt-12 mb-2 pb-4">
   <h3 class="text-3xl"><%= fa_icon 'bullhorn' %> Journal des mises à jours</h3>
 </div>
+<h4 class="text-2xl mb-2 mt-4">5.9</h4>
+<ul class="list-disc">
+  <li>État liquidatif collectif : export Excel de toutes les vacations des intervenants sur une période</li>
+  <li>Ajout d'un rôle 'partenaire QSE' pour les utilisateurs @icp.fr</li>
+  <li>Étudiants : création de comptes d'accès par lot</li>
+</ul>
+<h4 class="text-2xl mb-2 mt-4">5.8</h4>
+<ul class="list-disc">
+  <li>Cours : un document est attachable (ex: notes pour les examens de rattrapages)</li>
+</ul>
+<h4 class="text-2xl mb-2 mt-4">5.7</h4>
+<ul class="list-disc">
+  <li>Rappel des examens : permet d'envoyer un mail à tous les étudiants convoqués à un examen</li>
+  <li>Ajout d'un rôle 'accueil vacataire' pour l'utilisateur "vacaccueil@iae"</li>
+</ul>
+<h4 class="text-2xl mb-2 mt-4">5.5 / 5.6</h4>
+<ul class="list-disc">
+  <li>Vacations : standardisation des tarifs par activité et par statut</li>
+</ul>
+<h4 class="text-2xl mb-2 mt-4">5.4</h4>
+<ul class="list-disc">
+  <li>Notes (Post-it)</li>
+</ul>
+<h4 class="text-2xl mb-2 mt-4">5.3</h4>
+<ul class="list-disc">
+  <li>PDF Feuille émargement signée</li>
+  <li>Examen : n° table étudiant ajouté</li>
+  <li>Option BYPASS</li>
+</ul>
+<h4 class="text-2xl mb-2 mt-4">5.2</h4>
+<ul class="list-disc">
+  <li>Optimisation des performances</li>
+</ul>
+<h4 class="text-2xl mb-2 mt-4">5.1</h4>
+<ul class="list-disc">
+  <li>Commandes : permet de commander un "pot" (café, thé, jus, viennoiseries...) et de l'associer à un évènement (soutenance, réunion, ...)</li>
+  <li>Export academ : exportation des cours au format Académique</li>
+</ul>
 <h4 class="text-2xl mb-2 mt-4">5.0</h4>
 <ul class="list-disc">
   <li>Migration vers Ruby 3.3 &amp; Ruby on Rails 7.1.3</li>
@@ -509,6 +549,7 @@
 <h4 class="text-2xl mb-2 mt-4">4.20</h4>
 <ul class="list-disc">
   <li>Gestion des convocations aux examens. Notification par email.</li>
+  <li>Pochette examen : génère l'ensemble des documents nécessaires à la tenue d'un examen (PDF)</li>
 </ul>
 <h4 class="text-2xl mb-2 mt-4">4.16</h4>
 <ul class="list-disc">
