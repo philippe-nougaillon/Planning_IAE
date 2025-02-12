@@ -418,6 +418,8 @@ fr:
       title: Liste des cours "à booker"
     commandes:
       title: Commandes
+    edusign:
+      title: Edusign
   agents:
     index:
       title: Agents
