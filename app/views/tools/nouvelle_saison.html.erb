@@ -72,7 +72,7 @@
                 <tr class="hover border">
                     <td class="text-center"><%= j.cweek %></td>
                     <td><%= l(j, format: :long) %></td>
-                    <td class="text-center"><%= check_box_tag "[semaine][#{j.cweek}]", '1', false %></td>
+                    <td class="text-center"><%= check_box_tag "semaine[#{j.cweek}]", '1', false %></td>
                 </tr>
               <% end %>
           </table>
