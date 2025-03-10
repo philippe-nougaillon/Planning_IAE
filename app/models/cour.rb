@@ -22,7 +22,7 @@ class Cour < ApplicationRecord
   has_one_attached :document
 
   validates :debut, :formation_id, :intervenant_id, :duree, presence: true
-  validate :check_chevauchement_intervenant
+  validate :check_chevauchement_intervenant, if: Proc.new {|cours| !(cours.bypass?)}
   validate :check_chevauchement, if: Proc.new { |cours| cours.salle_id && !(cours.bypass?) }
   validate :jour_fermeture, if: Proc.new {|cours| !(cours.bypass?)}
   validate :reservation_dates_must_make_sense

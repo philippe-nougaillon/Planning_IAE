@@ -3,7 +3,7 @@ class VacationActiviteTarif < ApplicationRecord
 
   belongs_to :vacation_activite
 
-  enum statut: [:CEV_ENS_C_CONTRACTUEL, :CEV_TIT_CONT_FP, :CEV_SAL_PRIV_IND, :Permanent]
+  enum statut: [:CEV_ENS_C_CONTRACTUEL, :CEV_TIT_CONT_FP, :CEV_SAL_PRIV_IND, :Permanent, :CEV]
 
   default_scope {order(:statut)}
 

@@ -23,7 +23,7 @@ class ImportLogsController < ApplicationController
     import_log = ImportLog.find(params[:id])
     file_path = "#{Rails.root}/public/#{import_log.fichier}"
 
-    if File.exists?(file_path)
+    if File.exist?(file_path)
       send_file(file_path)
     else
       render body: "Le fichier n'existe pas."

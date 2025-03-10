@@ -437,7 +437,7 @@ class ToolsController < ApplicationController
         msg = "ETUDIANT #{etudiant.new_record? ? 'NEW' : 'UPDATE'} => id:#{etudiant.id} changes:#{etudiant.changes}"
 
         if etudiant.valid? 
-          if etudiant.new_record? && params[:notify] && params[:save]
+          if etudiant.new_record? && params[:notify] == '1' && params[:save] == 'true'
             etudiant.save
             # Création du compte d'accès (user) et envoi du mail de bienvenue
             user = User.new(nom: etudiant.nom, prénom: etudiant.prénom, email: etudiant.email, mobile: etudiant.mobile, password: SecureRandom.hex(10))
@@ -1040,7 +1040,7 @@ class ToolsController < ApplicationController
 
   def nouvelle_saison
 
-    @years ||= ['2021/2022','2022/2023','2023/2024','2024/2025']
+    @years ||= ['2021/2022','2022/2023','2023/2024','2024/2025', '2025/2026']
 
     unless params[:saison].blank?
       @formations = Formation.where(hors_catalogue:false)

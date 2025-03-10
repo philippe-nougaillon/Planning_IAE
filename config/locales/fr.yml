@@ -412,6 +412,8 @@ fr:
       title: Audit des modifications
     nouvelle_saison:
       title: Réservations en masse
+    nouvelle_saison_create:
+      title: Réservations en masse
     rappel_des_cours:
       title: Rappel des cours
     rappel_des_examens:

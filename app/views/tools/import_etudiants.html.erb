@@ -32,19 +32,23 @@
   </div>
   <br>
   
-  <div class="field">
-    <b>Enregistrer les changements ?</b> <br>
-    <%= label :save, "Oui", :value => "true" %>
-    <%= radio_button_tag :save, true %>
-    <%= label :save, "Non", :value => "false" %>
-    <%= radio_button_tag :save, false, :checked => true %>
-    <i>Choisissez 'Non' pour tester votre import car <b>il est irréversible !</b></i><br />
-  </div>
-  <br>
+  <div data-controller="notify-checkbox-visibility">
+    <div class="field">
+      <b>Enregistrer les changements ?</b> <br>
+      <div>
+        <%= label :save, "Oui", :value => "true" %>
+        <%= radio_button_tag :save, true, data: { action: "notify-checkbox-visibility#toggleVisibility" } %>
+        <%= label :save, "Non", :value => "false" %>
+        <%= radio_button_tag :save, false, true, data: { action: "notify-checkbox-visibility#toggleVisibility" } %>
+      </div>
+      <i>Choisissez 'Non' pour tester votre import car <b>il est irréversible !</b></i><br />
+    </div>
+    <br>
 
-  <div class="field">
-    <%= check_box_tag :notify %>
-    <%= label_tag :notify, "Créer un compte d'accès et en informer les étudiants ?", class: 'font-bold' %>
+    <div class="field hidden" data-notify-checkbox-visibility-target="notifyField">
+      <%= check_box_tag :notify %>
+      <%= label_tag :notify, "Créer un compte d'accès et en informer les étudiants ?", class: 'font-bold' %>
+    </div>
   </div>
   <br>
   
