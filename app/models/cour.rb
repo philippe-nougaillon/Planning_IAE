@@ -433,8 +433,15 @@ class Cour < ApplicationRecord
       return if self.intervenant.doublon 
 
       # s'il y a dejà des cours pour le même intervenant à la même date
-      cours = Cour.where("intervenant_id = ? AND ((debut BETWEEN ? AND ?) OR (fin BETWEEN ? AND ?))", 
-                          self.intervenant_id, self.debut, self.fin, self.debut, self.fin)
+      cours = Cour.where(
+      "intervenant_id = :intervenant_id AND 
+      (
+        (debut BETWEEN :debut AND :fin) OR
+        (fin BETWEEN :debut AND :fin) OR
+        (:debut BETWEEN debut AND fin) OR
+        (:fin BETWEEN debut AND fin)
+      )
+      ", intervenant_id: self.intervenant_id, debut: self.debut, fin: self.fin)
 
       # si cours en chevauchement n'est pas le cours lui même (modif de cours)
       cours = cours.where.not(id: self.id)
