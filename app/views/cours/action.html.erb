@@ -32,8 +32,8 @@
             <td><%= l(cours.debut.to_date) %></td>
             <td><%= "#{l(cours.debut, format: :heures_min)}-#{l(cours.fin, format: :heures_min)}" %></td>
             <td>
-              <span style="background-color:<%= cours.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
-              <%= cours.try(:formation).try(:nom_promo) %>
+              <span style="background-color:<%= cours.formation.try(:color) %>;padding-left: 7px;margin-right: 5px;"></span>
+              <%= cours.formation.try(:nom_promo) %>
             </td>
             <td><%= cours.intervenant.nom_prenom %>
               <% if cours.intervenant_binome %>
@@ -155,7 +155,7 @@
         <%= label_tag "U.E." %>
         <br>
         <%= select_tag 'invit[ue][1]', 
-                        options_from_collection_for_select(@cours.first.formation.unites.order(:num), :id, :num_nom, params[:ue]), 
+                        options_from_collection_for_select(@cours.first.formation&.unites&.order(:num) || [], :id, :num_nom, params[:ue]), 
                         include_blank: true,
                         class: "slim-select" %>
       </div>
@@ -177,7 +177,7 @@
         <%= label_tag "U.E." %>
         <br>
         <%= select_tag 'invit[ue][2]', 
-                        options_from_collection_for_select(@cours.first.formation.unites.order(:code), :id, :num_nom, params[:ue]), 
+                        options_from_collection_for_select(@cours.first.formation&.unites&.order(:code) || [], :id, :num_nom, params[:ue]), 
                         include_blank: true,
                         class: "slim-select" %>
       </div>
@@ -199,7 +199,7 @@
         <%= label_tag "U.E." %>
         <br>
         <%= select_tag 'invit[ue][3]', 
-                        options_from_collection_for_select(@cours.first.formation.unites.order(:num), :id, :num_nom, params[:ue]), 
+                        options_from_collection_for_select(@cours.first.formation&.unites&.order(:num) || [], :id, :num_nom, params[:ue]), 
                         include_blank: true,
                         class: "slim-select" %>
       </div>
@@ -221,7 +221,7 @@
         <%= label_tag "U.E." %>
         <br>
         <%= select_tag 'invit[ue][4]', 
-                        options_from_collection_for_select(@cours.first.formation.unites.order(:num), :id, :num_nom, params[:ue]), 
+                        options_from_collection_for_select(@cours.first.formation&.unites&.order(:num) || [], :id, :num_nom, params[:ue]), 
                         include_blank: true,
                         class: "slim-select" %>
       </div>
