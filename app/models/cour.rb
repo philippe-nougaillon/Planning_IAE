@@ -14,11 +14,15 @@ class Cour < ApplicationRecord
   has_many :invits
   has_many :presences
   has_many :etudiants, through: :formation
+  has_many :options, dependent: :destroy
+  accepts_nested_attributes_for :options,
+                                reject_if: lambda{|attributes| attributes['catégorie'].blank? || attributes['description'].blank?},
+                                allow_destroy:true
 
   has_one_attached :document
 
   validates :debut, :formation_id, :intervenant_id, :duree, presence: true
-  validate :check_chevauchement_intervenant
+  validate :check_chevauchement_intervenant, if: Proc.new {|cours| !(cours.bypass?)}
   validate :check_chevauchement, if: Proc.new { |cours| cours.salle_id && !(cours.bypass?) }
   validate :jour_fermeture, if: Proc.new {|cours| !(cours.bypass?)}
   validate :reservation_dates_must_make_sense
@@ -111,6 +115,14 @@ class Cour < ApplicationRecord
 
   def self.commandes_archivées
     Cour.réalisé.where("DATE(cours.debut) < ?", Date.today).where("cours.commentaires LIKE '+%'").order(debut: :desc)
+  end
+
+  def self.commandes_v2
+    Cour.confirmé.where("DATE(cours.debut) >= ?", Date.today).joins(:options).where(options: {catégorie: :commande}).order(:debut)
+  end
+
+  def self.commandes_archivées_v2
+    Cour.réalisé.where("DATE(cours.debut) < ?", Date.today).joins(:options).where(options: {catégorie: :commande}).order(debut: :desc)
   end
 
   def self.etats_humanized
@@ -421,8 +433,15 @@ class Cour < ApplicationRecord
       return if self.intervenant.doublon 
 
       # s'il y a dejà des cours pour le même intervenant à la même date
-      cours = Cour.where("intervenant_id = ? AND ((debut BETWEEN ? AND ?) OR (fin BETWEEN ? AND ?))", 
-                          self.intervenant_id, self.debut, self.fin, self.debut, self.fin)
+      cours = Cour.where(
+      "intervenant_id = :intervenant_id AND 
+      (
+        (debut BETWEEN :debut AND :fin) OR
+        (fin BETWEEN :debut AND :fin) OR
+        (:debut BETWEEN debut AND fin) OR
+        (:fin BETWEEN debut AND fin)
+      )
+      ", intervenant_id: self.intervenant_id, debut: self.debut, fin: self.fin)
 
       # si cours en chevauchement n'est pas le cours lui même (modif de cours)
       cours = cours.where.not(id: self.id)

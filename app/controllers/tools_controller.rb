@@ -1242,6 +1242,42 @@ class ToolsController < ApplicationController
 
   end
 
+  def liste_surveillants_examens_v2
+
+    if params[:start_date].blank? || params[:end_date].blank?
+      params[:start_date] ||= Date.today.at_beginning_of_month.last_month
+      params[:end_date]   ||= Date.today.last_month.at_end_of_month
+    end
+
+    @start_date = params[:start_date]
+    @end_date = params[:end_date]
+    surveillant = params[:surveillant]
+    @cumuls = {}
+    @examens = Cour
+                  .where("intervenant_id IN (:surveillants) OR intervenant_binome_id IN (:surveillants)", {surveillants: [169, 1166, 522, 1314]} )
+                  .joins(:options).where(options: {catégorie: :surveillance})
+                  .where("options.description LIKE '%[%'")
+                  .where("debut BETWEEN ? AND ?", @start_date, @end_date.to_date + 1.day)
+                  .includes(:formation)
+                  .order(:debut)
+
+    respond_to do |format|
+      format.html
+
+      format.pdf do
+        filename = "Vacations_administratives_#{ surveillant }_du_#{ @start_date }_au_#{ @end_date }"
+        pdf = ExportPdf.new
+        pdf.export_vacations_administratives_v2(@examens, @start_date, @end_date, surveillant)
+
+        send_data pdf.render,
+                  filename: filename.concat('.pdf'),
+                  type: 'application/pdf',
+                  disposition: 'inline'	
+      end
+    end
+
+  end
+
   def rechercher
 
     if !params[:search].blank? && params[:commit] =='Go'
@@ -1398,6 +1434,28 @@ class ToolsController < ApplicationController
     commande = Cour.find(params[:commande_id])
     commande.commentaires.concat("\r\n\r\n")
     commande.commentaires.concat("Fait le #{l DateTime.now, format: :short}, #{current_user.nom_et_prénom}")
+    commande.save
+
+    redirect_to request.referrer, notice: "Commande traitée avec succès"
+  end
+
+  def commandes_v2
+    if params[:archive].present?
+      @commandes = Cour.commandes_archivées_v2
+    else
+      @commandes = Cour.commandes_v2
+    end
+
+    if params[:search_cmd].present?
+      @commandes = @commandes.where("options.description ILIKE ?", "%#{params[:search_cmd]}%")
+    end
+  end
+
+  def commande_fait_v2
+    commande = Cour.find(params[:commande_id]).options.commande.first
+    commande.fait = true
+    commande.description.concat("\r\n\r\n")
+    commande.description.concat("Fait le #{l DateTime.now, format: :short}, #{current_user.nom_et_prénom}")
     commande.save
 
     redirect_to request.referrer, notice: "Commande traitée avec succès"

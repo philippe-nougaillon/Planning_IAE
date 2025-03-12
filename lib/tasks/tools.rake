@@ -43,4 +43,15 @@ namespace :tools do
     end
   end
 
+  desc "Informer des nouvelles commandes V2 (traiteur)"
+  task :informer_commandes_v2, [:enregistrer] => :environment do |task, args|
+    unless Fermeture.where(date: Date.today).any?
+      @cours = Cour.where("DATE(debut) = ?", Date.today + 7.days).joins(:options).where(options: {catégorie: :commande})
+      if @cours.any?
+        puts @cours.inspect
+        ToolsMailer.with(cours: @cours).rappel_commandes_v2.deliver_now
+      end
+    end
+  end
+
 end

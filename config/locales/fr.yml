@@ -382,6 +382,8 @@ fr:
       title: Export état liquidatif collectif
     liste_surveillants_examens:
       title: Liste des surveillances d'examens
+    liste_surveillants_examens_v2:
+      title: Liste des surveillances d'examens v2
     import:
       title: Import de cours
     import_intervenants:
@@ -420,6 +422,8 @@ fr:
       title: Liste des cours "à booker"
     commandes:
       title: Commandes
+    commandes_v2:
+      title: Commandes_v2
   agents:
     index:
       title: Agents

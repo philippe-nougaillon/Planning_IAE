@@ -6,7 +6,7 @@
               number_of_days: 6 do |date, meetings| %>
 
   <% meetings.each do |meeting| %>
-    <div class="shadow p-1 <%= meeting.formation.nbr_etudiants > 30 ? 'border-b border-red-600' : '' %>" style="border-width: 5px !important;">
+    <div class="shadow p-1 <%= defined?(meeting.formation.nbr_etudiants) && meeting.formation.nbr_etudiants > 30 ? 'border-b border-red-600' : '' %>" style="border-width: 5px !important;">
       <span class="badge badge-<%= meeting.style %> text-white"><%= meeting.etat.humanize %></span><br>
       <b><%= l(meeting.debut, format: :heures_min) %></b>
         - <%= l(meeting.fin, format: :heures_min) %>
@@ -76,16 +76,25 @@
               </i>
             <% end %>
 
-            <% if (policy(meeting).edit? || (current_user && current_user.accueil_vacataire?)) && !meeting.commentaires.blank? %>
-              <i title="<%= meeting.commentaires %>" >
-                <% if meeting.commentaires.include?('+') %>
-                  <%= link_to tools_commandes_path do %>
-                    <%= fa_icon 'mug-hot', class: 'text-amber-800' %>
+            <% if (policy(meeting).edit? || (current_user && current_user.accueil_vacataire?)) %>
+              <% if meeting.options.commande.any? %>
+                  <i title="<%= meeting.options.commande.first.description %>" >
+                      <%= link_to tools_commandes_v2_path do %>
+                          <%= fa_icon 'coffee', class: 'text-error' %>
+                      <% end %>
+                  </i>
+              <% end %>
+              <% if !meeting.commentaires.blank? %>
+                <i title="<%= meeting.commentaires %>" >
+                  <% if meeting.commentaires.include?('+') %>
+                    <%= link_to tools_commandes_path do %>
+                      <%= fa_icon 'mug-hot', class: 'text-amber-800' %>
+                    <% end %>
+                  <% else %>
+                    <%= fa_icon 'comment-dots' %>
                   <% end %>
-                <% else %>
-                  <%= fa_icon 'comment-dots' %>
-                <% end %>
-              </i>
+                </i>
+              <% end %>
             <% end %>
 
           </div>

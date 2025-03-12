@@ -12,8 +12,8 @@
       </p>
 
       <p class="mb-4">
-        <span style="background-color:<%= @invit.cour.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
-          <%= @invit.cour.formation.nom %>
+        <span style="background-color:<%= @invit.cour.formation.try(:color) %>;padding-left: 7px;margin-right: 5px;"></span>
+          <%= @invit.cour.formation.try(:nom) %>
         </span>
       </p>
 
