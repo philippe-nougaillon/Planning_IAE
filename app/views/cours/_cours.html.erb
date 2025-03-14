@@ -91,16 +91,25 @@
             <% end %>
         <% end %>
 
-        <% if (policy(cours).edit? || (current_user && current_user.accueil_vacataire?)) && !cours.commentaires.blank? %>
-            <i title="<%= cours.commentaires %>" >
-                <% if cours.commentaires.include?('+') %>
-                    <%= link_to tools_commandes_path do %>
-                        <%= fa_icon 'mug-hot', class: 'text-amber-800' %>
+        <% if (policy(cours).edit? || (current_user && current_user.accueil_vacataire?)) %>
+            <% if cours.options.commande.any? %>
+                <i title="<%= cours.options.commande.first.description %>" >
+                    <%= link_to tools_commandes_v2_path do %>
+                        <%= fa_icon 'coffee', class: 'text-error' %>
                     <% end %>
-                <% else %>
-                    <%= fa_icon 'comment-dots' %>
-                <% end %>
-            </i>
+                </i>
+            <% end %>
+            <% if !cours.commentaires.blank? %>
+                <i title="<%= cours.commentaires %>" >
+                    <% if cours.commentaires.include?('+') %>
+                        <%= link_to tools_commandes_path do %>
+                            <%= fa_icon 'mug-hot', class: 'text-amber-800' %>
+                        <% end %>
+                    <% else %>
+                        <%= fa_icon 'comment-dots' %>
+                    <% end %>
+                </i>
+            <% end %>
         <% end %>
         <% if current_user && current_user.role_number >= 1 && cours.document.attached? %>
             <%= link_to url_for(cours.document), title: cours.document.filename, target: "_blank" do %>

@@ -54,6 +54,17 @@
               <% end %>
             <% end %>
           </li>
+          <li class="nav-item">
+            <% is_active = params[:action] == 'commandes_v2' %>
+            <%= link_to tools_commandes_v2_path, class: "nav-link text-#{ is_active ? 'primary' : 'base-content' }" do %>
+              <%= fa_icon 'coffee' %>
+              Commandes v2
+              <% commandes_v2 = Cour.joins(:options).where(options: {catégorie: :commande}).where.not("options.description ILIKE ?", '%Fait le%').count %>
+              <% if commandes_v2 > 0 %>
+                <span class="badge badge-info text-white"><%= commandes_v2 %></span>
+              <% end %>
+            <% end %>
+          </li>
         <% end %>
 
       <% end %>

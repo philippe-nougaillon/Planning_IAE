@@ -130,12 +130,15 @@ Rails.application.routes.draw do
     get :creation_cours
     get :audit_cours
     get :liste_surveillants_examens
+    get :liste_surveillants_examens_v2
     get :rechercher
     get :rappel_des_cours
     get :rappel_des_examens
     get :acces_intervenants
     get :commandes
     get :commande_fait
+    get :commandes_v2
+    get :commande_fait_v2
     get :edusign
 
     post :import_do

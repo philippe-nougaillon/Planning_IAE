@@ -26,7 +26,7 @@ ExceptionNotification.configure do |config|
   config.add_notifier :email, {
     email_prefix: '[IAE PLANNING ERROR] ',
     sender_address: %{"IAE Planning Notifier" <planning-iae@philnoug.com>},
-    exception_recipients: %w{philippe.nougaillon@gmail.com, pierreemmanuel.dacquet@gmail.com}
+    exception_recipients: %w{philippe.nougaillon@gmail.com, pierreemmanuel.dacquet@gmail.com, alexandre.meunier@aikku.eu}
   }
 
   # Campfire notifier sends notifications to your Campfire room. Requires 'tinder' gem.

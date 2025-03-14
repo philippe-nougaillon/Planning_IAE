@@ -382,6 +382,8 @@ fr:
       title: Export état liquidatif collectif
     liste_surveillants_examens:
       title: Liste des surveillances d'examens
+    liste_surveillants_examens_v2:
+      title: Liste des surveillances d'examens v2
     import:
       title: Import de cours
     import_intervenants:
@@ -410,6 +412,8 @@ fr:
       title: Audit des modifications
     nouvelle_saison:
       title: Réservations en masse
+    nouvelle_saison_create:
+      title: Réservations en masse
     rappel_des_cours:
       title: Rappel des cours
     rappel_des_examens:
@@ -418,6 +422,8 @@ fr:
       title: Liste des cours "à booker"
     commandes:
       title: Commandes
+    commandes_v2:
+      title: Commandes_v2
     edusign:
       title: Edusign
   agents:

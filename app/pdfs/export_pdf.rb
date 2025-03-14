@@ -390,6 +390,132 @@ class ExportPdf
 
     end
 
+    def export_vacations_administratives_v2(examens, start_date, end_date, surveillant)
+        taux_horaire = Cour.taux_horaire_vacation
+        is_vacataire = false
+
+        if agent = Agent.find_by(nom: surveillant.split('-').first, prénom: surveillant.split('-').last)
+            taux_horaire = case agent.catégorie
+                            when "A"
+                                22.17
+                            when "B"
+                                14.41
+                            when "C"
+                                11.07
+                            end
+        end
+
+        image "#{@image_path}/logo@100.png", :height => 40, :position => :center
+        move_down @margin_down
+
+        font "Helvetica"
+        if agent
+            text "Demande de paiement de vacations accessoires", size: 18
+        else
+            text "Vacations administratives", size: 18
+        end
+
+        font_size 10
+
+        if agent
+            text "Décret n°2003-1009 du 16/10/2003 relatif aux vacations susceptibles d’être allouées aux personnels"
+            text "accomplissant des activités accessoires dans certains établissements d’enseignement supérieur"
+        else
+            text "Décret n°2024-951 du 23/10/2024 relatif au relèvement du salaire minimum de croissance"
+        end
+        move_down @margin_down
+
+        text surveillant
+        move_down @margin_down
+        text "Du #{I18n.l(start_date.to_date)} au #{I18n.l(end_date.to_date)}"
+
+        move_down @margin_down
+        #text "Affaire suivie par : Thémoline"
+
+        # Tableau récap par code OTP
+        data = [ ['N°', 'Date', 'Type', 'Formation', 'Centre de coût', 'Destination financière', 'EOTP', 'Total heures' ]]    
+
+        font_size 7
+ 
+        cumul_durée = 0
+        index = 0
+ 
+        examens.each do | exam |
+            exam.options.surveillance.first.description.split('[').each do |item|
+                unless item.blank? 
+                    surveillant_item = item.gsub(']', '').delete("\r\n\\")
+                    if surveillant_item == surveillant
+                        is_vacataire = (exam.intervenant_id == 1314)
+                        index += 1
+                        durée = exam.duree + (is_vacataire ? 0 : 1)
+                        cumul_durée += durée
+                        data += [[ index,
+                                    I18n.l(exam.debut.to_date, format: :long) + ' ' + I18n.l(exam.debut, format: :heures_min) + '-' + I18n.l(exam.fin, format: :heures_min),
+                                    is_vacataire ? "Vacataire" : "Surveillance Examen",
+                                    exam.formation.nom_promo,
+                                    '7322GRH',
+                                    (exam.formation.diplome.upcase == 'LICENCE' ? '101PAIE' : exam.intervenant.id == 1314 ? '115PAIE' : '102PAIE'),
+                                    exam.formation.code_analytique_avec_indice(exam.debut).gsub('HCO','VAC'),
+                                    durée 
+                                ]]
+                    end
+                end
+            end
+        end
+
+        data += [[nil, nil, nil, nil, nil, nil, "Total heures :", "<b>#{ cumul_durée }</b>" ]]
+
+        data += [[nil, nil, nil,
+                    "Taux horaire en vigueur au 01/11/2024 :", 
+                    "#{ taux_horaire } €",
+                    nil,
+                    "<b>Total brut :</b>",
+                    "<b>#{ cumul_durée * taux_horaire } €</b>"]]
+
+        # Corps de table
+        table data, 
+            header: true, 
+            column_widths: {0 => 20, 1 => 110, 2 => 50, 3 => 135, 4 => 50, 5 => 50, 6 => 85, 7 => 40},
+            row_colors: ["F0F0F0", "FFFFFF"] do 
+                column(6).style(:align => :right)
+                cells.style(inline_format: true, border_width: 1, border_color: 'C0C0C0')
+            end
+    
+        move_down @margin_down
+
+        # FOOTER
+        font "Helvetica"
+        font_size 10
+
+        text "Fait à Paris le #{I18n.l(Date.today)}", style: :italic
+        move_down @margin_down
+
+        y_position = cursor
+        if agent
+            bounding_box([0, y_position], :width => 166, :height => 100) do
+                text "L'agent"
+            end
+            bounding_box([166, y_position], :width => 166) do
+                text "Le supérieur hiérarchique,"
+                text "pour accord"
+            end
+            bounding_box([333, y_position], :width => 166) do
+                text "Le responsable du service concerné"
+                text "par la vacation, pour accord"
+            end
+        else
+            bounding_box([0, y_position], :width => 250, :height => 100) do
+                text "Eric LAMARQUE"
+                text "Directeur de l'IAE Paris", size: 8
+            end
+            bounding_box([250, y_position], :width => 250) do
+                text is_vacataire ? "" : "Barbara FITSCH-MOURAS"
+                text "Responsable de service", size: 8 
+            end
+        end
+
+    end
+
     def generate_feuille_emargement(cours, étudiants_id, table)
         font "OpenSans"
 
@@ -479,7 +605,9 @@ class ExportPdf
         font "OpenSans"
         
         cours.each_with_index do |cour, index|
-            unless cour.commentaires.blank?
+            if cour.options.surveillance.any? && !cour.options.surveillance.first.description.empty?
+                surveillants = cour.options.surveillance.first.description.scan(/\[([^\]]+)\]/).flatten.join(', ').gsub(/[-]/, ' ')
+            elsif !cour.commentaires.blank?
                 surveillants = cour.commentaires.scan(/\[([^\]]+)\]/).flatten.join(', ').gsub(/[-]/, ' ')
             else
                 surveillants = ""

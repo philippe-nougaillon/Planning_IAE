@@ -31,9 +31,9 @@ module ToolsHelper
                 ids = audit.audited_changes['intervenant_id']
                 case ids.class.name
                 when 'Integer'
-                    pretty_changes << "#{key} initialisé à '#{Intervenant.find(ids).nom_prenom}'"
+                    pretty_changes << "#{key} initialisé à '#{Intervenant.find_by(id: ids)&.nom_prenom}'"
                 when 'Array'
-                    pretty_changes << "#{key} changé de '#{Intervenant.find(ids.first).nom_prenom}' à '#{Intervenant.find(ids.last).nom_prenom}'"
+                    pretty_changes << "#{key} changé de '#{Intervenant.find_by(id: ids.first)&.nom_prenom}' à '#{Intervenant.find_by(id: ids.last)&.nom_prenom}'"
                 end 
             when 'User'
                 ids = audit.audited_changes['user_id']

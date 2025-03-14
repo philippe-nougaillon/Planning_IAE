@@ -136,6 +136,28 @@
       <% end %>
     </div>
 
+    <div class="flex flex-wrap mb-8">
+      <div class="sm:w-1/5">Options</div>
+      <div class="sm:w-1/2" data-controller="nested-form" nested-form-wrapper-selector-value=".nested-form-wrapper">
+        <template data-nested-form-target="template">
+          <%= f.fields_for :options, Option.new, child_index: 'NEW_RECORD' do |option_fields| %>
+            <%= render "option_form", f: option_fields %>
+          <% end %>
+        </template>
+
+        <%= f.fields_for :options do |option_fields| %>
+          <%= render "option_form", f: option_fields %>
+        <% end %>
+
+        <div data-nested-form-target="target"></div>
+
+        <button type="button" data-action="nested-form#add" class="btn btn-outline btn-success hover:!text-white btn-sm">
+          <%= fa_icon 'plus-circle' %>
+          Ajouter une option
+        </button>
+      </div>
+    </div>
+
     <% unless @cour.new_record? %>
       <div class="flex flex-wrap">
         <div class="sm:w-1/5"></div>

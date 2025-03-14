@@ -12,8 +12,11 @@
   Dans un souci d’efficacité, les créneaux sont proposés parallèlement à plusieurs intervenants et seront attribués selon les disponibilités de chacun. Nous vous confirmerons par retour de mail les créneaux retenus pour vos cours. Nous vous remercions donc par avance de votre réactivité, essentielle pour garantir la fluidité du processus. 
 </p>
 <p style="margin-bottom: 0.5rem">
-  En cas de questions, vous pouvez contacter votre gestionnaire de formation à l’adresse suivante: 
-  <%= mail_to @invit.formation.user.email %>
+  En cas de questions, vous pouvez contacter votre gestionnaire de formation
+  <% if @invit.formation %>
+    à l’adresse suivante : 
+    <%= mail_to @invit.formation.user.email %>
+  <% end %>
 </p>
 <p style="margin-bottom: 0.5rem">
   L’IAE Paris-Sorbonne vous remercie de votre implication. 

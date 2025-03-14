@@ -170,6 +170,10 @@ class ToolPolicy < ApplicationPolicy
     user.role_number >= 4
   end
 
+  def liste_surveillants_examens_v2?
+    user.role_number >= 4
+  end
+
   def rechercher?
     user.role_number >= 3
   end
@@ -224,6 +228,16 @@ class ToolPolicy < ApplicationPolicy
     user && (user.accueil? || (user.id == 41 || user.id == 35))
   end
 
+  def commandes_v2?
+    # Accueil ou gestionnaire ou admin
+    user && ([3,5,6].include?(user.role_number))
+  end
+
+  def commande_fait_v2?
+    # Accueil et Thierry.D ou Thémoline
+    user && (user.accueil? || (user.id == 41 || user.id == 35))
+  end
+  
   def edusign?
     user && user.admin?
   end
