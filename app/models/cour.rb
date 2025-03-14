@@ -39,6 +39,10 @@ class Cour < ApplicationRecord
   around_update :check_send_commande_email
   after_create :check_send_new_commande_email
 
+  after_create   :send_new_examen_email, if: Proc.new { |cours| cours.examen? }
+  around_update  :check_send_examen_email
+  after_destroy :send_delete_examen_email, if: Proc.new { |cours| cours.examen? }
+
   # Mettre à jour les SCENIC VIEWS
   after_commit {
     CoursNonPlanifie.refresh
@@ -492,6 +496,12 @@ class Cour < ApplicationRecord
       end
     end
 
+    def check_hss
+      if self.formation.hss && !self.hors_service_statutaire
+        errors.add(:hors_service_statutaire, 'ne correspond pas à celui de la formation')
+      end
+    end
+
     def check_send_commande_email
       old_commentaires = commentaires_was
       yield
@@ -526,9 +536,61 @@ class Cour < ApplicationRecord
       end
     end
 
-    def check_hss
-      if self.formation.hss && !self.hors_service_statutaire
-        errors.add(:hors_service_statutaire, 'ne correspond pas à celui de la formation')
+    def check_send_examen_email
+      old_intervenant = intervenant_id_was
+      changed_attributes = changes.dup
+
+      yield
+      
+      saved_changes.each do |attribute, (old_value, new_value)|
+        puts "#{attribute} : #{old_value} -> #{new_value}"
+        raise
       end
+
+      # Check si le cour était ou est un examen
+      if Intervenant.find_by(id: old_intervenant).try(:examen?) || self.examen?
+        examen_status = determine_statut_examen(old_intervenant, intervenant_id)
+        send_email_examen(examen_status)
+      end
+    end
+
+    def determine_statut_examen(old_intervenant, new_intervenant)
+      if old_intervenant != new_intervenant
+        # On passe d'un type d'examen à un autre
+        if old_intervenant.examen? && new_intervenant.examen?
+          'modifié'
+        # L'examen devient un cours
+        elsif old_intervenant.examen?
+          'supprimé'
+        # Un cours devient un examen
+        else
+          'ajouté'
+        end
+      else
+        # Cas de loin le plus probable : un examen change de propriété
+        'modifié'
+      end
+    end
+
+    def send_email_examen(examen_status)
+      case examen_status
+      when 'modifié'
+        mailer_response = CourMailer.with(cour: self, ).examen_modifié.deliver_now
+      when 'supprimé'
+        mailer_response = CourMailer.with(cour: self).examen_supprimé.deliver_now
+      when 'ajouté'
+        mailer_response = CourMailer.with(cour: self).examen_ajouté.deliver_now
+      end
+      MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen #{examen_status}")
+    end
+
+    def send_new_examen_email
+      mailer_response = CourMailer.with(cour: self).examen_ajouté.deliver_now
+      MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen ajouté")
+    end
+
+    def send_delete_examen_email
+      mailer_response = CourMailer.with(cour: self).examen_supprimé.deliver_now
+      MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen supprimé")
     end
 end

@@ -1,0 +1,36 @@
+<p style="margin-bottom: 0.5rem">
+  Bonjour,
+  <br><br>
+  <%= "Un examen vient d'être ajouté pour le <b>#{l @cour.debut, format: :long}</b>".html_safe %>
+  <br><br>
+
+  <p>Informations principales :</p>
+  <p>
+    <b>Durée :</b>
+    <%= number_with_precision(@cour.duree, precision: 1, strip_insignificant_zeros: true) %> h
+  </p>
+  <p>
+    <b>Type d'examen :</b>
+    <%= @cour.intervenant.nom_prenom %>
+  </p>
+  <p>
+    <b>Formation :</b>
+    <%= @cour.formation.try(:nom) || 'Non défini' %>
+  </p>
+  <p>
+    <b>Intervenant :</b>
+    <%= @cour.intervenant_binome.try(:nom_prenom) || 'Non défini' %>
+  </p>
+  <p>
+    <b>UE / Intitulé du cours :</b>
+    <%= @cour.nom_ou_ue %>
+  </p>
+  <p>
+    <b>Salle :</b>
+    <%= @cour.salle.try(:nom) || 'Non défini' %>
+  </p>
+
+  <br><br>
+  <%= link_to "Voir les détails de l'examen", cour_url(@cour) %>
+</p>
+
