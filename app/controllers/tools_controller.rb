@@ -1461,11 +1461,144 @@ class ToolsController < ApplicationController
     redirect_to request.referrer, notice: "Commande traitée avec succès"
   end
 
+  def edusign
+    @intervenants = Intervenant.all
+    @formations = Formation.all
+    @étudiants = Etudiant.all
+  end
+
+  def edusign_do
+    url = URI("https://ext.edusign.fr/v1/")
+
+    if intervenant = Intervenant.find_by(slug: params[:intervenant_id])
+      url.path += "professor"
+      record_type = "l'intervenant"
+
+      body = 
+      {"professor": {
+        "FIRSTNAME": intervenant.prenom,
+        "LASTNAME": intervenant.nom,
+        "EMAIL": intervenant.email,
+        # SPECIALITY
+        "API_ID": intervenant.slug, # OU L'ID
+        "TAGS": [intervenant.status],
+        "PHONE": intervenant.téléphone_mobile,
+        # VARIABLES (array of objects)
+        #  - NAME
+        #  - VALUE (string, the variable value, ex: ar82U1kk)
+        #  - RESSOURCE_TYPE (ex: professor)
+        #  - SCHOOL_VARIABLE_ID (number)
+      },
+        "dontSendCredentials": false # (If true, the credentials won't be sent to the professor)
+      }
+    elsif étudiant = Etudiant.find_by(id: params[:etudiant_id])
+      url.path += "student"
+      record_type = "l'étudiant (Apprenant)"
+      formation_ed_id = nil
+
+      formation_url = URI("https://ext.edusign.fr/v1/group/get-id/#{étudiant.formation_id}")
+
+      formation_http = Net::HTTP.new(formation_url.host, formation_url.port)
+      formation_http.use_ssl = true
+
+      formation_request = Net::HTTP::Get.new(formation_url)
+      formation_request["accept"] = 'application/json'
+      formation_request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
+
+      formation_response = JSON.parse(formation_http.request(formation_request).read_body)
+
+      if formation_response["status"] == 'success'
+        formation_ed_id = formation_response["result"]["ID"]
+      end
+
+      body = 
+      {"student":{
+        "FIRSTNAME": étudiant.prénom,
+        "LASTNAME": étudiant.nom,
+        "EMAIL": étudiant.email,
+        "PHONE": étudiant.mobile,
+        # FILE_NUMBER (y'en a pas mais ça pourrait avec l'inscription étudiant)
+        # PHOTO (y'en a pas)
+        # PHONE (y'en a pas)
+        # XXXXX GROUPS(formations ?) array of strings (j'imagine l'id généré par la création de la formation dans edusign, donc à récupérer)
+        "GROUPS": formation_ed_id,
+        # TRAINING_NAME (Student training's name) (le nom de la formation)
+        # COMPANY (etudiant.nom_entreprise mais c'est plus utilisé dans notre outil)
+        # TAGS (peut servir pour par ex: distinguer ceux qui n'ont pas de compte étudiant, ou tout autre boolean sur Etudiant)
+        # SEND_EMAIL_CREDENTIALS
+        "API_ID": étudiant.id,
+        # BADGE_ID (y'en a pas)
+        # STUDENT_FOLLOWER_ID (array of strings) ?
+        # NEW_PASSWORD_NEEDED (default: true) : s'il est demandé à l'étudiant de chagner de mdp à la première connexion
+        # HIDDEN" (nombre) (statut caché de l'étudiant)
+      }}
+    elsif formation = Formation.find_by(id: params[:formation_id])
+      url.path += "group"
+      record_type = "la formation (Groupe)"
+      etudiants_ed_ids = []
+      formation.etudiants.each do |étudiant|
+        student_url = URI("https://ext.edusign.fr/v1/student/get-id/#{étudiant.id}")
+        student_http = Net::HTTP.new(student_url.host, student_url.port)
+        student_http.use_ssl = true
+
+        student_request = Net::HTTP::Get.new(student_url)
+        student_request["accept"] = 'application/json'
+        student_request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
+
+        student_response = JSON.parse(student_http.request(student_request).read_body)
+
+        if student_response["status"] == 'success'
+          etudiants_ed_ids << student_response["result"]["ID"]
+        end
+      end
+
+      body = 
+      {"group":{
+        "NAME": formation.nom,
+        # DESCRIPTION
+        # STUDENTS (array on strings) (sûrement la liste des ids des étudiants du côté Edusign)
+        "STUDENTS": etudiants_ed_ids,
+        # PARENT (Group parent) (sûrement utile pour des demis groupes ou des formations généralisées (ex: Master CGAO, au lieu de M1 CGAO 2022/2023))
+        # LOGO (url)
+        "API_ID": formation.id,
+        # VARIABLES (array of objects)
+        #  - NAME
+        #  - RESSOURCE_TYPE (ex: group)
+        #  - RESSOURCE_ID
+        #  - TYPE (ex: select)
+        #  - SELECT_TYPE_VALUES (string, The variable select type values, ex: option 1)
+        #  - VALUE (string, the variable value, ex: option 1)
+      }}
+    end
+
+    body[body.keys.first]["API_TYPE"] = "Aikku PLANN"
+
+    request = Net::HTTP::Post.new(url)
+    request["accept"] = 'application/json'
+    request["content-type"] = 'application/json'
+    request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
+
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true
+
+    request.body = body.to_json
+
+    response = JSON.parse(http.request(request).read_body)
+    puts "-*" * 50
+    puts response
+    puts "-*" * 50
+
+    if response["status"] == 'error'
+      flash[:alert] = response["message"]
+    else
+      flash[:notice] = "Création avec succès de #{record_type} sur Edusign ! ID sur Edusign : #{response["result"]["ID"]}"
+    end
+    redirect_to tools_edusign_path
+  end
+
   private
 
     def is_user_authorized
       authorize :tool
     end
-
-  
 end
