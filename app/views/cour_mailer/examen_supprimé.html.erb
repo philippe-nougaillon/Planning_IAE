@@ -1,23 +1,17 @@
 <p style="margin-bottom: 0.5rem">
   Bonjour,
   <br><br>
-  Une commande vient d'être supprimée !
+  <%= "Un examen vient d'être supprimé pour le <b>#{l @cour.debut, format: :long}</b>".html_safe %>
   <br><br>
 
-  <%= l @cour.debut, format: :long %>
-  <%= simple_format @cour.commentaires %>
-  <% if @cour.salle %>
-    Salle : <%= @cour.salle.nom %>
-    <br><br>
-  <% end %>
-  <%= @cour.formation.nom %>
-  <br>
-  <%= @cour.intervenant.nom_prenom %>
+  <p>Toutes les informations de cet examen :</p>
+  <ul>
+    <% @old_cour.attributes.each do |champ, valeur| %>
+      <li><strong><%= champ.humanize %> :</strong> <%= valeur || "Non renseigné" %></li>
+    <% end %>
+  </ul>
 
   <br><br>
-  Commande supprimée : <%= simple_format @old_commentaires %>
-
-  <br><br>
-  <%= link_to "Voir toutes les commandes", tools_commandes_url %>
+  <%= link_to "Voir la liste des cours", cour_url %>
 </p>
 

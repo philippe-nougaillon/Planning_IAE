@@ -362,6 +362,10 @@ class Cour < ApplicationRecord
     (self.commentaires && self.commentaires.include?("BYPASS=#{self.id}"))
   end
 
+  def changements_examen
+    saved_changes.except("updated_at", "created_at")
+  end
+
   private
     def update_date_fin
       if self.debut and self.duree
@@ -537,30 +541,25 @@ class Cour < ApplicationRecord
     end
 
     def check_send_examen_email
-      old_intervenant = intervenant_id_was
-      changed_attributes = changes.dup
+      old_cour = self.dup
+      old_cour.intervenant_id = intervenant_id_was
 
       yield
-      
-      saved_changes.each do |attribute, (old_value, new_value)|
-        puts "#{attribute} : #{old_value} -> #{new_value}"
-        raise
-      end
 
       # Check si le cour était ou est un examen
-      if Intervenant.find_by(id: old_intervenant).try(:examen?) || self.examen?
-        examen_status = determine_statut_examen(old_intervenant, intervenant_id)
-        send_email_examen(examen_status)
+      if Intervenant.find_by(id: old_cour.intervenant_id).try(:examen?) || self.examen?
+        examen_status = determine_statut_examen(old_cour  .intervenant_id, self.intervenant_id)
+        send_email_examen(examen_status, old_cour)
       end
     end
 
-    def determine_statut_examen(old_intervenant, new_intervenant)
-      if old_intervenant != new_intervenant
+    def determine_statut_examen(old_intervenant_id, new_intervenant_id)
+      if old_intervenant_id != new_intervenant_id
         # On passe d'un type d'examen à un autre
-        if old_intervenant.examen? && new_intervenant.examen?
+        if Intervenant.find(new_intervenant_id).examen? && Intervenant.find_by(id: old_intervenant_id).try(:examen?)
           'modifié'
         # L'examen devient un cours
-        elsif old_intervenant.examen?
+        elsif Intervenant.find_by(id: old_intervenant_id).try(:examen?)
           'supprimé'
         # Un cours devient un examen
         else
@@ -572,14 +571,14 @@ class Cour < ApplicationRecord
       end
     end
 
-    def send_email_examen(examen_status)
+    def send_email_examen(examen_status, old_cour)
       case examen_status
       when 'modifié'
-        mailer_response = CourMailer.with(cour: self, ).examen_modifié.deliver_now
+        mailer_response = CourMailer.with(cour: self, old_cour:).examen_modifié.deliver_now
       when 'supprimé'
-        mailer_response = CourMailer.with(cour: self).examen_supprimé.deliver_now
+        mailer_response = CourMailer.with(cour: self, old_cour:).examen_supprimé.deliver_now
       when 'ajouté'
-        mailer_response = CourMailer.with(cour: self).examen_ajouté.deliver_now
+        mailer_response = CourMailer.with(cour: self, old_cour:).examen_ajouté.deliver_now
       end
       MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen #{examen_status}")
     end

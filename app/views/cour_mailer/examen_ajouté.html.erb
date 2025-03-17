@@ -15,11 +15,11 @@
   </p>
   <p>
     <b>Formation :</b>
-    <%= @cour.formation.try(:nom) || 'Non défini' %>
+    <%= @cour.formation.try(:nom) || 'Non renseigné' %>
   </p>
   <p>
     <b>Intervenant :</b>
-    <%= @cour.intervenant_binome.try(:nom_prenom) || 'Non défini' %>
+    <%= @cour.intervenant_binome.try(:nom_prenom) || 'Non renseigné' %>
   </p>
   <p>
     <b>UE / Intitulé du cours :</b>
@@ -27,7 +27,7 @@
   </p>
   <p>
     <b>Salle :</b>
-    <%= @cour.salle.try(:nom) || 'Non défini' %>
+    <%= @cour.salle.try(:nom) || 'Non renseigné' %>
   </p>
 
   <br><br>
