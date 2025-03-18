@@ -1,17 +1,13 @@
 <p style="margin-bottom: 0.5rem">
   Bonjour,
   <br><br>
-  <%= "Un examen vient d'être supprimé pour le <b>#{l @cour.debut, format: :long}</b>".html_safe %>
+  <%= "Un examen pour le <b>#{l @cour.debut, format: :long}</b> vient d'être supprimé".html_safe %>
   <br><br>
 
-  <p>Toutes les informations de cet examen :</p>
-  <ul>
-    <% @old_cour.attributes.each do |champ, valeur| %>
-      <li><strong><%= champ.humanize %> :</strong> <%= valeur || "Non renseigné" %></li>
-    <% end %>
-  </ul>
+  <p>Liste des informations de cet examen supprimé :</p>
+  <%= sanitize prettify(@cour.own_and_associated_audits.order(created_at: :desc).first).join('<br>') %>  
 
   <br><br>
-  <%= link_to "Voir la liste des cours", cour_url %>
+  <%= link_to "Voir la liste des cours", cours_url %>
 </p>
 

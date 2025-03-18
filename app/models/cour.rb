@@ -548,7 +548,7 @@ class Cour < ApplicationRecord
 
       # Check si le cour était ou est un examen
       if Intervenant.find_by(id: old_cour.intervenant_id).try(:examen?) || self.examen?
-        examen_status = determine_statut_examen(old_cour  .intervenant_id, self.intervenant_id)
+        examen_status = determine_statut_examen(old_cour.intervenant_id, self.intervenant_id)
         send_email_examen(examen_status, old_cour)
       end
     end
@@ -574,11 +574,11 @@ class Cour < ApplicationRecord
     def send_email_examen(examen_status, old_cour)
       case examen_status
       when 'modifié'
-        mailer_response = CourMailer.with(cour: self, old_cour:).examen_modifié.deliver_now
+        mailer_response = CourMailer.with(cour: self).examen_modifié.deliver_now
       when 'supprimé'
-        mailer_response = CourMailer.with(cour: self, old_cour:).examen_supprimé.deliver_now
+        mailer_response = CourMailer.with(cour: self).examen_supprimé.deliver_now
       when 'ajouté'
-        mailer_response = CourMailer.with(cour: self, old_cour:).examen_ajouté.deliver_now
+        mailer_response = CourMailer.with(cour: self).examen_ajouté.deliver_now
       end
       MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen #{examen_status}")
     end
@@ -588,8 +588,8 @@ class Cour < ApplicationRecord
       MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen ajouté")
     end
 
-    def send_delete_examen_email
-      mailer_response = CourMailer.with(cour: self).examen_supprimé.deliver_now
-      MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen supprimé")
-    end
+  def send_delete_examen_email
+    mailer_response = CourMailer.with(cour: self).examen_supprimé.deliver_now
+    MailLog.create!(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen supprimé")
+  end
 end
