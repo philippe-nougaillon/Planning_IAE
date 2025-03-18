@@ -426,6 +426,8 @@ fr:
       title: Commandes_v2
     edusign:
       title: Edusign
+    synchronisation_edusign:
+      title: Synchronisation Edusign
   agents:
     index:
       title: Agents

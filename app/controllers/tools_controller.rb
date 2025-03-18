@@ -1470,7 +1470,7 @@ class ToolsController < ApplicationController
   def edusign_do
     url = URI("https://ext.edusign.fr/v1/")
 
-    if intervenant = Intervenant.find_by(slug: params[:intervenant_id])
+    if (intervenant = Intervenant.find_by(slug: params[:intervenant_id]))
       url.path += "professor"
       record_type = "l'intervenant"
 
@@ -1594,6 +1594,94 @@ class ToolsController < ApplicationController
       flash[:notice] = "Création avec succès de #{record_type} sur Edusign ! ID sur Edusign : #{response["result"]["ID"]}"
     end
     redirect_to tools_edusign_path
+  end
+
+  def synchronisation_edusign
+  end
+
+  def synchronisation_edusign_do
+    # Partie étudiants
+
+    url = URI("https://ext.edusign.fr/v1/student")
+
+    request = Net::HTTP::Post.new(url)
+    request["accept"] = 'application/json'
+    request["content-type"] = 'application/json'
+    request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
+
+    etudiants = Etudiant.where(created_at: DateTime.now.beginning_of_day..DateTime.now.end_of_day)
+
+    etudiants.each do |etudiant|
+      body =
+        {"student":{
+          "FIRSTNAME": etudiant.prénom,
+          "LASTNAME": etudiant.nom,
+          "EMAIL": etudiant.email,
+          "API_ID": etudiant.id,
+        }}
+
+      body[body.keys.first]["API_TYPE"] = "Aikku PLANN"
+
+      request.body = body.to_json
+      http = Net::HTTP.new(url.host, url.port)
+      http.use_ssl = true
+
+      response = JSON.parse(http.request(request).read_body)
+
+      if response["status"] == 'error'
+        flash[:alert] = response["message"]
+        break
+      end
+
+      etudiant.edusign_id = response["result"]["ID"]
+
+      etudiant.save
+    end
+
+
+    # Partie Groupes
+
+    url = URI("https://ext.edusign.fr/v1/group")
+
+    request = Net::HTTP::Post.new(url)
+    request["accept"] = 'application/json'
+    request["content-type"] = 'application/json'
+    request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
+
+    formations = Formation.where(id: etudiants.pluck(:formation_id).uniq)
+
+    formations.each do |formation|
+
+      body =
+        {"group":{
+          "NAME": formation.nom,
+          "STUDENTS": formation.etudiants.pluck(:edusign_id).compact
+        }}
+
+      body[body.keys.first]["API_TYPE"] = "Aikku PLANN"
+
+      request.body = body.to_json
+      http = Net::HTTP.new(url.host, url.port)
+      http.use_ssl = true
+
+      response = JSON.parse(http.request(request).read_body)
+
+      if response["status"] == 'error'
+        flash[:alert] += response["message"]
+        break
+      end
+
+      formation.edusign_id = response["result"]["ID"]
+
+      formation.save
+
+    end
+
+    if flash[:alert].blank?
+      flash[:notice] = "Synchronisation avec succès sur Edusign !"
+    end
+
+    redirect_to tools_synchronisation_edusign_path
   end
 
   private

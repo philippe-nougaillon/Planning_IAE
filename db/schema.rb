@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_12_23_083609) do
+ActiveRecord::Schema[7.1].define(version: 2025_03_18_142829) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -208,6 +208,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_23_083609) do
     t.string "ville_entreprise"
     t.string "workflow_state"
     t.integer "table", default: 0
+    t.string "edusign_id"
     t.index ["formation_id"], name: "index_etudiants_on_formation_id"
     t.index ["workflow_state"], name: "index_etudiants_on_workflow_state"
   end
@@ -253,6 +254,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_23_083609) do
     t.boolean "hss"
     t.string "courriel"
     t.string "nomtauxtd"
+    t.string "edusign_id"
     t.index ["archive"], name: "index_formations_on_archive"
     t.index ["user_id"], name: "index_formations_on_user_id"
   end
@@ -511,10 +513,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_23_083609) do
   add_foreign_key "vacations", "vacation_activites"
 
   create_view "cours_non_planifies", materialized: true, sql_definition: <<-SQL
-      SELECT cours.id
+      SELECT id
      FROM cours
-    WHERE ((cours.id IN ( SELECT audits.auditable_id
+    WHERE ((id IN ( SELECT audits.auditable_id
              FROM audits
-            WHERE (((audits.auditable_type)::text = 'Cour'::text) AND (audits.user_id <> 41)))) AND (cours.etat = 0) AND ((cours.debut >= now()) AND (cours.debut <= (now() + 'P30D'::interval))));
+            WHERE (((audits.auditable_type)::text = 'Cour'::text) AND (audits.user_id <> 41)))) AND (etat = 0) AND ((debut >= now()) AND (debut <= (now() + 'P30D'::interval))));
   SQL
 end
