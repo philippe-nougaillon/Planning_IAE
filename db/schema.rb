@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_03_18_142829) do
+ActiveRecord::Schema[7.1].define(version: 2025_03_19_113723) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -108,6 +108,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_18_142829) do
     t.string "commentaires"
     t.boolean "elearning"
     t.integer "code_ue"
+    t.string "edusign_id"
     t.index ["debut"], name: "index_cours_on_debut"
     t.index ["etat"], name: "index_cours_on_etat"
     t.index ["formation_id"], name: "index_cours_on_formation_id"
@@ -309,6 +310,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_18_142829) do
     t.string "slug"
     t.integer "année_entrée"
     t.string "email2"
+    t.string "edusign_id"
     t.index ["slug"], name: "index_intervenants_on_slug", unique: true
   end
 
