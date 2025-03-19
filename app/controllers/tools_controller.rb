@@ -1584,7 +1584,7 @@ class ToolsController < ApplicationController
     request.body = body.to_json
 
     response = JSON.parse(http.request(request).read_body)
-    puts "-*" * 50
+   puts "-*" * 50
     puts response
     puts "-*" * 50
 
@@ -1600,82 +1600,9 @@ class ToolsController < ApplicationController
   end
 
   def synchronisation_edusign_do
-    # Partie étudiants
+    #ajout_etudiants
 
-    url = URI("https://ext.edusign.fr/v1/student")
-
-    request = Net::HTTP::Post.new(url)
-    request["accept"] = 'application/json'
-    request["content-type"] = 'application/json'
-    request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
-
-    etudiants = Etudiant.where(created_at: DateTime.now.beginning_of_day..DateTime.now.end_of_day)
-
-    etudiants.each do |etudiant|
-      body =
-        {"student":{
-          "FIRSTNAME": etudiant.prénom,
-          "LASTNAME": etudiant.nom,
-          "EMAIL": etudiant.email,
-          "API_ID": etudiant.id,
-        }}
-
-      body[body.keys.first]["API_TYPE"] = "Aikku PLANN"
-
-      request.body = body.to_json
-      http = Net::HTTP.new(url.host, url.port)
-      http.use_ssl = true
-
-      response = JSON.parse(http.request(request).read_body)
-
-      if response["status"] == 'error'
-        flash[:alert] = response["message"]
-        break
-      end
-
-      etudiant.edusign_id = response["result"]["ID"]
-
-      etudiant.save
-    end
-
-
-    # Partie Groupes
-
-    url = URI("https://ext.edusign.fr/v1/group")
-
-    request = Net::HTTP::Post.new(url)
-    request["accept"] = 'application/json'
-    request["content-type"] = 'application/json'
-    request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
-
-    formations = Formation.where(id: etudiants.pluck(:formation_id).uniq)
-
-    formations.each do |formation|
-
-      body =
-        {"group":{
-          "NAME": formation.nom,
-          "STUDENTS": formation.etudiants.pluck(:edusign_id).compact
-        }}
-
-      body[body.keys.first]["API_TYPE"] = "Aikku PLANN"
-
-      request.body = body.to_json
-      http = Net::HTTP.new(url.host, url.port)
-      http.use_ssl = true
-
-      response = JSON.parse(http.request(request).read_body)
-
-      if response["status"] == 'error'
-        flash[:alert] += response["message"]
-        break
-      end
-
-      formation.edusign_id = response["result"]["ID"]
-
-      formation.save
-
-    end
+    modification_etudiants
 
     if flash[:alert].blank?
       flash[:notice] = "Synchronisation avec succès sur Edusign !"
@@ -1685,6 +1612,122 @@ class ToolsController < ApplicationController
   end
 
   private
+
+    def ajout_etudiants
+  # Partie étudiants
+
+      url = URI("https://ext.edusign.fr/v1/student")
+
+      request = Net::HTTP::Post.new(url)
+      request["accept"] = 'application/json'
+      request["content-type"] = 'application/json'
+      request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
+
+      etudiants = Etudiant.where(created_at: DateTime.now.beginning_of_day..DateTime.now.end_of_day)
+      
+      etudiants.each do |etudiant|
+        body =
+          {"student":{
+            "FIRSTNAME": etudiant.prénom,
+            "LASTNAME": etudiant.nom,
+            "EMAIL": etudiant.email,
+            "API_ID": etudiant.id,
+          }}
+
+        body[body.keys.first]["API_TYPE"] = "Aikku PLANN"
+
+        request.body = body.to_json
+        http = Net::HTTP.new(url.host, url.port)
+        http.use_ssl = true
+
+        response = JSON.parse(http.request(request).read_body)
+
+        if response["status"] == 'error'
+          flash[:alert] = response["message"]
+          break
+        end
+
+        etudiant.edusign_id = response["result"]["ID"]
+
+        etudiant.save
+      end
+
+
+      # Partie Groupes
+
+      url = URI("https://ext.edusign.fr/v1/group")
+
+      request = Net::HTTP::Post.new(url)
+      request["accept"] = 'application/json'
+      request["content-type"] = 'application/json'
+      request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
+
+      formations = Formation.where(id: etudiants.pluck(:formation_id).uniq)
+
+      formations.each do |formation|
+
+        body =
+          {"group":{
+            "NAME": formation.nom,
+            "STUDENTS": formation.etudiants.pluck(:edusign_id).compact
+          }}
+
+        body[body.keys.first]["API_TYPE"] = "Aikku PLANN"
+
+        request.body = body.to_json
+        http = Net::HTTP.new(url.host, url.port)
+        http.use_ssl = true
+
+        response = JSON.parse(http.request(request).read_body)
+
+        if response["status"] == 'error'
+          flash[:alert] += response["message"]
+          break
+        end
+
+        formation.edusign_id = response["result"]["ID"]
+
+        formation.save
+      end
+    end
+
+    def modification_etudiants
+      
+      # Partie étudiants
+
+      url = URI("https://ext.edusign.fr/v1/student")
+
+      request = Net::HTTP::Patch.new(url)
+      request["accept"] = 'application/json'
+      request["content-type"] = 'application/json'
+      request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
+      
+      etudiants_updated = Etudiant.where(updated_at: DateTime.now.beginning_of_day..DateTime.now.end_of_day).where("created_at != updated_at")
+      
+      etudiants_updated.each do |etudiant|
+        body =
+          {"student":{
+            "ID": etudiant.edusign_id,
+            "FIRSTNAME": etudiant.prénom,
+            "LASTNAME": etudiant.nom,
+            "GROUPS": Formation.find(etudiant.formation_id).edusign_id
+          }}
+        
+        body[body.keys.first]["API_TYPE"] = "Aikku PLANN"
+
+        request.body = body.to_json
+        http = Net::HTTP.new(url.host, url.port)
+        http.use_ssl = true
+
+        response = JSON.parse(http.request(request).read_body)
+
+        if response["status"] == 'error'
+          flash[:alert] = response["message"]
+          raise
+          break
+        end
+      end
+    end
 
     def is_user_authorized
       authorize :tool
