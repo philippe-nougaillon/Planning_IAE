@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_03_19_113723) do
+ActiveRecord::Schema[7.1].define(version: 2025_03_20_100937) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -332,6 +332,21 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_19_113723) do
     t.index ["user_id"], name: "index_invits_on_user_id"
   end
 
+  create_table "justificatifs", force: :cascade do |t|
+    t.string "edusign_id"
+    t.string "nom"
+    t.string "commentaires"
+    t.bigint "etudiant_id", null: false
+    t.datetime "edusign_created_at"
+    t.datetime "accepete_le"
+    t.datetime "debut"
+    t.datetime "fin"
+    t.string "file_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["etudiant_id"], name: "index_justificatifs_on_etudiant_id"
+  end
+
   create_table "mail_logs", force: :cascade do |t|
     t.string "to"
     t.string "subject"
@@ -505,6 +520,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_19_113723) do
   add_foreign_key "invits", "cours"
   add_foreign_key "invits", "intervenants"
   add_foreign_key "invits", "users"
+  add_foreign_key "justificatifs", "etudiants"
   add_foreign_key "notes", "users"
   add_foreign_key "options", "cours"
   add_foreign_key "options", "users"

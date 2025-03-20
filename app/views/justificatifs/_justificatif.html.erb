@@ -1,0 +1,52 @@
+<div id="<%= dom_id justificatif %>">
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Edusign:</strong>
+    <%= justificatif.edusign_id %>
+  </p>
+
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Nom:</strong>
+    <%= justificatif.nom %>
+  </p>
+
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Commentaires:</strong>
+    <%= justificatif.commentaires %>
+  </p>
+
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Etudiant:</strong>
+    <%= justificatif.etudiant_id %>
+  </p>
+
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Edusign created at:</strong>
+    <%= justificatif.edusign_created_at %>
+  </p>
+
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Accepete le:</strong>
+    <%= justificatif.accepete_le %>
+  </p>
+
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Debut:</strong>
+    <%= justificatif.debut %>
+  </p>
+
+  <p class="my-5">
+    <strong class="block font-medium mb-1">Fin:</strong>
+    <%= justificatif.fin %>
+  </p>
+
+  <p class="my-5">
+    <strong class="block font-medium mb-1">File url:</strong>
+    <%= justificatif.file_url %>
+  </p>
+
+  <% if action_name != "show" %>
+    <%= link_to "Show this justificatif", justificatif, class: "rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
+    <%= link_to "Edit this justificatif", edit_justificatif_path(justificatif), class: "rounded-lg py-3 ml-2 px-5 bg-gray-100 inline-block font-medium" %>
+    <hr class="mt-6">
+  <% end %>
+</div>
