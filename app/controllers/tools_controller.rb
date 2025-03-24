@@ -1608,9 +1608,9 @@ class ToolsController < ApplicationController
 
     #modification_intervenants
 
-    #ajout_cours
+    ajout_cours
 
-    #modification_cours
+    modification_cours
 
     #modification_formations
 
@@ -1868,7 +1868,8 @@ class ToolsController < ApplicationController
             "END": cours.fin,
             "PROFESSOR": Intervenant.find(cours.intervenant_id).edusign_id,
             "API_ID": cours.id,
-            "NEED_STUDENTS_SIGNATURE": true
+            "NEED_STUDENTS_SIGNATURE": true,
+            "SCHOOL_GROUP": [cours.formation.edusign_id]
           }}
         
         body[body.keys.first]["API_TYPE"] = "Aikku PLANN"
@@ -1909,7 +1910,8 @@ class ToolsController < ApplicationController
             "END": cours.fin,
             "PROFESSOR": Intervenant.find(cours.intervenant_id).edusign_id,
             "NEED_STUDENTS_SIGNATURE": true,
-            "editSurveys": false
+            "editSurveys": false,
+            "SCHOOL_GROUP": [cours.formation.edusign_id]
           }}
         
         body[body.keys.first]["API_TYPE"] = "Aikku PLANN"

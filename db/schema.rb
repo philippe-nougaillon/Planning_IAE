@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_03_20_100937) do
+ActiveRecord::Schema[7.1].define(version: 2025_03_24_130905) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -67,6 +67,23 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_20_100937) do
     t.integer "etat"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "attendances", force: :cascade do |t|
+    t.boolean "état"
+    t.datetime "signée_le"
+    t.string "justificatif_edusign_id"
+    t.integer "retard"
+    t.datetime "exclu_le"
+    t.bigint "etudiant_id", null: false
+    t.bigint "cour_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "signature_email_id"
+    t.string "signature"
+    t.index ["cour_id"], name: "index_attendances_on_cour_id"
+    t.index ["etudiant_id"], name: "index_attendances_on_etudiant_id"
+    t.index ["signature_email_id"], name: "index_attendances_on_signature_email_id"
   end
 
   create_table "audits", id: :serial, force: :cascade do |t|
@@ -438,6 +455,18 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_20_100937) do
     t.index ["discarded_at"], name: "index_salles_on_discarded_at"
   end
 
+  create_table "signature_emails", force: :cascade do |t|
+    t.integer "nb_envoyee"
+    t.string "requete_edusign_id"
+    t.datetime "limite"
+    t.boolean "second_envoi"
+    t.datetime "envoi_email"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "attendance_id", null: false
+    t.index ["attendance_id"], name: "index_signature_emails_on_attendance_id"
+  end
+
   create_table "unites", id: :serial, force: :cascade do |t|
     t.integer "formation_id"
     t.string "nom"
@@ -514,6 +543,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_20_100937) do
   end
 
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "attendances", "cours"
+  add_foreign_key "attendances", "etudiants"
+  add_foreign_key "attendances", "signature_emails"
   add_foreign_key "documents", "dossiers"
   add_foreign_key "dossier_etudiants", "etudiants"
   add_foreign_key "evaluations", "etudiants"
@@ -527,6 +559,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_20_100937) do
   add_foreign_key "presences", "cours"
   add_foreign_key "presences", "etudiants"
   add_foreign_key "presences", "intervenants"
+  add_foreign_key "signature_emails", "attendances"
   add_foreign_key "vacation_activite_tarifs", "vacation_activites"
   add_foreign_key "vacations", "vacation_activites"
 

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :attendances
   resources :justificatifs
   resources :vacation_activites
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?

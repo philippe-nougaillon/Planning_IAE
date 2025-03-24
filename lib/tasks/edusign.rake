@@ -1,17 +1,5 @@
 namespace :edusign do
   task justificatifs: :environment do
-
-    def get_response(url)
-      request = Net::HTTP::Get.new(url)
-      request["accept"] = 'application/json'
-      request["content-type"] = 'application/json'
-      request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
-
-      http = Net::HTTP.new(url.host, url.port)
-      http.use_ssl = true
-
-      response = JSON.parse(http.request(request).read_body)
-    end
     
     def get_reason_by_id(motifs, motif_id)
       motifs.each do |motif|
@@ -67,4 +55,60 @@ namespace :edusign do
 
     end
   end
+
+  task attendance: :environment do
+    url = URI("https://ext.edusign.fr/v1/course")
+    response = get_response(url)
+    
+    if response["status"] == 'error'
+      puts response["message"]
+    end
+
+    cours = response["result"]
+    
+    cours.each do |cour|
+      
+      # Filtrer les cours avec un edusign_id
+      if Cour.find_by(edusign_id: cour["ID"])
+        
+        cour["STUDENTS"].each do |etudiant|
+          attendance = Attendance.new
+            attendance.état = etudiant["state"]
+            attendance.signée_le = etudiant["timestamp"]
+            attendance.justificatif_edusign_id = etudiant["absenceId"]
+            attendance.retard = etudiant["delay"]
+            attendance.exclu_le = etudiant["excluded"]
+            attendance.cour_id = Cour.find_by(edusign_id: etudiant["courseId"]).id
+            attendance.etudiant_id = Etudiant.find_by(edusign_id: etudiant["studentId"]).id
+            attendance.signature = etudiant["signature"]
+            
+            if etudiant["signatureEmail"] != nil          
+              signature_email = SignatureEmail.new
+              signature_email.nb_envoyee = etudiant["signatureEmail"]["nbSent"]
+              signature_email.requete_edusign_id = etudiant["signatureEmail"]["requestId"]
+              signature_email.limite = etudiant["signatureEmail"]["signUntil"]
+              signature_email.second_envoi = etudiant["signatureEmail"]["secondSend"]
+              signature_email.envoi_email = etudiant["signatureEmail"]["sendEmailDate"]
+              signature_email.save
+
+              attendance.signature_email_id = signature_email.id
+            end
+
+          attendance.save
+        end
+      end
+    end
+  end
+
+  def get_response(url)
+      request = Net::HTTP::Get.new(url)
+      request["accept"] = 'application/json'
+      request["content-type"] = 'application/json'
+      request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
+
+      http = Net::HTTP.new(url.host, url.port)
+      http.use_ssl = true
+
+      response = JSON.parse(http.request(request).read_body)
+    end
 end
