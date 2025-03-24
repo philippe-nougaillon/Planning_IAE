@@ -74,15 +74,16 @@ Rails.application.configure do
   # Raise error when a before_action's only/except options reference missing actions
   config.action_controller.raise_on_missing_callback_actions = true
 
-  # config.action_mailer.delivery_method = :letter_opener_web
-  # config.action_mailer.perform_deliveries = true
+  config.action_mailer.default_url_options = { :host => 'localhost' }
+  config.action_mailer.delivery_method = :letter_opener
+  config.action_mailer.perform_deliveries = true
 
-  config.action_mailer.delivery_method = :mailgun
-  config.action_mailer.mailgun_settings = {
-    :api_key => ENV['MAILGUN_API_KEY'],
-    :domain => ENV['MAILGUN_DOMAIN'],
-    :api_host => 'api.eu.mailgun.net'  # Uncomment this line for EU region domains
-  }
+  # config.action_mailer.delivery_method = :mailgun
+  # config.action_mailer.mailgun_settings = {
+  #   :api_key => ENV['MAILGUN_API_KEY'],
+  #   :domain => ENV['MAILGUN_DOMAIN'],
+  #   :api_host => 'api.eu.mailgun.net'  # Uncomment this line for EU region domains
+  # }
 
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3000, protocol: 'http' }
+  # config.action_mailer.default_url_options = { host: 'localhost', port: 3000, protocol: 'http' }
 end
