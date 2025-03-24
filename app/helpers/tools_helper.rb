@@ -27,8 +27,8 @@ module ToolsHelper
                         pretty_changes << "#{key} changée de 'nil' à '#{Formation.unscoped.find_by(id: ids.first).try(:nom)}'"
                     end
                 end 
-            when 'Intervenant'
-                ids = audit.audited_changes['intervenant_id']
+            when 'Intervenant', 'Intervenant binome'
+                ids = audit.audited_changes["#{key.parameterize.underscore}_id"]
                 case ids.class.name
                 when 'Integer'
                     pretty_changes << "#{key} initialisé à '#{Intervenant.find_by(id: ids)&.nom_prenom}'"
