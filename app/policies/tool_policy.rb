@@ -237,5 +237,13 @@ class ToolPolicy < ApplicationPolicy
     # Accueil et Thierry.D ou Thémoline
     user && (user.accueil? || (user.id == 41 || user.id == 35))
   end
+  
+  def edusign?
+    user && user.admin?
+  end
+
+  def edusign_do?
+    edusign?
+  end
 
 end

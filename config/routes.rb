@@ -139,6 +139,7 @@ Rails.application.routes.draw do
     get :commande_fait
     get :commandes_v2
     get :commande_fait_v2
+    get :edusign
 
     post :import_do
     post :creation_cours_do
@@ -160,6 +161,7 @@ Rails.application.routes.draw do
     post :rappel_des_cours_do
     post :rappel_des_examens_do
     post :acces_intervenants_do
+    post :edusign_do
   end
 
   get 'guide/index'
