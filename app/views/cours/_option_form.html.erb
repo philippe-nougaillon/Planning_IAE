@@ -4,7 +4,7 @@
     <div class="sm:w-fit px-4">
       <div class="form-control">
         <%= f.label :catégorie %>
-        <%= f.select :catégorie, Option.catégories.keys.to_a, {include_blank: true}, class: 'select select-bordered select-sm w-full' %>
+        <%= f.select :catégorie, Option.catégories.keys.to_a, {include_blank: true, required: true}, class: 'select select-bordered select-sm w-full' %>
       </div>
     </div>
     <div class="px-4 self-end">
@@ -17,7 +17,7 @@
   <div class="sm:w-full px-4">
     <div class="form-control">
       <%= f.label :description %>
-      <%= f.text_area :description, class: 'textarea textarea-bordered textarea-sm w-full' %>
+      <%= f.text_area :description, class: 'textarea textarea-bordered textarea-sm w-full', required: true %>
     </div>
   </div>
 </div>
