@@ -15,7 +15,7 @@ namespace :edusign do
       j_object.etudiant_id = Etudiant.find_by(edusign_id: j_json["STUDENT_ID"]).id
       j_object.file_url = j_json["FILE_URL"]
       j_object.edusign_created_at = j_json["DATE_CREATION"]
-      j_object.accepete_le = j_json["REQUEST_DATE"]
+      j_object.accepte_le = j_json["REQUEST_DATE"]
       j_object.debut = j_json["START"]
       j_object.fin = j_json["END"]
       j_object.save

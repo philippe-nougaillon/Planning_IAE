@@ -6,7 +6,7 @@ one:
   commentaires: MyString
   etudiant: one
   edusign_created_at: 2025-03-20 11:09:37
-  accepete_le: 2025-03-20 11:09:37
+  accepte_le: 2025-03-20 11:09:37
   debut: 2025-03-20 11:09:37
   fin: 2025-03-20 11:09:37
   file_url: MyString
@@ -17,7 +17,7 @@ two:
   commentaires: MyString
   etudiant: two
   edusign_created_at: 2025-03-20 11:09:37
-  accepete_le: 2025-03-20 11:09:37
+  accepte_le: 2025-03-20 11:09:37
   debut: 2025-03-20 11:09:37
   fin: 2025-03-20 11:09:37
   file_url: MyString

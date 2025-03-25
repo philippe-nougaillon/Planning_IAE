@@ -65,6 +65,6 @@ class JustificatifsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def justificatif_params
-      params.require(:justificatif).permit(:edusign_id, :nom, :commentaires, :etudiant_id, :edusign_created_at, :accepete_le, :debut, :fin, :file_url)
+      params.require(:justificatif).permit(:edusign_id, :nom, :commentaires, :etudiant_id, :edusign_created_at, :accepte_le, :debut, :fin, :file_url)
     end
 end

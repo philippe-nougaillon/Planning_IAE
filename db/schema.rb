@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_03_24_130905) do
+ActiveRecord::Schema[7.1].define(version: 2025_03_25_145342) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -355,7 +355,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_24_130905) do
     t.string "commentaires"
     t.bigint "etudiant_id", null: false
     t.datetime "edusign_created_at"
-    t.datetime "accepete_le"
+    t.datetime "accepte_le"
     t.datetime "debut"
     t.datetime "fin"
     t.string "file_url"

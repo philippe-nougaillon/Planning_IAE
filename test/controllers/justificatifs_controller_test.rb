@@ -17,7 +17,7 @@ class JustificatifsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create justificatif" do
     assert_difference("Justificatif.count") do
-      post justificatifs_url, params: { justificatif: { accepete_le: @justificatif.accepete_le, commentaires: @justificatif.commentaires, debut: @justificatif.debut, edusign_created_at: @justificatif.edusign_created_at, edusign_id: @justificatif.edusign_id, etudiant_id: @justificatif.etudiant_id, file_url: @justificatif.file_url, fin: @justificatif.fin, nom: @justificatif.nom } }
+      post justificatifs_url, params: { justificatif: { accepte_le: @justificatif.accepte_le, commentaires: @justificatif.commentaires, debut: @justificatif.debut, edusign_created_at: @justificatif.edusign_created_at, edusign_id: @justificatif.edusign_id, etudiant_id: @justificatif.etudiant_id, file_url: @justificatif.file_url, fin: @justificatif.fin, nom: @justificatif.nom } }
     end
 
     assert_redirected_to justificatif_url(Justificatif.last)
@@ -34,7 +34,7 @@ class JustificatifsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update justificatif" do
-    patch justificatif_url(@justificatif), params: { justificatif: { accepete_le: @justificatif.accepete_le, commentaires: @justificatif.commentaires, debut: @justificatif.debut, edusign_created_at: @justificatif.edusign_created_at, edusign_id: @justificatif.edusign_id, etudiant_id: @justificatif.etudiant_id, file_url: @justificatif.file_url, fin: @justificatif.fin, nom: @justificatif.nom } }
+    patch justificatif_url(@justificatif), params: { justificatif: { accepte_le: @justificatif.accepte_le, commentaires: @justificatif.commentaires, debut: @justificatif.debut, edusign_created_at: @justificatif.edusign_created_at, edusign_id: @justificatif.edusign_id, etudiant_id: @justificatif.etudiant_id, file_url: @justificatif.file_url, fin: @justificatif.fin, nom: @justificatif.nom } }
     assert_redirected_to justificatif_url(@justificatif)
   end
 
