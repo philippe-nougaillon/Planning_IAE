@@ -33,4 +33,8 @@ class Attendance < ApplicationRecord
     end
   end
 
+  def a_un_retard
+    self.retard && self.retard > 0
+  end
+
 end

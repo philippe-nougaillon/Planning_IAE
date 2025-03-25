@@ -11,8 +11,16 @@
   <td><%= attendance.cour.code_ue %></td>
   <td>
     <%= attendance.etudiant.nom_prénom %>
+    <% if attendance.a_un_retard %>
+      <br>
+      <small>Retard de <%= attendance.retard %> minutes</small>
+    <% end %>
   </td>
-  <td><% if attendance.signature %><img src=<%= attendance.signature %> style="badge width: 50px;"><% end %></td>
+  <td>
+    <% if attendance.signature %>
+      <img src="<%= attendance.signature %>" style="width: 100px;">
+    <% end %>
+  </td>
   <td><span class="badge <%= attendance.style%> text-white"><%= attendance.état_text %></span></td>
   <td><%= link_to 'Voir', attendance, class: 'text-primary hover:underline' %></td>
 </tr>

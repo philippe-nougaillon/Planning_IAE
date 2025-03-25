@@ -541,3 +541,8 @@ fr:
       title: "Nouvelle Activité"
     edit:
       title: "Modification Activité"
+  attendances:
+    index:
+      title: "Liste des présences"
+    show:
+      title: "Présence"

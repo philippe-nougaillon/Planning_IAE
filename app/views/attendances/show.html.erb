@@ -1,15 +1,129 @@
-<div class="mx-auto md:w-2/3 w-full flex">
-  <div class="mx-auto">
-    <% if notice.present? %>
-      <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
+<div class="border-b mt-6 mb-2 pb-4">
+
+  <div class="buttons-group float-right">
+    <%= link_to attendances_path, class: 'btn btn-ghost' do %>
+      <%= fa_icon 'list-alt', text: ' Retour' %>
     <% end %>
+  </div>
 
-    <%= render @attendance %>
+  <h1 class="text-3xl">
+    <%= fa_icon 'calendar-check' %>
+    Présence
+  </h1>
 
-    <%= link_to "Edit this attendance", edit_attendance_path(@attendance), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <div class="inline-block ml-2">
-      <%= button_to "Destroy this attendance", attendance_path(@attendance), method: :delete, class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 font-medium" %>
+
+</div>
+<div class="bs-container card shadow p-4 my-4">
+  <div class="flex flex-wrap">
+    <div class="relative flex-grow max-w-full flex-1">
+      <p class="mb-4">
+        <strong>
+          <%= l(@attendance.cour.debut, format: :long).humanize %>
+          <br>
+          <%= link_to @attendance.cour.nom, @attendance.cour, class: 'text-primary hover:underline' %>
+        </strong>
+      </p>
+
+      <p class="mb-4">
+        <span style="background-color:<%= @attendance.cour.formation.try(:color) %>;padding-left: 7px;margin-right: 5px;"></span>
+        <%= @attendance.cour.formation.try(:nom) %>
+        </span>
+      </p>
+
+      <p class="mb-4">
+        <strong>Intervenant :</strong>
+        <%= link_to @attendance.cour.intervenant.nom_prenom, @attendance.cour.intervenant, class: 'text-primary hover:underline' %>
+      </p>
+
+      <p class="mb-4">
+        <strong>Etudiant :</strong>
+        <%= link_to @attendance.etudiant.nom_prénom, @attendance.etudiant, class: 'text-primary hover:underline' %>
+      </p>
+
+      <p class="mb-4">
+        <strong>Etat :</strong>
+        <span class="badge <%= @attendance.style%> text-white"><%= @attendance.état_text %></span>
+      </p>
+
+      <% if @attendance.exclu_le %>
+        <p class="mb-4">
+          <strong>Exclu le :</strong>
+          <%= l(@attendance.exclu_le, format: :long).humanize %>
+        </p>
+      <% end %>
+
+      <% if @attendance.a_un_retard %>
+        <p class="mb-4">
+          <strong>Retard de :</strong>
+          <%= @attendance.retard %> minutes
+        </p>
+      <% end %>
+
+      <% if @attendance.signatureEmail %>
+        <div>
+          <p class="mb-4">
+            <strong>Mail envoyé le :</strong>
+            <%= l(@attendance.signatureEmail.envoi_email, format: :long).humanize %>
+          </p>
+
+          <p class="mb-4">
+            <strong>Nombre de mails envoyés :</strong>
+            <%= @attendance.signatureEmail.nb_envoyee %>
+          </p>
+
+          <p class="mb-4">
+            <strong>Envoyé deux fois :</strong>
+            <%= @attendance.signatureEmail.second_envoi ? "Oui" : "Non" %>
+          </p>
+
+          <p class="mb-4">
+            <strong>Date limite pour signer :</strong>
+            <%= l(@attendance.signatureEmail.limite, format: :long).humanize %>
+          </p>
+        </div>
+      <% end %>
+
+      <% if @justificatif %>
+        <p class="mb-4">
+          <strong>Justificatif :</strong>
+          <%= @justificatif.nom %>
+        </p>
+
+        <p class="mb-4">
+          <strong>Commentaires :</strong>
+          <%= @justificatif.commentaires %>
+        </p>
+
+        <p class="mb-4">
+          <strong>Accepté le :</strong>
+          <%= l(@justificatif.accepte_le, format: :long).humanize %>
+        </p>
+
+        <p class="mb-4">
+          <strong>Début :</strong>
+          <%= l(@justificatif.debut, format: :long).humanize %>
+        </p>
+
+        <p class="mb-4">
+          <strong>Fin :</strong>
+          <%= l(@justificatif.fin, format: :long).humanize %>
+        </p>
+
+        <p class="mb-4">
+          <%= link_to "Voir le justificatif", @justificatif.file_url, class: 'text-primary hover:underline' %>
+        </p>
+      <% end %>
+
+      <% if @attendance.signée_le %>
+        <p class="mb-4">
+          <strong>Signée le :</strong>
+          <%= l(@attendance.signée_le, format: :long).humanize %>
+        </p>
+
+        <div>
+          <img src=<%= @attendance.signature %>>
+        </div>
+      <% end %>
     </div>
-    <%= link_to "Back to attendances", attendances_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
   </div>
 </div>

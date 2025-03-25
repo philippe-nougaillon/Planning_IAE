@@ -8,15 +8,15 @@ class AttendancesController < ApplicationController
     if params[:etudiant].present?
       etudiant = params[:etudiant].strip
       etudiant_id = Etudiant.find_by(nom: etudiant.split(' ').first, prénom: etudiant.split(' ').last.rstrip).id
-      @attendances = @attendances.where(id: etudiant_id)
+      @attendances = @attendances.where(etudiant_id: etudiant_id)
     end
-    
+
     if params[:formation_id].present?
       @attendances = @attendances.joins(:cour).where('cour.formation_id': params[:formation_id])
     end
 
     if params[:ue].present?
-      @attendances = @attendances.where(code_ue: params[:ue])
+      @attendances = @attendances.joins(:cour).where('cour.code_ue': params[:ue] )
     end
 
     if params[:intervenant].present?
@@ -25,8 +25,12 @@ class AttendancesController < ApplicationController
       @attendances = @attendances.joins(:cour).where('cour.intervenant_id': intervenant_id)
     end
 
-    if params[:workflow_state].present?
-      @attendances = @attendances.where(workflow_state: params[:workflow_state])
+    if params[:etat].present?
+      attendance_ids = []
+      @attendances.each do |attendance|
+        attendance_ids << attendance.id if attendance.état_text == params[:etat]
+      end
+      @attendances = @attendances.where(id: attendance_ids)
     end
 
     @attendances = @attendances.paginate(page: params[:page], per_page: 20)
@@ -34,6 +38,9 @@ class AttendancesController < ApplicationController
 
   # GET /attendances/1 or /attendances/1.json
   def show
+    if @attendance.justificatif_edusign_id
+      @justificatif = Justificatif.find_by(edusign_id: @attendance.justificatif_edusign_id)
+    end
   end
 
   # GET /attendances/new
