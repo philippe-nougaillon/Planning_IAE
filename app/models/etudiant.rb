@@ -19,7 +19,7 @@ class Etudiant < ApplicationRecord
 
   before_destroy :delete_user
 
-  has_many :justificatif
+  has_many :justificatifs
 
   workflow do
     state :prospect

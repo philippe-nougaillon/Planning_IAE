@@ -1,15 +1,58 @@
-<div class="mx-auto md:w-2/3 w-full flex">
-  <div class="mx-auto">
-    <% if notice.present? %>
-      <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
+<div class="border-b mt-6 mb-2 pb-4">
+
+  <div class="buttons-group float-right">
+    <%= link_to justificatifs_path, class: 'btn btn-ghost' do %>
+      <%= fa_icon 'list-alt', text: ' Retour' %>
     <% end %>
+  </div>
 
-    <%= render @justificatif %>
+  <h1 class="text-3xl">
+    <%= fa_icon 'calendar-check' %>
+    Justificatif
+  </h1>
 
-    <%= link_to "Edit this justificatif", edit_justificatif_path(@justificatif), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
-    <div class="inline-block ml-2">
-      <%= button_to "Destroy this justificatif", justificatif_path(@justificatif), method: :delete, class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 font-medium" %>
+
+</div>
+<div class="bs-container card shadow p-4 my-4">
+  <div class="flex flex-wrap">
+    <div class="relative flex-grow max-w-full flex-1">
+      <p class="mb-4">
+        <strong>Motif :</strong>
+        <%= @justificatif.nom %>
+      </p>
+
+      <p class="mb-4">
+        <strong>Etudiant :</strong>
+        <%= link_to @justificatif.etudiant.nom_prénom, @justificatif.etudiant, class: 'text-primary hover:underline' %>
+      </p>
+
+      <p class="mb-4">
+        <strong>Commentaires :</strong>
+        <%= @justificatif.commentaires %>
+      </p>
+
+      <p class="mb-4">
+        <strong>Date de début :</strong>
+        <%= l @justificatif.debut, format: :long  %>
+      </p>
+
+      <p class="mb-4">
+        <strong>Date de fin :</strong>
+        <%= l @justificatif.fin, format: :long  %>
+      </p>
+
+      <p class="mb-4">
+        <strong>Accepté le :</strong>
+        <%= l @justificatif.edusign_created_at, format: :long  %>
+      </p>
+
+      <% if @justificatif.file_url %>
+        <p class="mb-4">
+          <strong>Document justificatif :</strong>
+          <%= link_to @justificatif.file_url, @justificatif.file_url, class: 'text-primary hover:underline' %>
+        </p>
+      <% end %>
+
     </div>
-    <%= link_to "Back to justificatifs", justificatifs_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium" %>
   </div>
 </div>

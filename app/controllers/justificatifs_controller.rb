@@ -4,6 +4,26 @@ class JustificatifsController < ApplicationController
   # GET /justificatifs or /justificatifs.json
   def index
     @justificatifs = Justificatif.all
+
+    if params[:etudiant].present?
+      etudiant = params[:etudiant].strip
+      etudiant_id = Etudiant.find_by(nom: etudiant.split(' ').first, prénom: etudiant.split(' ').last.rstrip).id
+      @justificatifs = @justificatifs.where(etudiant_id: etudiant_id)
+    end
+
+    if params[:date_debut].present?
+      @justificatifs = @justificatifs.where("debut >= DATE(?)", params[:date_debut])
+    end
+
+    if params[:date_fin].present?
+      @justificatifs = @justificatifs.where("fin <= DATE(?)", params[:date_fin])
+    end
+
+    if params[:motif].present?
+      @justificatifs = @justificatifs.where(nom: params[:motif])
+    end
+
+    @justificatifs = @justificatifs.paginate(page: params[:page], per_page: 20)
   end
 
   # GET /justificatifs/1 or /justificatifs/1.json

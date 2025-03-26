@@ -1,14 +1,84 @@
-<div class="w-full">
-  <% if notice.present? %>
-    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
+<div class="border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'file-signature' %> Justificatifs</h1>
+</div>
+
+<div class="bs-container p-4 shadow mb-4">
+  <%= form_tag request.path, method: :get do %>
+    <div class="flex flex-wrap">
+      
+      <div class="sm:w-1/4 pr-4">
+        <%= label_tag :etudiant %>
+        <%= select_tag :etudiant, 
+                            options_for_select(Etudiant.for_select, params[:etudiant]), 
+                            class: 'slim-select', 
+                            include_blank: true, 
+                            onchange: 'this.form.submit()' %>
+      </div>
+
+      <div class="sm:w-1/5 px-4">
+        <%= label_tag :date_debut, "Du" %>    
+        <%= text_field_tag :date_debut, 
+                            params[:date_debut], 
+                            type:'date', 
+                            onchange:'this.form.submit()', 
+                            class:"input input-bordered input-sm w-full" %>
+      </div>
+
+      <div class="sm:w-1/5 px-4">
+        <%= label_tag :date_fin, "Au" %>    
+        <%= text_field_tag :date_fin, 
+                            params[:date_fin], 
+                            type:'date', 
+                            onchange:'this.form.submit()', 
+                            class:"input input-bordered input-sm w-full" %>
+      </div>
+
+      <div class="sm:w-1/6 pl-4">
+        <%= label_tag :motif, "Motif" %>
+        <%= select_tag :motif,
+                            options_for_select(["sickleave", "deathoflovedone", "funeral", "medicalappointment", "jobinterview", "inenterprise", "other"], params[:motif]),
+                            include_blank: true,
+                            class: 'select select-bordered select-sm w-full', 
+                            onchange: 'this.form.submit()' %>
+      </div>
+    </div>
   <% end %>
+</div>
 
-  <div class="flex justify-between items-center">
-    <h1 class="font-bold text-4xl">Justificatifs</h1>
-    <%= link_to "New justificatif", new_justificatif_path, class: "rounded-lg py-3 px-5 bg-blue-600 text-white block font-medium" %>
-  </div>
+<div style="overflow-x: auto;">
+  <%= form_tag action_presences_path, name: 'action' do %>
+    <div data-controller="checkbox-select-all action">
+      <div class="overflow-x-auto">
+        <table class="table table-sm">
+          <thead class="bg-slate-100 border">
+            <tr>
+              <th>Il y a</th>
+              <th>Nom / Prénom</th>
+              <th>Du</th>
+              <th>Au</th>
+              <th>Motif</th>
+              <th colspan="2"></th>
+            </tr>
+          </thead>
 
-  <div id="justificatifs" class="min-w-full">
-    <%= render @justificatifs %>
-  </div>
+          <tbody>
+            <%= render partial: 'justificatif', collection: @justificatifs %>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="10"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<div class="page_info mb-6">
+  <%= page_entries_info @justificatifs %>
+</div>
+
+<div class="planning_pagination">
+  <%= will_paginate @justificatifs %>
 </div>

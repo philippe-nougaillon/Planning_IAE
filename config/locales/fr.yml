@@ -546,3 +546,8 @@ fr:
       title: "Liste des présences"
     show:
       title: "Présence"
+  justificatifs:
+    index:
+      title: "Liste des justificatifs"
+    show:
+      title: "Justificatif"
