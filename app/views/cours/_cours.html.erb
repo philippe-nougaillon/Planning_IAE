@@ -99,6 +99,13 @@
                     <% end %>
                 </i>
             <% end %>
+            <% if cours.options.surveillance.any? %>
+                <i title="<%= cours.options.surveillance.first.description %>" >
+                    <%= link_to tools_liste_surveillants_examens_v2_path(start_date: cours.debut.to_date, end_date: cours.debut.to_date) do %>
+                        <%= fa_icon 'user-secret' %>
+                    <% end %>
+                </i>
+            <% end %>
             <% if !cours.commentaires.blank? %>
                 <i title="<%= cours.commentaires %>" >
                     <% if cours.commentaires.include?('+') %>
