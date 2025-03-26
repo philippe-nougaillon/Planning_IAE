@@ -3,6 +3,6 @@
   <td><%= justificatif.etudiant.nom_prénom %></td>
   <td><%= l justificatif.debut, format: :short %></td>
   <td><%= l justificatif.fin, format: :short %></td>
-  <td><%= justificatif.nom %></td>
+  <td><%= justificatif.catégorie.humanize %></td>
   <td><%= link_to 'Voir', justificatif, class: 'text-primary hover:underline' %></td>
 </tr>

@@ -1,5 +1,5 @@
 <div class="border-b mt-6 mb-2 pb-4">
-  <h1 class="text-3xl"><%= fa_icon 'file-signature' %> Justificatifs</h1>
+  <h1 class="text-3xl"><%= fa_icon "file-signature" %> Justificatifs</h1>
 </div>
 
 <div class="bs-container p-4 shadow mb-4">
@@ -10,17 +10,17 @@
         <%= label_tag :etudiant %>
         <%= select_tag :etudiant, 
                             options_for_select(Etudiant.for_select, params[:etudiant]), 
-                            class: 'slim-select', 
+                            class: "slim-select", 
                             include_blank: true, 
-                            onchange: 'this.form.submit()' %>
+                            onchange: "this.form.submit()" %>
       </div>
 
       <div class="sm:w-1/5 px-4">
         <%= label_tag :date_debut, "Du" %>    
         <%= text_field_tag :date_debut, 
                             params[:date_debut], 
-                            type:'date', 
-                            onchange:'this.form.submit()', 
+                            type:"date", 
+                            onchange:"this.form.submit()", 
                             class:"input input-bordered input-sm w-full" %>
       </div>
 
@@ -28,25 +28,25 @@
         <%= label_tag :date_fin, "Au" %>    
         <%= text_field_tag :date_fin, 
                             params[:date_fin], 
-                            type:'date', 
-                            onchange:'this.form.submit()', 
+                            type:"date", 
+                            onchange:"this.form.submit()", 
                             class:"input input-bordered input-sm w-full" %>
       </div>
 
       <div class="sm:w-1/6 pl-4">
         <%= label_tag :motif, "Motif" %>
         <%= select_tag :motif,
-                            options_for_select(["sickleave", "deathoflovedone", "funeral", "medicalappointment", "jobinterview", "inenterprise", "other"], params[:motif]),
+                            options_for_select(@motifs, params[:motif]),
                             include_blank: true,
-                            class: 'select select-bordered select-sm w-full', 
-                            onchange: 'this.form.submit()' %>
+                            class: "select select-bordered select-sm w-full", 
+                            onchange: "this.form.submit()" %>
       </div>
     </div>
   <% end %>
 </div>
 
 <div style="overflow-x: auto;">
-  <%= form_tag action_presences_path, name: 'action' do %>
+  <%= form_tag action_presences_path, name: "action" do %>
     <div data-controller="checkbox-select-all action">
       <div class="overflow-x-auto">
         <table class="table table-sm">
@@ -62,7 +62,7 @@
           </thead>
 
           <tbody>
-            <%= render partial: 'justificatif', collection: @justificatifs %>
+            <%= render partial: "justificatif", collection: @justificatifs %>
           </tbody>
           <tfoot>
             <tr>

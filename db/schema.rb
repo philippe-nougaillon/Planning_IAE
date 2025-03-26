@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_03_25_145342) do
+ActiveRecord::Schema[7.1].define(version: 2025_03_26_143008) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -81,6 +81,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_25_145342) do
     t.datetime "updated_at", null: false
     t.bigint "signature_email_id"
     t.string "signature"
+    t.integer "edusign_id"
     t.index ["cour_id"], name: "index_attendances_on_cour_id"
     t.index ["etudiant_id"], name: "index_attendances_on_etudiant_id"
     t.index ["signature_email_id"], name: "index_attendances_on_signature_email_id"
@@ -351,7 +352,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_25_145342) do
 
   create_table "justificatifs", force: :cascade do |t|
     t.string "edusign_id"
-    t.string "nom"
     t.string "commentaires"
     t.bigint "etudiant_id", null: false
     t.datetime "edusign_created_at"
@@ -361,6 +361,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_25_145342) do
     t.string "file_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "catégorie", default: 0
     t.index ["etudiant_id"], name: "index_justificatifs_on_etudiant_id"
   end
 

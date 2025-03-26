@@ -2,7 +2,7 @@ class Attendance < ApplicationRecord
   belongs_to :etudiant
   belongs_to :cour
 
-  has_one :signatureEmail
+  has_one :signatureEmail, dependent: :destroy
 
 
   def style

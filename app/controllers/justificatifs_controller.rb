@@ -4,6 +4,7 @@ class JustificatifsController < ApplicationController
   # GET /justificatifs or /justificatifs.json
   def index
     @justificatifs = Justificatif.all
+    @motifs = Justificatif.catégories_humanized
 
     if params[:etudiant].present?
       etudiant = params[:etudiant].strip
@@ -20,7 +21,7 @@ class JustificatifsController < ApplicationController
     end
 
     if params[:motif].present?
-      @justificatifs = @justificatifs.where(nom: params[:motif])
+      @justificatifs = @justificatifs.where(catégorie: params[:motif])
     end
 
     @justificatifs = @justificatifs.paginate(page: params[:page], per_page: 20)

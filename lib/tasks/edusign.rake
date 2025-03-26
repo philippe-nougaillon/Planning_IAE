@@ -1,114 +1,63 @@
 namespace :edusign do
   task justificatifs: :environment do
+
+    requete = Edusign.new("https://ext.edusign.fr/v1/justified-absence?page=0")
     
-    def get_reason_by_id(motifs, motif_id)
-      motifs.each do |motif|
-        if motif["ID"] == motif_id
-          return motif["NAME"] 
-        end
-      end
-    end
+    response = requete.get_response
 
-    def modification_justificatif(j_object, j_json, motifs)
-      j_object.nom = get_reason_by_id(motifs, j_json["TYPE"])
-      j_object.commentaires = j_json["COMMENT"]
-      j_object.etudiant_id = Etudiant.find_by(edusign_id: j_json["STUDENT_ID"]).id
-      j_object.file_url = j_json["FILE_URL"]
-      j_object.edusign_created_at = j_json["DATE_CREATION"]
-      j_object.accepte_le = j_json["REQUEST_DATE"]
-      j_object.debut = j_json["START"]
-      j_object.fin = j_json["END"]
-      j_object.save
-    end
-
-    url = URI("https://ext.edusign.fr/v1/justified-absence?page=0")
-    
-    response = get_response(url)
-        
     if response["status"] == 'error'
-      puts response["message"]
-      return
+      puts response['message']
+      next
     end
 
-    justificatifs = response["result"]
+    justificatifs_edusign = response["result"]
 
-    url = URI("https://ext.edusign.fr/v1/justified-absence/absence-reason")
+    justificatifs_edusign.each do |justificatif_edusign|
 
-    response = get_response(url)
-        
-    if response["status"] == 'error'
-      puts response["message"]
-    end
-
-    motifs = response["result"]
-
-    justificatifs.each do |justificatif|
-
-      if Justificatif.where(edusign_id: justificatif["ID"]).blank?
-        j = Justificatif.new
-        j.edusign_id = justificatif["ID"]
-        modification_justificatif(j, justificatif, motifs)
+      if Justificatif.where(edusign_id: justificatif_edusign["ID"]).empty?
+        new_justificatif = Justificatif.new
+        new_justificatif.edusign_id = justificatif_edusign["ID"]
+        requete.remplir_justificatif(new_justificatif, justificatif_edusign)
       else
-        j = Justificatif.find_by(edusign_id: justificatif["ID"])
-        modification_justificatif(j, justificatif, motifs)
+        justificatif = Justificatif.find_by(edusign_id: justificatif_edusign["ID"])
+        requete.remplir_justificatif(justificatif, justificatif_edusign)
       end
 
     end
   end
 
   task attendance: :environment do
-    url = URI("https://ext.edusign.fr/v1/course")
-    response = get_response(url)
+    requete = Edusign.new("https://ext.edusign.fr/v1/course")
+
+    response = requete.get_response
     
     if response["status"] == 'error'
       puts response["message"]
     end
 
-    cours = response["result"]
+    cours_edusign = response["result"]
     
-    cours.each do |cour|
+    cours_edusign.each do |cour_edusign|
       
       # Filtrer les cours avec un edusign_id
-      if Cour.find_by(edusign_id: cour["ID"])
-        
-        cour["STUDENTS"].each do |etudiant|
-          attendance = Attendance.new
-            attendance.état = etudiant["state"]
-            attendance.signée_le = etudiant["timestamp"]
-            attendance.justificatif_edusign_id = etudiant["absenceId"]
-            attendance.retard = etudiant["delay"]
-            attendance.exclu_le = etudiant["excluded"]
-            attendance.cour_id = Cour.find_by(edusign_id: etudiant["courseId"]).id
-            attendance.etudiant_id = Etudiant.find_by(edusign_id: etudiant["studentId"]).id
-            attendance.signature = etudiant["signature"]
+      if cour = Cour.find_by(edusign_id: cour_edusign["ID"])
+
+        cour_edusign["STUDENTS"].each do |attendance_edusign|
+
+          #puts cour_edusign["STUDENTS"].pluck("_id")
+          etudiant = Etudiant.find_by(edusign_id: attendance_edusign["studentId"])
+          # STUDENTS dans les cours d'Edusign sont des attendances
+          if attendance = Attendance.find_by(edusign_id: attendance_edusign["_id"])
             
-            if etudiant["signatureEmail"] != nil          
-              signature_email = SignatureEmail.new
-              signature_email.nb_envoyee = etudiant["signatureEmail"]["nbSent"]
-              signature_email.requete_edusign_id = etudiant["signatureEmail"]["requestId"]
-              signature_email.limite = etudiant["signatureEmail"]["signUntil"]
-              signature_email.second_envoi = etudiant["signatureEmail"]["secondSend"]
-              signature_email.envoi_email = etudiant["signatureEmail"]["sendEmailDate"]
-              signature_email.save
+            requete.remplir_attendance(attendance, attendance_edusign)
+          else 
+            new_attendance = Attendance.new(etudiant_id: etudiant.id, cour_id: cour.id)
 
-              attendance.signature_email_id = signature_email.id
-            end
-
-          attendance.save
+            requete.remplir_attendance(new_attendance, attendance_edusign)
+          end
         end
       end
+      
     end
   end
-
-  def get_response(url)
-      request = Net::HTTP::Get.new(url)
-      request["accept"] = 'application/json'
-      request["content-type"] = 'application/json'
-      request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
-
-      http = Net::HTTP.new(url.host, url.port)
-      http.use_ssl = true
-
-      response = JSON.parse(http.request(request).read_body)
-    end
 end
