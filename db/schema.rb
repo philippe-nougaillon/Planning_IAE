@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_03_26_143008) do
+ActiveRecord::Schema[7.1].define(version: 2025_03_27_114222) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -464,7 +464,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_26_143008) do
     t.datetime "envoi_email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "attendance_id", null: false
+    t.bigint "attendance_id"
     t.index ["attendance_id"], name: "index_signature_emails_on_attendance_id"
   end
 
@@ -560,7 +560,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_26_143008) do
   add_foreign_key "presences", "cours"
   add_foreign_key "presences", "etudiants"
   add_foreign_key "presences", "intervenants"
-  add_foreign_key "signature_emails", "attendances"
+  add_foreign_key "signature_emails", "attendances", on_delete: :nullify
   add_foreign_key "vacation_activite_tarifs", "vacation_activites"
   add_foreign_key "vacations", "vacation_activites"
 
