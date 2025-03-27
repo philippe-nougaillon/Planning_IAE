@@ -1608,9 +1608,9 @@ class ToolsController < ApplicationController
 
     #modification_intervenants
 
-    ajout_cours
+    #ajout_cours
 
-    modification_cours
+    #modification_cours
 
     #modification_formations
 
@@ -1623,311 +1623,221 @@ class ToolsController < ApplicationController
 
   private
 
-    def ajout_etudiants
+  def ajout_etudiants
 
-      url = URI("https://ext.edusign.fr/v1/student")
+    request = Edusign.new("https://ext.edusign.fr/v1/student", 'Post')
 
-      request = Net::HTTP::Post.new(url)
-      request["accept"] = 'application/json'
-      request["content-type"] = 'application/json'
-      request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
+    etudiants_added = request.get_all_element_created_today(Etudiant).where(edusign_id: nil)
 
-      etudiants = Etudiant.where(created_at: DateTime.now.beginning_of_day..DateTime.now.end_of_day)
-      
-      etudiants.each do |etudiant|
-        body =
-          {"student":{
-            "FIRSTNAME": etudiant.prénom,
-            "LASTNAME": etudiant.nom,
-            "EMAIL": etudiant.email,
-            "API_ID": etudiant.id,
-          }}
+    etudiants_added.each do |etudiant|
+      body =
+        {"student":{
+          "FIRSTNAME": etudiant.prénom,
+          "LASTNAME": etudiant.nom,
+          "EMAIL": etudiant.email,
+          "API_ID": etudiant.id,
+        }}
 
-        body[body.keys.first]["API_TYPE"] = "Aikku PLANN"
+      response = request.prepare_body_request(body).get_response
 
-        request.body = body.to_json
-        http = Net::HTTP.new(url.host, url.port)
-        http.use_ssl = true
-
-        response = JSON.parse(http.request(request).read_body)
-
-        if response["status"] == 'error'
-          flash[:alert] = response["message"]
-          break
-        end
-
-        etudiant.edusign_id = response["result"]["ID"]
-
-        etudiant.save
+      if response["status"] == 'error'
+        flash[:alert] = response["message"]
+        break
       end
 
-      ajout_formations(etudiants)
-      
+      etudiant.edusign_id = response["result"]["ID"]
+
+      etudiant.save
     end
 
-    def modification_etudiants
-      
-      url = URI("https://ext.edusign.fr/v1/student")
+    ajout_formations(etudiants)
 
-      request = Net::HTTP::Patch.new(url)
-      request["accept"] = 'application/json'
-      request["content-type"] = 'application/json'
-      request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
-      
-      etudiants_updated = Etudiant.where(updated_at: DateTime.now.beginning_of_day..DateTime.now.end_of_day).where("created_at != updated_at")
-      
-      etudiants_updated.each do |etudiant|
-        body =
-          {"student":{
-            "ID": etudiant.edusign_id,
-            "FIRSTNAME": etudiant.prénom,
-            "LASTNAME": etudiant.nom,
-            "EMAIL": etudiant.email,
-            "GROUPS": Formation.find(etudiant.formation_id).edusign_id
-          }}
-        
-        body[body.keys.first]["API_TYPE"] = "Aikku PLANN"
+  end
 
-        request.body = body.to_json
-        http = Net::HTTP.new(url.host, url.port)
-        http.use_ssl = true
+  def modification_etudiants
 
-        response = JSON.parse(http.request(request).read_body)
+    request = Edusign.new("https://ext.edusign.fr/v1/student", 'Patch')
 
-        if response["status"] == 'error'
-          flash[:alert] = response["message"]
-          break
-        end
+    etudiants_updated = request.get_all_element_updated_today(Etudiant).where("created_at != updated_at")
+
+    etudiants_updated.each do |etudiant|
+      body =
+        {"student":{
+          "ID": etudiant.edusign_id,
+          "FIRSTNAME": etudiant.prénom,
+          "LASTNAME": etudiant.nom,
+          "EMAIL": etudiant.email,
+          "GROUPS": Formation.find(etudiant.formation_id).edusign_id
+        }}
+
+      response = request.prepare_body_request(body).get_response
+
+      if response["status"] == 'error'
+        flash[:alert] = response["message"]
+        break
       end
     end
+  end
 
-    def ajout_formations(etudiants)
+  def ajout_formations(etudiants)
 
-      url = URI("https://ext.edusign.fr/v1/group")
+    request = Edusign.new("https://ext.edusign.fr/v1/group", 'Post')
 
-      request = Net::HTTP::Post.new(url)
-      request["accept"] = 'application/json'
-      request["content-type"] = 'application/json'
-      request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
+    formations = Formation.where(id: etudiants.pluck(:formation_id).uniq).where(edusign_id: nil)
 
-      formations = Formation.where(id: etudiants.pluck(:formation_id).uniq).where(edusign_id: nil)
-      
-      formations.each do |formation|
+    formations.each do |formation|
 
-        body =
-          {"group":{
-            "NAME": formation.nom,
-            "STUDENTS": formation.etudiants.pluck(:edusign_id).compact
-          }}
+      body =
+        {"group":{
+          "NAME": formation.nom,
+          "STUDENTS": formation.etudiants.pluck(:edusign_id).compact
+        }}
 
-        body[body.keys.first]["API_TYPE"] = "Aikku PLANN"
+      response = request.prepare_body_request(body).get_response
 
-        request.body = body.to_json
-        http = Net::HTTP.new(url.host, url.port)
-        http.use_ssl = true
+      if response["status"] == 'error'
+        flash[:alert] += response["message"]
+        break
+      end
 
-        response = JSON.parse(http.request(request).read_body)
+      formation.edusign_id = response["result"]["ID"]
 
-        if response["status"] == 'error'
-          flash[:alert] += response["message"]
-          break
-        end
+      formation.save
+    end
+  end
 
-        formation.edusign_id = response["result"]["ID"]
+  def modification_formations
+    request = Edusign.new("https://ext.edusign.fr/v1/group/", 'Patch')
 
-        formation.save
+    formations_updated = request.get_all_element_updated_today(Formation)
+
+    formations_updated.each do |formation|
+      body =
+        {"group":{
+          "ID": formation.edusign_id,
+          "NAME": formation.nom,
+          "STUDENTS": formation.etudiants.pluck(:edusign_id).compact
+        }}
+
+      response = request.prepare_body_request(body).get_response
+
+      if response["status"] == 'error'
+        flash[:alert] = response["message"]
+        break
       end
     end
+  end
 
-    def modification_formations
-      url = URI("https://ext.edusign.fr/v1/group/")
+  def ajout_intervenants
 
-      request = Net::HTTP::Patch.new(url)
-      request["accept"] = 'application/json'
-      request["content-type"] = 'application/json'
-      request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
-      
-      formations_updated = Formation.where(updated_at: DateTime.now.beginning_of_day..DateTime.now.end_of_day).where("created_at != updated_at").where.not(edusign_id: nil)
-      
-      formations_updated.each do |formation|
-        body =
-          {"group":{
-            "ID": formation.edusign_id,
-            "NAME": formation.nom,
-            "STUDENTS": formation.etudiants.pluck(:edusign_id).compact
-          }}
+    request = Edusign.new("https://ext.edusign.fr/v1/professor", 'Post')
 
-        body[body.keys.first]["API_TYPE"] = "Aikku PLANN"
+    intervenants_added = request.get_all_element_created_today(Intervenant)
 
-        request.body = body.to_json
-        http = Net::HTTP.new(url.host, url.port)
-        http.use_ssl = true
+    intervenants_added.each do |intervenant|
+      body =
+        {"professor":{
+          "FIRSTNAME": intervenant.prenom,
+          "LASTNAME": intervenant.nom,
+          "EMAIL": intervenant.email,
+          "API_ID": intervenant.id,
+          "dontSendCredentials": true
+        }}
 
-        response = JSON.parse(http.request(request).read_body)
+      response = request.prepare_body_request(body).get_response
 
-        if response["status"] == 'error'
-          flash[:alert] = response["message"]
-          break
-        end
+      if response["status"] == 'error'
+        flash[:alert] = response["message"]
+        break
+      end
+
+      intervenant.edusign_id = response["result"]["ID"]
+
+      intervenant.save
+    end
+  end
+
+  def modification_intervenants
+
+    request = Edusign.new("https://ext.edusign.fr/v1/professor", 'Patch')
+
+    intervenants_updated = request.get_all_element_updated_today(Intervenant)
+
+    intervenants_updated.each do |intervenant|
+      body =
+        {"professor":{
+          "ID": intervenant.edusign_id,
+          "FIRSTNAME": intervenant.prenom,
+          "LASTNAME": intervenant.nom,
+          "EMAIL": intervenant.email
+        }}
+
+      response = request.prepare_body_request(body).get_response
+
+      if response["status"] == 'error'
+        flash[:alert] = response["message"]
+        break
       end
     end
+  end
 
-    def ajout_intervenants
+  def ajout_cours
 
-      url = URI("https://ext.edusign.fr/v1/professor")
+    request = Edusign.new("https://ext.edusign.fr/v1/course", 'Post')
 
-      request = Net::HTTP::Post.new(url)
-      request["accept"] = 'application/json'
-      request["content-type"] = 'application/json'
-      request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
-      
-      intervenants_added = Intervenant.where(created_at: DateTime.now.beginning_of_day..DateTime.now.end_of_day, edusign_id: nil)
-      
-      intervenants_added.each do |intervenant|
-        body =
-          {"professor":{
-            "FIRSTNAME": intervenant.prenom,
-            "LASTNAME": intervenant.nom,
-            "EMAIL": intervenant.email,
-            "API_ID": intervenant.id,
-            "dontSendCredentials": true
-          }}
-        
-        body[body.keys.first]["API_TYPE"] = "Aikku PLANN"
+    cours_added = request.get_all_element_created_today(Cour)
 
-        request.body = body.to_json
-        http = Net::HTTP.new(url.host, url.port)
-        http.use_ssl = true
+    cours_added.each do |cours|
+      body =
+        {"course":{
+          "NAME": cours.nom.presence || 'sans nom',
+          "START": cours.debut,
+          "END": cours.fin,
+          "PROFESSOR": Intervenant.find(cours.intervenant_id).edusign_id,
+          "API_ID": cours.id,
+          "NEED_STUDENTS_SIGNATURE": true,
+          "SCHOOL_GROUP": [cours.formation.edusign_id]
+        }}
 
-        response = JSON.parse(http.request(request).read_body)
+      response = request.prepare_body_request(body).get_response
 
-        if response["status"] == 'error'
-          flash[:alert] = response["message"] + ", nom : #{intervenant.nom}"
-          break
-        end
+      if response["status"] == 'error'
+        flash[:alert] = response["message"]
+        break
+      end
 
-        intervenant.edusign_id = response["result"]["ID"]
+      cours.edusign_id = response["result"]["ID"]
 
-        intervenant.save
+      cours.save
+    end
+  end
+
+  def modification_cours
+    request = Edusign.new("https://ext.edusign.fr/v1/course", 'Patch')
+
+    cours_updated = request.get_all_element_updated_today(Cour)
+
+    cours_updated.each do |cours|
+      body =
+        {"course":{
+          "ID": cours.edusign_id,
+          "NAME": cours.nom,
+          "START": cours.debut,
+          "END": cours.fin,
+          "PROFESSOR": Intervenant.find(cours.intervenant_id).edusign_id,
+          "NEED_STUDENTS_SIGNATURE": true,
+          "editSurveys": false,
+          "SCHOOL_GROUP": [cours.formation.edusign_id]
+        }}
+
+      response = request.prepare_body_request(body).get_response
+
+      if response["status"] == 'error'
+        flash[:alert] = response["message"]
+        break
       end
     end
-
-    def modification_intervenants
-      
-      url = URI("https://ext.edusign.fr/v1/professor")
-
-      request = Net::HTTP::Patch.new(url)
-      request["accept"] = 'application/json'
-      request["content-type"] = 'application/json'
-      request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
-      
-      intervenants_updated = Intervenant.where(updated_at: DateTime.now.beginning_of_day..DateTime.now.end_of_day).where("created_at != updated_at").where.not(edusign_id: nil)
-      
-      intervenants_updated.each do |intervenant|
-        body =
-          {"professor":{
-            "ID": intervenant.edusign_id,
-            "FIRSTNAME": intervenant.prenom,
-            "LASTNAME": intervenant.nom,
-            "EMAIL": intervenant.email
-          }}
-        
-        body[body.keys.first]["API_TYPE"] = "Aikku PLANN"
-
-        request.body = body.to_json
-        http = Net::HTTP.new(url.host, url.port)
-        http.use_ssl = true
-
-        response = JSON.parse(http.request(request).read_body)
-
-        if response["status"] == 'error'
-          flash[:alert] = response["message"]
-          break
-        end
-      end
-    end
-
-    def ajout_cours
-
-      url = URI("https://ext.edusign.fr/v1/course")
-
-      request = Net::HTTP::Post.new(url)
-      request["accept"] = 'application/json'
-      request["content-type"] = 'application/json'
-      request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
-      
-      cours_added = Cour.where(created_at: DateTime.now.beginning_of_day..DateTime.now.end_of_day, edusign_id: nil)
-      
-      count_cours = 0
-
-      cours_added.each do |cours|
-        body =
-          {"course":{
-            "NAME": cours.nom.presence || 'sans nom',
-            "START": cours.debut,
-            "END": cours.fin,
-            "PROFESSOR": Intervenant.find(cours.intervenant_id).edusign_id,
-            "API_ID": cours.id,
-            "NEED_STUDENTS_SIGNATURE": true,
-            "SCHOOL_GROUP": [cours.formation.edusign_id]
-          }}
-        
-        body[body.keys.first]["API_TYPE"] = "Aikku PLANN"
-
-        request.body = body.to_json
-        http = Net::HTTP.new(url.host, url.port)
-        http.use_ssl = true
-
-        response = JSON.parse(http.request(request).read_body)
-
-        if response["status"] == 'error'
-          flash[:alert] = response["message"]
-          break
-        end
-
-        cours.edusign_id = response["result"]["ID"]
-
-        cours.save
-      end
-    end
-
-    def modification_cours
-      url = URI("https://ext.edusign.fr/v1/course")
-
-      request = Net::HTTP::Patch.new(url)
-      request["accept"] = 'application/json'
-      request["content-type"] = 'application/json'
-      request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
-      
-      cours_updated = Cour.where(updated_at: DateTime.now.beginning_of_day..DateTime.now.end_of_day).where("created_at != updated_at").where.not(edusign_id: nil)
-      
-      cours_updated.each do |cours|
-        body =
-          {"course":{
-            "ID": cours.edusign_id,
-            "NAME": cours.nom,
-            "START": cours.debut,
-            "END": cours.fin,
-            "PROFESSOR": Intervenant.find(cours.intervenant_id).edusign_id,
-            "NEED_STUDENTS_SIGNATURE": true,
-            "editSurveys": false,
-            "SCHOOL_GROUP": [cours.formation.edusign_id]
-          }}
-        
-        body[body.keys.first]["API_TYPE"] = "Aikku PLANN"
-
-        request.body = body.to_json
-        http = Net::HTTP.new(url.host, url.port)
-        http.use_ssl = true
-
-        response = JSON.parse(http.request(request).read_body)
-
-        if response["status"] == 'error'
-          flash[:alert] = response["message"]
-          break
-        end
-      end
-    end
+  end
 
     def is_user_authorized
       authorize :tool

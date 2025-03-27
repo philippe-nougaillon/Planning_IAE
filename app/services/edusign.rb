@@ -1,11 +1,19 @@
 class Edusign < ApplicationService
 
-    def initialize(url)
+    def initialize(url, method)
         url = URI(url)
         @http = Net::HTTP.new(url.host, url.port)
         @http.use_ssl = true
 
-        @request = Net::HTTP::Get.new(url)
+        case method
+        when "Get"
+            @request = Net::HTTP::Get.new(url)
+        when "Post"
+            @request = Net::HTTP::Post.new(url)
+        when "Patch"
+            @request = Net::HTTP::Patch.new(url)
+        end
+
         @request["accept"] = 'application/json'
         @request["content-type"] = 'application/json'
         @request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
@@ -13,7 +21,7 @@ class Edusign < ApplicationService
         puts "Initialisation de la requête terminée"
     end
 
-    def get_response 
+    def get_response
         response = JSON.parse(@http.request(@request).read_body)
         
         puts "Lancement de la requête terminée"
@@ -21,16 +29,32 @@ class Edusign < ApplicationService
         response
     end
 
-    def remplir_justificatif(j_object, j_json)
-        j_object.catégorie = j_json["TYPE"]
-        j_object.commentaires = j_json["COMMENT"]
-        j_object.etudiant_id = Etudiant.find_by(edusign_id: j_json["STUDENT_ID"]).id
-        j_object.file_url = j_json["FILE_URL"]
-        j_object.edusign_created_at = j_json["DATE_CREATION"]
-        j_object.accepte_le = j_json["REQUEST_DATE"]
-        j_object.debut = j_json["START"]
-        j_object.fin = j_json["END"]
-        j_object.save
+    def prepare_body_request(body)
+        body[body.keys.first]["API_TYPE"] = "Aikku PLANN"
+
+        @request.body = body.to_json
+
+        self
+    end
+
+    def get_all_element_created_today(model)
+        model.where(created_at: self.get_interval_of_time)
+    end
+
+    def get_all_element_updated_today(model)
+        model.where(updated_at: self.get_interval_of_time).where("created_at != updated_at")
+    end
+
+    def remplir_justificatif(justificatif, justificatif_edusign)
+        justificatif.catégorie = justificatif_edusign["TYPE"]
+        justificatif.commentaires = justificatif_edusign["COMMENT"]
+        justificatif.etudiant_id = Etudiant.find_by(edusign_id: justificatif_edusign["STUDENT_ID"]).id
+        justificatif.file_url = justificatif_edusign["FILE_URL"]
+        justificatif.edusign_created_at = justificatif_edusign["DATE_CREATION"]
+        justificatif.accepte_le = justificatif_edusign["REQUEST_DATE"]
+        justificatif.debut = justificatif_edusign["START"]
+        justificatif.fin = justificatif_edusign["END"]
+        justificatif.save
     end
 
     def remplir_attendance(attendance, attendance_edusign)
@@ -62,6 +86,10 @@ class Edusign < ApplicationService
         
     end
 
+    private
 
+        def get_interval_of_time
+            DateTime.now.beginning_of_day..DateTime.now.end_of_day
+        end
 
 end

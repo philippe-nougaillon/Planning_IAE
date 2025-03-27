@@ -1,7 +1,7 @@
 namespace :edusign do
   task justificatifs: :environment do
 
-    requete = Edusign.new("https://ext.edusign.fr/v1/justified-absence?page=0")
+    requete = Edusign.new("https://ext.edusign.fr/v1/justified-absence?page=0", 'Get')
     
     response = requete.get_response
 
@@ -27,7 +27,7 @@ namespace :edusign do
   end
 
   task attendance: :environment do
-    requete = Edusign.new("https://ext.edusign.fr/v1/course")
+    requete = Edusign.new("https://ext.edusign.fr/v1/course", 'Get')
 
     response = requete.get_response
     
