@@ -1,6 +1,10 @@
 class Edusign < ApplicationService
 
-    def initialize(url, method)
+    def initialize
+
+    end
+
+    def prepare_request(url, method)
         url = URI(url)
         @http = Net::HTTP.new(url.host, url.port)
         @http.use_ssl = true
@@ -38,11 +42,11 @@ class Edusign < ApplicationService
     end
 
     def get_all_element_created_today(model)
-        model.where(created_at: self.get_interval_of_time)
+        model.where(created_at: self.get_interval_of_time).where(edusign_id: nil)
     end
 
-    def get_all_element_updated_today(model)
-        model.where(updated_at: self.get_interval_of_time).where("created_at != updated_at")
+    def get_all_element_updated_today(model, record_ids)
+        model.where(updated_at: self.get_interval_of_time).where("created_at != updated_at").where.not(edusign_id: nil).where.not(id: record_ids)
     end
 
     def remplir_justificatif(justificatif, justificatif_edusign)
@@ -90,6 +94,54 @@ class Edusign < ApplicationService
 
         attendance.save
         
+    end
+
+    def export_cours(method, cours_ajoutés_ids = nil)
+        self.prepare_request("https://ext.edusign.fr/v1/course", method)
+
+        if method == 'Post'
+            cours = self.get_all_element_created_today(Cour)
+            puts "Début de l'ajout des cours"
+        else
+            puts "#{cours_ajoutés_ids} nb de cours deja ajouté"
+            cours = self.get_all_element_updated_today(Cour, cours_ajoutés_ids)
+            puts "Début de la modification des cours"
+        end
+
+        puts "#{cours.count} cours ont été récupéré"
+
+        cours.each do |cour|
+            body =
+              {"course":{
+                "NAME": cour.nom.presence || 'sans nom',
+                "START": cour.debut - 1.hour,
+                "END": cour.fin - 1.hour,
+                "PROFESSOR": Intervenant.find(cour.intervenant_id).edusign_id,
+                "API_ID": cour.id,
+                "NEED_STUDENTS_SIGNATURE": true,
+                "SCHOOL_GROUP": [cour.formation.edusign_id]
+                }
+              }
+
+            if method == 'Patch'
+                body[:course].merge!({"ID": cour.edusign_id})
+                body.merge!({"editSurveys": false})
+            end
+
+            response = self.prepare_body_request(body).get_response
+
+            puts response["status"] == 'error' ?  "Error : #{response["message"]}" : "Exportation du cours #{cour.id} réussie"
+
+            if method == 'Post'
+                cour.edusign_id = response["result"]["ID"]
+
+                cour.save
+            end
+        end
+
+        puts "Exportation des cours terminée"
+
+        cours.pluck(:id) if method == "Post"
     end
 
     private

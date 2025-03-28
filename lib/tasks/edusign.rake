@@ -1,5 +1,5 @@
 namespace :edusign do
-  task import_attendance: :environment do
+  task import_data_from_edusign: :environment do
 
     requete = Edusign.new("https://ext.edusign.fr/v1/justified-absence?page=0", 'Get')
     
@@ -30,8 +30,6 @@ namespace :edusign do
 
     requete = Edusign.new("https://ext.edusign.fr/v1/course", 'Get')
 
-    response = requete.get_response
-
     if response["status"] == 'error'
       puts response["message"]
     end
@@ -60,5 +58,14 @@ namespace :edusign do
       end
 
     end
+  end
+
+  task :export_data_to_edusign => :environment do
+    request = Edusign.new
+
+    cours_ajoutés_ids = request.export_cours("Post")
+
+    request.export_cours("Patch", cours_ajoutés_ids)
+
   end
 end
