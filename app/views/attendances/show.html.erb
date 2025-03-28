@@ -48,7 +48,7 @@
       <% if @attendance.exclu_le %>
         <p class="mb-4">
           <strong>Exclu le :</strong>
-          <%= l(@attendance.exclu_le, format: :long).humanize %>
+          <%= l(@attendance.exclu_le.in_time_zone('Europe/Paris'), format: :long).humanize %>
         </p>
       <% end %>
 
@@ -78,7 +78,7 @@
 
           <p class="mb-4">
             <strong>Date limite pour signer :</strong>
-            <%= l(@attendance.signatureEmail.limite, format: :long).humanize %>
+            <%= l(@attendance.signatureEmail.limite.in_time_zone('Europe/Paris'), format: :long).humanize %>
           </p>
         </div>
       <% end %>
@@ -86,7 +86,7 @@
       <% if @justificatif %>
         <p class="mb-4">
           <strong>Justificatif :</strong>
-          <%= @justificatif.nom %>
+          <%= @justificatif.catégorie %>
         </p>
 
         <p class="mb-4">
@@ -96,17 +96,17 @@
 
         <p class="mb-4">
           <strong>Accepté le :</strong>
-          <%= l(@justificatif.accepte_le, format: :long).humanize %>
+          <%= l(@justificatif.accepte_le.in_time_zone('Europe/Paris'), format: :long).humanize %>
         </p>
 
         <p class="mb-4">
           <strong>Début :</strong>
-          <%= l(@justificatif.debut, format: :long).humanize %>
+          <%= l(@justificatif.debut.in_time_zone('Europe/Paris'), format: :long).humanize %>
         </p>
 
         <p class="mb-4">
           <strong>Fin :</strong>
-          <%= l(@justificatif.fin, format: :long).humanize %>
+          <%= l(@justificatif.fin.in_time_zone('Europe/Paris'), format: :long).humanize %>
         </p>
 
         <p class="mb-4">
@@ -117,7 +117,7 @@
       <% if @attendance.signée_le %>
         <p class="mb-4">
           <strong>Signée le :</strong>
-          <%= l(@attendance.signée_le, format: :long).humanize %>
+          <%= l(@attendance.signée_le.in_time_zone('Europe/Paris'), format: :long).humanize %>
         </p>
 
         <div>

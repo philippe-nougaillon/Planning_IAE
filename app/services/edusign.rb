@@ -46,6 +46,7 @@ class Edusign < ApplicationService
     end
 
     def remplir_justificatif(justificatif, justificatif_edusign)
+        justificatif.edusign_id = justificatif_edusign["ID"]
         justificatif.catégorie = justificatif_edusign["TYPE"]
         justificatif.commentaires = justificatif_edusign["COMMENT"]
         justificatif.etudiant_id = Etudiant.find_by(edusign_id: justificatif_edusign["STUDENT_ID"]).id
@@ -58,6 +59,7 @@ class Edusign < ApplicationService
     end
 
     def remplir_attendance(attendance, attendance_edusign)
+        attendance.edusign_id = attendance_edusign["_id"]
         attendance.état = attendance_edusign["state"]
         attendance.signée_le = attendance_edusign["timestamp"]
         attendance.justificatif_edusign_id = attendance_edusign["absenceId"]
@@ -66,9 +68,11 @@ class Edusign < ApplicationService
         attendance.cour_id = Cour.find_by(edusign_id: attendance_edusign["courseId"]).id
         attendance.etudiant_id = Etudiant.find_by(edusign_id: attendance_edusign["studentId"]).id
         attendance.signature = attendance_edusign["signature"]
-        attendance.save
+
 
         if attendance_edusign["signatureEmail"] != nil
+            # Sauvegarde l'attendance pour pouvoir la retrouver si elle vient d'être créé
+            attendance.save
 
             signature_email = SignatureEmail.find_by(attendance_id: attendance.id) || SignatureEmail.new(attendance_id: attendance.id)        
             signature_email.nb_envoyee = attendance_edusign["signatureEmail"]["nbSent"]
@@ -79,10 +83,12 @@ class Edusign < ApplicationService
             signature_email.save
 
             attendance.signature_email_id = signature_email.id
-
-            attendance.save
+        else
+            SignatureEmail.find_by(id: attendance.signature_email_id)&.destroy
+            attendance.signature_email_id = nil
         end
 
+        attendance.save
         
     end
 

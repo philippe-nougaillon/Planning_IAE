@@ -1,5 +1,5 @@
 namespace :edusign do
-  task justificatifs: :environment do
+  task import_attendance: :environment do
 
     requete = Edusign.new("https://ext.edusign.fr/v1/justified-absence?page=0", 'Get')
     
@@ -24,21 +24,22 @@ namespace :edusign do
       end
 
     end
-  end
 
-  task attendance: :environment do
+
+
+
     requete = Edusign.new("https://ext.edusign.fr/v1/course", 'Get')
 
     response = requete.get_response
-    
+
     if response["status"] == 'error'
       puts response["message"]
     end
 
     cours_edusign = response["result"]
-    
+
     cours_edusign.each do |cour_edusign|
-      
+
       # Filtrer les cours avec un edusign_id
       if cour = Cour.find_by(edusign_id: cour_edusign["ID"])
 
@@ -48,16 +49,16 @@ namespace :edusign do
           etudiant = Etudiant.find_by(edusign_id: attendance_edusign["studentId"])
           # STUDENTS dans les cours d'Edusign sont des attendances
           if attendance = Attendance.find_by(edusign_id: attendance_edusign["_id"])
-            
+
             requete.remplir_attendance(attendance, attendance_edusign)
-          else 
+          else
             new_attendance = Attendance.new(etudiant_id: etudiant.id, cour_id: cour.id)
 
             requete.remplir_attendance(new_attendance, attendance_edusign)
           end
         end
       end
-      
+
     end
   end
 end

@@ -6,7 +6,7 @@ class Attendance < ApplicationRecord
 
 
   def style
-    if self.signatureEmail
+    if self.signatureEmail && !self.état
       "badge-warning"
     elsif self.état && !self.exclu_le
       "badge-success"
@@ -16,7 +16,7 @@ class Attendance < ApplicationRecord
   end
 
   def état_text
-    if self.signatureEmail
+    if self.signatureEmail && !self.état
       "En attente"
     elsif self.état
       if self.exclu_le

@@ -1608,9 +1608,9 @@ class ToolsController < ApplicationController
 
     #modification_intervenants
 
-    #ajout_cours
+    ajout_cours
 
-    #modification_cours
+    modification_cours
 
     #modification_formations
 
@@ -1791,8 +1791,8 @@ class ToolsController < ApplicationController
       body =
         {"course":{
           "NAME": cours.nom.presence || 'sans nom',
-          "START": cours.debut,
-          "END": cours.fin,
+          "START": cours.debut - 1.hour,
+          "END": cours.fin - 1.hour,
           "PROFESSOR": Intervenant.find(cours.intervenant_id).edusign_id,
           "API_ID": cours.id,
           "NEED_STUDENTS_SIGNATURE": true,
@@ -1822,8 +1822,8 @@ class ToolsController < ApplicationController
         {"course":{
           "ID": cours.edusign_id,
           "NAME": cours.nom,
-          "START": cours.debut,
-          "END": cours.fin,
+          "START": cours.debut - 1.hour,
+          "END": cours.fin - 1.hour,
           "PROFESSOR": Intervenant.find(cours.intervenant_id).edusign_id,
           "NEED_STUDENTS_SIGNATURE": true,
           "editSurveys": false,

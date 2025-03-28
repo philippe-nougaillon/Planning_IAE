@@ -18,6 +18,7 @@ class Cour < ApplicationRecord
   accepts_nested_attributes_for :options,
                                 reject_if: lambda{|attributes| attributes['catégorie'].blank? || attributes['description'].blank?},
                                 allow_destroy:true
+  has_many :attendances, dependent: :destroy
 
   has_one_attached :document
 
@@ -356,6 +357,11 @@ class Cour < ApplicationRecord
 
   def bypass?
     (self.commentaires && self.commentaires.include?("BYPASS=#{self.id}"))
+  end
+
+  def désynchronisé?
+    # Regarde si un cours réalisé d'une formation étant sur Edusign n'a aucune présence de créé.
+    Formation.cobayes_émargement.include?(self.formation_id) && self.réalisé? && self.attendances.empty?
   end
 
   private

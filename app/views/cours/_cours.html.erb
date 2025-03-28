@@ -110,6 +110,11 @@
                     <% end %>
                 </i>
             <% end %>
+            <% if cours.désynchronisé? %>
+              <i title="Cours désynchronisé avec Edusign" >
+                <%= fa_icon 'exclamation', class: 'text-error' %>
+              </i>
+            <% end %>
         <% end %>
         <% if current_user && current_user.role_number >= 1 && cours.document.attached? %>
             <%= link_to url_for(cours.document), title: cours.document.filename, target: "_blank" do %>
