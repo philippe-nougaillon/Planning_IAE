@@ -86,7 +86,7 @@
       <% if @justificatif %>
         <p class="mb-4">
           <strong>Justificatif :</strong>
-          <%= @justificatif.catégorie %>
+          <%= @justificatif.catégorie.humanize %>
         </p>
 
         <p class="mb-4">
@@ -110,7 +110,7 @@
         </p>
 
         <p class="mb-4">
-          <%= link_to "Voir le justificatif", @justificatif.file_url, class: 'text-primary hover:underline' %>
+          <%= link_to "Voir le justificatif", @justificatif, class: 'text-primary hover:underline' %>
         </p>
       <% end %>
 
