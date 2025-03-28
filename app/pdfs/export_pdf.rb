@@ -810,7 +810,7 @@ class ExportPdf
     end
 
     def convocation(cour, étudiant, papier, calculatrice, ordi_tablette, téléphone, dictionnaire)
-        is_examen_rattrapage = cour.intervenant_id == 940
+        is_examen_rattrapage = cour.intervenant_id == 1166
 
         font "OpenSans"
 
