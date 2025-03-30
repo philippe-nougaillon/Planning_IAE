@@ -31,7 +31,7 @@ class Cour < ApplicationRecord
   validate :check_hss
 
   before_validation :update_date_fin
-  # before_validation :sunday_morning_praise_the_dawning
+  before_validation :sunday_morning_praise_the_dawning
 
   before_save :change_etat_si_salle
   before_save :annuler_salle_si_cours_est_annulé
