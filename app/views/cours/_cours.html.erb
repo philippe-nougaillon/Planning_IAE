@@ -108,7 +108,7 @@
             <% end %>
             <% if !cours.commentaires.blank? %>
                 <i title="<%= cours.commentaires %>" >
-                    <% if cours.commentaires.include?('+') %>
+                    <% if cours.commentaires.start_with?("+")  %>
                         <%= link_to tools_commandes_path do %>
                             <%= fa_icon 'mug-hot', class: 'text-amber-800' %>
                         <% end %>
