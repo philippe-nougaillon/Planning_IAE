@@ -11,7 +11,7 @@
   <br><br>
   <%# link_to "Voir les détails de cet examen", tools_audits_url(id: @cour.id, type: 'Cour') %>
   <%= link_to "Voir les détails de cet examen", tools_audits_url(id: @cour.own_and_associated_audits.pluck(:id)) %>
-  <br>
+  <br><br>
   <%= link_to "Voir la liste des cours", cours_url %>
 </p>
 
