@@ -12,12 +12,21 @@ namespace :edusign do
   task :export_data_to_edusign => :environment do
     request = Edusign.new
 
-    cours_ajoutés_ids = request.export_cours("Post")
+    # Necessaire pour créer des formations sans étudiants et des formations avec que des étudiants déjà créés sur Edusign
+    #formations_ajoutés_ids = request.export_formations("Post")
 
-    request.export_cours("Patch", cours_ajoutés_ids)
+    #etudiants_ajoutés_ids = request.export_etudiants("Post")
 
-    intervenants_ajoutés_ids = request.export_intervenants("Post")
+    #request.export_etudiants("Patch", etudiants_ajoutés_ids)
 
-    request.export_intervenants("Patch", intervenants_ajoutés_ids)
+    #request.export_formations("Patch", formations_ajoutés_ids)
+
+    #intervenants_ajoutés_ids = request.export_intervenants("Post")
+
+    #request.export_intervenants("Patch", intervenants_ajoutés_ids)
+
+    #cours_ajoutés_ids = request.export_cours("Post")
+
+    #request.export_cours("Patch", cours_ajoutés_ids)
   end
 end

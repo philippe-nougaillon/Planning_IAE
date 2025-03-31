@@ -22,6 +22,7 @@ class Edusign < ApplicationService
         @request["content-type"] = 'application/json'
         @request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
 
+        puts "=" * 20
         puts "Initialisation de la requête terminée"
     end
 
@@ -167,6 +168,135 @@ class Edusign < ApplicationService
 
         puts "Importation des présences terminée"
     end
+    
+    def export_formations(method, formations_ajoutés_ids = nil)
+        self.prepare_request("https://ext.edusign.fr/v1/group", method)
+                
+        if method == 'Post'
+            formations = self.get_all_element_created_today(Formation)
+            puts "Début de l'ajout des formations"
+        else
+            formations = self.get_all_element_updated_today(Formation, formations_ajoutés_ids)
+            puts "Début de la modification des formations"
+        end
+        
+        puts "#{formations.count} formations ont été récupéré : #{formations.pluck(:id, :nom)}"
+
+        formations.each do |formation|
+            body =
+                {"group":{
+                    "NAME": formation.nom,
+                    "STUDENTS": formation.etudiants.pluck(:edusign_id).compact
+                }}
+
+            if method == 'Patch'
+                body[:group].merge!({"ID": formation.edusign_id})
+            end
+
+            response = self.prepare_body_request(body).get_response
+
+            puts response["status"] == 'error' ?  "Error : #{response["message"]}" : "Exportation de la formation #{formation.id}, #{formation.nom} réussie"
+
+            if method == 'Post'
+                formation.edusign_id = response["result"]["ID"]
+                formation.save
+            end
+        end
+
+        puts "Exportation des formations terminée"
+
+        # La liste des formations pour ne pas update celles qui ont été créées aujourd'hui
+        formations.pluck(:id) if method == "Post"
+    end
+
+    def export_etudiants(method, etudiants_ajoutés_ids = nil)
+        self.prepare_request("https://ext.edusign.fr/v1/student", method)
+        
+        if method == 'Post'
+            etudiants = self.get_all_element_created_today(Etudiant)
+            puts "Début de l'ajout des etudiants"
+        else
+            etudiants = self.get_all_element_updated_today(Etudiant, etudiants_ajoutés_ids)
+            puts "Début de la modification des etudiants"
+        end
+        
+        puts "#{etudiants.count} etudiants ont été récupéré : #{etudiants.pluck(:id, :nom)}"
+
+        etudiants.each do |etudiant|
+            body =
+                {"student":{
+                "FIRSTNAME": etudiant.prénom,
+                "LASTNAME": etudiant.nom,
+                "EMAIL": etudiant.email,
+                "API_ID": etudiant.id,
+                }}
+
+            if method == 'Patch'
+                body[:student].merge!({
+                    "ID": etudiant.edusign_id, 
+                    "GROUPS": Formation.find(etudiant.formation_id).edusign_id
+                })
+            end
+
+            response = self.prepare_body_request(body).get_response
+
+            puts response["status"] == 'error' ?  "Error : #{response["message"]}" : "Exportation de l'étudiant #{etudiant.id}, #{etudiant.nom} réussie"
+
+            if method == 'Post'
+                etudiant.edusign_id = response["result"]["ID"]
+                etudiant.save
+            end
+        end
+
+        puts "Exportation des étudiants terminée"
+
+        # La liste des etudiants pour ne pas update ceux qui ont été créés aujourd'hui
+        etudiants.pluck(:id) if method == "Post"
+    end
+
+    def export_intervenants(method, intervenants_ajoutés_ids = nil)
+        self.prepare_request("https://ext.edusign.fr/v1/professor", method)
+        
+        if method == 'Post'
+            intervenants = self.get_all_element_created_today(Intervenant)
+            puts "Début de l'ajout des intervenants"
+        else
+            intervenants = self.get_all_element_updated_today(Intervenant, intervenants_ajoutés_ids)
+            puts "Début de la modification des intervenants"
+        end
+
+        puts "#{intervenants.count} intervenants ont été récupéré : #{intervenants.pluck(:id, :nom)}"
+
+        intervenants.each do |intervenant|
+            body =
+              {"professor":{
+                "FIRSTNAME": intervenant.prenom,
+                "LASTNAME": intervenant.nom,
+                "EMAIL": intervenant.email,
+                "API_ID": intervenant.id
+              }}
+
+            if method == 'Post'
+                body[:professor].merge!({"dontSendCredentials": true})
+            else
+                body[:professor].merge!({"ID": intervenant.edusign_id})
+            end
+
+            response = self.prepare_body_request(body).get_response
+
+            puts response["status"] == 'error' ?  "Error : #{response["message"]}" : "Exportation de l'intervenant #{intervenant.id}, #{intervenant.nom} réussie"
+
+            if method == 'Post'
+                intervenant.edusign_id = response["result"]["ID"]
+                intervenant.save
+            end
+        end
+
+        puts "Exportation des intervenants terminée"
+
+        # La liste des intervenants pour ne pas update ceux qui ont été créés aujourd'hui
+        intervenants.pluck(:id) if method == "Post"
+    end
 
     def export_cours(method, cours_ajoutés_ids = nil)
         self.prepare_request("https://ext.edusign.fr/v1/course", method)
@@ -179,7 +309,7 @@ class Edusign < ApplicationService
             puts "Début de la modification des cours"
         end
 
-        puts "#{cours.count} cours ont été récupéré"
+        puts "#{cours.count} cours ont été récupéré : #{cours.pluck(:id, :nom)}"
 
         cours.each do |cour|
             body =
@@ -201,7 +331,7 @@ class Edusign < ApplicationService
 
             response = self.prepare_body_request(body).get_response
 
-            puts response["status"] == 'error' ?  "Error : #{response["message"]}" : "Exportation du cours #{cour.id} réussie"
+            puts response["status"] == 'error' ?  "Error : #{response["message"]}" : "Exportation du cours #{cour.id}, #{cour.nom} réussie"
 
             if method == 'Post'
                 cour.edusign_id = response["result"]["ID"]
@@ -211,50 +341,8 @@ class Edusign < ApplicationService
 
         puts "Exportation des cours terminée"
 
+        # La liste des cours pour ne pas update ceux qui ont été créés aujourd'hui
         cours.pluck(:id) if method == "Post"
-    end
-
-    def export_intervenants(method, intervenants_ajoutés_ids = nil)
-        self.prepare_request("https://ext.edusign.fr/v1/professor", method)
-
-        if method == 'Post'
-            intervenants = self.get_all_element_created_today(Intervenant)
-            puts "Début de l'ajout des intervenants"
-        else
-            intervenants = self.get_all_element_updated_today(Intervenant, intervenants_ajoutés_ids)
-            puts "Début de la modification des intervenants"
-        end
-
-        puts "#{intervenants.count} intervenants ont été récupéré"
-
-        intervenants.each do |intervenant|
-            body =
-              {"professor":{
-                "FIRSTNAME": intervenant.prenom,
-                "LASTNAME": intervenant.nom,
-                "EMAIL": intervenant.email,
-                "API_ID": intervenant.id
-              }}
-
-            if method == 'Post'
-                body[:professor].merge!({"dontSendCredentials": true})
-            else
-                body[:professor].merge!({"ID": intervenant.edusign_id})
-            end
-
-            response = self.prepare_body_request(body).get_response
-
-            puts response["status"] == 'error' ?  "Error : #{response["message"]}" : "Exportation de l'intervenant #{intervenant.id} réussie"
-
-            if method == 'Post'
-                intervenant.edusign_id = response["result"]["ID"]
-                intervenant.save
-            end
-        end
-
-        puts "Exportation des intervenants terminée"
-
-        intervenants.pluck(:id) if method == "Post"
     end
 
     private
