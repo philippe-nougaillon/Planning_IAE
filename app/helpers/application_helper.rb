@@ -28,15 +28,18 @@ module ApplicationHelper
 
     def time_in_paris_selon_la_saison
         #
-        # penser à changer refreshProgressBar()
-        # penser à changer le -1.hour dans _commande.html.erb
+        # PENSER À CHANGER :
+        # - "const now = parseInt((Date.now() + 7200000) / 1000)" dans refreshProgressBar()
+        # - "-2.hour" dans _commande.html.erb
+        # - "-2.hour" dans _commandev2.html.erb
+        # - "-2.hour" dans ajout/modification des cours dans edusign
         #
 
         # Heure d'hiver
-        DateTime.now.in_time_zone('Europe/Paris') + 1.hours
+        # DateTime.now.in_time_zone('Europe/Paris') + 1.hours
 
         # Heure d'été
-        #DateTime.now.in_time_zone('Europe/Paris') + 2.hours
+        DateTime.now.in_time_zone('Europe/Paris') + 2.hours
     end
 
     def clean_page(page)

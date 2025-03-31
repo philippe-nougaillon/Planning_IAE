@@ -1,6 +1,7 @@
 class DossiersController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[ show deposer deposer_done ]
   before_action :set_dossier, only: %i[ show edit update destroy envoyer deposer deposer_done valider rejeter relancer archiver ]
+  before_action :set_période, :set_intervenants_list, only: %i[ new ]
   before_action :is_user_authorized, except: %i[ show ]
 
   layout :determine_layout
@@ -55,28 +56,8 @@ class DossiersController < ApplicationController
 
   # GET /dossiers/new
   def new
-    # Lister toutes les personnes ayant eu cours comme intervenant principal ou en binome
-    période = '2024/2025'
-    début_période = '2024-09-01'
-    fin_période = '2025-08-31'
-
-    # on garde les id des intervenants ayant eu cours sur la période
-    intervenants_ids = Cour.where("DATE(cours.debut) BETWEEN ? AND ?", début_période, fin_période).pluck(:intervenant_id)
-    # on y ajoute les intervenants ayants fait les cours comme binomes
-    intervenants_ids += Cour.where("DATE(cours.debut) BETWEEN ? AND ?", début_période, fin_période).pluck(:intervenant_binome_id)
-    # on ajoute les intervenants ayants fait des vacations
-    intervenants_ids += Intervenant.where(id: Vacation.where("DATE(vacations.date) BETWEEN ? AND ?", début_période, fin_période).pluck(:intervenant_id))
-
-    intervenants_avec_dossiers_sur_période = Dossier.where(période: période).pluck(:intervenant_id)
-
-    @intervenants = Intervenant
-                          .where("id IN(?)", intervenants_ids.uniq)
-                          .where(status: ['CEV','CEV_ENS_C_CONTRACTUEL','CEV_TIT_CONT_FP','CEV_SAL_PRIV_IND'])
-                          .where.not(id: intervenants_avec_dossiers_sur_période)
-                          .uniq
-    
     @dossier = Dossier.new
-    @dossier.période = période
+    @dossier.période = @période
   end
 
   # GET /dossiers/1/edit
@@ -93,6 +74,7 @@ class DossiersController < ApplicationController
         format.html { redirect_to @dossier, notice: "Nouveau dossier créé avec succès" }
         format.json { render :show, status: :created, location: @dossier }
       else
+        set_intervenants_list
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @dossier.errors, status: :unprocessable_entity }
       end
@@ -106,6 +88,7 @@ class DossiersController < ApplicationController
         format.html { redirect_to @dossier, notice: "Dossier modifié." }
         format.json { render :show, status: :ok, location: @dossier }
       else
+        set_intervenants_list
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @dossier.errors, status: :unprocessable_entity }
       end
@@ -229,5 +212,30 @@ private
 
     def is_user_authorized
       authorize Dossier
+    end
+
+    def set_période
+      période = '2024/2025'
+      @début_période = '2024-09-01'
+      @fin_période = '2025-08-31'
+    end
+
+    def set_intervenants_list
+      # Lister toutes les personnes ayant eu cours comme intervenant principal ou en binome
+
+      # on garde les id des intervenants ayant eu cours sur la période
+      intervenants_ids = Cour.where("DATE(cours.debut) BETWEEN ? AND ?", @début_période, @fin_période).pluck(:intervenant_id)
+      # on y ajoute les intervenants ayants fait les cours comme binomes
+      intervenants_ids += Cour.where("DATE(cours.debut) BETWEEN ? AND ?", @début_période, @fin_période).pluck(:intervenant_binome_id)
+      # on ajoute les intervenants ayants fait des vacations
+      intervenants_ids += Intervenant.where(id: Vacation.where("DATE(vacations.date) BETWEEN ? AND ?", @début_période, @fin_période).pluck(:intervenant_id))
+
+      intervenants_avec_dossiers_sur_période = Dossier.where(période: @période).pluck(:intervenant_id)
+
+      @intervenants = Intervenant
+                            .where("id IN(?)", intervenants_ids.uniq)
+                            .where(status: ['CEV','CEV_ENS_C_CONTRACTUEL','CEV_TIT_CONT_FP','CEV_SAL_PRIV_IND'])
+                            .where.not(id: intervenants_avec_dossiers_sur_période)
+                            .uniq
     end
 end
