@@ -5,10 +5,8 @@ class AttendancesController < ApplicationController
   def index
     @attendances = Attendance.all.joins(:cour).order('cours.id DESC')
 
-    if params[:etudiant].present?
-      etudiant = params[:etudiant].strip
-      etudiant_id = Etudiant.find_by(nom: etudiant.split(' ').first, prénom: etudiant.split(' ').last.rstrip).id
-      @attendances = @attendances.where(etudiant_id: etudiant_id)
+    if params[:etudiant_id].present?
+      @attendances = @attendances.where(etudiant_id: params[:etudiant_id])
     end
 
     if params[:formation_id].present?
