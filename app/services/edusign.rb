@@ -185,8 +185,8 @@ class Edusign < ApplicationService
             body =
               {"course":{
                 "NAME": cour.nom.presence || 'sans nom',
-                "START": cour.debut - 1.hour,
-                "END": cour.fin - 1.hour,
+                "START": cour.debut - 2.hour,
+                "END": cour.fin - 2.hour,
                 "PROFESSOR": Intervenant.find(cour.intervenant_id).edusign_id,
                 "API_ID": cour.id,
                 "NEED_STUDENTS_SIGNATURE": true,
