@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_03_27_114222) do
+ActiveRecord::Schema[7.1].define(version: 2025_03_31_122303) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -361,8 +361,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_27_114222) do
     t.string "file_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "catégorie", default: 0
+    t.bigint "motif_id", null: false
     t.index ["etudiant_id"], name: "index_justificatifs_on_etudiant_id"
+    t.index ["motif_id"], name: "index_justificatifs_on_motif_id"
   end
 
   create_table "mail_logs", force: :cascade do |t|
@@ -372,6 +373,13 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_27_114222) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id"
+  end
+
+  create_table "motifs", force: :cascade do |t|
+    t.integer "edusign_id"
+    t.string "nom"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "notes", force: :cascade do |t|
@@ -554,6 +562,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_03_27_114222) do
   add_foreign_key "invits", "intervenants"
   add_foreign_key "invits", "users"
   add_foreign_key "justificatifs", "etudiants"
+  add_foreign_key "justificatifs", "motifs"
   add_foreign_key "notes", "users"
   add_foreign_key "options", "cours"
   add_foreign_key "options", "users"

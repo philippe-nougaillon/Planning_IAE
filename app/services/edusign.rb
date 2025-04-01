@@ -52,7 +52,6 @@ class Edusign < ApplicationService
 
     def remplir_justificatif(justificatif, justificatif_edusign)
         justificatif.edusign_id = justificatif_edusign["ID"]
-        justificatif.catégorie = justificatif_edusign["TYPE"]
         justificatif.commentaires = justificatif_edusign["COMMENT"]
         justificatif.etudiant_id = Etudiant.find_by(edusign_id: justificatif_edusign["STUDENT_ID"]).id
         justificatif.file_url = justificatif_edusign["FILE_URL"]
@@ -60,6 +59,21 @@ class Edusign < ApplicationService
         justificatif.accepte_le = justificatif_edusign["REQUEST_DATE"]
         justificatif.debut = justificatif_edusign["START"]
         justificatif.fin = justificatif_edusign["END"]
+        justificatif.save
+        
+        puts "*" * 20
+        puts justificatif_edusign["TYPE"]
+        puts "*" * 20
+
+        if Motif.catégorie_exist(justificatif_edusign["TYPE"])
+            justificatif.motif_id = justificatif_edusign["TYPE"]
+        else
+            motif = Motif.new
+            motif.nom = get_motif_name_from_edusign_id(justificatif_edusign["TYPE"])
+            motif.edusign_id = justificatif_edusign["TYPE"]
+            #motif.save
+        end
+        
         justificatif.save
     end
 
@@ -95,6 +109,23 @@ class Edusign < ApplicationService
 
         attendance.save
 
+    end
+
+    def get_motifs_from_edusign
+        self.prepare_request("https://ext.edusign.fr/v1/justified-absence/absence-reason", 'Get')
+
+        response = self.get_response
+
+        if response["status"] == 'error'
+            puts response['message']
+            return
+        end
+
+        motifs_edusign = response["result"]
+
+        puts "#{motifs_edusign.count} motifs reçu"
+
+        motifs_edusign
     end
 
     def import_justificatifs
@@ -344,7 +375,14 @@ class Edusign < ApplicationService
         # La liste des cours pour ne pas update ceux qui ont été créés aujourd'hui
         cours.pluck(:id) if method == "Post"
     end
-
+    
+    def get_motif_name_from_edusign_id(id)
+        self.get_motifs_from_edusign.each do |motif|
+            if motif["ID"] == id
+                return motif["NAME"]
+            end
+        end
+    end
     private
 
         def get_interval_of_time
