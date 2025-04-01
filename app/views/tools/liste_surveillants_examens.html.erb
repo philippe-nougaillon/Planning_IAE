@@ -57,7 +57,7 @@
                         <% @cumuls[surveillant] ? @cumuls[surveillant] += durée : @cumuls[surveillant] = durée %>
                         <tr class="hover border">
                             <td><%= link_to l(exam.debut, format: :long), cour_path(exam.id), class: 'text-primary hover:underline' %></td>
-                            <td><%= exam.formation.nom %></td>
+                            <td><%= exam.formation&.nom %></td>
                             <td><b><%= surveillant %></b></td>
                             <td><%= exam.duree %> h</td>
                             <td><%= durée %> h</td>
