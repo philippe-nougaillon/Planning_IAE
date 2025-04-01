@@ -60,20 +60,19 @@ class Edusign < ApplicationService
         justificatif.debut = justificatif_edusign["START"]
         justificatif.fin = justificatif_edusign["END"]
         justificatif.save
-        
-        puts "*" * 20
-        puts justificatif_edusign["TYPE"]
-        puts "*" * 20
 
-        if Motif.catégorie_exist(justificatif_edusign["TYPE"])
-            justificatif.motif_id = justificatif_edusign["TYPE"]
+        justificatif_edusign_id = justificatif_edusign["TYPE"]
+        catégorie_name = Motif.catégories[justificatif_edusign_id]
+
+        if catégorie_name
+            # Pour la création des premiers motifs dans les catégories
+            create_motif(justificatif_edusign_id, catégorie_name)
         else
-            motif = Motif.new
-            motif.nom = get_motif_name_from_edusign_id(justificatif_edusign["TYPE"])
-            motif.edusign_id = justificatif_edusign["TYPE"]
-            #motif.save
+            # Pour la création d'un motif
+            create_motif(justificatif_edusign_id, get_motif_name_from_edusign_id(justificatif_edusign_id))
         end
-        
+
+        justificatif.motif_id = Motif.find_by(edusign_id: justificatif_edusign_id).id
         justificatif.save
     end
 
@@ -385,7 +384,16 @@ class Edusign < ApplicationService
     end
     private
 
-        def get_interval_of_time
+    def create_motif(justificatif_edusign_id, nom_motif)
+        unless Motif.find_by(edusign_id: justificatif_edusign_id)
+            motif = Motif.new
+            motif.nom = nom_motif
+            motif.edusign_id = justificatif_edusign_id
+            motif.save
+        end
+    end
+
+    def get_interval_of_time
             DateTime.now.beginning_of_day..DateTime.now.end_of_day
         end
 
