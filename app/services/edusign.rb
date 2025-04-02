@@ -261,13 +261,11 @@ class Edusign < ApplicationService
                 "LASTNAME": etudiant.nom,
                 "EMAIL": etudiant.email,
                 "API_ID": etudiant.id,
+                "GROUPS": etudiant.formation&.edusign_id
                 }}
 
             if method == 'Patch'
-                body[:student].merge!({
-                    "ID": etudiant.edusign_id, 
-                    "GROUPS": Formation.find(etudiant.formation_id).edusign_id
-                })
+                body[:student].merge!({"ID": etudiant.edusign_id})
             end
 
             response = self.prepare_body_request(body).get_response
@@ -396,7 +394,7 @@ class Edusign < ApplicationService
     end
 
     def get_interval_of_time
-            DateTime.now.beginning_of_day..DateTime.now.end_of_day
-        end
+        DateTime.now.beginning_of_day..DateTime.now.end_of_day
+    end
 
 end
