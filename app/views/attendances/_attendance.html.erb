@@ -1,5 +1,5 @@
 <tr class="hover border">
-  <td><%= time_ago_in_words attendance.created_at %></td>
+  <td><%= time_ago_in_words attendance.updated_at %></td>
   <td><%= l attendance.signée_le, format: :short if attendance.signée_le %></td>
   <td><%= attendance.cour.formation.abrg %></td>
   <td><p class="<%= attendance.cour.intervenant_id.present? ? 'badge badge-primary text-white uppercase italic' : '' %>"><%= attendance.cour.intervenant.nom_prenom %></p></td>

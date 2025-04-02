@@ -84,8 +84,13 @@
       <% end %>
 
       <% if @justificatif %>
+        <h3 class="text-xl text-secondary my-4">
+          <%= fa_icon 'file-contract' %>
+          Justificatif
+        </h3>
+
         <p class="mb-4">
-          <strong>Justificatif :</strong>
+          <strong>Motif :</strong>
           <%= @justificatif.motif.nom.humanize %>
         </p>
 
@@ -100,17 +105,13 @@
         </p>
 
         <p class="mb-4">
-          <strong>Début :</strong>
+          <strong>Date de début :</strong>
           <%= l(@justificatif.debut.in_time_zone('Europe/Paris'), format: :long).humanize %>
         </p>
 
         <p class="mb-4">
-          <strong>Fin :</strong>
+          <strong>Date de fin :</strong>
           <%= l(@justificatif.fin.in_time_zone('Europe/Paris'), format: :long).humanize %>
-        </p>
-
-        <p class="mb-4">
-          <%= link_to "Voir le justificatif", @justificatif, class: 'text-primary hover:underline' %>
         </p>
       <% end %>
 

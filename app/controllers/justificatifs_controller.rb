@@ -3,13 +3,11 @@ class JustificatifsController < ApplicationController
 
   # GET /justificatifs or /justificatifs.json
   def index
-    @justificatifs = Justificatif.all
-    @motifs = Justificatif.catégories_humanized.values
+    @justificatifs = Justificatif.ordered
+    @motifs_for_select = Motif.pluck(:nom).uniq.map{|nom| [nom.humanize, nom]}.sort
 
-    if params[:etudiant].present?
-      etudiant = params[:etudiant].strip
-      etudiant_id = Etudiant.find_by(nom: etudiant.split(' ').first, prénom: etudiant.split(' ').last.rstrip).id
-      @justificatifs = @justificatifs.where(etudiant_id: etudiant_id)
+    if params[:etudiant_id].present?
+      @justificatifs = @justificatifs.where(etudiant_id: params[:etudiant_id])
     end
 
     if params[:date_debut].present?

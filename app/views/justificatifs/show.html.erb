@@ -7,7 +7,7 @@
   </div>
 
   <h1 class="text-3xl">
-    <%= fa_icon 'calendar-check' %>
+    <%= fa_icon 'file-contract' %>
     Justificatif
   </h1>
 
@@ -46,7 +46,7 @@
         <%= l @justificatif.edusign_created_at, format: :long  %>
       </p>
 
-      <% if @justificatif.file_url %>
+      <% if @justificatif.file_url.present? %>
         <p class="mb-4">
           <strong>Document justificatif :</strong>
           <%= link_to @justificatif.file_url, @justificatif.file_url, class: 'text-primary hover:underline' %>

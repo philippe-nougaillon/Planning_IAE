@@ -3,7 +3,7 @@ class AttendancesController < ApplicationController
 
   # GET /attendances or /attendances.json
   def index
-    @attendances = Attendance.all.joins(:cour).order('cours.id DESC')
+    @attendances = Attendance.ordered
 
     if params[:etudiant_id].present?
       @attendances = @attendances.where(etudiant_id: params[:etudiant_id])

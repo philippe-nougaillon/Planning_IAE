@@ -1,5 +1,5 @@
 <div class="border-b mt-6 mb-2 pb-4">
-  <h1 class="text-3xl"><%= fa_icon "file-signature" %> Justificatifs</h1>
+  <h1 class="text-3xl"><%= fa_icon "file-contract" %> Justificatifs</h1>
 </div>
 
 <div class="bs-container p-4 shadow mb-4">
@@ -7,9 +7,9 @@
     <div class="flex flex-wrap">
       
       <div class="sm:w-1/4 pr-4">
-        <%= label_tag :etudiant %>
-        <%= select_tag :etudiant, 
-                            options_for_select(Etudiant.for_select, params[:etudiant]), 
+        <%= label_tag :etudiant_id %>
+        <%= select_tag :etudiant_id, 
+                            options_from_collection_for_select(Etudiant.all, :id, :nom_prénom, params[:etudiant_id]), 
                             class: "slim-select", 
                             include_blank: true, 
                             onchange: "this.form.submit()" %>
@@ -36,7 +36,7 @@
       <div class="sm:w-1/6 pl-4">
         <%= label_tag :motif, "Motif" %>
         <%= select_tag :motif,
-                            options_for_select(@motifs, params[:motif]),
+                            options_for_select(@motifs_for_select, params[:motif]),
                             include_blank: true,
                             class: "select select-bordered select-sm w-full", 
                             onchange: "this.form.submit()" %>

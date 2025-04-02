@@ -4,6 +4,7 @@ class Attendance < ApplicationRecord
 
   has_one :signatureEmail, dependent: :nullify
 
+  scope :ordered, -> { order(updated_at: :desc) }
 
   def style
     if self.signatureEmail && !self.état

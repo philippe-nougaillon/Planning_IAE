@@ -62,13 +62,15 @@ class Edusign < ApplicationService
         justificatif.save
 
         justificatif_edusign_id = justificatif_edusign["TYPE"]
+
+        # Correspond à une catégorie si elle existe chez nous, sinon nil
         catégorie_name = Motif.catégories[justificatif_edusign_id]
 
         if catégorie_name
-            # Pour la création des premiers motifs dans les catégories
+            # Pour la création des premiers motifs dans les catégories, si pas encore créé
             create_motif(justificatif_edusign_id, catégorie_name)
         else
-            # Pour la création d'un motif
+            # Pour la création d'un motif, si nouveau
             create_motif(justificatif_edusign_id, get_motif_name_from_edusign_id(justificatif_edusign_id))
         end
 
