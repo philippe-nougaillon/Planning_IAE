@@ -50,98 +50,6 @@ class Edusign < ApplicationService
         model.where(updated_at: self.get_interval_of_time).where("created_at != updated_at").where.not(edusign_id: nil).where.not(id: record_ids)
     end
 
-    def remplir_justificatif(justificatif, justificatif_edusign)
-        if etudiant_id = Etudiant.find_by(edusign_id: justificatif_edusign["STUDENT_ID"])&.id
-            justificatif.edusign_id = justificatif_edusign["ID"]
-            justificatif.commentaires = justificatif_edusign["COMMENT"]
-            justificatif.etudiant_id = etudiant_id
-            justificatif.file_url = justificatif_edusign["FILE_URL"]
-            justificatif.edusign_created_at = justificatif_edusign["DATE_CREATION"]
-            justificatif.accepte_le = justificatif_edusign["REQUEST_DATE"]
-            justificatif.debut = justificatif_edusign["START"]
-            justificatif.fin = justificatif_edusign["END"]
-            justificatif.save
-
-            justificatif_edusign_id = justificatif_edusign["TYPE"]
-
-            # Correspond à une catégorie si elle existe chez nous, sinon nil
-            catégorie_name = Motif.catégories[justificatif_edusign_id]
-
-            if catégorie_name
-                # Pour la création des premiers motifs dans les catégories, si pas encore créé
-                create_motif(justificatif_edusign_id, catégorie_name)
-            else
-                # Pour la création d'un motif, si nouveau
-                create_motif(justificatif_edusign_id, get_motif_name_from_edusign_id(justificatif_edusign_id))
-            end
-
-            justificatif.motif_id = Motif.find_by(edusign_id: justificatif_edusign_id).id
-            justificatif.save
-        else
-            puts "Étudiant avec l'edusign_id n° #{justificatif_edusign["STUDENT_ID"]} pas trouvé. Le justificatif n'est pas récupéré."
-        end
-    end
-
-    def remplir_attendance(attendance, attendance_edusign)
-        cour_id = Cour.find_by(edusign_id: attendance_edusign["courseId"])&.id
-        etudiant_id = Etudiant.find_by(edusign_id: attendance_edusign["studentId"])&.id
-        if cour_id
-            if etudiant_id
-                attendance.edusign_id = attendance_edusign["_id"]
-                attendance.état = attendance_edusign["state"]
-                attendance.signée_le = attendance_edusign["timestamp"]
-                attendance.justificatif_edusign_id = attendance_edusign["absenceId"]
-                attendance.retard = attendance_edusign["delay"]
-                attendance.exclu_le = attendance_edusign["excluded"]
-                attendance.cour_id = cour_id
-                attendance.etudiant_id = etudiant_id
-                attendance.signature = attendance_edusign["signature"]
-
-
-                if attendance_edusign["signatureEmail"] != nil
-                    # Sauvegarde l'attendance pour pouvoir la retrouver si elle vient d'être créé
-                    attendance.save
-
-                    signature_email = SignatureEmail.find_by(attendance_id: attendance.id) || SignatureEmail.new(attendance_id: attendance.id)        
-                    signature_email.nb_envoyee = attendance_edusign["signatureEmail"]["nbSent"]
-                    signature_email.requete_edusign_id = attendance_edusign["signatureEmail"]["requestId"]
-                    signature_email.limite = attendance_edusign["signatureEmail"]["signUntil"]
-                    signature_email.second_envoi = attendance_edusign["signatureEmail"]["secondSend"]
-                    signature_email.envoi_email = attendance_edusign["signatureEmail"]["sendEmailDate"]
-                    signature_email.save
-
-                    attendance.signature_email_id = signature_email.id
-                else
-                    SignatureEmail.find_by(id: attendance.signature_email_id)&.destroy
-                    attendance.signature_email_id = nil
-                end
-
-                attendance.save
-            else
-                puts "Étudiant avec l'edusign_id n° #{attendance_edusign["studentId"]} pas trouvé. L'attendance n'est pas récupérée."
-            end
-        else 
-            puts "Cour avec l'edusign_id n° #{attendance_edusign["courseId"]} pas trouvé. L'attendance n'est pas récupérée."
-        end
-    end
-
-    def get_motifs_from_edusign
-        self.prepare_request("https://ext.edusign.fr/v1/justified-absence/absence-reason", 'Get')
-
-        response = self.get_response
-
-        if response["status"] == 'error'
-            puts response['message']
-            return
-        end
-
-        motifs_edusign = response["result"]
-
-        puts "#{motifs_edusign.count} motifs reçu"
-
-        motifs_edusign
-    end
-
     def import_justificatifs
         self.prepare_request("https://ext.edusign.fr/v1/justified-absence?page=0", 'Get')
 
@@ -160,18 +68,43 @@ class Edusign < ApplicationService
 
         justificatifs_edusign.each do |justificatif_edusign|
 
-            if Justificatif.where(edusign_id: justificatif_edusign["ID"]).empty?
-                new_justificatif = Justificatif.new
-                new_justificatif.edusign_id = justificatif_edusign["ID"]
-                self.remplir_justificatif(new_justificatif, justificatif_edusign)
-            else
-                justificatif = Justificatif.find_by(edusign_id: justificatif_edusign["ID"])
+            if etudiant_id = Etudiant.find_by(edusign_id: attendance_edusign["studentId"])&.id
+                justificatif = Justificatif.find_or_initialize_by(edusign_id: justificatif_edusign["ID"], etudiant_id: etudiant_id)
                 self.remplir_justificatif(justificatif, justificatif_edusign)
+            else
+                puts "Étudiant avec l'edusign_id n° #{justificatif_edusign["STUDENT_ID"]} pas trouvé. Le justificatif n'est pas récupéré."
             end
 
         end
 
         puts "Importation des justificatifs terminée"
+    end
+
+    def remplir_justificatif(justificatif, justificatif_edusign)
+        justificatif.edusign_id = justificatif_edusign["ID"]
+        justificatif.commentaires = justificatif_edusign["COMMENT"]
+        justificatif.file_url = justificatif_edusign["FILE_URL"]
+        justificatif.edusign_created_at = justificatif_edusign["DATE_CREATION"]
+        justificatif.accepte_le = justificatif_edusign["REQUEST_DATE"]
+        justificatif.debut = justificatif_edusign["START"]
+        justificatif.fin = justificatif_edusign["END"]
+        justificatif.save
+
+        justificatif_edusign_id = justificatif_edusign["TYPE"]
+
+        # Correspond à une catégorie si elle existe chez nous, sinon nil
+        catégorie_name = Motif.catégories[justificatif_edusign_id]
+
+        if catégorie_name
+            # Pour la création des premiers motifs dans les catégories, si pas encore créé
+            create_motif(justificatif_edusign_id, catégorie_name)
+        else
+            # Pour la création d'un motif, si nouveau
+            create_motif(justificatif_edusign_id, get_motif_name_from_edusign_id(justificatif_edusign_id))
+        end
+
+        justificatif.motif_id = Motif.find_by(edusign_id: justificatif_edusign_id).id
+        justificatif.save
     end
 
     def import_attendances
@@ -195,23 +128,71 @@ class Edusign < ApplicationService
             # Filtrer les cours avec un edusign_id
             if cour = Cour.find_by(edusign_id: cour_edusign["ID"])
 
+                # STUDENTS dans les cours d'Edusign sont des attendances
                 cour_edusign["STUDENTS"].each do |attendance_edusign|
 
-                    #puts cour_edusign["STUDENTS"].pluck("_id")
-                    etudiant = Etudiant.find_by(edusign_id: attendance_edusign["studentId"])
-                    # STUDENTS dans les cours d'Edusign sont des attendances
-                    if attendance = Attendance.find_by(edusign_id: attendance_edusign["_id"])
+                    # puts cour_edusign["STUDENTS"].pluck("_id")
+
+                    # Cas où l'étudiant est créé côté Edusign ou l'étudiant recherché n'a pas d'edusign_id
+                    if etudiant = Etudiant.find_by(edusign_id: attendance_edusign["studentId"])
+                        attendance = Attendance.find_or_initialize_by(edusign_id: attendance_edusign["_id"], etudiant_id: etudiant.id, cour_id: cour.id)
                         self.remplir_attendance(attendance, attendance_edusign)
                     else
-                        new_attendance = Attendance.new(etudiant_id: etudiant.id, cour_id: cour.id)
-
-                        self.remplir_attendance(new_attendance, attendance_edusign)
+                        puts "Étudiant avec l'edusign_id n° #{attendance_edusign["studentId"]} pas trouvé. L'attendance n'est pas récupérée."
                     end
                 end
+            else
+                puts "Cour avec l'edusign_id n° #{cour_edusign["ID"]} pas trouvé. L'attendance n'est pas récupérée."
             end
         end
 
         puts "Importation des présences terminée"
+    end
+
+    def remplir_attendance(attendance, attendance_edusign)
+        attendance.état = attendance_edusign["state"]
+        attendance.signée_le = attendance_edusign["timestamp"]
+        attendance.justificatif_edusign_id = attendance_edusign["absenceId"]
+        attendance.retard = attendance_edusign["delay"]
+        attendance.exclu_le = attendance_edusign["excluded"]
+        attendance.signature = attendance_edusign["signature"]
+
+        if attendance_edusign["signatureEmail"] != nil
+            # Sauvegarde l'attendance pour pouvoir la retrouver si elle vient d'être créé
+            attendance.save
+
+            signature_email = SignatureEmail.find_by(attendance_id: attendance.id) || SignatureEmail.new(attendance_id: attendance.id)        
+            signature_email.nb_envoyee = attendance_edusign["signatureEmail"]["nbSent"]
+            signature_email.requete_edusign_id = attendance_edusign["signatureEmail"]["requestId"]
+            signature_email.limite = attendance_edusign["signatureEmail"]["signUntil"]
+            signature_email.second_envoi = attendance_edusign["signatureEmail"]["secondSend"]
+            signature_email.envoi_email = attendance_edusign["signatureEmail"]["sendEmailDate"]
+            signature_email.save
+
+            attendance.signature_email_id = signature_email.id
+        else
+            SignatureEmail.find_by(id: attendance.signature_email_id)&.destroy
+            attendance.signature_email_id = nil
+        end
+
+        attendance.save
+    end
+
+    def get_motifs_from_edusign
+        self.prepare_request("https://ext.edusign.fr/v1/justified-absence/absence-reason", 'Get')
+
+        response = self.get_response
+
+        if response["status"] == 'error'
+            puts response['message']
+            return
+        end
+
+        motifs_edusign = response["result"]
+
+        puts "#{motifs_edusign.count} motifs reçu"
+
+        motifs_edusign
     end
     
     def export_formations(method, formations_ajoutés_ids = nil)
@@ -407,6 +388,7 @@ class Edusign < ApplicationService
     end
 
     def get_interval_of_time
+        # Modifier le Scheduler en conséquence, pour éviter les duplications
         DateTime.now.beginning_of_day..DateTime.now.end_of_day
     end
 

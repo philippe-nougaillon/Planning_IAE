@@ -1584,13 +1584,24 @@ class ToolsController < ApplicationController
     request.body = body.to_json
 
     response = JSON.parse(http.request(request).read_body)
-   puts "-*" * 50
+    puts "-*" * 50
     puts response
     puts "-*" * 50
 
+    
     if response["status"] == 'error'
       flash[:alert] = response["message"]
     else
+      if intervenant
+        intervenant.edusign_id = response["result"]["ID"]
+        intervenant.save
+      elsif formation
+        formation.edusign_id = response["result"]["ID"]
+        formation.save
+      elsif étudiant
+        étudiant.edusign_id = response["result"]["ID"]
+        étudiant.save
+      end
       flash[:notice] = "Création avec succès de #{record_type} sur Edusign ! ID sur Edusign : #{response["result"]["ID"]}"
     end
     redirect_to tools_edusign_path
@@ -1608,9 +1619,9 @@ class ToolsController < ApplicationController
 
     #modification_intervenants
 
-    ajout_cours
+    # ajout_cours
 
-    modification_cours
+    # modification_cours
 
     #modification_formations
 
