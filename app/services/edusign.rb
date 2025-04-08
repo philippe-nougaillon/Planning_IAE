@@ -78,44 +78,50 @@ class Edusign < ApplicationService
             justificatif.motif_id = Motif.find_by(edusign_id: justificatif_edusign_id).id
             justificatif.save
         else
-            puts "Étudiant avec l'edusign_id n°#{justificatif_edusign["STUDENT_ID"]} pas trouvé"
+            puts "Étudiant avec l'edusign_id n° #{justificatif_edusign["STUDENT_ID"]} pas trouvé. Le justificatif n'est pas récupéré."
         end
     end
 
     def remplir_attendance(attendance, attendance_edusign)
         cour_id = Cour.find_by(edusign_id: attendance_edusign["courseId"])&.id
         etudiant_id = Etudiant.find_by(edusign_id: attendance_edusign["studentId"])&.id
-        if cour_id && etudiant_id
-            attendance.edusign_id = attendance_edusign["_id"]
-            attendance.état = attendance_edusign["state"]
-            attendance.signée_le = attendance_edusign["timestamp"]
-            attendance.justificatif_edusign_id = attendance_edusign["absenceId"]
-            attendance.retard = attendance_edusign["delay"]
-            attendance.exclu_le = attendance_edusign["excluded"]
-            attendance.cour_id = cour_id
-            attendance.etudiant_id = etudiant_id
-            attendance.signature = attendance_edusign["signature"]
+        if cour_id
+            if etudiant_id
+                attendance.edusign_id = attendance_edusign["_id"]
+                attendance.état = attendance_edusign["state"]
+                attendance.signée_le = attendance_edusign["timestamp"]
+                attendance.justificatif_edusign_id = attendance_edusign["absenceId"]
+                attendance.retard = attendance_edusign["delay"]
+                attendance.exclu_le = attendance_edusign["excluded"]
+                attendance.cour_id = cour_id
+                attendance.etudiant_id = etudiant_id
+                attendance.signature = attendance_edusign["signature"]
 
 
-            if attendance_edusign["signatureEmail"] != nil
-                # Sauvegarde l'attendance pour pouvoir la retrouver si elle vient d'être créé
+                if attendance_edusign["signatureEmail"] != nil
+                    # Sauvegarde l'attendance pour pouvoir la retrouver si elle vient d'être créé
+                    attendance.save
+
+                    signature_email = SignatureEmail.find_by(attendance_id: attendance.id) || SignatureEmail.new(attendance_id: attendance.id)        
+                    signature_email.nb_envoyee = attendance_edusign["signatureEmail"]["nbSent"]
+                    signature_email.requete_edusign_id = attendance_edusign["signatureEmail"]["requestId"]
+                    signature_email.limite = attendance_edusign["signatureEmail"]["signUntil"]
+                    signature_email.second_envoi = attendance_edusign["signatureEmail"]["secondSend"]
+                    signature_email.envoi_email = attendance_edusign["signatureEmail"]["sendEmailDate"]
+                    signature_email.save
+
+                    attendance.signature_email_id = signature_email.id
+                else
+                    SignatureEmail.find_by(id: attendance.signature_email_id)&.destroy
+                    attendance.signature_email_id = nil
+                end
+
                 attendance.save
-
-                signature_email = SignatureEmail.find_by(attendance_id: attendance.id) || SignatureEmail.new(attendance_id: attendance.id)        
-                signature_email.nb_envoyee = attendance_edusign["signatureEmail"]["nbSent"]
-                signature_email.requete_edusign_id = attendance_edusign["signatureEmail"]["requestId"]
-                signature_email.limite = attendance_edusign["signatureEmail"]["signUntil"]
-                signature_email.second_envoi = attendance_edusign["signatureEmail"]["secondSend"]
-                signature_email.envoi_email = attendance_edusign["signatureEmail"]["sendEmailDate"]
-                signature_email.save
-
-                attendance.signature_email_id = signature_email.id
             else
-                SignatureEmail.find_by(id: attendance.signature_email_id)&.destroy
-                attendance.signature_email_id = nil
+                puts "Étudiant avec l'edusign_id n° #{attendance_edusign["studentId"]} pas trouvé. L'attendance n'est pas récupérée."
             end
-
-            attendance.save
+        else 
+            puts "Cour avec l'edusign_id n° #{attendance_edusign["courseId"]} pas trouvé. L'attendance n'est pas récupérée."
         end
     end
 
