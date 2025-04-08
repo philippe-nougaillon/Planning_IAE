@@ -51,65 +51,72 @@ class Edusign < ApplicationService
     end
 
     def remplir_justificatif(justificatif, justificatif_edusign)
-        justificatif.edusign_id = justificatif_edusign["ID"]
-        justificatif.commentaires = justificatif_edusign["COMMENT"]
-        justificatif.etudiant_id = Etudiant.find_by(edusign_id: justificatif_edusign["STUDENT_ID"]).id
-        justificatif.file_url = justificatif_edusign["FILE_URL"]
-        justificatif.edusign_created_at = justificatif_edusign["DATE_CREATION"]
-        justificatif.accepte_le = justificatif_edusign["REQUEST_DATE"]
-        justificatif.debut = justificatif_edusign["START"]
-        justificatif.fin = justificatif_edusign["END"]
-        justificatif.save
+        if etudiant_id = Etudiant.find_by(edusign_id: justificatif_edusign["STUDENT_ID"]).id
+            justificatif.edusign_id = justificatif_edusign["ID"]
+            justificatif.commentaires = justificatif_edusign["COMMENT"]
+            justificatif.etudiant_id = etudiant_id
+            justificatif.file_url = justificatif_edusign["FILE_URL"]
+            justificatif.edusign_created_at = justificatif_edusign["DATE_CREATION"]
+            justificatif.accepte_le = justificatif_edusign["REQUEST_DATE"]
+            justificatif.debut = justificatif_edusign["START"]
+            justificatif.fin = justificatif_edusign["END"]
+            justificatif.save
 
-        justificatif_edusign_id = justificatif_edusign["TYPE"]
+            justificatif_edusign_id = justificatif_edusign["TYPE"]
 
-        # Correspond à une catégorie si elle existe chez nous, sinon nil
-        catégorie_name = Motif.catégories[justificatif_edusign_id]
+            # Correspond à une catégorie si elle existe chez nous, sinon nil
+            catégorie_name = Motif.catégories[justificatif_edusign_id]
 
-        if catégorie_name
-            # Pour la création des premiers motifs dans les catégories, si pas encore créé
-            create_motif(justificatif_edusign_id, catégorie_name)
+            if catégorie_name
+                # Pour la création des premiers motifs dans les catégories, si pas encore créé
+                create_motif(justificatif_edusign_id, catégorie_name)
+            else
+                # Pour la création d'un motif, si nouveau
+                create_motif(justificatif_edusign_id, get_motif_name_from_edusign_id(justificatif_edusign_id))
+            end
+
+            justificatif.motif_id = Motif.find_by(edusign_id: justificatif_edusign_id).id
+            justificatif.save
         else
-            # Pour la création d'un motif, si nouveau
-            create_motif(justificatif_edusign_id, get_motif_name_from_edusign_id(justificatif_edusign_id))
+            puts "Étudiant avec l'edusign_id n°#{justificatif_edusign["STUDENT_ID"]} pas trouvé"
         end
-
-        justificatif.motif_id = Motif.find_by(edusign_id: justificatif_edusign_id).id
-        justificatif.save
     end
 
     def remplir_attendance(attendance, attendance_edusign)
-        attendance.edusign_id = attendance_edusign["_id"]
-        attendance.état = attendance_edusign["state"]
-        attendance.signée_le = attendance_edusign["timestamp"]
-        attendance.justificatif_edusign_id = attendance_edusign["absenceId"]
-        attendance.retard = attendance_edusign["delay"]
-        attendance.exclu_le = attendance_edusign["excluded"]
-        attendance.cour_id = Cour.find_by(edusign_id: attendance_edusign["courseId"]).id
-        attendance.etudiant_id = Etudiant.find_by(edusign_id: attendance_edusign["studentId"]).id
-        attendance.signature = attendance_edusign["signature"]
+        cour_id = Cour.find_by(edusign_id: attendance_edusign["courseId"]).id
+        etudiant_id = Etudiant.find_by(edusign_id: attendance_edusign["studentId"]).id
+        if cour_id && etudiant_id
+            attendance.edusign_id = attendance_edusign["_id"]
+            attendance.état = attendance_edusign["state"]
+            attendance.signée_le = attendance_edusign["timestamp"]
+            attendance.justificatif_edusign_id = attendance_edusign["absenceId"]
+            attendance.retard = attendance_edusign["delay"]
+            attendance.exclu_le = attendance_edusign["excluded"]
+            attendance.cour_id = cour_id
+            attendance.etudiant_id = etudiant_id
+            attendance.signature = attendance_edusign["signature"]
 
 
-        if attendance_edusign["signatureEmail"] != nil
-            # Sauvegarde l'attendance pour pouvoir la retrouver si elle vient d'être créé
+            if attendance_edusign["signatureEmail"] != nil
+                # Sauvegarde l'attendance pour pouvoir la retrouver si elle vient d'être créé
+                attendance.save
+
+                signature_email = SignatureEmail.find_by(attendance_id: attendance.id) || SignatureEmail.new(attendance_id: attendance.id)        
+                signature_email.nb_envoyee = attendance_edusign["signatureEmail"]["nbSent"]
+                signature_email.requete_edusign_id = attendance_edusign["signatureEmail"]["requestId"]
+                signature_email.limite = attendance_edusign["signatureEmail"]["signUntil"]
+                signature_email.second_envoi = attendance_edusign["signatureEmail"]["secondSend"]
+                signature_email.envoi_email = attendance_edusign["signatureEmail"]["sendEmailDate"]
+                signature_email.save
+
+                attendance.signature_email_id = signature_email.id
+            else
+                SignatureEmail.find_by(id: attendance.signature_email_id)&.destroy
+                attendance.signature_email_id = nil
+            end
+
             attendance.save
-
-            signature_email = SignatureEmail.find_by(attendance_id: attendance.id) || SignatureEmail.new(attendance_id: attendance.id)        
-            signature_email.nb_envoyee = attendance_edusign["signatureEmail"]["nbSent"]
-            signature_email.requete_edusign_id = attendance_edusign["signatureEmail"]["requestId"]
-            signature_email.limite = attendance_edusign["signatureEmail"]["signUntil"]
-            signature_email.second_envoi = attendance_edusign["signatureEmail"]["secondSend"]
-            signature_email.envoi_email = attendance_edusign["signatureEmail"]["sendEmailDate"]
-            signature_email.save
-
-            attendance.signature_email_id = signature_email.id
-        else
-            SignatureEmail.find_by(id: attendance.signature_email_id)&.destroy
-            attendance.signature_email_id = nil
         end
-
-        attendance.save
-
     end
 
     def get_motifs_from_edusign
