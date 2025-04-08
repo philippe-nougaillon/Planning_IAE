@@ -51,7 +51,7 @@ class Edusign < ApplicationService
     end
 
     def remplir_justificatif(justificatif, justificatif_edusign)
-        if etudiant_id = Etudiant.find_by(edusign_id: justificatif_edusign["STUDENT_ID"]).id
+        if etudiant_id = Etudiant.find_by(edusign_id: justificatif_edusign["STUDENT_ID"])&.id
             justificatif.edusign_id = justificatif_edusign["ID"]
             justificatif.commentaires = justificatif_edusign["COMMENT"]
             justificatif.etudiant_id = etudiant_id
@@ -83,8 +83,8 @@ class Edusign < ApplicationService
     end
 
     def remplir_attendance(attendance, attendance_edusign)
-        cour_id = Cour.find_by(edusign_id: attendance_edusign["courseId"]).id
-        etudiant_id = Etudiant.find_by(edusign_id: attendance_edusign["studentId"]).id
+        cour_id = Cour.find_by(edusign_id: attendance_edusign["courseId"])&.id
+        etudiant_id = Etudiant.find_by(edusign_id: attendance_edusign["studentId"])&.id
         if cour_id && etudiant_id
             attendance.edusign_id = attendance_edusign["_id"]
             attendance.état = attendance_edusign["state"]
