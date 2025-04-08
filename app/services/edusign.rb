@@ -68,7 +68,7 @@ class Edusign < ApplicationService
 
         justificatifs_edusign.each do |justificatif_edusign|
 
-            if etudiant_id = Etudiant.find_by(edusign_id: attendance_edusign["studentId"])&.id
+            if etudiant_id = Etudiant.find_by(edusign_id: justificatif_edusign["studentId"])&.id
                 justificatif = Justificatif.find_or_initialize_by(edusign_id: justificatif_edusign["ID"], etudiant_id: etudiant_id)
                 self.remplir_justificatif(justificatif, justificatif_edusign)
             else
@@ -105,6 +105,31 @@ class Edusign < ApplicationService
 
         justificatif.motif_id = Motif.find_by(edusign_id: justificatif_edusign_id).id
         justificatif.save
+    end
+
+    def get_motif_name_from_edusign_id(id)
+        self.get_motifs_from_edusign.each do |motif|
+            if motif["ID"] == id
+                return motif["NAME"]
+            end
+        end
+    end
+
+    def get_motifs_from_edusign
+        self.prepare_request("https://ext.edusign.fr/v1/justified-absence/absence-reason", 'Get')
+
+        response = self.get_response
+
+        if response["status"] == 'error'
+            puts response['message']
+            return
+        end
+
+        motifs_edusign = response["result"]
+
+        puts "#{motifs_edusign.count} motifs reçu"
+
+        motifs_edusign
     end
 
     def import_attendances
@@ -176,23 +201,6 @@ class Edusign < ApplicationService
         end
 
         attendance.save
-    end
-
-    def get_motifs_from_edusign
-        self.prepare_request("https://ext.edusign.fr/v1/justified-absence/absence-reason", 'Get')
-
-        response = self.get_response
-
-        if response["status"] == 'error'
-            puts response['message']
-            return
-        end
-
-        motifs_edusign = response["result"]
-
-        puts "#{motifs_edusign.count} motifs reçu"
-
-        motifs_edusign
     end
     
     def export_formations(method, formations_ajoutés_ids = nil)
@@ -368,14 +376,7 @@ class Edusign < ApplicationService
         # La liste des cours pour ne pas update ceux qui ont été créés aujourd'hui
         cours.pluck(:id) if method == "Post"
     end
-    
-    def get_motif_name_from_edusign_id(id)
-        self.get_motifs_from_edusign.each do |motif|
-            if motif["ID"] == id
-                return motif["NAME"]
-            end
-        end
-    end
+
     private
 
     def create_motif(justificatif_edusign_id, nom_motif)
