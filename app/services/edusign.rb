@@ -1,7 +1,7 @@
 class Edusign < ApplicationService
 
     def initialize
-
+        @time_zone_difference = 2.hour
     end
 
     def prepare_request(url, method)
@@ -68,7 +68,8 @@ class Edusign < ApplicationService
 
         justificatifs_edusign.each do |justificatif_edusign|
 
-            if etudiant_id = Etudiant.find_by(edusign_id: justificatif_edusign["studentId"])&.id
+            # Test justificatif_edusign["STUDENT_ID"] à retirer si ça ne peut jamais être vide côté Edusign
+            if justificatif_edusign["STUDENT_ID"] && etudiant_id = Etudiant.find_by(edusign_id: justificatif_edusign["STUDENT_ID"])&.id
                 justificatif = Justificatif.find_or_initialize_by(edusign_id: justificatif_edusign["ID"], etudiant_id: etudiant_id)
                 self.remplir_justificatif(justificatif, justificatif_edusign)
             else
@@ -84,10 +85,10 @@ class Edusign < ApplicationService
         justificatif.edusign_id = justificatif_edusign["ID"]
         justificatif.commentaires = justificatif_edusign["COMMENT"]
         justificatif.file_url = justificatif_edusign["FILE_URL"]
-        justificatif.edusign_created_at = justificatif_edusign["DATE_CREATION"]
-        justificatif.accepte_le = justificatif_edusign["REQUEST_DATE"]
-        justificatif.debut = justificatif_edusign["START"]
-        justificatif.fin = justificatif_edusign["END"]
+        justificatif.edusign_created_at = justificatif_edusign["DATE_CREATION"].to_datetime + @time_zone_difference
+        justificatif.accepte_le = justificatif_edusign["REQUEST_DATE"].to_datetime + @time_zone_difference
+        justificatif.debut = justificatif_edusign["START"].to_datetime + @time_zone_difference
+        justificatif.fin = justificatif_edusign["END"].to_datetime + @time_zone_difference
         justificatif.save
 
         justificatif_edusign_id = justificatif_edusign["TYPE"]
@@ -156,8 +157,6 @@ class Edusign < ApplicationService
                 # STUDENTS dans les cours d'Edusign sont des attendances
                 cour_edusign["STUDENTS"].each do |attendance_edusign|
 
-                    # puts cour_edusign["STUDENTS"].pluck("_id")
-
                     # Cas où l'étudiant est créé côté Edusign ou l'étudiant recherché n'a pas d'edusign_id
                     if etudiant = Etudiant.find_by(edusign_id: attendance_edusign["studentId"])
                         attendance = Attendance.find_or_initialize_by(edusign_id: attendance_edusign["_id"], etudiant_id: etudiant.id, cour_id: cour.id)
@@ -176,10 +175,10 @@ class Edusign < ApplicationService
 
     def remplir_attendance(attendance, attendance_edusign)
         attendance.état = attendance_edusign["state"]
-        attendance.signée_le = attendance_edusign["timestamp"]
+        attendance.signée_le = attendance_edusign["timestamp"].to_datetime + @time_zone_difference if attendance_edusign["timestamp"]
         attendance.justificatif_edusign_id = attendance_edusign["absenceId"]
         attendance.retard = attendance_edusign["delay"]
-        attendance.exclu_le = attendance_edusign["excluded"]
+        attendance.exclu_le = attendance_edusign["excluded"].to_datetime + @time_zone_difference if attendance_edusign["excluded"]
         attendance.signature = attendance_edusign["signature"]
 
         if attendance_edusign["signatureEmail"] != nil
@@ -189,9 +188,9 @@ class Edusign < ApplicationService
             signature_email = SignatureEmail.find_by(attendance_id: attendance.id) || SignatureEmail.new(attendance_id: attendance.id)        
             signature_email.nb_envoyee = attendance_edusign["signatureEmail"]["nbSent"]
             signature_email.requete_edusign_id = attendance_edusign["signatureEmail"]["requestId"]
-            signature_email.limite = attendance_edusign["signatureEmail"]["signUntil"]
+            signature_email.limite = attendance_edusign["signatureEmail"]["signUntil"].to_datetime + @time_zone_difference
             signature_email.second_envoi = attendance_edusign["signatureEmail"]["secondSend"]
-            signature_email.envoi_email = attendance_edusign["signatureEmail"]["sendEmailDate"]
+            signature_email.envoi_email = attendance_edusign["signatureEmail"]["sendEmailDate"].to_datetime + @time_zone_difference
             signature_email.save
 
             attendance.signature_email_id = signature_email.id
@@ -220,7 +219,8 @@ class Edusign < ApplicationService
             body =
                 {"group":{
                     "NAME": formation.nom,
-                    "STUDENTS": formation.etudiants.pluck(:edusign_id).compact
+                    "STUDENTS": formation.etudiants.pluck(:edusign_id).compact,
+                    "API_ID": formation.id
                 }}
 
             if method == 'Patch'
@@ -305,11 +305,11 @@ class Edusign < ApplicationService
                 "FIRSTNAME": intervenant.prenom,
                 "LASTNAME": intervenant.nom,
                 "EMAIL": intervenant.email,
-                "API_ID": intervenant.id
+                "API_ID": intervenant.slug
               }}
 
             if method == 'Post'
-                body[:professor].merge!({"dontSendCredentials": true})
+                body[:professor].merge!({"dontSendCredentials": false})
             else
                 body[:professor].merge!({"ID": intervenant.edusign_id})
             end
@@ -347,9 +347,10 @@ class Edusign < ApplicationService
             body =
               {"course":{
                 "NAME": cour.nom.presence || 'sans nom',
-                "START": cour.debut - 2.hour,
-                "END": cour.fin - 2.hour,
-                "PROFESSOR": Intervenant.find(cour.intervenant_id).edusign_id,
+                "START": cour.debut - @time_zone_difference,
+                "END": cour.fin - @time_zone_difference,
+                "PROFESSOR": Intervenant.find_by(id: cour.intervenant_id)&.edusign_id,
+                "PROFESSOR_2": Intervenant.find_by(id: cour.intervenant_binome_id)&.edusign_id,
                 "API_ID": cour.id,
                 "NEED_STUDENTS_SIGNATURE": true,
                 "SCHOOL_GROUP": [cour.formation.edusign_id]

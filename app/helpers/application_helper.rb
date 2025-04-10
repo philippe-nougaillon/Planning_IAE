@@ -31,7 +31,7 @@ module ApplicationHelper
         # penser à changer refreshProgressBar()
         # penser à changer le -1.hour dans _commande.html.erb
         # penser à changer le -1.hour dans _commandev2.html.erb
-        # penser à changer le -1.hour dans ajout/modification des cours dans edusign
+        # penser à changer @time_zone_difference dans l'initialisation du service d'Edusign
         #
 
         # Heure d'hiver

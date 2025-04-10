@@ -1481,8 +1481,8 @@ class ToolsController < ApplicationController
         "EMAIL": intervenant.email,
         # SPECIALITY
         "API_ID": intervenant.slug, # OU L'ID
-        "TAGS": [intervenant.status],
-        "PHONE": intervenant.téléphone_mobile,
+        # "TAGS": [intervenant.status],
+        # "PHONE": intervenant.téléphone_mobile,
         # VARIABLES (array of objects)
         #  - NAME
         #  - VALUE (string, the variable value, ex: ar82U1kk)
@@ -1516,7 +1516,7 @@ class ToolsController < ApplicationController
         "FIRSTNAME": étudiant.prénom,
         "LASTNAME": étudiant.nom,
         "EMAIL": étudiant.email,
-        "PHONE": étudiant.mobile,
+        # "PHONE": étudiant.mobile,
         # FILE_NUMBER (y'en a pas mais ça pourrait avec l'inscription étudiant)
         # PHOTO (y'en a pas)
         # PHONE (y'en a pas)
