@@ -921,6 +921,11 @@ class ToolsController < ApplicationController
       @audits = @audits.where(id: audit_chgt_salle_id) 
     end
 
+    unless params[:id].blank?
+      # @audits = @audits.where(auditable_id: params[:id])
+      @audits = @audits.where(id: params[:id])
+    end
+
     @audits = @audits.includes(:user).paginate(page: params[:page], per_page: 20)
   end
 

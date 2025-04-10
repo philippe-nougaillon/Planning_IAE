@@ -27,8 +27,8 @@ module ToolsHelper
                         pretty_changes << "#{key} changée de 'nil' à '#{Formation.unscoped.find_by(id: ids.first).try(:nom)}'"
                     end
                 end 
-            when 'Intervenant'
-                ids = audit.audited_changes['intervenant_id']
+            when 'Intervenant', 'Intervenant binome'
+                ids = audit.audited_changes["#{key.parameterize.underscore}_id"]
                 case ids.class.name
                 when 'Integer'
                     pretty_changes << "#{key} initialisé à '#{Intervenant.find_by(id: ids)&.nom_prenom}'"
@@ -57,7 +57,7 @@ module ToolsHelper
                 if audit.audited_changes['fin'].class.name == 'Array'
                     pretty_changes << "Horaire de fin modifié de '#{I18n.l(c.last.first, format: :long)}' à '#{I18n.l(c.last.last, format: :long)}'"
                 else
-                    pretty_changes << "Fin initialisée à '#{c.last}'"
+                    pretty_changes << "Fin initialisée à '#{I18n.l(c.last, format: :long)}'"
                 end
             when 'Etat'
                 if audit.audited_changes['etat'].class.name == 'Array'

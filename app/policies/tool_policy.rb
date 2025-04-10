@@ -224,26 +224,16 @@ class ToolPolicy < ApplicationPolicy
   end
 
   def commande_fait?
-    # Accueil et Thierry.D ou Thémoline
-    user && (user.accueil? || (user.id == 41 || user.id == 35))
+    # Accueil et Thierry.D ou Thémoline ou Romuald
+    user && (user.accueil? || [41,35,3132].include?(user.id))
   end
 
   def commandes_v2?
-    # Accueil ou gestionnaire ou admin
-    user && ([3,5,6].include?(user.role_number))
+    commandes?
   end
 
   def commande_fait_v2?
-    # Accueil et Thierry.D ou Thémoline
-    user && (user.accueil? || (user.id == 41 || user.id == 35))
-  end
-  
-  def edusign?
-    user && user.admin?
-  end
-
-  def edusign_do?
-    edusign?
+    commande_fait?
   end
 
   def synchronisation_edusign?

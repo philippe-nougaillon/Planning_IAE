@@ -810,13 +810,15 @@ class ExportPdf
     end
 
     def convocation(cour, étudiant, papier, calculatrice, ordi_tablette, téléphone, dictionnaire)
+        is_examen_rattrapage = cour.intervenant_id == 1166
+
         font "OpenSans"
 
         image "#{@image_path}/logo_iae_2.png", :height => 60, :position => :center
         move_down @margin_down * 3
         text "<color rgb='032E4D'><b>#{cour.formation.nom.upcase}</b></color>", inline_format: true, size: 16, style: :bold, align: :center
         move_down @margin_down
-        text "<color rgb='E68824'><b>Convocation aux Examens</b></color>", inline_format: true, size: 24, align: :center
+        text "<color rgb='E68824'><b>Convocation #{is_examen_rattrapage ? 'Examen rattrapage' : 'aux Examens'}</b></color>", inline_format: true, size: 24, align: :center
 
         move_down @margin_down * 2
         y_position = cursor
@@ -831,7 +833,7 @@ class ExportPdf
         end
 
         move_down @margin_down * 2
-        text "<color rgb='E68824'><b>Examen de l'UE n°#{cour.code_ue} : #{cour.nom_ou_ue}</b></color>", inline_format: true, size: 16, align: :center
+        text "<color rgb='E68824'><b>Examen#{' rattrapage' if is_examen_rattrapage} de l'UE n°#{cour.code_ue} : #{cour.nom_ou_ue}</b></color>", inline_format: true, size: 16, align: :center
         move_down @margin_down
         text "<color rgb='E68824'><b>Le #{I18n.l cour.debut.to_date} de #{cour.debut.strftime('%Hh%M')} à #{cour.fin.strftime('%Hh%M')} en salle #{cour.salle.try(:nom)}</b></color>", inline_format: true, size: 16, align: :center
 

@@ -15,24 +15,28 @@
 
   <div class="flex flex-wrap gap-8">
     <div class="relative flex-grow max-w-full flex-1">
-      <div class="form-control mb-4">
-        <% if dossier.new_record? %>
+      <% if dossier.new_record? %>
+        <div class="form-control mb-4">
           <%= form.label :période %>
           <%= form.select :période, options_for_select(Dossier.périodes, dossier.période), {}, class: 'select select-bordered select-sm w-full' %>
-        <% else %>
+        </div>
+        <div class="form-control">
+          <%= form.label :intervenant_id %>
+          <%= form.select :intervenant_id, 
+                          options_from_collection_for_select(@intervenants, :id, :nom_prenom, @dossier.intervenant_id), 
+                          {},
+                          class: 'slim-select' %>
+        </div>
+      <% else %>
+        <div class="form-control mb-4">
           <label>Période</label>
           <input class="input input-bordered input-sm w-full" value=<%= dossier.période %> disabled=true>
-        <% end %>
-      </div>
-
-      <div class="form-control">
-        <%= form.label :intervenant_id %>
-        <%= form.select :intervenant_id, 
-                        options_from_collection_for_select(@intervenants, :id, :nom_prenom, @dossier.intervenant_id), 
-                        {},
-                        class: 'slim-select' %>
-      </div>
-
+        </div>
+        <div class="form-control mb-4">
+          <label>Intervenant</label>
+          <input type=select class="select select-bordered select-sm w-full" value=<%= dossier.intervenant.nom_prenom.parameterize(separator: "_") %> disabled=true>
+        </div>
+      <% end %>
     </div>
 
     <div class="relative flex-grow max-w-full flex-1">

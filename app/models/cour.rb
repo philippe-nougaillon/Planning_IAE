@@ -40,6 +40,10 @@ class Cour < ApplicationRecord
   around_update :check_send_commande_email
   after_create :check_send_new_commande_email
 
+  after_create   :send_new_examen_email, if: Proc.new { |cours| cours.examen? }
+  around_update  :check_send_examen_email
+  after_destroy :send_delete_examen_email, if: Proc.new { |cours| cours.examen? }
+
   # Mettre à jour les SCENIC VIEWS
   after_commit {
     CoursNonPlanifie.refresh
@@ -291,7 +295,7 @@ class Cour < ApplicationRecord
   def progress_bar_pct3
     # calcul le % de réalisation du cours
     now = ApplicationController.helpers.time_in_paris_selon_la_saison
-    pct = ((now.to_f - self.debut.in_time_zone('Paris').to_f) / (self.fin.in_time_zone('Paris').to_f - self.debut.in_time_zone('Paris').to_f) * 100).to_f
+    ((now.to_f - self.debut.in_time_zone('Paris').to_f) / (self.fin.in_time_zone('Paris').to_f - self.debut.in_time_zone('Paris').to_f) * 100).to_f
   end
 
   def range
@@ -362,6 +366,10 @@ class Cour < ApplicationRecord
   def désynchronisé?
     # Regarde si un cours réalisé d'une formation étant sur Edusign n'a aucune présence de créé.
     Formation.cobayes_émargement.include?(self.formation_id) && self.réalisé? && self.attendances.empty?
+  end
+
+  def changements_examen
+    saved_changes.except("updated_at", "created_at")
   end
 
   private
@@ -498,6 +506,12 @@ class Cour < ApplicationRecord
       end
     end
 
+    def check_hss
+      if self.formation.hss && !self.hors_service_statutaire
+        errors.add(:hors_service_statutaire, 'ne correspond pas à celui de la formation')
+      end
+    end
+
     def check_send_commande_email
       old_commentaires = commentaires_was
       yield
@@ -532,9 +546,56 @@ class Cour < ApplicationRecord
       end
     end
 
-    def check_hss
-      if self.formation.hss && !self.hors_service_statutaire
-        errors.add(:hors_service_statutaire, 'ne correspond pas à celui de la formation')
+    def check_send_examen_email
+      old_cour = self.dup
+      old_cour.intervenant_id = intervenant_id_was
+
+      yield
+
+      # Check si le cour était ou est un examen
+      if Intervenant.find_by(id: old_cour.intervenant_id).try(:examen?) || self.examen?
+        examen_status = determine_statut_examen(old_cour.intervenant_id, self.intervenant_id)
+        send_email_examen(examen_status, old_cour)
       end
     end
+
+    def determine_statut_examen(old_intervenant_id, new_intervenant_id)
+      if old_intervenant_id != new_intervenant_id
+        # On passe d'un type d'examen à un autre
+        if Intervenant.find(new_intervenant_id).examen? && Intervenant.find_by(id: old_intervenant_id).try(:examen?)
+          'modifié'
+        # L'examen devient un cours
+        elsif Intervenant.find_by(id: old_intervenant_id).try(:examen?)
+          'supprimé'
+        # Un cours devient un examen
+        else
+          'ajouté'
+        end
+      else
+        # Cas de loin le plus probable : un examen change de propriété
+        'modifié'
+      end
+    end
+
+    def send_email_examen(examen_status, old_cour)
+      case examen_status
+      when 'modifié'
+        mailer_response = CourMailer.with(cour: self).examen_modifié.deliver_now
+      when 'supprimé'
+        mailer_response = CourMailer.with(cour: self).examen_supprimé.deliver_now
+      when 'ajouté'
+        mailer_response = CourMailer.with(cour: self).examen_ajouté.deliver_now
+      end
+      MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen #{examen_status}")
+    end
+
+    def send_new_examen_email
+      mailer_response = CourMailer.with(cour: self).examen_ajouté.deliver_now
+      MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen ajouté")
+    end
+
+  def send_delete_examen_email
+    mailer_response = CourMailer.with(cour: self).examen_supprimé.deliver_now
+    MailLog.create!(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen supprimé")
+  end
 end
