@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  resources :vacation_activites
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
 
   devise_for :users, controllers: {
@@ -209,6 +208,7 @@ Rails.application.routes.draw do
   resources :notes
 
   resources :vacations, only: %i[ index show edit update]
+  resources :vacation_activites
 
   controller :pages do
     get 'mentions_légales', to: 'pages#mentions_légales', as: :mentions_legales

@@ -120,6 +120,11 @@ class Intervenant < ApplicationRecord
 		['Permanent', 'PR','MCF','MCF_HDR','PRAG','PAST'].include?(self.status)
 	end
 
+	# Si c'est un examen IAE / examen rattrapage / Tiers-temps
+  def examen?
+    [169, 1166, 522].include?(self.id)
+  end
+
 	private
 	# only one candidate for an nice id; one random UDID
 	def slug_candidates

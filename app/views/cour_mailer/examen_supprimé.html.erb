@@ -1,0 +1,17 @@
+<p style="margin-bottom: 0.5rem">
+  Bonjour,
+  <br><br>
+  <%= "Un examen pour le <b>#{l @cour.debut, format: :long}</b> vient d'être supprimé".html_safe %>
+  <br><br>
+
+  <%# Ne pas mettre les @cour.own_and_associated_audits, sinon on aura probablement juste l'audit de l'option %>
+  <p>Liste des informations de cet examen supprimé :</p>
+  <%= sanitize prettify(@cour.audits.order(created_at: :desc).first).join('<br>') %>  
+
+  <br><br>
+  <%# link_to "Voir les détails de cet examen", tools_audits_url(id: @cour.id, type: 'Cour') %>
+  <%= link_to "Voir les détails de cet examen", tools_audits_url(id: @cour.own_and_associated_audits.pluck(:id)) %>
+  <br><br>
+  <%= link_to "Voir la liste des cours", cours_url %>
+</p>
+
