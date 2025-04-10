@@ -11,8 +11,8 @@
     Présence
   </h1>
 
-
 </div>
+
 <div class="bs-container card shadow p-4 my-4">
   <div class="flex flex-wrap">
     <div class="relative flex-grow max-w-full flex-1">
@@ -35,6 +35,13 @@
         <%= link_to @attendance.cour.intervenant.nom_prenom, @attendance.cour.intervenant, class: 'text-primary hover:underline' %>
       </p>
 
+      <% if @attendance.cour.intervenant_binome_id %>
+        <p class="mb-4">
+          <strong>Intervenant binôme :</strong>
+          <%= link_to @attendance.cour.intervenant_binome.nom_prenom, @attendance.cour.intervenant_binome, class: 'text-primary hover:underline' %>
+        </p>
+      <% end %>
+
       <p class="mb-4">
         <strong>Etudiant :</strong>
         <%= link_to @attendance.etudiant.nom_prénom, @attendance.etudiant, class: 'text-primary hover:underline' %>
@@ -48,7 +55,7 @@
       <% if @attendance.exclu_le %>
         <p class="mb-4">
           <strong>Exclu le :</strong>
-          <%= l(@attendance.exclu_le.in_time_zone('Europe/Paris'), format: :long).humanize %>
+          <%= l(@attendance.exclu_le, format: :long).humanize %>
         </p>
       <% end %>
 
@@ -78,7 +85,7 @@
 
           <p class="mb-4">
             <strong>Date limite pour signer :</strong>
-            <%= l(@attendance.signatureEmail.limite.in_time_zone('Europe/Paris'), format: :long).humanize %>
+            <%= l(@attendance.signatureEmail.limite, format: :long).humanize %>
           </p>
         </div>
       <% end %>
@@ -101,24 +108,24 @@
 
         <p class="mb-4">
           <strong>Accepté le :</strong>
-          <%= l(@justificatif.accepte_le.in_time_zone('Europe/Paris'), format: :long).humanize %>
+          <%= l(@justificatif.accepte_le, format: :long).humanize %>
         </p>
 
         <p class="mb-4">
           <strong>Date de début :</strong>
-          <%= l(@justificatif.debut.in_time_zone('Europe/Paris'), format: :long).humanize %>
+          <%= l(@justificatif.debut, format: :long).humanize %>
         </p>
 
         <p class="mb-4">
           <strong>Date de fin :</strong>
-          <%= l(@justificatif.fin.in_time_zone('Europe/Paris'), format: :long).humanize %>
+          <%= l(@justificatif.fin, format: :long).humanize %>
         </p>
       <% end %>
 
       <% if @attendance.signée_le %>
         <p class="mb-4">
           <strong>Signée le :</strong>
-          <%= l(@attendance.signée_le.in_time_zone('Europe/Paris'), format: :long).humanize %>
+          <%= l(@attendance.signée_le, format: :long).humanize %>
         </p>
 
         <div>
