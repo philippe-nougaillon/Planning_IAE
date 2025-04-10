@@ -1611,23 +1611,26 @@ class ToolsController < ApplicationController
   end
 
   def synchronisation_edusign_do
-    #ajout_etudiants
+    request = Edusign.new
 
-    #modification_etudiants
+    # Necessaire pour créer des formations sans étudiants et des formations avec que des étudiants déjà créés sur Edusign
+    formations_ajoutés_ids = request.export_formations("Post")
 
-    #ajout_intervenants
+    etudiants_ajoutés_ids = request.export_etudiants("Post")
 
-    #modification_intervenants
+    request.export_etudiants("Patch", etudiants_ajoutés_ids)
 
-    # ajout_cours
+    request.export_formations("Patch", formations_ajoutés_ids)
 
-    # modification_cours
+    intervenants_ajoutés_ids = request.export_intervenants("Post")
 
-    #modification_formations
+    request.export_intervenants("Patch", intervenants_ajoutés_ids)
 
-    if flash[:alert].blank?
-      flash[:notice] = "Synchronisation avec succès sur Edusign !"
-    end
+    cours_ajoutés_ids = request.export_cours("Post")
+
+    request.export_cours("Patch", cours_ajoutés_ids)
+
+    flash[:notice] = "Synchronisation avec succès sur Edusign !"
 
     redirect_to tools_synchronisation_edusign_path
   end
