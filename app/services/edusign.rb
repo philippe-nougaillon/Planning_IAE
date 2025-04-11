@@ -378,6 +378,35 @@ class Edusign < ApplicationService
         cours.pluck(:id) if method == "Post"
     end
 
+    def suppression_cours
+        self.prepare_request("https://ext.edusign.fr/v1/course", "Get")
+
+        response = self.get_response
+
+        if response["status"] == 'error'
+            puts response['message']
+            return
+        end
+
+        cours_edusign = response["result"]
+
+        puts "Lancement de la recherche"
+
+        cours_edusign.each do |cour|
+
+            # Si l'edusign_id n'existe pas chez nous, le supprimer coté Edusign
+            if Cour.find_by(edusign_id: cour["ID"]).blank?
+                puts cour.inspect
+            end
+            # Prendre les cours après aujourd'hui
+
+            # Créer deux cours, dont un supprimé juste après chez nous
+        end
+
+
+        # Supprimer chez Edusign les cours supprimés chez nous
+    end
+
     private
 
     def create_motif(justificatif_edusign_id, nom_motif)

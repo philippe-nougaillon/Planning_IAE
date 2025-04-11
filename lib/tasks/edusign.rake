@@ -29,4 +29,9 @@ namespace :edusign do
 
     request.export_cours("Patch", cours_ajoutés_ids)
   end
+
+  task :remove_cours => :environment do
+    request = Edusign.new
+    request.suppression_cours
+  end
 end
