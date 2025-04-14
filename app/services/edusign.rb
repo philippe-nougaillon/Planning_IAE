@@ -385,7 +385,6 @@ class Edusign < ApplicationService
             cours_a_supprimer.each do |cour|
 
                 if cour.edusign_id != nil
-                    puts "cours a supprimer ", cour.nom
                     self.prepare_request("https://ext.edusign.fr/v1/course/#{cour.edusign_id}", "Delete")
             
                     cour.edusign_id = nil
@@ -402,6 +401,27 @@ class Edusign < ApplicationService
 
         # La liste des cours pour ne pas update ceux qui ont été créés aujourd'hui
         cours_a_envoyer.pluck(:id) if method == "Post"
+    end
+
+    def remove_cours_in_edusign
+        edusign_ids = Audited::Audit
+            .where(auditable_type: "Cour")
+            .where(action: "destroy")
+            .where(created_at: get_interval_of_time)
+            .pluck("audited_changes")
+            .pluck("edusign_id")
+            .compact
+
+        edusign_ids.each do |edusign_id|
+
+            self.prepare_request("https://ext.edusign.fr/v1/course/#{edusign_id}", "Delete")
+
+            response = self.get_response
+            
+            puts response["status"] == 'error' ?  "Error : #{response["message"]}" : "Exportation du cours #{edusign_id} pour la suppression réussie"
+
+
+        end
     end
 
     private

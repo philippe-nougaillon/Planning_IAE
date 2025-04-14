@@ -28,6 +28,8 @@ namespace :edusign do
     cours_ajoutés_ids = request.export_cours("Post")
 
     request.export_cours("Patch", cours_ajoutés_ids)
+
+    request.remove_cours_in_edusign
   end
 
 end
