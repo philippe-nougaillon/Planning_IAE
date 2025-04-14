@@ -348,6 +348,17 @@ class Cour < ApplicationRecord
     [169, 1166, 522].include?(self.intervenant.id)
   end
 
+  def type_examen
+    case self.intervenant_id
+    when 169
+      "Examen"
+    when 1166
+      "Examen Rattrapage"
+    when 522
+      "Examen Tiers-Temps"
+    end
+  end
+
   def signable_etudiant?
     now = ApplicationController.helpers.time_in_paris_selon_la_saison
     (self.debut - 10.minutes < now && self.debut + 30.minutes > now)
