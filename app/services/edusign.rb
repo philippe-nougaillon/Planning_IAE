@@ -16,6 +16,8 @@ class Edusign < ApplicationService
             @request = Net::HTTP::Post.new(url)
         when "Patch"
             @request = Net::HTTP::Patch.new(url)
+        when "Delete"
+            @request = Net::HTTP::Delete.new(url)
         end
 
         @request["accept"] = 'application/json'
@@ -334,77 +336,72 @@ class Edusign < ApplicationService
         self.prepare_request("https://ext.edusign.fr/v1/course", method)
 
         if method == 'Post'
-            cours = self.get_all_element_created_today(Cour)
+            cours = self.get_all_element_created_today(Cour).where.not(etat: ["annulé", "reporté"])
             puts "Début de l'ajout des cours"
+            cours_a_supprimer = nil
         else
             cours = self.get_all_element_updated_today(Cour, cours_ajoutés_ids)
             puts "Début de la modification des cours"
+            cours_a_supprimer = cours.where(etat: ["annulé", "reporté"])
         end
+        
+        # Cours à créer / modifier du côté d'Edusign
+        cours_a_envoyer = cours.where(etat: ["planifié", "confirmé", "à_réserver"])
 
         puts "#{cours.count} cours ont été récupéré : #{cours.pluck(:id, :nom)}"
 
-        cours.each do |cour|
-            body =
-              {"course":{
-                "NAME": cour.nom.presence || 'sans nom',
-                "START": cour.debut - @time_zone_difference,
-                "END": cour.fin - @time_zone_difference,
-                "PROFESSOR": Intervenant.find_by(id: cour.intervenant_id)&.edusign_id,
-                "PROFESSOR_2": Intervenant.find_by(id: cour.intervenant_binome_id)&.edusign_id,
-                "API_ID": cour.id,
-                "NEED_STUDENTS_SIGNATURE": true,
-                "SCHOOL_GROUP": [cour.formation.edusign_id]
+        if cours_a_envoyer 
+            cours_a_envoyer.each do |cour|
+                body =
+                {"course":{
+                    "NAME": cour.nom.presence || 'sans nom',
+                    "START": cour.debut - @time_zone_difference,
+                    "END": cour.fin - @time_zone_difference,
+                    "PROFESSOR": Intervenant.find_by(id: cour.intervenant_id)&.edusign_id,
+                    "PROFESSOR_2": Intervenant.find_by(id: cour.intervenant_binome_id)&.edusign_id,
+                    "API_ID": cour.id,
+                    "NEED_STUDENTS_SIGNATURE": true,
+                    "SCHOOL_GROUP": [cour.formation.edusign_id]
+                    }
                 }
-              }
 
-            if method == 'Patch'
-                body[:course].merge!({"ID": cour.edusign_id})
-                body.merge!({"editSurveys": false})
-            end
+                if method == 'Patch'
+                    body[:course].merge!({"ID": cour.edusign_id})
+                    body.merge!({"editSurveys": false})
+                end
 
-            response = self.prepare_body_request(body).get_response
+                response = self.prepare_body_request(body).get_response
 
-            puts response["status"] == 'error' ?  "Error : #{response["message"]}" : "Exportation du cours #{cour.id}, #{cour.nom} réussie"
+                puts response["status"] == 'error' ?  "Error : #{response["message"]}" : "Exportation du cours #{cour.id}, #{cour.nom} réussie"
 
-            if method == 'Post'
-                cour.edusign_id = response["result"]["ID"]
-                cour.save
+                if method == 'Post'
+                    cour.edusign_id = response["result"]["ID"]
+                    cour.save
+                end
             end
         end
+        
+        if cours_a_supprimer
+            cours_a_supprimer.each do |cour|
 
+                if cour.edusign_id != nil
+                    puts "cours a supprimer ", cour.nom
+                    self.prepare_request("https://ext.edusign.fr/v1/course/#{cour.edusign_id}", "Delete")
+            
+                    cour.edusign_id = nil
+                    cour.save
+                                
+                    response = self.get_response
+                    
+                    puts response["status"] == 'error' ?  "Error : #{response["message"]}" : "Exportation du cours #{cour.id}, #{cour.nom} pour la suppression réussie"
+                end
+            end
+        end
+        
         puts "Exportation des cours terminée"
 
         # La liste des cours pour ne pas update ceux qui ont été créés aujourd'hui
-        cours.pluck(:id) if method == "Post"
-    end
-
-    def suppression_cours
-        self.prepare_request("https://ext.edusign.fr/v1/course", "Get")
-
-        response = self.get_response
-
-        if response["status"] == 'error'
-            puts response['message']
-            return
-        end
-
-        cours_edusign = response["result"]
-
-        puts "Lancement de la recherche"
-
-        cours_edusign.each do |cour|
-
-            # Si l'edusign_id n'existe pas chez nous, le supprimer coté Edusign
-            if Cour.find_by(edusign_id: cour["ID"]).blank?
-                puts cour.inspect
-            end
-            # Prendre les cours après aujourd'hui
-
-            # Créer deux cours, dont un supprimé juste après chez nous
-        end
-
-
-        # Supprimer chez Edusign les cours supprimés chez nous
+        cours_a_envoyer.pluck(:id) if method == "Post"
     end
 
     private
@@ -420,7 +417,7 @@ class Edusign < ApplicationService
 
     def get_interval_of_time
         # Modifier le Scheduler en conséquence, pour éviter les duplications
-        DateTime.now.beginning_of_day..DateTime.now.end_of_day
+        DateTime.now-1.day..DateTime.now
     end
 
 end
