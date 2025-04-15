@@ -1635,6 +1635,8 @@ class ToolsController < ApplicationController
 
     request.export_cours("Patch", cours_ajoutés_ids)
 
+    request.remove_cours_in_edusign
+
     flash[:notice] = "Synchronisation avec succès sur Edusign !"
 
     redirect_to tools_synchronisation_edusign_path
