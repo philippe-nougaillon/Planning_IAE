@@ -235,6 +235,14 @@ class ToolPolicy < ApplicationPolicy
   def commande_fait_v2?
     commande_fait?
   end
+  
+  def edusign?
+    user && user.admin?
+  end
+
+  def edusign_do?
+    edusign?
+  end
 
   def synchronisation_edusign?
     user && user.admin?
