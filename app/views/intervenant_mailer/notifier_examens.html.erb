@@ -15,6 +15,7 @@
                 <th>Intervenant</th>
                 <th>Intitulé du cours</th>
                 <th>Salle</th>
+                <th style="color : red;">DATE LIMITE DE RETOUR DU SUJET</th>
             </tr>
         </thead>
         <tbody>
@@ -42,6 +43,7 @@
                     </td>
                     <td><%= c.nom_ou_ue %></td>
                     <td><%= c.try(:salle).try(:nom) %></td>
+                    <td style="color: red;"><b><%= I18n.l((c.debut-1.month).to_date, format: :day) %> <%= I18n.l((c.debut-1.month).to_date) %></b></td>
                 </tr>
             <% end %>
         </tbody>
