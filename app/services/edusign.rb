@@ -378,7 +378,7 @@ class Edusign < ApplicationService
         return response
     end
 
-    def export_cours(method, cours_ajoutés_ids = nil)
+    def sync_cours(method, cours_ajoutés_ids = nil)
         self.prepare_request("https://ext.edusign.fr/v1/course", method)
 
         if method == 'Post'
@@ -449,7 +449,7 @@ class Edusign < ApplicationService
         cours_a_envoyer.pluck(:id) if method == "Post"
     end
 
-    def remove_cours_in_edusign
+    def remove_deleted_cours_in_edusign
         edusign_ids = Audited::Audit
             .where(auditable_type: "Cour")
             .where(action: "destroy")

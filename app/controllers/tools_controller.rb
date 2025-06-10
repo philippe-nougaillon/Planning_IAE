@@ -1469,25 +1469,43 @@ class ToolsController < ApplicationController
   def edusign
     @intervenants = Intervenant.all
     @formations = Formation.all
-    @étudiants = Etudiant.all
+    @étudiants = Etudiant.ordered
   end
 
   def edusign_do
     return unless params[:intervenant_id].present? || params[:etudiant_id].present? || params[:formation_id].present?
 
     request = Edusign.new
-
     url = URI("https://ext.edusign.fr/v1/")
 
-    already_exist = false
-
     if params[:intervenant_id].present?
-      response = request.export_intervenant(params[:intervenant_id])
+      intervenant = Intervenant.find_by(slug: params[:intervenant_id])
+      url.path += "professor"
+      record_type = "l'intervenant"
+
+      body = 
+      {"professor": {
+        "FIRSTNAME": intervenant.prenom,
+        "LASTNAME": intervenant.nom,
+        "EMAIL": intervenant.email,
+        # SPECIALITY
+        "API_ID": intervenant.slug, # OU L'ID
+        # "TAGS": [intervenant.status],
+        # "PHONE": intervenant.téléphone_mobile,
+        # VARIABLES (array of objects)
+        #  - NAME
+        #  - VALUE (string, the variable value, ex: ar82U1kk)
+        #  - RESSOURCE_TYPE (ex: professor)
+        #  - SCHOOL_VARIABLE_ID (number)
+      },
+        "dontSendCredentials": false # (If true, the credentials won't be sent to the professor)
+      }
     elsif params[:formation_id].present?
       formation = Formation.find_by(id: params[:formation_id])
 
+      # Test si la formation est déjà dans Edusign
       if formation.edusign_id
-        formation_url = URI("https://ext.edusign.fr/v1/group/get-id/#{étudiant.formation_id}")
+        formation_url = URI("https://ext.edusign.fr/v1/group/get-id/#{formation.id}")
 
         formation_http = Net::HTTP.new(formation_url.host, formation_url.port)
         formation_http.use_ssl = true
@@ -1498,9 +1516,10 @@ class ToolsController < ApplicationController
 
         formation_response = JSON.parse(formation_http.request(formation_request).read_body)
 
-        # Si la formation est présente, ajouter dans l'étudiant
+        # Si la formation est déjà dans Edusign, ne fait aucun export
         if formation_response["status"] == 'success'
-          already_exist = true
+          redirect_to tools_edusign_path, alert: "Formation déjà existante sur Edusign, rien n'a été fait"
+          return
         end
       end
 
@@ -1542,6 +1561,26 @@ class ToolsController < ApplicationController
         }}
     elsif params[:etudiant_id].present?
       étudiant = Etudiant.find_by(id: params[:etudiant_id])
+
+      # Test si l'étudiant est déjà dans Edusign
+      if étudiant.edusign_id
+        student_url = URI("https://ext.edusign.fr/v1/student/get-id/#{étudiant.id}")
+        student_http = Net::HTTP.new(student_url.host, student_url.port)
+        student_http.use_ssl = true
+
+        student_request = Net::HTTP::Get.new(student_url)
+        student_request["accept"] = 'application/json'
+        student_request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
+
+        student_response = JSON.parse(student_http.request(student_request).read_body)
+
+        # Si l'étudiant est déjà dans Edusign, ne fait aucun export
+        if student_response["status"] == 'success'
+          redirect_to tools_edusign_path, alert: "Étudiant déjà existant sur Edusign, rien n'a été fait"
+          return
+        end
+      end
+      
       url.path += "student"
       record_type = "l'étudiant (Apprenant)"
       formation_ed_id = nil
@@ -1585,26 +1624,22 @@ class ToolsController < ApplicationController
       }}
     end
 
-    unless already_exist
-      body[body.keys.first]["API_TYPE"] = "Aikku PLANN"
+    body[body.keys.first]["API_TYPE"] = "Aikku PLANN"
 
-      request = Net::HTTP::Post.new(url)
-      request["accept"] = 'application/json'
-      request["content-type"] = 'application/json'
-      request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
+    request = Net::HTTP::Post.new(url)
+    request["accept"] = 'application/json'
+    request["content-type"] = 'application/json'
+    request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
 
-      http = Net::HTTP.new(url.host, url.port)
-      http.use_ssl = true
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true
 
-      request.body = body.to_json
+    request.body = body.to_json
 
-      response = JSON.parse(http.request(request).read_body)
-      puts "-*" * 50
-      puts response
-      puts "-*" * 50
-    end
-
-
+    response = JSON.parse(http.request(request).read_body)
+    puts "-*" * 50
+    puts response
+    puts "-*" * 50
 
     if response["status"] == 'error'
       flash[:alert] = response["message"]
@@ -1612,16 +1647,17 @@ class ToolsController < ApplicationController
       if intervenant
         intervenant.edusign_id = response["result"]["ID"]
         intervenant.save
-      elsif formation && !already_exist
+      elsif formation
         formation.edusign_id = response["result"]["ID"]
         formation.save
       elsif étudiant
         étudiant.edusign_id = response["result"]["ID"]
         étudiant.save
-      else
-        flash[:alert] = "#{record_type} existe déjà"
       end
+      flash[:notice] = "Création avec succès de #{record_type} sur Edusign ! ID sur Edusign : #{response["result"]["ID"]}"
     end
+
+    redirect_to tools_edusign_path
 
   end
 
@@ -1644,11 +1680,11 @@ class ToolsController < ApplicationController
 
     request.sync_intervenants("Patch", intervenants_ajoutés_ids)
 
-    cours_ajoutés_ids = request.export_cours("Post")
+    cours_ajoutés_ids = request.sync_cours("Post")
 
-    request.export_cours("Patch", cours_ajoutés_ids)
+    request.sync_cours("Patch", cours_ajoutés_ids)
 
-    request.remove_cours_in_edusign
+    request.remove_deleted_cours_in_edusign
 
     flash[:notice] = "Synchronisation avec succès sur Edusign !"
 

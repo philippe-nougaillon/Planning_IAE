@@ -25,11 +25,11 @@ namespace :edusign do
 
     request.sync_intervenants("Patch", intervenants_ajoutés_ids)
 
-    cours_ajoutés_ids = request.export_cours("Post")
+    cours_ajoutés_ids = request.sync_cours("Post")
 
-    request.export_cours("Patch", cours_ajoutés_ids)
+    request.sync_cours("Patch", cours_ajoutés_ids)
 
-    request.remove_cours_in_edusign
+    request.remove_deleted_cours_in_edusign
   end
 
 end

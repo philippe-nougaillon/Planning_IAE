@@ -21,6 +21,8 @@ class Etudiant < ApplicationRecord
 
   has_many :justificatifs
 
+  scope :ordered, -> { order(:nom, :prénom) }
+
   workflow do
     state :prospect
     state :candidat
