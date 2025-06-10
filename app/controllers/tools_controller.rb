@@ -1475,33 +1475,14 @@ class ToolsController < ApplicationController
   def edusign_do
     return unless params[:intervenant_id].present? || params[:etudiant_id].present? || params[:formation_id].present?
 
+    request = Edusign.new
+
     url = URI("https://ext.edusign.fr/v1/")
 
     already_exist = false
 
     if params[:intervenant_id].present?
-      intervenant = Intervenant.find_by(slug: params[:intervenant_id])
-
-      url.path += "professor"
-      record_type = "l'intervenant"
-
-      body = 
-      {"professor": {
-        "FIRSTNAME": intervenant.prenom,
-        "LASTNAME": intervenant.nom,
-        "EMAIL": intervenant.email,
-        # SPECIALITY
-        "API_ID": intervenant.slug, # OU L'ID
-        # "TAGS": [intervenant.status],
-        # "PHONE": intervenant.téléphone_mobile,
-        # VARIABLES (array of objects)
-        #  - NAME
-        #  - VALUE (string, the variable value, ex: ar82U1kk)
-        #  - RESSOURCE_TYPE (ex: professor)
-        #  - SCHOOL_VARIABLE_ID (number)
-      },
-        "dontSendCredentials": false # (If true, the credentials won't be sent to the professor)
-      }
+      response = request.export_intervenant(params[:intervenant_id])
     elsif params[:formation_id].present?
       formation = Formation.find_by(id: params[:formation_id])
 
@@ -1581,7 +1562,7 @@ class ToolsController < ApplicationController
         formation_ed_id = formation_response["result"]["ID"]
       end
 
-      body = 
+      body =
       {"student":{
         "FIRSTNAME": étudiant.prénom,
         "LASTNAME": étudiant.nom,
@@ -1604,22 +1585,25 @@ class ToolsController < ApplicationController
       }}
     end
 
-    body[body.keys.first]["API_TYPE"] = "Aikku PLANN"
+    unless already_exist
+      body[body.keys.first]["API_TYPE"] = "Aikku PLANN"
 
-    request = Net::HTTP::Post.new(url)
-    request["accept"] = 'application/json'
-    request["content-type"] = 'application/json'
-    request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
+      request = Net::HTTP::Post.new(url)
+      request["accept"] = 'application/json'
+      request["content-type"] = 'application/json'
+      request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
 
-    http = Net::HTTP.new(url.host, url.port)
-    http.use_ssl = true
+      http = Net::HTTP.new(url.host, url.port)
+      http.use_ssl = true
 
-    request.body = body.to_json
+      request.body = body.to_json
 
-    response = JSON.parse(http.request(request).read_body)
-    puts "-*" * 50
-    puts response
-    puts "-*" * 50
+      response = JSON.parse(http.request(request).read_body)
+      puts "-*" * 50
+      puts response
+      puts "-*" * 50
+    end
+
 
 
     if response["status"] == 'error'
@@ -1637,7 +1621,6 @@ class ToolsController < ApplicationController
       else
         flash[:alert] = "#{record_type} existe déjà"
       end
-      flash[:notice] = "Création avec succès de #{record_type} sur Edusign ! ID sur Edusign : #{response["result"]["ID"]}"
     end
 
   end
@@ -1649,17 +1632,17 @@ class ToolsController < ApplicationController
     request = Edusign.new
 
     # Necessaire pour créer des formations sans étudiants et des formations avec que des étudiants déjà créés sur Edusign
-    formations_ajoutés_ids = request.export_formations("Post")
+    formations_ajoutés_ids = request.sync_formations("Post")
 
-    etudiants_ajoutés_ids = request.export_etudiants("Post")
+    etudiants_ajoutés_ids = request.sync_etudiants("Post")
 
-    request.export_etudiants("Patch", etudiants_ajoutés_ids)
+    request.sync_etudiants("Patch", etudiants_ajoutés_ids)
 
-    request.export_formations("Patch", formations_ajoutés_ids)
+    request.sync_formations("Patch", formations_ajoutés_ids)
 
-    intervenants_ajoutés_ids = request.export_intervenants("Post")
+    intervenants_ajoutés_ids = request.sync_intervenants("Post")
 
-    request.export_intervenants("Patch", intervenants_ajoutés_ids)
+    request.sync_intervenants("Patch", intervenants_ajoutés_ids)
 
     cours_ajoutés_ids = request.export_cours("Post")
 

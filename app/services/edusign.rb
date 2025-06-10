@@ -204,7 +204,7 @@ class Edusign < ApplicationService
         attendance.save
     end
     
-    def export_formations(method, formations_ajoutés_ids = nil)
+    def sync_formations(method, formations_ajoutés_ids = nil)
         self.prepare_request("https://ext.edusign.fr/v1/group", method)
                 
         if method == 'Post'
@@ -245,9 +245,9 @@ class Edusign < ApplicationService
         formations.pluck(:id) if method == "Post"
     end
 
-    def export_etudiants(method, etudiants_ajoutés_ids = nil)
+    def sync_etudiants(method, etudiants_ajoutés_ids = nil)
         self.prepare_request("https://ext.edusign.fr/v1/student", method)
-        
+
         if method == 'Post'
             etudiants = self.get_all_element_created_today(Etudiant)
             puts "Début de l'ajout des etudiants"
@@ -255,7 +255,7 @@ class Edusign < ApplicationService
             etudiants = self.get_all_element_updated_today(Etudiant, etudiants_ajoutés_ids)
             puts "Début de la modification des etudiants"
         end
-        
+
         puts "#{etudiants.count} etudiants ont été récupéré : #{etudiants.pluck(:id, :nom)}"
 
         etudiants.each do |etudiant|
@@ -288,7 +288,29 @@ class Edusign < ApplicationService
         etudiants.pluck(:id) if method == "Post"
     end
 
-    def export_intervenants(method, intervenants_ajoutés_ids = nil)
+    def export_etudiant(etudiant_id)
+        self.prepare_request("https://ext.edusign.fr/v1/student", 'Post')
+
+        etudiant = Etudiant.find(etudiant_id)
+        body =
+          {"student":{
+            "FIRSTNAME": etudiant.prénom,
+            "LASTNAME": etudiant.nom,
+            "EMAIL": etudiant.email,
+            "API_ID": etudiant.id,
+            "GROUPS": etudiant.formation&.edusign_id
+          }}
+
+        response = self.prepare_body_request(body).get_response
+
+        unless response["status"] == 'error'
+            etudiant.edusign_id = response["result"]["ID"]
+            etudiant.save
+        end
+
+    end
+
+    def sync_intervenants(method, intervenants_ajoutés_ids = nil)
         self.prepare_request("https://ext.edusign.fr/v1/professor", method)
         
         if method == 'Post'
@@ -330,6 +352,30 @@ class Edusign < ApplicationService
 
         # La liste des intervenants pour ne pas update ceux qui ont été créés aujourd'hui
         intervenants.pluck(:id) if method == "Post"
+    end
+
+    def export_intervenant(intervenant_slug)
+        self.prepare_request("https://ext.edusign.fr/v1/professor", 'Post')
+
+        intervenant = Intervenant.find_by(slug: intervenant_slug)
+        body =
+          {"professor":{
+            "FIRSTNAME": intervenant.prenom,
+            "LASTNAME": intervenant.nom,
+            "EMAIL": intervenant.email,
+            "API_ID": intervenant.slug
+          },
+           "dontSendCredentials": false
+          }
+
+        response = self.prepare_body_request(body).get_response
+
+        unless response["status"] == 'error'
+            intervenant.edusign_id = response["result"]["ID"]
+            intervenant.save
+        end
+
+        return response
     end
 
     def export_cours(method, cours_ajoutés_ids = nil)
