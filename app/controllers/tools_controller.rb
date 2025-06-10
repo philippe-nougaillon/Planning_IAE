@@ -1473,9 +1473,15 @@ class ToolsController < ApplicationController
   end
 
   def edusign_do
+    return unless params[:intervenant_id].present? || params[:etudiant_id].present? || params[:formation_id].present?
+
     url = URI("https://ext.edusign.fr/v1/")
 
-    if (intervenant = Intervenant.find_by(slug: params[:intervenant_id]))
+    already_exist = false
+
+    if params[:intervenant_id].present?
+      intervenant = Intervenant.find_by(slug: params[:intervenant_id])
+
       url.path += "professor"
       record_type = "l'intervenant"
 
@@ -1496,7 +1502,65 @@ class ToolsController < ApplicationController
       },
         "dontSendCredentials": false # (If true, the credentials won't be sent to the professor)
       }
-    elsif étudiant = Etudiant.find_by(id: params[:etudiant_id])
+    elsif params[:formation_id].present?
+      formation = Formation.find_by(id: params[:formation_id])
+
+      if formation.edusign_id
+        formation_url = URI("https://ext.edusign.fr/v1/group/get-id/#{étudiant.formation_id}")
+
+        formation_http = Net::HTTP.new(formation_url.host, formation_url.port)
+        formation_http.use_ssl = true
+
+        formation_request = Net::HTTP::Get.new(formation_url)
+        formation_request["accept"] = 'application/json'
+        formation_request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
+
+        formation_response = JSON.parse(formation_http.request(formation_request).read_body)
+
+        # Si la formation est présente, ajouter dans l'étudiant
+        if formation_response["status"] == 'success'
+          already_exist = true
+        end
+      end
+
+      url.path += "group"
+      record_type = "la formation (Groupe)"
+      etudiants_ed_ids = []
+      formation.etudiants.each do |étudiant|
+        student_url = URI("https://ext.edusign.fr/v1/student/get-id/#{étudiant.id}")
+        student_http = Net::HTTP.new(student_url.host, student_url.port)
+        student_http.use_ssl = true
+
+        student_request = Net::HTTP::Get.new(student_url)
+        student_request["accept"] = 'application/json'
+        student_request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
+
+        student_response = JSON.parse(student_http.request(student_request).read_body)
+
+        if student_response["status"] == 'success'
+          etudiants_ed_ids << student_response["result"]["ID"]
+        end
+      end
+
+      body =
+        {"group":{
+          "NAME": formation.nom,
+          # DESCRIPTION
+          # STUDENTS (array on strings) (sûrement la liste des ids des étudiants du côté Edusign)
+          "STUDENTS": etudiants_ed_ids,
+          # PARENT (Group parent) (sûrement utile pour des demis groupes ou des formations généralisées (ex: Master CGAO, au lieu de M1 CGAO 2022/2023))
+          # LOGO (url)
+          "API_ID": formation.id,
+          # VARIABLES (array of objects)
+          #  - NAME
+          #  - RESSOURCE_TYPE (ex: group)
+          #  - RESSOURCE_ID
+          #  - TYPE (ex: select)
+          #  - SELECT_TYPE_VALUES (string, The variable select type values, ex: option 1)
+          #  - VALUE (string, the variable value, ex: option 1)
+        }}
+    elsif params[:etudiant_id].present?
+      étudiant = Etudiant.find_by(id: params[:etudiant_id])
       url.path += "student"
       record_type = "l'étudiant (Apprenant)"
       formation_ed_id = nil
@@ -1512,6 +1576,7 @@ class ToolsController < ApplicationController
 
       formation_response = JSON.parse(formation_http.request(formation_request).read_body)
 
+      # Si la formation est présente, ajouter dans l'étudiant
       if formation_response["status"] == 'success'
         formation_ed_id = formation_response["result"]["ID"]
       end
@@ -1537,43 +1602,6 @@ class ToolsController < ApplicationController
         # NEW_PASSWORD_NEEDED (default: true) : s'il est demandé à l'étudiant de chagner de mdp à la première connexion
         # HIDDEN" (nombre) (statut caché de l'étudiant)
       }}
-    elsif formation = Formation.find_by(id: params[:formation_id])
-      url.path += "group"
-      record_type = "la formation (Groupe)"
-      etudiants_ed_ids = []
-      formation.etudiants.each do |étudiant|
-        student_url = URI("https://ext.edusign.fr/v1/student/get-id/#{étudiant.id}")
-        student_http = Net::HTTP.new(student_url.host, student_url.port)
-        student_http.use_ssl = true
-
-        student_request = Net::HTTP::Get.new(student_url)
-        student_request["accept"] = 'application/json'
-        student_request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
-
-        student_response = JSON.parse(student_http.request(student_request).read_body)
-
-        if student_response["status"] == 'success'
-          etudiants_ed_ids << student_response["result"]["ID"]
-        end
-      end
-
-      body = 
-      {"group":{
-        "NAME": formation.nom,
-        # DESCRIPTION
-        # STUDENTS (array on strings) (sûrement la liste des ids des étudiants du côté Edusign)
-        "STUDENTS": etudiants_ed_ids,
-        # PARENT (Group parent) (sûrement utile pour des demis groupes ou des formations généralisées (ex: Master CGAO, au lieu de M1 CGAO 2022/2023))
-        # LOGO (url)
-        "API_ID": formation.id,
-        # VARIABLES (array of objects)
-        #  - NAME
-        #  - RESSOURCE_TYPE (ex: group)
-        #  - RESSOURCE_ID
-        #  - TYPE (ex: select)
-        #  - SELECT_TYPE_VALUES (string, The variable select type values, ex: option 1)
-        #  - VALUE (string, the variable value, ex: option 1)
-      }}
     end
 
     body[body.keys.first]["API_TYPE"] = "Aikku PLANN"
@@ -1593,23 +1621,25 @@ class ToolsController < ApplicationController
     puts response
     puts "-*" * 50
 
-    
+
     if response["status"] == 'error'
       flash[:alert] = response["message"]
     else
       if intervenant
         intervenant.edusign_id = response["result"]["ID"]
         intervenant.save
-      elsif formation
+      elsif formation && !already_exist
         formation.edusign_id = response["result"]["ID"]
         formation.save
       elsif étudiant
         étudiant.edusign_id = response["result"]["ID"]
         étudiant.save
+      else
+        flash[:alert] = "#{record_type} existe déjà"
       end
       flash[:notice] = "Création avec succès de #{record_type} sur Edusign ! ID sur Edusign : #{response["result"]["ID"]}"
     end
-    redirect_to tools_edusign_path
+
   end
 
   def synchronisation_edusign
