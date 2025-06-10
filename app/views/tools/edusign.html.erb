@@ -1,42 +1,41 @@
 <div class="border-b mt-6 mb-2 pb-4">
-  <h1 class="text-3xl"><%= fa_icon 'signature' %> Création Edusign </h1>
+  <h1 class="text-3xl"><%= fa_icon 'signature' %> Création de contact ou de formation dans Edusign </h1>
 </div>
-<br>
 
-<div>
-  <h4 class="text-xl">
-    Permet l'ajout d'intervenants, d'étudiants, et de formations dans Edusign
-  </h4>
-</div>
-<br>
+<h2 class="text-2xl my-4">
+  Permet la création d'un Intervenant <strong>ou</strong> d'une Formation <strong>ou</strong> d'un Étudiant manquant dans Edusign
+</h2>
 
 <%= form_tag({action: "edusign_do", method: :post}) do %>
 
   <div class="flex flex-col gap-4">
     <div class="sm:w-1/3">
-      <%= label_tag :intervenant_id %>    
+      <%= label_tag :intervenant_id %>
+      <br>
       <%= select_tag :intervenant_id, 
             options_from_collection_for_select(@intervenants, :slug, :nom_prenom, params[:intervenant_id]), 
-              class:"slim-select", include_blank: true %>
+              class: "select select-bordered", include_blank: true %>
     </div>
-      <div class="sm:w-1/3">
-      <%= label_tag :formation_id %>    
-      <%= select_tag :formation_id, 
-            options_from_collection_for_select(@formations, :id, :nom_promo, params[:formation_id]), 
-              class:"slim-select", include_blank: true %>
+    <div class="sm:w-1/3">
+      <%= label_tag :formation_id %>
+      <br>
+      <%= select_tag :formation_id,
+          options_from_collection_for_select(@formations, :id, :nom_promo, params[:formation_id]),
+            class: "select select-bordered", include_blank: true %>
     </div>
-        <div class="sm:w-1/3">
-      <%= label_tag :etudiant_id %>    
-      <%= select_tag :etudiant_id, 
-            options_from_collection_for_select(@étudiants, :id, :nom_prénom, params[:etudiant_id]), 
-              class:"slim-select", include_blank: true %>
+    <div class="sm:w-1/3">
+      <%= label_tag :etudiant_id %>
+      <br>
+      <%= select_tag :etudiant_id,
+          options_from_collection_for_select(@étudiants, :id, :nom_prénom, params[:etudiant_id]),
+            class: "select select-bordered", include_blank: true %>
     </div>
   </div>
   <br>
 
-  <div class="flex flex-wrap">
+  <div class="flex flex-wrap mt-2">
     <div class="sm:w-1/3">
-      <%= submit_tag "Envoyer", class: "btn btn-primary text-white", 'data-turbo': false %>
+      <%= submit_tag "Lancer la création", class: "btn btn-primary text-white", data: { turbo: false, turbo_confirm: "Voulez-vous vraiment ajouter cet élément sur Edusign ?" }  %>
     </div>
   </div>
 
