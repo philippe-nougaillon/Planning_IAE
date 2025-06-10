@@ -403,7 +403,7 @@ class Edusign < ApplicationService
                     "NAME": cour.nom.presence || 'sans nom',
                     "START": cour.debut - @time_zone_difference,
                     "END": cour.fin - @time_zone_difference,
-                    "PROFESSOR": Intervenant.find_by(id: cour.intervenant_id)&.edusign_id,
+                    "PROFESSOR": Intervenant.find_by(id: cour.intervenant_id)&.edusign_id || ENV['EDUSIGN_DEFAULT_INTERVENANT_ID'],
                     "PROFESSOR_2": Intervenant.find_by(id: cour.intervenant_binome_id)&.edusign_id,
                     "API_ID": cour.id,
                     "NEED_STUDENTS_SIGNATURE": true,
