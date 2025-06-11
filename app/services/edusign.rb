@@ -245,6 +245,33 @@ class Edusign < ApplicationService
         formations.pluck(:id) if method == "Post"
     end
 
+    def export_formation(formation_id)
+        self.prepare_request("https://ext.edusign.fr/v1/student", 'Post')
+
+        formation = Formation.find(formation_id)
+        if formation.edusign_id == nil && formation.etudiants.count > 0
+            body =
+            {"group":{
+                "NAME": formation.nom,
+                "STUDENTS": formation.etudiants.pluck(:edusign_id).compact,
+                "API_ID": formation.id
+            }}
+
+            response = self.prepare_body_request(body).get_response
+    
+            unless response["status"] == 'error'
+                formation.edusign_id = response["result"]["ID"]
+                formation.save
+            end
+        else
+            response = {}
+            response["status"] = 'error'
+            response["message"] = formation.edusign_id ? "Formation déjà existante dans Edusign, #{formation.edusign_id}." : "La formation n'a pas d'étudiant."
+        end
+
+        response
+    end
+
     def sync_etudiants(method, etudiants_ajoutés_ids = nil)
         self.prepare_request("https://ext.edusign.fr/v1/student", method)
 
@@ -292,22 +319,31 @@ class Edusign < ApplicationService
         self.prepare_request("https://ext.edusign.fr/v1/student", 'Post')
 
         etudiant = Etudiant.find(etudiant_id)
-        body =
-          {"student":{
-            "FIRSTNAME": etudiant.prénom,
-            "LASTNAME": etudiant.nom,
-            "EMAIL": etudiant.email,
-            "API_ID": etudiant.id,
-            "GROUPS": etudiant.formation&.edusign_id
-          }}
+        if etudiant.edusign_id == nil
+            body =
+            {"student":{
+                "FIRSTNAME": etudiant.prénom,
+                "LASTNAME": etudiant.nom,
+                "EMAIL": etudiant.email,
+                "API_ID": etudiant.id,
+                "GROUPS": etudiant.formation&.edusign_id
+            }}
 
-        response = self.prepare_body_request(body).get_response
-
-        unless response["status"] == 'error'
-            etudiant.edusign_id = response["result"]["ID"]
-            etudiant.save
+            response = self.prepare_body_request(body).get_response
+    
+            # puts response["status"] == 'error' ?  "Error : #{response["message"]}" : "Exportation de l'étudiant #{etudiant.id}, #{etudiant.nom} réussie"
+    
+            unless response["status"] == 'error'
+                etudiant.edusign_id = response["result"]["ID"]
+                etudiant.save
+            end
+        else
+            response = {}
+            response["status"] = 'error'
+            response["message"] = "Apprenant déjà existant sur Edusign,  #{etudiant.edusign_id}."
         end
 
+        response
     end
 
     def sync_intervenants(method, intervenants_ajoutés_ids = nil)
@@ -369,12 +405,13 @@ class Edusign < ApplicationService
           }
 
         response = self.prepare_body_request(body).get_response
-
+        
         unless response["status"] == 'error'
             intervenant.edusign_id = response["result"]["ID"]
             intervenant.save
         end
 
+        # return response["status"] == 'error' ?  "Error : #{response["message"]}" : "Exportation de l'intervenant #{intervenant.slug}, #{intervenant.nom} réussie"
         return response
     end
 
