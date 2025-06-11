@@ -24,14 +24,15 @@ class Edusign < ApplicationService
         @request["content-type"] = 'application/json'
         @request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
 
-        puts "=" * 20
-        puts "Initialisation de la requête terminée"
+        puts "=" * 40
+        puts "Préparation de la communication de l'API Edusign"
     end
 
     def get_response
         response = JSON.parse(@http.request(@request).read_body)
         
-        puts "Lancement de la requête terminée"
+        puts "Lancement de la requête terminée : "
+        puts response
 
         response
     end
@@ -215,7 +216,7 @@ class Edusign < ApplicationService
             puts "Début de la modification des formations"
         end
         
-        puts "#{formations.count} formations ont été récupéré : #{formations.pluck(:id, :nom)}"
+        puts "#{formations.count} formations ont été récupérés : #{formations.pluck(:id, :nom)}"
 
         formations.each do |formation|
             body =
@@ -231,7 +232,7 @@ class Edusign < ApplicationService
 
             response = self.prepare_body_request(body).get_response
 
-            puts response["status"] == 'error' ?  "Error : #{response["message"]}" : "Exportation de la formation #{formation.id}, #{formation.nom} réussie"
+            puts response["status"] == 'error' ?  "Error : #{response["message"]}" : "Exportation de la formation réussie : #{formation.id}, #{formation.nom} "
 
             if method == 'Post'
                 formation.edusign_id = response["result"]["ID"]
@@ -301,7 +302,7 @@ class Edusign < ApplicationService
 
             response = self.prepare_body_request(body).get_response
 
-            puts response["status"] == 'error' ?  "Error : #{response["message"]}" : "Exportation de l'étudiant #{etudiant.id}, #{etudiant.nom} réussie"
+            puts response["status"] == 'error' ?  "Error : #{response["message"]}" : "Exportation de l'étudiant réussie : #{etudiant.id}, #{etudiant.nom} "
 
             if method == 'Post'
                 etudiant.edusign_id = response["result"]["ID"]
@@ -376,7 +377,7 @@ class Edusign < ApplicationService
 
             response = self.prepare_body_request(body).get_response
 
-            puts response["status"] == 'error' ?  "Error : #{response["message"]}" : "Exportation de l'intervenant #{intervenant.id}, #{intervenant.nom} réussie"
+            puts response["status"] == 'error' ?  "Error : #{response["message"]}" : "Exportation de l'intervenant réussie :  #{intervenant.id}, #{intervenant.nom}"
 
             if method == 'Post'
                 intervenant.edusign_id = response["result"]["ID"]

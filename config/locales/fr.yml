@@ -428,6 +428,8 @@ fr:
       title: Edusign
     synchronisation_edusign:
       title: Synchronisation Edusign
+    synchronisation_edusign_do:
+      title: Synchronisation Edusign
   agents:
     index:
       title: Agents
