@@ -211,11 +211,11 @@ Rails.application.routes.draw do
 
   resources :notes
 
-  resources :vacations, only: %i[ index show edit update]
+  resources :vacations, only: %i[ index show edit update ]
   resources :vacation_activites
 
   resources :attendances
-  resources :justificatifs
+  resources :justificatifs, only: %i[ index show ]
 
   controller :pages do
     get 'mentions_légales', to: 'pages#mentions_légales', as: :mentions_legales

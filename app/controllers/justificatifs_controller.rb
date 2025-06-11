@@ -1,5 +1,6 @@
 class JustificatifsController < ApplicationController
   before_action :set_justificatif, only: %i[ show edit update destroy ]
+  before_action :is_user_authorized
 
   # GET /justificatifs or /justificatifs.json
   def index
@@ -85,5 +86,9 @@ class JustificatifsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def justificatif_params
       params.require(:justificatif).permit(:edusign_id, :nom, :commentaires, :etudiant_id, :edusign_created_at, :accepte_le, :debut, :fin, :file_url)
+    end
+
+    def is_user_authorized
+      authorize Justificatif
     end
 end

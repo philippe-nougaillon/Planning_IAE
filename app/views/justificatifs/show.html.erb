@@ -1,5 +1,4 @@
 <div class="border-b mt-6 mb-2 pb-4">
-
   <div class="buttons-group float-right">
     <%= link_to justificatifs_path, class: 'btn btn-ghost' do %>
       <%= fa_icon 'list-alt', text: ' Retour' %>
@@ -8,14 +7,17 @@
 
   <h1 class="text-3xl">
     <%= fa_icon 'file-contract' %>
-    Justificatif
+    Justificatif d'absence
   </h1>
-
-
 </div>
+
 <div class="bs-container card shadow p-4 my-4">
   <div class="flex flex-wrap">
     <div class="relative flex-grow max-w-full flex-1">
+      <p class="mb-4">
+        <strong>Créé il y a :</strong>
+        <%= time_ago_in_words(@justificatif.edusign_created_at) %>
+      </p>
       <p class="mb-4">
         <strong>Motif :</strong>
         <%= @justificatif.motif.nom.humanize %>
@@ -32,12 +34,12 @@
       </p>
 
       <p class="mb-4">
-        <strong>Date de début :</strong>
+        <strong>Absence du :</strong>
         <%= l @justificatif.debut, format: :long  %>
       </p>
 
       <p class="mb-4">
-        <strong>Date de fin :</strong>
+        <strong>Au :</strong>
         <%= l @justificatif.fin, format: :long  %>
       </p>
 
