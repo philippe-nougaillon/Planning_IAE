@@ -14,6 +14,11 @@
     <td class="text-right"><%= intervenant.nbr_heures_statutaire %></td>
     <td><%= l(intervenant.remise_dossier_srh.to_date) if intervenant.remise_dossier_srh %></td>
     <td><%= time_ago_in_words(intervenant.created_at) %></td>
+    <td class="text-center">
+        <% if intervenant.edusign_id? %>
+            <%= fa_icon 'check' %>
+        <% end %>
+    </td>
     <td>
         <%= link_to edit_intervenant_path(intervenant), class: "btn btn-ghost btn-xs" do %>
             <%= fa_icon 'edit' %>

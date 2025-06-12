@@ -128,7 +128,9 @@
                 <%= fa_icon 'file' %>
             <% end %>
         <% end %>
-
+        <% if current_user && current_user.role_number >= 5 && !cours.edusign_id? %>
+            <span title="Problème avec Edusign, le cours n'est pas synchronisé !" class="text-error text-xl underline font-black ml-5 animate-pulse">e</span>
+        <% end %>
     </td>
 
     <% if policy(cours).edit? %>
