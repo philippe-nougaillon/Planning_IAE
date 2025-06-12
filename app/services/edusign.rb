@@ -465,6 +465,7 @@ class Edusign < ApplicationService
                     "PROFESSOR_2": Intervenant.find_by(id: cour.intervenant_binome_id)&.edusign_id,
                     "API_ID": cour.id,
                     "NEED_STUDENTS_SIGNATURE": true,
+                    "CLASSROOM": cour.salle.nom,
                     "SCHOOL_GROUP": [cour.formation.edusign_id]
                     }
                 }
