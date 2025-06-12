@@ -79,7 +79,8 @@
         <div class="sm:w-1/5"></div>
         <div class="sm:w-1/2">
           <%= f.check_box :hors_service_statutaire %>
-          <%= f.label :hors_service_statutaire, "Hors Service Statutaire ?" %>
+          <%= f.label :hors_service_statutaire, "Rémunéré ? (Hors Service Statutaire)" %>
+          <span class="hover:cursor-pointer" title="Cochez pour que les heures de cours ne soient pas imputées sur l'état de service de l'intervenant"><%= fa_icon 'info-circle' %></span>
         </div>
       </div>
 
