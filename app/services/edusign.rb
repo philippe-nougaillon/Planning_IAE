@@ -438,7 +438,7 @@ class Edusign < ApplicationService
             cours_a_envoyer.each do |cour|
                 body =
                 {"course":{
-                    "NAME": cour.nom.presence || 'sans nom',
+                    "NAME": "#{cour.formation.nom} - #{cour.nom_ou_ue}" || 'Nom du cours à valider',
                     "START": cour.debut - @time_zone_difference,
                     "END": cour.fin - @time_zone_difference,
                     "PROFESSOR": Intervenant.find_by(id: cour.intervenant_id)&.edusign_id || ENV['EDUSIGN_DEFAULT_INTERVENANT_ID'],
