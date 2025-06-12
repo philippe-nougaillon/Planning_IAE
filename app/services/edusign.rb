@@ -218,6 +218,8 @@ class Edusign < ApplicationService
         
         puts "#{formations.count} formations ont été récupérés : #{formations.pluck(:id, :nom)}"
 
+        nb_audited = 0
+
         formations.each do |formation|
             body =
                 {"group":{
@@ -234,13 +236,17 @@ class Edusign < ApplicationService
 
             puts response["status"] == 'error' ?  "Error : #{response["message"]}" : "Exportation de la formation réussie : #{formation.id}, #{formation.nom} "
 
-            if method == 'Post'
-                formation.edusign_id = response["result"]["ID"]
-                formation.save
+            if response["status"] == 'success' 
+                if method == 'Post'
+                    formation.edusign_id = response["result"]["ID"]
+                    formation.save
+                end
+                nb_audited += 1
             end
         end
 
-        puts "Exportation des formations terminée"
+        puts "Exportation des formations terminée."
+        puts "Formations : #{nb_audited}"
 
         # La liste des formations pour ne pas update celles qui ont été créées aujourd'hui
         formations.pluck(:id) if method == "Post"
@@ -286,6 +292,8 @@ class Edusign < ApplicationService
 
         puts "#{etudiants.count} etudiants ont été récupéré : #{etudiants.pluck(:id, :nom)}"
 
+        nb_audited = 0
+
         etudiants.each do |etudiant|
             body =
                 {"student":{
@@ -304,13 +312,17 @@ class Edusign < ApplicationService
 
             puts response["status"] == 'error' ?  "Error : #{response["message"]}" : "Exportation de l'étudiant réussie : #{etudiant.id}, #{etudiant.nom} "
 
-            if method == 'Post'
-                etudiant.edusign_id = response["result"]["ID"]
-                etudiant.save
+            if response["status"] == 'success' 
+                if method == 'Post'
+                    etudiant.edusign_id = response["result"]["ID"]
+                    etudiant.save
+                end
+                nb_audited += 1
             end
         end
 
-        puts "Exportation des étudiants terminée"
+        puts "Exportation des étudiants terminée." 
+        puts "Etudiants : #{nb_audited}"
 
         # La liste des etudiants pour ne pas update ceux qui ont été créés aujourd'hui
         etudiants.pluck(:id) if method == "Post"
@@ -360,6 +372,8 @@ class Edusign < ApplicationService
 
         puts "#{intervenants.count} intervenants ont été récupéré : #{intervenants.pluck(:id, :nom)}"
 
+        nb_audited = 0
+
         intervenants.each do |intervenant|
             body =
               {"professor":{
@@ -379,13 +393,17 @@ class Edusign < ApplicationService
 
             puts response["status"] == 'error' ?  "Error : #{response["message"]}" : "Exportation de l'intervenant réussie :  #{intervenant.id}, #{intervenant.nom}"
 
-            if method == 'Post'
-                intervenant.edusign_id = response["result"]["ID"]
-                intervenant.save
+            if response["status"] == 'success'
+                if method == 'Post'
+                    intervenant.edusign_id = response["result"]["ID"]
+                    intervenant.save
+                end
+                nb_audited += 1
             end
         end
 
-        puts "Exportation des intervenants terminée"
+        puts "Exportation des intervenants terminée."
+        puts "Intervenants : #{nb_audited}"
 
         # La liste des intervenants pour ne pas update ceux qui ont été créés aujourd'hui
         intervenants.pluck(:id) if method == "Post"
@@ -422,7 +440,7 @@ class Edusign < ApplicationService
         if method == 'Post'
             cours = self.get_all_element_created_today(Cour).where.not(etat: ["annulé", "reporté"])
             puts "Début de l'ajout des cours"
-            cours_a_supprimer = nil
+            cours_a_supprimer = Cour.none
         else
             cours = self.get_all_element_updated_today(Cour, cours_ajoutés_ids)
             puts "Début de la modification des cours"
@@ -433,6 +451,8 @@ class Edusign < ApplicationService
         cours_a_envoyer = cours.where(etat: ["planifié", "confirmé", "à_réserver"])
 
         puts "#{cours.count} cours ont été récupéré : #{cours.pluck(:id, :nom)}"
+
+        nb_audited = 0
 
         if cours_a_envoyer 
             cours_a_envoyer.each do |cour|
@@ -458,14 +478,20 @@ class Edusign < ApplicationService
 
                 puts response["status"] == 'error' ?  "Error : #{response["message"]}" : "Exportation du cours #{cour.id}, #{cour.nom} réussie"
 
-                if method == 'Post'
-                    cour.edusign_id = response["result"]["ID"]
-                    cour.save
+                if response["status"] == 'success' 
+                    if method == 'Post'
+                        cour.edusign_id = response["result"]["ID"]
+                        cour.save
+                    end
+                    nb_audited += 1
                 end
             end
         end
         
-        if cours_a_supprimer
+        if cours_a_supprimer.any?
+            puts "Début de la suppression des cours"
+            puts "#{cours_a_supprimer.count} cours ont été récupéré : #{cours_a_supprimer.pluck(:id, :nom)}"
+            
             cours_a_supprimer.each do |cour|
 
                 if cour.edusign_id != nil
@@ -477,11 +503,16 @@ class Edusign < ApplicationService
                     response = self.get_response
                     
                     puts response["status"] == 'error' ?  "Error : #{response["message"]}" : "Exportation du cours #{cour.id}, #{cour.nom} pour la suppression réussie"
+                    
+                    if response["status"] == 'error'
+                        nb_audited += 1
+                    end
                 end
             end
         end
         
-        puts "Exportation des cours terminée"
+        puts "Exportation des cours terminée."
+        puts "Cours : #{nb_audited}"
 
         # La liste des cours pour ne pas update ceux qui ont été créés aujourd'hui
         cours_a_envoyer.pluck(:id) if method == "Post"
