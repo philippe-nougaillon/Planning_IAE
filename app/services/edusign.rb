@@ -246,7 +246,7 @@ class Edusign < ApplicationService
         end
 
         puts "Exportation des formations terminée."
-        puts "Formations : #{nb_audited}"
+        puts "<strong>Formations #{method == 'Post' ? 'ajoutées' : "modifiées"} : #{nb_audited}</strong>"
 
         # La liste des formations pour ne pas update celles qui ont été créées aujourd'hui
         formations.pluck(:id) if method == "Post"
@@ -322,7 +322,7 @@ class Edusign < ApplicationService
         end
 
         puts "Exportation des étudiants terminée." 
-        puts "Etudiants : #{nb_audited}"
+        puts "<strong>Etudiants #{method == 'Post' ? 'ajoutés' : "modifiés"} : #{nb_audited}</strong>"
 
         # La liste des etudiants pour ne pas update ceux qui ont été créés aujourd'hui
         etudiants.pluck(:id) if method == "Post"
@@ -403,7 +403,7 @@ class Edusign < ApplicationService
         end
 
         puts "Exportation des intervenants terminée."
-        puts "Intervenants : #{nb_audited}"
+        puts "<strong>Intervenants #{method == 'Post' ? 'ajoutés' : "modifiés"} : #{nb_audited}</strong>"
 
         # La liste des intervenants pour ne pas update ceux qui ont été créés aujourd'hui
         intervenants.pluck(:id) if method == "Post"
@@ -465,7 +465,7 @@ class Edusign < ApplicationService
                     "PROFESSOR_2": Intervenant.find_by(id: cour.intervenant_binome_id)&.edusign_id,
                     "API_ID": cour.id,
                     "NEED_STUDENTS_SIGNATURE": true,
-                    "CLASSROOM": cour.salle.nom,
+                    "CLASSROOM": cour.salle&.nom,
                     "SCHOOL_GROUP": [cour.formation.edusign_id]
                     }
                 }
@@ -513,7 +513,7 @@ class Edusign < ApplicationService
         end
         
         puts "Exportation des cours terminée."
-        puts "Cours : #{nb_audited}"
+        puts "<strong>Cours #{method == 'Post' ? 'ajoutés' : "modifiés"} #{cours_a_supprimer.any? ? '/ supprimés' : ''}: #{nb_audited}</strong>"
 
         # La liste des cours pour ne pas update ceux qui ont été créés aujourd'hui
         cours_a_envoyer.pluck(:id) if method == "Post"
