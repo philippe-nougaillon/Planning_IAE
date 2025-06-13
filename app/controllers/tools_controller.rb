@@ -1525,6 +1525,8 @@ class ToolsController < ApplicationController
   
       request.remove_deleted_cours_in_edusign
     end
+
+    EdusignLog.create(modele_type: "Synchronisation", message: @stream, user_id: current_user.id, etat: 1)
     
   end
 

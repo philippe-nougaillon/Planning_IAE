@@ -10,26 +10,33 @@ namespace :edusign do
   end
 
   task :export_data_to_edusign => :environment do
-    request = Edusign.new
 
-    # Necessaire pour créer des formations sans étudiants et des formations avec que des étudiants déjà créés sur Edusign
-    formations_ajoutés_ids = request.sync_formations("Post")
+    stream = capture_stdout do
+      request = Edusign.new
 
-    etudiants_ajoutés_ids = request.sync_etudiants("Post")
+      # Necessaire pour créer des formations sans étudiants et des formations avec que des étudiants déjà créés sur Edusign
+      formations_ajoutés_ids = request.sync_formations("Post")
 
-    request.sync_etudiants("Patch", etudiants_ajoutés_ids)
+      etudiants_ajoutés_ids = request.sync_etudiants("Post")
 
-    request.sync_formations("Patch", formations_ajoutés_ids)
+      request.sync_etudiants("Patch", etudiants_ajoutés_ids)
 
-    intervenants_ajoutés_ids = request.sync_intervenants("Post")
+      request.sync_formations("Patch", formations_ajoutés_ids)
 
-    request.sync_intervenants("Patch", intervenants_ajoutés_ids)
+      intervenants_ajoutés_ids = request.sync_intervenants("Post")
 
-    cours_ajoutés_ids = request.sync_cours("Post")
+      request.sync_intervenants("Patch", intervenants_ajoutés_ids)
 
-    request.sync_cours("Patch", cours_ajoutés_ids)
+      cours_ajoutés_ids = request.sync_cours("Post")
 
-    request.remove_deleted_cours_in_edusign
+      request.sync_cours("Patch", cours_ajoutés_ids)
+
+      request.remove_deleted_cours_in_edusign
+
+    end
+
+    e=EdusignLog.create(modele_type: "Synchronisation", message: stream, user_id: 0, etat: 1)
+    puts e.errors.full_messages
   end
 
 end
