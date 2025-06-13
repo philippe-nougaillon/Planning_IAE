@@ -1,7 +1,7 @@
 <tr class="hover border">
   <td><%= time_ago_in_words edusign_log.created_at %></td>
   <td><%= edusign_log.modele_type %></td>
-  <td><%= edusign_log.user_id %></td>
+  <td><%= edusign_log.username %></td>
   <td><%= edusign_log.etat %></td>
   <td><%= link_to 'Voir', edusign_log, class: 'text-primary hover:underline' %></td>
 </tr>
