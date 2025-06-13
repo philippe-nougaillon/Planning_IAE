@@ -553,3 +553,8 @@ fr:
       title: "Liste des justificatifs"
     show:
       title: "Justificatif"
+  edusign_logs:
+    index:
+      title: Edusign logs
+    show:
+      title: Edusign log

@@ -157,23 +157,26 @@
 			</li>
 			-->
 			<div class="divider"></div>
+		</ul>
 
-			<div class="flex items-center gap-2 mt-4">
-				<%= image_tag 'edusign.png', size: 32 %>
-				<span class="font-black">edusign</span>
-			</div>
-			<ul class="list-disc list-inside mt-2">
-				<% if current_user.admin? %>
-					<li>
-						<%= link_to "Création manuelle", tools_edusign_path, class: 'text-primary hover:underline' %>
-					</li>
-					<li>
-						<%= link_to "Synchronisation automatique", tools_synchronisation_edusign_path, class: 'text-primary hover:underline' %>
-					</li>
-				<% end %>
-				<li class='mt-2'>
-					<%= link_to "Justificatifs d'absences", justificatifs_path, class: 'text-primary hover:underline' %>
+		<div class="flex items-center gap-2 mt-4">
+			<%= image_tag 'edusign.png', size: 32 %>
+			<span class="font-black">edusign</span>
+		</div>
+		<ul class="list-disc list-inside mt-2">
+			<% if current_user.admin? %>
+				<li>
+					<%= link_to "Création manuelle", tools_edusign_path, class: 'text-primary hover:underline' %>
 				</li>
+				<li>
+					<%= link_to "Synchronisation automatique", tools_synchronisation_edusign_path, class: 'text-primary hover:underline' %>
+				</li>
+				<li>
+					<%= link_to "Edusign logs", edusign_logs_path, class: 'text-primary hover:underline' %>
+				</li>
+			<% end %>
+			<li class='mt-2'>
+				<%= link_to "Justificatifs d'absences", justificatifs_path, class: 'text-primary hover:underline' %>
 			</li>
 		</ul>
 	</div>

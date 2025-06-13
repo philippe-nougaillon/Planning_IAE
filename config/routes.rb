@@ -217,6 +217,8 @@ Rails.application.routes.draw do
   resources :attendances
   resources :justificatifs, only: %i[ index show ]
 
+  resources :edusign_logs, only: %i[ index show ]
+
   controller :pages do
     get 'mentions_légales', to: 'pages#mentions_légales', as: :mentions_legales
   end

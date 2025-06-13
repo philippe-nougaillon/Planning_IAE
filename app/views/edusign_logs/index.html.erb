@@ -1,0 +1,28 @@
+<div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'graduation-cap' %> Liste des logs de la synchronisation avec Edusign</h1>
+</div>
+
+<div class="overflow-x-auto">
+  <table class="table">
+    <thead class="bg-slate-100 border">
+    <tr>
+      <th>Il y a</th>
+      <th>Type</th>
+      <th>Utilisateur</th>
+      <th>Etat</th>
+      <th></th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <%= render @edusign_logs %>
+    </tbody>
+
+    <tfoot>
+    <tr>
+      <td colspan="9">
+      </td>
+    </tr>
+    </tfoot>
+  </table>
+</div>
