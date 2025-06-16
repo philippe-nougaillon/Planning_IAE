@@ -17,10 +17,14 @@
 
   <div class="relative flex-grow max-w-full flex-1">
     <strong>État</strong>
-    <%= fa_icon @edusign_log.icon_etat, class: @edusign_log.icon_color %>
-    <p class="mb-4"><%= @edusign_log.etat %></p>
+    <p class="mb-4">
+      <%= fa_icon @edusign_log.icon_etat, class: @edusign_log.icon_color %>
+      <%= @edusign_log.etat %>
+    </p>
   </div>
 </dl>
 
-<strong>Message</strong>
-<%= simple_format(@edusign_log.message) %>
+<div class="mb-4">
+  <strong>Message</strong>
+  <%= simple_format(@edusign_log.message) %>
+</div>
