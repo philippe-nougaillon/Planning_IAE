@@ -33,8 +33,18 @@ class Edusign < ApplicationService
         self.remove_deleted_cours_in_edusign
 
         # Modification de l'etat à echec si aucun élément n'a pu être envoyé
-        if @nb_recovered_elements != 0 && self.count_failure_elements == @nb_recovered_elements
-            @etat = 2
+        if @nb_recovered_elements != 0
+            @etat = case self.count_failure_elements
+                    when 0
+                        # Success
+                        0
+                    when @nb_recovered_elements
+                        # Echec
+                        2
+                    else
+                        # Warning
+                        1
+                    end
         end
     end
 
@@ -278,8 +288,6 @@ class Edusign < ApplicationService
                     formation.save
                 end
                 nb_audited += 1
-            else
-                @etat = 1
             end
         end
 
@@ -360,8 +368,6 @@ class Edusign < ApplicationService
                     etudiant.save
                 end
                 nb_audited += 1
-            else
-                @etat = 1
             end
         end
 
@@ -447,8 +453,6 @@ class Edusign < ApplicationService
                     intervenant.save
                 end
                 nb_audited += 1
-            else
-                @etat = 1
             end
         end
 
@@ -539,8 +543,6 @@ class Edusign < ApplicationService
                         cour.save
                     end
                     nb_audited += 1
-                else
-                    @etat = 1
                 end
             end
         end
@@ -564,8 +566,6 @@ class Edusign < ApplicationService
                     
                     if response["status"] == 'success'
                         nb_audited += 1
-                    else
-                        @etat = 1
                     end
                 end
             end
@@ -594,6 +594,8 @@ class Edusign < ApplicationService
 
         @nb_recovered_elements += edusign_ids.count
         
+        nb_audited = 0
+
         edusign_ids.each do |edusign_id|
 
             self.prepare_request("https://ext.edusign.fr/v1/course/#{edusign_id}", "Delete")
@@ -604,8 +606,6 @@ class Edusign < ApplicationService
 
             if response["status"] == 'success'
                 nb_audited += 1
-            else
-                @etat = 1
             end
         end
 
