@@ -14,24 +14,9 @@ namespace :edusign do
     stream = capture_stdout do
       request = Edusign.new
 
-      # Necessaire pour créer des formations sans étudiants et des formations avec que des étudiants déjà créés sur Edusign
-      formations_ajoutés_ids = request.sync_formations("Post")
+      puts "Lancement automatique de la synchronisatioin."
 
-      etudiants_ajoutés_ids = request.sync_etudiants("Post")
-
-      request.sync_etudiants("Patch", etudiants_ajoutés_ids)
-
-      request.sync_formations("Patch", formations_ajoutés_ids)
-
-      intervenants_ajoutés_ids = request.sync_intervenants("Post")
-
-      request.sync_intervenants("Patch", intervenants_ajoutés_ids)
-
-      cours_ajoutés_ids = request.sync_cours("Post")
-
-      request.sync_cours("Patch", cours_ajoutés_ids)
-
-      request.remove_deleted_cours_in_edusign
+      request.call
 
     end
 

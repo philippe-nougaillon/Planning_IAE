@@ -4,6 +4,28 @@ class Edusign < ApplicationService
         @time_zone_difference = 2.hour
     end
 
+    def call
+        # Necessaire pour créer des formations sans étudiants et des formations avec que des étudiants déjà créés sur Edusign
+        formations_ajoutés_ids = self.sync_formations("Post")
+    
+        etudiants_ajoutés_ids = self.sync_etudiants("Post")
+    
+        self.sync_etudiants("Patch", etudiants_ajoutés_ids)
+    
+        self.sync_formations("Patch", formations_ajoutés_ids)
+    
+        intervenants_ajoutés_ids = self.sync_intervenants("Post")
+    
+        self.sync_intervenants("Patch", intervenants_ajoutés_ids)
+    
+        cours_ajoutés_ids = self.sync_cours("Post")
+    
+        self.sync_cours("Patch", cours_ajoutés_ids)
+    
+        self.remove_deleted_cours_in_edusign
+
+    end
+
     def prepare_request(url, method)
         url = URI(url)
         @http = Net::HTTP.new(url.host, url.port)
