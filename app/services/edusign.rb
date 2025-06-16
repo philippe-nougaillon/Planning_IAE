@@ -1,7 +1,10 @@
 class Edusign < ApplicationService
 
     def initialize
-        @time_zone_difference = 2.hour
+        @@time_zone_difference = 2.hour
+        
+        @etat = 0
+        
     end
 
     def call
@@ -23,7 +26,6 @@ class Edusign < ApplicationService
         self.sync_cours("Patch", cours_ajoutés_ids)
     
         self.remove_deleted_cours_in_edusign
-
     end
 
     def prepare_request(url, method)
@@ -264,11 +266,13 @@ class Edusign < ApplicationService
                     formation.save
                 end
                 nb_audited += 1
+            else
+                @etat = 1
             end
         end
 
         puts "Exportation des formations terminée."
-        puts "<strong>Formations #{method == 'Post' ? 'ajoutées' : "modifiées"} : #{nb_audited}</strong>"
+        puts "Formations #{method == 'Post' ? 'ajoutées' : "modifiées"} : #{nb_audited}"
 
         # La liste des formations pour ne pas update celles qui ont été créées aujourd'hui
         formations.pluck(:id) if method == "Post"
@@ -340,11 +344,13 @@ class Edusign < ApplicationService
                     etudiant.save
                 end
                 nb_audited += 1
+            else
+                @etat = 1
             end
         end
 
         puts "Exportation des étudiants terminée." 
-        puts "<strong>Etudiants #{method == 'Post' ? 'ajoutés' : "modifiés"} : #{nb_audited}</strong>"
+        puts "Etudiants #{method == 'Post' ? 'ajoutés' : "modifiés"} : #{nb_audited}"
 
         # La liste des etudiants pour ne pas update ceux qui ont été créés aujourd'hui
         etudiants.pluck(:id) if method == "Post"
@@ -421,11 +427,13 @@ class Edusign < ApplicationService
                     intervenant.save
                 end
                 nb_audited += 1
+            else
+                @etat = 1
             end
         end
 
         puts "Exportation des intervenants terminée."
-        puts "<strong>Intervenants #{method == 'Post' ? 'ajoutés' : "modifiés"} : #{nb_audited}</strong>"
+        puts "Intervenants #{method == 'Post' ? 'ajoutés' : "modifiés"} : #{nb_audited}"
 
         # La liste des intervenants pour ne pas update ceux qui ont été créés aujourd'hui
         intervenants.pluck(:id) if method == "Post"
@@ -507,12 +515,14 @@ class Edusign < ApplicationService
                         cour.save
                     end
                     nb_audited += 1
+                else
+                    @etat = 1
                 end
             end
         end
         
         if cours_a_supprimer.any?
-            puts "Début de la suppression des cours annulés ou reportés"
+            puts "Début de la suppression des cours"
             puts "#{cours_a_supprimer.count} cours ont été récupéré : #{cours_a_supprimer.pluck(:id, :nom)}"
             
             cours_a_supprimer.each do |cour|
@@ -527,8 +537,10 @@ class Edusign < ApplicationService
                     
                     puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation du cours #{cour.id}, #{cour.nom} pour la suppression réussie"
                     
-                    if response["status"] == 'error'
+                    if response["status"] == 'success'
                         nb_audited += 1
+                    else
+                        @etat = 1
                     end
                 end
             end
@@ -550,9 +562,6 @@ class Edusign < ApplicationService
             .pluck("edusign_id")
             .compact
 
-        puts "Début de la suppression des cours supprimés"
-        puts "#{edusign_ids.count} cours ont été récupéré : #{edusign_ids}"
-
         edusign_ids.each do |edusign_id|
 
             self.prepare_request("https://ext.edusign.fr/v1/course/#{edusign_id}", "Delete")
@@ -561,8 +570,16 @@ class Edusign < ApplicationService
             
             puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation du cours #{edusign_id} pour la suppression réussie"
 
-
+            if response["status"] == 'success'
+                nb_audited += 1
+            else
+                @etat = 1
+            end
         end
+    end
+
+    def get_etat
+        return @etat
     end
 
     private

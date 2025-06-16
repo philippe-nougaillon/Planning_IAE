@@ -1502,16 +1502,21 @@ class ToolsController < ApplicationController
   end
 
   def synchronisation_edusign_do
+    etat = 0
+
     # capture output
     @stream = capture_stdout do
       request = Edusign.new
       puts "C'est parti !"
 
       request.call
+      
+      etat = request.get_etat
     end
 
-    EdusignLog.create(modele_type: "Synchronisation", message: @stream, user_id: current_user.id, etat: 1)
-    
+
+    e=EdusignLog.create(modele_type: "Synchronisation", message: @stream, user_id: current_user.id, etat: etat)
+    # puts e.inspect
   end
 
   private

@@ -20,8 +20,7 @@ namespace :edusign do
 
     end
 
-    e=EdusignLog.create(modele_type: "Synchronisation", message: stream, user_id: 0, etat: 1)
-    puts e.errors.full_messages
+    EdusignLog.create(modele_type: "Synchronisation", message: stream, user_id: 0, etat: 1)
   end
 
 end
