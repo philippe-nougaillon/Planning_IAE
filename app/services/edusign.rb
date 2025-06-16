@@ -1,10 +1,15 @@
 class Edusign < ApplicationService
 
     def initialize
-        @@time_zone_difference = 2.hour
+        # Pour le décalage horaire des cours entre Planning et Edusign
+        @time_zone_difference = 2.hour
         
+        # Etat à success par défaut
         @etat = 0
         
+        # Utilisés pour calculer le nombre d'éléments en erreur
+        @nb_recovered_elements = 0
+        @nb_sended_elements = 0
     end
 
     def call
@@ -26,6 +31,11 @@ class Edusign < ApplicationService
         self.sync_cours("Patch", cours_ajoutés_ids)
     
         self.remove_deleted_cours_in_edusign
+
+        # Modification de l'etat à echec si aucun élément n'a pu être envoyé
+        if @nb_recovered_elements != 0 && self.count_failure_elements == @nb_recovered_elements
+            @etat = 2
+        end
     end
 
     def prepare_request(url, method)
@@ -242,6 +252,8 @@ class Edusign < ApplicationService
         
         puts "#{formations.count} formations ont été récupérés : #{formations.pluck(:id, :nom)}"
 
+        @nb_recovered_elements += formations.count
+
         nb_audited = 0
 
         formations.each do |formation|
@@ -273,6 +285,8 @@ class Edusign < ApplicationService
 
         puts "Exportation des formations terminée."
         puts "Formations #{method == 'Post' ? 'ajoutées' : "modifiées"} : #{nb_audited}"
+
+        @nb_sended_elements += nb_audited
 
         # La liste des formations pour ne pas update celles qui ont été créées aujourd'hui
         formations.pluck(:id) if method == "Post"
@@ -318,6 +332,8 @@ class Edusign < ApplicationService
 
         puts "#{etudiants.count} etudiants ont été récupéré : #{etudiants.pluck(:id, :nom)}"
 
+        @nb_recovered_elements += etudiants.count
+
         nb_audited = 0
 
         etudiants.each do |etudiant|
@@ -351,6 +367,8 @@ class Edusign < ApplicationService
 
         puts "Exportation des étudiants terminée." 
         puts "Etudiants #{method == 'Post' ? 'ajoutés' : "modifiés"} : #{nb_audited}"
+        
+        @nb_sended_elements += nb_audited
 
         # La liste des etudiants pour ne pas update ceux qui ont été créés aujourd'hui
         etudiants.pluck(:id) if method == "Post"
@@ -400,6 +418,8 @@ class Edusign < ApplicationService
 
         puts "#{intervenants.count} intervenants ont été récupéré : #{intervenants.pluck(:id, :nom)}"
 
+        @nb_recovered_elements += intervenants.count
+
         nb_audited = 0
 
         intervenants.each do |intervenant|
@@ -434,6 +454,8 @@ class Edusign < ApplicationService
 
         puts "Exportation des intervenants terminée."
         puts "Intervenants #{method == 'Post' ? 'ajoutés' : "modifiés"} : #{nb_audited}"
+
+        @nb_sended_elements += nb_audited
 
         # La liste des intervenants pour ne pas update ceux qui ont été créés aujourd'hui
         intervenants.pluck(:id) if method == "Post"
@@ -482,6 +504,8 @@ class Edusign < ApplicationService
 
         puts "#{cours.count} cours ont été récupéré : #{cours.pluck(:id, :nom)}"
 
+        @nb_recovered_elements += cours.count
+
         nb_audited = 0
 
         if cours_a_envoyer 
@@ -521,8 +545,9 @@ class Edusign < ApplicationService
             end
         end
         
+        # Supprime les cours reportés ou annulés
         if cours_a_supprimer.any?
-            puts "Début de la suppression des cours"
+            puts "Début de la suppression des cours annulés ou reportés"
             puts "#{cours_a_supprimer.count} cours ont été récupéré : #{cours_a_supprimer.pluck(:id, :nom)}"
             
             cours_a_supprimer.each do |cour|
@@ -549,6 +574,8 @@ class Edusign < ApplicationService
         puts "Exportation des cours terminée."
         puts "Cours #{method == 'Post' ? 'ajoutés' : "modifiés"} #{cours_a_supprimer.any? ? '/ supprimés' : ''}: #{nb_audited}"
 
+        @nb_sended_elements += nb_audited
+
         # La liste des cours pour ne pas update ceux qui ont été créés aujourd'hui
         cours_a_envoyer.pluck(:id) if method == "Post"
     end
@@ -562,6 +589,11 @@ class Edusign < ApplicationService
             .pluck("edusign_id")
             .compact
 
+        puts "Début de la suppression des cours supprimés"
+        puts "#{edusign_ids.count} cours ont été récupéré : #{edusign_ids}"
+
+        @nb_recovered_elements += edusign_ids.count
+        
         edusign_ids.each do |edusign_id|
 
             self.prepare_request("https://ext.edusign.fr/v1/course/#{edusign_id}", "Delete")
@@ -576,10 +608,16 @@ class Edusign < ApplicationService
                 @etat = 1
             end
         end
+
+        @nb_sended_elements += nb_audited
     end
 
     def get_etat
-        return @etat
+        @etat
+    end
+
+    def count_failure_elements
+        @nb_recovered_elements - @nb_sended_elements
     end
 
     private
