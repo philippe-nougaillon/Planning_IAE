@@ -20,7 +20,7 @@ namespace :edusign do
 
     end
 
-    EdusignLog.create(modele_type: "Synchronisation", message: stream, user_id: 0, etat: 1)
+    EdusignLog.create(modele_type: "Auto sync", message: stream, user_id: 0, etat: 1)
   end
 
 end

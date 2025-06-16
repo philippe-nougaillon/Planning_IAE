@@ -1515,8 +1515,7 @@ class ToolsController < ApplicationController
     end
 
 
-    e=EdusignLog.create(modele_type: "Synchronisation", message: @stream, user_id: current_user.id, etat: etat)
-    # puts e.inspect
+    EdusignLog.create(modele_type: "Auto sync", message: @stream, user_id: current_user.id, etat: etat)
   end
 
   private

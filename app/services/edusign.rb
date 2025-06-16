@@ -68,7 +68,7 @@ class Edusign < ApplicationService
         @request["content-type"] = 'application/json'
         @request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
 
-        puts "=" * 40
+        puts "=" * 100
         puts "Préparation de la communication de l'API Edusign"
     end
 

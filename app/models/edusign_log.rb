@@ -1,9 +1,9 @@
 class EdusignLog < ApplicationRecord
   belongs_to :user, optional: true
 
-  enum etat: {succès: 0, 
+  enum etat: {success: 0, 
               warning: 1, 
-              échec: 2, 
+              error: 2, 
               }
 
   def username
@@ -11,7 +11,7 @@ class EdusignLog < ApplicationRecord
   end
 
   def icon_etat
-    if self.etat == 'succès'
+    if self.etat == 'success'
       'check-circle'
     else
       'times-circle'
@@ -20,12 +20,12 @@ class EdusignLog < ApplicationRecord
   
   def icon_color
     case self.etat
-    when 'succès'
+    when 'success'
       'text-success'
-    when 'échec', 
-      'text-error'
     when 'warning'
       'text-warning'
+    when 'error' 
+      'text-error'
     end
   end
 end
