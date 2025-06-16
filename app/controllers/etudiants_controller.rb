@@ -67,6 +67,7 @@ class EtudiantsController < ApplicationController
             MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: @etudiant.email, subject: "Nouvel accès étudiant")
             flash[:notice] = "Etudiant créé avec succès. Accès créé, étudiant informé"
           else
+            flash.delete(:notice)
             flash[:alert] = "Étudiant créé avec succès mais sans son compte d'accès : #{user.errors.full_messages}"
           end
         end
