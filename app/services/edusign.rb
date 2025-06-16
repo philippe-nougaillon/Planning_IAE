@@ -234,7 +234,7 @@ class Edusign < ApplicationService
 
             response = self.prepare_body_request(body).get_response
 
-            puts response["status"] == 'error' ?  "Error : #{response["message"]}" : "Exportation de la formation réussie : #{formation.id}, #{formation.nom} "
+            puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de la formation réussie : #{formation.id}, #{formation.nom} "
 
             if response["status"] == 'success' 
                 if method == 'Post'
@@ -310,7 +310,7 @@ class Edusign < ApplicationService
 
             response = self.prepare_body_request(body).get_response
 
-            puts response["status"] == 'error' ?  "Error : #{response["message"]}" : "Exportation de l'étudiant réussie : #{etudiant.id}, #{etudiant.nom} "
+            puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de l'étudiant réussie : #{etudiant.id}, #{etudiant.nom} "
 
             if response["status"] == 'success' 
                 if method == 'Post'
@@ -391,7 +391,7 @@ class Edusign < ApplicationService
 
             response = self.prepare_body_request(body).get_response
 
-            puts response["status"] == 'error' ?  "Error : #{response["message"]}" : "Exportation de l'intervenant réussie :  #{intervenant.id}, #{intervenant.nom}"
+            puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de l'intervenant réussie :  #{intervenant.id}, #{intervenant.nom}"
 
             if response["status"] == 'success'
                 if method == 'Post'
@@ -477,7 +477,7 @@ class Edusign < ApplicationService
 
                 response = self.prepare_body_request(body).get_response
 
-                puts response["status"] == 'error' ?  "Error : #{response["message"]}" : "Exportation du cours #{cour.id}, #{cour.nom} réussie"
+                puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation du cours #{cour.id}, #{cour.nom} réussie"
 
                 if response["status"] == 'success' 
                     if method == 'Post'
@@ -490,7 +490,7 @@ class Edusign < ApplicationService
         end
         
         if cours_a_supprimer.any?
-            puts "Début de la suppression des cours"
+            puts "Début de la suppression des cours annulés ou reportés"
             puts "#{cours_a_supprimer.count} cours ont été récupéré : #{cours_a_supprimer.pluck(:id, :nom)}"
             
             cours_a_supprimer.each do |cour|
@@ -503,7 +503,7 @@ class Edusign < ApplicationService
                                 
                     response = self.get_response
                     
-                    puts response["status"] == 'error' ?  "Error : #{response["message"]}" : "Exportation du cours #{cour.id}, #{cour.nom} pour la suppression réussie"
+                    puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation du cours #{cour.id}, #{cour.nom} pour la suppression réussie"
                     
                     if response["status"] == 'error'
                         nb_audited += 1
@@ -513,7 +513,7 @@ class Edusign < ApplicationService
         end
         
         puts "Exportation des cours terminée."
-        puts "<strong>Cours #{method == 'Post' ? 'ajoutés' : "modifiés"} #{cours_a_supprimer.any? ? '/ supprimés' : ''}: #{nb_audited}</strong>"
+        puts "Cours #{method == 'Post' ? 'ajoutés' : "modifiés"} #{cours_a_supprimer.any? ? '/ supprimés' : ''}: #{nb_audited}"
 
         # La liste des cours pour ne pas update ceux qui ont été créés aujourd'hui
         cours_a_envoyer.pluck(:id) if method == "Post"
@@ -528,13 +528,16 @@ class Edusign < ApplicationService
             .pluck("edusign_id")
             .compact
 
+        puts "Début de la suppression des cours supprimés"
+        puts "#{edusign_ids.count} cours ont été récupéré : #{edusign_ids}"
+
         edusign_ids.each do |edusign_id|
 
             self.prepare_request("https://ext.edusign.fr/v1/course/#{edusign_id}", "Delete")
 
             response = self.get_response
             
-            puts response["status"] == 'error' ?  "Error : #{response["message"]}" : "Exportation du cours #{edusign_id} pour la suppression réussie"
+            puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation du cours #{edusign_id} pour la suppression réussie"
 
 
         end
