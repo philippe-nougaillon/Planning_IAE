@@ -13,6 +13,7 @@ class EtudiantsController < ApplicationController
     params[:paginate] ||= 'pages'
 
     @etudiants = Etudiant.all
+    @formations = Formation.unscoped.ordered
 
     unless params[:search].blank?
       @etudiants = @etudiants.where("LOWER(nom) like :search OR LOWER(prénom) like :search OR LOWER(email) like :search", {search: "%#{params[:search]}%".downcase})
@@ -41,10 +42,12 @@ class EtudiantsController < ApplicationController
   def new
     @etudiant = Etudiant.new
     @etudiant.workflow_state = "étudiant"
+    @formations = Formation.unscoped.ordered
   end
 
   # GET /etudiants/1/edit
   def edit
+    @formations = Formation.unscoped.ordered
   end
 
   # POST /etudiants
@@ -66,7 +69,10 @@ class EtudiantsController < ApplicationController
         format.html { redirect_to @etudiant, notice: "Etudiant créé avec succès. #{'Accès créé, étudiant informé' if params[:notify] }" }
         format.json { render :show, status: :created, location: @etudiant }
       else
-        format.html { render :new, status: :unprocessable_entity }
+        format.html do
+          @formations = Formation.unscoped.ordered
+          render :new, status: :unprocessable_entity
+        end
         format.json { render json: @etudiant.errors, status: :unprocessable_entity }
       end
     end
@@ -80,7 +86,10 @@ class EtudiantsController < ApplicationController
         format.html { redirect_to @etudiant, notice: 'Etudiant modifié avec succès.' }
         format.json { render :show, status: :ok, location: @etudiant }
       else
-        format.html { render :edit }
+        format.html do
+          @formations = Formation.unscoped.ordered
+          render :edit, status: :unprocessable_entity
+        end
         format.json { render json: @etudiant.errors, status: :unprocessable_entity }
       end
     end
