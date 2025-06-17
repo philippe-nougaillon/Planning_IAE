@@ -4,6 +4,8 @@ class EdusignLogsController < ApplicationController
   # GET /edusign_logs or /edusign_logs.json
   def index
     @edusign_logs = EdusignLog.all
+
+    @edusign_logs = @edusign_logs.paginate(page: params[:page], per_page: 10)
   end
 
   # GET /edusign_logs/1 or /edusign_logs/1.json
