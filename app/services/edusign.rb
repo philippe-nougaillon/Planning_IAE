@@ -4,9 +4,6 @@ class Edusign < ApplicationService
         # Pour le décalage horaire des cours entre Planning et Edusign
         @time_zone_difference = 2.hour
         
-        # Etat à success par défaut
-        @etat = 0
-        
         # Utilisés pour calculer le nombre d'éléments en erreur
         @nb_recovered_elements = 0
         @nb_sended_elements = 0
@@ -31,21 +28,6 @@ class Edusign < ApplicationService
         self.sync_cours("Patch", cours_ajoutés_ids)
     
         self.remove_deleted_cours_in_edusign
-
-        # Modification de l'etat à echec si aucun élément n'a pu être envoyé
-        if @nb_recovered_elements != 0
-            @etat = case self.count_failure_elements
-                    when 0
-                        # Success
-                        0
-                    when @nb_recovered_elements
-                        # Echec
-                        2
-                    else
-                        # Warning
-                        1
-                    end
-        end
     end
 
     def prepare_request(url, method)
@@ -303,25 +285,38 @@ class Edusign < ApplicationService
     def export_formation(formation_id)
         self.prepare_request("https://ext.edusign.fr/v1/student", 'Post')
 
-        formation = Formation.find(formation_id)
-        if formation.edusign_id == nil && formation.etudiants.count > 0
-            body =
-            {"group":{
-                "NAME": formation.nom,
-                "STUDENTS": formation.etudiants.pluck(:edusign_id).compact,
-                "API_ID": formation.id
-            }}
+        if formation = Formation.find(formation_id)
+            @nb_recovered_elements += 1
 
-            response = self.prepare_body_request(body).get_response
-    
-            unless response["status"] == 'error'
-                formation.edusign_id = response["result"]["ID"]
-                formation.save
+            if formation.edusign_id == nil && formation.etudiants.count > 0
+                body =
+                  {"group":{
+                    "NAME": formation.nom,
+                    "STUDENTS": formation.etudiants.pluck(:edusign_id).compact,
+                    "API_ID": formation.id
+                  }}
+
+                response = self.prepare_body_request(body).get_response
+
+                puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de l'étudiant #{formation.id}, #{formation.nom} réussie"
+
+                if response["status"] == 'success'
+                    formation.edusign_id = response["result"]["ID"]
+                    formation.save
+                    @nb_sended_elements += 1
+                end
+            else
+                message = formation.edusign_id ? "Formation déjà existante dans Edusign, #{formation.edusign_id}." : "La formation n'a pas d'étudiant."
+                puts message
+
+                response = {}
+                response["status"] = 'error'
+                response["message"] = message
             end
         else
             response = {}
             response["status"] = 'error'
-            response["message"] = formation.edusign_id ? "Formation déjà existante dans Edusign, #{formation.edusign_id}." : "La formation n'a pas d'étudiant."
+            response["message"] = "Error : Aucune formation ne correspond à cet id : #{formation_id}"
         end
 
         response
@@ -383,29 +378,37 @@ class Edusign < ApplicationService
     def export_etudiant(etudiant_id)
         self.prepare_request("https://ext.edusign.fr/v1/student", 'Post')
 
-        etudiant = Etudiant.find(etudiant_id)
-        if etudiant.edusign_id == nil
-            body =
-            {"student":{
-                "FIRSTNAME": etudiant.prénom,
-                "LASTNAME": etudiant.nom,
-                "EMAIL": etudiant.email,
-                "API_ID": etudiant.id,
-                "GROUPS": etudiant.formation&.edusign_id
-            }}
+        if etudiant = Etudiant.find(etudiant_id)
+            @nb_recovered_elements += 1
 
-            response = self.prepare_body_request(body).get_response
-    
-            # puts response["status"] == 'error' ?  "Error : #{response["message"]}" : "Exportation de l'étudiant #{etudiant.id}, #{etudiant.nom} réussie"
-    
-            unless response["status"] == 'error'
-                etudiant.edusign_id = response["result"]["ID"]
-                etudiant.save
+            if etudiant.edusign_id == nil
+                body =
+                {"student":{
+                    "FIRSTNAME": etudiant.prénom,
+                    "LASTNAME": etudiant.nom,
+                    "EMAIL": etudiant.email,
+                    "API_ID": etudiant.id,
+                    "GROUPS": etudiant.formation&.edusign_id
+                }}
+
+                response = self.prepare_body_request(body).get_response
+
+                puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de l'étudiant #{etudiant.id}, #{etudiant.nom} réussie"
+
+                if response["status"] == 'success'
+                    etudiant.edusign_id = response["result"]["ID"]
+                    etudiant.save
+                    @nb_sended_elements += 1
+                end
+            else
+                response = {}
+                response["status"] = 'error'
+                response["message"] = "Apprenant déjà existant sur Edusign,  #{etudiant.edusign_id}."
             end
         else
             response = {}
             response["status"] = 'error'
-            response["message"] = "Apprenant déjà existant sur Edusign,  #{etudiant.edusign_id}."
+            response["message"] = "Error : Aucun étudiant ne correspond à cet id : #{etudiant_id}"
         end
 
         response
@@ -468,26 +471,35 @@ class Edusign < ApplicationService
     def export_intervenant(intervenant_slug)
         self.prepare_request("https://ext.edusign.fr/v1/professor", 'Post')
 
-        intervenant = Intervenant.find_by(slug: intervenant_slug)
-        body =
-          {"professor":{
-            "FIRSTNAME": intervenant.prenom,
-            "LASTNAME": intervenant.nom,
-            "EMAIL": intervenant.email,
-            "API_ID": intervenant.slug
-          },
-           "dontSendCredentials": false
-          }
+        if intervenant = Intervenant.find_by(slug: intervenant_slug)
+            @nb_recovered_elements += 1
 
-        response = self.prepare_body_request(body).get_response
-        
-        unless response["status"] == 'error'
-            intervenant.edusign_id = response["result"]["ID"]
-            intervenant.save
+            body =
+              {"professor":{
+                "FIRSTNAME": intervenant.prenom,
+                "LASTNAME": intervenant.nom,
+                "EMAIL": intervenant.email,
+                "API_ID": intervenant.slug
+              },
+               "dontSendCredentials": false
+              }
+
+            response = self.prepare_body_request(body).get_response
+
+            puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de l'étudiant #{intervenant.id}, #{intervenant.nom} réussie"
+
+            if response["status"] == 'success'
+                intervenant.edusign_id = response["result"]["ID"]
+                intervenant.save
+                @nb_sended_elements += 1
+            end
+        else
+            response = {}
+            response["status"] = 'error'
+            response["message"] = "Error : Aucun intervenant ne correspond à ce slug : #{intervenant_slug}"
         end
 
-        # return response["status"] == 'error' ?  "Error : #{response["message"]}" : "Exportation de l'intervenant #{intervenant.slug}, #{intervenant.nom} réussie"
-        return response
+        response
     end
 
     def sync_cours(method, cours_ajoutés_ids = nil)
@@ -613,7 +625,19 @@ class Edusign < ApplicationService
     end
 
     def get_etat
-        @etat
+        # Modification de l'etat
+        if @nb_recovered_elements != 0
+            case self.count_failure_elements
+            when 0
+                0 # Success
+            when @nb_recovered_elements
+                2 # Echec
+            else
+                1 # Warning
+            end
+        else
+            0
+        end
     end
 
     def count_failure_elements

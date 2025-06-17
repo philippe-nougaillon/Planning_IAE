@@ -1475,24 +1475,33 @@ class ToolsController < ApplicationController
   def edusign_do
     return unless params[:intervenant_id].present? || params[:etudiant_id].present? || params[:formation_id].present?
 
-    request = Edusign.new
+    etat = 0
 
-    if params[:intervenant_id].present?
-      response = request.export_intervenant(params[:intervenant_id])
-      record_type = "l'intervenant"
-    elsif params[:formation_id].present?
-      response = request.export_formation(params[:formation_id])
-      record_type = "la formation (Groupe)"
-    elsif params[:etudiant_id].present?
-      response = request.export_etudiant(params[:etudiant_id])
-      record_type = "l'étudiant (Apprenant)"
-    end
+    # capture output
+    @stream = capture_stdout do
+      request = Edusign.new
 
-    if response["status"] == 'error'
+      if params[:intervenant_id].present?
+        response = request.export_intervenant(params[:intervenant_id])
+        record_type = "l'intervenant"
+      elsif params[:formation_id].present?
+        response = request.export_formation(params[:formation_id])
+        record_type = "la formation (Groupe)"
+      elsif params[:etudiant_id].present?
+        response = request.export_etudiant(params[:etudiant_id])
+        record_type = "l'étudiant (Apprenant)"
+      end
+
+      if response["status"] == 'error'
         flash[:alert] = "Erreur Edusign : #{response["message"]}"
-    else
+      else
         flash[:notice] = "Création avec succès de #{record_type} sur Edusign ! ID sur Edusign : #{response["result"]["ID"]}"
+      end
+
+      etat = request.get_etat
     end
+
+    EdusignLog.create(modele_type: "Manual sync", message: @stream, user_id: current_user.id, etat: etat)
 
     redirect_to tools_edusign_path
 
