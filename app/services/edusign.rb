@@ -11,11 +11,11 @@ class Edusign < ApplicationService
 
     def call
         # Necessaire pour créer des formations sans étudiants et des formations avec que des étudiants déjà créés sur Edusign
-        formations_ajoutés_ids = self.sync_formations("Post", nil, Formation.cobaye_edusign, formation_id)
+        formations_ajoutés_ids = self.sync_formations("Post", nil)
     
-        etudiants_ajoutés_ids = self.sync_etudiants("Post", nil, Formation.cobaye_edusign)
+        etudiants_ajoutés_ids = self.sync_etudiants("Post", nil)
     
-        self.sync_etudiants("Patch", etudiants_ajoutés_ids, Formation.cobaye_edusign)
+        self.sync_etudiants("Patch", etudiants_ajoutés_ids)
     
         self.sync_formations("Patch", formations_ajoutés_ids)
     
@@ -71,20 +71,52 @@ class Edusign < ApplicationService
         self
     end
 
-    def get_all_element_created_today(model, formation_ids)
-        case model
-        when Formation
-            model.where(id: formation_ids, created_at: self.get_interval_of_time, edusign_id: nil)
-        when Etudiant, Cour
-            model.where(formation_id: formation_ids, created_at: self.get_interval_of_time, edusign_id: nil)
-        when Intervenant
-            model.where(id: Cour.where(created_at: self.get_interval_of_time, formation_id: formation_ids).pluck(:intervenant_id, :intervenant_binome_id), edusign_id: nil)
+    def get_all_element_created_today(model)
+        interval = self.get_interval_of_time
+
+        if model == Formation
+            model.where(
+              id: Formation.cobayes_edusign,
+              created_at: interval,
+              edusign_id: nil
+            )
+        elsif [Etudiant, Cour].include?(model)
+            model.where(
+              formation_id: Formation.cobayes_edusign,
+              created_at: interval,
+              edusign_id: nil
+            )
+        elsif model == Intervenant
+            intervenant_ids = Cour.where(
+              created_at: interval,
+              formation_id: Formation.cobayes_edusign
+            ).pluck(:intervenant_id, :intervenant_binome_id).flatten.compact.uniq
+
+            model.where(id: intervenant_ids, edusign_id: nil)
         end
-        model.where(created_at: self.get_interval_of_time, edusign_id: nil)
     end
 
     def get_all_element_updated_today(model, record_ids = nil)
-        model.where(updated_at: self.get_interval_of_time).where("created_at != updated_at").where.not(edusign_id: nil).where.not(id: record_ids)
+        interval = self.get_interval_of_time
+
+        if model == Formation
+            model.where(
+              id: Formation.cobayes_edusign,
+              updated_at: interval,
+            ).where("created_at != updated_at").where.not(edusign_id: nil).where.not(id: record_ids)
+        elsif [Etudiant, Cour].include?(model)
+            model.where(
+              formation_id: Formation.cobayes_edusign,
+              updated_at: interval,
+            ).where("created_at != updated_at").where.not(edusign_id: nil).where.not(id: record_ids)
+        elsif model == Intervenant
+            intervenant_ids = Cour.where(
+              updated_at: interval,
+              formation_id: Formation.cobayes_edusign
+            ).where("created_at != updated_at").pluck(:intervenant_id, :intervenant_binome_id).flatten.compact.uniq
+
+            model.where(id: intervenant_ids).where.not(edusign_id: nil).where.not(id: record_ids)
+        end
     end
 
     def import_justificatifs
