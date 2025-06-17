@@ -664,6 +664,19 @@ class CoursController < ApplicationController
             MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: "accueil@iae.pantheonsorbonne.fr", subject: "BYPASS")
           end
 
+          # Modifier la salle sur Edusign si changement
+          if @cour.audits.last.audited_changes["salle_id"]
+            etat = 0
+
+            # capture output
+            @stream = capture_stdout do
+              request = Edusign.new
+              request.export_cours(@cour.id)
+              etat = request.get_etat
+            end
+            EdusignLog.create(modele_type: "Classroom changed", message: @stream, user_id: current_user.id, etat: etat)
+          end
+
           # repartir à la page où a eu lieu la demande de modification
           if params[:from] == 'planning_salles'
             redirect_to cours_path(view:"calendar_rooms", start_date:@cour.debut)

@@ -592,6 +592,42 @@ class Edusign < ApplicationService
         cours_a_envoyer.pluck(:id) if method == "Post"
     end
 
+    def export_cours(cours_id)
+        self.prepare_request("https://ext.edusign.fr/v1/course", 'Post')
+
+        if cours = Cour.find(cours_id)
+            @nb_recovered_elements += 1
+
+            body =
+              {"course":{
+                "NAME": "#{cours.formation.nom} - #{cours.nom_ou_ue}" || 'Nom du cours à valider',
+                "START": cours.debut - @time_zone_difference,
+                "END": cours.fin - @time_zone_difference,
+                "PROFESSOR": Intervenant.find_by(id: cours.intervenant_id)&.edusign_id || ENV['EDUSIGN_DEFAULT_INTERVENANT_ID'],
+                "PROFESSOR_2": Intervenant.find_by(id: cours.intervenant_binome_id)&.edusign_id,
+                "API_ID": cours.id,
+                "NEED_STUDENTS_SIGNATURE": true,
+                "CLASSROOM": cours.salle&.nom,
+                "SCHOOL_GROUP": [cours.formation.edusign_id]
+              }
+              }
+
+            response = self.prepare_body_request(body).get_response
+
+            puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de l'étudiant #{cours.id}, #{cours.nom} réussie"
+
+            if response["status"] == 'success'
+                @nb_sended_elements += 1
+            end
+        else
+            response = {}
+            response["status"] = 'error'
+            response["message"] = "Error : Aucun cours ne correspond à cet id : #{cours_id}"
+        end
+
+        response
+    end
+
     def remove_deleted_cours_in_edusign
         edusign_ids = Audited::Audit
             .where(auditable_type: "Cour")
