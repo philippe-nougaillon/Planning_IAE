@@ -104,5 +104,9 @@ class Formation < ApplicationRecord
 		[258, 599, 671, 672, 683, 687, 695]
 	end
 
+	def self.cobayes_edusign
+		[258, 599, 671, 672, 683, 687, 695]
+	end
+
 end
 

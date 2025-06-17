@@ -11,11 +11,11 @@ class Edusign < ApplicationService
 
     def call
         # Necessaire pour créer des formations sans étudiants et des formations avec que des étudiants déjà créés sur Edusign
-        formations_ajoutés_ids = self.sync_formations("Post")
+        formations_ajoutés_ids = self.sync_formations("Post", nil, Formation.cobaye_edusign, formation_id)
     
-        etudiants_ajoutés_ids = self.sync_etudiants("Post")
+        etudiants_ajoutés_ids = self.sync_etudiants("Post", nil, Formation.cobaye_edusign)
     
-        self.sync_etudiants("Patch", etudiants_ajoutés_ids)
+        self.sync_etudiants("Patch", etudiants_ajoutés_ids, Formation.cobaye_edusign)
     
         self.sync_formations("Patch", formations_ajoutés_ids)
     
@@ -71,8 +71,16 @@ class Edusign < ApplicationService
         self
     end
 
-    def get_all_element_created_today(model)
-        model.where(created_at: self.get_interval_of_time).where(edusign_id: nil)
+    def get_all_element_created_today(model, formation_ids)
+        case model
+        when Formation
+            model.where(id: formation_ids, created_at: self.get_interval_of_time, edusign_id: nil)
+        when Etudiant, Cour
+            model.where(formation_id: formation_ids, created_at: self.get_interval_of_time, edusign_id: nil)
+        when Intervenant
+            model.where(id: Cour.where(created_at: self.get_interval_of_time, formation_id: formation_ids).pluck(:intervenant_id, :intervenant_binome_id), edusign_id: nil)
+        end
+        model.where(created_at: self.get_interval_of_time, edusign_id: nil)
     end
 
     def get_all_element_updated_today(model, record_ids = nil)
