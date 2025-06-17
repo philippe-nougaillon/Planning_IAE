@@ -2,6 +2,46 @@
   <h1 class="text-3xl"><%= fa_icon 'signature' %> Logs des synchronisations avec Edusign</h1>
 </div>
 
+<div class="bs-container p-4 shadow mb-4">
+  <%= form_tag request.path, method: :get do %>
+    <div class="flex flex-wrap">
+
+      <div class="sm:w-2/12">
+        <%= label_tag :du, "Du" %>
+        <%= text_field_tag :du, params[:du], type: 'date', onchange: 'this.form.submit()', class: "input input-bordered input-sm w-full" %>
+      </div>
+
+      <div class="sm:w-2/12 px-2">
+        <%= label_tag :au, "Au" %>
+        <%= text_field_tag :au, params[:au], type: 'date', onchange: 'this.form.submit()', class: "input input-bordered input-sm w-full" %>
+      </div>
+
+      <div class="sm:w-1/5 px-2">
+        <%= label_tag :type, "Type" %>
+        <%= select_tag :type, options_for_select(EdusignLog.modele_types.map { |k, v| [k.humanize, v]},
+                                                 params[:type]), include_blank:true,
+                       class: 'select select-bordered select-sm w-full', onchange: 'this.form.submit()' %>
+      </div>
+
+      <div class="sm:w-1/5 pl-4">
+        <%= label_tag :user_id %>
+        <%= select_tag :user_id,
+                       options_for_select(User.for_edusign_logs_select, params[:user_id]),
+                       class: 'slim-select',
+                       include_blank: true,
+                       onchange: 'this.form.submit()' %>
+      </div>
+
+      <div class="sm:w-1/5 px-2">
+        <%= label_tag :etat, "État" %>
+        <%= select_tag :etat, options_for_select(EdusignLog.etats.map { |k, v| [k.humanize, v]},
+                                                   params[:etat]), include_blank:true,
+                       class: 'select select-bordered select-sm w-full', onchange: 'this.form.submit()' %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
 <div class="overflow-x-auto">
   <table class="table">
     <thead class="bg-slate-100 border">

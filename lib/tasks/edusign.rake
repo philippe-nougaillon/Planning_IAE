@@ -10,6 +10,7 @@ namespace :edusign do
   end
 
   task :export_data_to_edusign => :environment do
+    etat = 0
 
     stream = capture_stdout do
       request = Edusign.new
@@ -18,9 +19,10 @@ namespace :edusign do
 
       request.call
 
+      etat = request.get_etat
     end
 
-    EdusignLog.create(modele_type: "Auto sync", message: stream, user_id: 0, etat: 1)
+    EdusignLog.create(modele_type: 0, message: stream, user_id: 0, etat: etat)
   end
 
 end

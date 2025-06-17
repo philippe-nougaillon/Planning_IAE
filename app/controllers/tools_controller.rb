@@ -1478,7 +1478,7 @@ class ToolsController < ApplicationController
     etat = 0
 
     # capture output
-    @stream = capture_stdout do
+    stream = capture_stdout do
       request = Edusign.new
 
       if params[:intervenant_id].present?
@@ -1501,7 +1501,7 @@ class ToolsController < ApplicationController
       etat = request.get_etat
     end
 
-    EdusignLog.create(modele_type: "Manual sync", message: @stream, user_id: current_user.id, etat: etat)
+    EdusignLog.create(modele_type: 1, message: stream, user_id: current_user.id, etat: etat)
 
     redirect_to tools_edusign_path
 
@@ -1524,7 +1524,7 @@ class ToolsController < ApplicationController
     end
 
 
-    EdusignLog.create(modele_type: "Auto sync", message: @stream, user_id: current_user.id, etat: etat)
+    EdusignLog.create(modele_type: 0, message: @stream, user_id: current_user.id, etat: etat)
   end
 
   private

@@ -6,8 +6,14 @@ class EdusignLog < ApplicationRecord
               error: 2, 
               }
 
+  enum modele_type: {
+    'auto sync': 0,
+    'manual sync': 1,
+    'classroom changed': 2
+  }
+
   def username
-    user&.username || "Serveur"
+    user&.prénom_et_nom || "Serveur"
   end
 
   def icon_etat
@@ -27,5 +33,9 @@ class EdusignLog < ApplicationRecord
     when 'error' 
       'text-error'
     end
+  end
+
+  def self.get_types
+    ["Auto sync", "Manual sync", "Classroom changed"]
   end
 end

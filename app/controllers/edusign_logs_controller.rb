@@ -5,6 +5,26 @@ class EdusignLogsController < ApplicationController
   def index
     @edusign_logs = EdusignLog.all
 
+    unless params[:du].blank?
+      @edusign_logs = @edusign_logs.where("created_at > ?", Date.parse(params[:du]))
+    end
+
+    unless params[:au].blank?
+      @edusign_logs = @edusign_logs.where("created_at < ?", Date.parse(params[:au]).end_of_day)
+    end
+
+    unless params[:type].blank?
+      @edusign_logs = @edusign_logs.where(modele_type: params[:type])
+    end
+
+    unless params[:user_id].blank?
+      @edusign_logs = @edusign_logs.where(user_id: params[:user_id])
+    end
+
+    unless params[:etat].blank?
+      @edusign_logs = @edusign_logs.where(etat: params[:etat])
+    end
+
     @edusign_logs = @edusign_logs.paginate(page: params[:page], per_page: 10)
   end
 

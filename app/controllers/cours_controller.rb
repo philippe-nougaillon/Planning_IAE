@@ -669,12 +669,12 @@ class CoursController < ApplicationController
             etat = 0
 
             # capture output
-            @stream = capture_stdout do
+            stream = capture_stdout do
               request = Edusign.new
               request.export_cours(@cour.id)
               etat = request.get_etat
             end
-            EdusignLog.create(modele_type: "Classroom changed", message: @stream, user_id: current_user.id, etat: etat)
+            EdusignLog.create(modele_type: 2, message: stream, user_id: current_user.id, etat: etat)
           end
 
           # repartir à la page où a eu lieu la demande de modification

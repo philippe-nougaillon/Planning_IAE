@@ -661,6 +661,9 @@ class Edusign < ApplicationService
     end
 
     def get_etat
+        puts "=" * 100
+        puts "===> Nombre d'éléments récupérés : #{@nb_recovered_elements}, nombre d'éléments envoyés : #{@nb_sended_elements}, nombre d'échecs : #{self.count_failure_elements}"
+
         # Modification de l'etat
         if @nb_recovered_elements != 0
             case self.count_failure_elements
