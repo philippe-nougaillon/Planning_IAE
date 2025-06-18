@@ -87,8 +87,14 @@ class Edusign < ApplicationService
               edusign_id: nil
             )
         elsif model == Intervenant
+            
+            # On sélectionne que les intervenants qui sont liés à une formation cobaye.
+            # Pour cela, on va passer par les cours qui appartienent aux formations cobayes et correspondent à l'intervalle.
+            # Pour les cours, on se base sur updated_at pour ne pas rater un changement d'intervenant ou un ajout d'intervenant binome.
+
+            # Ce code est temporaire le temps que l'on sache à quel moment il faudra créer l'intervenant sur Edusign.
             intervenant_ids = Cour.where(
-              created_at: interval,
+              updated_at: interval,
               formation_id: Formation.cobayes_edusign
             ).pluck(:intervenant_id, :intervenant_binome_id).flatten.compact.uniq
 
@@ -103,17 +109,22 @@ class Edusign < ApplicationService
             model.where(
               id: Formation.cobayes_edusign,
               updated_at: interval,
-            ).where("created_at != updated_at").where.not(edusign_id: nil).where.not(id: record_ids)
+            ).where.not(edusign_id: nil).where.not(id: record_ids)
         elsif [Etudiant, Cour].include?(model)
             model.where(
               formation_id: Formation.cobayes_edusign,
               updated_at: interval,
-            ).where("created_at != updated_at").where.not(edusign_id: nil).where.not(id: record_ids)
+            ).where.not(edusign_id: nil).where.not(id: record_ids)
         elsif model == Intervenant
+
+            # On sélectionne que les intervenants qui sont liés à une formation cobaye.
+            # Pour cela, on va passer par les cours qui appartienent aux formations cobayes et correspondent à l'intervalle.
+
+            # Ce code est temporaire le temps que l'on sache à quel moment il faudra créer l'intervenant sur Edusign.
             intervenant_ids = Cour.where(
               updated_at: interval,
               formation_id: Formation.cobayes_edusign
-            ).where("created_at != updated_at").pluck(:intervenant_id, :intervenant_binome_id).flatten.compact.uniq
+            ).pluck(:intervenant_id, :intervenant_binome_id).flatten.compact.uniq
 
             model.where(id: intervenant_ids).where.not(edusign_id: nil).where.not(id: record_ids)
         end
