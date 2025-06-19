@@ -611,7 +611,7 @@ class Cour < ApplicationRecord
       request.export_cours(self.id)
       etat = request.get_etat
     end
-    EdusignLog.create(modele_type: 2, message: stream, user_id: self.audits.last.user_id, etat: etat)
+    EdusignLog.create(modele_type: 3, message: stream, user_id: self.audits.last.user_id, etat: etat)
   end
 
 end

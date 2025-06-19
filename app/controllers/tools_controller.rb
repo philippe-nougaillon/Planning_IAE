@@ -1501,7 +1501,7 @@ class ToolsController < ApplicationController
       etat = request.get_etat
     end
 
-    EdusignLog.create(modele_type: 1, message: stream, user_id: current_user.id, etat: etat)
+    EdusignLog.create(modele_type: 2, message: stream, user_id: current_user.id, etat: etat)
 
     redirect_to tools_edusign_path
 
@@ -1523,6 +1523,24 @@ class ToolsController < ApplicationController
       etat = request.get_etat
     end
 
+    EdusignLog.create(modele_type: 1, message: @stream, user_id: current_user.id, etat: etat)
+  end
+
+  def initialisation_edusign
+  end
+
+  def initialisation_edusign_do
+    etat = 0
+
+    # capture output
+    @stream = capture_stdout do
+      request = Edusign.new
+      puts "Démarrage de l'initialisation de la synchronisation avec Edusign !"
+
+      request.initialisation
+      
+      etat = request.get_etat
+    end
 
     EdusignLog.create(modele_type: 0, message: @stream, user_id: current_user.id, etat: etat)
   end

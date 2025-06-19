@@ -22,7 +22,7 @@ namespace :edusign do
       etat = request.get_etat
     end
 
-    EdusignLog.create(modele_type: 0, message: stream, user_id: 0, etat: etat)
+    EdusignLog.create(modele_type: 1, message: stream, user_id: 0, etat: etat)
   end
 
 end

@@ -26,8 +26,26 @@ class Edusign < ApplicationService
         cours_ajoutés_ids = self.sync_cours("Post")
     
         self.sync_cours("Patch", cours_ajoutés_ids)
- 
+    
         self.remove_deleted_and_unfollowed_cours_in_edusign
+    end
+
+    def initialisation
+        # Récupérer toutes les formations cobayes
+        # Necessaire pour créer des formations sans étudiants et des formations avec que des étudiants déjà créés sur Edusign
+
+        # Faire un scope pour l'interval qui doit tout prendre
+        # Faire un scope pour les cours qui doivent comprendre ceux commancant ajd
+
+        @setup = true
+
+        self.sync_formations("Post", nil)
+        
+        self.sync_etudiants("Post", nil)
+    
+        self.sync_intervenants("Post")
+    
+        self.sync_cours("Post")
     end
 
     def prepare_request(url, method)
@@ -118,6 +136,37 @@ class Edusign < ApplicationService
         elsif model == Intervenant
             # Un intervenant peut ne plus avoir de cours avec des formations cobayes. Comme la requête permet de savoir qu'il est actif sur le planning, on l'update quand même sur Edusiugn.
             model.where(updated_at: interval).where.not(edusign_id: nil).where.not(id: record_ids)
+        end
+    end
+
+    def get_all_elements_for_initialisation(model)
+        if model == Formation
+            model.where(
+              id: Formation.cobayes_edusign,
+              edusign_id: nil
+            )
+        elsif model == Cour
+            model.where(
+              formation_id: Formation.cobayes_edusign,
+              edusign_id: nil
+            ).where("debut >= ?", DateTime.now)
+        elsif model == Etudiant
+            model.where(
+              formation_id: Formation.cobayes_edusign,
+              edusign_id: nil
+            )
+        elsif model == Intervenant
+            
+            # On sélectionne que les intervenants qui sont liés à une formation cobaye.
+            # Pour cela, on va passer par les cours qui appartienent aux formations cobayes et correspondent à l'intervalle.
+            # Pour les cours, on se base sur updated_at pour ne pas rater un changement d'intervenant ou un ajout d'intervenant binome.
+
+            # Ce code est temporaire le temps que l'on sache à quel moment il faudra créer l'intervenant sur Edusign.
+            intervenant_ids = Cour.where(
+              formation_id: Formation.cobayes_edusign
+            ).where("debut >= ?", DateTime.now).pluck(:intervenant_id, :intervenant_binome_id).flatten.compact.uniq
+
+            model.where(id: intervenant_ids, edusign_id: nil)
         end
     end
 
@@ -275,13 +324,17 @@ class Edusign < ApplicationService
     
     def sync_formations(method, formations_ajoutés_ids = nil)
         self.prepare_request("https://ext.edusign.fr/v1/group", method)
-                
-        if method == 'Post'
-            formations = self.get_all_element_created_today(Formation)
+        if @setup
+            formations = self.get_all_elements_for_initialisation(Formation)
             puts "Début de l'ajout des formations"
-        else
-            formations = self.get_all_element_updated_today(Formation, formations_ajoutés_ids)
-            puts "Début de la modification des formations"
+        else 
+            if method == 'Post'
+                formations = self.get_all_element_created_today(Formation)
+                puts "Début de l'ajout des formations"
+            else
+                formations = self.get_all_element_updated_today(Formation, formations_ajoutés_ids)
+                puts "Début de la modification des formations"
+            end
         end
         
         puts "#{formations.count} formations ont été récupérés : #{formations.pluck(:id, :nom)}"
@@ -367,14 +420,19 @@ class Edusign < ApplicationService
     def sync_etudiants(method, etudiants_ajoutés_ids = nil)
         self.prepare_request("https://ext.edusign.fr/v1/student", method)
 
-        if method == 'Post'
-            etudiants = self.get_all_element_created_today(Etudiant)
+        if @setup
+            etudiants = self.get_all_elements_for_initialisation(Etudiant)
             puts "Début de l'ajout des etudiants"
-        else
-            etudiants = self.get_all_element_updated_today(Etudiant, etudiants_ajoutés_ids)
-            puts "Début de la modification des etudiants"
+        else 
+            if method == 'Post'
+                etudiants = self.get_all_element_created_today(Etudiant)
+                puts "Début de l'ajout des etudiants"
+            else
+                etudiants = self.get_all_element_updated_today(Etudiant, etudiants_ajoutés_ids)
+                puts "Début de la modification des etudiants"
+            end
         end
-
+        
         puts "#{etudiants.count} etudiants ont été récupéré : #{etudiants.pluck(:id, :nom)}"
 
         @nb_recovered_elements += etudiants.count
@@ -459,14 +517,19 @@ class Edusign < ApplicationService
     def sync_intervenants(method, intervenants_ajoutés_ids = nil)
         self.prepare_request("https://ext.edusign.fr/v1/professor", method)
         
-        if method == 'Post'
-            intervenants = self.get_all_element_created_today(Intervenant)
+        if @setup
+            intervenants = self.get_all_elements_for_initialisation(Intervenant)
             puts "Début de l'ajout des intervenants"
-        else
-            intervenants = self.get_all_element_updated_today(Intervenant, intervenants_ajoutés_ids)
-            puts "Début de la modification des intervenants"
+        else 
+            if method == 'Post'
+                intervenants = self.get_all_element_created_today(Intervenant)
+                puts "Début de l'ajout des intervenants"
+            else
+                intervenants = self.get_all_element_updated_today(Intervenant, intervenants_ajoutés_ids)
+                puts "Début de la modification des intervenants"
+            end
         end
-
+        
         puts "#{intervenants.count} intervenants ont été récupéré : #{intervenants.pluck(:id, :nom)}"
 
         @nb_recovered_elements += intervenants.count
@@ -546,15 +609,21 @@ class Edusign < ApplicationService
 
     def sync_cours(method, cours_ajoutés_ids = nil)
         self.prepare_request("https://ext.edusign.fr/v1/course", method)
-
-        if method == 'Post'
-            cours = self.get_all_element_created_today(Cour).where.not(etat: ["annulé", "reporté"])
+        
+        if @setup
+            cours = self.get_all_elements_for_initialisation(Cour)
             puts "Début de l'ajout des cours"
             cours_a_supprimer = Cour.none
-        else
-            cours = self.get_all_element_updated_today(Cour, cours_ajoutés_ids)
-            puts "Début de la modification des cours"
-            cours_a_supprimer = cours.where(etat: ["annulé", "reporté"])
+        else 
+            if method == 'Post'
+                cours = self.get_all_element_created_today(Cour).where.not(etat: ["annulé", "reporté"])
+                puts "Début de l'ajout des cours"
+                cours_a_supprimer = Cour.none
+            else
+                cours = self.get_all_element_updated_today(Cour, cours_ajoutés_ids)
+                puts "Début de la modification des cours"
+                cours_a_supprimer = cours.where(etat: ["annulé", "reporté"])
+            end    
         end
         
         # Cours à créer / modifier du côté d'Edusign

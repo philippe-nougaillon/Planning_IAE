@@ -7,9 +7,10 @@ class EdusignLog < ApplicationRecord
               }
 
   enum modele_type: {
-    'auto sync': 0,
-    'manual sync': 1,
-    'classroom changed': 2
+    'initialisation': 0,
+    'sync auto': 1,
+    'sync manuelle': 2,
+    'salle changée': 3
   }
 
   def username
