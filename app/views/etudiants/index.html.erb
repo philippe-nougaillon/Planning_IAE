@@ -18,7 +18,7 @@
       <div class="sm:w-1/2 pl-4">
         <%= label_tag :formation_id %>
         <%= select_tag :formation_id, 
-                            options_from_collection_for_select(@formations, :id, :nom, params[:formation_id]), 
+                            options_from_collection_for_select(Formation.unscoped.all, :id, :nom, params[:formation_id]), 
                             class: 'slim-select', 
                             include_blank: true, 
                             onchange: 'this.form.submit()' %>

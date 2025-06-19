@@ -37,7 +37,7 @@
     <div class="relative flex-grow max-w-full flex-1 flex flex-col gap-4 pl-4">
       <div class="form-control">
         <%= f.label :formation_id, "Formation *" %>
-        <%= f.collection_select(:formation_id, @formations, :id, :nom, {include_blank: true}, class:"slim-select") %>
+        <%= f.collection_select(:formation_id, Formation.unscoped.all, :id, :nom, {include_blank: true}, class:"slim-select") %>
       </div>
 
       <div class="form-control">

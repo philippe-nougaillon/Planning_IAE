@@ -31,9 +31,6 @@ class IntervenantMailer < ApplicationMailer
         @gestionnaires = gestionnaires
         @intervenant = intervenant
         @message = EnvoiLog.find(envoi_log_id).message
-
-        attachments['PDG_Examen.docx']   = File.read('app/assets/attachments/PDG_Examen.docx')
-
         if test
             mail(to: "fitsch-mouras.iae@univ-paris1.fr", cc: "philippe.nougaillon@gmail.com, pierreemmanuel.dacquet@gmail.com",
                 subject:"[PLANNING] TEST / Rappel des examens de #{@intervenant.nom_prenom} du #{l @debut} au #{l @fin}")

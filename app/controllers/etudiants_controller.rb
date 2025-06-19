@@ -13,7 +13,6 @@ class EtudiantsController < ApplicationController
     params[:paginate] ||= 'pages'
 
     @etudiants = Etudiant.all
-    @formations = Formation.unscoped.ordered
 
     unless params[:search].blank?
       @etudiants = @etudiants.where("LOWER(nom) like :search OR LOWER(prénom) like :search OR LOWER(email) like :search", {search: "%#{params[:search]}%".downcase})
@@ -42,12 +41,10 @@ class EtudiantsController < ApplicationController
   def new
     @etudiant = Etudiant.new
     @etudiant.workflow_state = "étudiant"
-    @formations = Formation.unscoped.ordered
   end
 
   # GET /etudiants/1/edit
   def edit
-    @formations = Formation.unscoped.ordered
   end
 
   # POST /etudiants
@@ -57,27 +54,19 @@ class EtudiantsController < ApplicationController
 
     respond_to do |format|
       if @etudiant.save
-        flash[:notice] = "Etudiant créé avec succès."
         if params[:notify]
           # Création du compte d'accès (user) et envoi du mail de bienvenue
-          user = User.new(nom: @etudiant.nom, prénom: @etudiant.prénom, email: @etudiant.email, mobile: @etudiant.mobile, password: SecureRandom.base64(12))
+          user = User.new(nom: @etudiant.nom, prénom: @etudiant.prénom, email: @etudiant.email, mobile: @etudiant.mobile, password: SecureRandom.hex(10))
           if user.valid?
             user.save
             mailer_response = EtudiantMailer.welcome_student(user).deliver_now
             MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: @etudiant.email, subject: "Nouvel accès étudiant")
-            flash[:notice] = "Etudiant créé avec succès. Accès créé, étudiant informé"
-          else
-            flash.delete(:notice)
-            flash[:alert] = "Étudiant créé avec succès mais sans son compte d'accès : #{user.errors.full_messages}"
           end
         end
-        format.html { redirect_to @etudiant }
+        format.html { redirect_to @etudiant, notice: "Etudiant créé avec succès. #{'Accès créé, étudiant informé' if params[:notify] }" }
         format.json { render :show, status: :created, location: @etudiant }
       else
-        format.html do
-          @formations = Formation.unscoped.ordered
-          render :new, status: :unprocessable_entity
-        end
+        format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @etudiant.errors, status: :unprocessable_entity }
       end
     end
@@ -91,10 +80,7 @@ class EtudiantsController < ApplicationController
         format.html { redirect_to @etudiant, notice: 'Etudiant modifié avec succès.' }
         format.json { render :show, status: :ok, location: @etudiant }
       else
-        format.html do
-          @formations = Formation.unscoped.ordered
-          render :edit, status: :unprocessable_entity
-        end
+        format.html { render :edit }
         format.json { render json: @etudiant.errors, status: :unprocessable_entity }
       end
     end

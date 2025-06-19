@@ -598,7 +598,7 @@ class CoursController < ApplicationController
   # GET /cours/1/edit
   def edit
     authorize @cour
-    @formations = Formation.unscoped.ordered
+    @formations = Formation.unscoped.order(:nom, :promo)
     @salles = Salle.all
 
     if current_user.partenaire_qse?
@@ -630,7 +630,7 @@ class CoursController < ApplicationController
         format.json { render :show, status: :created, location: @cour }
       else
         format.html do
-          @formations = Formation.unscoped.ordered
+          @formations = Formation.unscoped.order(:nom, :promo)
           @salles = Salle.all
 
           if current_user.partenaire_qse?
@@ -678,7 +678,7 @@ class CoursController < ApplicationController
         format.json { render :show, status: :ok, location: @cour }
       else
         format.html do
-          @formations = Formation.unscoped.ordered
+          @formations = Formation.unscoped.order(:nom, :promo)
           @salles = Salle.all
 
           if current_user.partenaire_qse?

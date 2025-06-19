@@ -70,7 +70,7 @@ class Intervenant < ApplicationRecord
         "Coordination d'une UE (hors MAE)",
 		"Coordination pédagogique en appui de la direction de programme (groupe > 40 étudiants à Paris)"
 		]
-	end
+    end
 	
 
 	def nom_prenom
@@ -113,8 +113,8 @@ class Intervenant < ApplicationRecord
 	end
 
 	def linked_user
-    User.intervenant.or(User.enseignant).find_by("LOWER(users.email) = ?", self.try(:email).try(:downcase))
-	end
+    return User.intervenant.or(User.enseignant).find_by("LOWER(users.email) = ?", self.try(:email).try(:downcase))
+  end
 
 	def permanent?
 		['Permanent', 'PR','MCF','MCF_HDR','PRAG','PAST'].include?(self.status)

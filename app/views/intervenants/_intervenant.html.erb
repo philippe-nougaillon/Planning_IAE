@@ -20,18 +20,12 @@
         <% end %>
     </td>
     <td>
-        <% if policy(Intervenant).edit? %>
-            <%= link_to edit_intervenant_path(intervenant), class: "btn btn-ghost btn-xs" do %>
-                <%= fa_icon 'edit' %>
-            <% end %>
+        <%= link_to edit_intervenant_path(intervenant), class: "btn btn-ghost btn-xs" do %>
+            <%= fa_icon 'edit' %>
         <% end %>
-        <% if policy(Intervenant).destroy? %> 
-            <% if !(intervenant.cours.any? or Cour.where(intervenant_binome: intervenant).any?) %>
-                <%= link_to(intervenant, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: "btn btn-ghost btn-xs") do %>
-                    <%= fa_icon 'trash-alt' %>
-                <% end %>
-            <% else%>
-                <%= fa_icon 'trash-alt', title: "Impossible de supprimer cet intervenant car il est dans un cours !", class: "btn btn-ghost btn-xs pt-1 text-secondary" %>
+        <% unless intervenant.cours.any? or Cour.where(intervenant_binome: intervenant).any? %> 
+            <%= link_to(intervenant, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: "btn btn-ghost btn-xs") do %>
+                <%= fa_icon 'trash-alt' %>
             <% end %>
         <% end %>
     </td>
