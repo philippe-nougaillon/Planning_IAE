@@ -43,6 +43,8 @@ class Cour < ApplicationRecord
   after_create   :send_new_examen_email, if: Proc.new { |cours| cours.examen? }
   around_update  :check_send_examen_email
   after_destroy :send_delete_examen_email, if: Proc.new { |cours| cours.examen? }
+  
+  after_update :synchronisation_edusign, if: Proc.new { |cours| cours.audits.last.audited_changes["salle_id"]}
 
   # Mettre à jour les SCENIC VIEWS
   after_commit {
@@ -598,4 +600,18 @@ class Cour < ApplicationRecord
     mailer_response = CourMailer.with(cour: self).examen_supprimé.deliver_now
     MailLog.create!(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen supprimé")
   end
+
+  def synchronisation_edusign
+    # Modifier la salle sur Edusign si changement
+    etat = 0
+
+    # capture output
+    stream = capture_stdout do
+      request = Edusign.new
+      request.export_cours(self.id)
+      etat = request.get_etat
+    end
+    EdusignLog.create(modele_type: 2, message: stream, user_id: self.audits.last.user_id, etat: etat)
+  end
+
 end
