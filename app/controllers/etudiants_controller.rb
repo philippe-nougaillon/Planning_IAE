@@ -164,7 +164,7 @@ class EtudiantsController < ApplicationController
     end
 
     def sortable_columns
-      ['etudiants.nom', 'etudiants.prénom', 'etudiants.date_de_naissance', 'etudiants.workflow_state', 'etudiants.nom_entreprise', 'etudiants.updated_at']
+      ['etudiants.nom', 'etudiants.prénom', 'etudiants.date_de_naissance', 'etudiants.workflow_state', 'etudiants.nom_entreprise', 'etudiants.updated_at', 'etudiants.edusign_id']
     end
 
     def sort_column

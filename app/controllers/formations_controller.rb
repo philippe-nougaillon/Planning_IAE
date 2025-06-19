@@ -126,11 +126,11 @@ class FormationsController < ApplicationController
     end
 
     def sortable_columns
-      ['formations.nom', 'formations.abrg','formations.nbr_etudiants','formations.code_analytique']
+      ['formations.nom', 'formations.abrg','formations.nbr_etudiants','formations.code_analytique', 'formations.edusign_id']
     end
 
     def sort_column
-        sortable_columns.include?(params[:column]) ? params[:column] : 'nom'
+        sortable_columns.include?(params[:column]) ? params[:column] : 'formations.nom'
     end
 
     def sort_direction

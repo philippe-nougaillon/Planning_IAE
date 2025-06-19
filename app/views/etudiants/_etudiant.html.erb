@@ -25,6 +25,11 @@
     <td>
         <%= time_ago_in_words etudiant.updated_at %>
     </td>
+    <td class="text-center">
+        <% if etudiant.edusign_id? %>
+            <%= fa_icon 'check' %>
+        <% end %>
+    </td>
     <td>
         <% if policy(Etudiant).edit? %>
             <%= link_to edit_etudiant_path(etudiant), class:"btn btn-ghost btn-xs" do %>

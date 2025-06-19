@@ -424,6 +424,12 @@ fr:
       title: Commandes
     commandes_v2:
       title: Commandes_v2
+    edusign:
+      title: Edusign
+    synchronisation_edusign:
+      title: Synchronisation Edusign
+    synchronisation_edusign_do:
+      title: Synchronisation Edusign
   agents:
     index:
       title: Agents
@@ -537,3 +543,18 @@ fr:
       title: "Nouvelle Activité"
     edit:
       title: "Modification Activité"
+  attendances:
+    index:
+      title: "Liste des présences"
+    show:
+      title: "Présence"
+  justificatifs:
+    index:
+      title: "Liste des justificatifs"
+    show:
+      title: "Justificatif"
+  edusign_logs:
+    index:
+      title: Edusign logs
+    show:
+      title: Edusign log

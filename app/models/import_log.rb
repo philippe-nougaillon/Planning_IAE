@@ -21,7 +21,7 @@ class ImportLog < ApplicationRecord
     case self.etat
     when 'succès'
       'text-success'
-    when 'echec', 
+    when 'echec'
       'text-error'
     when 'warning'
       'text-warning'

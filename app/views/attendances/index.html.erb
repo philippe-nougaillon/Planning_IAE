@@ -1,0 +1,92 @@
+<div class="border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'file-signature' %> Présences</h1>
+</div>
+
+<div class="bs-container p-4 shadow mb-4">
+  <%= form_tag request.path, method: :get do %>
+    <div class="flex flex-wrap">
+      <div class="sm:w-1/4 pr-4">
+        <%= label_tag :etudiant_id %>
+        <%= select_tag :etudiant_id, 
+                            options_from_collection_for_select(Etudiant.all, :id, :nom_prénom, params[:etudiant_id]), 
+                            class: 'slim-select', 
+                            include_blank: true, 
+                            onchange: 'this.form.submit()' %>
+      </div>
+      <div class="sm:w-1/4 px-4">
+        <%= label_tag :formation_id %>
+        <%= select_tag :formation_id, 
+                            options_from_collection_for_select(Formation.unscoped.all, :id, :nom, params[:formation_id]), 
+                            class: 'slim-select', 
+                            include_blank: true, 
+                            onchange: 'this.form.submit()' %>
+      </div>
+
+      <div class="sm:w-1/12 px-4">
+        <%= label_tag :ue, "U.E." %>   
+        <%= select_tag :ue, options_for_select((0..20), params[:ue]), 
+                        class: "slim-select", 
+                        include_blank:true, onchange: 'this.form.submit()' %>
+      </div>
+
+      <div class="sm:w-1/4 px-4">
+        <%= label_tag :intervenant %>
+        <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
+                        class: "slim-select",
+                        include_blank:true,
+                        onchange: 'this.form.submit()' %>
+      </div>
+
+      <div class="sm:w-1/6 pl-4">
+        <%= label_tag :etat, "État" %>
+        <%= select_tag :etat,
+                            options_for_select(["Présent", "Absent", "En attente", "Exclu", "Absence justifié"], params[:etat]),
+                            include_blank: true,
+                            class: 'select select-bordered select-sm w-full', 
+                            onchange: 'this.form.submit()' %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<div style="overflow-x: auto;">
+  <%= form_tag action_presences_path, name: 'action' do %>
+    <div data-controller="checkbox-select-all action">
+      <div class="overflow-x-auto">
+        <table class="table table-sm">
+          <thead class="bg-slate-100 border">
+            <tr>
+              <th>Il y a</th>
+              <th>Date signature</th>
+              <th>Formation</th>
+              <th>Intervenant</th>
+              <th>Cours</th>
+              <th>UE</th>
+              <th>Nom / Prénom</th>
+              <th>Signature</th>
+              <th>État</th>
+              <th colspan="2"></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <%= render partial: 'attendance', collection: @attendances %>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="10"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<div class="page_info mb-6">
+  <%= page_entries_info @attendances %>
+</div>
+
+<div class="planning_pagination">
+  <%= will_paginate @attendances %>
+</div>

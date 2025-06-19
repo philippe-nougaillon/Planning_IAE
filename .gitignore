@@ -47,3 +47,11 @@ yarn-debug.log*
 .byebug_history
 
 .DS_Store
+
+/.idea/.gitignore
+/.idea/dataSources.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/Planning_IAE.iml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/vcs.xml

@@ -105,5 +105,9 @@ class Formation < ApplicationRecord
 		[258, 599, 671, 672, 683, 687, 695]
 	end
 
+	def self.cobayes_edusign
+		ENV["FORMATIONS_COBAYES_EDUSIGN"].split(',').map(&:to_i)
+	end
+
 end
 

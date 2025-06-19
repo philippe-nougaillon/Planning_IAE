@@ -1,0 +1,10 @@
+<tr class="hover border">
+  <td><%= time_ago_in_words justificatif.edusign_created_at %></td>
+  <td><b><%= justificatif.etudiant.nom_prénom %></b></td>
+  <td><b><%= l justificatif.debut, format: :short %></b></td>
+  <td><%= l justificatif.fin, format: :short %></td>
+  <td><%= justificatif.motif.nom.humanize %></td>
+  <td><%= justificatif.commentaires %></td>
+  <td><%= l(justificatif.accepte_le, format: :short) if justificatif.accepte_le %></td>
+  <td><%= link_to 'Voir', justificatif, class: 'text-primary hover:underline' %></td>
+</tr>
