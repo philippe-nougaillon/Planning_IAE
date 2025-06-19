@@ -27,7 +27,7 @@ class EtudiantMailer < ApplicationMailer
         @cours = cours
         attachments['Convocation.pdf'] = pdf.render
 
-        mail(to: @étudiant.email, cc: @étudiant.formation.courriel, subject: "Convocation - #{@cours.nom_ou_ue}").tap do |message|
+        mail(to: @étudiant.email, cc: @étudiant.formation.courriel, subject: "Convocation #{@cours.type_examen} - #{@cours.nom_ou_ue}").tap do |message|
             message.mailgun_options = {
               "tag" => [étudiant.email, "convocation"]
             }

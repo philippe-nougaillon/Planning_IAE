@@ -2,7 +2,7 @@
 
   <div>
     <div class="join float-right">
-      <% if policy(:tool).can_see_RHGroup_private_tool? %>
+      <% if policy(Intervenant).edit? %>
         <%= link_to edit_intervenant_path(@intervenant), class: 'btn btn-sm btn-primary btn-outline join-item' do %>
           <%= fa_icon 'edit' %> Modifier
         <% end %>

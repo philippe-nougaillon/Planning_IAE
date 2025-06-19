@@ -440,7 +440,7 @@ class ToolsController < ApplicationController
           if etudiant.new_record? && params[:notify] == '1' && params[:save] == 'true'
             etudiant.save
             # Création du compte d'accès (user) et envoi du mail de bienvenue
-            user = User.new(nom: etudiant.nom, prénom: etudiant.prénom, email: etudiant.email, mobile: etudiant.mobile, password: SecureRandom.hex(10))
+            user = User.new(nom: etudiant.nom, prénom: etudiant.prénom, email: etudiant.email, mobile: etudiant.mobile, password: SecureRandom.base64(12))
             if user.valid?
               user.save
               mailer_response = EtudiantMailer.welcome_student(user).deliver_now

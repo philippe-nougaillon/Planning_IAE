@@ -55,6 +55,10 @@ class User < ApplicationRecord
 		"#{self.try(:prénom)} #{self.try(:nom)}" 
   end
 
+  def nom_prénom_role
+    "#{self&.nom&.upcase} #{self&.prénom&.humanize} (#{self.role.upcase})"
+  end
+
   # wish for discarded users to be unable to login and stop their session
   def active_for_authentication?
     super && !self.discarded?
