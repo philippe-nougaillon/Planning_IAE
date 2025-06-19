@@ -26,8 +26,8 @@ class Edusign < ApplicationService
         cours_ajoutés_ids = self.sync_cours("Post")
     
         self.sync_cours("Patch", cours_ajoutés_ids)
-    
-        self.remove_deleted_cours_in_edusign
+ 
+        self.remove_deleted_and_unfollowed_cours_in_edusign
     end
 
     def prepare_request(url, method)
@@ -116,17 +116,8 @@ class Edusign < ApplicationService
               updated_at: interval,
             ).where.not(edusign_id: nil).where.not(id: record_ids)
         elsif model == Intervenant
-
-            # On sélectionne que les intervenants qui sont liés à une formation cobaye.
-            # Pour cela, on va passer par les cours qui appartienent aux formations cobayes et correspondent à l'intervalle.
-
-            # Ce code est temporaire le temps que l'on sache à quel moment il faudra créer l'intervenant sur Edusign.
-            intervenant_ids = Cour.where(
-              updated_at: interval,
-              formation_id: Formation.cobayes_edusign
-            ).pluck(:intervenant_id, :intervenant_binome_id).flatten.compact.uniq
-
-            model.where(id: intervenant_ids).where.not(edusign_id: nil).where.not(id: record_ids)
+            # Un intervenant peut ne plus avoir de cours avec des formations cobayes. Comme la requête permet de savoir qu'il est actif sur le planning, on l'update quand même sur Edusiugn.
+            model.where(updated_at: interval).where.not(edusign_id: nil).where.not(id: record_ids)
         end
     end
 
@@ -679,7 +670,8 @@ class Edusign < ApplicationService
         response
     end
 
-    def remove_deleted_cours_in_edusign
+    def remove_deleted_and_unfollowed_cours_in_edusign
+        # Récupération des cours supprimés sur Planning
         edusign_ids = Audited::Audit
             .where(auditable_type: "Cour")
             .where(action: "destroy")
@@ -687,6 +679,9 @@ class Edusign < ApplicationService
             .pluck("audited_changes")
             .pluck("edusign_id")
             .compact
+
+        # Récupération des cours appartennant à une ancienne formation cobaye
+        edusign_ids << Cour.where.not(edusign_id: nil).where.not(formation_id: Formation.cobayes_edusign)
 
         puts "Début de la suppression des cours supprimés"
         puts "#{edusign_ids.count} cours ont été récupéré : #{edusign_ids}"
