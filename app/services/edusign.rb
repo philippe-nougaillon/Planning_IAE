@@ -48,6 +48,13 @@ class Edusign < ApplicationService
         self.sync_cours("Post")
     end
 
+    def prepare_request_with_message(url, method)
+        puts "=" * 100
+        puts "Préparation de la communication de l'API Edusign"
+        
+        prepare_request(url, method)
+    end
+
     def prepare_request(url, method)
         url = URI(url)
         @http = Net::HTTP.new(url.host, url.port)
@@ -67,16 +74,15 @@ class Edusign < ApplicationService
         @request["accept"] = 'application/json'
         @request["content-type"] = 'application/json'
         @request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
-
-        puts "=" * 100
-        puts "Préparation de la communication de l'API Edusign"
     end
 
-    def get_response
+    def get_response(without_message_response = false)
         response = JSON.parse(@http.request(@request).read_body)
         
-        puts "Lancement de la requête terminée : "
-        puts response
+        if !without_message_response
+            puts "Lancement de la requête terminée : "
+            puts response
+        end
 
         response
     end
@@ -171,7 +177,7 @@ class Edusign < ApplicationService
     end
 
     def import_justificatifs
-        self.prepare_request("https://ext.edusign.fr/v1/justified-absence?page=0", 'Get')
+        self.prepare_request_with_message("https://ext.edusign.fr/v1/justified-absence?page=0", 'Get')
 
         response = self.get_response
 
@@ -237,7 +243,7 @@ class Edusign < ApplicationService
     end
 
     def get_motifs_from_edusign
-        self.prepare_request("https://ext.edusign.fr/v1/justified-absence/absence-reason", 'Get')
+        self.prepare_request_with_message("https://ext.edusign.fr/v1/justified-absence/absence-reason", 'Get')
 
         response = self.get_response
 
@@ -254,7 +260,7 @@ class Edusign < ApplicationService
     end
 
     def import_attendances
-        self.prepare_request("https://ext.edusign.fr/v1/course", 'Get')
+        self.prepare_request_with_message("https://ext.edusign.fr/v1/course", 'Get')
 
         response = self.get_response
 
@@ -323,7 +329,7 @@ class Edusign < ApplicationService
     end
     
     def sync_formations(method, formations_ajoutés_ids = nil)
-        self.prepare_request("https://ext.edusign.fr/v1/group", method)
+        self.prepare_request_with_message("https://ext.edusign.fr/v1/group", method)
         if @setup
             formations = self.get_all_elements_for_initialisation(Formation)
             puts "Début de l'ajout des formations"
@@ -378,7 +384,7 @@ class Edusign < ApplicationService
     end
 
     def export_formation(formation_id)
-        self.prepare_request("https://ext.edusign.fr/v1/student", 'Post')
+        self.prepare_request_with_message("https://ext.edusign.fr/v1/student", 'Post')
 
         if formation = Formation.find(formation_id)
             @nb_recovered_elements += 1
@@ -418,7 +424,7 @@ class Edusign < ApplicationService
     end
 
     def sync_etudiants(method, etudiants_ajoutés_ids = nil)
-        self.prepare_request("https://ext.edusign.fr/v1/student", method)
+        self.prepare_request_with_message("https://ext.edusign.fr/v1/student", method)
 
         if @setup
             etudiants = self.get_all_elements_for_initialisation(Etudiant)
@@ -476,7 +482,7 @@ class Edusign < ApplicationService
     end
 
     def export_etudiant(etudiant_id)
-        self.prepare_request("https://ext.edusign.fr/v1/student", 'Post')
+        self.prepare_request_with_message("https://ext.edusign.fr/v1/student", 'Post')
 
         if etudiant = Etudiant.find(etudiant_id)
             @nb_recovered_elements += 1
@@ -515,7 +521,7 @@ class Edusign < ApplicationService
     end
 
     def sync_intervenants(method, intervenants_ajoutés_ids = nil)
-        self.prepare_request("https://ext.edusign.fr/v1/professor", method)
+        self.prepare_request_with_message("https://ext.edusign.fr/v1/professor", method)
         
         if @setup
             intervenants = self.get_all_elements_for_initialisation(Intervenant)
@@ -574,7 +580,7 @@ class Edusign < ApplicationService
     end
 
     def export_intervenant(intervenant_slug)
-        self.prepare_request("https://ext.edusign.fr/v1/professor", 'Post')
+        self.prepare_request_with_message("https://ext.edusign.fr/v1/professor", 'Post')
 
         if intervenant = Intervenant.find_by(slug: intervenant_slug)
             @nb_recovered_elements += 1
@@ -608,7 +614,7 @@ class Edusign < ApplicationService
     end
 
     def sync_cours(method, cours_ajoutés_ids = nil)
-        self.prepare_request("https://ext.edusign.fr/v1/course", method)
+        self.prepare_request_with_message("https://ext.edusign.fr/v1/course", method)
         
         if @setup
             cours = self.get_all_elements_for_initialisation(Cour)
@@ -704,7 +710,7 @@ class Edusign < ApplicationService
     end
 
     def export_cours(cours_id)
-        self.prepare_request("https://ext.edusign.fr/v1/course", 'Post')
+        self.prepare_request_with_message("https://ext.edusign.fr/v1/course", 'Post')
 
         if cours = Cour.find(cours_id)
             @nb_recovered_elements += 1
@@ -740,27 +746,43 @@ class Edusign < ApplicationService
     end
 
     def remove_deleted_and_unfollowed_cours_in_edusign
-        # Récupération des cours supprimés sur Planning
-        edusign_ids = Audited::Audit
+        puts "=" * 100
+        puts "Préparation de la communication de l'API Edusign"
+        
+        edusign_ids = []
+        deleted_cours_to_sync_ids = []
+        
+        # Récupération des cours appartennant à une ancienne formation cobaye
+        cours_unfollowed = Cour.where.not(edusign_id: nil).where.not(formation_id: Formation.cobayes_edusign)
+        
+        edusign_ids << cours_unfollowed.pluck(:edusign_id)
+        
+        deleted_cours = Audited::Audit
             .where(auditable_type: "Cour")
             .where(action: "destroy")
             .where(created_at: get_interval_of_time)
-            .pluck("audited_changes")
-            .pluck("edusign_id")
-            .compact
+            
+        # Pour les edusigns id des cours supprimés on vérifie si il n'existe déjà plus sur Edusign
+        deleted_cours.each do |deleted_cour|
+            edusign_id = deleted_cour.audited_changes["edusign_id"]
+            self.prepare_request("https://ext.edusign.fr/v1/course/#{edusign_id}", "Get")
+            response = self.get_response(true)
+            if response["status"] == "success"
+                edusign_ids << edusign_id
+                deleted_cours_to_sync_ids << deleted_cour.auditable_id
+            end
+        end
 
-        # Récupération des cours appartennant à une ancienne formation cobaye
-        edusign_ids << Cour.where.not(edusign_id: nil).where.not(formation_id: Formation.cobayes_edusign)
+        edusign_ids = edusign_ids.flatten
 
-        puts "Début de la suppression des cours supprimés"
-        puts "#{edusign_ids.count} cours ont été récupéré : #{edusign_ids}"
+        puts "Début de la suppression des cours"
+        puts "#{edusign_ids.count} cours ont été récupérés : #{deleted_cours_to_sync_ids}, #{cours_unfollowed.pluck(:id)}"
 
         @nb_recovered_elements += edusign_ids.count
         
         nb_audited = 0
 
         edusign_ids.each do |edusign_id|
-
             self.prepare_request("https://ext.edusign.fr/v1/course/#{edusign_id}", "Delete")
 
             response = self.get_response
@@ -768,9 +790,15 @@ class Edusign < ApplicationService
             puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation du cours #{edusign_id} pour la suppression réussie"
 
             if response["status"] == 'success'
+                # Suppression de l'edusign_id sur le cours supprimé sur Edusign
+                if cour_id = Cour.find_by(edusign_id: edusign_id).try(:id)
+                    Cour.update(cour_id, edusign_id: nil)
+                end
                 nb_audited += 1
             end
         end
+
+        puts "Cours supprimés : #{nb_audited}"
 
         @nb_sended_elements += nb_audited
     end
