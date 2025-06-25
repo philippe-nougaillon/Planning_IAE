@@ -1,7 +1,9 @@
 <p style="margin-bottom: 0.5rem">
     Bonjour,
     <br><br>
-    En vue de l'examen de votre UE, merci de bien vouloir faire parvenir à votre gestionnaire de formation <b>au plus tard 1 mois avant</b> la date de l'examen, votre <b>sujet</b> avec la <b>page de garde</b> (en y indiquant les <b>consignes</b>) en format <b>pdf</b> , afin qu'il/elle puisse envoyer les convocations aux étudiants.
+    En vue de l'examen de votre UE, merci de bien vouloir faire parvenir à votre gestionnaire de formation <b>au plus tard 1 mois avant</b> la date de l'examen, votre <b>sujet</b> avec <b>la page de garde</b> (en y indiquant les <b>consignes</b>) en format pdf, afin qu'il/elle puisse envoyer les convocations aux étudiants. Vous trouverez ci-joint la page de garde type.
+    <br>
+    Tout sujet envoyé sans page de garde, sera imprimé tel quel.
 </p>
 <br>
 <div style="overflow-x: auto;">
@@ -13,6 +15,7 @@
                 <th>Intervenant</th>
                 <th>Intitulé du cours</th>
                 <th>Salle</th>
+                <th style="color : red;">DATE LIMITE DE RETOUR DU SUJET</th>
             </tr>
         </thead>
         <tbody>
@@ -40,6 +43,7 @@
                     </td>
                     <td><%= c.nom_ou_ue %></td>
                     <td><%= c.try(:salle).try(:nom) %></td>
+                    <td style="color: red;"><b><%= I18n.l((c.debut-1.month).to_date, format: :day) %> <%= I18n.l((c.debut-1.month).to_date) %></b></td>
                 </tr>
             <% end %>
         </tbody>
@@ -47,10 +51,7 @@
 </div>
 
 <p style="margin-bottom: 0.5rem">
-    <b>
-        Nous vous remercions de vérifier ce récapitulatif et vous rappelons ci-dessous la(es) adresse(s) mail(s) où envoyer votre sujet.
-    </b>
-    <br>
+    Nous vous remercions de vérifier ce récapitulatif et vous rappelons ci-dessous la(es) adresse(s) mail(s) où envoyer votre sujet.
 </p>
 
 <% if @gestionnaires.any? %>
@@ -79,7 +80,7 @@
 <% end %>
 
 <p style="margin-bottom: 0.5rem">
-    Vous remerciant par avance du respect des délais indiqués ci-dessus,
+    <b>Vous remerciant par avance du respect des délais et des consignes indiqués ci-dessus,</b>
 </p>
 
 <p style="margin-bottom: 0.5rem">

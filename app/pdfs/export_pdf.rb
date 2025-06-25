@@ -619,7 +619,7 @@ class ExportPdf
 
                 move_down @margin_down * 2
 
-                infos = [ ["<b><color rgb='E68824'>EMARGEMENT POUR SURVEILLANCE D’EXAMEN</color></b> \n <color rgb='032E4D'>(Exemplaire à conserver par le surveillant)</color>"] ]
+                infos = [ ["<b><color rgb='E68824'>EMARGEMENT POUR SURVEILLANCE D’#{cour.type_examen.upcase}</color></b> \n <color rgb='032E4D'>(Exemplaire à conserver par le surveillant)</color>"] ]
                 table(infos, cell_style: {inline_format: true, border_color: "E68824", align: :center})
 
                 move_down @margin_down * 2
@@ -630,7 +630,7 @@ class ExportPdf
 
                 data = [ ["<color rgb='032E4D'>Date</color>", "<color rgb='032E4D'><b>#{I18n.l(cour.debut.to_date)}</b></color>"],
                         ["<color rgb='032E4D'>Formation</color>","<color rgb='032E4D'><b>#{cour.formation.nom}</b></color>"],
-                        ["<color rgb='032E4D'>Examen</color>","<color rgb='032E4D'><b>UE#{cour.code_ue} - #{cour.nom_ou_ue} / #{cour.intervenant_binome.try(:nom_prenom)}</b></color>"],
+                        ["<color rgb='032E4D'>#{cour.type_examen}</color>","<color rgb='032E4D'><b>UE#{cour.code_ue} - #{cour.nom_ou_ue} / #{cour.intervenant_binome.try(:nom_prenom)}</b></color>"],
                         ["<color rgb='032E4D'>Horaires de surveillance </color>","<color rgb='032E4D'><b>#{cour.debut.strftime('%Hh%M')}-#{cour.fin.strftime('%Hh%M')}</b></color>"],
                         ["<color rgb='032E4D'>Nbre d'heures rémunérées</color>","<color rgb='032E4D'><b>#{cour.duree + 1} heure.s</b></color>"]
                     ]
@@ -657,7 +657,7 @@ class ExportPdf
 
                 move_down @margin_down * 4
 
-                infos = [ ["<color rgb='E68824'><b>EMARGEMENT POUR SURVEILLANCE D’EXAMEN</b></color> \n<color rgb='032E4D'> (Exemplaire à remettre à l’Administration)</color>"] ]
+                infos = [ ["<color rgb='E68824'><b>EMARGEMENT POUR SURVEILLANCE D’#{cour.type_examen.upcase}</b></color> \n<color rgb='032E4D'> (Exemplaire à remettre à l’Administration)</color>"] ]
                 table(infos, cell_style: {inline_format: true, border_color: "E68824", align: :center})
 
                 move_down @margin_down
@@ -694,7 +694,7 @@ class ExportPdf
             move_down @margin_down * 2
             
 
-            infos = [ ["<color rgb='E68824'><b>PROCÈS-VERBAL DE DÉROULEMENT D’EXAMEN</b></color>"] ]
+            infos = [ ["<color rgb='E68824'><b>PROCÈS-VERBAL DE DÉROULEMENT D’#{cour.type_examen.upcase}</b></color>"] ]
             table(infos, cell_style: {inline_format: true, width: 540, border_color: "E68824", align: :center})
 
             move_down @margin_down *2
@@ -703,7 +703,7 @@ class ExportPdf
 
             move_down @margin_down 
 
-            text "<color rgb='032E4D'><u>Pour tous problèmes importants durant l’examen, contacter le responsable(s) de l’UE</u> :</color>", inline_format: true
+            text "<color rgb='032E4D'><u>Pour tous problèmes importants durant l’#{cour.type_examen.downcase}, contacter le responsable(s) de l’UE</u> :</color>", inline_format: true
             text "<color rgb='032E4D'><b>#{Intervenant.find_by(id: cour.intervenant_binome_id).try(:prenom_nom)} (tel: #{Intervenant.find_by(id: cour.intervenant_binome_id).try(:téléphone_mobile)})</b></color>", inline_format: true
 
             move_down @margin_down
@@ -723,14 +723,14 @@ class ExportPdf
 
             move_down @margin_down * 2
 
-            text "<color rgb='032E4D'><b><u>COMPTE-RENDU DU DÉROULEMENT DE L’EXAMEN</u></b></color>", inline_format: true, align: :center
+            text "<color rgb='032E4D'><b><u>COMPTE-RENDU DU DÉROULEMENT DE L’#{cour.type_examen.upcase}</u></b></color>", inline_format: true, align: :center
 
             text "[_]  <color rgb='032E4D'><b>R. A. S.</b></color>", inline_format: true
             text "[_]  <color rgb='032E4D'><b>INCIDENT</b></color>", inline_format: true
 
             move_down @margin_down
 
-            text "<color rgb='032E4D'><b>Dans ce dernier cas,</b> indiquez ci-après les observations ou incidents constatés pendant l’examen :</color>", inline_format: true
+            text "<color rgb='032E4D'><b>Dans ce dernier cas,</b> indiquez ci-après les observations ou incidents constatés pendant l’#{cour.type_examen.downcase} :</color>", inline_format: true
 
             move_down @margin_down * 6
 
@@ -752,7 +752,7 @@ class ExportPdf
             text "<color rgb='032E4D'><u>Surveillant.e.s :</u></color>", inline_format: true, size: 24
             text "<color rgb='032E4D'><b>#{surveillants}</b></color>", inline_format: true, size: 24
             move_down @margin_down
-            text "<color rgb='032E4D'>Examen <b>UE#{cour.code_ue} #{cour.nom_ou_ue} - #{cour.intervenant_binome.try(:nom_prenom)}</b></color>", inline_format: true, size: 24
+            text "<color rgb='032E4D'>#{cour.type_examen} <b>UE#{cour.code_ue} #{cour.nom_ou_ue} - #{cour.intervenant_binome.try(:nom_prenom)}</b></color>", inline_format: true, size: 24
             text "<color rgb='032E4D'>Le <b>#{I18n.l(cour.debut.to_date)}</b></color>", inline_format: true, size: 24
             text "<color rgb='032E4D'>De <b>#{cour.debut.strftime('%Hh%M')} à #{cour.fin.strftime('%Hh%M')}</b></color>", inline_format: true, size: 24
             text "<color rgb='032E4D'>Salle <b>#{cour.salle.try(:nom)}</b></color>", inline_format: true, size: 24
@@ -768,7 +768,7 @@ class ExportPdf
             move_down @margin_down * 4
 
             text "<color rgb='032E4D'><b>UE#{cour.code_ue} #{cour.nom_ou_ue}</b></color>", inline_format: true, size: 16
-            text "<color rgb='032E4D'><b>Examen du #{I18n.l(cour.debut.to_date)}</b></color>", inline_format: true, size: 16
+            text "<color rgb='032E4D'><b>#{cour.type_examen} du #{I18n.l(cour.debut.to_date)}</b></color>", inline_format: true, size: 16
 
             move_down @margin_down * 3
 
@@ -791,7 +791,7 @@ class ExportPdf
             move_down @margin_down * 4
 
             text "<color rgb='032E4D'><b>UE#{cour.code_ue} #{cour.nom_ou_ue}</b></color>", inline_format: true, size: 16
-            text "<color rgb='032E4D'><b>Examen du #{I18n.l(cour.debut.to_date)}</b></color>", inline_format: true, size: 16
+            text "<color rgb='032E4D'><b>#{cour.type_examen} du #{I18n.l(cour.debut.to_date)}</b></color>", inline_format: true, size: 16
 
             move_down @margin_down * 2
             text "<color rgb='032E4D'><i>Merci d’indiquer votre numéro étudiant : .......................</i></color>", inline_format: true, size: 16

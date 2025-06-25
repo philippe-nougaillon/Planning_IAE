@@ -1,8 +1,13 @@
-Bienvenue <%= @user.prénom.humanize %>
+Bienvenue <%= @user.prénom.humanize %> !
+<br><br>
+Voici vos identifiants pour vous connecter au Planning IAE-Paris :
+<br><br>
+Email : <b><%= @user.email %></b>
+<br>
+Mot de passe : <b><%= @user.password %></b>
 
 <br><br>
-Mot de passe :
-<%= @user.password %>
+Le lien pour vous connecter : <%= link_to new_session_url(@user), new_session_url(@user) %>
 
 <br><br>
 Bien cordialement,

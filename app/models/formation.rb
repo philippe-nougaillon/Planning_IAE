@@ -31,6 +31,7 @@ class Formation < ApplicationRecord
 	
 	default_scope { where("archive is null OR archive is false") }
 	default_scope { order(:nom, :promo) } 
+	scope :ordered, -> {order(:nom, :promo)}
 	
 	def nom_promo
 		self.promo.blank? ? self.nom : "#{self.nom} - #{self.promo}" 
