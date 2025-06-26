@@ -1,9 +1,9 @@
 source "https://rubygems.org"
 
-ruby "3.3.1"
+ruby "3.4.4"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 7.1.3"
+gem "rails", "~> 7.2"
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
@@ -24,7 +24,7 @@ gem "turbo-rails"
 gem "stimulus-rails"
 
 # Use Tailwind CSS [https://github.com/rails/tailwindcss-rails]
-gem "tailwindcss-rails"
+gem "tailwindcss-rails", "~> 2.3"
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
@@ -145,7 +145,7 @@ gem "mailgun-ruby", "~> 1.2"
 
 gem "sortable-for-rails", "~> 1.2"
 
-gem "page_title_helper", "~> 7.0"
+gem "page_title_helper", "~> 9.0"
 
 gem "matrix", "~> 0.4.2"
 
