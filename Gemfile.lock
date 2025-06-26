@@ -475,7 +475,7 @@ DEPENDENCIES
   letter_opener_web
   mailgun-ruby (~> 1.2)
   matrix (~> 0.4.2)
-  page_title_helper
+  page_title_helper (~> 9.0)
   pg (~> 1.1)
   pg_search
   prawn (~> 2.4)
