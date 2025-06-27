@@ -118,7 +118,7 @@ class Edusign < ApplicationService
               created_at: interval,
               edusign_id: nil,
               no_send_to_edusign: false
-            )
+            ).joins(:intervenant).where.not(intervenant: {id: Intervenant.intervenants_examens})
         elsif model == Intervenant
             
             # On sélectionne que les intervenants qui sont liés à une formation cobaye.
@@ -156,6 +156,7 @@ class Edusign < ApplicationService
               updated_at: interval,
               no_send_to_edusign: false
               ).where.not(edusign_id: nil).where.not(id: record_ids)
+              .joins(:intervenant).where.not(intervenant: {id: Intervenant.intervenants_examens})
         elsif model == Intervenant
             # Un intervenant peut ne plus avoir de cours avec des formations cobayes. Comme la requête permet de savoir qu'il est actif sur le planning, on l'update quand même sur Edusiugn.
             model.where(updated_at: interval).where.not(edusign_id: nil).where.not(id: record_ids)
@@ -175,6 +176,7 @@ class Edusign < ApplicationService
               edusign_id: nil,
               no_send_to_edusign: false
             ).where("debut >= ?", DateTime.now)
+              .joins(:intervenant).where.not(intervenant: {id: Intervenant.intervenants_examens})
         elsif model == Etudiant
             model.where(
               formation_id: formations_sent_to_edusign_ids,
@@ -770,18 +772,34 @@ class Edusign < ApplicationService
         
         edusign_ids = []
         deleted_cours_to_sync_ids = []
-        
-        # Récupération des cours appartennant à une ancienne formation cobaye
-        cours_unfollowed = Cour.where.not(edusign_id: nil).where.not(formation_id: Formation.sent_to_edusign_ids).or(Cour.where.not(edusign_id: nil).where(no_send_to_edusign: true))
-        
+
+        # Pour récupérer les cours à supprimer sur Edusign, obligé de séparer les requêtes à cause du "joins" sur les intervenants.
+
+        # request_base = Récupération des cours déjà sur Edusign,
+        # condition_1 = qui n'appartiennent plus à une formation envoyée sur Edusign,
+        # condition_2 = qui ne doit plus être envoyé sur Edusign,
+        # condition_3 = qui ne doit pas contenir d'intervenant examen,
+
+        request_base = Cour.where.not(edusign_id: nil)
+        condition_1 = Cour.where.not(formation_id: Formation.sent_to_edusign_ids)
+        condition_2 = Cour.where(no_send_to_edusign: true)
+        condition_3 = Cour.joins(:intervenant).where(intervenant: { id: Intervenant.intervenants_examens })
+
+        # Récupération des ids des cours récupérés
+        cours_to_remove_in_edusign_ids = condition_1.or(condition_2).pluck(:id) + condition_3.pluck(:id)
+
+        # Récupération des cours à supprimer
+        cours_unfollowed = request_base.where(id: cours_to_remove_in_edusign_ids.uniq)
+
         edusign_ids << cours_unfollowed.pluck(:edusign_id)
-        
+
+        # Récupération des cours supprimés
         deleted_cours = Audited::Audit
             .where(auditable_type: "Cour")
             .where(action: "destroy")
             .where(created_at: get_interval_of_time)
             
-        # Pour les edusigns id des cours supprimés on vérifie si il n'existe déjà plus sur Edusign
+        # Pour les edusign ids des cours supprimés, on vérifie s'il existe encore sur Edusign
         deleted_cours.each do |deleted_cour|
             edusign_id = deleted_cour.audited_changes["edusign_id"]
             self.prepare_request("https://ext.edusign.fr/v1/course/#{edusign_id}", "Get")
@@ -801,6 +819,7 @@ class Edusign < ApplicationService
         
         nb_audited = 0
 
+        # Suppression des cours sur Edusign avec les edusign ids qui ont été récupérés
         edusign_ids.each do |edusign_id|
             self.prepare_request("https://ext.edusign.fr/v1/course/#{edusign_id}", "Delete")
 
@@ -809,7 +828,7 @@ class Edusign < ApplicationService
             puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation du cours #{edusign_id} pour la suppression réussie"
 
             if response["status"] == 'success'
-                # Suppression de l'edusign_id sur le cours supprimé sur Edusign
+                # Suppression de l'edusign_id du cours supprimé sur Edusign
                 if cour_id = Cour.find_by(edusign_id: edusign_id).try(:id)
                     Cour.update(cour_id, edusign_id: nil)
                 end

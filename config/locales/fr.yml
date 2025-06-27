@@ -430,6 +430,10 @@ fr:
       title: Synchronisation Edusign
     synchronisation_edusign_do:
       title: Synchronisation Edusign
+    initialisation_edusign:
+      title: Initialisation Edusign
+    initialisation_edusign_do:
+      title: Initialisation Edusign
   agents:
     index:
       title: Agents
@@ -555,6 +559,6 @@ fr:
       title: "Justificatif"
   edusign_logs:
     index:
-      title: Edusign logs
+      title: "Edusign logs"
     show:
-      title: Edusign log
+      title: "Edusign log"
