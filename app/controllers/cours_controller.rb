@@ -805,7 +805,7 @@ class CoursController < ApplicationController
       params.require(:cour).permit(:debut, :fin, :formation_id, :intervenant_id,
                                     :salle_id, :code_ue, :nom, :etat, :duree,
                                     :intervenant_binome_id, :hors_service_statutaire,
-                                    :commentaires, :elearning, :document,
+                                    :commentaires, :elearning, :document, :no_send_to_edusign,
                                     options_attributes: [:id, :user_id, :catégorie, :description, :_destroy])
     end
 

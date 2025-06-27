@@ -98,17 +98,26 @@ class Edusign < ApplicationService
     def get_all_element_created_today(model)
         interval = self.get_interval_of_time
 
+        formations_sent_to_edusign_ids = Formation.sent_to_edusign_ids
+
         if model == Formation
             model.where(
-              id: Formation.cobayes_edusign,
+              created_at: interval,
+              edusign_id: nil,
+              send_to_edusign: true
+            )
+        elsif model == Etudiant
+            model.where(
+              formation_id: formations_sent_to_edusign_ids,
               created_at: interval,
               edusign_id: nil
             )
-        elsif [Etudiant, Cour].include?(model)
+        elsif model == Cour
             model.where(
-              formation_id: Formation.cobayes_edusign,
+              formation_id: formations_sent_to_edusign_ids,
               created_at: interval,
-              edusign_id: nil
+              edusign_id: nil,
+              no_send_to_edusign: false
             )
         elsif model == Intervenant
             
@@ -119,7 +128,7 @@ class Edusign < ApplicationService
             # Ce code est temporaire le temps que l'on sache à quel moment il faudra créer l'intervenant sur Edusign.
             intervenant_ids = Cour.where(
               updated_at: interval,
-              formation_id: Formation.cobayes_edusign
+              formation_id: formations_sent_to_edusign_ids
             ).pluck(:intervenant_id, :intervenant_binome_id).flatten.compact.uniq
 
             model.where(id: intervenant_ids, edusign_id: nil)
@@ -129,16 +138,24 @@ class Edusign < ApplicationService
     def get_all_element_updated_today(model, record_ids = nil)
         interval = self.get_interval_of_time
 
+        formations_sent_to_edusign_ids = Formation.sent_to_edusign_ids
+
         if model == Formation
             model.where(
-              id: Formation.cobayes_edusign,
               updated_at: interval,
+              send_to_edusign: true
             ).where.not(edusign_id: nil).where.not(id: record_ids)
-        elsif [Etudiant, Cour].include?(model)
+        elsif model == Etudiant
             model.where(
-              formation_id: Formation.cobayes_edusign,
-              updated_at: interval,
+              formation_id: formations_sent_to_edusign_ids,
+              updated_at: interval
             ).where.not(edusign_id: nil).where.not(id: record_ids)
+        elsif model == Cour
+            model.where(
+              formation_id: formations_sent_to_edusign_ids,
+              updated_at: interval,
+              no_send_to_edusign: false
+              ).where.not(edusign_id: nil).where.not(id: record_ids)
         elsif model == Intervenant
             # Un intervenant peut ne plus avoir de cours avec des formations cobayes. Comme la requête permet de savoir qu'il est actif sur le planning, on l'update quand même sur Edusiugn.
             model.where(updated_at: interval).where.not(edusign_id: nil).where.not(id: record_ids)
@@ -146,19 +163,21 @@ class Edusign < ApplicationService
     end
 
     def get_all_elements_for_initialisation(model)
+        formations_sent_to_edusign_ids = Formation.sent_to_edusign_ids
         if model == Formation
             model.where(
-              id: Formation.cobayes_edusign,
-              edusign_id: nil
+              edusign_id: nil,
+              send_to_edusign: true
             )
         elsif model == Cour
             model.where(
-              formation_id: Formation.cobayes_edusign,
-              edusign_id: nil
+              formation_id: formations_sent_to_edusign_ids,
+              edusign_id: nil,
+              no_send_to_edusign: false
             ).where("debut >= ?", DateTime.now)
         elsif model == Etudiant
             model.where(
-              formation_id: Formation.cobayes_edusign,
+              formation_id: formations_sent_to_edusign_ids,
               edusign_id: nil
             )
         elsif model == Intervenant
@@ -169,7 +188,7 @@ class Edusign < ApplicationService
 
             # Ce code est temporaire le temps que l'on sache à quel moment il faudra créer l'intervenant sur Edusign.
             intervenant_ids = Cour.where(
-              formation_id: Formation.cobayes_edusign
+              formation_id: Formation.sent_to_edusign_ids
             ).where("debut >= ?", DateTime.now).pluck(:intervenant_id, :intervenant_binome_id).flatten.compact.uniq
 
             model.where(id: intervenant_ids, edusign_id: nil)
@@ -753,7 +772,7 @@ class Edusign < ApplicationService
         deleted_cours_to_sync_ids = []
         
         # Récupération des cours appartennant à une ancienne formation cobaye
-        cours_unfollowed = Cour.where.not(edusign_id: nil).where.not(formation_id: Formation.cobayes_edusign)
+        cours_unfollowed = Cour.where.not(edusign_id: nil).where.not(formation_id: Formation.sent_to_edusign_ids).or(Cour.where.not(edusign_id: nil).where(no_send_to_edusign: true))
         
         edusign_ids << cours_unfollowed.pluck(:edusign_id)
         

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_06_17_115318) do
+ActiveRecord::Schema[7.1].define(version: 2025_06_27_083042) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -127,6 +127,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_17_115318) do
     t.boolean "elearning"
     t.integer "code_ue"
     t.string "edusign_id"
+    t.boolean "no_send_to_edusign"
     t.index ["debut"], name: "index_cours_on_debut"
     t.index ["etat"], name: "index_cours_on_etat"
     t.index ["formation_id"], name: "index_cours_on_formation_id"
@@ -283,6 +284,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_17_115318) do
     t.string "courriel"
     t.string "nomtauxtd"
     t.string "edusign_id"
+    t.boolean "send_to_edusign"
     t.index ["archive"], name: "index_formations_on_archive"
     t.index ["user_id"], name: "index_formations_on_user_id"
   end
