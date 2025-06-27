@@ -213,6 +213,7 @@ class EtatLiquidatifCollectifFormationToXls < ApplicationService
       index += 2
     end
 
+    # Todo: Mettre dans une variable la signature
     index += 5
     sheet.row(index).concat ["Fait à Paris le #{I18n.l(Date.today)}"]
     index += 5

@@ -42,7 +42,7 @@
           </li>
         <% end %>
 
-        <% if current_user.accueil? || [41,35,3132].include?(current_user.id) %>
+        <% if current_user.accueil? || ENV["USER_COMMAND_AUTHORIZATION_IDS"].split(',').map(&:to_i).include?(current_user.id) %>
           <li class="nav-item">
             <% is_active = params[:action] == 'commandes' %>
             <%= link_to tools_commandes_path, class: "nav-link text-#{ is_active ? 'primary' : 'base-content' }" do %>

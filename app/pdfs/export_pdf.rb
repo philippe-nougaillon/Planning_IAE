@@ -252,6 +252,7 @@ class ExportPdf
         text "Fait à Paris le #{I18n.l(Date.today)}", style: :italic
         move_down @margin_down
 
+        # Todo: Mettre dans une variable la signature
         y_position = cursor
         bounding_box([0, y_position], :width => 250, :height => 100) do
             text "Eric LAMARQUE"
@@ -304,7 +305,6 @@ class ExportPdf
         text "Du #{I18n.l(start_date.to_date)} au #{I18n.l(end_date.to_date)}"
 
         move_down @margin_down
-        #text "Affaire suivie par : Thémoline"
 
         # Tableau récap par code OTP
         data = [ ['N°', 'Date', 'Type', 'Formation', 'Centre de coût', 'Destination financière', 'EOTP', 'Total heures' ]]    
@@ -378,6 +378,7 @@ class ExportPdf
                 text "par la vacation, pour accord"
             end
         else
+            # Todo: Mettre dans une variable la signature
             bounding_box([0, y_position], :width => 250, :height => 100) do
                 text "Eric LAMARQUE"
                 text "Directeur de l'IAE Paris", size: 8
@@ -430,7 +431,6 @@ class ExportPdf
         text "Du #{I18n.l(start_date.to_date)} au #{I18n.l(end_date.to_date)}"
 
         move_down @margin_down
-        #text "Affaire suivie par : Thémoline"
 
         # Tableau récap par code OTP
         data = [ ['N°', 'Date', 'Type', 'Formation', 'Centre de coût', 'Destination financière', 'EOTP', 'Total heures' ]]    
@@ -504,6 +504,7 @@ class ExportPdf
                 text "par la vacation, pour accord"
             end
         else
+            # Todo: Mettre dans une variable la signature
             bounding_box([0, y_position], :width => 250, :height => 100) do
                 text "Eric LAMARQUE"
                 text "Directeur de l'IAE Paris", size: 8
