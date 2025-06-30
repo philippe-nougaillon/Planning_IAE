@@ -614,15 +614,7 @@ class Cour < ApplicationRecord
 
   def synchronisation_edusign
     # Modifier la salle sur Edusign si changement
-    etat = 0
-
-    # capture output
-    stream = capture_stdout do
-      request = Edusign.new
-      request.export_cours(self.id)
-      etat = request.get_etat
-    end
-    EdusignLog.create(modele_type: 3, message: stream, user_id: self.audits.last.user_id, etat: etat)
+    EdusignJob.perform_later("salle changée", self.audits.last.user_id, {cour_id: self.id})
   end
 
 end

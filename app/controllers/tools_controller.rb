@@ -1475,35 +1475,20 @@ class ToolsController < ApplicationController
   def edusign_do
     return unless params[:intervenant_id].present? || params[:etudiant_id].present? || params[:formation_id].present?
 
-    etat = 0
-
-    # capture output
-    stream = capture_stdout do
-      request = Edusign.new
-
-      if params[:intervenant_id].present?
-        response = request.export_intervenant(params[:intervenant_id])
-        record_type = "l'intervenant"
-      elsif params[:formation_id].present?
-        response = request.export_formation(params[:formation_id])
-        record_type = "la formation (Groupe)"
-      elsif params[:etudiant_id].present?
-        response = request.export_etudiant(params[:etudiant_id])
-        record_type = "l'étudiant (Apprenant)"
-      end
-
-      if response["status"] == 'error'
-        flash[:alert] = "Erreur Edusign : #{response["message"]}"
-      else
-        flash[:notice] = "Création avec succès de #{record_type} sur Edusign ! ID sur Edusign : #{response["result"]["ID"]}"
-      end
-
-      etat = request.get_etat
+    if params[:intervenant_id].present?
+      record_type = "intervenant"
+      record_id = params[:intervenant_id]
+    elsif params[:formation_id].present?
+      record_type = "formation"
+      record_id = params[:formation_id]
+    elsif params[:etudiant_id].present?
+      record_type = "etudiant"
+      record_id = params[:etudiant_id]
     end
 
-    EdusignLog.create(modele_type: 2, message: stream, user_id: current_user.id, etat: etat)
+    EdusignJob.perform_later("sync manuelle", current_user.id, {record_type:, record_id:})
 
-    redirect_to tools_edusign_path
+    redirect_to tools_edusign_path, notice: "Lancement de l'ajout de l'élément effectuée."
 
   end
 
@@ -1511,38 +1496,18 @@ class ToolsController < ApplicationController
   end
 
   def synchronisation_edusign_do
-    etat = 0
+    EdusignJob.perform_later("Sync log", current_user.id)
 
-    # capture output
-    @stream = capture_stdout do
-      request = Edusign.new
-      puts "C'est parti !"
-
-      request.call
-      
-      etat = request.get_etat
-    end
-
-    EdusignLog.create(modele_type: 1, message: @stream, user_id: current_user.id, etat: etat)
+    redirect_to tools_synchronisation_edusign_path, notice: "Lancement de la synchronisation effectuée."
   end
 
   def initialisation_edusign
   end
 
   def initialisation_edusign_do
-    etat = 0
+    EdusignJob.perform_later("Initialisation", current_user.id)
 
-    # capture output
-    @stream = capture_stdout do
-      request = Edusign.new
-      puts "Démarrage de l'initialisation de la synchronisation avec Edusign !"
-
-      request.initialisation
-      
-      etat = request.get_etat
-    end
-
-    EdusignLog.create(modele_type: 0, message: @stream, user_id: current_user.id, etat: etat)
+    redirect_to tools_initialisation_edusign_path, notice: "Lancement de l'initialisation effectuée."
   end
 
   private
