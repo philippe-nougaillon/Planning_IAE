@@ -4,7 +4,17 @@
       <%= link_to edit_etudiant_path(@etudiant), class: 'btn btn-sm btn-primary btn-outline join-item' do %>
         <%= fa_icon 'edit' %> Modifier
       <% end %>
-
+      <% if policy(Etudiant).destroy? %>
+        <% if @etudiant.attendances.any? %>
+          <div title="L'étudiant.e ne peut pas être supprimé.e car il/elle a des signatures" class="btn btn-sm btn-secondary btn-outline join-item cursor-not-allowed">
+              <%= fa_icon 'trash-alt' %> Supprimer
+          </div>
+        <% else %>
+          <%= link_to(@etudiant, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: 'btn btn-ghost btn-xs') do %>
+              <%= fa_icon 'trash' %>
+          <% end %>
+        <% end %>
+      <% end %>
       <%= link_to etudiants_path, class: 'btn btn-sm btn-primary btn-outline join-item' do %>
         <%= fa_icon 'list' %> Retour
       <% end %>

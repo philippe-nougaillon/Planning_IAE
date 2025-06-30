@@ -19,6 +19,7 @@ class Etudiant < ApplicationRecord
 
   before_destroy :delete_user
 
+  has_many :attendances
   has_many :justificatifs
 
   scope :ordered, -> { order(:nom, :prénom) }

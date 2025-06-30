@@ -37,8 +37,12 @@
             <% end %>
         <% end %>
         <% if policy(Etudiant).destroy? %>
-            <%= link_to(etudiant, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: 'btn btn-ghost btn-xs') do %>
-                <%= fa_icon 'trash' %>
+            <% if etudiant.attendances.any? %>
+                <%= fa_icon 'trash', title:"L'étudiant.e ne peut pas être supprimé.e car il/elle a des signatures", class:"btn btn-ghost btn-xs text-secondary pt-1 cursor-not-allowed"%>
+            <% else %>
+                <%= link_to(etudiant, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: 'btn btn-ghost btn-xs') do %>
+                    <%= fa_icon 'trash' %>
+                <% end %>
             <% end %>
         <% end %>
     </td>
