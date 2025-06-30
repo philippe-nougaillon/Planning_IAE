@@ -573,7 +573,7 @@ class Edusign < ApplicationService
               }}
 
             if method == 'Post'
-                body[:professor].merge!({"dontSendCredentials": false})
+                body[:professor].merge!({"dontSendCredentials": true})
             else
                 body[:professor].merge!({"ID": intervenant.edusign_id})
             end
@@ -613,7 +613,7 @@ class Edusign < ApplicationService
                 "EMAIL": intervenant.email,
                 "API_ID": intervenant.slug
               },
-               "dontSendCredentials": false
+               "dontSendCredentials": true
               }
 
             response = self.prepare_body_request(body).get_response
@@ -778,10 +778,16 @@ class Edusign < ApplicationService
         # qui ne doit plus être envoyé sur Edusign,
         # qui a un intervenant devenu un examen,
 
-        cours_unfollowed = Cour.joins(:intervenant).where.not(edusign_id: nil)
-        .where.not(formation_id: Formation.sent_to_edusign_ids)
-        .or(Cour.where.not(edusign_id: nil).where(no_send_to_edusign: true))
-        .or(Cour.where.not(edusign_id: nil).where(intervenant: { id: Intervenant.intervenants_examens }))      
+        request_base = Cour.where.not(edusign_id: nil)
+        condition_1 = request_base.where.not(formation_id: Formation.sent_to_edusign_ids)
+        condition_2 = request_base.where(no_send_to_edusign: true)
+        condition_3 = request_base.joins(:intervenant).where(intervenant: { id: Intervenant.intervenants_examens })
+
+        # Récupération des ids des cours récupérés
+        cours_to_remove_in_edusign_ids = condition_1.or(condition_2).pluck(:id) + condition_3.pluck(:id)
+
+        # Récupération des cours à supprimer
+        cours_unfollowed = Cour.where(id: cours_to_remove_in_edusign_ids.uniq)    
 
         edusign_ids << cours_unfollowed.pluck(:edusign_id)
 
