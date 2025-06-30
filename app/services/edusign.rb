@@ -773,23 +773,15 @@ class Edusign < ApplicationService
         edusign_ids = []
         deleted_cours_to_sync_ids = []
 
-        # Pour récupérer les cours à supprimer sur Edusign, obligé de séparer les requêtes à cause du "joins" sur les intervenants.
+        # Récupération des cours déjà sur Edusign,
+        # qui n'appartiennent plus à une formation envoyée sur Edusign,
+        # qui ne doit plus être envoyé sur Edusign,
+        # qui a un intervenant devenu un examen,
 
-        # request_base = Récupération des cours déjà sur Edusign,
-        # condition_1 = qui n'appartiennent plus à une formation envoyée sur Edusign,
-        # condition_2 = qui ne doit plus être envoyé sur Edusign,
-        # condition_3 = qui ne doit pas contenir d'intervenant examen,
-
-        request_base = Cour.where.not(edusign_id: nil)
-        condition_1 = Cour.where.not(formation_id: Formation.sent_to_edusign_ids)
-        condition_2 = Cour.where(no_send_to_edusign: true)
-        condition_3 = Cour.joins(:intervenant).where(intervenant: { id: Intervenant.intervenants_examens })
-
-        # Récupération des ids des cours récupérés
-        cours_to_remove_in_edusign_ids = condition_1.or(condition_2).pluck(:id) + condition_3.pluck(:id)
-
-        # Récupération des cours à supprimer
-        cours_unfollowed = request_base.where(id: cours_to_remove_in_edusign_ids.uniq)
+        cours_unfollowed = Cour.joins(:intervenant).where.not(edusign_id: nil)
+        .where.not(formation_id: Formation.sent_to_edusign_ids)
+        .or(Cour.where.not(edusign_id: nil).where(no_send_to_edusign: true))
+        .or(Cour.where.not(edusign_id: nil).where(intervenant: { id: Intervenant.intervenants_examens }))      
 
         edusign_ids << cours_unfollowed.pluck(:edusign_id)
 
@@ -804,7 +796,7 @@ class Edusign < ApplicationService
             edusign_id = deleted_cour.audited_changes["edusign_id"]
             self.prepare_request("https://ext.edusign.fr/v1/course/#{edusign_id}", "Get")
             response = self.get_response(true)
-            if response["status"] == "success"
+            if response["status"] == "success" && edusign_id != nil
                 edusign_ids << edusign_id
                 deleted_cours_to_sync_ids << deleted_cour.auditable_id
             end
