@@ -447,7 +447,7 @@ class CoursController < ApplicationController
         if (params[:invits_en_cours].present? && params[:confirmation] == 'yes') || !params[:invits_en_cours].present?
           if !params[:delete].blank?
             @cours.each do |c|
-              if policy(c).destroy?
+              if policy(c).destroy? && c.attendances.empty?
                 c.invits.destroy_all
                 c.destroy
               else

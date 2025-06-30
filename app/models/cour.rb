@@ -18,7 +18,7 @@ class Cour < ApplicationRecord
   accepts_nested_attributes_for :options,
                                 reject_if: lambda{|attributes| attributes['catégorie'].blank? || attributes['description'].blank?},
                                 allow_destroy:true
-  has_many :attendances, dependent: :destroy
+  has_many :attendances
 
   has_one_attached :document
 
