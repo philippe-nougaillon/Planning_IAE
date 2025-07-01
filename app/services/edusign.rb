@@ -435,13 +435,13 @@ class Edusign < ApplicationService
                 response["status"] = 'error'
                 response["message"] = message
             end
-        else
-            response = {}
-            response["status"] = 'error'
-            response["message"] = "Error : Aucune formation ne correspond à cet id : #{formation_id}"
+        # else
+        #     response = {}
+        #     response["status"] = 'error'
+        #     response["message"] = "Error : Aucune formation ne correspond à cet id : #{formation_id}"
         end
 
-        response
+        # response
     end
 
     def sync_etudiants(method, etudiants_ajoutés_ids = nil)
@@ -527,18 +527,18 @@ class Edusign < ApplicationService
                     etudiant.save
                     @nb_sended_elements += 1
                 end
-            else
-                response = {}
-                response["status"] = 'error'
-                response["message"] = "Apprenant déjà existant sur Edusign,  #{etudiant.edusign_id}."
+            # else
+            #     response = {}
+            #     response["status"] = 'error'
+            #     response["message"] = "Apprenant déjà existant sur Edusign,  #{etudiant.edusign_id}."
             end
-        else
-            response = {}
-            response["status"] = 'error'
-            response["message"] = "Error : Aucun étudiant ne correspond à cet id : #{etudiant_id}"
+        # else
+        #     response = {}
+        #     response["status"] = 'error'
+        #     response["message"] = "Error : Aucun étudiant ne correspond à cet id : #{etudiant_id}"
         end
-
-        response
+        #
+        # response
     end
 
     def sync_intervenants(method, intervenants_ajoutés_ids = nil)
@@ -625,13 +625,13 @@ class Edusign < ApplicationService
                 intervenant.save
                 @nb_sended_elements += 1
             end
-        else
-            response = {}
-            response["status"] = 'error'
-            response["message"] = "Error : Aucun intervenant ne correspond à ce slug : #{intervenant_slug}"
+        # else
+        #     response = {}
+        #     response["status"] = 'error'
+        #     response["message"] = "Error : Aucun intervenant ne correspond à ce slug : #{intervenant_slug}"
         end
 
-        response
+        # response
     end
 
     def sync_cours(method, cours_ajoutés_ids = nil)
@@ -757,13 +757,13 @@ class Edusign < ApplicationService
             if response["status"] == 'success'
                 @nb_sended_elements += 1
             end
-        else
-            response = {}
-            response["status"] = 'error'
-            response["message"] = "Error : Aucun cours ne correspond à cet id : #{cours_id}"
+        # else
+        #     response = {}
+        #     response["status"] = 'error'
+        #     response["message"] = "Error : Aucun cours ne correspond à cet id : #{cours_id}"
         end
 
-        response
+        # response
     end
 
     def remove_deleted_and_unfollowed_cours_in_edusign
