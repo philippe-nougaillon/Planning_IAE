@@ -420,7 +420,7 @@ class Edusign < ApplicationService
 
                 response = self.prepare_body_request(body).get_response
 
-                puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de l'étudiant #{formation.id}, #{formation.nom} réussie"
+                puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de la formation #{formation.id}, #{formation.nom} réussie"
 
                 if response["status"] == 'success'
                     formation.edusign_id = response["result"]["ID"]
@@ -618,7 +618,7 @@ class Edusign < ApplicationService
 
             response = self.prepare_body_request(body).get_response
 
-            puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de l'étudiant #{intervenant.id}, #{intervenant.nom} réussie"
+            puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de l'intervenant #{intervenant.id}, #{intervenant.nom} réussie"
 
             if response["status"] == 'success'
                 intervenant.edusign_id = response["result"]["ID"]

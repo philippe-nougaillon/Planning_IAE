@@ -365,6 +365,8 @@ fr:
   guide:
     index:
       title: Aide-mémoire de l'application Planning
+    edusign:
+      title: Aide-mémoire de l'intégration Edusign
   tools:
     index:
       title: Outils

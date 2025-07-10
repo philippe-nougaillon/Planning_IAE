@@ -167,8 +167,11 @@ Rails.application.routes.draw do
     post :initialisation_edusign_do
   end
 
-  get 'guide/index'
-  
+  namespace :guide do
+    get :index
+    get :edusign
+  end
+
   # namespace :api, defaults: {format: 'json'} do 
   #   namespace :v1 do 
   #       resources :cours

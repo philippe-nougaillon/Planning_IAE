@@ -1,0 +1,108 @@
+<div class="bs-container mt-6 mb-12 pl-0 border-b pb-4">
+  <h1 class="text-3xl">
+    <%= fa_icon 'info-circle' %>
+      Guide Edusign/Planning
+  </h1>
+</div>
+
+<div class="border-b mt-12 mb-2 pb-4">
+  <h3 class="text-3xl"><span class="font-black underline text-4xl">e</span> Intégration d'Edusign</h3>
+</div>
+
+<ul class="list-disc">
+  <li>L'outil Edusign est une extension du Planning pour gérer l'assiduité des étudiants</li>
+  <li>Le Planning permet d'envoyer cours, formations, étudiants et intervenants vers Edusign, afin qu'il ai des données nécessaires pour la gestion de l'assiduité (Création de feuilles de présences)
+</ul>
+
+<div class="border-b mt-12 mb-2 pb-4">
+  <h3 class="text-3xl"><%= fa_icon 'toggle-on' %> Activer la synchronisation des données vers Edusign</h3>
+</div>
+
+<ul class="list-disc">
+  <li>Vous avez la possibilité de choisir les formations et les cours à synchroniser :</li>
+  <ul class="list-inside" style="list-style-type: circle">
+    <li>Pour synchroniser une <strong>formation</strong>, allez sur le formulaire pour créer/modifier une formation, et cochez la case <strong>[x] Synchroniser la formation sur Edusign ?</strong></li>
+    <li>La synchronisation d'un <strong>cours</strong> ne se fait que s'il est associé à une formation synchronisée. Si vous ne voulez pas que le cours soit synchronisé automatiquement, cochez la case <strong>[x] Ne pas synchroniser le cours sur Edusign ?</strong>, et le cours n'apparaitra pas ou plus sur Edusign</li>
+  </ul>
+</ul>
+
+<div class="border-b mt-12 mb-2 pb-4">
+  <h3 class="text-3xl"><%= fa_icon 'exchange-alt' %> Comment envoyer les données à synchroniser</h3>
+</div>
+
+<div class="flex flex-wrap mb-8">
+  <div class="md:w-1/2 px-4">
+    <div class="card shadow-lg">
+      <a href="/Images/guide/edusign/synchronisation_automatique.png">
+        <img src="/Images/guide/edusign/synchronisation_automatique.png" alt="Synchronisation automatique lancé manuellement" style="width:100%">
+        <div class="caption">
+          <p class="text-center mt-2 mb-4 border-t pt-2">Synchronisation automatique lancé manuellement</p>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="md:w-1/2 px-4">
+    <div class="card shadow-lg">
+      <a href="/Images/guide/edusign/creation_manuelle.png">
+        <img src="/Images/guide/edusign/creation_manuelle.png" alt="Création manuelle" style="width:100%">
+        <div class="caption">
+          <p class="text-center mt-2 mb-4 border-t pt-2">Création manuelle</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<ul class="list-disc">
+  <li>Toutes les heures, une synchronisation automatiquement est effectué par le serveur, pour mettre constamment à jour les données entre les deux outils</li>
+  <li>Si un changement doit être pris en compte rapidement, il est possible de lancer manuellement la synchronisation, ou de synchroniser un intervenant, une formation ou un étudiant</li>
+  <li>Après une synchronisation, le planning réceptionne les justificatifs d'absences sur Edusign</li>
+</ul>
+
+<div class="border-b mt-12 mb-2 pb-4">
+  <h3 class="text-3xl"><%= fa_icon 'search' %> Journalisation des synchronisations</h3>
+</div>
+
+<div class="flex flex-wrap mb-8">
+  <div class="md:w-1/2 px-4">
+    <div class="card shadow-lg">
+      <a href="/Images/guide/edusign/edusign_logs.png">
+        <img src="/Images/guide/edusign/edusign_logs.png" alt="Le journal des synchronisations" style="width:100%">
+        <div class="caption">
+          <p class="text-center mt-2 mb-4 border-t pt-2">Le journal des synchronisations</p>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="md:w-1/2 px-4">
+    <div class="card shadow-lg">
+      <a href="/Images/guide/edusign/edusign_log.png">
+        <img src="/Images/guide/edusign/edusign_log.png" alt="Détail d'une synchronisation" style="width:100%">
+        <div class="caption">
+          <p class="text-center mt-2 mb-4 border-t pt-2">Détail d'une synchronisation</p>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<ul class="list-disc">
+  <li>Chaque synchronisation effectuée est enregistrée dans un journal, avec la date, le type, le nom de l'utilisateur (ou "Serveur" pour la synchronisation automatique lancée par le serveur), et l'état</li>
+  <li>Une synchronisation en avertissement (en jaune) signale qu'une donnée ou plusieurs données n'a pas pu être envoyé vers Edusign. Celle en échec (en rouge) signale qu'aucune donnée n'a pu être envoyé.</li>
+  <li>L'erreur la plus courante apparait quand une donnée existe déjà sur Edusign</li>
+</ul>
+
+<div class="border-b mt-12 mb-2 pb-4">
+  <h3 class="text-3xl"><%= fa_icon 'asterisk' %> Quelques règles établis sur les données envoyées</h3>
+</div>
+
+<ul class="list-disc">
+  <li>Les cours examens et ceux qui sont déjà passés ne sont pas compris dans la synchronisation</li>
+  <li>Les cours synchronisés sont toujours ceux qui viennent après la date actuelle</li>
+  <li>Les cours qui ne sont plus dans une formation à synchroniser, sont supprimés</li>
+  <li>Chaque changement de salle sur un cours sera remonté immédiatement vers Edusign, pour prévenir les étudiants le plus rapidement possible</li>
+  <li>Les intervenants ne sont envoyés que s'ils ont un cours d'une formation synchronisé</li>
+  <li>Les étudiants ne sont envoyés que si leur formation est synchronisé</li>
+</ul>
+
+<div class="mb-8"></div>
