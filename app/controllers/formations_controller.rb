@@ -126,11 +126,11 @@ class FormationsController < ApplicationController
     end
 
     def sortable_columns
-      ['formations.nom', 'formations.abrg','formations.nbr_etudiants','formations.code_analytique']
+      ['formations.nom', 'formations.abrg','formations.nbr_etudiants','formations.code_analytique', 'formations.edusign_id']
     end
 
     def sort_column
-        sortable_columns.include?(params[:column]) ? params[:column] : 'nom'
+        sortable_columns.include?(params[:column]) ? params[:column] : 'formations.nom'
     end
 
     def sort_direction
@@ -141,7 +141,7 @@ class FormationsController < ApplicationController
     def formation_params
       params.require(:formation)
             .permit(:nom, :promo, :diplome, :domaine, :apprentissage, :memo, :nbr_etudiants, :nbr_heures, 
-                    :abrg, :user_id, :color, :Forfait_HETD, :hors_catalogue, :nomtauxtd, :code_analytique, :catalogue, :archive, :hss, :courriel,
+                    :abrg, :user_id, :color, :Forfait_HETD, :hors_catalogue, :nomtauxtd, :code_analytique, :catalogue, :archive, :hss, :courriel, :send_to_edusign,
                     unites_attributes: [:id, :code, :nom, :séances, :heures, :destroy],
                     etudiants_attributes: [:id, :nom, :prénom, :civilité, :email, :mobile, :_destroy],
                     vacations_attributes: [:id, :date, :intervenant_id, :titre, :qte, :forfaithtd, :commentaires, :vacation_activite_id, :_destroy])

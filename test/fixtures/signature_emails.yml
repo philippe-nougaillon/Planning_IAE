@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  nb_envoyee: 1
+  requete_edusign_id: MyString
+  limite: 2025-03-24 11:54:28
+  second_envoi: false
+  envoi_email: 2025-03-24 11:54:28
+
+two:
+  nb_envoyee: 1
+  requete_edusign_id: MyString
+  limite: 2025-03-24 11:54:28
+  second_envoi: false
+  envoi_email: 2025-03-24 11:54:28

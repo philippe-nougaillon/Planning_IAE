@@ -138,6 +138,9 @@ Rails.application.routes.draw do
     get :commande_fait
     get :commandes_v2
     get :commande_fait_v2
+    get :edusign
+    get :synchronisation_edusign
+    get :initialisation_edusign
 
     post :import_do
     post :creation_cours_do
@@ -159,10 +162,16 @@ Rails.application.routes.draw do
     post :rappel_des_cours_do
     post :rappel_des_examens_do
     post :acces_intervenants_do
+    post :edusign_do
+    post :synchronisation_edusign_do
+    post :initialisation_edusign_do
   end
 
-  get 'guide/index'
-  
+  namespace :guide do
+    get :index
+    get :edusign
+  end
+
   # namespace :api, defaults: {format: 'json'} do 
   #   namespace :v1 do 
   #       resources :cours
@@ -207,8 +216,13 @@ Rails.application.routes.draw do
 
   resources :notes
 
-  resources :vacations, only: %i[ index show edit update]
+  resources :vacations, only: %i[ index show edit update ]
   resources :vacation_activites
+
+  resources :attendances
+  resources :justificatifs, only: %i[ index show ]
+
+  resources :edusign_logs, only: %i[ index show ]
 
   controller :pages do
     get 'mentions_légales', to: 'pages#mentions_légales', as: :mentions_legales

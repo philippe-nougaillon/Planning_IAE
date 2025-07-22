@@ -117,13 +117,20 @@
                     <% end %>
                 </i>
             <% end %>
+            <% if cours.désynchronisé? %>
+              <i title="Cours désynchronisé avec Edusign" >
+                <%= fa_icon 'exclamation', class: 'text-error' %>
+              </i>
+            <% end %>
         <% end %>
         <% if current_user && current_user.role_number >= 1 && cours.document.attached? %>
             <%= link_to url_for(cours.document), title: cours.document.filename, target: "_blank" do %>
                 <%= fa_icon 'file' %>
             <% end %>
         <% end %>
-
+        <% if current_user && current_user.role_number >= 5 && !cours.edusign_id? %>
+            <span title="Problème avec Edusign, le cours n'est pas synchronisé !" class="text-error text-xl underline font-black ml-5 animate-pulse">e</span>
+        <% end %>
     </td>
 
     <% if policy(cours).edit? %>

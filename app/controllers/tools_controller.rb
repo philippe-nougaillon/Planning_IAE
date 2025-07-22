@@ -1466,7 +1466,267 @@ class ToolsController < ApplicationController
     redirect_to request.referrer, notice: "Commande traitée avec succès"
   end
 
+  def edusign
+    @intervenants = Intervenant.all
+    @formations = Formation.all
+    @étudiants = Etudiant.ordered
+  end
+
+  def edusign_do
+    return unless params[:intervenant_id].present? || params[:etudiant_id].present? || params[:formation_id].present?
+
+    if params[:intervenant_id].present?
+      record_type = "intervenant"
+      record_id = params[:intervenant_id]
+    elsif params[:formation_id].present?
+      record_type = "formation"
+      record_id = params[:formation_id]
+    elsif params[:etudiant_id].present?
+      record_type = "etudiant"
+      record_id = params[:etudiant_id]
+    end
+
+    EdusignJob.perform_later("sync manuelle", current_user.id, {record_type:, record_id:})
+
+    redirect_to tools_edusign_path, notice: "Lancement de l'ajout de l'élément effectuée."
+
+  end
+
+  def synchronisation_edusign
+  end
+
+  def synchronisation_edusign_do
+    EdusignJob.perform_later("Sync log", current_user.id)
+
+    redirect_to tools_synchronisation_edusign_path, notice: "Lancement de la synchronisation effectuée."
+  end
+
+  def initialisation_edusign
+  end
+
+  def initialisation_edusign_do
+    EdusignJob.perform_later("Initialisation", current_user.id)
+
+    redirect_to tools_initialisation_edusign_path, notice: "Lancement de l'initialisation effectuée."
+  end
+
   private
+
+  # def ajout_etudiants
+
+  #   request = Edusign.new("https://ext.edusign.fr/v1/student", 'Post')
+
+  #   etudiants_added = request.get_all_element_created_today(Etudiant).where(edusign_id: nil)
+
+  #   etudiants_added.each do |etudiant|
+  #     body =
+  #       {"student":{
+  #         "FIRSTNAME": etudiant.prénom,
+  #         "LASTNAME": etudiant.nom,
+  #         "EMAIL": etudiant.email,
+  #         "API_ID": etudiant.id,
+  #       }}
+
+  #     response = request.prepare_body_request(body).get_response
+
+  #     if response["status"] == 'error'
+  #       flash[:alert] = response["message"]
+  #       break
+  #     end
+
+  #     etudiant.edusign_id = response["result"]["ID"]
+
+  #     etudiant.save
+  #   end
+
+  #   ajout_formations(etudiants)
+
+  # end
+
+  # def modification_etudiants
+
+  #   request = Edusign.new("https://ext.edusign.fr/v1/student", 'Patch')
+
+  #   etudiants_updated = request.get_all_element_updated_today(Etudiant).where("created_at != updated_at")
+
+  #   etudiants_updated.each do |etudiant|
+  #     body =
+  #       {"student":{
+  #         "ID": etudiant.edusign_id,
+  #         "FIRSTNAME": etudiant.prénom,
+  #         "LASTNAME": etudiant.nom,
+  #         "EMAIL": etudiant.email,
+  #         "GROUPS": Formation.find(etudiant.formation_id).edusign_id
+  #       }}
+
+  #     response = request.prepare_body_request(body).get_response
+
+  #     if response["status"] == 'error'
+  #       flash[:alert] = response["message"]
+  #       break
+  #     end
+  #   end
+  # end
+
+  # def ajout_formations(etudiants)
+
+  #   request = Edusign.new("https://ext.edusign.fr/v1/group", 'Post')
+
+  #   formations = Formation.where(id: etudiants.pluck(:formation_id).uniq).where(edusign_id: nil)
+
+  #   formations.each do |formation|
+
+  #     body =
+  #       {"group":{
+  #         "NAME": formation.nom,
+  #         "STUDENTS": formation.etudiants.pluck(:edusign_id).compact
+  #       }}
+
+  #     response = request.prepare_body_request(body).get_response
+
+  #     if response["status"] == 'error'
+  #       flash[:alert] += response["message"]
+  #       break
+  #     end
+
+  #     formation.edusign_id = response["result"]["ID"]
+
+  #     formation.save
+  #   end
+  # end
+
+  # def modification_formations
+  #   request = Edusign.new("https://ext.edusign.fr/v1/group/", 'Patch')
+
+  #   formations_updated = request.get_all_element_updated_today(Formation)
+
+  #   formations_updated.each do |formation|
+  #     body =
+  #       {"group":{
+  #         "ID": formation.edusign_id,
+  #         "NAME": formation.nom,
+  #         "STUDENTS": formation.etudiants.pluck(:edusign_id).compact
+  #       }}
+
+  #     response = request.prepare_body_request(body).get_response
+
+  #     if response["status"] == 'error'
+  #       flash[:alert] = response["message"]
+  #       break
+  #     end
+  #   end
+  # end
+
+  # def ajout_intervenants
+
+  #   request = Edusign.new("https://ext.edusign.fr/v1/professor", 'Post')
+
+  #   intervenants_added = request.get_all_element_created_today(Intervenant)
+
+  #   intervenants_added.each do |intervenant|
+  #     body =
+  #       {"professor":{
+  #         "FIRSTNAME": intervenant.prenom,
+  #         "LASTNAME": intervenant.nom,
+  #         "EMAIL": intervenant.email,
+  #         "API_ID": intervenant.id,
+  #         "dontSendCredentials": true
+  #       }}
+
+  #     response = request.prepare_body_request(body).get_response
+
+  #     if response["status"] == 'error'
+  #       flash[:alert] = response["message"]
+  #       break
+  #     end
+
+  #     intervenant.edusign_id = response["result"]["ID"]
+
+  #     intervenant.save
+  #   end
+  # end
+
+  # def modification_intervenants
+
+  #   request = Edusign.new("https://ext.edusign.fr/v1/professor", 'Patch')
+
+  #   intervenants_updated = request.get_all_element_updated_today(Intervenant)
+
+  #   intervenants_updated.each do |intervenant|
+  #     body =
+  #       {"professor":{
+  #         "ID": intervenant.edusign_id,
+  #         "FIRSTNAME": intervenant.prenom,
+  #         "LASTNAME": intervenant.nom,
+  #         "EMAIL": intervenant.email
+  #       }}
+
+  #     response = request.prepare_body_request(body).get_response
+
+  #     if response["status"] == 'error'
+  #       flash[:alert] = response["message"]
+  #       break
+  #     end
+  #   end
+  # end
+
+  # def ajout_cours
+
+  #   request = Edusign.new("https://ext.edusign.fr/v1/course", 'Post')
+
+  #   cours_added = request.get_all_element_created_today(Cour)
+
+  #   cours_added.each do |cours|
+  #     body =
+  #       {"course":{
+  #         "NAME": cours.nom.presence || 'sans nom',
+  #         "START": cours.debut - 1.hour,
+  #         "END": cours.fin - 1.hour,
+  #         "PROFESSOR": Intervenant.find(cours.intervenant_id).edusign_id,
+  #         "API_ID": cours.id,
+  #         "NEED_STUDENTS_SIGNATURE": true,
+  #         "SCHOOL_GROUP": [cours.formation.edusign_id]
+  #       }}
+
+  #     response = request.prepare_body_request(body).get_response
+
+  #     if response["status"] == 'error'
+  #       flash[:alert] = response["message"]
+  #       break
+  #     end
+
+  #     cours.edusign_id = response["result"]["ID"]
+
+  #     cours.save
+  #   end
+  # end
+
+  # def modification_cours
+  #   request = Edusign.new("https://ext.edusign.fr/v1/course", 'Patch')
+
+  #   cours_updated = request.get_all_element_updated_today(Cour)
+
+  #   cours_updated.each do |cours|
+  #     body =
+  #       {"course":{
+  #         "ID": cours.edusign_id,
+  #         "NAME": cours.nom,
+  #         "START": cours.debut - 1.hour,
+  #         "END": cours.fin - 1.hour,
+  #         "PROFESSOR": Intervenant.find(cours.intervenant_id).edusign_id,
+  #         "NEED_STUDENTS_SIGNATURE": true,
+  #         "editSurveys": false,
+  #         "SCHOOL_GROUP": [cours.formation.edusign_id]
+  #       }}
+
+  #     response = request.prepare_body_request(body).get_response
+
+  #     if response["status"] == 'error'
+  #       flash[:alert] = response["message"]
+  #       break
+  #     end
+  #   end
+  # end
 
     def is_user_authorized
       authorize :tool

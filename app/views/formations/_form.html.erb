@@ -105,6 +105,13 @@
         </div>
       </div>
 
+      <div class="flex flex-wrap">
+        <div>
+          <%= f.check_box :send_to_edusign %>
+          <%= f.label :send_to_edusign, "Synchroniser la formation sur Edusign" %>
+        </div>
+      </div>
+
       <div class="form-control">
         <%= f.label :memo, "Mémo" %>
         <%= f.text_area :memo, class: 'textarea textarea-bordered textarea-sm w-full' %>

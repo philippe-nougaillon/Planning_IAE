@@ -18,6 +18,7 @@ class Cour < ApplicationRecord
   accepts_nested_attributes_for :options,
                                 reject_if: lambda{|attributes| attributes['catégorie'].blank? || attributes['description'].blank?},
                                 allow_destroy:true
+  has_many :attendances
 
   has_one_attached :document
 
@@ -42,6 +43,8 @@ class Cour < ApplicationRecord
   after_create   :send_new_examen_email, if: Proc.new { |cours| cours.examen? }
   around_update  :check_send_examen_email
   after_destroy :send_delete_examen_email, if: Proc.new { |cours| cours.examen? }
+  
+  after_update :synchronisation_edusign, if: Proc.new { |cours| cours.audits.last.audited_changes["salle_id"]}
 
   # Mettre à jour les SCENIC VIEWS
   after_commit {
@@ -373,6 +376,11 @@ class Cour < ApplicationRecord
     (self.commentaires && self.commentaires.include?("BYPASS=#{self.id}"))
   end
 
+  def désynchronisé?
+    # Regarde si un cours réalisé d'une formation étant sur Edusign n'a aucune présence de créé.
+    Formation.cobayes_émargement.include?(self.formation_id) && self.réalisé? && self.attendances.empty?
+  end
+
   def changements_examen
     saved_changes.except("updated_at", "created_at")
   end
@@ -603,4 +611,10 @@ class Cour < ApplicationRecord
     mailer_response = CourMailer.with(cour: self).examen_supprimé.deliver_now
     MailLog.create!(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen supprimé")
   end
+
+  def synchronisation_edusign
+    # Modifier la salle sur Edusign si changement
+    EdusignJob.perform_later("salle changée", self.audits.last.user_id, {cour_id: self.id})
+  end
+
 end

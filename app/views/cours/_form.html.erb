@@ -92,6 +92,14 @@
         </div>
       </div>
 
+      <div class="flex flex-wrap">
+        <div class="sm:w-1/5"></div>
+        <div class="sm:w-1/2">
+          <%= f.check_box :no_send_to_edusign %>
+          <%= f.label :no_send_to_edusign, "Ne pas synchroniser le cours sur Edusign" %>
+        </div>
+      </div>
+
       <% if policy(current_user).peut_réserver? %>
         <% unless @cour.new_record? %>
           <div class="flex flex-wrap">

@@ -75,7 +75,7 @@ Rails.application.configure do
   config.action_controller.raise_on_missing_callback_actions = true
 
   config.action_mailer.default_url_options = { :host => 'localhost' }
-  config.action_mailer.delivery_method = :letter_opener
+  config.action_mailer.delivery_method = ENV.fetch("DELIVERY_METHOD", 'letter_opener').to_sym
   config.action_mailer.perform_deliveries = true
 
   # config.action_mailer.delivery_method = :mailgun

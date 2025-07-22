@@ -105,5 +105,9 @@ class Formation < ApplicationRecord
 		[258, 599, 671, 672, 683, 687, 695]
 	end
 
+	def self.sent_to_edusign_ids
+		self.where(send_to_edusign: true).ids
+	end
+
 end
 

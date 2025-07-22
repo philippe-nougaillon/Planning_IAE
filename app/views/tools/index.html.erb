@@ -1,158 +1,169 @@
-<div class="border-b mt-6 mb-2 pb-4">
+<div class="border-b mt-6 mb-8 pb-4">
   <h1 class="text-3xl"><%= fa_icon 'wrench' %> Outils</h1>
 </div>
-<br>
 
-<div class="flex flex-wrap">
+<div class="flex flex-wrap mb-4">
 	<div class="sm:w-1/3 px-4">
 		<ul class="list-disc">
-			<li>
+			<li class="mb-6">
 				<%= fa_icon 'calendar-day' %>
 				<%= link_to "Réservation de créneaux horaires", tools_creation_cours_path, class: 'text-primary hover:underline' %>
 			</li>
-			<br>
 
-			<li>
+			<li class="mb-6">
 				<%= fa_icon 'tv' %>
 				<%= link_to "Planning au format 'téléviseur'", planning_cours_path, class: 'text-primary hover:underline' %>
 			</li>
-			<br>
 
-			<li>
+			<li class="mb-6">
 				<%= fa_icon 'tachometer-alt' %>
 				<%= link_to "Taux d'occupation jours", tools_taux_occupation_jours_path, class: 'text-primary hover:underline' %>
 			</li>
-			<br>
 
-			<li>
+			<li class="mb-12">
 				<%= fa_icon 'tachometer-alt' %>
 				<%= link_to "Taux d'occupation salles", tools_taux_occupation_salles_path, class: 'text-primary hover:underline' %>
 			</li>
-			<br>
-			<br>
+
 			<% if current_user.rh? || current_user.admin? %>
-				<li>
+				<li class="mb-6">
 					<%= fa_icon 'list-alt' %>
 					<%= link_to "États de services", tools_etats_services_path, class: 'text-primary hover:underline' %>
 				</li>
-				<br>
-				<li>
+
+				<li class="mb-6">
 					<%= fa_icon 'list-alt' %>
 					<%= link_to "État liquidatif collectif", tools_export_etat_liquidatif_collectif_path, class: 'text-primary hover:underline' %>
 				</li>
-				<br>
-				<li>
+
+				<li class="mb-12">
 					<%= fa_icon 'user-md' %>
 					<%= link_to "Activités", vacation_activites_path, class: 'text-primary hover:underline' %>
 				</li>
-				<br>
-				<br>
+
 				<li>
 					<%= fa_icon 'list-alt' %>
 					<%= link_to "Liste des surveillances d'examens", tools_liste_surveillants_examens_path, class: 'text-primary hover:underline' %>
 				</li>
-				<li>
+
+				<li class="mb-6">
 					<%= fa_icon 'list-alt' %>
 					<%= link_to "Liste des surveillances d'examens v2", tools_liste_surveillants_examens_v2_path, class: 'text-primary hover:underline' %>
 				</li>
-				<br>
-				<li>
+
+				<li class="mb-12">
 					<%= fa_icon 'user-secret' %>
 					<%= link_to "Agents", agents_path, class: 'text-primary hover:underline' %>
 				</li>
-				<br>
-				<br>
 			<% end %>
 
 			<% if current_user.role_number >= 5 %>
-				<li>
+				<li class="mb-6">
 					<%= fa_icon 'calendar-check' %>
 					<%= link_to 'Invitations', invits_path, class: 'text-primary hover:underline' %>
 				</li>
-				<br>
 			<% end %>
 
-			<li>
+			<li class="mb-12">
 				<%= fa_icon 'envelope' %>
 				<%= link_to 'MailLogs', mail_logs_path, class: 'text-primary hover:underline' %>
 			</li>
-			<br><br>
+
 			<li>
 				<%= fa_icon 'mug-hot' %>
 				<%= link_to 'Commandes', tools_commandes_path, class: 'text-primary hover:underline' %>
 			</li>
-			<li>
+
+			<li class="mb-6">
 				<%= fa_icon 'coffee' %>
 				<%= link_to 'Commandes v2', tools_commandes_v2_path, class: 'text-primary hover:underline' %>
 			</li>
-			<br>
+
 		</ul>
 	</div>
 	
 	<div class="sm:w-1/3 px-4">
-		<ul class="list-disc">
-			<li>
+		<ul class="list-disc list-inside">
+			<li class="mb-6">
 				<%= fa_icon 'download' %>
 				<%= link_to "Import de cours", tools_import_path, class: 'text-primary hover:underline' %>
 			</li>
-			<br>
 
-			<li>
+			<li class="mb-6">
 				<%= fa_icon 'download' %>
 				<%= link_to "Import d'intervenants", tools_import_intervenants_path, class: 'text-primary hover:underline' %>
 			</li>
-			<br>
 
-			<li>
+			<li class="mb-6">
 				<%= fa_icon 'download' %>
 				<%= link_to "Import d'étudiants", tools_import_etudiants_path, class: 'text-primary hover:underline' %>
 			</li>
-			<br>
 
-			<li>
+			<li class="mb-6">
 				<%= fa_icon 'inbox' %>
 				<%= link_to "Import log", import_logs_path, class: 'text-primary hover:underline' %>
 			</li>
-			<br>
 
-			<li>
+			<li class="mb-6">
 				<%= fa_icon 'upload' %>
 				<%= link_to "Export de cours", tools_export_path, class: 'text-primary hover:underline' %>
 			</li>
-			<br>
 
-			<li>
+			<li class="mb-6">
 				<%= fa_icon 'upload' %>
 				<%= link_to "Export des intervenants", tools_export_intervenants_path, class: 'text-primary hover:underline' %>
 			</li>
-			<br>
 
-			<li>
+			<li class="mb-6">
 				<%= fa_icon 'upload' %>
 				<%= link_to "Export d'étudiants", tools_export_etudiants_path, class: 'text-primary hover:underline' %>
 			</li>
-			<br>
 
-			<li>
+			<li class="mb-6">
 				<%= fa_icon 'upload' %>
 				<%= link_to "Export des formations", tools_export_formations_path, class: 'text-primary hover:underline' %>
 			</li>
-			<br>
 
-			<li>
+			<li class="mb-12">
 				<%= fa_icon 'upload' %>
 				<%= link_to "Export des vacations", tools_export_vacations_path, class: 'text-primary hover:underline' %>
 			</li>
-			<br><br>
 
-			<li>
+			<li class="mb-6">
 				<%= fa_icon 'key' %>
 				<%= link_to "Créer accès intervenant", tools_acces_intervenants_path, class: 'text-primary hover:underline' %>
 			</li>
-			<br>
-			<li>
-				<%= fa_icon 'file-signature' %>
-				<%= link_to 'Émargements', presences_path, class: 'text-primary hover:underline' %>
+
+			<!--
+			<li class="mb-6">
+				<%# fa_icon 'file-signature' %>
+				<%# link_to 'Présences', attendances_path, class: 'text-primary hover:underline' %>
+			</li>
+			-->
+			<div class="divider"></div>
+		</ul>
+
+		<div class="flex items-center gap-2 mt-4">
+			<%= image_tag 'edusign.png', size: 32 %>
+			<span class="font-black">edusign</span>
+		</div>
+		<ul class="list-disc list-inside mt-2">
+			<% if current_user.admin? %>
+				<li>
+					<%= link_to "Création manuelle", tools_edusign_path, class: 'text-primary hover:underline' %>
+				</li>
+				<li>
+					<%= link_to "Synchronisation automatique", tools_synchronisation_edusign_path, class: 'text-primary hover:underline' %>
+				</li>
+				<li>
+					<%= link_to "Initialisation synchronisation", tools_initialisation_edusign_path, class: 'text-primary hover:underline' %>
+				</li>
+				<li>
+					<%= link_to "Logs des synchronisations", edusign_logs_path, class: 'text-primary hover:underline' %>
+				</li>
+			<% end %>
+			<li class='mt-2'>
+				<%= link_to "Justificatifs d'absences", justificatifs_path, class: 'text-primary hover:underline' %>
 			</li>
 		</ul>
 	</div>
@@ -160,75 +171,64 @@
 	<% if current_user.admin? %>
 		<div class="sm:w-1/3 px-4">
 			<ul class="list-disc">
-				<li>
+				<li class="mb-6">
 					<%= fa_icon 'users' %>
 					<%= link_to "Utilisateurs", users_path, class: 'text-primary hover:underline' %>
 				</li>
-				<br>
 
-				<li>
+				<li class="mb-6">
 					<%= fa_icon 'download' %>
 					<%= link_to "Import des utilisateurs", tools_import_utilisateurs_path, class: 'text-primary hover:underline' %>
 				</li>
-				<br>
 
-				<li>
+				<li class="mb-6">
 					<%= fa_icon 'upload' %>
 					<%= link_to "Export des utilisateurs", tools_export_utilisateurs_path, class: 'text-primary hover:underline' %>
 				</li>
-				<br>
 
-				<li>
+				<li class="mb-6">
 					<%= fa_icon 'random' %>
 					<%= link_to "Intervertir deux intervenants", tools_swap_intervenant_path, class: 'text-primary hover:underline' %>
 				</li>
-				<br>
 
-				<li>
+				<li class="mb-6">
 					<%= fa_icon 'search' %>
 					<%= link_to "Audit des modifications", tools_audits_path, class: 'text-primary hover:underline' %>
 				</li>
-				<br>
 
-				<li>
+				<li class="mb-6">
 					<%= fa_icon 'chalkboard' %>
 					<%= link_to "Salles", salles_path, class: 'text-primary hover:underline' %>
 				</li>
-				<br>
 
-				<li>
+				<li class="mb-6">
 					<%= fa_icon 'calendar' %>
 					<%= link_to "Nouvelle saison", tools_nouvelle_saison_path, class: 'text-primary hover:underline' %>
 				</li>
-				<br>
 
-				<li>
+				<li class="mb-6">
 					<%= fa_icon 'bell' %>
 					<%= link_to "Rappel des cours/examens (file d'attente)", envoi_logs_path, class: 'text-primary hover:underline' %>
 				</li>
-				<br>
 
 				<% if policy(:tool).audit_cours? %>
-					<li>
+					<li class="mb-6">
 						<%= fa_icon 'search' %>
 						<%= link_to 'Cours à booker', tools_audit_cours_path, class: 'text-primary hover:underline' %>
 					</li>
-					<br>
 				<% end %>
 
-				<li>
+				<li class="mb-6">
 					<%= fa_icon 'umbrella-beach' %>
 					<%= link_to "Jours de fermeture", fermetures_path, class: 'text-primary hover:underline' %>
 				</li>
-				<br>
 
-				<li>
+				<li class="mb-6">
 					<%= fa_icon 'business-time' %>
 					<%= link_to "Horaires d'ouverture", ouvertures_path, class: 'text-primary hover:underline' %>
 				</li>
-				<br>
 
-				<li>
+				<li class="mb-6">
 					<%= fa_icon 'exclamation' %>
 					<%= link_to "Alertes", alerts_path, class: 'text-primary hover:underline' %>
 				</li>

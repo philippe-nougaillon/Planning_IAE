@@ -365,6 +365,8 @@ fr:
   guide:
     index:
       title: Aide-mémoire de l'application Planning
+    edusign:
+      title: Aide-mémoire de l'intégration Edusign
   tools:
     index:
       title: Outils
@@ -424,6 +426,16 @@ fr:
       title: Commandes
     commandes_v2:
       title: Commandes_v2
+    edusign:
+      title: Edusign
+    synchronisation_edusign:
+      title: Synchronisation Edusign
+    synchronisation_edusign_do:
+      title: Synchronisation Edusign
+    initialisation_edusign:
+      title: Initialisation Edusign
+    initialisation_edusign_do:
+      title: Initialisation Edusign
   agents:
     index:
       title: Agents
@@ -537,3 +549,18 @@ fr:
       title: "Nouvelle Activité"
     edit:
       title: "Modification Activité"
+  attendances:
+    index:
+      title: "Liste des présences"
+    show:
+      title: "Présence"
+  justificatifs:
+    index:
+      title: "Liste des justificatifs"
+    show:
+      title: "Justificatif"
+  edusign_logs:
+    index:
+      title: "Edusign logs"
+    show:
+      title: "Edusign log"

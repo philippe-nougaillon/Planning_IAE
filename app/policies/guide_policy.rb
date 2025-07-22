@@ -8,4 +8,8 @@ class GuidePolicy < ApplicationPolicy
   def index?
     user && user.role_number >= 2
   end
+
+  def edusign?
+    index?
+  end
 end
