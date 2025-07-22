@@ -123,7 +123,11 @@ class Intervenant < ApplicationRecord
 	# Si c'est un examen IAE / examen rattrapage / Tiers-temps
   def examen?
     [169, 1166, 522].include?(self.id)
-  end
+	end
+
+	def self.intervenants_examens
+		ENV["INTERVENANTS_EXAMENS"].to_s.split(',').map(&:to_i)
+	end
 
 	private
 	# only one candidate for an nice id; one random UDID

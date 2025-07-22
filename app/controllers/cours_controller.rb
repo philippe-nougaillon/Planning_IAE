@@ -447,7 +447,7 @@ class CoursController < ApplicationController
         if (params[:invits_en_cours].present? && params[:confirmation] == 'yes') || !params[:invits_en_cours].present?
           if !params[:delete].blank?
             @cours.each do |c|
-              if policy(c).destroy?
+              if policy(c).destroy? && c.attendances.empty?
                 c.invits.destroy_all
                 c.destroy
               else
@@ -805,7 +805,7 @@ class CoursController < ApplicationController
       params.require(:cour).permit(:debut, :fin, :formation_id, :intervenant_id,
                                     :salle_id, :code_ue, :nom, :etat, :duree,
                                     :intervenant_binome_id, :hors_service_statutaire,
-                                    :commentaires, :elearning, :document,
+                                    :commentaires, :elearning, :document, :no_send_to_edusign,
                                     options_attributes: [:id, :user_id, :catégorie, :description, :_destroy])
     end
 

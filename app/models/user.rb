@@ -86,6 +86,12 @@ class User < ApplicationRecord
     self.email == "vacaccueil@iae.pantheonsorbonne.fr"
   end
 
+  def self.for_edusign_logs_select
+    users = User.where(id: EdusignLog.pluck(:user_id)).map { |u| [u.prénom_et_nom, u.id] }
+    users << ["Serveur", 0]
+    users.sort
+  end
+
   private
 
     def timeout_in

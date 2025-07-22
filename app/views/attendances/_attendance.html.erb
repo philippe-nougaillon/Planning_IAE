@@ -1,0 +1,29 @@
+<tr class="hover border">
+  <td><%= time_ago_in_words attendance.updated_at %></td>
+  <td><%= l attendance.signée_le, format: :short if attendance.signée_le %></td>
+  <td><%= attendance.cour.formation.abrg %></td>
+  <td>
+    <p class="<%= attendance.cour.intervenant_id.present? ? 'badge badge-primary text-white uppercase italic' : '' %>"><%= attendance.cour.intervenant&.nom_prenom %></p>
+    <p class="<%= attendance.cour.intervenant_binome_id.present? ? 'badge badge-primary text-white uppercase italic' : '' %>"><%= attendance.cour.intervenant_binome&.nom_prenom %></p>
+  </td>
+  <td>
+    <%= l attendance.cour.debut, format: :short %>
+    <br>
+    <%= attendance.cour.nom_ou_ue %>
+  </td>
+  <td><%= attendance.cour.code_ue %></td>
+  <td>
+    <%= attendance.etudiant.nom_prénom %>
+    <% if attendance.a_un_retard %>
+      <br>
+      <small>Retard de <%= attendance.retard %> minutes</small>
+    <% end %>
+  </td>
+  <td>
+    <% if attendance.signature %>
+      <img src="<%= attendance.signature %>" style="width: 100px;">
+    <% end %>
+  </td>
+  <td><span class="badge <%= attendance.style%> text-white"><%= attendance.état_text %></span></td>
+  <td><%= link_to 'Voir', attendance, class: 'text-primary hover:underline' %></td>
+</tr>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_12_23_083609) do
+ActiveRecord::Schema[7.1].define(version: 2025_06_27_083042) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -69,6 +69,24 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_23_083609) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "attendances", force: :cascade do |t|
+    t.boolean "état"
+    t.datetime "signée_le"
+    t.string "justificatif_edusign_id"
+    t.integer "retard"
+    t.datetime "exclu_le"
+    t.bigint "etudiant_id", null: false
+    t.bigint "cour_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "signature_email_id"
+    t.string "signature"
+    t.integer "edusign_id"
+    t.index ["cour_id"], name: "index_attendances_on_cour_id"
+    t.index ["etudiant_id"], name: "index_attendances_on_etudiant_id"
+    t.index ["signature_email_id"], name: "index_attendances_on_signature_email_id"
+  end
+
   create_table "audits", id: :serial, force: :cascade do |t|
     t.integer "auditable_id"
     t.string "auditable_type"
@@ -108,6 +126,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_23_083609) do
     t.string "commentaires"
     t.boolean "elearning"
     t.integer "code_ue"
+    t.string "edusign_id"
+    t.boolean "no_send_to_edusign"
     t.index ["debut"], name: "index_cours_on_debut"
     t.index ["etat"], name: "index_cours_on_etat"
     t.index ["formation_id"], name: "index_cours_on_formation_id"
@@ -165,6 +185,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_23_083609) do
     t.index ["slug"], name: "index_dossiers_on_slug"
   end
 
+  create_table "edusign_logs", force: :cascade do |t|
+    t.integer "modele_type"
+    t.text "message"
+    t.integer "user_id"
+    t.integer "etat"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "envoi_logs", force: :cascade do |t|
     t.datetime "date_prochain", precision: nil
     t.string "workflow_state"
@@ -208,6 +237,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_23_083609) do
     t.string "ville_entreprise"
     t.string "workflow_state"
     t.integer "table", default: 0
+    t.string "edusign_id"
     t.index ["formation_id"], name: "index_etudiants_on_formation_id"
     t.index ["workflow_state"], name: "index_etudiants_on_workflow_state"
   end
@@ -253,6 +283,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_23_083609) do
     t.boolean "hss"
     t.string "courriel"
     t.string "nomtauxtd"
+    t.string "edusign_id"
+    t.boolean "send_to_edusign"
     t.index ["archive"], name: "index_formations_on_archive"
     t.index ["user_id"], name: "index_formations_on_user_id"
   end
@@ -307,6 +339,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_23_083609) do
     t.string "slug"
     t.integer "année_entrée"
     t.string "email2"
+    t.string "edusign_id"
     t.index ["slug"], name: "index_intervenants_on_slug", unique: true
   end
 
@@ -328,6 +361,22 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_23_083609) do
     t.index ["user_id"], name: "index_invits_on_user_id"
   end
 
+  create_table "justificatifs", force: :cascade do |t|
+    t.string "edusign_id"
+    t.string "commentaires"
+    t.bigint "etudiant_id", null: false
+    t.datetime "edusign_created_at"
+    t.datetime "accepte_le"
+    t.datetime "debut"
+    t.datetime "fin"
+    t.string "file_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "motif_id", null: false
+    t.index ["etudiant_id"], name: "index_justificatifs_on_etudiant_id"
+    t.index ["motif_id"], name: "index_justificatifs_on_motif_id"
+  end
+
   create_table "mail_logs", force: :cascade do |t|
     t.string "to"
     t.string "subject"
@@ -335,6 +384,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_23_083609) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id"
+  end
+
+  create_table "motifs", force: :cascade do |t|
+    t.integer "edusign_id"
+    t.string "nom"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "notes", force: :cascade do |t|
@@ -419,6 +475,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_23_083609) do
     t.index ["discarded_at"], name: "index_salles_on_discarded_at"
   end
 
+  create_table "signature_emails", force: :cascade do |t|
+    t.integer "nb_envoyee"
+    t.string "requete_edusign_id"
+    t.datetime "limite"
+    t.boolean "second_envoi"
+    t.datetime "envoi_email"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "attendance_id"
+    t.index ["attendance_id"], name: "index_signature_emails_on_attendance_id"
+  end
+
   create_table "unites", id: :serial, force: :cascade do |t|
     t.integer "formation_id"
     t.string "nom"
@@ -495,26 +563,32 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_23_083609) do
   end
 
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "attendances", "cours"
+  add_foreign_key "attendances", "etudiants"
+  add_foreign_key "attendances", "signature_emails"
   add_foreign_key "documents", "dossiers"
   add_foreign_key "dossier_etudiants", "etudiants"
   add_foreign_key "evaluations", "etudiants"
   add_foreign_key "invits", "cours"
   add_foreign_key "invits", "intervenants"
   add_foreign_key "invits", "users"
+  add_foreign_key "justificatifs", "etudiants"
+  add_foreign_key "justificatifs", "motifs"
   add_foreign_key "notes", "users"
   add_foreign_key "options", "cours"
   add_foreign_key "options", "users"
   add_foreign_key "presences", "cours"
   add_foreign_key "presences", "etudiants"
   add_foreign_key "presences", "intervenants"
+  add_foreign_key "signature_emails", "attendances", on_delete: :nullify
   add_foreign_key "vacation_activite_tarifs", "vacation_activites"
   add_foreign_key "vacations", "vacation_activites"
 
   create_view "cours_non_planifies", materialized: true, sql_definition: <<-SQL
-      SELECT cours.id
+      SELECT id
      FROM cours
-    WHERE ((cours.id IN ( SELECT audits.auditable_id
+    WHERE ((id IN ( SELECT audits.auditable_id
              FROM audits
-            WHERE (((audits.auditable_type)::text = 'Cour'::text) AND (audits.user_id <> 41)))) AND (cours.etat = 0) AND ((cours.debut >= now()) AND (cours.debut <= (now() + 'P30D'::interval))));
+            WHERE (((audits.auditable_type)::text = 'Cour'::text) AND (audits.user_id <> 41)))) AND (etat = 0) AND ((debut >= now()) AND (debut <= (now() + 'P30D'::interval))));
   SQL
 end

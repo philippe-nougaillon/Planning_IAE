@@ -121,7 +121,7 @@ class EtudiantsController < ApplicationController
   def action_do
     action_name = params[:action_name]
 
-    @etudiants = Etudiant.where(id: params[:etudiants_id].keys)
+    @etudiants = Etudiant.where(id: params[:etudiants_id]&.keys)
 
     case action_name
     when "Changer de formation"
@@ -130,8 +130,15 @@ class EtudiantsController < ApplicationController
         etudiant.save
       end
     when "Supprimer"
+      comptes_supprimés = 0
       @etudiants.each do |etudiant|
-        etudiant.destroy
+        if etudiant.justificatifs.empty? && etudiant.attendances.empty?
+          etudiant.destroy
+          comptes_supprimés += 1
+        end
+      end
+      if comptes_supprimés < @etudiants.count
+        flash[:alert] = "#{@etudiants.count - comptes_supprimés} suppressions de comptes ont échoués et #{comptes_supprimés} comptes supprimés avec succès."
       end
     when "Création de compte d'accès"
       comptes_créés = 0
@@ -152,7 +159,7 @@ class EtudiantsController < ApplicationController
     end
 
     unless flash[:alert]
-      flash[:notice] = "Action '#{action_name}' appliquée à #{params.permit![:etudiants_id].keys.size} étudiant.s."
+      flash[:notice] = "Action '#{action_name}' appliquée à #{params.permit![:etudiants_id]&.keys&.size || 0} étudiant.s."
     end
     redirect_to etudiants_path
   end
@@ -164,7 +171,7 @@ class EtudiantsController < ApplicationController
     end
 
     def sortable_columns
-      ['etudiants.nom', 'etudiants.prénom', 'etudiants.date_de_naissance', 'etudiants.workflow_state', 'etudiants.nom_entreprise', 'etudiants.updated_at']
+      ['etudiants.nom', 'etudiants.prénom', 'etudiants.date_de_naissance', 'etudiants.workflow_state', 'etudiants.nom_entreprise', 'etudiants.updated_at', 'etudiants.edusign_id']
     end
 
     def sort_column

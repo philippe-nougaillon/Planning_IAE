@@ -25,6 +25,11 @@
     <td>
         <%= time_ago_in_words etudiant.updated_at %>
     </td>
+    <td class="text-center">
+        <% if etudiant.edusign_id? %>
+            <%= fa_icon 'check' %>
+        <% end %>
+    </td>
     <td>
         <% if policy(Etudiant).edit? %>
             <%= link_to edit_etudiant_path(etudiant), class:"btn btn-ghost btn-xs" do %>
@@ -32,8 +37,12 @@
             <% end %>
         <% end %>
         <% if policy(Etudiant).destroy? %>
-            <%= link_to(etudiant, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: 'btn btn-ghost btn-xs') do %>
-                <%= fa_icon 'trash' %>
+            <% if etudiant.attendances.any? %>
+                <%= fa_icon 'trash', title:"L'étudiant.e ne peut pas être supprimé.e car il/elle a des signatures", class:"btn btn-ghost btn-xs text-secondary pt-1 cursor-not-allowed"%>
+            <% else %>
+                <%= link_to(etudiant, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: 'btn btn-ghost btn-xs') do %>
+                    <%= fa_icon 'trash' %>
+                <% end %>
             <% end %>
         <% end %>
     </td>

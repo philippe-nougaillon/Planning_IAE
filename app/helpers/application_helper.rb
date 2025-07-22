@@ -32,7 +32,7 @@ module ApplicationHelper
         # - "const now = parseInt((Date.now() + 7200000) / 1000)" dans refreshProgressBar()
         # - "-2.hour" dans _commande.html.erb
         # - "-2.hour" dans _commandev2.html.erb
-        # - "-2.hour" dans ajout/modification des cours dans edusign
+        # - "2.hour" dans @time_zone_difference dans l'initialisation du service d'Edusign
         #
 
         # Heure d'hiver
