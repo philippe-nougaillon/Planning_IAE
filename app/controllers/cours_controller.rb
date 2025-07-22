@@ -264,11 +264,16 @@ class CoursController < ApplicationController
     else
       # Affiche un papier peint si pas de cours à afficher
       require 'net/http'
-      url = "http://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=fr-FR"
-      uri = URI(url)
-      response = Net::HTTP.get(uri)
-      json = JSON.parse(response)
-      @image = json["images"][0]["url"]
+      begin
+        url = "https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=fr-FR"
+        uri = URI(url)
+        response = Net::HTTP.get(uri)
+        json = JSON.parse(response)
+        @image = json["images"][0]["url"]
+      rescue => e
+        Rails.logger.error("Erreur chargement image Bing : #{e.message}")
+        @image = nil
+      end
     end
   end
 
