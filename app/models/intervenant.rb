@@ -32,7 +32,7 @@ class Intervenant < ApplicationRecord
 	normalizes :nom, with: -> nom { nom.strip }
 	normalizes :prenom, with: -> prenom { prenom.strip }
 	
-	enum status: [:CEV, :Permanent, :PR, :MCF, :MCF_HDR, :PAST, :PRAG, :Admin, :CEV_HSS, :CEV_ENS_C_CONTRACTUEL, :CEV_TIT_CONT_FP, :CEV_SAL_PRIV_IND]
+	enum :status, [:CEV, :Permanent, :PR, :MCF, :MCF_HDR, :PAST, :PRAG, :Admin, :CEV_HSS, :CEV_ENS_C_CONTRACTUEL, :CEV_TIT_CONT_FP, :CEV_SAL_PRIV_IND]
 
 	default_scope { order(:nom, :prenom) } 
 

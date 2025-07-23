@@ -3,7 +3,7 @@
 class ImportLogLine < ApplicationRecord
   belongs_to :import_log
 
-  enum etat: [:succès, :echec]
+  enum :etat, [:succès, :echec]
 
   def icon_etat
     if self.etat == 'succès'
