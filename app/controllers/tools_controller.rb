@@ -745,7 +745,7 @@ class ToolsController < ApplicationController
   def export_formations_do
     formations = Formation.all
 
-    formations = formations.where(archive: false) unless params[:archive]
+    formations = Formation.unscoped.ordered if params[:archive]
 
     book = FormationsToXls.new(formations).call
     file_contents = StringIO.new

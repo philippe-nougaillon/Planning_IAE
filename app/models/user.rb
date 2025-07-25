@@ -18,7 +18,7 @@ class User < ApplicationRecord
 
   validates :nom, :prénom, :role, presence: true    
 
-  enum role: {étudiant: 0, 
+  enum :role, {étudiant: 0, 
               intervenant: 1, 
               enseignant: 2, 
               accueil: 3, 

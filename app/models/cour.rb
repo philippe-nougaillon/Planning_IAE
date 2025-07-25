@@ -51,7 +51,7 @@ class Cour < ApplicationRecord
     CoursNonPlanifie.refresh
   }
 
-  enum etat: [:planifié, :à_réserver, :confirmé, :reporté, :annulé, :réalisé]
+  enum :etat, [:planifié, :à_réserver, :confirmé, :reporté, :annulé, :réalisé]
   
 
   self.per_page = 20

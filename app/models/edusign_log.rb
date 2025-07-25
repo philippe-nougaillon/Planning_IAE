@@ -1,12 +1,12 @@
 class EdusignLog < ApplicationRecord
   belongs_to :user, optional: true
 
-  enum etat: {success: 0, 
+  enum :etat, {success: 0, 
               warning: 1, 
               error: 2, 
               }
 
-  enum modele_type: {
+  enum :modele_type, {
     'initialisation': 0,
     'sync auto': 1,
     'sync manuelle': 2,
