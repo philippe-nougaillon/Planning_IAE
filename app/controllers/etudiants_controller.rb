@@ -13,7 +13,7 @@ class EtudiantsController < ApplicationController
     params[:paginate] ||= 'pages'
 
     @etudiants = Etudiant.all
-    @formations = Formation.unscoped.ordered
+    @formations = Formation.ordered
 
     unless params[:search].blank?
       @etudiants = @etudiants.where("LOWER(nom) like :search OR LOWER(prénom) like :search OR LOWER(email) like :search", {search: "%#{params[:search]}%".downcase})
@@ -42,12 +42,12 @@ class EtudiantsController < ApplicationController
   def new
     @etudiant = Etudiant.new
     @etudiant.workflow_state = "étudiant"
-    @formations = Formation.unscoped.ordered
+    @formations = Formation.ordered
   end
 
   # GET /etudiants/1/edit
   def edit
-    @formations = Formation.unscoped.ordered
+    @formations = Formation.ordered
   end
 
   # POST /etudiants
@@ -75,7 +75,7 @@ class EtudiantsController < ApplicationController
         format.json { render :show, status: :created, location: @etudiant }
       else
         format.html do
-          @formations = Formation.unscoped.ordered
+          @formations = Formation.ordered
           render :new, status: :unprocessable_entity
         end
         format.json { render json: @etudiant.errors, status: :unprocessable_entity }
@@ -92,7 +92,7 @@ class EtudiantsController < ApplicationController
         format.json { render :show, status: :ok, location: @etudiant }
       else
         format.html do
-          @formations = Formation.unscoped.ordered
+          @formations = Formation.ordered
           render :edit, status: :unprocessable_entity
         end
         format.json { render json: @etudiant.errors, status: :unprocessable_entity }

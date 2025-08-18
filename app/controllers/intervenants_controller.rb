@@ -50,7 +50,7 @@ class IntervenantsController < ApplicationController
       @invits = @invits.where("invits.workflow_state = ?", params[:workflow_state].to_s.downcase)
     end
 
-    @formations = Formation.where(id: @invits.joins(:formation).pluck("formations.id").uniq)
+    @formations = Formation.not_archived.ordered.where(id: @invits.joins(:formation).pluck("formations.id").uniq)
     @invits = @invits.joins(:cour).reorder('cours.debut').paginate(page: params[:page], per_page: 20)
   end
 

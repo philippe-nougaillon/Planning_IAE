@@ -150,7 +150,7 @@ class Cour < ApplicationRecord
   end
 
   def manque_de_places? 
-    (self.salle.places > 0 && Formation.unscoped.find(self.formation_id).nbr_etudiants > self.salle.places)
+    (self.salle.places > 0 && Formation.find(self.formation_id).nbr_etudiants > self.salle.places)
   end
 
   def nom_ou_ue
@@ -249,7 +249,7 @@ class Cour < ApplicationRecord
   end
 
   def taux_td
-    case Formation.unscoped.find(self.formation_id).nomtauxtd
+    case Formation.find(self.formation_id).nomtauxtd
     when 'TD'
       Cour.Tarif
     when 'CM'
@@ -262,7 +262,7 @@ class Cour < ApplicationRecord
   end
 
   def HETD
-    case Formation.unscoped.find(self.formation_id).nomtauxtd
+    case Formation.find(self.formation_id).nomtauxtd
     when 'TD'
       1
     when 'CM'
@@ -279,7 +279,7 @@ class Cour < ApplicationRecord
   end
 
   def imputable?
-    !(self.hors_service_statutaire || Formation.unscoped.find(self.formation_id).hss)
+    !(self.hors_service_statutaire || Formation.find(self.formation_id).hss)
   end
 
 

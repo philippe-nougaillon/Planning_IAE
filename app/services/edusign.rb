@@ -98,7 +98,7 @@ class Edusign < ApplicationService
     def get_all_element_created_today(model)
         interval = self.get_interval_of_time
 
-        formations_sent_to_edusign_ids = Formation.sent_to_edusign_ids
+        formations_sent_to_edusign_ids = Formation.not_archived.sent_to_edusign_ids
 
         if model == Formation
             model.where(
@@ -138,7 +138,7 @@ class Edusign < ApplicationService
     def get_all_element_updated_today(model, record_ids = nil)
         interval = self.get_interval_of_time
 
-        formations_sent_to_edusign_ids = Formation.sent_to_edusign_ids
+        formations_sent_to_edusign_ids = Formation.not_archived.sent_to_edusign_ids
 
         if model == Formation
             model.where(
@@ -164,7 +164,7 @@ class Edusign < ApplicationService
     end
 
     def get_all_elements_for_initialisation(model)
-        formations_sent_to_edusign_ids = Formation.sent_to_edusign_ids
+        formations_sent_to_edusign_ids = Formation.not_archived.sent_to_edusign_ids
         if model == Formation
             model.where(
               edusign_id: nil,
@@ -190,7 +190,7 @@ class Edusign < ApplicationService
 
             # Ce code est temporaire le temps que l'on sache à quel moment il faudra créer l'intervenant sur Edusign.
             intervenant_ids = Cour.where(
-              formation_id: Formation.sent_to_edusign_ids
+              formation_id: formations_sent_to_edusign_ids
             ).where("debut >= ?", DateTime.now).pluck(:intervenant_id, :intervenant_binome_id).flatten.compact.uniq
 
             model.where(id: intervenant_ids, edusign_id: nil)
@@ -407,7 +407,7 @@ class Edusign < ApplicationService
     def export_formation(formation_id)
         self.prepare_request_with_message("https://ext.edusign.fr/v1/student", 'Post')
 
-        if formation = Formation.find(formation_id)
+        if formation = Formation.not_archived.find(formation_id)
             @nb_recovered_elements += 1
 
             if formation.edusign_id == nil && formation.etudiants.count > 0
@@ -779,7 +779,7 @@ class Edusign < ApplicationService
         # qui a un intervenant devenu un examen,
 
         request_base = Cour.where.not(edusign_id: nil)
-        condition_1 = request_base.where.not(formation_id: Formation.sent_to_edusign_ids)
+        condition_1 = request_base.where.not(formation_id: Formation.not_archived.sent_to_edusign_ids)
         condition_2 = request_base.where(no_send_to_edusign: true)
         condition_3 = request_base.joins(:intervenant).where(intervenant: { id: Intervenant.intervenants_examens })
 

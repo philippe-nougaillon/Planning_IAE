@@ -14,9 +14,9 @@ class FormationsController < ApplicationController
     params[:direction_formations] ||= session[:direction_formations]
     
     unless params[:archive].blank?
-      @formations = Formation.unscoped.where(archive: true)
+      @formations = Formation.where(archive: true)
     else
-      @formations = Formation.all
+      @formations = Formation.not_archived
     end
 
     unless params[:nom].blank?
@@ -120,7 +120,7 @@ class FormationsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_formation
-      @formation = Formation.unscoped.find(params[:id])
+      @formation = Formation.find(params[:id])
     end
 
     def sortable_columns

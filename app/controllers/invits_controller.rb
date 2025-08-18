@@ -43,7 +43,7 @@ class InvitsController < ApplicationController
       @invits = @invits.where(cour_id: params[:cours_id].to_i)
     end
 
-    @formations = Formation.where(id: @invits.joins(:formation).pluck("formations.id").uniq)
+    @formations = Formation.not_archived.where(id: @invits.joins(:formation).pluck("formations.id").uniq).ordered
     @intervenants = Intervenant.where(id: @invits.pluck(:intervenant_id).uniq)
     @invits = @invits.paginate(page: params[:page], per_page: 20)
   end

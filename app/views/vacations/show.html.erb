@@ -53,7 +53,7 @@
         <strong>Formation</strong>
         <br>
         <span class="pl-2" style="border-left: .3rem solid <%= @vacation.formation.try(:positive_color) %>">
-          <%= link_to(Formation.unscoped.find(@vacation.formation_id).nom, Formation.unscoped.find(@vacation.formation_id), class: 'text-primary hover:underline') %>
+          <%= link_to(Formation.find(@vacation.formation_id).nom, Formation.find(@vacation.formation_id), class: 'text-primary hover:underline') %>
         </span>
       </p>
 

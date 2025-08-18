@@ -29,8 +29,7 @@ class Formation < ApplicationRecord
 
 	normalizes :nom, with: -> nom { nom.strip }
 	
-	default_scope { where("archive is null OR archive is false") }
-	default_scope { order(:nom, :promo) } 
+	scope :not_archived, -> { where("archive is null OR archive is false") }
 	scope :ordered, -> {order(:nom, :promo)}
 	
 	def nom_promo
@@ -83,8 +82,8 @@ class Formation < ApplicationRecord
 
 	def self.for_select
 		{
-		  'Formations catalogue' => where(hors_catalogue:false).map { |i| i.nom },
-		  'Formations hors catalogue' => where(hors_catalogue:true).map { |i| i.nom }
+		  'Formations catalogue' => where(hors_catalogue:false).not_archived.ordered.map { |i| i.nom },
+		  'Formations hors catalogue' => where(hors_catalogue:true).not_archived.ordered.map { |i| i.nom }
 		}
 	end
 

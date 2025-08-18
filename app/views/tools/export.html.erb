@@ -27,7 +27,7 @@
     <div>
       <%= label_tag :formation %>    
       <%= select_tag :formation_id, 
-            options_from_collection_for_select(Formation.all, :id, :nom_promo), include_blank:true, class:"slim-select" %>
+            options_from_collection_for_select(Formation.not_archived.ordered, :id, :nom_promo), include_blank:true, class:"slim-select" %>
     </div>
 
     <div>
