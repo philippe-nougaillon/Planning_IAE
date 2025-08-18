@@ -378,7 +378,7 @@ class Cour < ApplicationRecord
 
   def désynchronisé?
     # Regarde si un cours réalisé d'une formation étant sur Edusign n'a aucune présence de créé.
-    Formation.cobayes_émargement.include?(self.formation_id) && self.réalisé? && self.attendances.empty?
+    Formation.where(send_to_edusign: true).pluck(:id).include?(self.formation_id) && self.réalisé? && self.attendances.empty?
   end
 
   def changements_examen
