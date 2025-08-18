@@ -52,7 +52,6 @@ class Cour < ApplicationRecord
   }
 
   enum :etat, [:planifié, :à_réserver, :confirmé, :reporté, :annulé, :réalisé]
-  
 
   self.per_page = 20
 
