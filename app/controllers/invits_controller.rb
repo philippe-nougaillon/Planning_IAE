@@ -150,17 +150,37 @@ class InvitsController < ApplicationController
   end
 
   def valider
-    @invit.valider!
-    if user_signed_in?
-      redirect_to invits_path, notice: "Invitation mise à jour avec succès"
+    if @invit.valid?
+      if @invit.can_valider?
+        @invit.valider!
+        flash[:notice] = "Invitation mise à jour avec succès."
+      elsif @invit.disponible?
+        flash[:alert] = "L'invitation est déjà validée"
+      else
+        flash[:alert] = "L'invitation ne peux plus être validée"
+      end
     else
-      redirect_to invitations_intervenant_path(@invit.intervenant), notice: "Invitation mise à jour avec succès."
+      flash[:alert] = "L'invitation est invalide. Elle ne peut donc pas être modifiée"
     end
+
+    redirect_to request.referrer || root_path
   end
 
   def rejeter
-    @invit.rejeter!
-    redirect_to invitations_intervenant_path(@invit.intervenant), notice: "Invitation mise à jour avec succès."
+    if @invit.valid?
+      if @invit.can_rejeter?
+        @invit.rejeter!
+        flash[:notice] = "Invitation mise à jour avec succès."
+      elsif @invit.pas_disponible?
+        flash[:alert] = "L'invitation est déjà rejetée"
+      else
+        flash[:alert] = "L'invitation ne peux plus être rejetée"
+      end
+    else
+      flash[:alert] = "L'invitation est invalide. Elle ne peut donc pas être modifiée"
+    end
+
+    redirect_to request.referrer || root_path
   end
 
   def confirmer
