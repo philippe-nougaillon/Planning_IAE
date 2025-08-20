@@ -20,8 +20,18 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
 development:
-  <<: *default
-  database: planning4_pg_development
+  primary: &primary_development
+    <<: *default
+    database: planning4_pg_development
+  queue:
+    <<: *primary_development
+    database: app_development_queue
+    migrations_paths: db/queue_migrate
+  # S'il y a besoin d'ActionCable, décommenter ceci (pour solid_queue)
+  # cable:
+  #   <<: *primary_development
+  #   database: app_development_queue
+  #   migrations_paths: db/cable_migrate
 
 
   # The specified database role being used to connect to PostgreSQL.
@@ -79,7 +89,12 @@ test:
 # for a full overview on how database connection configuration can be specified.
 #
 production:
-  <<: *default
-  database: myapp_production
-  username: myapp
-  password: <%= ENV['MYAPP_DATABASE_PASSWORD'] %>
+  primary: &primary_production
+    <<: *default
+    database: myapp_production
+    username: myapp
+    password: <%= ENV['MYAPP_DATABASE_PASSWORD'] %>
+  queue:
+    <<: *primary_production
+    database: app_production_queue
+    migrations_paths: db/queue_migrate

@@ -150,3 +150,7 @@ gem "page_title_helper", "~> 9.0"
 gem "matrix", "~> 0.4.2"
 
 gem "rqrcode", "~> 2.2"
+
+gem "solid_queue", "~> 1.2"
+
+gem "mission_control-jobs", "~> 1.1"

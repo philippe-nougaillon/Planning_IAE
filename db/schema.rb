@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_06_27_083042) do
+ActiveRecord::Schema[7.2].define(version: 2025_06_27_083042) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -585,10 +585,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_06_27_083042) do
   add_foreign_key "vacations", "vacation_activites"
 
   create_view "cours_non_planifies", materialized: true, sql_definition: <<-SQL
-      SELECT id
+      SELECT cours.id
      FROM cours
-    WHERE ((id IN ( SELECT audits.auditable_id
+    WHERE ((cours.id IN ( SELECT audits.auditable_id
              FROM audits
-            WHERE (((audits.auditable_type)::text = 'Cour'::text) AND (audits.user_id <> 41)))) AND (etat = 0) AND ((debut >= now()) AND (debut <= (now() + 'P30D'::interval))));
+            WHERE (((audits.auditable_type)::text = 'Cour'::text) AND (audits.user_id <> 41)))) AND (cours.etat = 0) AND ((cours.debut >= now()) AND (cours.debut <= (now() + 'P30D'::interval))));
   SQL
 end
