@@ -53,8 +53,7 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
-    @audits = Audited.audit_class.where(user_id:@user.id).order("id DESC")
-    @audits = @audits.paginate(page:params[:page], per_page:20)
+    @audits = @user.audits.reorder(id: :desc).paginate(page:params[:page], per_page:20)
   end
 
   # GET /users/new
