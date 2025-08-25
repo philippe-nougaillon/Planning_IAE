@@ -106,13 +106,13 @@ class ExportPdf
                 cumul_hetd += c.duree.to_f * c.HETD
                 montant_service = c.montant_service.round(2)
                 cumul_tarif += montant_service
-                formation = Formation.unscoped.find(c.formation_id)
+                formation = Formation.find(c.formation_id)
                 eotp = formation.code_analytique_avec_indice(c.debut)
                 cumul_eotp.keys.include?(eotp) ? cumul_eotp[eotp] += montant_service : cumul_eotp[eotp] = montant_service
                 cumul_eotp_durée.keys.include?(eotp) ? cumul_eotp_durée[eotp] += c.duree : cumul_eotp_durée[eotp] = c.duree
             end
     
-            formation = Formation.unscoped.find(c.formation_id)
+            formation = Formation.find(c.formation_id)
 
             data += [ [
                 formation.code_analytique_avec_indice(c.debut),
@@ -151,7 +151,7 @@ class ExportPdf
             end
             cumul_vacations += vacation.montant || 0
 
-            formation = Formation.unscoped.find(vacation.formation_id) 
+            formation = Formation.find(vacation.formation_id) 
             
             data += [ [
                 formation.code_analytique_avec_indice(vacation.date),

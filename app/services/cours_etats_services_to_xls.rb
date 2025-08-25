@@ -48,7 +48,7 @@ class CoursEtatsServicesToXls < ApplicationService
             montant_service = c.montant_service.round(2)
           end
 
-          formation = Formation.unscoped.find(c.formation_id)
+          formation = Formation.find(c.formation_id)
 
           fields_to_export = [
             'C',
@@ -85,7 +85,7 @@ class CoursEtatsServicesToXls < ApplicationService
           end
         end
 
-        formation = Formation.unscoped.find(vacation.formation_id)
+        formation = Formation.find(vacation.formation_id)
         
         fields_to_export = [
               'V',
@@ -111,7 +111,7 @@ class CoursEtatsServicesToXls < ApplicationService
       @responsabilites.each do |resp|
         montant_responsabilite = (resp.heures * Cour.Tarif).round(2)
         cumul_hetd += resp.heures
-        formation = Formation.unscoped.find(resp.formation_id)
+        formation = Formation.find(resp.formation_id)
 
         fields_to_export = [
               'R',

@@ -99,9 +99,9 @@ class ToolsController < ApplicationController
 
         formation = nil
         if !params[:formation_id].blank?
-          formation = Formation.find(params[:formation_id])
+          formation = Formation.not_archived.find(params[:formation_id])
         elsif row[headers.index 'Formation']
-          formation = Formation.find_by(nom: row[headers.index 'Formation'].strip)
+          formation = Formation.not_archived.find_by(nom: row[headers.index 'Formation'].strip)
         end
 
         elearning = (row[headers.index 'Intervenant'] == 'E-LEARNING Hors_IAE') || 
@@ -743,9 +743,7 @@ class ToolsController < ApplicationController
   end
 
   def export_formations_do
-    formations = Formation.all
-
-    formations = Formation.unscoped.ordered if params[:archive]
+    formations = params[:archive] ? Formation.ordered : Formation.not_archived.ordered
 
     book = FormationsToXls.new(formations).call
     file_contents = StringIO.new
@@ -799,7 +797,7 @@ class ToolsController < ApplicationController
 
     @intervenants ||= []
 
-    unless params[:start_date].blank? || params[:end_date].blank?
+    if params[:start_date].present? && params[:end_date].present?
       @start_date = params[:start_date]
       @end_date = params[:end_date]
     else
@@ -807,7 +805,7 @@ class ToolsController < ApplicationController
       params[:end_date]   ||= Date.today.last_month.at_end_of_month
     end
 
-    unless params[:status].blank?
+    if params[:status].present?
       # Peupler la liste des intervenants ayant eu des cours en principal ou binome
       @cours = Cour
                 .where(etat: Cour.etats.values_at(:confirmé, :réalisé))
@@ -831,11 +829,17 @@ class ToolsController < ApplicationController
 
       @intervenants = Intervenant.where(id: ids.flatten).where(status: params[:status])
       @intervenants_for_select = @intervenants
+
+      if params[:intervenant_id].present?
+        intervenant = Intervenant.find_by(id: params[:intervenant_id])
+        if intervenant && intervenant.status == Intervenant.statuses.key(params[:status].to_i)
+          @intervenants = Intervenant.where(id: intervenant.id)
+        else
+          params[:intervenant_id] = nil  # on "vide" le param si ça ne colle pas
+        end
+      end
     end 
 
-    unless params[:intervenant_id].blank? 
-      @intervenants = Intervenant.where(id: params[:intervenant_id])
-    end
 
     @cumul_hetd = @cumul_vacations = @cumul_resps = 0
 
@@ -1048,8 +1052,8 @@ class ToolsController < ApplicationController
     @years ||= ['2021/2022','2022/2023','2023/2024','2024/2025', '2025/2026']
 
     unless params[:saison].blank?
-      @formations = Formation.where(hors_catalogue:false)
-                             .where("nom like ?", "%#{params[:saison]}%")
+      @formations = Formation.not_archived.where(hors_catalogue:false)
+                             .where("nom like ?", "%#{params[:saison]}%").ordered
       
       case params[:saison]
       when @years[0]
@@ -1084,7 +1088,7 @@ class ToolsController < ApplicationController
       _intervenant = Intervenant.find(445) # A CONFIRMER
       _date_debut = Date.parse(params[:date_debut])
       _date_fin = Date.parse(params[:date_fin])
-      _formation = Formation.find(params[:formation_id])
+      _formation = Formation.not_archived.find(params[:formation_id])
       _salle_id = params[:salle_id]
       _save = params[:save]
       _semaines = params[:semaine].try(:keys)
@@ -1323,7 +1327,7 @@ class ToolsController < ApplicationController
 
   def rappel_des_cours
     @intervenants = Intervenant.where(doublon: false)
-    @formations = Formation.all
+    @formations = Formation.not_archived.ordered
   end
 
   def rappel_des_cours_do
@@ -1355,7 +1359,7 @@ class ToolsController < ApplicationController
 
   def rappel_des_examens
     @examens = Intervenant.where(id: [169, 522, 1166])
-    @formations = Formation.all
+    @formations = Formation.not_archived.ordered
   end
 
   def rappel_des_examens_do
@@ -1468,7 +1472,7 @@ class ToolsController < ApplicationController
 
   def edusign
     @intervenants = Intervenant.all
-    @formations = Formation.all
+    @formations = Formation.not_archived.ordered
     @étudiants = Etudiant.ordered
   end
 
@@ -1556,7 +1560,7 @@ class ToolsController < ApplicationController
   #         "FIRSTNAME": etudiant.prénom,
   #         "LASTNAME": etudiant.nom,
   #         "EMAIL": etudiant.email,
-  #         "GROUPS": Formation.find(etudiant.formation_id).edusign_id
+  #         "GROUPS": Formation.not_archived.find(etudiant.formation_id).edusign_id
   #       }}
 
   #     response = request.prepare_body_request(body).get_response
@@ -1572,7 +1576,7 @@ class ToolsController < ApplicationController
 
   #   request = Edusign.new("https://ext.edusign.fr/v1/group", 'Post')
 
-  #   formations = Formation.where(id: etudiants.pluck(:formation_id).uniq).where(edusign_id: nil)
+  #   formations = Formation.not_archived.where(id: etudiants.pluck(:formation_id).uniq).where(edusign_id: nil)
 
   #   formations.each do |formation|
 

@@ -42,7 +42,7 @@
                     <% cumul_tarif += montant_service %>
                 <% end %>
 
-                <% formation = Formation.unscoped.find(c.formation_id) %>
+                <% formation = Formation.find(c.formation_id) %>
 
                 <tr class="hover border">
                     <td>C</td>
@@ -107,7 +107,7 @@
                     <% end %>
                 <% end %>
                 <% cumul_vacations += vacation.montant || 0 %>
-                <% formation = Formation.unscoped.find(vacation.formation_id) %> 
+                <% formation = Formation.find(vacation.formation_id) %> 
                 <tr class="hover border">
                     <td>V</td>
                     <td><%= l vacation.date %></td>
@@ -148,7 +148,7 @@
                 <% montant_responsabilite = (resp.heures * Cour.Tarif).round(2) %>
                 <% cumul_resps += montant_responsabilite %>
                 <% cumul_hetd += resp.heures %>
-                <% formation = Formation.unscoped.find(resp.formation_id) %>
+                <% formation = Formation.find(resp.formation_id) %>
 
                 <tr class="hover border">
                     <td>R</td>

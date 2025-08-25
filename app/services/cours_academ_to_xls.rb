@@ -20,7 +20,7 @@ class CoursAcademToXls < ApplicationService
 
     index = 1
     @cours.each do |c|
-      formation = Formation.unscoped.find(c.formation_id)
+      formation = Formation.find(c.formation_id)
       fields_to_export = [
         c.id, 
         I18n.l(c.debut.to_date),

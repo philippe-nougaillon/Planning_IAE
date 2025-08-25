@@ -109,7 +109,7 @@
           <strong>Votre réponse</strong>
           <br>
           <%= form_tag validation_invit_path(@invit), method: :post do %>
-            <%= text_area_tag :reponse, @invit.reponse, rows: 5, cols: 55, disabled: user_signed_in? %>
+            <%= text_area_tag :reponse, @invit.reponse, rows: 5, cols: 55, disabled: user_signed_in?, class: 'textarea textarea-bordered' %>
             <br>
             <%= submit_tag "Disponible", disabled: user_signed_in?, class: "btn btn-success btn-outline" %>
             <%= submit_tag "Pas disponible", disabled: user_signed_in?, class: "btn btn-error btn-outline" %>
@@ -137,31 +137,36 @@
   <%= link_to_if @invit.can_relancer?, 
       'Relancer', 
       relancer_invit_path(@invit), 
-      class: "btn btn-sm text-white " + Invit.workflow_spec.states[:relance1].meta[:style] 
+      class: "btn btn-sm text-white " + Invit.workflow_spec.states[:relance1].meta[:style],
+      'data-turbo': false
   %> 
   |
   <%= link_to_if @invit.can_valider?, 
       'Disponible', 
       valider_invit_path(@invit), 
-      class: "btn btn-sm text-white " + Invit.workflow_spec.states[:disponible].meta[:style] 
+      class: "btn btn-sm text-white " + Invit.workflow_spec.states[:disponible].meta[:style],
+      'data-turbo': false
   %> 
   |
   <%= link_to_if @invit.can_rejeter?, 
       'Pas disponible', 
       rejeter_invit_path(@invit), 
-      class: "btn btn-sm text-white " + Invit.workflow_spec.states[:pas_disponible].meta[:style] 
+      class: "btn btn-sm text-white " + Invit.workflow_spec.states[:pas_disponible].meta[:style],
+      'data-turbo': false
   %> 
   |
   <%= link_to_if @invit.can_confirmer?, 
       'Confirmer', 
       confirmer_invit_path(@invit), 
-      class: "btn btn-sm text-white " + Invit.workflow_spec.states[:confirmée].meta[:style] 
+      class: "btn btn-sm text-white " + Invit.workflow_spec.states[:confirmée].meta[:style],
+      'data-turbo': false
   %> 
   |
   <%= link_to_if @invit.can_archiver?, 
       'Archiver', 
       archiver_invit_path(@invit), 
-      class: "btn btn-sm text-white " + Invit.workflow_spec.states[:non_retenue].meta[:style] 
+      class: "btn btn-sm text-white " + Invit.workflow_spec.states[:non_retenue].meta[:style],
+      'data-turbo': false
   %>
   <br>
   <br>

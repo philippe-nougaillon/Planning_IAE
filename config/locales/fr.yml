@@ -351,6 +351,8 @@ fr:
       title: Nouvel intervenant
     edit:
       title: Modification d'un intervenant
+    invitations:
+      title: Invitations
   etudiants:
     index:
       title: Liste des étudiants

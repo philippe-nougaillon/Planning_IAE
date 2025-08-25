@@ -17,7 +17,7 @@
     <div class="form-control">
       <%= f.label :formation_id, 'Formation/EOTP' %>
       <%= f.collection_select :formation_id, 
-              Formation.where(hors_catalogue: false), 
+              Formation.not_archived.where(hors_catalogue: false).ordered, 
               :id,
               :nom_eotp,
               {include_blank: true},

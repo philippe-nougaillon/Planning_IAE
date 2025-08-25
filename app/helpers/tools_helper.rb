@@ -17,14 +17,14 @@ module ToolsHelper
                 ids = audit.audited_changes['formation_id']
                 case ids.class.name
                 when 'Integer'
-                    pretty_changes << "#{key} initialisée à '#{Formation.unscoped.find_by(id: ids).try(:nom)}'"
+                    pretty_changes << "#{key} initialisée à '#{Formation.find_by(id: ids).try(:nom)}'"
                 when 'Array'
                     if ids.first && ids.last 
-                        pretty_changes << "#{key} changée de '#{Formation.unscoped.find_by(id: ids.first).try(:nom)}' à '#{Formation.unscoped.find(ids.last).nom}'"
+                        pretty_changes << "#{key} changée de '#{Formation.find_by(id: ids.first).try(:nom)}' à '#{Formation.find_by(id: ids.last).try(:nom)}'"
                     elsif ids.first 
-                        pretty_changes << "#{key} changée de '#{Formation.unscoped.find_by(id: ids.first).try(:nom)}' à 'nil'"
+                        pretty_changes << "#{key} changée de '#{Formation.find_by(id: ids.first).try(:nom)}' à 'nil'"
                     else
-                        pretty_changes << "#{key} changée de 'nil' à '#{Formation.unscoped.find_by(id: ids.first).try(:nom)}'"
+                        pretty_changes << "#{key} changée de 'nil' à '#{Formation.find_by(id: ids.first).try(:nom)}'"
                     end
                 end 
             when 'Intervenant', 'Intervenant binome'
@@ -69,7 +69,7 @@ module ToolsHelper
                 elsif audit.audited_changes['etat'].class.name == 'Integer'
                     pretty_changes << "État initialisé à '#{ Cour.etats.keys[c.last].humanize }'"
                 else
-                    pretty_changes << "État initialisé à '#{ c.last.humanize }'"
+                    pretty_changes << "État initialisé à '#{ c.last.try(:humanize) }'"
                 end
             when 'Discarded at'
                 if audit.action == 'update'

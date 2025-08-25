@@ -58,7 +58,7 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
     end
 
     intervenants = Intervenant.where(status: @status, id: [cours.pluck(:intervenant_id).uniq, cours.pluck(:intervenant_binome_id).uniq, vacations.pluck(:intervenant_id).uniq, responsabilites.pluck(:intervenant_id).uniq].flatten.uniq)
-    formations_par_eotp = Formation.unscoped.includes(:cours).group_by(&:code_analytique)
+    formations_par_eotp = Formation.includes(:cours).group_by(&:code_analytique)
 
     intervenants.each do | intervenant |
       # Passe au suivant si intervenant est 'A CONFIRMER'
@@ -173,7 +173,7 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
 
         cumul_vacations += vacation.montant || 0
 
-        formation = Formation.unscoped.find(vacation.formation_id)
+        formation = Formation.find(vacation.formation_id)
         
         fields_to_export = [
           'V',

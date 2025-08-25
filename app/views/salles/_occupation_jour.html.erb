@@ -43,7 +43,7 @@
           <td class="text-right"><%= salle.places %></td>
           <td>
             <% cours.order(:debut).pluck(:formation_id).uniq.each do |id| %> 
-              <% formation = Formation.unscoped.find(id) %> 
+              <% formation = Formation.find(id) %> 
               <div>
                 <span style="background-color:<%= formation.color %>;padding-left: 7px;"></span> 
                 <span style="padding-left:5px;"></span> 

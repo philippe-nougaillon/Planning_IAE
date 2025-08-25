@@ -32,7 +32,7 @@
     <td>
         <% unless formation_cours.any? %>
             <%= link_to(formation, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: "btn btn-ghost btn-xs") do %>
-                <%= fa_icon 'trash-alt' %>
+                <%= fa_icon 'trash' %>
             <% end %>
         <% end %>
     </td>

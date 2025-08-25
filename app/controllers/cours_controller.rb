@@ -109,11 +109,11 @@ class CoursController < ApplicationController
     end
 
     unless params[:formation_id].blank?
-      params[:formation] = Formation.find(params[:formation_id]).nom.rstrip
+      params[:formation] = Formation.not_archived.find(params[:formation_id]).nom.rstrip
     end
 
     unless params[:formation].blank?
-      formation_id = Formation.find_by(nom:params[:formation].rstrip)
+      formation_id = Formation.not_archived.find_by(nom:params[:formation].rstrip)
       @cours = @cours.where(formation_id:formation_id)
     end
 
@@ -164,7 +164,7 @@ class CoursController < ApplicationController
 
     if request.variant.include?(:phone)
       @cours = @cours.includes(:formation, :intervenant, :salle).paginate(page: params[:page])
-      @formations = Formation.select(:nom).where(hors_catalogue: false).pluck(:nom)
+      @formations = Formation.not_archived.ordered.select(:nom).where(hors_catalogue: false).pluck(:nom)
     end
 
     if params[:view] == "calendar_rooms"
@@ -570,7 +570,7 @@ class CoursController < ApplicationController
   # GET /cours/new
   def new
     @cour = Cour.new
-    @formations = Formation.order(:nom, :promo)
+    @formations = Formation.not_archived.ordered
     @salles = Salle.all
 
     if current_user.partenaire_qse?
@@ -579,7 +579,7 @@ class CoursController < ApplicationController
     end
 
     unless params[:formation].blank?
-      @cour.formation_id = Formation.find_by(nom:params[:formation]).id
+      @cour.formation_id = Formation.not_archived.find_by(nom:params[:formation]).id
     end
 
     unless params[:intervenant].blank?
@@ -603,7 +603,7 @@ class CoursController < ApplicationController
   # GET /cours/1/edit
   def edit
     authorize @cour
-    @formations = Formation.unscoped.ordered
+    @formations = Formation.ordered
     @salles = Salle.all
 
     if current_user.partenaire_qse?
@@ -635,7 +635,7 @@ class CoursController < ApplicationController
         format.json { render :show, status: :created, location: @cour }
       else
         format.html do
-          @formations = Formation.unscoped.ordered
+          @formations = Formation.ordered
           @salles = Salle.all
 
           if current_user.partenaire_qse?
@@ -683,7 +683,7 @@ class CoursController < ApplicationController
         format.json { render :show, status: :ok, location: @cour }
       else
         format.html do
-          @formations = Formation.unscoped.ordered
+          @formations = Formation.ordered
           @salles = Salle.all
 
           if current_user.partenaire_qse?

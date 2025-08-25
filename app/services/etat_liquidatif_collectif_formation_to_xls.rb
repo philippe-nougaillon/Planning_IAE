@@ -54,7 +54,7 @@ class EtatLiquidatifCollectifFormationToXls < ApplicationService
       responsabilites = Responsabilite.none
     end
 
-    formations = Formation.where(id: [cours.pluck(:formation_id).uniq, vacations.pluck(:formation_id).uniq, responsabilites.pluck(:formation_id).uniq].flatten.uniq)
+    formations = Formation.not_archived.where(id: [cours.pluck(:formation_id).uniq, vacations.pluck(:formation_id).uniq, responsabilites.pluck(:formation_id).uniq].flatten.uniq).ordered
     formations.each do | formation |
       any_cours = false
       
