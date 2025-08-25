@@ -54,11 +54,11 @@ namespace :tools do
     end
   end
 
-  desc "Test solid_queue (à checker en parralèle sur /jobs)"
+  desc "Test solid_queue (à checker en parallèle sur /jobs)"
   task test_solid_queue: :environment do
-    puts "A" * 100
+    puts "START TASK - " * 10
     SolidQueueJob.perform_later
-    puts "B" * 100
+    puts "END TASK - " * 10
   end
 
 end
