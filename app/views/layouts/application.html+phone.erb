@@ -67,6 +67,10 @@
             <%= yield %>
         </div>
 
+        <% if !(user_signed_in?) && current_page?("/users/sign_in") %>
+            <%= render 'partials/footer' %>
+        <% end %>
+
         <%= render 'partials/slim_select' %>
     </body>
 </html>
