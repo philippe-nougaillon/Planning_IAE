@@ -42,6 +42,7 @@ module Planning
     # pour fixer Psych::DisallowedClass in Devise::SessionsController#create (Tried to load unspecified class: ActiveSupport::TimeWithZone):
     config.active_record.use_yaml_unsafe_load = true
 
+    # Solid queue : pour utiliser à sa manière le contrôle d'accès
     config.mission_control.jobs.http_basic_auth_enabled = false
     config.mission_control.jobs.base_controller_class = "MissionControlAdminController"
   end
