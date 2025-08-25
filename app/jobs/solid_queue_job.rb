@@ -2,8 +2,8 @@ class SolidQueueJob < ApplicationJob
   queue_as :default
 
   def perform
-    puts "C" * 100
+    puts "BEGIN JOB" * 10
     sleep(20)
-    puts "D" * 100
+    puts "END JOB" * 10
   end
 end
