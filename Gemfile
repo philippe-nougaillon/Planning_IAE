@@ -117,7 +117,7 @@ gem 'workflow-activerecord'
 # This gem hooks up your Rails application with Roadie to help you generate HTML emails.
 gem 'roadie-rails', '~> 3.1'
 
-gem 'exception_notification'
+gem 'exception_notification', github: "kmcphillips/exception_notification", branch: "main"
 
 # UDID
 gem 'friendly_id', '~> 5.5'
