@@ -109,8 +109,6 @@ gem 'icalendar'
 # Access-Control-Allow-Origin (pour l'APP React)
 gem 'rack-cors'
 
-# Sucker Punch is a single-process Ruby asynchronous processing library.
-gem 'sucker_punch', '~> 3.0'
 
 # Ruby finite-state-machine-inspired API for modeling workflow 
 gem 'workflow'
