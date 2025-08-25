@@ -36,4 +36,6 @@ plugin :tmp_restart
 
 # run the Solid Queue's supervisor together with Puma and have Puma monitor and manage it
 # You can either set the env var, or check for development
-plugin :solid_queue if Rails.env.development?
+if Rails.env.development?
+  plugin :solid_queue
+end
