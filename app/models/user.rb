@@ -92,6 +92,14 @@ class User < ApplicationRecord
     users.sort
   end
 
+  def super_admin?
+    ENV['USER_JOBS_AUTHORIZATION_IDS']
+      .to_s
+      .split(',')
+      .map(&:to_i)
+      .include?(id)
+  end
+
   private
 
     def timeout_in
