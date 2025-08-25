@@ -4,6 +4,6 @@ class MissionControlAdminController < ApplicationController
   private
 
   def require_admin
-    raise ActiveRecord::RecordNotFound unless user_signed_in? && ENV['USER_JOBS_AUTHORIZATION_IDS'].split(',').map(&:to_i).include?(current_user.id)
+    raise ActionController::RoutingError.new('Not Found') unless current_user&.super_admin?
   end
 end

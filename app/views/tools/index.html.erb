@@ -232,6 +232,13 @@
 					<%= fa_icon 'exclamation' %>
 					<%= link_to "Alertes", alerts_path, class: 'text-primary hover:underline' %>
 				</li>
+
+				<% if user_signed_in? && current_user.super_admin? %>
+					<li class="mb-6">
+						<%= fa_icon 'list' %>
+						<%= link_to "Tâches du serveur", mission_control_jobs_path, class: 'text-primary hover:underline' %>
+					</li>
+				<% end %>
 			</ul>
 		</div>
 	<% end %>
