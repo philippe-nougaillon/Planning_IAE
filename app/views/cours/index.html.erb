@@ -24,7 +24,7 @@
   <% end %>
 </div>
 
-<div class="bs-container p-4 shadow mb-4">
+<div class="bs-container p-4 border mb-4">
   <%= form_tag cours_path, method: :get do %>
     <div class="flex flex-wrap">
       <div class="sm:w-5/12 pr-2">
@@ -151,11 +151,15 @@
               <% @cours.includes(:formation, :intervenant, :salle).each do | cours | %>
 
                 <% if cours.debut.to_date != current_date %>
-                  <tr class="shadow bg-slate-50">
+                  <tr class="border bg-slate-50">
                     <% if policy(Cour).action? %><th></th><% end %>
                     <th colspan=<%= policy(Cour).action? ? '9' : '8' %>>
-                      <%= fa_icon 'calendar-day' %>
-                      <b><%= l(cours.debut.to_date, format: :long).humanize %></b> 
+                      <div class="flex items-center gap-1">
+                        <span class="material-symbols-outlined text-lg">
+                          today
+                        </span>
+                        <%= l(cours.debut.to_date, format: :long).humanize %>
+                      </div>
                     </th>
                   </tr>
                   <% current_date = cours.debut.to_date %>
