@@ -129,7 +129,10 @@
             <% end %>
         <% end %>
         <% if current_user && current_user.role_number >= 5 && !cours.edusign_id? %>
-            <span title="Le cours n'est pas synchronisé avec Edusign !" class="text-error text-xl underline font-black ml-5 animate-pulse">e</span>
+            <span title="Le cours n'est pas synchronisé avec Edusign" class="cursor-pointer">
+                <span class="text-sky-900 bg-orange-300 px-1 pb-1 rounded-sm text-xl font-bold"><u>e</u></span>
+                <%= fa_icon 'exclamation-triangle', class: 'text-warning' %>
+            </span>
         <% end %>
     </td>
 

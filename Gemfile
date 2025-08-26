@@ -109,8 +109,6 @@ gem 'icalendar'
 # Access-Control-Allow-Origin (pour l'APP React)
 gem 'rack-cors'
 
-# Sucker Punch is a single-process Ruby asynchronous processing library.
-gem 'sucker_punch', '~> 3.0'
 
 # Ruby finite-state-machine-inspired API for modeling workflow 
 gem 'workflow'
@@ -119,7 +117,7 @@ gem 'workflow-activerecord'
 # This gem hooks up your Rails application with Roadie to help you generate HTML emails.
 gem 'roadie-rails', '~> 3.1'
 
-gem 'exception_notification'
+gem 'exception_notification', github: "kmcphillips/exception_notification", branch: "main"
 
 # UDID
 gem 'friendly_id', '~> 5.5'
@@ -150,3 +148,9 @@ gem "page_title_helper", "~> 9.0"
 gem "matrix", "~> 0.4.2"
 
 gem "rqrcode", "~> 2.2"
+
+gem "solid_queue", "~> 1.2"
+
+gem "mission_control-jobs", "~> 1.1"
+
+gem "skylight", "~> 6.0"

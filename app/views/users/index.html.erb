@@ -1,7 +1,7 @@
 <div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
   <h1 class="text-3xl"><%= fa_icon 'users' %> Liste des utilisateurs</h1>
   <% if policy(User).new? %>
-    <%= link_to new_user_path, class: 'text-primary' do %>
+    <%= link_to new_user_path, class: 'btn btn-sm btn-primary btn-outline hover:!text-white' do %>
       <%= fa_icon 'plus-circle' %> Utilisateur
     <% end %>
   <% end %>

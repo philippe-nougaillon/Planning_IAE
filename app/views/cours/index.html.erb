@@ -9,17 +9,22 @@
 <% end %>
 
 <div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
-  <h1 class="text-3xl"><%= fa_icon 'calendar-alt' %> Planning des cours</h1>
+  <h1 class="text-3xl flex items-center gap-3">
+    <span class="material-symbols-outlined text-3xl">
+      calendar_month
+    </span>
+    Planning des cours
+  </h1>
   <% if policy(Cour).new? %>
     <%= link_to new_cour_path(formation: session[:formation], 
                               debut: DateTime.now), 
-                              class: 'text-primary' do %>
-      <%= fa_icon 'plus-circle' %> Cours
+                              class: 'btn btn-sm btn-primary btn-outline hover:!text-white' do %>
+      <%= fa_icon 'plus-circle' %> Nouvelle réservation
     <% end %>
   <% end %>
 </div>
 
-<div class="bs-container p-4 shadow mb-4">
+<div class="bs-container p-4 border mb-4">
   <%= form_tag cours_path, method: :get do %>
     <div class="flex flex-wrap">
       <div class="sm:w-5/12 pr-2">
@@ -146,11 +151,15 @@
               <% @cours.includes(:formation, :intervenant, :salle).each do | cours | %>
 
                 <% if cours.debut.to_date != current_date %>
-                  <tr class="shadow bg-slate-50">
+                  <tr class="border bg-slate-50">
                     <% if policy(Cour).action? %><th></th><% end %>
                     <th colspan=<%= policy(Cour).action? ? '9' : '8' %>>
-                      <%= fa_icon 'calendar-day' %>
-                      <b><%= l(cours.debut.to_date, format: :long).humanize %></b> 
+                      <div class="flex items-center gap-1">
+                        <span class="material-symbols-outlined text-lg">
+                          today
+                        </span>
+                        <%= l(cours.debut.to_date, format: :long).humanize %>
+                      </div>
                     </th>
                   </tr>
                   <% current_date = cours.debut.to_date %>

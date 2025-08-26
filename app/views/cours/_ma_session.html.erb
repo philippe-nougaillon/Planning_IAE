@@ -1,24 +1,22 @@
 <div class="flex-1 card shadow px-2 py-4 mb-6" style="border-left:6px; border-left-style:solid; border-left-color:<%= cour.formation.color %>;">
   <div class="flex mb-2">
-    <% if cour.intervenant.photo.present? %>
-      <%= image_tag cour.intervenant.photo, class:"border rounded mr-4 w-1/3" %>
-    <% else %>
-      <%= image_tag 'planning_intervenant.jpg', class:"border rounded mr-4", width: 75, height: 75 %>
-    <% end %>
     <div class="w-full">
+      <% if cour.salle %>
+        <p class="mb-0">
+          <span class="badge badge-<%= cour.style %> text-white font-black">
+            <%= cour.salle.nom %>
+          </span>
+        </p>
+      <% end %>
       <div class="flex justify-between">
         <p class="mb-0"><b><%= l(cour.debut, format: :heures_min) %></b> - <%= l(cour.fin, format: :heures_min) %></p>
-        <% if cour.salle %>
-          <p class="mb-0">
-            <span class="badge badge-<%= cour.style %> text-white">
-              <%= cour.salle.nom %>
-            </span>
-          </p>
-        <% end %>
       </div>
       <p class="mb-0"><%= cour.intervenant.nom_prenom %></p>
       <p class="mb-0 font-bold"><%= cour.nom_ou_ue %></p>
     </div>
+    <% if cour.intervenant.photo.present? %>
+      <%= image_tag cour.intervenant.photo, class:"border rounded max-w-24" %>
+    <% end %>
   </div>
   <progress data-debut="<%= cour.debut.to_i %>" data-fin="<%= cour.fin.to_i %>" class="progress progress-primary opacity-50 mt-2" value="<%= cour.progress_bar_pct3 %>" max="100"></progress>
 

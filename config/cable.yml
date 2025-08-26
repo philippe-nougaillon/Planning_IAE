@@ -1,5 +1,12 @@
 development:
   adapter: async
+  # S'il y a besoin d'ActionCable, remplacer par ceci (pour solid_queue)
+  # adapter: solid_cable
+  # connects_to:
+  #   database:
+  #     writing: cable
+  # polling_interval: 0.1.seconds
+  # message_retention: 1.day
 
 test:
   adapter: test

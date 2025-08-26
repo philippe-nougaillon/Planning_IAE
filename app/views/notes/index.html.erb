@@ -2,7 +2,7 @@
   <div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
     <h1 class="text-3xl"><i class="far fa-lightbulb"></i> Mémos</h1>
     <% if policy(Note).new? %>
-      <button onclick="my_modal_memo.showModal()" class="text-primary">
+      <button onclick="my_modal_memo.showModal()" class="btn btn-sm btn-primary btn-outline hover:!text-white">
         <%= fa_icon 'plus-circle' %> Mémo
       </button>
     <% end %>
