@@ -401,6 +401,8 @@ GEM
       rails (>= 6.1)
     sitemap_generator (6.3.0)
       builder (~> 3.0)
+    skylight (6.0.4)
+      activesupport (>= 5.2.0)
     solid_queue (1.2.1)
       activejob (>= 7.1)
       activerecord (>= 7.1)
@@ -521,6 +523,7 @@ DEPENDENCIES
   selenium-webdriver
   simple_calendar (~> 3.0)
   sitemap_generator
+  skylight (~> 6.0)
   solid_queue (~> 1.2)
   sortable-for-rails (~> 1.2)
   spreadsheet
