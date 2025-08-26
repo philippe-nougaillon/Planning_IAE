@@ -104,7 +104,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :mail_logs, only: %i[ index show ]
+  resources :mail_logs, only: %i[ index show ] do
+    collection do
+      get :refresh
+    end
+  end
 
   namespace :tools do
     get :index
