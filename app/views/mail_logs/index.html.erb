@@ -6,10 +6,6 @@
 </div>
 <p class="mb-4">Historique des mails envoyés via MailGun, avec Statut et État (OK = Acheminé, OUVERT = Vu).</p>
 
-<% if @result_failed && @result_failed['items'].size.positive? %>
-  <p class="text-error mb-4">Il y a actuellement <%= @result_failed['items'].count %> envois en Statut 'KO'</p>
-<% end %>
-
 <div class="bs-container p-4 shadow mb-4">
   <%= form_tag request.path, method: :get do %>
     <div class="flex flex-wrap">
