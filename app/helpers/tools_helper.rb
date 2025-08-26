@@ -69,7 +69,7 @@ module ToolsHelper
                 elsif audit.audited_changes['etat'].class.name == 'Integer'
                     pretty_changes << "État initialisé à '#{ Cour.etats.keys[c.last].humanize }'"
                 else
-                    pretty_changes << "État initialisé à '#{ c.last.try(:humanize) }'"
+                    pretty_changes << "État initialisé à '#{ c.last.humanize }'"
                 end
             when 'Discarded at'
                 if audit.action == 'update'
