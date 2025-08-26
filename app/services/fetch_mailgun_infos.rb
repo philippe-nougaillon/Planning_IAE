@@ -20,8 +20,8 @@ class FetchMailgunInfos < ApplicationService
       end
 
       # Check lu
-      if !mail_log.etat && events_opened["items"].find{|item| item["message"]["headers"]["message-id"] == mail_log.message_id }
-        mail_log.update!(etat: true)
+      if !mail_log.opened && events_opened["items"].find{|item| item["message"]["headers"]["message-id"] == mail_log.message_id }
+        mail_log.update!(opened: true)
         # puts "Mail_log #{mail_log.id} a été lu"
       end
     end
