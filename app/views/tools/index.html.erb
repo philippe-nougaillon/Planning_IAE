@@ -1,5 +1,10 @@
 <div class="border-b mt-6 mb-8 pb-4">
-  <h1 class="text-3xl"><%= fa_icon 'wrench' %> Outils</h1>
+  <h1 class="text-3xl flex items-center gap-3">
+    <span class="material-symbols-outlined text-3xl">
+      build
+    </span>
+    Outils
+  </h1>
 </div>
 
 <div class="flex flex-wrap mb-4">
@@ -232,6 +237,13 @@
 					<%= fa_icon 'exclamation' %>
 					<%= link_to "Alertes", alerts_path, class: 'text-primary hover:underline' %>
 				</li>
+
+				<% if user_signed_in? && current_user.super_admin? %>
+					<li class="mb-6">
+						<%= fa_icon 'spinner' %>
+						<%= link_to "Jobs Control (File d'attente principale)", mission_control_jobs_path, class: 'text-primary hover:underline' %>
+					</li>
+				<% end %>
 			</ul>
 		</div>
 	<% end %>
