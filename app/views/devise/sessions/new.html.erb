@@ -2,9 +2,9 @@
   <% unless request.variant.include?(:phone) %>
     <%= image_tag "logo@2000.png", style: "width: 100%; max-width: 500px;" %>
   <% end %>
-  <div class="border border-gray-900 rounded shadow p-6 w-full" style="max-width: 500px">
+  <div class="w-full mt-8" style="max-width: 500px">
     <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-      <h1 class="text-4xl text-center border-b mb-4 pb-4">
+      <h1 class="text-3xl text-center border-b mb-4 pb-4">
         <%= t('.sign_in') %>
       </h1>
       <div class="flex flex-wrap">
@@ -19,7 +19,7 @@
             <%= f.password_field :password, autocomplete: "current-password", required: true, class: "input input-bordered w-full mt-2" %>
           </div>
 
-          <%= f.submit t('.sign_in'), class: "btn btn-primary text-white w-full mt-2 mb-4", 'data-turbo': false %>
+          <%= f.submit t('.sign_in'), class: "btn btn-primary text-white w-full mt-2 mb-4 text-xl font-normal", 'data-turbo': false %>
           <div class="flex flex-wrap justify-between my-4 gap-2">
             <%- if devise_mapping.recoverable? && controller_name != 'passwords' %>
               <%= link_to "Mot de passe oublié ?", new_password_path(resource_name), class: 'hover:underline' %>
