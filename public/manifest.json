@@ -1,14 +1,14 @@
 {
-  "short_name": "Business School",
-  "name": "Business School Planning",
+  "short_name": "AIKKU Plann",
+  "name": "AIKKU Plann",
   "icons": [
     {
-      "src": "/Images/logo_business_school_192.png",
+      "src": "/Images/aikku_plan_favicon@192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "/Images/logo_business_school_512.png",
+      "src": "/Images/aikku_plan_favicon@512.png",
       "type": "image/png",
       "sizes": "512x512"
     }
