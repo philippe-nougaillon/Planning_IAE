@@ -5,8 +5,10 @@ module ApplicationHelper
         render(inline: %{
             <li>
                 <%= link_to '#{ url_for(path) }', 
-                            class: 'text-#{ is_active ? 'primary font-bold' : 'base-content' } #{classes}' do %>
-                    <%= fa_icon '#{ icon }' %>
+                            class: 'flex items-center gap-1 py-0 text-#{ is_active ? 'primary font-bold' : 'base-content' } #{classes}' do %>
+                    <span class="material-symbols-outlined text-xl mb-1">
+                        #{ icon }
+                    </span>
                     #{ label ? label : name.humanize }
                 <% end %>
             </li>
