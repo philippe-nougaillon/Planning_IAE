@@ -30,7 +30,7 @@ class FormationPolicy < ApplicationPolicy
   end
 
   def destroy?
-    user.role_number >= 4
+    user && user.role_number >= 4
   end
 
 end
