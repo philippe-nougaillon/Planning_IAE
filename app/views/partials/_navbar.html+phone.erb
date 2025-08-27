@@ -1,7 +1,7 @@
 <nav class="navbar mb-4 pr-0 sticky top-0 z-50 shadow <%= ENV["STAGING_COLOR_MODE"].present? ? ENV["STAGING_COLOR_MODE"] : 'bg-base-100' %>">
   <div class="navbar-start">
     <%= link_to root_path do %>
-      <%= image_tag("Aikku_logo.png", width: 175, alt: 'logo Business School') %>
+      <%= image_tag("Aikku_plann.png", width: 100, alt: 'Aikku plann') %>
     <% end %>
   </div>
   <div class="navbar-end">
@@ -9,7 +9,7 @@
       <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
       </div>
-      <ul tabindex="0" class="menu menu-sm dropdown-content z-[1] p-0 shadow bg-base-100 rounded-box w-screen">
+      <ul tabindex="0" class="menu menu-sm dropdown-content z-[1] p-0 shadow bg-base-100 rounded-box w-screen mt-8">
         <% if user_signed_in? %> 
           <% if current_user.étudiant? %>
             <%= navbar_nav_item('ma journée', 'calendar-day', mes_sessions_etudiant_path, nil, 'mes_sessions_etudiant', 'py-2') %>
