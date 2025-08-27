@@ -11,8 +11,12 @@
 	<div class="sm:w-1/3 px-4">
 		<ul class="list-disc">
 			<li class="mb-6">
-				<%= fa_icon 'calendar-day' %>
-				<%= link_to "Réservation de créneaux horaires", tools_creation_cours_path, class: 'text-primary hover:underline' %>
+				<div class="flex items-center gap-1">
+					<span class="material-symbols-outlined text-xl">
+						today
+					</span>
+					<%= link_to "Réservation de créneaux horaires", tools_creation_cours_path, class: 'text-primary hover:underline' %>
+				</div>
 			</li>
 
 			<li class="mb-6">

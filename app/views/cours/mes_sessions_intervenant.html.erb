@@ -1,18 +1,32 @@
-<h1 class="text-3xl text-base-content mt-6 border-b pb-4"><%= fa_icon 'calendar-day' %> <%= l(Date.today, format: :long).humanize %></h1>
+<h1 class="text-3xl flex items-center gap-3 mt-6 border-b pb-4">
+  <span class="material-symbols-outlined text-3xl">
+    event
+  </span>
+  <%= l(Date.today, format: :long).humanize %>
+</h1>
+
 
 <% if @cours.any?%>
   <% @cours.each do |cour| %>
     <%= render partial: 'ma_session_intervenant', locals: {cour: cour} %>
   <% end %>
 <% else %>
-  <div class="chat chat-start mt-12 mb-4">
-    <div class="chat-bubble chat-bubble-primary text-white">
-      <p class="text-xl font-bold">Aucun cours aujourd'hui !</b>
-    </div>
+  <div role="alert" class="alert">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      class="stroke-primary h-6 w-6 shrink-0">
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+    </svg>
+    <span>Vous n'avez pas de cours planifiés pour aujourd'hui...</span>
   </div>
-  <span>Vous n'avez pas de cours planifiés pour aujourd'hui.</span>
 <% end %>
 
 <% if user_signed_in? %>
-  <%= link_to 'Voir mes prochains cours...', cours_path(start_date: Date.tomorrow, intervenant_id: @intervenant.id, intervenant: @intervenant.nom + " " + @intervenant.prenom), class: 'text-primary hover:underline' %>
+  <%= link_to 'Voir mes prochains cours...', cours_path(start_date: Date.tomorrow, intervenant_id: @intervenant.id, intervenant: @intervenant.nom + " " + @intervenant.prenom), class: 'btn rounded-lg btn-primary btn-outline hover:!text-white mt-4 w-full sm:w-fit' %>
 <% end %>

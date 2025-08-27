@@ -6,7 +6,12 @@
 </div>
 
 <div class="border-b mt-12 mb-2 pb-4">
-  <h2 class="text-3xl"><%= fa_icon 'calendar-alt' %> Planning des cours</h2>
+  <h2 class="text-3xl flex items-center gap-1">
+    <span class="material-symbols-outlined text-3xl">
+      calendar_month
+    </span>
+    Planning des cours
+  </h2>
 </div>
 <div class="flex flex-wrap mb-8">
   <div class="md:w-1/3 px-4">
@@ -71,7 +76,7 @@
 </ul>
 
 <div class="border-b mt-12 mb-2 pb-4">
-  <h3 class="text-3xl"><%= fa_icon 'chalkboard' %> Liste des salles</h3>
+  <h2 class="text-3xl"><%= fa_icon 'chalkboard' %> Salles</h2>
 </div>
 <div class="flex flex-wrap mb-8">
   <div class="md:w-1/3 px-4">
@@ -111,7 +116,12 @@
 </ul>
 
 <div class="border-b mt-12 mb-2 pb-4">
-  <h3 class="text-3xl"><%= fa_icon 'briefcase' %> Formations</h3>
+  <h2 class="text-3xl flex items-center gap-1">
+    <span class="material-symbols-outlined text-3xl">
+      work
+    </span>
+    Formations
+  </h2>
 </div>
 <div class="flex flex-wrap mb-8">
   <div class="md:w-1/3 px-4">
@@ -170,7 +180,12 @@
 
 
 <div class="border-b mt-12 mb-2 pb-4">
-  <h3 class="text-3xl"><%= fa_icon 'chalkboard-teacher' %> Intervenants</h3>
+  <h2 class="text-3xl flex items-center gap-1">
+    <span class="material-symbols-outlined text-3xl">
+      co_present
+    </span>
+    Intervenants
+  </h2>
 </div>
 <div class="flex flex-wrap mb-8">
   <div class="md:w-1/3 px-4">
@@ -212,7 +227,12 @@
 </ul>
 
 <div class="border-b mt-12 mb-2 pb-4">
-  <h3 class="text-3xl"><%= fa_icon 'graduation-cap' %> Etudiants</h3>
+  <h2 class="text-3xl flex items-center gap-1">
+    <span class="material-symbols-outlined text-3xl">
+      school
+    </span>
+    Etudiants
+  </h2>
 </div>
 <div class="flex flex-wrap mb-8">
   <div class="md:w-1/3 px-4">
@@ -242,7 +262,7 @@
 </ul>
 
 <div class="border-b mt-12 mb-2 pb-4">
-  <h3 class="text-3xl"><%= fa_icon 'users' %> Utilisateurs</h3>
+  <h2 class="text-3xl"><%= fa_icon 'users' %> Utilisateurs</h2>
 </div>
 <ul class="list-disc">
   <li>Il existe 4 rôles utilisateur :</li>
@@ -255,7 +275,7 @@
 </ul>
 
 <div class="border-b mt-12 mb-2 pb-4">
-  <h3 class="text-3xl"><%= fa_icon 'user-secret' %> Agents</h3>
+  <h2 class="text-3xl"><%= fa_icon 'user-secret' %> Agents</h2>
 </div>
 <ul class="list-disc">
   <li>Un agent est une personne qui peut participer à la surveillance d'un examen et qui a son taux horaire différent d'un non-agent</li>
@@ -263,7 +283,7 @@
 </ul>
 
 <div class="border-b mt-12 mb-2 pb-4">
-  <h3 class="text-3xl"><%= fa_icon 'wrench' %> Outils</h3>
+  <h2 class="text-3xl"><%= fa_icon 'wrench' %> Outils</h2>
 </div>
 <div class="flex flex-wrap mb-8">
   <div class="md:w-1/3 px-4">
@@ -318,7 +338,7 @@
 </ul>
 
 <div class="border-b mt-12 mb-2 pb-4">
-  <h3 class="text-3xl"><%= fa_icon 'download' %> Importation des données</h3>
+  <h2 class="text-3xl"><%= fa_icon 'download' %> Importation des données</h2>
 </div>
 <ul class="list-disc">
   <li><b>Importation de cours à partir d'un fichier Excel :</b></li>
@@ -352,7 +372,7 @@
 </ul>
 
 <div class="border-b mt-12 mb-2 pb-4">
-  <h3 class="text-3xl"><%= fa_icon 'upload' %> Exportation des données</h3>
+  <h2 class="text-3xl"><%= fa_icon 'upload' %> Exportation des données</h2>
 </div>
 <ul class="list-disc">
   <li>Toutes les données sont exportables au format Microsoft Excel (XLS)</li>
@@ -360,7 +380,7 @@
 
 
 <div class="border-b mt-12 mb-2 pb-4">
-  <h3 class="text-3xl"><%= fa_icon 'search' %> Audit des modifications</h3>
+  <h2 class="text-3xl"><%= fa_icon 'search' %> Audit des modifications</h2>
 </div>
 <div class="flex flex-wrap mb-8">
   <div class="md:w-1/3 px-4">
@@ -400,7 +420,7 @@
 
 
 <div class="border-b mt-12 mb-2 pb-4">
-  <h3 class="text-3xl"><%= fa_icon 'list-alt' %> Etats de services</h3>
+  <h2 class="text-3xl"><%= fa_icon 'list-alt' %> Etats de services</h2>
 </div>
 <ul class="list-disc">
     <li>Récapitule les cours <b>réalisés</b> par un intervenant sur une période donnée </li>
@@ -409,7 +429,7 @@
 </ul>
 
 <div class="border-b mt-12 mb-2 pb-4">
-  <h3 class="text-3xl"><%= fa_icon 'exchange-alt' %> API</h3>
+  <h2 class="text-3xl"><%= fa_icon 'exchange-alt' %> API</h2>
 </div>
 <ul class="list-disc">
     <li>Une API fournit les données du Planning au format JSON</li>
@@ -417,7 +437,7 @@
 </ul>
 
 <div class="border-b mt-12 mb-2 pb-4">
-  <h3 class="text-3xl"><%= fa_icon 'asterisk' %> Notification</h3>
+  <h2 class="text-3xl"><%= fa_icon 'asterisk' %> Notification</h2>
 </div>
 <ul class="list-disc">
     <li>Les chargés de scolarité et les étudiants peuvent recevoir une notification par email/SMS(à venir) lors de l'annulation de cours(option)</li>
@@ -425,7 +445,7 @@
 </ul>
 
 <div class="border-b mt-12 mb-2 pb-4">
-  <h3 class="text-3xl"><%= fa_icon 'mobile-alt' %> Mobile</h3>
+  <h2 class="text-3xl"><%= fa_icon 'mobile-alt' %> Mobile</h2>
 </div>
 <div class="flex flex-wrap mb-8">
   <div class="md:w-1/3 px-4">
@@ -466,7 +486,7 @@
 </ul>
 
 <div class="border-b mt-12 mb-2 pb-4">
-  <h3 class="text-3xl"><%= fa_icon 'film' %> Affichage sur panneaux lumineux</h3>
+  <h2 class="text-3xl"><%= fa_icon 'film' %> Affichage sur panneaux lumineux</h2>
 </div>
 <div class="flex flex-wrap mb-8">
   <div class="md:w-1/2 px-4">
@@ -495,7 +515,7 @@
 </ul>
 
 <div class="border-b mt-12 mb-2 pb-4">
-  <h3 class="text-3xl"><span class="font-black underline text-4xl">e</span> Edusign</h3>
+  <h2 class="text-3xl"><span class="font-black underline text-4xl">e</span> Edusign</h2>
 </div>
 
 <ul class="list-disc">
@@ -504,72 +524,72 @@
 </ul>
 
 <div class="border-b mt-12 mb-2 pb-4">
-  <h3 class="text-3xl"><%= fa_icon 'bullhorn' %> Journal des mises à jours</h3>
+  <h2 class="text-3xl"><%= fa_icon 'bullhorn' %> Journal des mises à jours</h2>
 </div>
-<h4 class="text-2xl mb-2 mt-4">5.9</h4>
+<h3 class="text-2xl mb-2 mt-4">5.9</h3>
 <ul class="list-disc">
   <li>État liquidatif collectif : export Excel de toutes les vacations des intervenants sur une période</li>
   <li>Ajout d'un rôle 'partenaire QSE' pour les utilisateurs @icp.fr</li>
   <li>Étudiants : création de comptes d'accès par lot</li>
 </ul>
-<h4 class="text-2xl mb-2 mt-4">5.8</h4>
+<h3 class="text-2xl mb-2 mt-4">5.8</h3>
 <ul class="list-disc">
   <li>Cours : un document est attachable (ex: notes pour les examens de rattrapages)</li>
 </ul>
-<h4 class="text-2xl mb-2 mt-4">5.7</h4>
+<h3 class="text-2xl mb-2 mt-4">5.7</h3>
 <ul class="list-disc">
   <li>Rappel des examens : permet d'envoyer un mail à tous les étudiants convoqués à un examen</li>
   <li>Ajout d'un rôle 'accueil vacataire' pour l'utilisateur "vacaccueil@iae"</li>
 </ul>
-<h4 class="text-2xl mb-2 mt-4">5.5 / 5.6</h4>
+<h3 class="text-2xl mb-2 mt-4">5.5 / 5.6</h3>
 <ul class="list-disc">
   <li>Vacations : standardisation des tarifs par activité et par statut</li>
 </ul>
-<h4 class="text-2xl mb-2 mt-4">5.4</h4>
+<h3 class="text-2xl mb-2 mt-4">5.4</h3>
 <ul class="list-disc">
   <li>Notes (Post-it)</li>
 </ul>
-<h4 class="text-2xl mb-2 mt-4">5.3</h4>
+<h3 class="text-2xl mb-2 mt-4">5.3</h3>
 <ul class="list-disc">
   <li>PDF Feuille émargement signée</li>
   <li>Examen : n° table étudiant ajouté</li>
   <li>Option BYPASS</li>
 </ul>
-<h4 class="text-2xl mb-2 mt-4">5.2</h4>
+<h3 class="text-2xl mb-2 mt-4">5.2</h3>
 <ul class="list-disc">
   <li>Optimisation des performances</li>
 </ul>
-<h4 class="text-2xl mb-2 mt-4">5.1</h4>
+<h3 class="text-2xl mb-2 mt-4">5.1</h3>
 <ul class="list-disc">
   <li>Commandes : permet de commander un "pot" (café, thé, jus, viennoiseries...) et de l'associer à un évènement (soutenance, réunion, ...)</li>
   <li>Export academ : exportation des cours au format Académique</li>
 </ul>
-<h4 class="text-2xl mb-2 mt-4">5.0</h4>
+<h3 class="text-2xl mb-2 mt-4">5.0</h3>
 <ul class="list-disc">
   <li>Migration vers Ruby 3.3 &amp; Ruby on Rails 7.1.3</li>
   <li>Actualisation en temps réel des barres de progression des cours</li>
   <li>Actualisation en temps réel de l'indicateur horaire dans "Occupation des salles"</li>
   <li>Multiples optimisations du code</li>
 </ul>
-<h4 class="text-2xl mb-2 mt-4">4.27</h4>
+<h3 class="text-2xl mb-2 mt-4">4.27</h3>
 <ul class="list-disc">
   <li>Gestion des émargements. Les étudiants signent sur leur portable pour justifier de leur présence.</li>
 </ul>
-<h4 class="text-2xl mb-2 mt-4">4.20</h4>
+<h3 class="text-2xl mb-2 mt-4">4.20</h3>
 <ul class="list-disc">
   <li>Gestion des convocations aux examens. Notification par email.</li>
   <li>Pochette examen : génère l'ensemble des documents nécessaires à la tenue d'un examen (PDF)</li>
 </ul>
-<h4 class="text-2xl mb-2 mt-4">4.16</h4>
+<h3 class="text-2xl mb-2 mt-4">4.16</h3>
 <ul class="list-disc">
 <li>Gestion des inscriptions des étudiants et intervenants pour accès complet au Planning</li>
 <li>Ne plus afficher les données nominatives des Intervenants et du détail des cours, pour être en accord avec RGPD</li>
 </ul>
-<h4 class="text-2xl mb-2 mt-4">4.14</h4>
+<h3 class="text-2xl mb-2 mt-4">4.14</h3>
 <ul class="list-disc">
 <li>Etat récapitulatif des surveillances d'examens</li>
 </ul>
-<h4 class="text-2xl mb-2 mt-4">4.12</h4>
+<h3 class="text-2xl mb-2 mt-4">4.12</h3>
 <ul class="list-disc">
 <li>Notification des changements de cours (envoi emails à tous les étudiants)</li>
 <li>Affichage des Alertes. Un message apparaît dans le bas des grands écrans couloirs pour informé tous les étudiants. Ce message apparaît aussi dans l'application. Trois couleurs de messages : (Danger, Warning, Info).</li>
@@ -577,11 +597,11 @@
 <li>Feuille d’émargement PDF</li>
 <li>Feuille d’émargement PDF pour les examens</li>
 </ul>
-<h4 class="text-2xl mb-2 mt-4">4.10</h4>
+<h3 class="text-2xl mb-2 mt-4">4.10</h3>
 <ul class="list-disc">
 <li>MailLog : affiche les états (envoyé/ouvert/KO) de tous les emails envoyés par le Planning</li>
 </ul>
-<h4 class="text-2xl mb-2 mt-4">4.8</h4>
+<h3 class="text-2xl mb-2 mt-4">4.8</h3>
 <ul class="list-disc">
 <li>Invitations</li>
 <li>Horaires d'ouverture</li>
@@ -589,25 +609,25 @@
 <li>Gestion des accès selon le rôle des utilisateurs</li>
 <li>Conversion des UE</li>
 </ul>
-<h4 class="text-2xl mb-2 mt-4">4.5</h4>
+<h3 class="text-2xl mb-2 mt-4">4.5</h3>
 <ul class="list-disc">
 <li>Un utilisateur connecté peut faire une recherche d'un terme parmi les intitulés des Cours, Formation, Intervenant, UE.</li>
 <li>Une fonction 'Rappel des cours' permet d'envoyer le rappel des cours du mois suivant à un intervenant choisi.</li>
 <li>Désactivation des utilisateurs ayants quitté l'établissement.</li>
 <li>Diverses optimisations et améliorations.</li>
 </ul>
-<h4 class="text-2xl mb-2 mt-4">4.4</h4>
+<h3 class="text-2xl mb-2 mt-4">4.4</h3>
 <ul class="list-disc">
 <li>Une vue 'Audit des cours' liste les cours planifiés et non encore confirmés, pas créés par Thierry.D (Gestionnaire du Planning).</li>
 <li>Une alerte affiche dans une bulle rouge le nombre de cours non confirmés, à placer dans les 7 jours.</li>
 </ul>
-<h4 class="text-2xl mb-2 mt-4">4.3</h4>
+<h3 class="text-2xl mb-2 mt-4">4.3</h3>
 <ul class="list-disc">
   <li>Affichage des salles habituelles par formation et intervenant. Basé sur les données des cours passés. Affiche la Salle et le nombre de cours effectués =&gt; D2(20).</li>
   <li>Quelques corrections et optimisations</li>
   <li>Tests automatisés (models &amp; system)</li>
 </ul>
-<h4 class="text-2xl mb-2 mt-4">4.2</h4>
+<h3 class="text-2xl mb-2 mt-4">4.2</h3>
 <ul class="list-disc mb-8">
   <li>Nouveau cours : une fois la date, la durée, la formation et l'intervenant renseignés, la liste des salles se remplie automatiquement et n'affiche que les salles disponibles.</li>
   <li>Liste des cours : l'Action 'Intervertir' permet d'échanger facilement les intervenants de deux cours.</li>

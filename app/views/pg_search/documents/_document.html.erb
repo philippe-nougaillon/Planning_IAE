@@ -1,15 +1,19 @@
 <tr class="hover border">
     <td style="white-space: nowrap;">
         <% case result.searchable_type when 'Cour' %>
-            <%= fa_icon 'calendar-day', title: "Cour" %>
-            Cours
+            <div class="flex items-center gap-1">
+                <span class="material-symbols-outlined text-xl">
+                    today
+                </span>
+                Cours
+            </div>
             </td>
             <td>
                 <% cours = Cour.find(result.searchable_id) %>
                 <%= l(cours.debut, format: :long) %>
                 <br>
-                <span style="background-color:<%= Formation.find(Cour.find(result.searchable_id).formation_id).color %>;padding-left: 5px;margin-right: 5px;"></span>
-                <%= Formation.find(cours.formation_id).nom %>
+                <span style="background-color:<%= cours.formation.color %>;padding-left: 5px;margin-right: 5px;"></span>
+                <%= cours.formation.nom %>
                 <p class="mx-2 inline mb-4">|</p>
                 <%= cours.nom_ou_ue %>
                 <p class="mx-2 inline mb-4">|</p>
@@ -21,8 +25,12 @@
                 <% end %>
             </td>
             <% when 'Formation' %>
-                <%= fa_icon 'briefcase', title: "Formation" %>
-                Formation
+                <div class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-xl">
+                        work
+                    </span>
+                    Formation
+                </div>
                 </td>
                 <td>
                     <% formation = Formation.find(result.searchable_id) %>
@@ -30,8 +38,12 @@
                     <%= [formation.nom, formation.domaine, formation.promo, formation.diplome].reject(&:blank?).join('  |  ') %>
                 </td>
             <% when 'Intervenant' %>
-                <%= fa_icon 'chalkboard-teacher', title: "Intervenant" %>
-                Intervenant
+                <div class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-xl">
+                        co_present
+                    </span>
+                    Intervenant
+                </div>
                 </td>
                 <td>
                     <% intervenant = Intervenant.find(result.searchable_id) %>
@@ -42,8 +54,12 @@
                     <%= intervenant.status %>
                 </td>
             <% when 'Etudiant' %>
-                <%= fa_icon 'graduation-cap', title: "Étudiant" %>
-                Étudiant
+                <div class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-xl">
+                        school
+                    </span>
+                    Étudiant
+                </div>
                 </td>
                 <td>
                     <% etudiant = Etudiant.find(result.searchable_id) %>
