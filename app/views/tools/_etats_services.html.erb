@@ -42,7 +42,7 @@
                     <% cumul_tarif += montant_service %>
                 <% end %>
 
-                <% formation = Formation.unscoped.find(c.formation_id) %>
+                <% formation = Formation.find(c.formation_id) %>
 
                 <tr class="hover border">
                     <td>C</td>
@@ -99,21 +99,22 @@
             </tr>
 
             <% @vacations.each_with_index do |vacation, index| %>
-                <% if vacation.forfaithtd > 0 %>
-                    <% montant_vacation = ((Cour.Tarif * vacation.forfaithtd) * vacation.qte).round(2) %>
-                    <% cumul_hetd += (vacation.qte * vacation.forfaithtd) %>
-                <% else %>
-                    <% montant_vacation = vacation.tarif * vacation.qte %>
+                <% if vacation.vacation_activite %>
+                    <% intitulé = vacation.vacation_activite.nom %>
+                    <% tarif = vacation.vacation_activite.vacation_activite_tarifs.find_by(statut: VacationActiviteTarif.statuts[vacation.intervenant.status]) %>
+                    <% if tarif && tarif.forfait_hetd %>
+                        <% cumul_hetd += tarif.forfait_hetd %>
+                    <% end %>
                 <% end %>
-                <% cumul_vacations += montant_vacation %>
-                <% formation = Formation.unscoped.find(vacation.formation_id) %> 
+                <% cumul_vacations += vacation.montant || 0 %>
+                <% formation = Formation.find(vacation.formation_id) %> 
                 <tr class="hover border">
                     <td>V</td>
                     <td><%= l vacation.date %></td>
                     <td />
                     <td><%= link_to formation.nom, formation, target:"_new", class: 'text-primary hover:underline' %></td>
                     <td><%= formation.code_analytique_avec_indice(vacation.date) %></td>
-                    <td><%= vacation.titre %></td>
+                    <td><%= intitulé || vacation.titre %></td>
                     <td />
                     <td class="text-right"><%= vacation.qte %></td>
                     <td />
@@ -123,7 +124,7 @@
                         <% end %>
                     </td>
                     <td class="text-right"><%= vacation.forfaithtd %></td>
-                    <td class="text-right"><%= number_to_currency(montant_vacation) %></td>
+                    <td class="text-right"><%= number_to_currency(vacation.montant) %></td>
                     <td class="text-right">
                         <%= cumul_hetd %>
                         <% if (nbr_heures_statutaire > 0) && (cumul_hetd >= nbr_heures_statutaire) %>
@@ -147,7 +148,7 @@
                 <% montant_responsabilite = (resp.heures * Cour.Tarif).round(2) %>
                 <% cumul_resps += montant_responsabilite %>
                 <% cumul_hetd += resp.heures %>
-                <% formation = Formation.unscoped.find(resp.formation_id) %>
+                <% formation = Formation.find(resp.formation_id) %>
 
                 <tr class="hover border">
                     <td>R</td>

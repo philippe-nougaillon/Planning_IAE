@@ -1,0 +1,61 @@
+<div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'user-md' %> Liste des activités</h1>
+  <% if policy(VacationActivite).new? %>
+    <%= link_to new_vacation_activite_path, class: 'btn btn-sm btn-primary btn-outline hover:!text-white' do %>
+      <%= fa_icon 'plus-circle' %> Activité
+    <% end %>
+  <% end %>
+</div>
+
+<div class="bs-container p-4 shadow mb-4">
+  <%= form_tag request.path, method: :get do %>
+    <div class="flex flex-wrap gap-4">
+      <div class="sm:w-4/12">
+        <%= label_tag :nature %>
+        <%= select_tag :nature, options_for_select(@natures, params[:nature]), class: 'slim-select',
+                      include_blank:true, onchange: 'this.form.submit()' %>
+
+      </div>
+
+
+      <div class="sm:w-4/12 pr-2">
+        <%= label_tag :statut, "Statut" %>
+        <%= select_tag :statut, options_for_select(VacationActiviteTarif.statuts, 
+              params[:statut]), include_blank:true,
+              class: 'select select-bordered select-sm w-full', onchange: 'this.form.submit()' %>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap">
+    </div>
+  <% end %>
+</div>
+
+<div class="overflow-x-auto">
+  <table class="table">
+    <thead class="bg-slate-100 border">
+      <tr>
+        <th>Nature</th>
+        <th>Type</th>
+        <th>Enseignant</th>
+        <th>Titulaire</th>
+        <th>Salarié</th>
+        <th>Permanent</th>
+        <th>CEV</th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <%= render partial: "vacation_activite", collection: @vacation_activites, locals: {nature: nil} %>
+    </tbody>
+  </table>
+</div>
+
+<div class="page_info mt-4">
+  <%= page_entries_info(@vacation_activites, 'Activité') %>
+</div>
+
+<div class="planning_pagination">
+  <%= will_paginate @vacation_activites %>
+</div>

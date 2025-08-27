@@ -4,11 +4,6 @@ class MailLogsController < ApplicationController
 
   # GET /mail_logs or /mail_logs.json
   def index
-    mg_client = Mailgun::Client.new ENV["MAILGUN_API_KEY"], 'api.eu.mailgun.net'
-    domain = ENV["MAILGUN_DOMAIN"]
-    @result_failed = mg_client.get("#{domain}/events", {:event => 'failed'}).to_h
-    @result_opened = {}.to_h
-
     @mail_logs = MailLog.all
 
     unless params[:search].blank?
@@ -19,12 +14,12 @@ class MailLogsController < ApplicationController
       @mail_logs = @mail_logs.where(subject: params[:search_subject])
     end
 
-    @mail_logs = @mail_logs.reorder('mail_logs.'+ sort_column + ' ' + sort_direction)
-
-    if params[:ko].blank?
-      @mail_logs = @mail_logs.paginate(page: params[:page], per_page: 20)
-      @result_opened = mg_client.get("#{domain}/events", {:event => 'opened'}).to_h
+    if params[:ko].present?
+      @mail_logs = @mail_logs.where(statut: false)
     end
+    
+    @mail_logs = @mail_logs.reorder('mail_logs.'+ sort_column + ' ' + sort_direction)
+    @mail_logs = @mail_logs.paginate(page: params[:page], per_page: 20)
   end
 
   # GET /mail_logs/1 or /mail_logs/1.json
@@ -32,6 +27,11 @@ class MailLogsController < ApplicationController
     mg_client = Mailgun::Client.new ENV["MAILGUN_API_KEY"], 'api.eu.mailgun.net'
     domain = ENV["MAILGUN_DOMAIN"]
     @result = mg_client.get("#{domain}/events", {:event => 'failed'}).to_h
+  end
+
+  def refresh
+    FetchMailgunInfos.call
+    redirect_to(mail_logs_path, notice: 'Actualisation réussie')
   end
 
   private

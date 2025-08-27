@@ -19,19 +19,16 @@
       </div>
 
       <div class="form-control">
-        <%= f.label :email, "Email *" %>
-        <%= f.email_field :email, required: true, class: 'input input-bordered input-sm w-full' %>
+        <%= f.label :table, "N° Table" %>
+        <%= f.number_field :table, class: 'input input-bordered input-sm w-full' %>
       </div>
 
-      <div class="form-control">
-        <%= f.label :mobile, "Mobile" %>
-        <%= f.text_field :mobile, class: 'input input-bordered input-sm w-full' %>
-      </div>
-
-      <div class="field mb-6">
-        <%= check_box_tag :notify %>
-        <%= label_tag :notify, "Créer un compte d'accès et en informer l'étudiant ?", class: 'font-bold' %>
-      </div>
+      <% if @etudiant.new_record? %>
+        <div class="field mb-6">
+          <%= check_box_tag :notify %>
+          <%= label_tag :notify, "Créer un compte d'accès et en informer l'étudiant ?", class: 'font-bold' %>
+        </div>
+      <% end %>
 
       <%= f.submit class: "btn btn-primary text-white", 'data-turbo': false %>
 
@@ -40,12 +37,17 @@
     <div class="relative flex-grow max-w-full flex-1 flex flex-col gap-4 pl-4">
       <div class="form-control">
         <%= f.label :formation_id, "Formation *" %>
-        <%= f.collection_select(:formation_id, Formation.unscoped.all, :id, :nom, {include_blank: true}, class:"slim-select") %>
+        <%= f.collection_select(:formation_id, @formations, :id, :nom, {include_blank: true}, class:"slim-select") %>
       </div>
 
       <div class="form-control">
-        <%= f.label :workflow_state, "Statut" %>
-        <%= f.select :workflow_state, Etudiant.workflow_spec.states.keys.to_a, {include_blank: true}, class: 'select select-bordered select-sm w-full' %>
+        <%= f.label :email, "Email *" %>
+        <%= f.email_field :email, required: true, class: 'input input-bordered input-sm w-full' %>
+      </div>
+
+      <div class="form-control">
+        <%= f.label :mobile, "Mobile" %>
+        <%= f.text_field :mobile, class: 'input input-bordered input-sm w-full' %>
       </div>
     </div>
   </div>

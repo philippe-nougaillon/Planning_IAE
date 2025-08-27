@@ -1,0 +1,90 @@
+<p style="margin-bottom: 0.5rem">
+    Bonjour,
+    <br><br>
+    En vue de l'examen de votre UE, merci de bien vouloir faire parvenir à votre gestionnaire de formation <b>au plus tard 1 mois avant</b> la date de l'examen, votre <b>sujet</b> avec <b>la page de garde</b> (en y indiquant les <b>consignes</b>) en format pdf, afin qu'il/elle puisse envoyer les convocations aux étudiants. Vous trouverez ci-joint la page de garde type.
+    <br>
+    Tout sujet envoyé sans page de garde, sera imprimé tel quel.
+</p>
+<br>
+<div style="overflow-x: auto;">
+    <table style="border: 1px solid lightgrey;" cellpadding=5 cellspacing=5>
+        <thead>
+            <tr>
+                <th colspan=2>Date</th>
+                <th>Formation</th>
+                <th>Intervenant</th>
+                <th>Intitulé du cours</th>
+                <th>Salle</th>
+                <th style="color : red;">DATE LIMITE DE RETOUR DU SUJET</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @cours.each_with_index do | c, index | %>
+                <tr style="<%= index.even? ? 'background-color: #f2f2f2;' : nil %>" >
+                    <td>
+                        <b><%= I18n.l(c.debut.to_date, format: :day) %> <%= I18n.l(c.debut.to_date) %></b>
+                    </td>
+                    <td>
+                        <b><%= I18n.l(c.debut, format: :heures_min) %></b>
+                        - <%= I18n.l(c.fin, format: :heures_min) %>
+                    </td>
+                    <td><%= c.try(:formation).try(:nom) %></td>
+                    <td>
+                        <% if c.intervenant.nom_prenom.include?('EXAMEN') %>
+                            <i><b><%= c.intervenant.nom_prenom %></b></i>
+                        <% else %>
+                            <%= c.intervenant.nom_prenom %>
+                        <% end %>
+
+                        <% if c.intervenant_binome %>
+                            <br>
+                            <%= c.intervenant_binome.nom_prenom %>
+                        <% end %>
+                    </td>
+                    <td><%= c.nom_ou_ue %></td>
+                    <td><%= c.try(:salle).try(:nom) %></td>
+                    <td style="color: red;"><b><%= I18n.l((c.debut-1.month).to_date, format: :day) %> <%= I18n.l((c.debut-1.month).to_date) %></b></td>
+                </tr>
+            <% end %>
+        </tbody>
+    </table>
+</div>
+
+<p style="margin-bottom: 0.5rem">
+    Nous vous remercions de vérifier ce récapitulatif et vous rappelons ci-dessous la(es) adresse(s) mail(s) où envoyer votre sujet.
+</p>
+
+<% if @gestionnaires.any? %>
+    <div style="overflow-x: auto;">
+        <table style="border: 1px solid lightgrey;" cellpadding=5 cellspacing=5>
+            <tbody>
+                <% @gestionnaires.each do | formation, email | %>
+                    <% unless email.blank? %>
+                        <tr>
+                            <td style="border: 1px solid lightgrey;"><%= formation %></td>
+                            <td><%= email %></td>
+                        </tr>
+                    <% end %>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+    <br>
+<% end %>
+
+<% unless @message.blank? %>
+    <div style="padding: 15px; background-color: #f2f2f2;">
+        <b><%= @message %></b>
+    </div>
+    <br>
+<% end %>
+
+<p style="margin-bottom: 0.5rem">
+    <b>Vous remerciant par avance du respect des délais et des consignes indiqués ci-dessus,</b>
+</p>
+
+<p style="margin-bottom: 0.5rem">
+    Bien cordialement,
+    <br>
+    IAE Paris
+</p>

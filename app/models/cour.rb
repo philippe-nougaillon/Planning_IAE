@@ -14,14 +14,22 @@ class Cour < ApplicationRecord
   has_many :invits
   has_many :presences
   has_many :etudiants, through: :formation
+  has_many :options, dependent: :destroy
+  accepts_nested_attributes_for :options,
+                                reject_if: lambda{|attributes| attributes['catégorie'].blank? || attributes['description'].blank?},
+                                allow_destroy:true
+  has_many :attendances
+
+  has_one_attached :document
 
   validates :debut, :formation_id, :intervenant_id, :duree, presence: true
-  validate :check_chevauchement_intervenant
-  validate :check_chevauchement, if: Proc.new { |cours| cours.salle_id }
-  validate :jour_fermeture
+  validate :check_chevauchement_intervenant, if: Proc.new {|cours| !(cours.bypass?)}
+  validate :check_chevauchement, if: Proc.new { |cours| cours.salle_id && !(cours.bypass?) }
+  validate :jour_fermeture, if: Proc.new {|cours| !(cours.bypass?)}
   validate :reservation_dates_must_make_sense
-  validate :jour_ouverture, if: Proc.new { |cours| cours.salle && cours.salle.bloc != 'Z' }
+  validate :jour_ouverture, if: Proc.new { |cours| cours.salle && cours.salle.bloc != 'Z' && !(cours.bypass?) }
   validate :check_invits_en_cours
+  validate :check_hss
 
   before_validation :update_date_fin
   before_validation :sunday_morning_praise_the_dawning
@@ -29,13 +37,21 @@ class Cour < ApplicationRecord
   before_save :change_etat_si_salle
   before_save :annuler_salle_si_cours_est_annulé
 
+  around_update :check_send_commande_email
+  after_create :check_send_new_commande_email
+
+  after_create   :send_new_examen_email, if: Proc.new { |cours| cours.examen? }
+  around_update  :check_send_examen_email
+  after_destroy :send_delete_examen_email, if: Proc.new { |cours| cours.examen? }
+  
+  after_update :synchronisation_edusign, if: Proc.new { |cours| cours.audits.last.audited_changes["salle_id"]}
+
   # Mettre à jour les SCENIC VIEWS
   after_commit {
     CoursNonPlanifie.refresh
   }
 
-  enum etat: [:planifié, :à_réserver, :confirmé, :reporté, :annulé, :réalisé]
-  
+  enum :etat, [:planifié, :à_réserver, :confirmé, :reporté, :annulé, :réalisé]
 
   self.per_page = 20
 
@@ -55,13 +71,13 @@ class Cour < ApplicationRecord
     actions = ["Exporter vers Excel", "Exporter vers iCalendar", "Exporter en PDF"]
 
     if user.partenaire_qse?
-      actions << ["Générer Feuille émargement PDF"]
+      actions << ["Générer Feuille émargement PDF", "Convocation étudiants PDF"]
     else
       actions << ["Supprimer", "Changer de salle", "Changer d'intervenant", "Intervertir"]
     end
 
     if user.role_number >= 5
-      actions << ["Changer d'état", "Changer de date", "Inviter", "Générer Feuille émargement PDF", "Générer Pochette Examen PDF", "Convocation étudiants PDF"]
+      actions << ["Changer d'état", "Changer de date", "Inviter", "Générer Feuille émargement PDF", "Générer Feuille émargement présences signées PDF", "Générer Pochette Examen PDF", "Convocation étudiants PDF"]
     end
     return actions.flatten.sort
   end
@@ -100,8 +116,25 @@ class Cour < ApplicationRecord
   end  
 
   def self.commandes
-    Cour.confirmé.where("DATE(cours.debut) >= ?", Date.today).where("cours.commentaires LIKE '%+%'").order(:debut)
+    Cour.confirmé.where("DATE(cours.debut) >= ?", Date.today).where("cours.commentaires LIKE '+%'").order(:debut)
   end
+
+  def self.commandes_archivées
+    Cour.réalisé.where("DATE(cours.debut) < ?", Date.today).where("cours.commentaires LIKE '+%'").order(debut: :desc)
+  end
+
+  def self.commandes_v2
+    Cour.confirmé.where("DATE(cours.debut) >= ?", Date.today).joins(:options).where(options: {catégorie: :commande}).order(:debut)
+  end
+
+  def self.commandes_archivées_v2
+    Cour.réalisé.where("DATE(cours.debut) < ?", Date.today).joins(:options).where(options: {catégorie: :commande}).order(debut: :desc)
+  end
+
+  def self.etats_humanized
+    self.etats.transform_keys(&:humanize)
+  end
+
 
   # Simple_calendar attributes
   def start_time
@@ -117,7 +150,7 @@ class Cour < ApplicationRecord
   end
 
   def manque_de_places? 
-    (self.salle.places > 0 && Formation.unscoped.find(self.formation_id).nbr_etudiants > self.salle.places)
+    (self.salle.places > 0 && Formation.find(self.formation_id).nbr_etudiants > self.salle.places)
   end
 
   def nom_ou_ue
@@ -211,8 +244,12 @@ class Cour < ApplicationRecord
     43.50
   end
 
+  def self.taux_horaire_vacation
+    11.88
+  end
+
   def taux_td
-    case Formation.unscoped.find(self.formation_id).nomtauxtd
+    case Formation.find(self.formation_id).nomtauxtd
     when 'TD'
       Cour.Tarif
     when 'CM'
@@ -225,7 +262,7 @@ class Cour < ApplicationRecord
   end
 
   def HETD
-    case Formation.unscoped.find(self.formation_id).nomtauxtd
+    case Formation.find(self.formation_id).nomtauxtd
     when 'TD'
       1
     when 'CM'
@@ -242,7 +279,7 @@ class Cour < ApplicationRecord
   end
 
   def imputable?
-    !(self.hors_service_statutaire || Formation.unscoped.find(self.formation_id).hss)
+    !(self.hors_service_statutaire || Formation.find(self.formation_id).hss)
   end
 
 
@@ -259,7 +296,7 @@ class Cour < ApplicationRecord
   def progress_bar_pct3
     # calcul le % de réalisation du cours
     now = ApplicationController.helpers.time_in_paris_selon_la_saison
-    pct = ((now.to_f - self.debut.in_time_zone('Paris').to_f) / (self.fin.in_time_zone('Paris').to_f - self.debut.in_time_zone('Paris').to_f) * 100).to_f
+    ((now.to_f - self.debut.in_time_zone('Paris').to_f) / (self.fin.in_time_zone('Paris').to_f - self.debut.in_time_zone('Paris').to_f) * 100).to_f
   end
 
   def range
@@ -275,58 +312,6 @@ class Cour < ApplicationRecord
     else
       return range[0..-2] # enlève le dernier créneau horaire pour ne pas afficher la dernière heure comme occupée
     end
-  end
-
-  def self.generate_xls(cours, exporter_binome, voir_champs_privés = false)
-    require 'spreadsheet'    
-    
-    Spreadsheet.client_encoding = 'UTF-8'
-
-    book = Spreadsheet::Workbook.new
-    sheet = book.create_worksheet name: 'Planning'
-		bold = Spreadsheet::Format.new :weight => :bold, :size => 10
-	
-    sheet.row(0).concat Cour.xls_headers
-		sheet.row(0).default_format = bold
-    
-    index = 1
-    cours.each do |c|
-        formation = Formation.unscoped.find(c.formation_id)
-        fields_to_export = [
-            c.id, 
-            I18n.l(c.debut.to_date), 
-            c.debut.to_formatted_s(:time), 
-            I18n.l(c.fin.to_date), 
-            c.fin.to_formatted_s(:time), 
-            c.formation_id, formation.nom_promo, formation.code_analytique, 
-            c.intervenant_id, c.intervenant.nom_prenom,
-            c.intervenant_binome.try(:nom_prenom), 
-            c.code_ue, c.nom, 
-            c.etat, (c.salle ? c.salle.nom : nil), 
-            c.duree,
-            (c.elearning ? "OUI" : nil), 
-            (!(c.imputable?) ? "OUI" : nil),
-            ((voir_champs_privés && c.imputable?) ? formation.taux_td : nil),
-            ((voir_champs_privés && c.imputable?) ? c.HETD : nil),
-            (voir_champs_privés ? c.commentaires : nil),
-            c.created_at,
-            c.audits.first.user.try(:email),
-            c.updated_at
-        ]
-        sheet.row(index).replace fields_to_export
-        #logger.debug "#{index} #{fields_to_export}"
-        index += 1
-
-        # créer une ligne d'export supplémentaire pour le cours en binome
-        if exporter_binome and c.intervenant_binome
-          fields_to_export[8] = c.intervenant_binome_id
-          fields_to_export[9] = c.intervenant_binome.nom_prenom 
-          sheet.row(index).replace fields_to_export
-          index += 1
-        end  
-    end
-
-    return book
   end
 
   # PGSearch Attributs
@@ -360,252 +345,21 @@ class Cour < ApplicationRecord
     return calendar
   end
 
-  def self.generate_etats_services_csv(cours, intervenants, start_date, end_date)
-    require 'csv'
-
-    cours = cours.where(etat: Cour.etats[:réalisé])
-
-    total_hetd = 0
-    CSV.generate(col_sep:';', quote_char:'"', encoding:'UTF-8') do | csv |
-        csv << ['Type','Intervenant','Date','Heure','Formation','Code','Intitulé','Etat','Commentaires',
-                'Durée','HSS?','E-learning?','Binôme','CM/TD?', 'Taux_TD','HETD','Montant','Cumul_hetd','Dépassement?']
-    
-        intervenants.each do | intervenant |
-      
-          # Passe au suivant si intervenant est 'A CONFIRMER'
-          next if intervenant.id == 445
-
-          nbr_heures_statutaire = intervenant.nbr_heures_statutaire || 0
-
-          cours_ids = cours.where(intervenant: intervenant).order(:debut).pluck(:id)
-          cours_ids << cours.where(intervenant_binome: intervenant).pluck(:id)
-          cours_ids = cours_ids.flatten
-
-          cumul_hetd = 0.00
-
-          @vacations = intervenant.vacations.where("date BETWEEN ? AND ?", start_date, end_date)
-          @responsabilites = intervenant.responsabilites.where("debut BETWEEN ? AND ?", start_date, end_date)
-      
-          cours_ids.each do |id|
-              c = Cour.find(id)
-
-              if c.imputable?
-                cumul_hetd += c.HETD
-                montant_service = c.montant_service.round(2)
-              end
-
-              formation = Formation.unscoped.find(c.formation_id)
-
-              fields_to_export = [
-                'C',
-                intervenant.nom_prenom,
-                I18n.l(c.debut.to_date),
-                c.debut.strftime("%k:%M"), 
-                formation.abrg, 
-                formation.code_analytique_avec_indice(c.debut), 
-                c.nom_ou_ue,
-                c.etat,
-                c.commentaires,
-                c.duree.to_s.gsub(/\./, ','),
-                (c.hors_service_statutaire ? "OUI" : ''),
-                (c.elearning ? "OUI" : ''), 
-                (c.intervenant && c.intervenant_binome ? "OUI" : ''),
-                c.CMTD?, 
-                formation.taux_td.to_s.gsub(/\./, ','),
-                c.HETD.to_s.gsub(/\./, ','),
-                montant_service.to_s.gsub(/\./, ','),
-                cumul_hetd.to_s.gsub(/\./, ','),
-                ((nbr_heures_statutaire > 0) && (cumul_hetd >= nbr_heures_statutaire) ? "#{cumul_hetd - nbr_heures_statutaire}" : '')
-              ]
-              csv << fields_to_export
-          end 
-
-          @vacations.each do |vacation|
-            if vacation.forfaithtd > 0
-              montant_vacation = ((Cour.Tarif * vacation.forfaithtd) * vacation.qte).round(2)
-            else
-              montant_vacation = vacation.tarif * vacation.qte
-            end
-            fields_to_export = [
-                  'V',
-                  intervenant.nom_prenom,
-                  vacation.date,
-                  nil,
-                  vacation.formation.nom,
-                  vacation.formation.code_analytique,
-                  vacation.titre,
-                  nil, 
-                  vacation.qte,
-                  nil, nil, nil, nil,
-                  vacation.forfaithtd.to_s.gsub(/\./, ','),
-                  montant_vacation.to_s.gsub(/\./, ',')
-                ]
-            csv << fields_to_export
-          end
-
-          @responsabilites.each do |resp|
-            montant_responsabilite = (resp.heures * Cour.Tarif).round(2)
-            fields_to_export = [
-                  'R',
-                  intervenant.nom_prenom,
-                  I18n.l(resp.debut),
-                  I18n.l(resp.fin),
-                  resp.formation.nom,
-                  resp.formation.code_analytique,
-                  resp.titre,
-                  nil, 
-                  resp.heures.to_s.gsub(/\./, ','), 
-                  nil, nil, nil, nil, nil,
-                  montant_responsabilite.to_s.gsub(/\./, ',')
-                ]
-            csv << fields_to_export
-          end
-        end
-    end
-  end
-
-  def self.generate_etats_services_xls(cours, intervenants, start_date, end_date)
-    require 'spreadsheet'    
-    
-    Spreadsheet.client_encoding = 'UTF-8'
-
-    book = Spreadsheet::Workbook.new
-    sheet = book.create_worksheet name: 'Etats de services'
-		bold = Spreadsheet::Format.new :weight => :bold, :size => 10
-	
-    sheet.row(0).concat ['Type','Intervenant','Date','Heure','Formation','Code','Intitulé','Etat','Commentaires',
-      'Durée','HSS?','E-learning?','Binôme','CM/TD?', 'Taux_TD','HETD','Montant','Cumul_hetd','Dépassement']
-
-    sheet.row(0).default_format = bold
-    
-    index = 1
-    total_hetd = 0
-    
-    intervenants.each do | intervenant |
-      
-      # Passe au suivant si intervenant est 'A CONFIRMER'
-      next if intervenant.id == 445
-
-      nbr_heures_statutaire = intervenant.nbr_heures_statutaire || 0
-
-      cours_ids = cours.where(intervenant: intervenant).order(:debut).pluck(:id)
-      cours_ids << cours.where(intervenant_binome: intervenant).pluck(:id)
-      cours_ids = cours_ids.flatten
-
-      cumul_hetd = 0.00
-
-      @vacations = intervenant.vacations.where("date BETWEEN ? AND ?", start_date, end_date)
-      @responsabilites = intervenant.responsabilites.where("debut BETWEEN ? AND ?", start_date, end_date)
-  
-      cours_ids.each do |id|
-          c = Cour.find(id)
-
-          if c.imputable?
-            cumul_hetd += c.HETD
-            montant_service = c.montant_service.round(2)
-          end
-
-          formation = Formation.unscoped.find(c.formation_id)
-
-          fields_to_export = [
-            'C',
-            intervenant.nom_prenom,
-            I18n.l(c.debut.to_date),
-            c.debut.strftime("%k:%M"), 
-            formation.abrg, 
-            formation.code_analytique_avec_indice(c.debut), 
-            c.nom_ou_ue,
-            c.etat,
-            c.commentaires,
-            c.duree,
-            (c.hors_service_statutaire ? "OUI" : ''),
-            (c.elearning ? "OUI" : ''), 
-            (c.intervenant && c.intervenant_binome ? "OUI" : ''),
-            formation.nomtauxtd, 
-            c.taux_td,
-            c.HETD,
-            montant_service,
-            cumul_hetd,
-            ((nbr_heures_statutaire > 0) && (cumul_hetd >= nbr_heures_statutaire) ? cumul_hetd - nbr_heures_statutaire : nil)
-          ]
-
-          sheet.row(index).replace fields_to_export
-          index += 1
-      end 
-
-      @vacations.each do |vacation|
-        if vacation.forfaithtd > 0
-          montant_vacation = ((Cour.Tarif * vacation.forfaithtd) * vacation.qte).round(2)
-          cumul_hetd += (vacation.qte * vacation.forfaithtd)
-        else
-          montant_vacation = vacation.tarif * vacation.qte
-        end
-        formation = Formation.unscoped.find(vacation.formation_id)
-        
-        fields_to_export = [
-              'V',
-              intervenant.nom_prenom,
-              I18n.l(vacation.date.to_date),
-              nil,
-              formation.nom,
-              formation.code_analytique,
-              vacation.titre,
-              nil, nil, 
-              vacation.qte,
-              nil, nil, nil, 
-              'TD', 1,
-              vacation.forfaithtd,
-              montant_vacation,
-              cumul_hetd,
-              ((nbr_heures_statutaire > 0) && (cumul_hetd >= nbr_heures_statutaire) ? cumul_hetd - nbr_heures_statutaire : nil)
-            ]
-        sheet.row(index).replace fields_to_export
-        index += 1
-      end
-
-      @responsabilites.each do |resp|
-        montant_responsabilite = (resp.heures * Cour.Tarif).round(2)
-        cumul_hetd += resp.heures
-        formation = Formation.unscoped.find(resp.formation_id)
-
-        fields_to_export = [
-              'R',
-              intervenant.nom_prenom,
-              I18n.l(resp.debut),
-              nil,
-              formation.nom,
-              formation.code_analytique,
-              resp.titre,
-              nil,
-              nil, 
-              resp.heures, 
-              nil, nil, nil,
-              'TD', 1, nil,
-              montant_responsabilite,
-              cumul_hetd,
-              ((nbr_heures_statutaire > 0) && (cumul_hetd >= nbr_heures_statutaire) ? cumul_hetd - nbr_heures_statutaire : nil)
-        ]
-        sheet.row(index).replace fields_to_export
-        index += 1
-      end
-    end
-
-    return book 
-  end
-
-  # Si c'est un certain id
+  # Si c'est un examen IAE / examen rattrapage / Tiers-temps
   def examen?
     [169, 1166, 522].include?(self.intervenant.id)
   end
 
-  # def self.cours_a_planifier
-  #   # ids des cours créés par utilisateur autre que le user (#41)
-  #   # vérifie que la date de début de cours est dans la période observée
-  #   Cour.where("id IN (?)", Audited::Audit.where(auditable_type: 'Cour').where.not(user_id: 41).pluck(:auditable_id).uniq)
-  #       .planifié
-  #       .where("cours.debut BETWEEN ? AND ?", Date.today, Date.today + 30.days)
-  #       .count
-  # end
+  def type_examen
+    case self.intervenant_id
+    when 169
+      "Examen"
+    when 1166
+      "Examen Rattrapage"
+    when 522
+      "Examen Tiers-Temps"
+    end
+  end
 
   def signable_etudiant?
     now = ApplicationController.helpers.time_in_paris_selon_la_saison
@@ -615,6 +369,19 @@ class Cour < ApplicationRecord
   def signable_intervenant?
     now = ApplicationController.helpers.time_in_paris_selon_la_saison
     (now > self.debut + 30.minutes)
+  end
+
+  def bypass?
+    (self.commentaires && self.commentaires.include?("BYPASS=#{self.id}"))
+  end
+
+  def désynchronisé?
+    # Regarde si un cours réalisé d'une formation étant sur Edusign n'a aucune présence de créé.
+    Formation.where(send_to_edusign: true).pluck(:id).include?(self.formation_id) && self.réalisé? && self.attendances.empty?
+  end
+
+  def changements_examen
+    saved_changes.except("updated_at", "created_at")
   end
 
   private
@@ -687,8 +454,15 @@ class Cour < ApplicationRecord
       return if self.intervenant.doublon 
 
       # s'il y a dejà des cours pour le même intervenant à la même date
-      cours = Cour.where("intervenant_id = ? AND ((debut BETWEEN ? AND ?) OR (fin BETWEEN ? AND ?))", 
-                          self.intervenant_id, self.debut, self.fin, self.debut, self.fin)
+      cours = Cour.where(
+      "intervenant_id = :intervenant_id AND 
+      (
+        (debut BETWEEN :debut AND :fin) OR
+        (fin BETWEEN :debut AND :fin) OR
+        (:debut BETWEEN debut AND fin) OR
+        (:fin BETWEEN debut AND fin)
+      )
+      ", intervenant_id: self.intervenant_id, debut: self.debut, fin: self.fin)
 
       # si cours en chevauchement n'est pas le cours lui même (modif de cours)
       cours = cours.where.not(id: self.id)
@@ -738,4 +512,103 @@ class Cour < ApplicationRecord
         errors.add(:cours, 'a des invitations en cours !')
       end
     end
+
+    def check_hss
+      if self.formation.hss && !self.hors_service_statutaire
+        errors.add(:hors_service_statutaire, 'ne correspond pas à celui de la formation')
+      end
+    end
+
+    def check_send_commande_email
+      old_commentaires = commentaires_was
+      yield
+      commande_status = determine_statut_commande(old_commentaires, commentaires)
+      send_email_commande(commande_status, old_commentaires)
+    end
+
+    def determine_statut_commande(old_commentaires, new_commentaires)
+      if old_commentaires && old_commentaires.include?('+')
+        new_commentaires.include?('+') ? 'modifiée' : 'supprimée'
+      elsif new_commentaires && new_commentaires.include?('+')
+        'ajoutée'
+      else
+        ''
+      end
+    end
+
+    def send_email_commande(commande_status, old_commentaires)
+      case commande_status
+      when 'modifiée'
+        ToolsMailer.with(cour: self, old_commentaires: old_commentaires).commande_modifiée.deliver_now
+      when 'supprimée'
+        ToolsMailer.with(cour: self, old_commentaires: old_commentaires).commande_supprimée.deliver_now
+      when 'ajoutée'
+        ToolsMailer.with(cour: self).nouvelle_commande.deliver_now
+      end
+    end
+
+    def check_send_new_commande_email
+      if self.commentaires && self.commentaires.include?('+')
+        ToolsMailer.with(cour: self).nouvelle_commande.deliver_now
+      end
+    end
+
+    def check_send_examen_email
+      old_cour = self.dup
+      old_cour.intervenant_id = intervenant_id_was
+
+      yield
+
+      # Check si le cour était ou est un examen
+      if Intervenant.find_by(id: old_cour.intervenant_id).try(:examen?) || self.examen?
+        examen_status = determine_statut_examen(old_cour.intervenant_id, self.intervenant_id)
+        send_email_examen(examen_status, old_cour)
+      end
+    end
+
+    def determine_statut_examen(old_intervenant_id, new_intervenant_id)
+      if old_intervenant_id != new_intervenant_id
+        # On passe d'un type d'examen à un autre
+        if Intervenant.find(new_intervenant_id).examen? && Intervenant.find_by(id: old_intervenant_id).try(:examen?)
+          'modifié'
+        # L'examen devient un cours
+        elsif Intervenant.find_by(id: old_intervenant_id).try(:examen?)
+          'supprimé'
+        # Un cours devient un examen
+        else
+          'ajouté'
+        end
+      else
+        # Cas de loin le plus probable : un examen change de propriété
+        'modifié'
+      end
+    end
+
+    def send_email_examen(examen_status, old_cour)
+      case examen_status
+      when 'modifié'
+        mailer_response = CourMailer.with(cour: self).examen_modifié.deliver_now
+      when 'supprimé'
+        mailer_response = CourMailer.with(cour: self).examen_supprimé.deliver_now
+      when 'ajouté'
+        mailer_response = CourMailer.with(cour: self).examen_ajouté.deliver_now
+      end
+      MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen #{examen_status}")
+    end
+
+    def send_new_examen_email
+      mailer_response = CourMailer.with(cour: self).examen_ajouté.deliver_now
+      MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen ajouté")
+    end
+
+  def send_delete_examen_email
+    mailer_response = CourMailer.with(cour: self).examen_supprimé.deliver_now
+    MailLog.create!(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen supprimé")
+  end
+
+  def synchronisation_edusign
+    # Modifier la salle sur Edusign si changement
+    EdusignJob.perform_later("salle changée", self.audits.last.user_id, {cour_id: self.id})
+  end
+
 end

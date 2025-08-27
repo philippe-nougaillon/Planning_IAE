@@ -17,23 +17,23 @@ module ToolsHelper
                 ids = audit.audited_changes['formation_id']
                 case ids.class.name
                 when 'Integer'
-                    pretty_changes << "#{key} initialisée à '#{Formation.unscoped.find(ids).nom}'"
+                    pretty_changes << "#{key} initialisée à '#{Formation.find_by(id: ids).try(:nom)}'"
                 when 'Array'
                     if ids.first && ids.last 
-                        pretty_changes << "#{key} changée de '#{Formation.unscoped.find(ids.first).nom}' à '#{Formation.unscoped.find(ids.last).nom}'"
+                        pretty_changes << "#{key} changée de '#{Formation.find_by(id: ids.first).try(:nom)}' à '#{Formation.find_by(id: ids.last).try(:nom)}'"
                     elsif ids.first 
-                        pretty_changes << "#{key} changée de '#{Formation.unscoped.find(ids.first).nom}' à 'nil'"
+                        pretty_changes << "#{key} changée de '#{Formation.find_by(id: ids.first).try(:nom)}' à 'nil'"
                     else
-                        pretty_changes << "#{key} changée de 'nil' à '#{Formation.unscoped.find(ids.last).nom}'"
+                        pretty_changes << "#{key} changée de 'nil' à '#{Formation.find_by(id: ids.first).try(:nom)}'"
                     end
                 end 
-            when 'Intervenant'
-                ids = audit.audited_changes['intervenant_id']
+            when 'Intervenant', 'Intervenant binome'
+                ids = audit.audited_changes["#{key.parameterize.underscore}_id"]
                 case ids.class.name
                 when 'Integer'
-                    pretty_changes << "#{key} initialisé à '#{Intervenant.find(ids).nom_prenom}'"
+                    pretty_changes << "#{key} initialisé à '#{Intervenant.find_by(id: ids)&.nom_prenom}'"
                 when 'Array'
-                    pretty_changes << "#{key} changé de '#{Intervenant.find(ids.first).nom_prenom}' à '#{Intervenant.find(ids.last).nom_prenom}'"
+                    pretty_changes << "#{key} changé de '#{Intervenant.find_by(id: ids.first)&.nom_prenom}' à '#{Intervenant.find_by(id: ids.last)&.nom_prenom}'"
                 end 
             when 'User'
                 ids = audit.audited_changes['user_id']
@@ -57,7 +57,7 @@ module ToolsHelper
                 if audit.audited_changes['fin'].class.name == 'Array'
                     pretty_changes << "Horaire de fin modifié de '#{I18n.l(c.last.first, format: :long)}' à '#{I18n.l(c.last.last, format: :long)}'"
                 else
-                    pretty_changes << "Fin initialisée à '#{c.last}'"
+                    pretty_changes << "Fin initialisée à '#{I18n.l(c.last, format: :long)}'"
                 end
             when 'Etat'
                 if audit.audited_changes['etat'].class.name == 'Array'

@@ -46,15 +46,14 @@ class UsersController < ApplicationController
     session[:direction] = params[:direction]
 
     @users = @users
-                .reorder("#{sort_column} #{sort_direction}")
+                .reorder(Arel.sql("#{sort_column} #{sort_direction}"))
                 .paginate(page: params[:page], per_page: 10)
   end
 
   # GET /users/1
   # GET /users/1.json
   def show
-    @audits = Audited.audit_class.where(user_id:@user.id).order("id DESC")
-    @audits = @audits.paginate(page:params[:page], per_page:20)
+    @audits = @user.audits.reorder(id: :desc).paginate(page:params[:page], per_page:20)
   end
 
   # GET /users/new
@@ -100,6 +99,8 @@ class UsersController < ApplicationController
   # DELETE /users/1.json
   def destroy
     @user.discard
+    # à décommenter uniquement lorsqu'il y a :rememberable d'activé, sinon ceux qui essayeront de se connecter avec le compte discarded auront l'erreur 'Stack level too deep'
+    # @user.forget_me! if @user.remember_created_at
     respond_to do |format|
       format.html { redirect_to users_path, notice: 'Utilisateur désactivé !' }
       format.json { head :no_content }

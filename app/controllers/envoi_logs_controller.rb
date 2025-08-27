@@ -35,7 +35,7 @@ class EnvoiLogsController < ApplicationController
     # créer le prochain envoi
     new_envoi_log = EnvoiLog.new
     new_envoi_log.date_prochain = @envoi_log.date_prochain
-    new_envoi_log.msg = @envoi_log.msg
+    new_envoi_log.message = @envoi_log.message
     new_envoi_log.save
 
     redirect_to envoi_logs_path, notice: "Job placé dans la file d'attente pour exécution immédiate"
@@ -64,7 +64,7 @@ class EnvoiLogsController < ApplicationController
         EnvoyerNotificationsJob.perform_later(envoi_log.id)
       end
     end
-    redirect_to envoi_logs_path, notice: "Démarrage  de l'envoi des rappels en état 'prêts'."
+    redirect_to envoi_logs_path, notice: "Démarrage de l'envoi des rappels en état 'prêts'."
   end
 
   # GET /envoi_logs/new
@@ -124,7 +124,7 @@ class EnvoiLogsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def envoi_log_params
-      params.require(:envoi_log).permit(:date_prochain, :workflow_state, :cible, :msg)
+      params.require(:envoi_log).permit(:date_prochain, :workflow_state, :cible, :message)
     end
 
     def is_user_authorized

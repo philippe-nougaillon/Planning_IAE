@@ -45,10 +45,19 @@ namespace :cours do
     end
 
     intervenants.each do | intervenant |
-      cours = Cour.where("debut BETWEEN (?) AND (?)", start_day, end_day)
-                  .where(etat: Cour.etats.values_at(:planifié, :confirmé))
-                  .where("intervenant_id = ? OR intervenant_binome_id = ?", intervenant.id, intervenant.id)
-                  .order(:debut)
+      cours = Cour.where("debut BETWEEN (?) AND (?)", start_day, end_day).where(etat: Cour.etats.values_at(:planifié, :confirmé))
+
+      if envoi_specs.cible != 'Examen'
+        cours = cours.where("intervenant_id = ? OR intervenant_binome_id = ?", intervenant.id, intervenant.id)
+      elsif envoi_specs.cible_id
+        # Examen choisi
+        cours = cours.where("intervenant_id = ? AND intervenant_binome_id = ?", envoi_specs.cible_id, intervenant.id)
+      else
+        # Tous les examens
+        cours = cours.where("intervenant_id = ANY ('{169,522,1166}'::int[]) AND intervenant_binome_id = ?", intervenant.id)
+      end
+
+      cours = cours.order(:debut)
 
       if envoi_specs.cible == 'Formation'
         cours = cours.where(formation_id: envoi_specs.cible_id) 
@@ -73,10 +82,12 @@ namespace :cours do
           puts "Gestionnaire #{formation} = #{gest}"
         end
 
-        envoyes += 1 if envoyer_liste_cours_a_intervenant(start_day, end_day, intervenant, cours, liste_des_gestionnaires, envoi_specs.id, args.test) 
+        envoyes += 1 if envoyer_liste_cours_a_intervenant(start_day, end_day, intervenant, cours, liste_des_gestionnaires, envoi_specs.id, envoi_specs.cible == 'Examen', args.test) 
 
-        # Mettre à jour les infos du job
-        envoi_specs.update(mail_count: envoyes)
+        if args.test != 'true'
+          # Mettre à jour les infos du job
+          envoi_specs.update(mail_count: envoyes)
+        end
 
         # puts "Pause !"
         # # faire une grande pause de 40 secondes pour ne pas dépasser la limite de 100mails/heure imposée par la période de probation
@@ -91,15 +102,17 @@ namespace :cours do
 
     puts "* #{envoyes} mail(s) envoyé(s) *"
 
-    # Mettre à jour les infos du job
-    envoi_specs.update(workflow_state: "envoyé", date_exécution: DateTime.now ,mail_count: envoyes)
+    if args.test != 'true'
+      # Mettre à jour les infos du job
+      envoi_specs.update(workflow_state: "envoyé", date_exécution: DateTime.now, mail_count: envoyes)
+    end
   end
 
   desc "Envoyer le lien des sessions des intervenants"
   task envoyer_sessions_intervenants: :environment do
     now = ApplicationController.helpers.time_in_paris_selon_la_saison
 
-    cours = Cour.where(formation_id: [258, 599, 671, 672, 683, 687]).confirmé.where("DATE(debut) = ?", Date.today)
+    cours = Cour.where(formation_id: Formation.cobayes_émargement).confirmé.where("DATE(debut) = ?", Date.today)
     # cours = Cour.confirmé.where("DATE(debut) = ?", Date.today)
     cours.each do |cour|
       if now > cour.debut + 30.minute && now < cour.debut + 40.minute
@@ -124,13 +137,19 @@ namespace :cours do
     end
   end
 
-  def envoyer_liste_cours_a_intervenant(debut, fin, intervenant, cours, gestionnaires, envoi_log_id, test)
+  def envoyer_liste_cours_a_intervenant(debut, fin, intervenant, cours, gestionnaires, envoi_log_id, examen, test)
     if !intervenant.email.blank? && intervenant.email != '?'
       puts "OK => Planning envoyé à: #{intervenant.email}"
 
-      # mailer_response = IntervenantMailer
-      #                                   .notifier_cours(debut, fin, intervenant, cours, gestionnaires, envoi_log_id, test)
-      #                                   .deliver_now
+      if !examen
+        # mailer_response = IntervenantMailer
+        #                                   .notifier_cours(debut, fin, intervenant, cours, gestionnaires, envoi_log_id, test)
+        #                                   .deliver_now
+      else
+        # mailer_response = IntervenantMailer
+        #                                 .notifier_examens(debut, fin, intervenant, cours, gestionnaires, envoi_log_id, test)
+        #                                 .deliver_now
+      end
 
       # MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: intervenant.email, subject: "Rappel des cours")
 

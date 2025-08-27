@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  état: false
+  signée_le: 2025-03-24 09:43:49
+  retard: 1
+  exclu_le: 2025-03-24 09:43:49
+  etudiant: one
+  cour: one
+
+two:
+  état: false
+  signée_le: 2025-03-24 09:43:49
+  retard: 1
+  exclu_le: 2025-03-24 09:43:49
+  etudiant: two
+  cour: two

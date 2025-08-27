@@ -1,9 +1,9 @@
 source "https://rubygems.org"
 
-ruby "3.3.0"
+ruby "3.4.5"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 7.1.3"
+gem "rails", "~> 7.2"
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
@@ -24,7 +24,7 @@ gem "turbo-rails"
 gem "stimulus-rails"
 
 # Use Tailwind CSS [https://github.com/rails/tailwindcss-rails]
-gem "tailwindcss-rails"
+gem "tailwindcss-rails", "~> 3.1"
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
@@ -92,6 +92,7 @@ gem 'will_paginate'
 gem 'pundit'
 
 # PDF
+gem "prawn-svg", "~> 0.34.2"
 gem 'prawn', '~> 2.4'
 gem 'prawn-table', '~> 0.2'
 
@@ -108,8 +109,6 @@ gem 'icalendar'
 # Access-Control-Allow-Origin (pour l'APP React)
 gem 'rack-cors'
 
-# Sucker Punch is a single-process Ruby asynchronous processing library.
-gem 'sucker_punch', '~> 3.0'
 
 # Ruby finite-state-machine-inspired API for modeling workflow 
 gem 'workflow'
@@ -118,7 +117,7 @@ gem 'workflow-activerecord'
 # This gem hooks up your Rails application with Roadie to help you generate HTML emails.
 gem 'roadie-rails', '~> 3.1'
 
-gem 'exception_notification'
+gem 'exception_notification', github: "kmcphillips/exception_notification", branch: "main"
 
 # UDID
 gem 'friendly_id', '~> 5.5'
@@ -144,6 +143,14 @@ gem "mailgun-ruby", "~> 1.2"
 
 gem "sortable-for-rails", "~> 1.2"
 
-gem "page_title_helper", "~> 7.0"
+gem "page_title_helper", "~> 9.0"
 
 gem "matrix", "~> 0.4.2"
+
+gem "rqrcode", "~> 2.2"
+
+gem "solid_queue", "~> 1.2"
+
+gem "mission_control-jobs", "~> 1.1"
+
+gem "skylight", "~> 6.0"

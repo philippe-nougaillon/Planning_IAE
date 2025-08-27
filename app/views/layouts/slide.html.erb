@@ -18,21 +18,74 @@
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
 
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.5.0/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.2/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      ::-webkit-progress-value {
+        background-color: #6666ff;
+      }
+      ::-webkit-progress-bar {
+        background-color: #CCCCCC;
+      }
+
+      .alert {
+        display: grid;
+        width: 100%;
+        grid-auto-flow: row;
+        align-content: flex-start;
+        align-items: center;
+        justify-items: center;
+        gap: 1rem;
+        text-align: center;
+        border-radius: var(--rounded-box, 1rem);
+        border-width: 1px;
+        --tw-border-opacity: 1;
+        border-color: var(--fallback-b2, oklch(var(--b2) / var(--tw-border-opacity)));
+        padding: 1rem;
+        --tw-text-opacity: 1;
+        color: var(--fallback-bc, oklch(var(--bc) / var(--tw-text-opacity)));
+        --alert-bg: var(--fallback-b2, oklch(var(--b2)/1));
+        --alert-bg-mix: var(--fallback-b1, oklch(var(--b1)/1));
+        background-color: var(--alert-bg);
+      }
+
+      .alert-info{
+        border-color: var(--fallback-in, oklch(var(--in) / .2));
+        --tw-text-opacity: 1;
+        color: var(--fallback-inc, oklch(var(--inc) / var(--tw-text-opacity)));
+        --alert-bg: var(--fallback-in, oklch(var(--in)/1));
+        --alert-bg-mix: var(--fallback-b1, oklch(var(--b1)/1));
+      }
+
+      .alert-success{
+        border-color: var(--fallback-su, oklch(var(--su) / .2));
+        --tw-text-opacity: 1;
+        color: var(--fallback-suc, oklch(var(--suc) / var(--tw-text-opacity)));
+        --alert-bg: var(--fallback-su, oklch(var(--su)/1));
+        --alert-bg-mix: var(--fallback-b1, oklch(var(--b1)/1));
+      }
+
+      .alert-warning{
+        border-color: var(--fallback-er, oklch(var(--er) / .2));
+        --tw-text-opacity: 1;
+        color: var(--fallback-erc, oklch(var(--erc) / var(--tw-text-opacity)));
+        --alert-bg: var(--fallback-er, oklch(var(--er)/1));
+        --alert-bg-mix: var(--fallback-b1, oklch(var(--b1)/1));
+      }
+    </style>
   </head>
 
   <body>
-    <div class="flex justify-between items-center w-full shadow px-6 py-4 mb-2 bg-base-100">
-      <%= link_to image_tag('Aikku_logo.png', width: 300, alt: 'logo Business School'), root_url, class: 'flex-1 float-left' %>
-      <p class="flex-1 text-center text-5xl whitespace-nowrap	mb-4">
+    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1); padding-left: 1.5rem; padding-right: 1.5rem; padding-top: 1rem; padding-bottom: 1rem; margin-bottom: 0.5rem; background-color: #FFFFFF">
+      <%= link_to image_tag('Aikku_logo.png', width: 300, alt: 'logo Business School'), root_url, style: 'flex: 1 1 0%; float: left;' %>
+      <p style="flex: 1 1 0%; text-align: center; font-size: 3rem; line-height: 1; white-space: nowrap; margin-bottom: 1rem;">
         <%= l(@planning_date.to_date, format: :long) %>
       </p>
-      <div class="flex-1">
+      <div style="flex: 1 1 0%;">
       </div>
     </div>
 
-    <div class="bs-container mx-auto sm:px-4 max-w-full">
+    <div class="bs-container" style="margin-left: auto; margin-right: auto; max-width: 100%;">
       <%= yield %>
     </div>
   </body>

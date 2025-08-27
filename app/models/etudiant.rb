@@ -19,6 +19,11 @@ class Etudiant < ApplicationRecord
 
   before_destroy :delete_user
 
+  has_many :attendances
+  has_many :justificatifs
+
+  scope :ordered, -> { order(:nom, :prénom) }
+
   workflow do
     state :prospect
     state :candidat
@@ -38,61 +43,7 @@ class Etudiant < ApplicationRecord
     #   'Nom Entreprise', 'Adresse entreprise', 'CP entreprise', 'Ville entreprise',
     #   'Formation_ID','Formation','created_at', 'updated_at'  
     # ]
-    [ 'Civilité', 'NOM', 'Prénom', 'Mail', 'Mobile']
-  end
-
-	def self.generate_xls(etudiants)
-    require 'spreadsheet'    
-		
-		Spreadsheet.client_encoding = 'UTF-8'
-	
-		book = Spreadsheet::Workbook.new
-		sheet = book.create_worksheet name: 'Etudiants'
-		bold = Spreadsheet::Format.new :weight => :bold, :size => 10
-
-		sheet.row(0).concat [ 'Civilité','NOM', 'Prénom', 'Mail', 'Téléphone', 'Formation' ]
-    sheet.row(0).default_format = bold
-		
-		index = 1
-
-    etudiants.each do |i|
-      fields_to_export = [
-          # i.id,
-          # i.workflow_state,
-          i.civilité,
-          i.nom, 
-          # i.nom_marital,
-          i.prénom, 
-          # i.date_de_naissance,
-          # i.lieu_naissance,
-          # i.pays_naissance,
-          # i.nationalité,
-          i.email, 
-          # i.adresse,
-          # i.cp,
-          # i.ville,
-          i.mobile,
-          # i.dernier_ets,
-          # i.dernier_diplôme,
-          # i.cat_diplôme,
-          # i.num_sécu,
-          # i.num_apogée,
-          # i.poste_occupé,
-          # i.nom_entreprise,
-          # i.adresse_entreprise,
-          # i.cp_entreprise,
-          # i.ville_entreprise,
-          # i.formation_id,
-          i.try(:formation).try(:nom), 
-          # i.created_at, 
-          # i.updated_at
-      ]
-
-			sheet.row(index).replace fields_to_export
-			index += 1
-		end
-	
-		return book
+    [ 'Civilité', 'NOM', 'Prénom', 'Mail', 'Mobile', 'Table']
   end
 
   def delete_user
@@ -108,4 +59,8 @@ class Etudiant < ApplicationRecord
   def linked_user
     return User.étudiant.find_by("LOWER(users.email) = ?", self.try(:email).try(:downcase))
   end
+
+  def self.for_select
+		all.map { |i| "#{i.nom} #{i.prénom}"  }
+	end
 end

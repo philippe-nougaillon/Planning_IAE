@@ -13,9 +13,9 @@ module ApplicationHelper
         })
     end
 
-    def page_entries_info(collection)
-        model_name = collection.respond_to?(:human_name) ? collection.model_name.human : (collection.first&.model_name&.human || '')
-    
+    def page_entries_info(collection, entry_name = nil)
+        model_name = entry_name || (collection.respond_to?(:human_name) ? collection.model_name.human : (collection.first&.model_name&.human || ''))
+
         sanitize "Affichage de  #{model_name} " +
           tag.b("#{collection.offset + 1} - #{[collection.per_page * collection.current_page, collection.total_entries].min}") +
           ' sur ' + tag.b(collection.total_entries) +
@@ -23,21 +23,23 @@ module ApplicationHelper
     end
 
     def time_in_paris
-
         DateTime.now.in_time_zone('Europe/Paris')
-
     end
 
     def time_in_paris_selon_la_saison
         #
-        # penser à changer refreshProgressBar()
+        # PENSER À CHANGER :
+        # - "const now = parseInt((Date.now() + 7200000) / 1000)" dans refreshProgressBar()
+        # - "-2.hour" dans _commande.html.erb
+        # - "-2.hour" dans _commandev2.html.erb
+        # - "2.hour" dans @time_zone_difference dans l'initialisation du service d'Edusign
         #
 
         # Heure d'hiver
-        DateTime.now.in_time_zone('Europe/Paris') + 1.hours
+        # DateTime.now.in_time_zone('Europe/Paris') + 1.hours
 
         # Heure d'été
-        #DateTime.now.in_time_zone('Europe/Paris') + 2.hours
+        DateTime.now.in_time_zone('Europe/Paris') + 2.hours
     end
 
     def clean_page(page)

@@ -12,9 +12,11 @@
     <% end %>
   </td>
   <td>
-    <span style="background-color:<%= invit.cour.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
-      <%= invit.cour.formation.nom %>
-    </span>
+    <% if invit.cour.formation %>
+      <span style="background-color:<%= invit.cour.formation.try(:color) %>;padding-left: 7px;margin-right: 5px;"></span>
+        <%= invit.cour.formation.try(:nom) %>
+      </span>
+    <% end %>
   </td>
   <td>
     <%= Unite.find(invit.ue).num_nom if invit.ue %>

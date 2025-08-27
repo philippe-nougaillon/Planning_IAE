@@ -9,15 +9,16 @@ class User < ApplicationRecord
   audited
   
   # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable,
+  # :confirmable, :lockable, :rememberable and :omniauthable,
   devise :database_authenticatable,
-         :recoverable, :rememberable, :trackable, :validatable, :registerable
+         :recoverable, :trackable, :validatable, :registerable, :timeoutable
 
   belongs_to :formation, optional: true   
+  has_many :notes
 
   validates :nom, :prénom, :role, presence: true    
 
-  enum role: {étudiant: 0, 
+  enum :role, {étudiant: 0, 
               intervenant: 1, 
               enseignant: 2, 
               accueil: 3, 
@@ -54,9 +55,13 @@ class User < ApplicationRecord
 		"#{self.try(:prénom)} #{self.try(:nom)}" 
   end
 
+  def nom_prénom_role
+    "#{self&.nom&.upcase} #{self&.prénom&.humanize} (#{self.role.upcase})"
+  end
+
   # wish for discarded users to be unable to login and stop their session
   def active_for_authentication?
-    super && !discarded?
+    super && !self.discarded?
   end
 
   def role_number
@@ -70,11 +75,34 @@ class User < ApplicationRecord
   # Pour donner le role 'gestionnaire' à un partenaire
   # qui pourra modifier que les cours de ses formations
   def partenaire_qse?
-    self.email == "d.gbedemah@icp.fr"
+    ["d.gbedemah@icp.fr","m.danet@icp.fr"].include?(self.email)
   end
 
   def unlinked?
     return ( self.étudiant? && Etudiant.find_by("LOWER(etudiants.email) = ?", self.email.downcase).nil? ) || ( (self.intervenant? || self.enseignant?) && Intervenant.find_by("LOWER(intervenants.email) = ?", self.email.downcase).nil? )
   end
 
+  def accueil_vacataire?
+    self.email == "vacaccueil@iae.pantheonsorbonne.fr"
+  end
+
+  def self.for_edusign_logs_select
+    users = User.where(id: EdusignLog.pluck(:user_id)).map { |u| [u.prénom_et_nom, u.id] }
+    users << ["Serveur", 0]
+    users.sort
+  end
+
+  def super_admin?
+    ENV['USER_JOBS_AUTHORIZATION_IDS']
+      .to_s
+      .split(',')
+      .map(&:to_i)
+      .include?(id)
+  end
+
+  private
+
+    def timeout_in
+      self.étudiant? ? 4.hours : 24.hours
+    end
 end

@@ -1,31 +1,45 @@
 <%= form_for(@fermeture) do |f| %>
   <%= render partial: 'partials/errors', locals: { record: @fermeture } %>
 
-  <div class="flex flex-col sm:w-1/4 mt-4 gap-4">
+  <div class="flex flex-col sm:w-1/4 mt-4 gap-4" data-controller="new-fermetures-count">
     <div class="form-control">
       <%= f.label :date, "Début de la période de fermeture" %>
-      <%= f.text_field :date, 
-                        value: !@fermeture.new_record? ? @fermeture.date.strftime("%Y-%m-%dT%H:%M") : nil, 
-                        type: 'datetime-local', # datetime-local et pas date à cause de Firefox
-                        class: 'input input-bordered input-sm w-full' %>
+      <span data-action="change->new-fermetures-count#calc">
+        <%= f.text_field :date, 
+                          value: !@fermeture.new_record? ? @fermeture.date.strftime("%Y-%m-%d") : nil, 
+                          type: 'date', # datetime-local et pas date à cause de Firefox
+                          class: 'input input-bordered input-sm w-full',
+                          data: { 'new-fermetures-count-target': 'date' } %>
+      </span>
     </div>
 
     <% if @fermeture.new_record? %>
       <div class="form-control">
-        <%= label_tag :date_fin, 'Fin de la période' %>
-        <%= text_field_tag :date_fin,
-                            :date_fin,
-                            type: 'datetime-local', # datetime-local et pas date à cause de Firefox
-                            class: 'input input-bordered input-sm w-full' %>
+        <%= label_tag :date_fin, 'Fin de la période (inclue)' %>
+        <span data-action="change->new-fermetures-count#calc">
+          <%= text_field_tag :date_fin,
+                              :date_fin,
+                              type: 'date', # datetime-local et pas date à cause de Firefox
+                              class: 'input input-bordered input-sm w-full',
+                              data: { 'new-fermetures-count-target': 'date_fin' } %>
       </div>
     <% end %>
 
     <div class="form-control">
-      <%= f.label :nom %>
-      <%= f.text_field :nom, class: 'input input-bordered input-sm w-full' %>
+      <%= f.label :nom, 'Nom de la période / jour férié *' %>
+      <span data-action="change->new-fermetures-count#calc">
+        <%= f.text_field :nom, class: 'input input-bordered input-sm w-full', required: true, data: { 'new-fermetures-count-target': 'nom' } %>
+      </span>
     </div>
 
-    <%= f.submit class: "btn btn-primary text-white mt-4", 'data-turbo': false %>
+    <% if @fermeture.new_record? %>
+      <div data-new-fermetures-count-target="box" class="flex items-center gap-2">
+        <%= check_box_tag :confirm, 0, false, class: 'checkbox', disabled: true, data: { 'new-fermetures-count-target': 'checkbox' } %>
+        <span data-new-fermetures-count-target="message">Confirmer ?</span>
+      </div>
+    <% end %>
+
+    <%= f.submit "Valider", class: "btn btn-primary text-white mt-4", 'data-turbo': false %>
 
   </div>
 

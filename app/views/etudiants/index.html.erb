@@ -1,7 +1,12 @@
 <div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
-  <h1 class="text-3xl"><%= fa_icon 'graduation-cap' %> Liste des étudiants</h1>
+  <h1 class="text-3xl flex items-center gap-3">
+    <span class="material-symbols-outlined text-3xl">
+      school
+    </span>
+    Liste des étudiants
+  </h1>
   <% if policy(Etudiant).new? %>
-    <%= link_to new_etudiant_path, class: 'text-primary' do %>
+    <%= link_to new_etudiant_path, class: 'btn btn-sm btn-primary btn-outline hover:!text-white' do %>
       <%= fa_icon 'plus-circle' %> Etudiant
     <% end %>
   <% end %>
@@ -18,44 +23,74 @@
       <div class="sm:w-1/2 pl-4">
         <%= label_tag :formation_id %>
         <%= select_tag :formation_id, 
-                            options_from_collection_for_select(Formation.unscoped.all, :id, :nom, params[:formation_id]), 
+                            options_from_collection_for_select(@formations, :id, :nom, params[:formation_id]), 
                             class: 'slim-select', 
                             include_blank: true, 
                             onchange: 'this.form.submit()' %>
+      </div>
+
+      <div class="sm:w-2/12 pl-2">
+        <%= label_tag :paginate, "Afficher" %>
+        <br> 
+        <%= radio_button_tag :paginate, "pages", (params[:paginate]=='pages'), onchange:'this.form.submit()' %>
+        Pages 
+        <%= radio_button_tag :paginate, "all", (params[:paginate]=='all'), onchange:'this.form.submit()' %>
+        Tout 
       </div>
     </div>
   <% end %>
 </div>
 
-<div class="overflow-x-auto">
-  <table class="table">
-    <thead class="bg-slate-100 border">
-      <tr>
-        <th><%= sort_link 'etudiants.nom', 'Nom' %></th>
-        <th>Prénom</th>
-        <th>Email</th>
-        <th>Formation</th>
-        <th><%= sort_link 'etudiants.updated_at', 'MàJ il y a' %></th>
-        <th colspan="2"></th>
-      </tr>
-    </thead>
+<%= form_tag action_etudiants_path, name: 'action' do %>
+  <div data-controller="checkbox-select-all action">
+    <div class="overflow-x-auto">
+      <table class="table">
+        <thead class="bg-slate-100 border">
+          <tr>
+            <% if policy(Etudiant).action? %>
+              <th>
+                <span class="flex" data-action="click->action#click">
+                  <input type="checkbox" data-checkbox-select-all-target="checkboxAll" data-action-target="source">
+                </span>
+              </th>
+            <% end %>
+            <th><%= sort_link 'etudiants.nom', 'Nom' %></th>
+            <th><%= sort_link 'etudiants.prénom', 'Prénom' %></th>
+            <th>Email</th>
+            <th>Formation</th>
+            <th><%= sort_link 'etudiants.updated_at', 'MàJ il y a' %></th>
+            <th><%= sort_link 'etudiants.edusign_id', 'Edusign ID?' %></th>
+            <th colspan="2"></th>
+          </tr>
+        </thead>
 
-    <tbody>
-      <%= render @etudiants %>
-    </tbody>
+        <tbody>
+          <%= render @etudiants %>
+        </tbody>
 
-    <tfoot>
-      <tr>
-        <th colspan=8></th>
-      </tr>
-    </tfoot>
-  </table>
-</div>
+        <tfoot>
+          <tr>
+            <th colspan=8></th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
 
-<div class="page_info">
-  <%= page_entries_info @etudiants %>
-</div>
+    <div data-action-target="selector" class="mb-4">
+      <span class="align-bottom">
+        Choisir une action à exécuter sur les étudiants sélectionnés
+      </span>
+      <br>
+      <%= select_tag "action_name", options_for_select(["Création de compte d'accès", "Changer de formation", "Supprimer"]), include_blank:true, class:"select select-bordered select-sm", onchange:'this.form.submit()' %>
+    </div>
+  </div>
+<% end %>
+<% if params[:paginate] == 'pages' %>
+  <div class="page_info">
+    <%= page_entries_info @etudiants %>
+  </div>
 
-<div class="planning_pagination">
-  <%= will_paginate @etudiants %>
-</div>
+  <div class="planning_pagination">
+    <%= will_paginate @etudiants %>
+  </div>
+<% end %>

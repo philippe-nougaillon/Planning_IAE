@@ -1,0 +1,23 @@
+<div class="border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'signature' %> Initialisation Edusign </h1>
+</div>
+<br>
+
+<div>
+  <h4 class="text-xl">
+    Cette fonction permet d'initialiser la synchronisation avec Edusign. 
+    Les éléments sychronisés seront les formations cobayes, leurs étudiants, leurs cours commençant à partir de maintenant et les intervenants de ces cours.
+    <br>
+  </h4>
+</div>
+<br>
+
+<%= form_tag({action: "initialisation_edusign_do", method: :post}) do %>
+
+  <div class="flex flex-wrap">
+    <div class="sm:w-1/3">
+      <%= submit_tag "Initialiser la synchronisation", class: "btn btn-primary text-white", data: {turbo: false, turbo_confirm: 'Confirmez-vous vouloir initialiser la synchronisation ?'} %>
+    </div>
+  </div>
+
+<% end %>

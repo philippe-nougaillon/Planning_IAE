@@ -9,7 +9,7 @@
       <%= meeting.try(:salle).try(:nom) %>  
       <br>
       <% if params[:formation].blank? %>
-        <% formation = Formation.unscoped.find(meeting.formation_id) %>
+        <% formation = Formation.find_by(id: meeting.formation_id) %>
         <span style="background-color:<%= formation.color %>;padding-left: 5px;margin-right: 3px;"></span>
         <b><%= link_to_if user_signed_in?, formation.nom, meeting, class: 'text-primary hover:underline' %></b>
         <br>

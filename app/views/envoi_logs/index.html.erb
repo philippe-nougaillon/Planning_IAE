@@ -1,9 +1,14 @@
 <div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
-  <h1 class="text-3xl"><%= fa_icon 'bell' %> Rappel des cours (file d'attente)</h1>
+  <h1 class="text-3xl"><%= fa_icon 'bell' %> Rappel des cours/examens (file d'attente)</h1>
   <% if policy(EnvoiLog).new? %>
-    <%= link_to tools_rappel_des_cours_path, class: 'text-primary' do %>
-      <%= fa_icon 'plus-circle' %> Rappel
-    <% end %>
+    <div>
+      <%= link_to tools_rappel_des_cours_path, class: 'btn btn-sm btn-primary btn-outline hover:!text-white mr-4' do %>
+        <%= fa_icon 'plus-circle' %> Rappel cours
+      <% end %>
+      <%= link_to tools_rappel_des_examens_path, class: 'btn btn-sm btn-primary btn-outline hover:!text-white' do %>
+        <%= fa_icon 'plus-circle' %> Rappel examens
+      <% end %>
+    </div>
   <% end %>
 </div>
 
@@ -51,7 +56,7 @@
 
 <% if params[:workflow_state] == "prêt" %>
   <div class="flex mt-6" style="gap: 1rem">
-    <%= link_to "Envoyer les rappels 'prêts' aux testeurs (mode test)", envoyer_envoi_logs_path(test: true), class: 'btn btn-warning' %>
-    <%= link_to "Envoyer le rappel des cours 'prêts'", envoyer_envoi_logs_path, class: 'btn btn-error' %>
+    <%= link_to "Envoyer les rappels 'prêts' aux testeurs (mode test)", envoyer_envoi_logs_path(test: true), class: 'btn btn-warning', data: { turbo_method: :get, turbo_confirm: "Confirmez-vous l'envoi des rappels aux testeurs ?" } %>
+    <%= link_to "Envoyer le rappel des cours 'prêts'", envoyer_envoi_logs_path, class: 'btn btn-error', data: { turbo_method: :get, turbo_confirm: "Confirmez-vous l'envoi des rappels 'prêts' ?" } %>
   </div>
 <%end %>

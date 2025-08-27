@@ -36,7 +36,7 @@ class IntervenantsController < ApplicationController
     session[:direction] = params[:direction]
 
     @intervenants = @intervenants
-                      .reorder("#{sort_column} #{sort_direction}")  
+                      .reorder(Arel.sql("#{sort_column} #{sort_direction}"))  
                       .paginate(page: params[:page], per_page: 10)
   end
 
@@ -51,7 +51,7 @@ class IntervenantsController < ApplicationController
       @invits = @invits.where("invits.workflow_state = ?", params[:workflow_state].to_s.downcase)
     end
 
-    @formations = Formation.where(id: @invits.joins(:formation).pluck("formations.id").uniq)
+    @formations = Formation.not_archived.ordered.where(id: @invits.joins(:formation).pluck("formations.id").uniq)
     @invits = @invits.joins(:cour).reorder('cours.debut').paginate(page: params[:page], per_page: 20)
   end
 
@@ -144,7 +144,7 @@ class IntervenantsController < ApplicationController
     end
 
     def sortable_columns
-      ['intervenants.nom','intervenants.created_at','intervenants.status','intervenants.nbr_heures_statutaire','intervenants.remise_dossier_srh']
+      ['intervenants.nom','intervenants.created_at','intervenants.status','intervenants.nbr_heures_statutaire','intervenants.remise_dossier_srh', 'intervenants.doublon', 'intervenants.edusign_id']
     end
 
     def sort_column
@@ -159,7 +159,7 @@ class IntervenantsController < ApplicationController
     def intervenant_params
       params.require(:intervenant).permit(:nom, :prenom, :email, :linkedin_url, :titre1, :titre2, :spécialité,
        :téléphone_fixe, :téléphone_mobile, :bureau, :photo, :status, :remise_dossier_srh, :adresse, :cp, :ville, :doublon,
-       :nbr_heures_statutaire, :date_naissance, :memo, :notifier, :année_entrée,
+       :nbr_heures_statutaire, :date_naissance, :memo, :notifier, :année_entrée, :email2,
        responsabilites_attributes: [:id, :debut, :fin, :titre, :formation_id, :heures, :commentaires, :_destroy])
     end
 

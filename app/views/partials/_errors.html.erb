@@ -5,7 +5,7 @@
     </h3>
     <ul>
       <% record.errors.each do |error| %>
-        <li><%= error.full_message %></li>
+        <li><%= error.full_message.html_safe %></li>
       <% end %>
     </ul>
   </div>

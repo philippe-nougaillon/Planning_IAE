@@ -44,18 +44,22 @@
 - Les cours, formations, intervenants, étudiants et les utilisateurs peuvent être importés en masse à partir de fichiers CSV issues de tableaux Excel.
 
 ### Export des données
-- Toutes les données sont exportables au format CSV
+- Toutes les données sont exportables au format CSV, XLS
 
 ### RH
-- Etat récapitulatif mensuel des cours effectués
+- Etat récapitulatif chiffré des vacations effectuées
 
-### API
-- une API fournit les données du planning au format JSON aux applications tierces/mobiles
+## En savoir plus 
 
-### TODO
+Pour en savoir plus, veuillez [consulter le guide d'utilisation](https://business-school-planning-demo-248ac1f2d92e.herokuapp.com/guide/index)
 
-||
-|-|
-| - Notification d'annulation de cours par SMS à chaque étudiant |
-| - Notification de cours en e-learning (envoi du lien à tous les étudiants de la formation) |
+### Démonstration
+Envie de tester l'application ? [Lancer l'instance de démonstration](https://business-school-planning-demo-248ac1f2d92e.herokuapp.com/)
+
+### Développement
+CrystalData est développé et maintenu par [Philippe NOUGAILLON (Consulting IT)](https://www.philnoug.com/)
+
+### Support et services
+Vous souhaitez une nouvelle fonctionnalité ou installer CrystalData sur votre serveur Linux ? [Consultez notre offre de services](https://www.philnoug.com/services)
+
 

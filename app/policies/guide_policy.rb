@@ -8,4 +8,8 @@ class GuidePolicy < ApplicationPolicy
   def index?
     true
   end
+
+  def edusign?
+    index?
+  end
 end

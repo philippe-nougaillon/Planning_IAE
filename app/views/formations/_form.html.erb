@@ -69,7 +69,7 @@
     <div class="relative flex-grow max-w-full flex-1 flex flex-col gap-4">
       <div class="form-control">
         <%= f.label :user_id, "Gestionnaire de formation (User) *" %>
-        <%= f.collection_select :user_id, User.where.not(nom: nil).order(:nom), :id, :nom_et_prénom, {include_blank: true}, class:"slim-select" %>
+        <%= f.collection_select :user_id, User.where.not(nom: nil).where.not(role: "étudiant").order(:nom), :id, :nom_prénom_role, {include_blank: true}, class:"slim-select" %>
       </div>
       <div class="flex flex-wrap gap-4">
         <div class="relative flex-grow max-w-full flex-1 gap-4">
@@ -102,6 +102,13 @@
             <%= f.check_box :hss, title: "Cochez pour ne pas imputer dans les états de services" %>
             <%= f.label :hss, "HSS?" %>
           </div>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap">
+        <div>
+          <%= f.check_box :send_to_edusign %>
+          <%= f.label :send_to_edusign, "Synchroniser la formation sur Edusign" %>
         </div>
       </div>
 
@@ -150,7 +157,7 @@
     <p class="text-xl text-secondary mb-8">
       <%= fa_icon 'graduation-cap' %>
       Etudiants
-    </h4>
+    </p>
     <hr>
     <div data-controller="nested-form" nested-form-wrapper-selector-value=".nested-form-wrapper">
       <template data-nested-form-target="template">
@@ -177,7 +184,7 @@
     <p class="text-xl text-secondary mb-8">
       <%= fa_icon 'user-md' %>
       Vacations ou autres activités
-    </h4>
+    </p>
     <hr>
     <div data-controller="nested-form" nested-form-wrapper-selector-value=".nested-form-wrapper">
       <template data-nested-form-target="template">

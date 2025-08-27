@@ -32,8 +32,8 @@
             <td><%= l(cours.debut.to_date) %></td>
             <td><%= "#{l(cours.debut, format: :heures_min)}-#{l(cours.fin, format: :heures_min)}" %></td>
             <td>
-              <span style="background-color:<%= cours.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
-              <%= cours.try(:formation).try(:nom_promo) %>
+              <span style="background-color:<%= cours.formation.try(:color) %>;padding-left: 7px;margin-right: 5px;"></span>
+              <%= cours.formation.try(:nom_promo) %>
             </td>
             <td><%= cours.intervenant.nom_prenom %>
               <% if cours.intervenant_binome %>
@@ -155,7 +155,7 @@
         <%= label_tag "U.E." %>
         <br>
         <%= select_tag 'invit[ue][1]', 
-                        options_from_collection_for_select(@cours.first.formation.unites.order(:num), :id, :num_nom, params[:ue]), 
+                        options_from_collection_for_select(@cours.first.formation&.unites&.order(:num) || [], :id, :num_nom, params[:ue]), 
                         include_blank: true,
                         class: "slim-select" %>
       </div>
@@ -177,7 +177,7 @@
         <%= label_tag "U.E." %>
         <br>
         <%= select_tag 'invit[ue][2]', 
-                        options_from_collection_for_select(@cours.first.formation.unites.order(:code), :id, :num_nom, params[:ue]), 
+                        options_from_collection_for_select(@cours.first.formation&.unites&.order(:code) || [], :id, :num_nom, params[:ue]), 
                         include_blank: true,
                         class: "slim-select" %>
       </div>
@@ -199,7 +199,7 @@
         <%= label_tag "U.E." %>
         <br>
         <%= select_tag 'invit[ue][3]', 
-                        options_from_collection_for_select(@cours.first.formation.unites.order(:num), :id, :num_nom, params[:ue]), 
+                        options_from_collection_for_select(@cours.first.formation&.unites&.order(:num) || [], :id, :num_nom, params[:ue]), 
                         include_blank: true,
                         class: "slim-select" %>
       </div>
@@ -221,7 +221,7 @@
         <%= label_tag "U.E." %>
         <br>
         <%= select_tag 'invit[ue][4]', 
-                        options_from_collection_for_select(@cours.first.formation.unites.order(:num), :id, :num_nom, params[:ue]), 
+                        options_from_collection_for_select(@cours.first.formation&.unites&.order(:num) || [], :id, :num_nom, params[:ue]), 
                         include_blank: true,
                         class: "slim-select" %>
       </div>
@@ -270,7 +270,7 @@
       <% end %>
 
     </div>
-  <% elsif ["Générer Feuille émargement PDF","Générer Pochette Examen PDF", "Convocation étudiants PDF"].include?(params[:action_name]) %>
+  <% elsif ["Générer Feuille émargement PDF", "Générer Feuille émargement présences signées PDF","Générer Pochette Examen PDF", "Convocation étudiants PDF"].include?(params[:action_name]) %>
     <% if params[:action_name] == "Générer Feuille émargement PDF" || (@cours.count == 1 && @cours.first.examen?) %>
       <h3 class="text-2xl">Sélectionnez les étudiants</h3>
       <br>
@@ -298,12 +298,11 @@
           <%= label_tag :table, "Ajouter une colonne N° Table" %>
         </div>
       </div>
-    <% else %>
-      <%# Générer Pochette Examen PDF, Convocation étudiants PDF %>
+    <% elsif ["Générer Pochette Examen PDF", "Convocation étudiants PDF"].include?(params[:action_name]) %>
       <% wrong_parameter = false %>
       <% if @cours.count == 1 && @cours.first.examen? %>
         <h3 class="text-2xl mt-4">Sélectionnez les options d'examens</h3>
-        <i>Cochez les options autorisées. Non cochée = option interdite</i>
+        <i>Cochez les options autorisées.</i>
         <br><br>
         <%= check_box_tag :papier %> 
         <%= label_tag :papier, "Papiers autorisés ?" %>

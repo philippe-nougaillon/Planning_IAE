@@ -1,0 +1,23 @@
+<div class="nested-form-wrapper flex flex-wrap shadow-lg py-4 mb-4" data-new-record="<%= f.object.new_record? %>">
+  <%= f.hidden_field :user_id, value: f.object.user_id || current_user.id %>
+  <div class="flex w-full justify-between mb-2">
+    <div class="sm:w-fit px-4">
+      <div class="form-control">
+        <%= f.label :catégorie %>
+        <%= f.select :catégorie, Option.catégories.keys.to_a, {include_blank: true, required: true}, class: 'select select-bordered select-sm w-full' %>
+      </div>
+    </div>
+    <div class="px-4 self-end">
+      <button type="button" data-action="nested-form#remove" class="btn btn-ghost btn-sm text-error">
+        <%= fa_icon 'trash' %>
+      </button>
+      <%= f.hidden_field :_destroy %>
+    </div>
+  </div>
+  <div class="sm:w-full px-4">
+    <div class="form-control">
+      <%= f.label :description %>
+      <%= f.text_area :description, class: 'textarea textarea-bordered textarea-sm w-full', required: true %>
+    </div>
+  </div>
+</div>

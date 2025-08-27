@@ -15,9 +15,9 @@ class FormationsController < ApplicationController
     params[:direction_formations] ||= session[:direction_formations]
     
     unless params[:archive].blank?
-      @formations = Formation.unscoped.where(archive: true)
+      @formations = Formation.where(archive: true)
     else
-      @formations = Formation.all
+      @formations = Formation.not_archived
     end
 
     unless params[:nom].blank?
@@ -44,14 +44,12 @@ class FormationsController < ApplicationController
     session[:column] = params[:column]
     session[:direction_formations] = params[:direction_formations]
 
-    @formations = @formations.reorder("#{sort_column} #{sort_direction}") 
+    @formations = @formations.reorder(Arel.sql("#{sort_column} #{sort_direction}"))
     
     @all_formations = @formations
     if params[:paginate] == 'pages'
        @formations = @formations.paginate(page: params[:page], per_page: 10)
     end
-
-    @diplomes = Formation.where.not(diplome: nil).select(:diplome).uniq.pluck(:diplome).sort
   end
 
   # GET /formations/1
@@ -123,15 +121,15 @@ class FormationsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_formation
-      @formation = Formation.unscoped.find(params[:id])
+      @formation = Formation.find(params[:id])
     end
 
     def sortable_columns
-      ['formations.nom', 'formations.abrg','formations.nbr_etudiants','formations.code_analytique']
+      ['formations.nom', 'formations.abrg','formations.nbr_etudiants','formations.code_analytique', 'formations.edusign_id']
     end
 
     def sort_column
-        sortable_columns.include?(params[:column]) ? params[:column] : 'nom'
+        sortable_columns.include?(params[:column]) ? params[:column] : 'formations.nom'
     end
 
     def sort_direction
@@ -142,10 +140,10 @@ class FormationsController < ApplicationController
     def formation_params
       params.require(:formation)
             .permit(:nom, :promo, :diplome, :domaine, :apprentissage, :memo, :nbr_etudiants, :nbr_heures, 
-                    :abrg, :user_id, :color, :Forfait_HETD, :hors_catalogue, :nomtauxtd, :code_analytique, :catalogue, :archive, :hss, :courriel,
+                    :abrg, :user_id, :color, :Forfait_HETD, :hors_catalogue, :nomtauxtd, :code_analytique, :catalogue, :archive, :hss, :courriel, :send_to_edusign,
                     unites_attributes: [:id, :code, :nom, :séances, :heures, :destroy],
                     etudiants_attributes: [:id, :nom, :prénom, :civilité, :email, :mobile, :_destroy],
-                    vacations_attributes: [:id, :date, :intervenant_id, :titre, :qte, :forfaithtd, :commentaires, :_destroy])
+                    vacations_attributes: [:id, :date, :intervenant_id, :titre, :qte, :forfaithtd, :commentaires, :vacation_activite_id, :_destroy])
     end
 
     def is_user_authorized

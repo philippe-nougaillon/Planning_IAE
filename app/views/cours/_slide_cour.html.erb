@@ -1,27 +1,39 @@
-<tr class="shadow" style="height:110px">
+<tr style="height:110px; border-width: 5px; border-color: #EBEBEB;">
 
-  <td class="align-middle">
-    <h2 class="text-3xl text-base-content">
+  <td style="vertical-align: middle; padding: .75rem 1rem;">
+    <h2 style="font-size: 1.875rem; line-height: 2.25rem;">
       <%= l(le_cours.debut, format: :heures_min) %>
       <small>
         - <%= l(le_cours.fin, format: :heures_min) %>
       </small>
     </h2>
 
-    <progress class="progress opacity-50 mt-4" value="<%= le_cours.progress_bar_pct2 %>" max="100"></progress>
+    <progress value="<%= le_cours.progress_bar_pct2 %>" max="100"
+    style="position: relative;
+    width: 100%;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    overflow: hidden;
+    height: .5rem;
+    border-radius: var(--rounded-box, 1rem);
+    background-color: grey;
+    opacity: 0.5;
+    margin-top: 1rem;
+    height: 1rem;"></progress>
   </td>
   
-  <td style="border-left: 1rem solid <%= le_cours.formation.color %>">
+  <td style="padding: .75rem 1rem; border-left: 1rem solid <%= le_cours.formation.try(:positive_color) %>">
     <div>
-      <h3 class="text-2xl text-primary">
+      <h3 style="font-size: 1.875rem; line-height: 2.25rem">
         
         <span style="margin-left: 15px;">
-          <%= le_cours.formation.try(:nom_promo) %>
+          <b><%= le_cours.formation.try(:nom_promo) %></b>
         </span>
 
         <br><br>
         
-        <span class="text-base-content" style="margin-left: 15px;">
+        <span style="margin-left: 15px;">
           <i><%= le_cours.nom_ou_ue %></i>
         </span>
 
@@ -29,8 +41,8 @@
     </div>
   </td>
 
-  <td class="align-middle">
-    <h3 class="text-2xl text-base-content">
+  <td style="vertical-align: middle; padding: .75rem 1rem;">
+    <h3 style="font-size: 1.5rem; line-height: 2rem;">
       <%= le_cours.intervenant.nom_prenom %>
       <% if le_cours.intervenant_binome_id %>
           / <%= le_cours.intervenant_binome.nom_prenom %>
@@ -38,10 +50,18 @@
     </h3>
   </td>
   
-  <td class="align-middle text-center" style="width:200px">
-    <span class="badge badge-<%= le_cours.style %> text-white mask mask-circle p-10">
-      <h3 class="text-4xl font-bold text-base-100" style="margin: 0"><%= le_cours.try(:salle).try(:nom).first(3) %></h3>
-    </span>
+  <td style="width:200px; vertical-align: middle; text-align: center; padding: .75rem 1rem;">
+    <% if le_cours.salle %>
+      <% if le_cours.salle.bloc != 'Z' %>
+        <h3 style="margin: 0; color: #00AA00; font-size: 2.25rem; line-height: 2.5rem;">
+          <b><%= le_cours.salle.nom %></b>
+        </h3>
+      <% else %>
+        <h3 style="color: #4444FF; font-size: 2.25rem; line-height: 2.5rem;">
+          <b><%= le_cours.salle.nom %></b>
+        </h3>
+      <% end %>
+    <% end %>
   </td>
 
 </tr>

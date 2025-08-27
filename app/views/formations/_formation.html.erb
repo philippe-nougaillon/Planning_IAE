@@ -19,6 +19,11 @@
         <% formation_cours_réalisé_count = formation_cours.réalisé.count %>
         <%= link_to_unless (formation.archive || formation_cours_réalisé_count.zero?), formation_cours_réalisé_count, cours_path(ids:formation_cours.réalisé.pluck(:id), filter:'all'), class: 'text-primary hover:underline' %>
     </td>
+    <td class="text-center">
+        <% if formation.edusign_id? %>
+            <%= fa_icon 'check' %>
+        <% end %>
+    </td>
     <td>
         <%= link_to edit_formation_path(formation), class: "btn btn-ghost btn-xs" do %>
             <%= fa_icon 'edit' %>
@@ -27,7 +32,7 @@
     <td>
         <% unless formation_cours.any? %>
             <%= link_to(formation, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: "btn btn-ghost btn-xs") do %>
-                <%= fa_icon 'trash-alt' %>
+                <%= fa_icon 'trash' %>
             <% end %>
         <% end %>
     </td>

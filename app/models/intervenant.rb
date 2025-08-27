@@ -28,8 +28,11 @@ class Intervenant < ApplicationRecord
 	#validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP } 
 
 	validates_uniqueness_of :email, case_sensitive: false
+
+	normalizes :nom, with: -> nom { nom.strip }
+	normalizes :prenom, with: -> prenom { prenom.strip }
 	
-  enum status: [:CEV, :Permanent, :PR, :MCF, :MCF_HDR, :PAST, :PRAG, :Admin, :CEV_HSS]
+	enum :status, [:CEV, :Permanent, :PR, :MCF, :MCF_HDR, :PAST, :PRAG, :Admin, :CEV_HSS, :CEV_ENS_C_CONTRACTUEL, :CEV_TIT_CONT_FP, :CEV_SAL_PRIV_IND]
 
 	default_scope { order(:nom, :prenom) } 
 
@@ -38,8 +41,8 @@ class Intervenant < ApplicationRecord
 
 	def self.for_select
 		{
-		  'Groupes (Doublons autorisés)' => where(doublon:true).map { |i| "#{i.nom} #{i.prenom}" },
-		  'Individus' => where("intervenants.doublon = ? OR intervenants.doublon is null", false).map { |i| "#{i.nom} #{i.prenom}"  }
+			'Groupes (Doublons autorisés)' => where(doublon:true).map { |i| "#{i.nom} #{i.prenom}" },
+			'Individus' => where("intervenants.doublon = ? OR intervenants.doublon is null", false).map { |i| "#{i.nom} #{i.prenom}"  }
 		}
 	end
 
@@ -64,11 +67,13 @@ class Intervenant < ApplicationRecord
         "Direction de Chaire",
         "SCORE Business School message",
         "Co-rédaction d'un cas",
-        "Coordination d'une UE (hors MAE)"]
-    end
+        "Coordination d'une UE (hors MAE)",
+		"Coordination pédagogique en appui de la direction de programme (groupe > 40 étudiants à Paris)"
+		]
+	end
 	
 
-		def nom_prenom
+	def nom_prenom
 		self.prenom.blank? ? self.nom.upcase : "#{self.nom} #{self.prenom}" 
 	end
 
@@ -76,8 +81,16 @@ class Intervenant < ApplicationRecord
 		"#{self.try(:prenom)} #{self.nom}" 
 	end
 
+	def academ_nom
+		"#{self.prenom.first}#{self.nom}"
+	end
+
 	def nom_du_status
 		self.status
+	end
+
+	def nom_prenom_status
+		self.prenom.blank? ? "#{self.nom.upcase} (#{self.status})" : "#{self.nom} #{self.prenom} (#{self.status})" 
 	end
 
 	def total_cours
@@ -86,60 +99,6 @@ class Intervenant < ApplicationRecord
 
 	def self.xls_headers
 		%w{Id Nom Prénom Email Statut Remise_dossier_srh Linkedin_url Titre1 Titre2 Spécialité Téléphone_fixe Téléphone_mobile Bureau Adresse CP Ville Créé_le Modifié_le Notifier? NbrHeuresCours}
-	end
-
-	def self.generate_xls(intervenants, date_debut, date_fin)
-		require 'spreadsheet'    
-		
-		Spreadsheet.client_encoding = 'UTF-8'
-	
-		book = Spreadsheet::Workbook.new
-		sheet = book.create_worksheet name: 'Intervenants'
-		bold = Spreadsheet::Format.new :weight => :bold, :size => 10
-	
-		sheet.row(0).concat Intervenant.xls_headers
-		sheet.row(0).default_format = bold
-		
-		index = 1
-		intervenants.each do |i|
-			if date_debut.present? && date_fin.present?
-				cours = i.cours.where("debut BETWEEN ? AND ?", date_debut, date_fin)
-			elsif date_debut.present?
-				cours = i.cours.where("debut > ?", date_debut)
-			elsif date_fin.present?
-				cours = i.cours.where("debut < ?", date_fin)
-			else
-				cours = i.cours
-			end
-			nbr_heures_cours = cours.sum(:duree).to_f
-
-			fields_to_export = [
-				i.id, 
-				i.nom, 
-				i.prenom, 
-				i.email, 
-				i.status, 
-				i.remise_dossier_srh, 
-				i.linkedin_url, 
-				i.titre1, 
-				i.titre2, 
-				i.spécialité, 
-				i.téléphone_fixe, 
-				i.téléphone_mobile, 
-				i.bureau, 
-				i.adresse, 
-				i.cp, 
-				i.ville, 
-				i.created_at, 
-				i.updated_at,
-				i.notifier?,
-				nbr_heures_cours
-			]
-			sheet.row(index).replace fields_to_export
-			index += 1
-		end
-	
-		return book
 	end
 
 	def create_user_access
@@ -154,8 +113,21 @@ class Intervenant < ApplicationRecord
 	end
 
 	def linked_user
-    return User.intervenant.or(User.enseignant).find_by("LOWER(users.email) = ?", self.try(:email).try(:downcase))
-  end
+    User.intervenant.or(User.enseignant).find_by("LOWER(users.email) = ?", self.try(:email).try(:downcase))
+	end
+
+	def permanent?
+		['Permanent', 'PR','MCF','MCF_HDR','PRAG','PAST'].include?(self.status)
+	end
+
+	# Si c'est un examen IAE / examen rattrapage / Tiers-temps
+  def examen?
+    [169, 1166, 522].include?(self.id)
+	end
+
+	def self.intervenants_examens
+		ENV["INTERVENANTS_EXAMENS"].to_s.split(',').map(&:to_i)
+	end
 
 	private
 	# only one candidate for an nice id; one random UDID

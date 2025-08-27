@@ -1,0 +1,29 @@
+<% if nature != vacation_activite.nature %>
+  <tr class="hover bg-slate-50 border">
+    <td colspan="8">
+      <b><%= vacation_activite.nature %></b>
+      <% local_assigns[:nature] = vacation_activite.nature %>
+    </td>
+  </tr>
+<% end %>
+<tr class="hover border">
+  <td>
+  </td>
+    
+  <td><%= vacation_activite.nom %></td>
+  <% VacationActiviteTarif.statuts.each do |statut| %>
+    <td class="align-top">
+      <% if tarif = vacation_activite.vacation_activite_tarifs.find_by(statut:) %>
+        <%= simple_format(tarif.prix_ou_HETD) %>
+        <% if tarif.max %>
+          <span class="text-error">
+            <%= "x#{tarif.max} max" %>
+          </span>
+        <% end %>
+      <% end %>
+    </td>
+  <% end %>
+  <td style="white-space: nowrap">
+    <%= link_to "Voir", vacation_activite, class: "text-primary hover:underline" %>
+  </td>
+</tr>

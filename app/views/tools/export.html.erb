@@ -27,18 +27,21 @@
     <div>
       <%= label_tag :formation %>    
       <%= select_tag :formation_id, 
-            options_from_collection_for_select(Formation.all, :id, :nom_promo), include_blank:true, class:"slim-select" %>
+            options_from_collection_for_select(Formation.not_archived.ordered, :id, :nom_promo), include_blank:true, class:"slim-select" %>
     </div>
 
     <div>
       <%= label_tag :intervenant_id %>
       <%= select_tag :intervenant_id,
             options_from_collection_for_select(Intervenant.all, :id, :nom_prenom), include_blank:true, class:"slim-select" %>
-
-      <div class="flex items-center gap-1">
-        <%= check_box_tag :binome, true, true %>
-        <%= label_tag :binome, "Exporter les binômes ?" %>
-      </div>
+    </div>
+    <div class="flex items-center gap-1">
+      <%= check_box_tag :binome, true, true %>
+      <%= label_tag :binome, "Inclure les binômes ?" %>
+    </div>
+    <div class="flex items-center gap-1">
+      <%= check_box_tag :academ, true %>
+      <%= label_tag :academ, "Format Academ" %>
     </div>
 
     <%= submit_tag "Exporter", { class: "btn btn-primary text-white", 'data-turbo': false } %>

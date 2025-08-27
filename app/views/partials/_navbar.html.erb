@@ -23,6 +23,7 @@
       <%= navbar_nav_item('etudiants', 'graduation-cap', etudiants_path) %>
       <% if user_signed_in? && current_user.rh? %>
         <%= navbar_nav_item('dossiers', 'folder', dossiers_path) %>
+        <%= navbar_nav_item('vacations', 'user-md', vacations_path) %>
       <% end %>
 
       <% if user_signed_in? && policy(:tool).audit_cours? %>
@@ -38,16 +39,15 @@
           <% end %>
         </li>
       <% end %>
-
-      <% if user_signed_in? && (current_user.accueil? || current_user.id == 41) %>
+      <% if user_signed_in? && (current_user.accueil? || [41,35,3132].include?(current_user.id)) %>
         <li class="nav-item">
-          <% is_active = params[:action] == 'commandes' %>
-          <%= link_to tools_commandes_path, class: "nav-link text-#{ is_active ? 'primary' : 'base-content' }" do %>
-            <%= fa_icon 'mug-hot' %>
-            Commandes
-            <% commandes = Cour.commandes.where.not("commentaires ILIKE ?", '%Fait le%').count %>
-            <% if commandes > 0 %>
-              <span class="badge badge-info text-white"><%= commandes %></span>
+          <% is_active = params[:action] == 'commandes_v2' %>
+          <%= link_to tools_commandes_v2_path, class: "nav-link text-#{ is_active ? 'primary' : 'base-content' }" do %>
+            <%= fa_icon 'coffee' %>
+            Commandes v2
+            <% commandes_v2 = Cour.joins(:options).where(options: {catégorie: :commande}).where.not("options.description ILIKE ?", '%Fait le%').count %>
+            <% if commandes_v2 > 0 %>
+              <span class="badge badge-info text-white"><%= commandes_v2 %></span>
             <% end %>
           <% end %>
         </li>
@@ -65,6 +65,17 @@
             Dernière connexion il y a <%= time_ago_in_words current_user.last_sign_in_at %>
           <% end %>
         </li>
+        <% if policy(Note).index? %>
+          <li class="nav-item indicator mr-4">
+            <%= link_to notes_path, class: "nav-link" do %>
+              <i class="far fa-lightbulb"></i>
+              <% notes = current_user.notes.count %>
+              <% if notes > 0 %>
+                <span class="indicator-item badge badge-warning"><%= notes %></span> 
+              <% end %>
+            <% end%>
+          </li>
+        <% end %>
         <% if policy(current_user).right_navbar? %>
           <%= navbar_nav_item('', 'wrench', tools_index_path) %>
           <%= navbar_nav_item('', 'search-plus', tools_rechercher_path) %>

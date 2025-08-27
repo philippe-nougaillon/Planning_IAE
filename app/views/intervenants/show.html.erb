@@ -2,7 +2,7 @@
 
   <div>
     <div class="join float-right">
-      <% if policy(:tool).can_see_RHGroup_private_tool? %>
+      <% if policy(Intervenant).edit? %>
         <%= link_to edit_intervenant_path(@intervenant), class: 'btn btn-sm btn-primary btn-outline join-item' do %>
           <%= fa_icon 'edit' %> Modifier
         <% end %>
@@ -65,6 +65,11 @@
         <small class="text-secondary">Courriel</small><br>
       </h3>
       <%= mail_to @intervenant.email %>
+
+      <h3 class="text-2xl">
+        <small class="text-secondary">Courriel 2</small><br>
+      </h3>
+      <%= mail_to @intervenant.email2 %>
 
       <% if @user && @user.sign_in_count.positive? %>
         <h3 class="text-2xl mt-6">
@@ -133,7 +138,7 @@
         <h3 class="text-xl text-secondary my-4">
           <%= fa_icon 'file-contract' %>
           Responsabilités
-        </h2>
+        </h3>
 
         <div class="overflow-x-auto">
           <table class="table table-sm">
@@ -151,7 +156,7 @@
                     <%= l r.debut %>
                   </td>
                   <td>
-                    <%= link_to(Formation.unscoped.find(r.formation_id).nom, formations_path(r.formation_id), class: 'text-primary hover:underline') %>
+                    <%= link_to(Formation.find(r.formation_id).nom, formations_path(r.formation_id), class: 'text-primary hover:underline') %>
                   </td>
                   <td>
                     <%= r.titre %>
@@ -171,33 +176,9 @@
     <% end %>
   <% end %>
 
-  <% if @intervenant.vacations.any? %>
-    <div class="mt-8">
-      <h3 class="text-xl text-secondary my-4">
-        <%= fa_icon 'user-md' %>
-        Vacations
-      </h2>
-
-      <div class="overflow-x-auto">
-        <table class="table table-sm ">
-          <thead class="bg-slate-100 border">
-            <th>Date</th>
-            <th>Formation</th>
-            <th>Activité</th>
-            <th>Intervenant</th>
-            <th>Qté</th>
-            <th>Forfait_HTD</th>
-            <th>Commentaires</th>
-          </thead>
-
-          <% @intervenant.vacations.each do |vacation| %>
-            <%= render vacation %>
-          <% end %>
-        </table>
-      </div>
-    </div>
-
-  <% end %>
+  <div class="mt-8">
+    <%= render partial: "partials/vacations", locals: {vacations: @intervenant.vacations} %>
+  </div>
 
   <div tabindex="0" class="collapse collapse-arrow border border-base-300 bg-base-100 mt-8">
     <div class="collapse-title text-lg">

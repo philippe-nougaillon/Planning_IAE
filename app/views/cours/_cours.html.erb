@@ -67,12 +67,12 @@
                     </i>
                 <% end %>
             <% end %>
-            <% if user_signed_in? && (current_user.gestionnaire? || current_user.admin?) &&  %>
+            <% if user_signed_in? && (current_user.gestionnaire? || current_user.admin?)  %>
                 <% étudiants_présents = cours.presences.where.not(etudiant_id: nil).where(workflow_state: ['signée', 'validée']).count %>
 
                 <% if étudiants_présents > 0 %>
                     <%= fa_icon 'file-signature' %>
-                    <%= link_to presences_path(cours_id: cours.id), title: 'présences signées / nbr étudiants', class: 'text-primary hover:underline' do %>
+                    <%= link_to presences_path(search: "cours:#{cours.id}"), title: 'présences signées / nbr étudiants', class: 'text-primary hover:underline' do %>
                         <%= étudiants_présents %> / <%= cours.etudiants.count %>
                     <% end %>
                 <% end %>
@@ -91,16 +91,48 @@
             <% end %>
         <% end %>
 
-        <% if policy(cours).edit? && !cours.commentaires.blank? %>
-            <i title="<%= cours.commentaires %>" >
-                <% if cours.commentaires.include?('+') %>
-                    <%= link_to tools_commandes_path do %>
-                        <%= fa_icon 'mug-hot', class: 'text-amber-800' %>
+        <% if (policy(cours).edit? || (current_user && current_user.accueil_vacataire?)) %>
+            <% if cours.options.commande.any? %>
+                <i title="<%= cours.options.commande.first.description %>" >
+                    <%= link_to tools_commandes_v2_path do %>
+                        <%= fa_icon 'coffee', class: 'text-error' %>
                     <% end %>
-                <% else %>
-                    <%= fa_icon 'comment-dots' %>
-                <% end %>
-            </i>
+                </i>
+            <% end %>
+            <% if cours.options.surveillance.any? %>
+                <i title="<%= cours.options.surveillance.first.description %>" >
+                    <%= link_to tools_liste_surveillants_examens_v2_path(start_date: cours.debut.to_date, end_date: cours.debut.to_date) do %>
+                        <%= fa_icon 'user-secret' %>
+                    <% end %>
+                </i>
+            <% end %>
+            <% if !cours.commentaires.blank? %>
+                <i title="<%= cours.commentaires %>" >
+                    <% if cours.commentaires.start_with?("+")  %>
+                        <%= link_to tools_commandes_path do %>
+                            <%= fa_icon 'mug-hot', class: 'text-amber-800' %>
+                        <% end %>
+                    <% else %>
+                        <%= fa_icon 'comment-dots' %>
+                    <% end %>
+                </i>
+            <% end %>
+            <% if cours.désynchronisé? %>
+              <i title="Cours désynchronisé avec Edusign" >
+                <%= fa_icon 'exclamation', class: 'text-error' %>
+              </i>
+            <% end %>
+        <% end %>
+        <% if current_user && current_user.role_number >= 1 && cours.document.attached? %>
+            <%= link_to url_for(cours.document), title: cours.document.filename, target: "_blank" do %>
+                <%= fa_icon 'file' %>
+            <% end %>
+        <% end %>
+        <% if current_user && current_user.role_number >= 5 && !cours.edusign_id? %>
+            <span title="Le cours n'est pas synchronisé avec Edusign" class="cursor-pointer">
+                <span class="text-sky-900 bg-orange-300 px-1 pb-1 rounded-sm text-xl font-bold"><u>e</u></span>
+                <%= fa_icon 'exclamation-triangle', class: 'text-warning' %>
+            </span>
         <% end %>
     </td>
 

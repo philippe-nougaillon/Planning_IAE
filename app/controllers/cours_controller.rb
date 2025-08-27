@@ -4,7 +4,7 @@ class CoursController < ApplicationController
   include ApplicationHelper
 
   skip_before_action :authenticate_user!, only: %i[ index index_slide mes_sessions_intervenant signature_intervenant signature_intervenant_do ]
-  before_action :set_cour, only: [:show, :edit, :update, :destroy]
+  before_action :set_cour, only: [:show, :edit, :update, :destroy, :delete_attachment]
   before_action :is_user_authorized, except: [:show, :edit, :update, :destroy, :signature_etudiant, :signature_etudiant_do]
 
   layout :define_layout
@@ -31,12 +31,11 @@ class CoursController < ApplicationController
           params[:intervenant] = intervenant.nom + " " + intervenant.prenom
         end
       elsif current_user.étudiant?
-        if formation = Etudiant
-                      .where("LOWER(etudiants.email) = ?", current_user.email.downcase)
-                      .first
-                      .formation
-          params[:formation_id] = formation.id
-          params[:formation] = formation.nom
+        if etudiant = Etudiant.find_by("LOWER(etudiants.email) = ?", current_user.email.downcase)
+          if formation = etudiant.formation
+            params[:formation_id] = formation.id
+            params[:formation] = formation.nom
+          end
         end
       end
     end
@@ -47,7 +46,7 @@ class CoursController < ApplicationController
       session[:intervenant_id] = params[:intervenant_id] = nil
       session[:intervenant_nom] = params[:intervenant_nom] = nil
       session[:ue] = params[:ue] = nil
-      session[:semaine] = params[:semaine] = nil
+      session[:week_number] = params[:week_number] = nil
       session[:start_date] = params[:start_date] = Date.today.to_s
       session[:etat] = params[:etat] = nil
       session[:view] = params[:view] = 'list'
@@ -68,13 +67,9 @@ class CoursController < ApplicationController
     @cours = Cour.order(:debut)
 
     # Si N° de semaine, afficher le premier jour de la semaine choisie, sinon date du jour
-    unless params[:semaine].blank?
-      if params[:semaine].to_i < Date.today.cweek
-        year =  Date.today.year + 1
-      else
-        year = Date.today.year
-      end
-      @date = Date.commercial(year, params[:semaine].to_i, 1)
+    unless params[:week_number].blank?
+      year, week = params[:week_number].split('-')
+      @date = Date.commercial(year.to_i, week.gsub('W','').to_i, 1)
     else
       unless params[:start_date].blank?
         begin
@@ -92,7 +87,7 @@ class CoursController < ApplicationController
       when 'list'
         @alert = Alert.visibles.first
         unless params[:filter] == 'all'
-          unless params[:semaine].blank?
+          unless params[:week_number].blank?
             @cours = @cours.where("cours.debut BETWEEN DATE(?) AND DATE(?)", @date, @date + 7.day)
           else
             @cours = @cours.where("cours.debut >= DATE(?)", @date)
@@ -114,11 +109,11 @@ class CoursController < ApplicationController
     end
 
     unless params[:formation_id].blank?
-      params[:formation] = Formation.find(params[:formation_id]).nom.rstrip
+      params[:formation] = Formation.not_archived.find(params[:formation_id]).nom.rstrip
     end
 
     unless params[:formation].blank?
-      formation_id = Formation.find_by(nom:params[:formation].rstrip)
+      formation_id = Formation.not_archived.find_by(nom:params[:formation].rstrip)
       @cours = @cours.where(formation_id:formation_id)
     end
 
@@ -169,14 +164,14 @@ class CoursController < ApplicationController
 
     if request.variant.include?(:phone)
       @cours = @cours.includes(:formation, :intervenant, :salle).paginate(page: params[:page])
-      @formations = Formation.select(:nom).where(hors_catalogue: false).pluck(:nom)
+      @formations = Formation.not_archived.ordered.select(:nom).where(hors_catalogue: false).pluck(:nom)
     end
 
     if params[:view] == "calendar_rooms"
       @cours = @cours.where(etat: Cour.etats.values_at(:à_réserver, :planifié, :confirmé, :annulé, :reporté, :réalisé))
     end
 
-    @week_numbers =  ((Date.today.cweek.to_s..'52').to_a << ('1'..(Date.today.cweek - 1).to_s).to_a).flatten
+    #@week_numbers =  ((Date.today.cweek.to_s..'52').to_a << ('1'..(Date.today.cweek - 1).to_s).to_a).flatten
 
     session[:formation] = params[:formation]
     session[:intervenant] = params[:intervenant]
@@ -192,7 +187,7 @@ class CoursController < ApplicationController
       format.html
 
       format.xls do
-        book = Cour.generate_xls(@cours, !params[:intervenant])
+        book = CoursToXls.new(@cours, !params[:intervenant]).call
         file_contents = StringIO.new
         book.write file_contents # => Now file_contents contains the rendered file output
         filename = "Export_Cours.xls"
@@ -269,11 +264,16 @@ class CoursController < ApplicationController
     else
       # Affiche un papier peint si pas de cours à afficher
       require 'net/http'
-      url = "http://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=fr-FR"
-      uri = URI(url)
-      response = Net::HTTP.get(uri)
-      json = JSON.parse(response)
-      @image = json["images"][0]["url"]
+      begin
+        url = "https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=fr-FR"
+        uri = URI(url)
+        response = Net::HTTP.get(uri)
+        json = JSON.parse(response)
+        @image = json["images"][0]["url"]
+      rescue => e
+        Rails.logger.error("Erreur chargement image Bing : #{e.message}")
+        @image = nil
+      end
     end
   end
 
@@ -452,7 +452,7 @@ class CoursController < ApplicationController
         if (params[:invits_en_cours].present? && params[:confirmation] == 'yes') || !params[:invits_en_cours].present?
           if !params[:delete].blank?
             @cours.each do |c|
-              if policy(c).destroy?
+              if policy(c).destroy? && c.attendances.empty?
                 c.invits.destroy_all
                 c.destroy
               else
@@ -473,17 +473,18 @@ class CoursController < ApplicationController
         @calendar = Cour.generate_ical(@cours)
         request.format = 'ics'
 
-      when "Exporter en PDF", "Générer Feuille émargement PDF", "Générer Pochette Examen PDF"
+      when "Exporter en PDF", "Générer Feuille émargement PDF", "Générer Feuille émargement présences signées PDF", "Générer Pochette Examen PDF"
         request.format = 'pdf'
+
       when 'Convocation étudiants PDF'
         if @cours.count == 1 && @cours.first.examen?
           étudiants = Etudiant.where(id: params[:etudiants_id].try(:keys))
           if étudiants.any?
             étudiants.each do |étudiant|
               pdf = ExportPdf.new
-              pdf.convocation(@cours.first, étudiant, params[:papier], params[:calculatrice], params[:ordi_tablette], params[:téléphone], params[:dictionnaire])
-              # mailer_response = EtudiantMailer.convocation(étudiant, pdf).deliver_now
-              # MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: étudiant.email, subject: "Convocation")
+              pdf.convocation(@cours.first, étudiant, (params[:papier]=='1'), (params[:calculatrice]=='1'), (params[:ordi_tablette]=='1'), (params[:téléphone]=='1'), (params[:dictionnaire]=='1'))
+              # mailer_response = EtudiantMailer.convocation(étudiant, pdf, @cours.first).deliver_now
+              # MailLog.create(subject: "Convocation UE##{@cours.first.code_ue}", user_id: current_user.id, message_id: mailer_response.message_id, to: étudiant.email)
             end
           else
             flash[:alert] = "Aucun étudiant n'a été sélectionné, il ne s'est rien passé"
@@ -509,7 +510,7 @@ class CoursController < ApplicationController
       end
 
       format.xls do
-        book = Cour.generate_xls(@cours, !params[:intervenant])
+        book = CoursToXls.new(@cours, !params[:intervenant]).call
         file_contents = StringIO.new
         book.write file_contents # => Now file_contents contains the rendered file output
         filename = "Export_Cours.xls"
@@ -538,6 +539,12 @@ class CoursController < ApplicationController
           pdf.generate_feuille_emargement(@cours, params[:etudiants_id].try(:keys), params[:table])
 
           send_data pdf.render, filename: filename, type: 'application/pdf'
+        when "Générer Feuille émargement présences signées PDF"
+          filename = "Feuille_émargement_signée#{ Date.today }.pdf"
+          pdf = ExportPdf.new
+          pdf.generate_feuille_emargement_signée(@cours)
+
+          send_data pdf.render, filename: filename, type: 'application/pdf'
         when "Générer Pochette Examen PDF"
           if params[:etudiants_id]
             filename = "Pochette_Examen_#{ Date.today }.pdf"
@@ -563,7 +570,7 @@ class CoursController < ApplicationController
   # GET /cours/new
   def new
     @cour = Cour.new
-    @formations = Formation.order(:nom, :promo)
+    @formations = Formation.not_archived.ordered
     @salles = Salle.all
 
     if current_user.partenaire_qse?
@@ -572,7 +579,7 @@ class CoursController < ApplicationController
     end
 
     unless params[:formation].blank?
-      @cour.formation_id = Formation.find_by(nom:params[:formation]).id
+      @cour.formation_id = Formation.not_archived.find_by(nom:params[:formation]).id
     end
 
     unless params[:intervenant].blank?
@@ -596,7 +603,7 @@ class CoursController < ApplicationController
   # GET /cours/1/edit
   def edit
     authorize @cour
-    @formations = Formation.unscoped.order(:nom, :promo)
+    @formations = Formation.ordered
     @salles = Salle.all
 
     if current_user.partenaire_qse?
@@ -613,10 +620,6 @@ class CoursController < ApplicationController
     respond_to do |format|
       if @cour.valid? && @cour.save
         format.html do
-          if @cour.commentaires.include?('+')
-            # ToolsMailer.with(cour: @cour).commande.deliver_now
-          end
-
           if params[:create_and_add]
             redirect_to new_cour_path(debut:@cour.debut, fin:@cour.fin,
                         formation_id:@cour.formation_id, intervenant_id:@cour.intervenant_id, ue:@cour.ue, salle_id:@cour.salle_id, nom:@cour.nom),
@@ -632,7 +635,7 @@ class CoursController < ApplicationController
         format.json { render :show, status: :created, location: @cour }
       else
         format.html do
-          @formations = Formation.unscoped.order(:nom, :promo)
+          @formations = Formation.ordered
           @salles = Salle.all
 
           if current_user.partenaire_qse?
@@ -652,17 +655,18 @@ class CoursController < ApplicationController
     authorize @cour
     respond_to do |format|
       if @cour.update(cour_params)
-
-        if @cour.commentaires_previously_changed? && @cour.commentaires.include?('+')
-          # ToolsMailer.with(cour: @cour, changed: true).commande.deliver_now
-        end
-
         format.html do
           # notifier les étudiants des changements ?
           if params[:notifier]
             @cour.formation.etudiants.each do | etudiant |
               NotifierEtudiantsJob.perform_later(etudiant, @cour, current_user.id)
             end
+          end
+
+          # notifier l'accueil s'il y a un bypass
+          if @cour.commentaires.include?("BYPASS=#{@cour.id}")
+            mailer_response = AccueilMailer.notifier_cours_bypass(@cour, current_user.email).deliver_now
+            MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: "accueil@iae.pantheonsorbonne.fr", subject: "BYPASS")
           end
 
           # repartir à la page où a eu lieu la demande de modification
@@ -679,7 +683,7 @@ class CoursController < ApplicationController
         format.json { render :show, status: :ok, location: @cour }
       else
         format.html do
-          @formations = Formation.unscoped.order(:nom, :promo)
+          @formations = Formation.ordered
           @salles = Salle.all
 
           if current_user.partenaire_qse?
@@ -707,23 +711,32 @@ class CoursController < ApplicationController
 
   def mes_sessions_etudiant
     @etudiant = Etudiant.find_by("LOWER(etudiants.email) = ?", current_user.email.downcase)
-    @cours = @etudiant
-            .formation
-            .cours
-            .confirmé
-            .where("DATE(debut) = ?", Date.today)
-            .order(:debut)
+    if @etudiant && @etudiant.formation
+      @cours = @etudiant
+              .formation
+              .cours
+              .confirmé
+              .where("DATE(debut) = ?", Date.today)
+              .order(:debut)
+    else
+      redirect_to root_path
+    end
   end
 
   def mes_sessions_intervenant
     if params[:presence_slug].present?
-      presence = Presence.find_by(slug: params[:presence_slug]) 
-      @intervenant = presence.intervenant
-    else
+      if presence = Presence.find_by(slug: params[:presence_slug]) 
+        @intervenant = presence.intervenant
+      end
+    elsif user_signed_in?
       @intervenant = Intervenant.find_by("LOWER(intervenants.email) = ?", current_user.email.downcase)
     end
-
-    @cours = @intervenant.cours.confirmé.where("DATE(debut) = ?", Date.today).order(:debut)
+    
+    if @intervenant
+      @cours = @intervenant.cours.confirmé.where("DATE(debut) = ?", Date.today).order(:debut)
+    else
+      redirect_to root_path, alert: "Vous devez vous connecter ou cliquer sur le lien reçu par email pour accéder à cette page"
+    end
   end
 
   def signature_etudiant
@@ -781,6 +794,11 @@ class CoursController < ApplicationController
     end
   end
 
+  def delete_attachment
+    @cour.document.purge
+    redirect_to @cour, notice: 'Document supprimée.'
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_cour
@@ -792,7 +810,8 @@ class CoursController < ApplicationController
       params.require(:cour).permit(:debut, :fin, :formation_id, :intervenant_id,
                                     :salle_id, :code_ue, :nom, :etat, :duree,
                                     :intervenant_binome_id, :hors_service_statutaire,
-                                    :commentaires, :elearning)
+                                    :commentaires, :elearning, :document, :no_send_to_edusign,
+                                    options_attributes: [:id, :user_id, :catégorie, :description, :_destroy])
     end
 
     def is_user_authorized

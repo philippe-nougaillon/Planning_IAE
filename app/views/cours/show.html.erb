@@ -7,8 +7,14 @@
         <% end %>
       <% end %>
       <% if policy(@cour).destroy? %>
-        <%= link_to(@cour,'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous la suppression définitive de ce cours ?', class: 'btn btn-sm btn-primary btn-outline join-item' ) do %>
-          <%= fa_icon 'trash-alt' %> Supprimer
+        <% if @cour.attendances.any? %>
+          <div title="Le cours ne peut pas être supprimé car il a des signatures" class="btn btn-sm btn-secondary btn-outline join-item cursor-not-allowed">
+            <%= fa_icon 'trash' %> Supprimer
+          </div>
+        <% else %>
+          <%= link_to(@cour,'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous la suppression définitive de ce cours ?', class: 'btn btn-sm btn-primary btn-outline join-item' ) do %>
+            <%= fa_icon 'trash' %> Supprimer
+          <% end %>
         <% end %>
       <% end %>
 
@@ -105,6 +111,13 @@
     <%= @cour.commentaires %>
   </p>
 
+  <% if @cour.document.attached? %>
+    <h4 class="text-xl mt-4">
+      <small class="text-secondary">Document</small><br>
+    </h4>
+    <%= link_to @cour.document.filename, url_for(@cour.document), class: 'text-primary hover:underline', target: "_blank" %>
+  <% end %>
+
   <hr>
 
   <% if @cour.audits.any? %>
@@ -123,7 +136,7 @@
             <th>Modifications</th>
           </thead>
 
-          <%= render partial: 'tools/audit', collection: @cour.audits.reorder(id: :desc) %>
+          <%= render partial: 'tools/audit', collection: @cour.own_and_associated_audits.reorder(id: :desc) %>
 
         </table>
       </div>

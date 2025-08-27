@@ -113,6 +113,14 @@ class ToolPolicy < ApplicationPolicy
     user.rh? || user.admin?
   end
 
+  def export_etat_liquidatif_collectif?
+    user.rh? || user.admin?
+  end
+
+  def export_etat_liquidatif_collectif_do?
+    export_etat_liquidatif_collectif?
+  end
+
   def audits?
     user.admin?
   end
@@ -162,6 +170,10 @@ class ToolPolicy < ApplicationPolicy
     user.role_number >= 4
   end
 
+  def liste_surveillants_examens_v2?
+    user.role_number >= 4
+  end
+
   def rechercher?
     user.role_number >= 3
   end
@@ -172,6 +184,14 @@ class ToolPolicy < ApplicationPolicy
 
   def rappel_des_cours_do?
     rappel_des_cours?
+  end
+
+  def rappel_des_examens?
+    user.admin?
+  end
+
+  def rappel_des_examens_do?
+    rappel_des_examens?
   end
 
   def can_see_RHGroup_private_tool?
@@ -206,6 +226,38 @@ class ToolPolicy < ApplicationPolicy
   def commande_fait?
     # Accueil et user 41
     user && (user.accueil? || user.id == 41)
+  end
+
+  def commandes_v2?
+    commandes?
+  end
+
+  def commande_fait_v2?
+    commande_fait?
+  end
+  
+  def edusign?
+    user && user.admin?
+  end
+
+  def edusign_do?
+    edusign?
+  end
+
+  def synchronisation_edusign?
+    user && user.admin?
+  end
+
+  def synchronisation_edusign_do?
+    synchronisation_edusign?
+  end
+
+  def initialisation_edusign?
+    user && user.admin?
+  end
+
+  def initialisation_edusign_do?
+    initialisation_edusign?
   end
 
 end

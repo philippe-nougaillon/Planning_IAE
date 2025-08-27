@@ -22,7 +22,7 @@ class CourPolicy < ApplicationPolicy
   end
 
   def action?
-    user && (user.role_number >= 3 || user.partenaire_qse?) 
+    user && ((user.role_number >= 3 && !user.accueil_vacataire?) || user.partenaire_qse?) 
   end
 
   def action_do?
@@ -30,7 +30,7 @@ class CourPolicy < ApplicationPolicy
   end
 
   def new?
-    user && (user.role_number >= 2 || user.partenaire_qse?)
+    user && ((user.role_number >= 2 && !user.accueil_vacataire?) || user.partenaire_qse?)
   end
 
   def create?
@@ -38,7 +38,7 @@ class CourPolicy < ApplicationPolicy
   end
 
   def edit?
-    user && (user.role_number >= 2 || (user.partenaire_qse? && record.formation.partenaire_qse?))
+    user && ((user.role_number >= 2 && !user.accueil_vacataire?) || (user.partenaire_qse? && record.formation.try(:partenaire_qse?)))
   end
 
   def update?
@@ -53,7 +53,7 @@ class CourPolicy < ApplicationPolicy
     # - un admin
     (record.audits.first.user == user) || 
     (record.formation.try(:user) == user) ||
-    (record.formation.partenaire_qse? && user.partenaire_qse?) ||
+    (record.formation.try(:partenaire_qse?) && user.partenaire_qse?) ||
     (user.admin?) 
   end
 
@@ -79,6 +79,10 @@ class CourPolicy < ApplicationPolicy
 
   def signature_intervenant_do?
     signature_intervenant?
+  end
+
+  def delete_attachment?
+    user && user.role_number >= 5
   end
 
 end

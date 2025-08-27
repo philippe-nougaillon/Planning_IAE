@@ -108,7 +108,17 @@ class SallesController < ApplicationController
       sum_occupation = @salle.cours.where("DATE(cours.debut) BETWEEN ? AND ?", "#{year}-09-01", "#{year+1}-07-01").réalisé.sum(:duree).to_i
       @taux_occupation[year] =  (sum_occupation / sum_occupation_max * 100).to_i
     end
-    
+
+    qrcode = RQRCode::QRCode.new("https://planning.iae-paris.com/?salle_id=#{@salle.id}")
+
+    @qrcode_svg = qrcode.as_svg(
+          color: "000",
+          shape_rendering: "crispEdges",
+          module_size: 11,
+          standalone: true,
+          use_path: true,
+          viewbox: "20 20"
+    )
   end
 
   # GET /salles/new
@@ -178,7 +188,8 @@ class SallesController < ApplicationController
                         duree: params[:duree], 
                         formation_id: params[:formation_id], 
                         intervenant_id: params[:intervenant_id],
-                        salle_id: Salle.first.id)
+                        salle_id: Salle.first.id,
+                        hors_service_statutaire: true)
     end
 
     if cours

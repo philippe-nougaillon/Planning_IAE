@@ -1,7 +1,7 @@
 <div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
   <h1 class="text-3xl"><%= fa_icon 'users' %> Liste des utilisateurs</h1>
   <% if policy(User).new? %>
-    <%= link_to new_user_path, class: 'text-primary' do %>
+    <%= link_to new_user_path, class: 'btn btn-sm btn-primary btn-outline hover:!text-white' do %>
       <%= fa_icon 'plus-circle' %> Utilisateur
     <% end %>
   <% end %>
@@ -71,7 +71,12 @@
             <%= user.email %>
             <% if user.unlinked? %>
               <%= link_to user.étudiant? ? etudiants_path(search: user.nom) : intervenants_path(nom: user.nom) do %>
-                <%= fa_icon 'question-circle', class: 'text-error' , title: 'L\'utilisateur n\'a pas de profil étudiant/intervenant associé à cet email' %>
+                <%= fa_icon 'exclamation-circle', class: 'text-error' , title: "L'utilisateur n'a pas de profil étudiant/intervenant associé à cet email. Cliquez ici pour chercher avec le nom de famille." %>
+              <% end %>
+              <% if user.étudiant? && Etudiant.where("LOWER(nom) = ?", user.nom.try(:downcase)).any? %>
+                <%= link_to etudiants_path(search: user.nom) do %>
+                  <%= fa_icon 'graduation-cap', class: 'text-primary' , title: 'Un étudiant existe avec le même nom de famille' %>
+                <% end %>
               <% end %>
             <% end %>
           </td>

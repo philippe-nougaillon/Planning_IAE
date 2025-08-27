@@ -1,0 +1,83 @@
+<div class="border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'exclamation-triangle' %> <%= params[:action_name] %></h1>
+</div>
+
+<p class="my-4">
+  Vérifiez que les adresses emails se terminent par '@etu.univ-paris1.fr', ou qu'un compte avec la même adresse email existe
+</p>
+
+<%= form_tag :action_do_etudiants do %>
+
+	<%= hidden_field_tag :action_name, params[:action_name] %>
+
+  <h3 class="text-2xl">Étudiants sélectionnés</h3>
+
+  <div class="overflow-x-auto">
+    <table class="table table-sm">
+      <thead class="bg-slate-100 border">
+        <tr>
+          <th></th>
+          <th>Nom</th>
+          <th>Prénom</th>
+          <th>Email</th>
+          <th>Formation</th>
+          <th>MàJ il y a</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @etudiants.each do |etudiant| %>
+          <tr class="hover border">
+            <td><%= check_box_tag "etudiants_id[#{etudiant.id}]", true, true %></td>
+            <td><b><%= link_to etudiant.nom, etudiant, class: 'text-primary hover:underline' %></b></td>
+            <td><%= etudiant.prénom %></td>
+            <td>
+              <%= etudiant.email %>
+              <% if !etudiant.linked_user && Formation.find(etudiant.formation_id).cours.confirmé.count.positive? %>
+                <%= link_to users_path(search: etudiant.nom, role: 0) do %>
+                  <%= fa_icon 'exclamation-circle', class: 'text-error' , title: 'L\'étudiant n\'a pas de compte de connexion (utilisateur) associé à cet email' %>
+                <% end %>
+              <% end %>
+            </td>
+            <td style="border-left: .3rem solid <%= etudiant.formation.positive_color %>">
+              <% if etudiant.formation_id %>
+                <% formation = Formation.find(etudiant.formation_id) %>
+                <%= link_to formation.nom, formation, class: 'text-primary hover:underline' %>
+              <% end %>
+            </td>
+            <td>
+              <%= time_ago_in_words etudiant.updated_at %>
+            </td>
+          </tr>
+        <% end%>
+
+      </tbody>
+
+      <tfoot>
+        <tr>
+          <th colspan=8></th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <% if params[:action_name] == "Changer de formation" %>
+    <h3 class="text-2xl">
+      Changer de formation
+    </h3>
+    <div class="sm:w-1/2">
+      <%= label_tag :formation_id, "Nouvelle formation" %>    
+      <%= select_tag :formation_id, 
+                      options_from_collection_for_select(Formation.not_archived.ordered, :id, :nom, params[:formation_id]), 
+                      include_blank:true, class:"slim-select" %>
+    </div>
+  <% end %>
+
+  <div class="flex flex-wrap mb-12 mt-4">
+    <div class="sm:w-full">
+      <%= submit_tag 'Appliquer', class:"btn btn-primary text-white", 'data-turbo': false %>
+      <%= link_to 'Annuler', etudiants_path, class:"btn btn-light" %>
+    </div>
+  </div>
+
+<% end %>

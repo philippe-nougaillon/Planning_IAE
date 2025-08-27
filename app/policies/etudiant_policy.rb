@@ -14,7 +14,7 @@ class EtudiantPolicy < ApplicationPolicy
   end
 
   def new?
-    user && user.role_number >= 2
+    index? && user && user.role_number >= 2 && !user.accueil_vacataire?
   end
 
   def create?
@@ -22,7 +22,7 @@ class EtudiantPolicy < ApplicationPolicy
   end
 
   def edit?
-    user && user.role_number >= 2
+    index? && user && user.role_number >= 2 && !user.accueil_vacataire?
   end
 
   def update?
@@ -30,7 +30,15 @@ class EtudiantPolicy < ApplicationPolicy
   end
 
   def destroy?
-    user && user.role_number >= 2
+    index? && user && user.role_number >= 2 && !user.accueil_vacataire?
+  end
+
+  def action?
+    user && user.role_number >= 5
+  end
+
+  def action_do?
+    action?
   end
 
 end

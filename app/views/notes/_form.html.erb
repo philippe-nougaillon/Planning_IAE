@@ -1,0 +1,11 @@
+<%= form_with(model: note) do |form| %>
+
+  <%= form.text_field :titre, class: "input input-bordered input w-full mb-8", required: true, placeholder: 'Titre du mémo' %>
+  <%= form.text_area :texte, class: "textarea textarea-bordered w-full", rows: 5 %>
+
+  <%= form.color_field :couleur, class: 'w-full' %>
+
+  <div class="mt-4">
+    <%= form.submit "Enregistrer", class: "btn btn-primary text-white mx-auto" %>
+  </div>
+<% end %>

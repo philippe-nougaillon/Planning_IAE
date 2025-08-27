@@ -106,13 +106,13 @@ class ExportPdf
                 cumul_hetd += c.duree.to_f * c.HETD
                 montant_service = c.montant_service.round(2)
                 cumul_tarif += montant_service
-                formation = Formation.unscoped.find(c.formation_id)
+                formation = Formation.find(c.formation_id)
                 eotp = formation.code_analytique_avec_indice(c.debut)
                 cumul_eotp.keys.include?(eotp) ? cumul_eotp[eotp] += montant_service : cumul_eotp[eotp] = montant_service
                 cumul_eotp_durée.keys.include?(eotp) ? cumul_eotp_durée[eotp] += c.duree : cumul_eotp_durée[eotp] = c.duree
             end
     
-            formation = Formation.unscoped.find(c.formation_id)
+            formation = Formation.find(c.formation_id)
 
             data += [ [
                 formation.code_analytique_avec_indice(c.debut),
@@ -142,14 +142,16 @@ class ExportPdf
 
         # Vacations
         vacations.each_with_index do | vacation, index |
-            if vacation.forfaithtd > 0
-                montant_vacation = ((Cour.Tarif * vacation.forfaithtd) * vacation.qte).round(2)
-                cumul_hetd += (vacation.qte * vacation.forfaithtd)
-            else
-                montant_vacation = vacation.tarif * vacation.qte
+            if vacation.vacation_activite
+                intitulé = vacation.vacation_activite.nom
+                tarif = vacation.vacation_activite.vacation_activite_tarifs.find_by(statut: VacationActiviteTarif.statuts[vacation.intervenant.status])
+                if tarif && tarif.forfait_hetd
+                    cumul_hetd += tarif.forfait_hetd
+                end
             end
-            cumul_vacations += montant_vacation
-            formation = Formation.unscoped.find(vacation.formation_id) 
+            cumul_vacations += vacation.montant || 0
+
+            formation = Formation.find(vacation.formation_id) 
             
             data += [ [
                 formation.code_analytique_avec_indice(vacation.date),
@@ -157,11 +159,11 @@ class ExportPdf
                 I18n.l(vacation.date),
                 nil,
                 formation.nom,
-                vacation.titre,
+                intitulé || vacation.titre,
                 vacation.qte,
                 nil, nil,
                 vacation.forfaithtd,
-                number_to_currency(montant_vacation)
+                number_to_currency(vacation.montant)
             ] ] 
     
             if index == vacations.size - 1
@@ -253,7 +255,7 @@ class ExportPdf
     end
 
     def export_vacations_administratives(examens, start_date, end_date, surveillant)
-        taux_horaire = 11.65
+        taux_horaire = Cour.taux_horaire_vacation
         is_vacataire = false
 
         if agent = Agent.find_by(nom: surveillant.split('-').first, prénom: surveillant.split('-').last)
@@ -283,7 +285,7 @@ class ExportPdf
             text "Décret n°2003-1009 du 16/10/2003 relatif aux vacations susceptibles d’être allouées aux personnels"
             text "accomplissant des activités accessoires dans certains établissements d’enseignement supérieur"
         else
-            text "Décret n°2023-1216 du 20/12/2023 relatif au relèvement du salaire minimum de croissance"
+            text "Décret n°2024-951 du 23/10/2024 relatif au relèvement du salaire minimum de croissance"
         end
         move_down @margin_down
 
@@ -320,7 +322,7 @@ class ExportPdf
                                     exam.formation.code_analytique_avec_indice(exam.debut).gsub('HCO','VAC'),
                                     durée 
                                 ]]
-                        end
+                    end
                 end
             end
         end
@@ -328,7 +330,133 @@ class ExportPdf
         data += [[nil, nil, nil, nil, nil, nil, "Total heures :", "<b>#{ cumul_durée }</b>" ]]
 
         data += [[nil, nil, nil,
-                    "Taux horaire en vigueur au 01/01/2024 :", 
+                    "Taux horaire en vigueur au 01/11/2024 :", 
+                    "#{ taux_horaire } €",
+                    nil,
+                    "<b>Total brut :</b>",
+                    "<b>#{ cumul_durée * taux_horaire } €</b>"]]
+
+        # Corps de table
+        table data, 
+            header: true, 
+            column_widths: {0 => 20, 1 => 110, 2 => 50, 3 => 135, 4 => 50, 5 => 50, 6 => 85, 7 => 40},
+            row_colors: ["F0F0F0", "FFFFFF"] do 
+                column(6).style(:align => :right)
+                cells.style(inline_format: true, border_width: 1, border_color: 'C0C0C0')
+            end
+    
+        move_down @margin_down
+
+        # FOOTER
+        font "Helvetica"
+        font_size 10
+
+        text "Fait à Paris le #{I18n.l(Date.today)}", style: :italic
+        move_down @margin_down
+
+        y_position = cursor
+        if agent
+            bounding_box([0, y_position], :width => 166, :height => 100) do
+                text "L'agent"
+            end
+            bounding_box([166, y_position], :width => 166) do
+                text "Le supérieur hiérarchique,"
+                text "pour accord"
+            end
+            bounding_box([333, y_position], :width => 166) do
+                text "Le responsable du service concerné"
+                text "par la vacation, pour accord"
+            end
+        else
+            bounding_box([0, y_position], :width => 250, :height => 100) do
+                text "Eric LAMARQUE"
+                text "Directeur de l'IAE Paris", size: 8
+            end
+            bounding_box([250, y_position], :width => 250) do
+                text is_vacataire ? "" : "Barbara FITSCH-MOURAS"
+                text "Responsable de service", size: 8 
+            end
+        end
+
+    end
+
+    def export_vacations_administratives_v2(examens, start_date, end_date, surveillant)
+        taux_horaire = Cour.taux_horaire_vacation
+        is_vacataire = false
+
+        if agent = Agent.find_by(nom: surveillant.split('-').first, prénom: surveillant.split('-').last)
+            taux_horaire = case agent.catégorie
+                            when "A"
+                                22.17
+                            when "B"
+                                14.41
+                            when "C"
+                                11.07
+                            end
+        end
+
+        image "#{@image_path}/logo@100.png", :height => 40, :position => :center
+        move_down @margin_down
+
+        font "Helvetica"
+        if agent
+            text "Demande de paiement de vacations accessoires", size: 18
+        else
+            text "Vacations administratives", size: 18
+        end
+
+        font_size 10
+
+        if agent
+            text "Décret n°2003-1009 du 16/10/2003 relatif aux vacations susceptibles d’être allouées aux personnels"
+            text "accomplissant des activités accessoires dans certains établissements d’enseignement supérieur"
+        else
+            text "Décret n°2024-951 du 23/10/2024 relatif au relèvement du salaire minimum de croissance"
+        end
+        move_down @margin_down
+
+        text surveillant
+        move_down @margin_down
+        text "Du #{I18n.l(start_date.to_date)} au #{I18n.l(end_date.to_date)}"
+
+        move_down @margin_down
+        #text "Affaire suivie par : Thémoline"
+
+        # Tableau récap par code OTP
+        data = [ ['N°', 'Date', 'Type', 'Formation', 'Centre de coût', 'Destination financière', 'EOTP', 'Total heures' ]]    
+
+        font_size 7
+ 
+        cumul_durée = 0
+        index = 0
+ 
+        examens.each do | exam |
+            exam.options.surveillance.first.description.split('[').each do |item|
+                unless item.blank? 
+                    surveillant_item = item.gsub(']', '').delete("\r\n\\")
+                    if surveillant_item == surveillant
+                        is_vacataire = (exam.intervenant_id == 1314)
+                        index += 1
+                        durée = exam.duree + (is_vacataire ? 0 : 1)
+                        cumul_durée += durée
+                        data += [[ index,
+                                    I18n.l(exam.debut.to_date, format: :long) + ' ' + I18n.l(exam.debut, format: :heures_min) + '-' + I18n.l(exam.fin, format: :heures_min),
+                                    is_vacataire ? "Vacataire" : "Surveillance Examen",
+                                    exam.formation.nom_promo,
+                                    '7322GRH',
+                                    (exam.formation.diplome.upcase == 'LICENCE' ? '101PAIE' : exam.intervenant.id == 1314 ? '115PAIE' : '102PAIE'),
+                                    exam.formation.code_analytique_avec_indice(exam.debut).gsub('HCO','VAC'),
+                                    durée 
+                                ]]
+                    end
+                end
+            end
+        end
+
+        data += [[nil, nil, nil, nil, nil, nil, "Total heures :", "<b>#{ cumul_durée }</b>" ]]
+
+        data += [[nil, nil, nil,
+                    "Taux horaire en vigueur au 01/11/2024 :", 
                     "#{ taux_horaire } €",
                     nil,
                     "<b>Total brut :</b>",
@@ -412,17 +540,16 @@ class ExportPdf
 
             if examen = cour.examen?
                 if table
-                    data = [ ['<i>NOM PRÉNOM</i>', 'N° Table', '<i>SIGNATURE DÉBUT ÉPREUVE</i>', '<i>SIGNATURE REMISE COPIE</i>'] ]
+                    data = [ ['<i>NOM PRÉNOM</i>', 'Table n°', '<i>SIGNATURE DÉBUT ÉPREUVE</i>', '<i>SIGNATURE REMISE COPIE</i>'] ]
                 else
                     data = [ ['<i>NOM PRÉNOM</i>', '<i>SIGNATURE DÉBUT ÉPREUVE</i>', '<i>SIGNATURE REMISE COPIE</i>'] ]
                 end
                 (0..array.length - 1).each do |index|
                     etudiant = Etudiant.find(array[index])
-                    data += [ [
-                        "<b>#{etudiant.nom.upcase}</b> #{etudiant.prénom.humanize}",
-                        Array.new(table ? 3 : 2)
-                    ].flatten
-                    ]
+                    row = ["<b>#{etudiant.nom.upcase}</b> #{etudiant.prénom.humanize}"]
+                    row += ["#{etudiant.table.zero? ? '' : etudiant.table}"] if table
+                    row += [Array.new(2)]
+                    data += [row.flatten]
                 end
             else
                 data = [ ['<i>NOM PRÉNOM</i>', '<i>SIGNATURE</i>', '<i>NOM PRÉNOM</i>', '<i>SIGNATURE</i>'] ]
@@ -447,7 +574,9 @@ class ExportPdf
             table(data, 
                 header: true,
                 column_widths: examen ? (table ? [160, 60, 160, 160] : [180,180,180]) : [150, 120, 150, 120] ,
-                cell_style: { :inline_format => true, height: 35 })
+                cell_style: { :inline_format => true, height: 35 }) do
+                    column(1).style(:align => :center) if table
+                end
 
             start_new_page unless index == cours.size - 1
         end
@@ -457,83 +586,94 @@ class ExportPdf
         font "OpenSans"
         
         cours.each_with_index do |cour, index|
-            surveillants = cour.commentaires.tr('[]', '').gsub(/[\r\n]/, ' ').split(' ').to_s.tr('\"[]', '').gsub(/[-]/, ' ')
-            image "#{@image_path}/Aikku_logo.png", :height => 60
+            if cour.options.surveillance.any? && !cour.options.surveillance.first.description.empty?
+                surveillants = cour.options.surveillance.first.description.scan(/\[([^\]]+)\]/).flatten.join(', ').gsub(/[-]/, ' ')
+            elsif !cour.commentaires.blank?
+                surveillants = cour.commentaires.scan(/\[([^\]]+)\]/).flatten.join(', ').gsub(/[-]/, ' ')
+            else
+                surveillants = ""
+            end
+            
+            surveillants.split(', ').each do |surveillant|
+                #1ère page
+                image "#{@image_path}/Aikku_logo.png", :height => 60
 
-            move_down @margin_down * 2
+                move_down @margin_down * 2
 
-            infos = [ ["<b><color rgb='E68824'>EMARGEMENT POUR SURVEILLANCE D’EXAMEN</color></b> \n <color rgb='032E4D'>(Exemplaire à conserver par le surveillant)</color>"] ]
-            table(infos, cell_style: {inline_format: true, border_color: "E68824", align: :center})
+                infos = [ ["<b><color rgb='E68824'>EMARGEMENT POUR SURVEILLANCE D’#{cour.type_examen.upcase}</color></b> \n <color rgb='032E4D'>(Exemplaire à conserver par le surveillant)</color>"] ]
+                table(infos, cell_style: {inline_format: true, border_color: "E68824", align: :center})
 
-            move_down @margin_down * 2
-            text "<color rgb='032E4D'>NOM – Prénom du surveillant : <b>#{surveillants}</b></color>", inline_format: true
+                move_down @margin_down * 2
+                text "<color rgb='032E4D'>NOM – Prénom du surveillant : <b>#{surveillant}</b></color>", inline_format: true
 
 
-            move_down @margin_down * 2
+                move_down @margin_down * 2
 
-            data = [ ["<color rgb='032E4D'>Date</color>", "<color rgb='032E4D'><b>#{I18n.l(cour.debut.to_date)}</b></color>"],
-                    ["<color rgb='032E4D'>Formation(s)</color>","<color rgb='032E4D'><b>#{cour.formation.nom}</b></color>"],
-                    ["<color rgb='032E4D'>#{cour.intervenant_binome.nom_prenom}</color>","<color rgb='032E4D'><b>UE#{cour.code_ue} - #{cour.nom_ou_ue}</b></color>"],
-                    ["<color rgb='032E4D'>Horaires de surveillance   (nbre d’heures rémunérées)</color>",
-                    "<color rgb='032E4D'><b>#{cour.debut.strftime('%Hh%M')}-#{cour.fin.strftime('%Hh%M')} (#{cour.duree + 1} heure.s)</b></color>"],]
+                data = [ ["<color rgb='032E4D'>Date</color>", "<color rgb='032E4D'><b>#{I18n.l(cour.debut.to_date)}</b></color>"],
+                        ["<color rgb='032E4D'>Formation</color>","<color rgb='032E4D'><b>#{cour.formation.nom}</b></color>"],
+                        ["<color rgb='032E4D'>#{cour.type_examen}</color>","<color rgb='032E4D'><b>UE#{cour.code_ue} - #{cour.nom_ou_ue} / #{cour.intervenant_binome.try(:nom_prenom)}</b></color>"],
+                        ["<color rgb='032E4D'>Horaires de surveillance </color>","<color rgb='032E4D'><b>#{cour.debut.strftime('%Hh%M')}-#{cour.fin.strftime('%Hh%M')}</b></color>"],
+                        ["<color rgb='032E4D'>Nbre d'heures rémunérées</color>","<color rgb='032E4D'><b>#{cour.duree + 1} heure.s</b></color>"]
+                    ]
 
-            table(data, 
-                header: true, 
-                column_widths: [150, 350], 
-                row_colors: ["FFEAD5", "FFFFFF"],
-                cell_style: { inline_format: true},
-                position: :center)
-
-            move_down @margin_down * 3
-            data2 = [ ["<color rgb='032E4D'>Cadre réservé au \n<b>Surveillant</b></color>"], ["<color rgb='032E4D'>Date :  ………/………/……………… \n\n Signature : \n\n\n\n\n\n\n\n\n\n</color>"]]
-                table(data2, 
+                table(data, 
                     header: true, 
-                    column_widths: [300],
-                    cell_style: { inline_format: true, width: 300, align: :center, color: "032E4D"},
+                    column_widths: [150, 350], 
+                    row_colors: ["FFEAD5", "FFFFFF"],
+                    cell_style: { inline_format: true},
                     position: :center)
 
-            start_new_page
+                move_down @margin_down * 3
+                data2 = [ ["<color rgb='032E4D'>Cadre réservé au \n<b>Surveillant</b></color>"], ["<color rgb='032E4D'>Date :  ………/………/……………… \n\n Signature : \n\n\n\n\n\n\n\n\n\n</color>"]]
+                    table(data2, 
+                        header: true, 
+                        column_widths: [300],
+                        cell_style: { inline_format: true, width: 300, align: :center, color: "032E4D"},
+                        position: :center)
 
-            image "#{@image_path}/Aikku_logo.png", :height => 60
+                start_new_page
 
-            move_down @margin_down * 4
+                image "#{@image_path}/Aikku_logo.png", :height => 60
 
-            infos = [ ["<color rgb='E68824'><b>EMARGEMENT POUR SURVEILLANCE D’EXAMEN</b></color> \n<color rgb='032E4D'> (Exemplaire à remettre à l’Administration)</color>"] ]
-            table(infos, cell_style: {inline_format: true, border_color: "E68824", align: :center})
+                move_down @margin_down * 4
 
-            move_down @margin_down
+                infos = [ ["<color rgb='E68824'><b>EMARGEMENT POUR SURVEILLANCE D’#{cour.type_examen.upcase}</b></color> \n<color rgb='032E4D'> (Exemplaire à remettre à l’Administration)</color>"] ]
+                table(infos, cell_style: {inline_format: true, border_color: "E68824", align: :center})
 
-            text "<color rgb='032E4D'>NOM – Prénom du surveillant : <b>#{surveillants}</b></color>", inline_format: true
+                move_down @margin_down
 
-            move_down @margin_down
+                text "<color rgb='032E4D'>NOM – Prénom du surveillant : <b>#{surveillant}</b></color>", inline_format: true
 
-            table(data, 
-                header: true, 
-                column_widths: [150, 350], 
-                row_colors: ["FFEAD5", "FFFFFF"],
-                cell_style: { inline_format: true},
-                position: :center)
+                move_down @margin_down
 
-            move_down @margin_down * 3
+                table(data, 
+                    header: true, 
+                    column_widths: [150, 350], 
+                    row_colors: ["FFEAD5", "FFFFFF"],
+                    cell_style: { inline_format: true},
+                    position: :center)
 
-            data3 = [ ["<color rgb='032E4D'>Cadre réservé au \n<b>Surveillant</b></color>", "<color rgb='032E4D'>Cadre réservé à \n<b>l’Administration</b></color>"]]
-            data3 += [ ["<color rgb='032E4D'>\n\nDate :  ………/………/……………… \n\n Signature : \n\n\n\n\n\n\n</color>", "<color rgb='032E4D'>\n\nSaisie dans l’Outil Planning le \n\n\n ………/………/……………… \n\n\n\n\n\n</color>"] ]
+                move_down @margin_down * 3
 
-            move_down @margin_down
-            table(data3, 
-                header: true, 
-                column_widths: [250, 250],
-                cell_style: { inline_format: true, align: :center},
-                position: :center)
+                data3 = [ ["<color rgb='032E4D'>Cadre réservé au \n<b>Surveillant</b></color>", "<color rgb='032E4D'>Cadre réservé à \n<b>l’Administration</b></color>"]]
+                data3 += [ ["<color rgb='032E4D'>\n\nDate :  ………/………/……………… \n\n Signature : \n\n\n\n\n\n\n</color>", "<color rgb='032E4D'>\n\nSaisie dans l’Outil Planning le \n\n\n ………/………/……………… \n\n\n\n\n\n</color>"] ]
 
-            start_new_page
+                move_down @margin_down
+                table(data3, 
+                    header: true, 
+                    column_widths: [250, 250],
+                    cell_style: { inline_format: true, align: :center},
+                    position: :center)
 
+                start_new_page
+            end
+
+            # 3ème page
             image "#{@image_path}/Aikku_logo.png", :height => 60, position: :center
 
             move_down @margin_down * 2
-            
 
-            infos = [ ["<color rgb='E68824'><b>PROCÈS-VERBAL DE DÉROULEMENT D’EXAMEN</b></color>"] ]
+            infos = [ ["<color rgb='E68824'><b>PROCÈS-VERBAL DE DÉROULEMENT D’#{cour.type_examen.upcase}</b></color>"] ]
             table(infos, cell_style: {inline_format: true, width: 540, border_color: "E68824", align: :center})
 
             move_down @margin_down *2
@@ -542,7 +682,7 @@ class ExportPdf
 
             move_down @margin_down 
 
-            text "<color rgb='032E4D'><u>Pour tous problèmes importants durant l’examen, contacter le responsable(s) de l’UE</u> :</color>", inline_format: true
+            text "<color rgb='032E4D'><u>Pour tous problèmes importants durant l’#{cour.type_examen.downcase}, contacter le responsable(s) de l’UE</u> :</color>", inline_format: true
             text "<color rgb='032E4D'><b>#{Intervenant.find_by(id: cour.intervenant_binome_id).try(:prenom_nom)} (tel: #{Intervenant.find_by(id: cour.intervenant_binome_id).try(:téléphone_mobile)})</b></color>", inline_format: true
 
             move_down @margin_down
@@ -550,7 +690,7 @@ class ExportPdf
             table([ ["<color rgb='032E4D'>•</color>", "<color rgb='032E4D'><b>Formation : #{cour.formation.nom}</b></color>"],
                 ["<color rgb='032E4D'>•</color>", "<color rgb='032E4D'><b>Date : #{I18n.l(cour.debut.to_date)}</b></color>"],
                 ["<color rgb='032E4D'>•</color>", "<color rgb='032E4D'><b>Horaires : #{cour.debut.strftime('%Hh%M')}-#{cour.fin.strftime('%Hh%M')}</b></color>"],
-                ["<color rgb='032E4D'>•</color>", "<color rgb='032E4D'><b>Salle : #{cour.salle.nom}</b></color>"] ],
+                ["<color rgb='032E4D'>•</color>", "<color rgb='032E4D'><b>Salle : #{cour.salle.try(:nom) }</b></color>"] ],
                 cell_style: { borders: [], inline_format: true })
             move_down @margin_down / 2
             table([ ["<color rgb='032E4D'>•</color>", "<color rgb='032E4D'><b>Nombre d’étudiants inscrits : #{étudiants_count}</b></color>"],
@@ -562,14 +702,14 @@ class ExportPdf
 
             move_down @margin_down * 2
 
-            text "<color rgb='032E4D'><b><u>COMPTE-RENDU DU DÉROULEMENT DE L’EXAMEN</u></b></color>", inline_format: true, align: :center
+            text "<color rgb='032E4D'><b><u>COMPTE-RENDU DU DÉROULEMENT DE L’#{cour.type_examen.upcase}</u></b></color>", inline_format: true, align: :center
 
             text "[_]  <color rgb='032E4D'><b>R. A. S.</b></color>", inline_format: true
             text "[_]  <color rgb='032E4D'><b>INCIDENT</b></color>", inline_format: true
 
             move_down @margin_down
 
-            text "<color rgb='032E4D'><b>Dans ce dernier cas,</b> indiquez ci-après les observations ou incidents constatés pendant l’examen :</color>", inline_format: true
+            text "<color rgb='032E4D'><b>Dans ce dernier cas,</b> indiquez ci-après les observations ou incidents constatés pendant l’#{cour.type_examen.downcase} :</color>", inline_format: true
 
             move_down @margin_down * 6
 
@@ -581,6 +721,7 @@ class ExportPdf
                 text "<color rgb='032E4D'>Signature de l’étudiant impliqué \ndans l’incident, le cas échéant</color>", inline_format: true
             end    
 
+            # 4ème page
             start_new_page(layout: :landscape)
 
             text "<color rgb='032E4D'><b>#{cour.formation.nom}</b></color>", inline_format: true, align: :center, size: 32
@@ -590,14 +731,15 @@ class ExportPdf
             text "<color rgb='032E4D'><u>Surveillant.e.s :</u></color>", inline_format: true, size: 24
             text "<color rgb='032E4D'><b>#{surveillants}</b></color>", inline_format: true, size: 24
             move_down @margin_down
-            text "<color rgb='032E4D'>Examen <b>UE#{cour.code_ue} #{cour.nom_ou_ue}</b></color>", inline_format: true, size: 24
+            text "<color rgb='032E4D'>#{cour.type_examen} <b>UE#{cour.code_ue} #{cour.nom_ou_ue} - #{cour.intervenant_binome.try(:nom_prenom)}</b></color>", inline_format: true, size: 24
             text "<color rgb='032E4D'>Le <b>#{I18n.l(cour.debut.to_date)}</b></color>", inline_format: true, size: 24
             text "<color rgb='032E4D'>De <b>#{cour.debut.strftime('%Hh%M')} à #{cour.fin.strftime('%Hh%M')}</b></color>", inline_format: true, size: 24
-            text "<color rgb='032E4D'>Salle <b>#{cour.salle.nom}</b></color>", inline_format: true, size: 24
+            text "<color rgb='032E4D'>Salle <b>#{cour.salle.try(:nom)}</b></color>", inline_format: true, size: 24
 
             move_down @margin_down * 2
             text "<color rgb='FF0000'>=>   <b><u>En fin d’épreuve</u>, merci de remettre l’enveloppe contenant les copies à l’accueil.</b></color>", inline_format: true, size: 24
 
+            # 5ème page
             start_new_page(layout: :portrait)
 
             image "#{@image_path}/Aikku_logo.png", :height => 60
@@ -605,34 +747,22 @@ class ExportPdf
             move_down @margin_down * 4
 
             text "<color rgb='032E4D'><b>UE#{cour.code_ue} #{cour.nom_ou_ue}</b></color>", inline_format: true, size: 16
-            text "<color rgb='032E4D'><b>Examen du #{I18n.l(cour.debut.to_date)}</b></color>", inline_format: true, size: 16
+            text "<color rgb='032E4D'><b>#{cour.type_examen} du #{I18n.l(cour.debut.to_date)}</b></color>", inline_format: true, size: 16
 
             move_down @margin_down * 3
 
             text "<color rgb='E68824'><b>#{cour.formation.nom}</b></color>", inline_format: true, size: 16
             text "<color rgb='E68824'>#{'Formation en apprentissage' if cour.formation.apprentissage}</b></color>", inline_format: true, size: 16
             move_down @margin_down * 2
-            text "<color rgb='032E4D'>Enseignant : #{Intervenant.find_by(id: cour.intervenant_binome_id).nom_prenom}</color>", inline_format: true
+            text "<color rgb='032E4D'>Enseignant : #{Intervenant.find_by(id: cour.intervenant_binome_id).try(:nom_prenom)}</color>", inline_format: true
             move_down @margin_down
             text "<color rgb='032E4D'>Durée : #{cour.duree}h (#{cour.duree + 1}h pour le tiers temps)</color>", inline_format: true
             move_down @margin_down
 
-            autorisations = {papier:, calculatrice:, ordi_tablette:, téléphone:, dictionnaire:}
-            autorisations_sorted = autorisations.sort_by{|i| i.last ? 1 : 0 }
-            autorisations_sorted.each do |autorisation|
-                case autorisation.first
-                when :papier
-                    text "<color rgb='032E4D'>> Documents papier #{papier ? "autorisés" : "interdits"}</color>", inline_format: true, style: papier ? nil : :bold
-                when :calculatrice
-                    text "<color rgb='032E4D'>> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission #{calculatrice ? "autorisée" : "interdite"}</color>", inline_format: true, style: calculatrice ? nil : :bold
-                when :ordi_tablette
-                    text "<color rgb='032E4D'>> Les ordinateurs et tablettes sont #{ordi_tablette ? "autorisés" : "interdits"}</color>", inline_format: true, style: ordi_tablette ? nil : :bold
-                when :téléphone
-                    text "<color rgb='032E4D'>> Les téléphones portables sont #{téléphone ? "autorisés" : "interdits"}</color>", inline_format: true, style: téléphone ? nil : :bold
-                when :dictionnaire
-                    text "<color rgb='032E4D'>> Les dictionnaires sont #{dictionnaire ? "autorisés" : "interdits"}</color>", inline_format: true, style: dictionnaire ? nil : :bold
-                end
-            end
+            move_down @margin_down
+            consignes(papier, calculatrice, ordi_tablette, téléphone, dictionnaire)
+
+            # 6ème page (étudiant)
             start_new_page
 
             image "#{@image_path}/Aikku_logo.png", :height => 60
@@ -640,7 +770,7 @@ class ExportPdf
             move_down @margin_down * 4
 
             text "<color rgb='032E4D'><b>UE#{cour.code_ue} #{cour.nom_ou_ue}</b></color>", inline_format: true, size: 16
-            text "<color rgb='032E4D'><b>Examen du #{I18n.l(cour.debut.to_date)}</b></color>", inline_format: true, size: 16
+            text "<color rgb='032E4D'><b>#{cour.type_examen} du #{I18n.l(cour.debut.to_date)}</b></color>", inline_format: true, size: 16
 
             move_down @margin_down * 2
             text "<color rgb='032E4D'><i>Merci d’indiquer votre numéro étudiant : .......................</i></color>", inline_format: true, size: 16
@@ -650,36 +780,24 @@ class ExportPdf
             text "<color rgb='E68824'><b>#{cour.formation.nom}</b></color>", inline_format: true, size: 16
             text "<color rgb='E68824'>#{'Formation en apprentissage' if cour.formation.apprentissage}</b></color>", inline_format: true, size: 16
             move_down @margin_down * 2
-            text "<color rgb='032E4D'>Enseignant : #{Intervenant.find_by(id: cour.intervenant_binome_id).nom_prenom}</color>", inline_format: true, size: 16
+            text "<color rgb='032E4D'>Enseignant : #{Intervenant.find_by(id: cour.intervenant_binome_id).try(:nom_prenom)}</color>", inline_format: true, size: 16
             move_down @margin_down
             text "<color rgb='032E4D'>Durée : #{cour.duree}h</color>", inline_format: true
             move_down @margin_down
-            autorisations_sorted.each do |autorisation|
-                case autorisation.first
-                when :papier
-                    text "<color rgb='032E4D'>> Documents papier #{papier ? "autorisés" : "interdits"}</color>", inline_format: true, style: papier ? nil : :bold
-                when :calculatrice
-                    text "<color rgb='032E4D'>> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission #{calculatrice ? "autorisée" : "interdite"}</color>", inline_format: true, style: calculatrice ? nil : :bold
-                when :ordi_tablette
-                    text "<color rgb='032E4D'>> Les ordinateurs et tablettes sont #{ordi_tablette ? "autorisés" : "interdits"}</color>", inline_format: true, style: ordi_tablette ? nil : :bold
-                when :téléphone
-                    text "<color rgb='032E4D'>> Les téléphones portables sont #{téléphone ? "autorisés" : "interdits"}</color>", inline_format: true, style: téléphone ? nil : :bold
-                when :dictionnaire
-                    text "<color rgb='032E4D'>> Les dictionnaires sont #{dictionnaire ? "autorisés" : "interdits"}</color>", inline_format: true, style: dictionnaire ? nil : :bold
-                end
-            end
-
+            consignes(papier, calculatrice, ordi_tablette, téléphone, dictionnaire)
         end
     end
 
     def convocation(cour, étudiant, papier, calculatrice, ordi_tablette, téléphone, dictionnaire)
+        is_examen_rattrapage = cour.intervenant_id == 1166
+
         font "OpenSans"
 
         image "#{@image_path}/Aikku_logo.png", :height => 60, :position => :center
         move_down @margin_down * 3
         text "<color rgb='032E4D'><b>#{cour.formation.nom.upcase}</b></color>", inline_format: true, size: 16, style: :bold, align: :center
         move_down @margin_down
-        text "<color rgb='E68824'><b>Convocation aux Examens</b></color>", inline_format: true, size: 24, align: :center
+        text "<color rgb='E68824'><b>Convocation #{is_examen_rattrapage ? 'Examen rattrapage' : 'aux Examens'}</b></color>", inline_format: true, size: 24, align: :center
 
         move_down @margin_down * 2
         y_position = cursor
@@ -689,11 +807,14 @@ class ExportPdf
         bounding_box([350, y_position], :width => 190) do
             text "<color rgb='032E4D'><b>Prénom : #{étudiant.prénom}</b></color>", inline_format: true, size: 16
         end
+        if étudiant.table && !étudiant.table.zero?
+            text "<color rgb='032E4D'><b>Table n° #{étudiant.table}</b></color>", inline_format: true, size: 16, align: :center
+        end
 
         move_down @margin_down * 2
-        text "<color rgb='E68824'><b>Examen de l'UE n°#{cour.code_ue} : #{cour.nom_ou_ue}</b></color>", inline_format: true, size: 16, align: :center
+        text "<color rgb='E68824'><b>Examen#{' rattrapage' if is_examen_rattrapage} de l'UE n°#{cour.code_ue} : #{cour.nom_ou_ue}</b></color>", inline_format: true, size: 16, align: :center
         move_down @margin_down
-        text "<color rgb='E68824'><b>Le #{I18n.l cour.debut.to_date} de #{cour.debut.strftime('%Hh%M')} à #{cour.fin.strftime('%Hh%M')} en salle #{cour.salle.nom}</b></color>", inline_format: true, size: 16, align: :center
+        text "<color rgb='E68824'><b>Le #{I18n.l cour.debut.to_date} de #{cour.debut.strftime('%Hh%M')} à #{cour.fin.strftime('%Hh%M')} en salle #{cour.salle.try(:nom)}</b></color>", inline_format: true, size: 16, align: :center
 
         move_down @margin_down * 2
         text "<color rgb='032E4D'><b>Vous devez :</b></color>", inline_format: true
@@ -703,23 +824,147 @@ class ExportPdf
         text "<color rgb='032E4D'><b>-    vous présenter dans la salle d'examen 15 minutes avant le début de l'épreuve</b></color>", inline_format: true
 
         move_down @margin_down * 2
-        text "<color rgb='032E4D'><b>Consignes :</b></color>", inline_format: true
+        consignes(papier, calculatrice, ordi_tablette, téléphone, dictionnaire)
+
+    end
+
+    def generate_feuille_emargement_signée(cours)
+        cour = cours.first
+
+        font_size 14
+
+        y_position = cursor
+        bounding_box([0, y_position], :width => 270) do
+            image "#{@image_path}/logo@100.png", :width => 200
+        end
+        bounding_box([270, y_position], :width => 270) do
+            move_down @margin_down
+            text cour.formation.nom, style: :bold, align: :right
+        end
+
+        move_down @margin_down * 4
+        text "ÉMARGEMENT PRÉSENCE", size: 16, style: :bold, align: :center
         move_down @margin_down
-        autorisations = {papier:, calculatrice:, ordi_tablette:, téléphone:, dictionnaire:}
-        autorisations_sorted = autorisations.sort_by{|i| i.last ? 1 : 0 }
-        autorisations_sorted.each do |autorisation|
-            case autorisation.first
-            when :papier
-                text "<color rgb='032E4D'>> Documents papier #{papier ? "autorisés" : "interdits"}</color>", inline_format: true, style: papier ? nil : :bold
-            when :calculatrice
-                text "<color rgb='032E4D'>> Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission #{calculatrice ? "autorisée" : "interdite"}</color>", inline_format: true, style: calculatrice ? nil : :bold
-            when :ordi_tablette
-                text "<color rgb='032E4D'>> Les ordinateurs et tablettes sont #{ordi_tablette ? "autorisés" : "interdits"}</color>", inline_format: true, style: ordi_tablette ? nil : :bold
-            when :téléphone
-                text "<color rgb='032E4D'>> Les téléphones portables sont #{téléphone ? "autorisés" : "interdits"}</color>", inline_format: true, style: téléphone ? nil : :bold
-            when :dictionnaire
-                text "<color rgb='032E4D'>> Les dictionnaires sont #{dictionnaire ? "autorisés" : "interdits"}</color>", inline_format: true, style: dictionnaire ? nil : :bold
+
+        font_size 12
+
+        move_down @margin_down
+        y_position = cursor
+        bounding_box([0, y_position], :width => 250, :height => 100) do
+            text "Date : #{I18n.l(cour.debut.to_date)}", style: :bold
+        end
+        bounding_box([250, y_position], :width => 250) do
+            
+            text "Horaire : #{I18n.l(cour.debut, format: :heures_min)} - #{I18n.l(cour.fin, format: :heures_min)}", style: :bold
+
+        end
+        move_down @margin_down
+        text "Enseignant : #{cour.intervenant.nom_prenom}", style: :bold
+        move_down @margin_down
+        text "UE : #{cour.code_ue} - #{cour.nom_ou_ue}", style: :bold
+        move_down @margin_down
+        text "Signature :", style: :bold
+        move_down @margin_down
+
+        stroke_horizontal_rule
+
+        font_size 14
+
+        array = cour.formation.etudiants.order(:nom, :prénom).pluck(:id)
+
+        (0..array.length - 1).step(2).each do |index|
+            # Multiple de deux parce qu'il y a un step(2)
+            start_new_page if (index%10 == 6)
+            move_down @margin_down
+
+            etudiant = Etudiant.find(array[index])
+            presence = Presence.find_by(cour_id: cour.id, etudiant_id: etudiant.id)
+
+            if index < array.length - 1
+                next_etudiant = Etudiant.find(array[index + 1])
+                presence_next_etudiant = Presence.find_by(cour_id: cour.id, etudiant_id: next_etudiant.id)
             end
+
+            y_position = cursor
+            bounding_box([0, y_position], :width => 270) do
+                text "<b>#{etudiant.nom.upcase}</b> #{etudiant.prénom.humanize}", inline_format: true
+                if presence
+                    if presence.signature
+                        svg Base64.decode64(presence.signature.split(',')[1]), height: 50
+                    else
+                        move_down @margin_down * 3.4
+                    end
+                    move_down @margin_down
+                    text presence.workflow_state.humanize
+                else
+                    move_down @margin_down * 6
+                end
+            end
+
+            if next_etudiant
+                bounding_box([270, y_position], :width => 270) do
+                    text "<b>#{next_etudiant.nom.upcase}</b> #{next_etudiant.prénom.humanize}", inline_format: true
+                    if presence_next_etudiant
+                        if presence_next_etudiant.signature
+                            svg Base64.decode64(presence_next_etudiant.signature.split(',')[1]), height: 50
+                        else
+                            move_down @margin_down * 3.4
+                        end
+                        move_down @margin_down
+                        text presence_next_etudiant.workflow_state.humanize
+                    else
+                        move_down @margin_down * 6
+                    end
+                end
+            end
+
+            move_down @margin_down
+            stroke_horizontal_rule
+        end
+    end
+
+
+    def consignes(papier, calculatrice, ordi_tablette, téléphone, dictionnaire)
+        text "<color rgb='032E4D'><b>CONSIGNES :</b></color>", inline_format: true
+        move_down @margin_down 
+
+        text "<color rgb='032E4D'><i>Sont autorisés :</i></color>", inline_format: true
+        move_down @margin_down
+
+        if papier
+            text "<color rgb='032E4D'> - Documents papier</color>", inline_format: true, style: :bold
+        end
+        if calculatrice
+            text "<color rgb='032E4D'> - Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission</color>", inline_format: true, style: :bold
+        end
+        if ordi_tablette
+            text "<color rgb='032E4D'> - Les ordinateurs et tablettes</color>", inline_format: true, style: :bold
+        end
+        if téléphone
+            text "<color rgb='032E4D'> - Les téléphones portables</color>", inline_format: true, style: :bold
+        end
+        if dictionnaire
+            text "<color rgb='032E4D'> - Les dictionnaires</color>", inline_format: true, style: :bold
+        end
+        move_down @margin_down
+
+        text "<color rgb='032E4D'><i>Sont interdits :</i></color>", inline_format: true
+        move_down @margin_down
+
+        if !papier
+            text "<color rgb='032E4D'> - Documents papier</color>", inline_format: true, style: :bold
+        end
+        if !calculatrice
+            text "<color rgb='032E4D'> - Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission</color>", inline_format: true, style: :bold
+        end
+        if !ordi_tablette
+            text "<color rgb='032E4D'> - Les ordinateurs et tablettes</color>", inline_format: true, style: :bold
+        end
+        if !téléphone
+            text "<color rgb='032E4D'> - Les téléphones portables</color>", inline_format: true, style: :bold
+        end
+        if !dictionnaire
+            text "<color rgb='032E4D'> - Les dictionnaires</color>", inline_format: true, style: :bold
         end
     end
 

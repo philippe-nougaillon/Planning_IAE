@@ -1,0 +1,30 @@
+<div class="mx-auto md:w-2/3 w-full flex mt-8">
+  <div class="mx-auto">
+    
+    <h1 class="text-4xl font-black mb-2">
+      <%= @vacation_activite.nature %>
+    </h1>
+    <h2 class="text-2xl">
+      <%= @vacation_activite.nom %>
+    </h2>
+
+    <h2 class="text-2xl mt-8 mb-4">
+      Tarifs
+    </h2>
+    <% @vacation_activite.vacation_activite_tarifs.order(:statut).each do |tarif| %>
+      <hr class="my-2">
+      <h3 class="text-xl"><%= tarif.statut %></h3>
+      <%= simple_format(tarif.prix_ou_HETD) %>
+      <% if tarif.max %>
+        <span class="text-error">
+          <%= "x#{tarif.max} maximum" %>
+        </span>
+      <% end %>
+    <% end %>
+    <div class="mt-8">
+      <%= link_to "Modifier", edit_vacation_activite_path(@vacation_activite), class: "btn" %>
+      <%= link_to '[X]', @vacation_activite, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: 'btn' %>
+      <%= link_to "Retour", vacation_activites_path, class: "btn" %>
+    </div>
+  </div>
+</div>

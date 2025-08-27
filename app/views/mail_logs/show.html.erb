@@ -1,4 +1,4 @@
-<p class="mb-4">
+<p class="my-4">
   <strong>Il y a :</strong>
   <%= time_ago_in_words @mail_log.created_at %>
 </p>
@@ -23,18 +23,20 @@
   <%= @mail_log.message_id %>
 </p>
 
-<% if @mail_log.created_at > 5.days.ago %>
-  <p class="mb-4">
-    <strong>Statut :</strong>
-    <% if status = @result["items"].find{|item| item["message"]["headers"]["message-id"] == @mail_log.message_id } %>
-      <span class="text-error">
-        <%= JSON.pretty_generate(status) %>
-      </span>
+<p class="mb-4">
+  <strong>Statut :</strong>
+  <% if @mail_log.statut %>
+    <span class="text-success">OK</span>
+  <% else %>
+    <span class="text-error break-words!">Erreur <%= @mail_log.error_message["delivery-status"]["code"] %> : <%= @mail_log.error_message["reason"] %></span>
+  <% end %>
+</p>
 
-    <% else %>
-      <span class="text-success">OK</span>
-    <% end %>
-  </p>
-<% end %>
+<p class="mb-4">
+  <strong>État :</strong>
+  <% if @mail_log.opened %>
+    <span class="text-info">OUVERT</span>
+  <% end %>
+</p>
 
 <%= link_to 'Retour', mail_logs_path, class: 'text-primary hover:underline' %>

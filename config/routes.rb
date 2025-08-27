@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  mount MissionControl::Jobs::Engine, at: "/jobs"
+
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
 
   devise_for :users, controllers: {
@@ -36,7 +38,12 @@ Rails.application.routes.draw do
   end
 
   resources :fermetures
-  resources :etudiants
+  resources :etudiants do
+    collection do
+      post :action
+      post :action_do
+    end
+  end
   resources :documents
   resources :unites
 
@@ -49,6 +56,9 @@ Rails.application.routes.draw do
       get :signature_intervenant
       patch :signature_etudiant_do
       patch :signature_intervenant_do
+    end
+    member do
+      delete :delete_attachment
     end
   end
 
@@ -94,7 +104,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :mail_logs, only: %i[ index show ]
+  resources :mail_logs, only: %i[ index show ] do
+    collection do
+      get :refresh
+    end
+  end
 
   namespace :tools do
     get :index
@@ -109,6 +123,7 @@ Rails.application.routes.draw do
     get :export_etudiants
     get :export_formations
     get :export_vacations
+    get :export_etat_liquidatif_collectif
 
     get :swap_intervenant
     get :etats_services
@@ -120,11 +135,18 @@ Rails.application.routes.draw do
     get :creation_cours
     get :audit_cours
     get :liste_surveillants_examens
+    get :liste_surveillants_examens_v2
     get :rechercher
     get :rappel_des_cours
+    get :rappel_des_examens
     get :acces_intervenants
     get :commandes
     get :commande_fait
+    get :commandes_v2
+    get :commande_fait_v2
+    get :edusign
+    get :synchronisation_edusign
+    get :initialisation_edusign
 
     post :import_do
     post :creation_cours_do
@@ -137,17 +159,25 @@ Rails.application.routes.draw do
     post :export_etudiants_do
     post :export_formations_do
     post :export_vacations_do
+    post :export_etat_liquidatif_collectif_do
     post :swap_intervenant_do
     post :taux_occupation_jours_do
     post :taux_occupation_salles_do
     post :nouvelle_saison_create
     post :notifier_intervenants_do
     post :rappel_des_cours_do
+    post :rappel_des_examens_do
     post :acces_intervenants_do
+    post :edusign_do
+    post :synchronisation_edusign_do
+    post :initialisation_edusign_do
   end
 
-  get 'guide/index'
-  
+  namespace :guide do
+    get :index
+    get :edusign
+  end
+
   # namespace :api, defaults: {format: 'json'} do 
   #   namespace :v1 do 
   #       resources :cours
@@ -189,6 +219,16 @@ Rails.application.routes.draw do
       post :action
     end
   end
+
+  resources :notes
+
+  resources :vacations, only: %i[ index show edit update ]
+  resources :vacation_activites
+
+  resources :attendances
+  resources :justificatifs, only: %i[ index show ]
+
+  resources :edusign_logs, only: %i[ index show ]
 
   controller :pages do
     get 'mentions_légales', to: 'pages#mentions_légales', as: :mentions_legales

@@ -35,9 +35,30 @@ namespace :tools do
 
   desc "Informer des nouvelles commandes (traiteur)"
   task :informer_commandes, [:enregistrer] => :environment do |task, args|
-    if @cours = Cour.where("DATE(debut) = ?", Date.today + 7.days).where("cours.commentaires LIKE '%+%'")
-      # ToolsMailer.with(cours: @cours).commande.deliver_now
+    unless Fermeture.where(date: Date.today).any?
+      @cours = Cour.where("DATE(debut) = ?", Date.today + 7.days).where("cours.commentaires LIKE '%+%'")
+      if @cours.any?
+        # ToolsMailer.with(cours: @cours).rappel_commandes.deliver_now
+      end
     end
+  end
+
+  desc "Informer des nouvelles commandes V2 (traiteur)"
+  task :informer_commandes_v2, [:enregistrer] => :environment do |task, args|
+    unless Fermeture.where(date: Date.today).any?
+      @cours = Cour.where("DATE(debut) = ?", Date.today + 7.days).joins(:options).where(options: {catégorie: :commande})
+      if @cours.any?
+        puts @cours.inspect
+        ToolsMailer.with(cours: @cours).rappel_commandes_v2.deliver_now
+      end
+    end
+  end
+
+  desc "Test solid_queue (à checker en parallèle sur /jobs)"
+  task test_solid_queue: :environment do
+    puts "START TASK - " * 10
+    SolidQueueJob.perform_later
+    puts "END TASK - " * 10
   end
 
 end

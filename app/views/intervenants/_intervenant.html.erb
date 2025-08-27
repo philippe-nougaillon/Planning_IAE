@@ -14,13 +14,24 @@
     <td class="text-right"><%= intervenant.nbr_heures_statutaire %></td>
     <td><%= l(intervenant.remise_dossier_srh.to_date) if intervenant.remise_dossier_srh %></td>
     <td><%= time_ago_in_words(intervenant.created_at) %></td>
-    <td>
-        <%= link_to edit_intervenant_path(intervenant), class: "btn btn-ghost btn-xs" do %>
-            <%= fa_icon 'edit' %>
+    <td class="text-center">
+        <% if intervenant.edusign_id? %>
+            <%= fa_icon 'check' %>
         <% end %>
-        <% unless intervenant.cours.any? or Cour.where(intervenant_binome: intervenant).any? %> 
-            <%= link_to(intervenant, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: "btn btn-ghost btn-xs") do %>
-                <%= fa_icon 'trash-alt' %>
+    </td>
+    <td>
+        <% if policy(Intervenant).edit? %>
+            <%= link_to edit_intervenant_path(intervenant), class: "btn btn-ghost btn-xs" do %>
+                <%= fa_icon 'edit' %>
+            <% end %>
+        <% end %>
+        <% if policy(Intervenant).destroy? %> 
+            <% if !(intervenant.cours.any? or Cour.where(intervenant_binome: intervenant).any?) %>
+                <%= link_to(intervenant, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: "btn btn-ghost btn-xs") do %>
+                    <%= fa_icon 'trash' %>
+                <% end %>
+            <% else%>
+                <%= fa_icon 'trash', title: "Impossible de supprimer cet intervenant car il est dans un cours !", class: "btn btn-ghost btn-xs pt-1 text-secondary" %>
             <% end %>
         <% end %>
     </td>

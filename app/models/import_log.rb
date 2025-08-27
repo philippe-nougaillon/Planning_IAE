@@ -7,7 +7,7 @@ class ImportLog < ApplicationRecord
 
   validates :model_type, :etat, presence: true
 
-  enum etat: [:succès, :echec, :warning]
+  enum :etat, [:succès, :echec, :warning]
 
   def icon_etat
     if self.etat == 'succès'
@@ -21,7 +21,7 @@ class ImportLog < ApplicationRecord
     case self.etat
     when 'succès'
       'text-success'
-    when 'echec', 
+    when 'echec'
       'text-error'
     when 'warning'
       'text-warning'

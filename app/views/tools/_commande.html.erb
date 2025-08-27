@@ -1,13 +1,16 @@
 <tr class="hover">
   <% color = 'text-warning font-black' if (commande.debut.to_date - Date.today) <= 7 %>
   <% color = 'text-error font-black' if (commande.debut.to_date - Date.today) <= 2 %>
+  <% color = 'text-base-100' if (commande.debut < DateTime.now) %>
 
   <td>
     <% if commande.commentaires.include?('Fait le') %>
       <span class="text-success text-xl"><%= fa_icon('check') %></span>
     <% end %>
   </td>
-  <td class="<%= color %>"><%= time_ago_in_words commande.debut %></td>
+  <td class="<%= color %>">
+    <%= time_ago_in_words commande.debut - 2.hour %>
+  </td>
   <td><b><%= link_to l(commande.debut, format: :long), commande, class: 'text-primary hover:underline' %></b></td>
   <td>
     <% if commande.salle %>
@@ -21,17 +24,16 @@
   <td>
     <%= simple_format commande.commentaires.tr('+','') %>
   </td>
-    <td>
-    <%= commande.formation.nom %>
+  <td>
+    <%= commande.formation.try(:nom) %>
     <br>
     <%= commande.intervenant.nom_prenom %>
   </td>
   <td>
-    <%= time_ago_in_words commande.created_at %>
-  </td>
-  <td>
     <% unless commande.commentaires.include?('Fait le') %>
-      <%= link_to "C'est fait !", tools_commande_fait_path(commande_id: commande.id), class: 'btn btn-success btn-outline', data: { turbo_method: :get, turbo_confirm: "Confirmez-vous ?" } %>
+      <%= link_to tools_commande_fait_path(commande_id: commande.id), class: 'btn btn-success btn-outline', data: { turbo_method: :get, turbo_confirm: "Confirmez-vous ?" } do %>
+        <span class="text-xl"><%= fa_icon('check') %></span>
+      <% end %>
     <% end %>
   </td>
 </tr>

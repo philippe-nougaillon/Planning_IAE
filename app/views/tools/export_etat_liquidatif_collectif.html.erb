@@ -1,0 +1,59 @@
+<div class="border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'list-alt' %> Etat liquidatif collectif</h1>
+</div>
+<br>
+
+<h3 class="text-2xl mb-4">Exporte vers Excel les cours réalisés sur une période donnée</h3>
+
+<%= form_tag({action: "export_etat_liquidatif_collectif_do", method: :post}, class: 'mt-12') do %>
+  <div class="flex flex-wrap items-start gap-4">
+
+    <div class="w-full sm:w-1/6">
+      <%= label_tag :start_date, "Du" %>
+      <%= text_field_tag :start_date, params[:start_date], type: 'date', class: "input input-bordered input-sm w-full", required: true %>
+    </div>
+
+    <div class="w-full sm:w-1/6">
+      <%= label_tag :end_date, "Au" %>
+      <%= text_field_tag :end_date, params[:end_date], type: 'date', class: "input input-bordered input-sm w-full", required: true %>
+    </div>
+
+    <div class="w-full sm:w-fit">
+      <%= label_tag :status, "Statut" %>
+      <br>
+      <%= select_tag :status, 
+        options_for_select(Intervenant.statuses, 
+        params[:status]), include_blank:true,
+        class: "select select-bordered select-sm",
+        required: true %>
+    </div>
+
+    <div class="w-full sm:w-fit">
+      <%= label_tag "Inclure ?" %>
+      <div class="relative flex-grow max-w-full flex-1 flex gap-1 items-center">
+        <%= check_box_tag :cours, 1, true, class: 'checkbox checkbox-xs checkbox-primary' %>
+        <%= label_tag :cours, "Cours", class: 'whitespace-nowrap' %>
+      </div>
+
+      <div class="relative flex-grow max-w-full flex-1 flex gap-1 items-center">
+        <%= check_box_tag :vacations, 1, false, class: 'checkbox checkbox-xs checkbox-primary' %>
+        <%= label_tag :vacations, "Vacations", class: 'whitespace-nowrap' %>
+      </div>
+
+      <div class="relative flex-grow max-w-full flex-1 flex gap-1 items-center">
+        <%= check_box_tag :responsabilites, 1, false, class: 'checkbox checkbox-xs checkbox-primary' %>
+        <%= label_tag :responsabilites, "Responsabilités", class: 'whitespace-nowrap' %>
+      </div>
+    </div>
+
+    <div>
+      <%= label_tag :group_by, "Grouper par" %>
+      <br>
+      <%= radio_button_tag :group_by, "intervenant", true %> Intervenant
+      <br>
+      <%= radio_button_tag :group_by, "formation", false %> EOTP
+    </div>
+
+  </div>
+  <%= submit_tag "Exporter", class: 'btn btn-sm btn-success btn-outline mt-8', 'data-turbo': false %>
+<% end %>

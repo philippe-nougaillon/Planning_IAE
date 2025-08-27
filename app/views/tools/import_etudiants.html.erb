@@ -5,7 +5,7 @@
 
 <%= form_tag({action: "import_etudiants_do", method: :post}, multipart: true) do %>
   <div>
-    <h3 class="text-2xl">Cette fonction permet l'importation / màj d'une liste d'étudiants à partir d'une feuille Excel(.xls)</h3>
+    <h3 class="text-2xl">Cette fonction permet l'importation / màj d'une liste d'étudiants à partir d'une feuille au format Excel 97-2003 (.xls)</h3>
     <br>
     <p class="mb-4">
       Les champs attendus sont :
@@ -21,7 +21,7 @@
     <div class="sm:w-1/3">
       <%= label_tag :formation_id, "Formation *" %>    
       <%= select_tag :formation_id, 
-            options_from_collection_for_select(Formation.all, :id, :nom, params[:formation_id]), 
+            options_from_collection_for_select(Formation.not_archived.ordered, :id, :nom, params[:formation_id]), 
               class:"slim-select", include_blank: true %>
       <br>
       <div class="field">
@@ -32,19 +32,23 @@
   </div>
   <br>
   
-  <div class="field">
-    <b>Enregistrer les changements ?</b> <br>
-    <%= label :save, "Oui", :value => "true" %>
-    <%= radio_button_tag :save, true %>
-    <%= label :save, "Non", :value => "false" %>
-    <%= radio_button_tag :save, false, :checked => true %>
-    <i>Choisissez 'Non' pour tester votre import car <b>il est irréversible !</b></i><br />
-  </div>
-  <br>
+  <div data-controller="notify-checkbox-visibility">
+    <div class="field">
+      <b>Enregistrer les changements ?</b> <br>
+      <div>
+        <%= label :save, "Oui", :value => "true" %>
+        <%= radio_button_tag :save, true, data: { action: "notify-checkbox-visibility#toggleVisibility" } %>
+        <%= label :save, "Non", :value => "false" %>
+        <%= radio_button_tag :save, false, true, data: { action: "notify-checkbox-visibility#toggleVisibility" } %>
+      </div>
+      <i>Choisissez 'Non' pour tester votre import car <b>il est irréversible !</b></i><br />
+    </div>
+    <br>
 
-  <div class="field">
-    <%= check_box_tag :notify %>
-    <%= label_tag :notify, "Créer un compte d'accès et en informer les étudiants ?", class: 'font-bold' %>
+    <div class="field hidden" data-notify-checkbox-visibility-target="notifyField">
+      <%= check_box_tag :notify %>
+      <%= label_tag :notify, "Créer un compte d'accès et en informer les étudiants ?", class: 'font-bold' %>
+    </div>
   </div>
   <br>
   

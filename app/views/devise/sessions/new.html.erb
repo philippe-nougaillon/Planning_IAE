@@ -2,38 +2,32 @@
   <% unless request.variant.include?(:phone) %>
     <%= image_tag "Aikku_logo.png", style: "width: 100%; max-width: 500px;" %>
   <% end %>
-  <div class="border border-gray-900 rounded shadow p-6 w-full" style="max-width: 500px">
+  <div class="w-full mt-8" style="max-width: 500px">
     <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-      <h1 class="text-4xl text-center border-b mb-4 pb-4">
+      <h1 class="text-3xl text-center border-b mb-4 pb-4">
         <%= t('.sign_in') %>
       </h1>
       <div class="flex flex-wrap">
         <div class="relative flex-grow max-w-full flex-1">
           <div class="form-control">
             <%= f.label :email, label: "Email *" %>
-            <%= f.email_field :email, autofocus: true, required: true, class: "input input-bordered w-full mt-2" %>
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", required: true, class: "input input-bordered w-full mt-2" %>
           </div>
 
           <div class="form-control my-4">
             <%= f.label :password, label: "Mot de passe *" %>
-            <%= f.password_field :password, autocomplete: "off", required: true, class: "input input-bordered w-full mt-2" %>
+            <%= f.password_field :password, autocomplete: "current-password", required: true, class: "input input-bordered w-full mt-2" %>
           </div>
 
+          <%= f.submit t('.sign_in'), class: "btn btn-primary text-white w-full mt-2 mb-4 text-xl font-normal", 'data-turbo': false %>
           <div class="flex flex-wrap justify-between my-4 gap-2">
-            <% if devise_mapping.rememberable? %>
-              <div class="flex items-center gap-2">
-                <%= f.check_box :remember_me, class: 'toggle' %>
-                <%= f.label :remember_me %>
-              </div>
-            <% end %>
             <%- if devise_mapping.recoverable? && controller_name != 'passwords' %>
               <%= link_to "Mot de passe oublié ?", new_password_path(resource_name), class: 'hover:underline' %>
             <% end -%>
+            <%- if devise_mapping.registerable? && controller_name != 'registrations' %>
+              <%= link_to "S'inscrire", new_registration_path(resource_name), class: 'hover:underline' %>
+            <% end -%>
           </div>
-          <%= f.submit t('.sign_in'), class: "btn btn-primary text-white w-full mt-2 mb-4", 'data-turbo': false %>
-          <%- if devise_mapping.registerable? && controller_name != 'registrations' %>
-            <%= link_to "S'inscrire", new_registration_path(resource_name), class: 'float-right hover:underline' %>
-          <% end -%>
         </div>
       </div>
     <% end %>

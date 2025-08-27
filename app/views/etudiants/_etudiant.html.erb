@@ -1,22 +1,34 @@
 <tr class="hover border">
+    <% if policy(Etudiant).action? %>
+        <td>
+            <span class="flex" data-action="click->action#click">
+            <%= check_box_tag "etudiants_id[#{etudiant.id}]", 'yes', false, data: {"action-target": "source", "checkbox-select-all-target": "checkbox"} %>
+            </span>
+        </td>
+    <% end %>
     <td><b><%= link_to etudiant.nom, etudiant, class: 'text-primary hover:underline' %></b></td>
     <td><%= etudiant.prénom %></td>
     <td>
         <%= etudiant.email %>
-        <% if !etudiant.linked_user && Formation.unscoped.find(etudiant.formation_id).cours.confirmé.count.positive? %>
+        <% if !etudiant.linked_user && Formation.find(etudiant.formation_id).cours.confirmé.count.positive? %>
             <%= link_to users_path(search: etudiant.nom, role: 0) do %>
-                <%= fa_icon 'question-circle', class: 'text-base-content' , title: 'L\'étudiant n\'a pas de compte de connexion (utilisateur) associé à cet email' %>
+                <%= fa_icon 'exclamation-circle', class: 'text-error' , title: 'L\'étudiant n\'a pas de compte de connexion (utilisateur) associé à cet email' %>
             <% end %>
         <% end %>
     </td>
-    <td style="border-left: .3rem solid <%= etudiant.formation.try(:positive_color) %>">
+    <td style="border-left: .3rem solid <%= etudiant.formation.positive_color %>">
         <% if etudiant.formation_id %>
-            <% formation = Formation.unscoped.find(etudiant.formation_id) %>
+            <% formation = Formation.find(etudiant.formation_id) %>
             <%= link_to formation.nom, formation, class: 'text-primary hover:underline' %>
         <% end %>
     </td>
     <td>
         <%= time_ago_in_words etudiant.updated_at %>
+    </td>
+    <td class="text-center">
+        <% if etudiant.edusign_id? %>
+            <%= fa_icon 'check' %>
+        <% end %>
     </td>
     <td>
         <% if policy(Etudiant).edit? %>
@@ -25,8 +37,12 @@
             <% end %>
         <% end %>
         <% if policy(Etudiant).destroy? %>
-            <%= link_to(etudiant, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: 'btn btn-ghost btn-xs') do %>
-                <%= fa_icon 'trash' %>
+            <% if etudiant.attendances.any? %>
+                <%= fa_icon 'trash', title:"L'étudiant.e ne peut pas être supprimé.e car il/elle a des signatures", class:"btn btn-ghost btn-xs text-secondary pt-1 cursor-not-allowed"%>
+            <% else %>
+                <%= link_to(etudiant, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: 'btn btn-ghost btn-xs') do %>
+                    <%= fa_icon 'trash' %>
+                <% end %>
             <% end %>
         <% end %>
     </td>
