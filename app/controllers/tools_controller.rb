@@ -1505,14 +1505,14 @@ class ToolsController < ApplicationController
     redirect_to tools_synchronisation_edusign_path, notice: "Lancement de la synchronisation effectuée."
   end
 
-  def initialisation_edusign
-  end
+  # def initialisation_edusign
+  # end
 
-  def initialisation_edusign_do
-    EdusignJob.perform_later("Initialisation", current_user.id)
+  # def initialisation_edusign_do
+  #   EdusignJob.perform_later("Initialisation", current_user.id)
 
-    redirect_to tools_initialisation_edusign_path, notice: "Lancement de l'initialisation effectuée."
-  end
+  #   redirect_to tools_initialisation_edusign_path, notice: "Lancement de l'initialisation effectuée."
+  # end
 
   private
 

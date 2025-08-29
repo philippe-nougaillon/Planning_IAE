@@ -152,28 +152,27 @@
 			<div class="divider"></div>
 		</ul>
 
-		<div class="flex items-center gap-2 mt-4">
+		<div class="flex items-center gap-2 mt-4 mb-4">
 			<%= image_tag 'edusign.png', size: 32 %>
-			<span class="font-black">edusign</span>
+			<span class="font-black">Edusign</span>
 		</div>
 		<ul class="list-disc list-inside mt-2">
 			<% if current_user.admin? %>
 				<li>
-					<%= link_to "Création manuelle", tools_edusign_path, class: 'text-primary hover:underline' %>
+					<%= link_to "Synchronisation", tools_synchronisation_edusign_path, class: 'text-primary hover:underline' %>
 				</li>
 				<li>
-					<%= link_to "Synchronisation automatique", tools_synchronisation_edusign_path, class: 'text-primary hover:underline' %>
-				</li>
-				<li>
-					<%= link_to "Initialisation synchronisation", tools_initialisation_edusign_path, class: 'text-primary hover:underline' %>
-				</li>
-				<li>
-					<%= link_to "Logs des synchronisations", edusign_logs_path, class: 'text-primary hover:underline' %>
+					<%= link_to "Historique des synchronisations", edusign_logs_path, class: 'text-primary hover:underline' %>
 				</li>
 			<% end %>
 			<li class='mt-2'>
 				<%= link_to "Justificatifs d'absences", justificatifs_path, class: 'text-primary hover:underline' %>
 			</li>
+			<% if policy(:tool).edusign? %>
+				<li class="mt-2">
+					<%= link_to "Synchronisation ponctuelle", tools_edusign_path, class: 'text-primary hover:underline' %>
+				</li>
+			<% end %>
 		</ul>
 	</div>
 

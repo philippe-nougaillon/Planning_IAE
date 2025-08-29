@@ -8,8 +8,8 @@ class EdusignLog < ApplicationRecord
 
   enum :modele_type, {
     'initialisation': 0,
-    'sync auto': 1,
-    'sync manuelle': 2,
+    'synchronisation': 1,
+    'synchronisation ponctuelle': 2,
     'salle changée': 3
   }
 
