@@ -3,7 +3,7 @@ class EdusignLogsController < ApplicationController
 
   # GET /edusign_logs or /edusign_logs.json
   def index
-    @edusign_logs = EdusignLog.all
+    @edusign_logs = EdusignLog.order(created_at: :desc)
 
     unless params[:du].blank?
       @edusign_logs = @edusign_logs.where("created_at > ?", Date.parse(params[:du]))
