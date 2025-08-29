@@ -44,7 +44,7 @@ class Cour < ApplicationRecord
   around_update  :check_send_examen_email
   after_destroy :send_delete_examen_email, if: Proc.new { |cours| cours.examen? }
   
-  after_update :synchronisation_edusign, if: Proc.new { |cours| cours.audits.last.audited_changes["salle_id"]}
+  after_update :synchronisation_edusign, if: Proc.new { |cours| !cours.no_send_to_edusign && cours.formation.send_to_edusign && cours.audits.last.audited_changes["salle_id"]}
 
   # Mettre à jour les SCENIC VIEWS
   after_commit {
