@@ -10,7 +10,10 @@
 			</p>
 
 			<p data-action="click->reveal#openPannelEtudiants" class="btn btn-sm btn-primary btn-outline join-item">
-				<%= fa_icon 'graduation-cap' %> Etudiants
+				<span class="material-symbols-outlined text-xl mb-0.5">
+					school
+				</span>
+				Etudiants
 			</p>
 
 			<p data-action="click->reveal#openPannelVacations" class="btn btn-sm btn-primary btn-outline join-item">
@@ -22,7 +25,12 @@
 			<% end %>
 
 		</div>
-		<h1 class="text-3xl"><%= fa_icon 'briefcase' %> Modification d'une formation</h1>
+		<h1 class="flex items center gap-1 text-3xl">
+			<span class="material-symbols-outlined text-3xl">
+				work
+			</span>
+			Modification d'une formation
+		</h1>
 	</div>
 
 	<%= render 'form' %>
