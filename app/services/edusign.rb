@@ -102,20 +102,17 @@ class Edusign < ApplicationService
 
         if model == Formation
             model.where(
-              created_at: interval,
               edusign_id: nil,
               send_to_edusign: true
             )
         elsif model == Etudiant
             model.where(
               formation_id: formations_sent_to_edusign_ids,
-              created_at: interval,
               edusign_id: nil
             )
         elsif model == Cour
             model.where(
               formation_id: formations_sent_to_edusign_ids,
-              created_at: interval,
               edusign_id: nil,
               no_send_to_edusign: false
             ).joins(:intervenant).where.not(intervenant: {id: Intervenant.intervenants_examens})
@@ -126,10 +123,9 @@ class Edusign < ApplicationService
             # Pour les cours, on se base sur updated_at pour ne pas rater un changement d'intervenant ou un ajout d'intervenant binome.
 
             # Ce code est temporaire le temps que l'on sache à quel moment il faudra créer l'intervenant sur Edusign.
-            # TODO : Probablement rajouter la condition que le cours n'est pas 'no_send_to_edusign' à true
             intervenant_ids = Cour.where(
-              updated_at: interval,
-              formation_id: formations_sent_to_edusign_ids
+              formation_id: formations_sent_to_edusign_ids,
+              no_send_to_edusign: false
             ).pluck(:intervenant_id, :intervenant_binome_id).flatten.compact.uniq
 
             model.where(id: intervenant_ids, edusign_id: nil)
@@ -190,9 +186,9 @@ class Edusign < ApplicationService
             # Pour les cours, on se base sur updated_at pour ne pas rater un changement d'intervenant ou un ajout d'intervenant binome.
 
             # Ce code est temporaire le temps que l'on sache à quel moment il faudra créer l'intervenant sur Edusign.
-            # TODO : Probablement rajouter la condition que le cours n'est pas 'no_send_to_edusign' à true 
             intervenant_ids = Cour.where(
-              formation_id: formations_sent_to_edusign_ids
+              formation_id: formations_sent_to_edusign_ids,
+              no_send_to_edusign: false
             ).where("debut >= ?", DateTime.now).pluck(:intervenant_id, :intervenant_binome_id).flatten.compact.uniq
 
             model.where(id: intervenant_ids, edusign_id: nil)
