@@ -95,6 +95,7 @@ class Edusign < ApplicationService
         self
     end
 
+    # Cette fonction ne prend pas seulement des éléments créés aujourd'hui, mais aussi ceux qui viennent d'être considérés comme élément à ajouter sur edusign
     def get_all_element_created_today(model)
         interval = self.get_interval_of_time
 
@@ -132,6 +133,7 @@ class Edusign < ApplicationService
         end
     end
 
+    # Récupère tous les éléments déjà sur Edusign, qui ont été modifiés dans l'interval sur AIKKU Plann
     def get_all_element_updated_today(model, record_ids = nil)
         interval = self.get_interval_of_time
 
