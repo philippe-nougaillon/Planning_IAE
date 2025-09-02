@@ -128,7 +128,7 @@ class Edusign < ApplicationService
               no_send_to_edusign: false
             ).pluck(:intervenant_id, :intervenant_binome_id).flatten.compact.uniq
 
-            model.where(id: intervenant_ids, edusign_id: nil).where.not(intervenant_id: Intervenant.intervenants_examens + Intervenant.sans_intervenant)
+            model.where(id: intervenant_ids, edusign_id: nil).where.not(id: Intervenant.intervenants_examens + Intervenant.sans_intervenant)
         end
     end
 
