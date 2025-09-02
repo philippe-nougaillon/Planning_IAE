@@ -18,7 +18,8 @@ class Edusign < ApplicationService
         self.sync_etudiants("Patch", etudiants_ajoutés_ids)
     
         self.sync_formations("Patch", formations_ajoutés_ids)
-    
+        
+        # Ajout des intervenants avant les cours, sinon les cours qui n'ont pas d'intervenant créé sur Edusign, ne seront pas créés
         intervenants_ajoutés_ids = self.sync_intervenants("Post", nil)
     
         self.sync_intervenants("Patch", intervenants_ajoutés_ids)
@@ -43,6 +44,7 @@ class Edusign < ApplicationService
         
         self.sync_etudiants("Post", nil)
     
+        # Ajout des intervenants avant les cours, sinon les cours qui n'ont pas d'intervenant créé sur Edusign, ne seront pas créés
         self.sync_intervenants("Post", nil)
     
         self.sync_cours("Post", nil)
@@ -878,7 +880,7 @@ class Edusign < ApplicationService
 
     def get_interval_of_time
         # Modifier le Scheduler en conséquence, pour éviter les duplications
-        1.day.ago.to_date.to_time.change(hour: 10, min: 8)..DateTime.now
+        DateTime.now-1.hour..DateTime.now
     end
 
 end
