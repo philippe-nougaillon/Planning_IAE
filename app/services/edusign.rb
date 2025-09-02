@@ -116,20 +116,19 @@ class Edusign < ApplicationService
               formation_id: formations_sent_to_edusign_ids,
               edusign_id: nil,
               no_send_to_edusign: false
-            ).joins(:intervenant).where.not(intervenant: {id: Intervenant.intervenants_examens})
+            ).where.not(intervenant_id: Intervenant.intervenants_examens + Intervenant.sans_intervenant)
         elsif model == Intervenant
             
             # On sélectionne que les intervenants qui sont liés à une formation cobaye.
             # Pour cela, on va passer par les cours qui appartienent aux formations cobayes et correspondent à l'intervalle.
             # Pour les cours, on se base sur updated_at pour ne pas rater un changement d'intervenant ou un ajout d'intervenant binome.
 
-            # Ce code est temporaire le temps que l'on sache à quel moment il faudra créer l'intervenant sur Edusign.
             intervenant_ids = Cour.where(
               formation_id: formations_sent_to_edusign_ids,
               no_send_to_edusign: false
             ).pluck(:intervenant_id, :intervenant_binome_id).flatten.compact.uniq
 
-            model.where(id: intervenant_ids, edusign_id: nil)
+            model.where(id: intervenant_ids, edusign_id: nil).where.not(intervenant_id: Intervenant.intervenants_examens + Intervenant.sans_intervenant)
         end
     end
 
@@ -155,7 +154,7 @@ class Edusign < ApplicationService
               updated_at: interval,
               no_send_to_edusign: false
               ).where.not(edusign_id: nil).where.not(id: record_ids)
-              .joins(:intervenant).where.not(intervenant: {id: Intervenant.intervenants_examens})
+              .where.not(intervenant_id: Intervenant.intervenants_examens + Intervenant.sans_intervenant)
         elsif model == Intervenant
             # Un intervenant peut ne plus avoir de cours avec des formations cobayes. Comme la requête permet de savoir qu'il est actif sur le planning, on l'update quand même sur Edusiugn.
             model.where(updated_at: interval).where.not(edusign_id: nil).where.not(id: record_ids)
@@ -175,7 +174,7 @@ class Edusign < ApplicationService
               edusign_id: nil,
               no_send_to_edusign: false
             ).where("debut >= ?", DateTime.now)
-              .joins(:intervenant).where.not(intervenant: {id: Intervenant.intervenants_examens})
+              .where.not(intervenant_id: Intervenant.intervenants_examens + Intervenant.sans_intervenant)
         elsif model == Etudiant
             model.where(
               formation_id: formations_sent_to_edusign_ids,
@@ -192,7 +191,7 @@ class Edusign < ApplicationService
               no_send_to_edusign: false
             ).where("debut >= ?", DateTime.now).pluck(:intervenant_id, :intervenant_binome_id).flatten.compact.uniq
 
-            model.where(id: intervenant_ids, edusign_id: nil)
+            model.where(id: intervenant_ids, edusign_id: nil).where.not(id: Intervenant.intervenants_examens + Intervenant.sans_intervenant)
         end
     end
 
@@ -879,7 +878,7 @@ class Edusign < ApplicationService
 
     def get_interval_of_time
         # Modifier le Scheduler en conséquence, pour éviter les duplications
-        DateTime.now-10.minutes..DateTime.now
+        1.day.ago.to_date.to_time.change(hour: 10, min: 8)..DateTime.now
     end
 
 end

@@ -244,13 +244,13 @@ class ToolPolicy < ApplicationPolicy
     edusign?
   end
 
-  def synchronisation_edusign?
-    user && user.admin?
-  end
+  # def synchronisation_edusign?
+  #   user && user.admin?
+  # end
 
-  def synchronisation_edusign_do?
-    synchronisation_edusign?
-  end
+  # def synchronisation_edusign_do?
+  #   synchronisation_edusign?
+  # end
 
   # def initialisation_edusign?
   #   user && user.super_admin?
