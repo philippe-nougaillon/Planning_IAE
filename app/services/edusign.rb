@@ -19,11 +19,11 @@ class Edusign < ApplicationService
     
         self.sync_formations("Patch", formations_ajoutés_ids)
     
-        intervenants_ajoutés_ids = self.sync_intervenants("Post")
+        intervenants_ajoutés_ids = self.sync_intervenants("Post", nil)
     
         self.sync_intervenants("Patch", intervenants_ajoutés_ids)
     
-        cours_ajoutés_ids = self.sync_cours("Post")
+        cours_ajoutés_ids = self.sync_cours("Post", nil)
     
         self.sync_cours("Patch", cours_ajoutés_ids)
     
@@ -43,9 +43,9 @@ class Edusign < ApplicationService
         
         self.sync_etudiants("Post", nil)
     
-        self.sync_intervenants("Post")
+        self.sync_intervenants("Post", nil)
     
-        self.sync_cours("Post")
+        self.sync_cours("Post", nil)
     end
 
     def prepare_request_with_message(url, method)
@@ -187,7 +187,6 @@ class Edusign < ApplicationService
             # Pour cela, on va passer par les cours qui appartienent aux formations cobayes et correspondent à l'intervalle.
             # Pour les cours, on se base sur updated_at pour ne pas rater un changement d'intervenant ou un ajout d'intervenant binome.
 
-            # Ce code est temporaire le temps que l'on sache à quel moment il faudra créer l'intervenant sur Edusign.
             intervenant_ids = Cour.where(
               formation_id: formations_sent_to_edusign_ids,
               no_send_to_edusign: false
@@ -353,7 +352,7 @@ class Edusign < ApplicationService
         self.prepare_request_with_message("https://ext.edusign.fr/v1/group", method)
         if @setup
             formations = self.get_all_elements_for_initialisation(Formation)
-            puts "Début de l'ajout des formations"
+            puts "Début de l'ajout des formations (initialisation)"
         else 
             if method == 'Post'
                 formations = self.get_all_element_created_today(Formation)
@@ -449,7 +448,7 @@ class Edusign < ApplicationService
 
         if @setup
             etudiants = self.get_all_elements_for_initialisation(Etudiant)
-            puts "Début de l'ajout des etudiants"
+            puts "Début de l'ajout des etudiants (initialisation)"
         else 
             if method == 'Post'
                 etudiants = self.get_all_element_created_today(Etudiant)
@@ -460,7 +459,7 @@ class Edusign < ApplicationService
             end
         end
         
-        puts "#{etudiants.count} etudiants ont été récupéré : #{etudiants.pluck(:id, :nom)}"
+        puts "#{etudiants.count} etudiants ont été récupérés : #{etudiants.pluck(:id, :nom)}"
 
         @nb_recovered_elements += etudiants.count
 
@@ -546,7 +545,7 @@ class Edusign < ApplicationService
         
         if @setup
             intervenants = self.get_all_elements_for_initialisation(Intervenant)
-            puts "Début de l'ajout des intervenants"
+            puts "Début de l'ajout des intervenants (initialisation)"
         else 
             if method == 'Post'
                 intervenants = self.get_all_element_created_today(Intervenant)
@@ -557,7 +556,7 @@ class Edusign < ApplicationService
             end
         end
         
-        puts "#{intervenants.count} intervenants ont été récupéré : #{intervenants.pluck(:id, :nom)}"
+        puts "#{intervenants.count} intervenants ont été récupérés : #{intervenants.pluck(:id, :nom)}"
 
         @nb_recovered_elements += intervenants.count
 
@@ -580,11 +579,13 @@ class Edusign < ApplicationService
 
             response = self.prepare_body_request(body).get_response
 
+            # TODO : Voir s'il n'y a pas d'autres status que "error" ou "success"
             puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de l'intervenant réussie :  #{intervenant.id}, #{intervenant.nom}"
 
             if response["status"] == 'success'
                 if method == 'Post'
                     intervenant.edusign_id = response["result"]["ID"]
+                    # TODO: Checker que le save == true
                     intervenant.save
                 end
                 nb_audited += 1
@@ -596,8 +597,10 @@ class Edusign < ApplicationService
 
         @nb_sended_elements += nb_audited
 
-        # La liste des intervenants pour ne pas update ceux qui ont été créés aujourd'hui
-        intervenants.pluck(:id) if method == "Post"
+        if method == "Post" && !@setup
+            # La liste des intervenants pour ne pas update ceux qui ont été créés aujourd'hui
+            return intervenants.pluck(:id) 
+        end
     end
 
     def export_intervenant(intervenant_slug)
@@ -639,7 +642,7 @@ class Edusign < ApplicationService
         
         if @setup
             cours = self.get_all_elements_for_initialisation(Cour)
-            puts "Début de l'ajout des cours"
+            puts "Début de l'ajout des cours (initialisation)"
             cours_a_supprimer = Cour.none
         else 
             if method == 'Post'
@@ -656,7 +659,7 @@ class Edusign < ApplicationService
         # Cours à créer / modifier du côté d'Edusign
         cours_a_envoyer = cours.where(etat: ["planifié", "confirmé", "à_réserver"])
 
-        puts "#{cours.count} cours ont été récupéré : #{cours.pluck(:id, :nom)}"
+        puts "#{cours.count} cours ont été récupérés : #{cours.pluck(:id, :nom)}"
 
         @nb_recovered_elements += cours.count
 
@@ -700,7 +703,7 @@ class Edusign < ApplicationService
         # Supprime les cours reportés ou annulés
         if cours_a_supprimer.any?
             puts "Début de la suppression des cours annulés ou reportés"
-            puts "#{cours_a_supprimer.count} cours ont été récupéré : #{cours_a_supprimer.pluck(:id, :nom)}"
+            puts "#{cours_a_supprimer.count} cours ont été récupérés : #{cours_a_supprimer.pluck(:id, :nom)}"
             
             cours_a_supprimer.each do |cour|
 
@@ -731,13 +734,14 @@ class Edusign < ApplicationService
     end
 
     def export_cours(cours_id)
-        self.prepare_request_with_message("https://ext.edusign.fr/v1/course", 'Post')
+        self.prepare_request_with_message("https://ext.edusign.fr/v1/course", 'Patch')
 
         if cours = Cour.find(cours_id)
             @nb_recovered_elements += 1
 
             body =
               {"course":{
+                "ID": "#{cours.edusign_id}",
                 "NAME": "#{cours.formation.nom} - #{cours.nom_ou_ue}" || 'Nom du cours à valider',
                 "START": cours.debut - @time_zone_difference,
                 "END": cours.fin - @time_zone_difference,
@@ -752,7 +756,7 @@ class Edusign < ApplicationService
 
             response = self.prepare_body_request(body).get_response
 
-            puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de l'étudiant #{cours.id}, #{cours.nom} réussie"
+            puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation du cours #{cours.id}, #{cours.nom} réussie"
 
             if response["status"] == 'success'
                 @nb_sended_elements += 1
