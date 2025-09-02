@@ -129,6 +129,10 @@ class Intervenant < ApplicationRecord
 		ENV["INTERVENANTS_EXAMENS"].to_s.split(',').map(&:to_i)
 	end
 
+	def self.sans_intervenant
+		ENV["INTERVENANTS_PLACEHOLDER"].to_s.split(',').map(&:to_i)
+	end
+
 	private
 	# only one candidate for an nice id; one random UDID
 	def slug_candidates

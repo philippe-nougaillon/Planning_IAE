@@ -158,9 +158,11 @@
 		</div>
 		<ul class="list-disc list-inside mt-2">
 			<% if current_user.admin? %>
+				<!--
 				<li>
-					<%= link_to "Synchronisation", tools_synchronisation_edusign_path, class: 'text-primary hover:underline' %>
+					<%# link_to "Synchronisation", tools_synchronisation_edusign_path, class: 'text-primary hover:underline' %>
 				</li>
+				-->
 				<li>
 					<%= link_to "Historique des synchronisations", edusign_logs_path, class: 'text-primary hover:underline' %>
 				</li>

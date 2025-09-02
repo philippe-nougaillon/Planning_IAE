@@ -1496,14 +1496,14 @@ class ToolsController < ApplicationController
 
   end
 
-  def synchronisation_edusign
-  end
+  # def synchronisation_edusign
+  # end
 
-  def synchronisation_edusign_do
-    EdusignJob.perform_later("Sync log", current_user.id)
+  # def synchronisation_edusign_do
+  #   EdusignJob.perform_later("Sync log", current_user.id)
 
-    redirect_to tools_synchronisation_edusign_path, notice: "Lancement de la synchronisation effectuée."
-  end
+  #   redirect_to tools_synchronisation_edusign_path, notice: "Lancement de la synchronisation effectuée."
+  # end
 
   # def initialisation_edusign
   # end
