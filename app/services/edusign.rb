@@ -371,27 +371,31 @@ class Edusign < ApplicationService
         nb_audited = 0
 
         formations.each do |formation|
-            body =
-                {"group":{
-                    "NAME": formation.nom,
-                    "STUDENTS": formation.etudiants.pluck(:edusign_id).compact,
-                    "API_ID": formation.id
-                }}
+            if formation.valid?
+                body =
+                    {"group":{
+                        "NAME": formation.nom,
+                        "STUDENTS": formation.etudiants.pluck(:edusign_id).compact,
+                        "API_ID": formation.id
+                    }}
 
-            if method == 'Patch'
-                body[:group].merge!({"ID": formation.edusign_id})
-            end
-
-            response = self.prepare_body_request(body).get_response
-
-            puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de la formation réussie : #{formation.id}, #{formation.nom} "
-
-            if response["status"] == 'success' 
-                if method == 'Post'
-                    formation.edusign_id = response["result"]["ID"]
-                    formation.save
+                if method == 'Patch'
+                    body[:group].merge!({"ID": formation.edusign_id})
                 end
-                nb_audited += 1
+
+                response = self.prepare_body_request(body).get_response
+
+                puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de la formation réussie : #{formation.id}, #{formation.nom} "
+
+                if response["status"] == 'success' 
+                    if method == 'Post'
+                        formation.edusign_id = response["result"]["ID"]
+                        formation.save
+                    end
+                    nb_audited += 1
+                end
+            else
+                puts "La formation n'est pas valide, elle ne peut pas être envoyée dans Edusign : #{formation.errors.full_messages}"
             end
         end
 
@@ -467,29 +471,33 @@ class Edusign < ApplicationService
         nb_audited = 0
 
         etudiants.each do |etudiant|
-            body =
-                {"student":{
-                "FIRSTNAME": etudiant.prénom,
-                "LASTNAME": etudiant.nom,
-                "EMAIL": etudiant.email,
-                "API_ID": etudiant.id,
-                "GROUPS": etudiant.formation&.edusign_id
-                }}
+            if etudiant.valid?
+                body =
+                    {"student":{
+                    "FIRSTNAME": etudiant.prénom,
+                    "LASTNAME": etudiant.nom,
+                    "EMAIL": etudiant.email,
+                    "API_ID": etudiant.id,
+                    "GROUPS": etudiant.formation&.edusign_id
+                    }}
 
-            if method == 'Patch'
-                body[:student].merge!({"ID": etudiant.edusign_id})
-            end
-
-            response = self.prepare_body_request(body).get_response
-
-            puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de l'étudiant réussie : #{etudiant.id}, #{etudiant.nom} "
-
-            if response["status"] == 'success' 
-                if method == 'Post'
-                    etudiant.edusign_id = response["result"]["ID"]
-                    etudiant.save
+                if method == 'Patch'
+                    body[:student].merge!({"ID": etudiant.edusign_id})
                 end
-                nb_audited += 1
+
+                response = self.prepare_body_request(body).get_response
+
+                puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de l'étudiant réussie : #{etudiant.id}, #{etudiant.nom} "
+
+                if response["status"] == 'success' 
+                    if method == 'Post'
+                        etudiant.edusign_id = response["result"]["ID"]
+                        etudiant.save
+                    end
+                    nb_audited += 1
+                end
+            else
+                puts "L'étudiant n'est pas valide, il ne peut pas être envoyé dans Edusign : #{etudiant.errors.full_messages}"
             end
         end
 
@@ -564,32 +572,36 @@ class Edusign < ApplicationService
         nb_audited = 0
 
         intervenants.each do |intervenant|
-            body =
-              {"professor":{
-                "FIRSTNAME": intervenant.prenom,
-                "LASTNAME": intervenant.nom,
-                "EMAIL": intervenant.email,
-                "API_ID": intervenant.slug
-              }}
+            if intervenant.valid?
+                body =
+                {"professor":{
+                    "FIRSTNAME": intervenant.prenom,
+                    "LASTNAME": intervenant.nom,
+                    "EMAIL": intervenant.email,
+                    "API_ID": intervenant.slug
+                }}
 
-            if method == 'Post'
-                body[:professor].merge!({"dontSendCredentials": true})
-            else
-                body[:professor].merge!({"ID": intervenant.edusign_id})
-            end
-
-            response = self.prepare_body_request(body).get_response
-
-            # TODO : Voir s'il n'y a pas d'autres status que "error" ou "success"
-            puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de l'intervenant réussie :  #{intervenant.id}, #{intervenant.nom}"
-
-            if response["status"] == 'success'
                 if method == 'Post'
-                    intervenant.edusign_id = response["result"]["ID"]
-                    # TODO: Checker que le save == true
-                    intervenant.save
+                    body[:professor].merge!({"dontSendCredentials": true})
+                else
+                    body[:professor].merge!({"ID": intervenant.edusign_id})
                 end
-                nb_audited += 1
+
+                response = self.prepare_body_request(body).get_response
+
+                # TODO : Voir s'il n'y a pas d'autres status que "error" ou "success"
+                puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de l'intervenant réussie :  #{intervenant.id}, #{intervenant.nom}"
+
+                if response["status"] == 'success'
+                    if method == 'Post'
+                        intervenant.edusign_id = response["result"]["ID"]
+                        # TODO: Checker que le save == true
+                        intervenant.save
+                    end
+                    nb_audited += 1
+                end
+            else 
+                puts "L'intervenant n'est pas valide, il ne peut pas être envoyé dans Edusign : #{intervenant.errors.full_messages}"
             end
         end
 
@@ -668,35 +680,39 @@ class Edusign < ApplicationService
 
         if cours_a_envoyer 
             cours_a_envoyer.each do |cour|
-                body =
-                {"course":{
-                    "NAME": "#{cour.formation.nom} - #{cour.nom_ou_ue}" || 'Nom du cours à valider',
-                    "START": cour.debut - @time_zone_difference,
-                    "END": cour.fin - @time_zone_difference,
-                    "PROFESSOR": Intervenant.find_by(id: cour.intervenant_id)&.edusign_id || ENV['EDUSIGN_DEFAULT_INTERVENANT_ID'],
-                    "PROFESSOR_2": Intervenant.find_by(id: cour.intervenant_binome_id)&.edusign_id,
-                    "API_ID": cour.id,
-                    "NEED_STUDENTS_SIGNATURE": true,
-                    "CLASSROOM": cour.salle&.nom,
-                    "SCHOOL_GROUP": [cour.formation.edusign_id]
+                if cour.valid?
+                    body =
+                    {"course":{
+                        "NAME": "#{cour.formation.nom} - #{cour.nom_ou_ue}" || 'Nom du cours à valider',
+                        "START": cour.debut - @time_zone_difference,
+                        "END": cour.fin - @time_zone_difference,
+                        "PROFESSOR": Intervenant.find_by(id: cour.intervenant_id)&.edusign_id || ENV['EDUSIGN_DEFAULT_INTERVENANT_ID'],
+                        "PROFESSOR_2": Intervenant.find_by(id: cour.intervenant_binome_id)&.edusign_id,
+                        "API_ID": cour.id,
+                        "NEED_STUDENTS_SIGNATURE": true,
+                        "CLASSROOM": cour.salle&.nom,
+                        "SCHOOL_GROUP": [cour.formation.edusign_id]
+                        }
                     }
-                }
 
-                if method == 'Patch'
-                    body[:course].merge!({"ID": cour.edusign_id})
-                    body.merge!({"editSurveys": false})
-                end
-
-                response = self.prepare_body_request(body).get_response
-
-                puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation du cours #{cour.id}, #{cour.nom} réussie"
-
-                if response["status"] == 'success' 
-                    if method == 'Post'
-                        cour.edusign_id = response["result"]["ID"]
-                        cour.save
+                    if method == 'Patch'
+                        body[:course].merge!({"ID": cour.edusign_id})
+                        body.merge!({"editSurveys": false})
                     end
-                    nb_audited += 1
+
+                    response = self.prepare_body_request(body).get_response
+
+                    puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation du cours #{cour.id}, #{cour.nom} réussie"
+
+                    if response["status"] == 'success' 
+                        if method == 'Post'
+                            cour.edusign_id = response["result"]["ID"]
+                            cour.save
+                        end
+                        nb_audited += 1
+                    end
+                else
+                    puts "Le cours n'est pas valide, il ne peut pas être envoyé dans Edusign : #{cour.errors.full_messages}"
                 end
             end
         end
