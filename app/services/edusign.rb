@@ -395,7 +395,7 @@ class Edusign < ApplicationService
                     nb_audited += 1
                 end
             else
-                puts "La formation n'est pas valide, elle ne peut pas être envoyée dans Edusign : #{formation.errors.full_messages}"
+                puts "La formation #{formation.id}, #{formation.nom} n'est pas valide, elle ne peut pas être envoyée dans Edusign : #{formation.errors.full_messages}"
             end
         end
 
@@ -497,7 +497,7 @@ class Edusign < ApplicationService
                     nb_audited += 1
                 end
             else
-                puts "L'étudiant n'est pas valide, il ne peut pas être envoyé dans Edusign : #{etudiant.errors.full_messages}"
+                puts "L'étudiant #{etudiant.id}, #{etudiant.nom} n'est pas valide, il ne peut pas être envoyé dans Edusign : #{etudiant.errors.full_messages}"
             end
         end
 
@@ -601,7 +601,7 @@ class Edusign < ApplicationService
                     nb_audited += 1
                 end
             else 
-                puts "L'intervenant n'est pas valide, il ne peut pas être envoyé dans Edusign : #{intervenant.errors.full_messages}"
+                puts "L'intervenant #{intervenant.id}, #{intervenant.nom} n'est pas valide, il ne peut pas être envoyé dans Edusign : #{intervenant.errors.full_messages}"
             end
         end
 
@@ -712,7 +712,7 @@ class Edusign < ApplicationService
                         nb_audited += 1
                     end
                 else
-                    puts "Le cours n'est pas valide, il ne peut pas être envoyé dans Edusign : #{cour.errors.full_messages}"
+                    puts "Le cours #{cour.id}, #{cour.nom} n'est pas valide, il ne peut pas être envoyé dans Edusign : #{cour.errors.full_messages}"
                 end
             end
         end
