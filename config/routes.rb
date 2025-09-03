@@ -22,7 +22,12 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :formations
+  resources :formations do
+    collection do
+      post :action
+      post :action_do
+    end
+  end
 
   resources :intervenants do
     member do
