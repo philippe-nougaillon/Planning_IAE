@@ -880,7 +880,7 @@ class Edusign < ApplicationService
 
     def get_interval_of_time
         # Modifier le Scheduler en conséquence, pour éviter les duplications
-        1.day.ago.to_date.to_time.change(hour: 17, min: 0)..DateTime.now
+        DateTime.now-1.hour..DateTime.now
     end
 
 end
