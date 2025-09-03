@@ -750,6 +750,7 @@ class Edusign < ApplicationService
         cours_a_envoyer.pluck(:id) if method == "Post"
     end
 
+    # Cet export est différent des autres exports, c'est une méthode Patch. Toutes les fonctions export ne sont plus utlisés, sauf export_cours
     def export_cours(cours_id)
         self.prepare_request_with_message("https://ext.edusign.fr/v1/course", 'Patch')
 
@@ -773,7 +774,7 @@ class Edusign < ApplicationService
 
             response = self.prepare_body_request(body).get_response
 
-            puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation du cours #{cours.id}, #{cours.nom} réussie"
+            puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Modification du cours #{cours.id}, #{cours.nom} (id Edusign : #{cours.edusign_id}) réussie"
 
             if response["status"] == 'success'
                 @nb_sended_elements += 1
