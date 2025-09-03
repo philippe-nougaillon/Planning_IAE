@@ -281,7 +281,7 @@ class Edusign < ApplicationService
     end
 
     def import_attendances
-        self.prepare_request_with_message("https://ext.edusign.fr/v1/course", 'Get')
+        self.prepare_request_with_message("https://ext.edusign.fr/v1/course?start=#{(Date.today-90.days).iso8601}&end=#{Date.today.iso8601}", 'Get')
 
         response = self.get_response
 
