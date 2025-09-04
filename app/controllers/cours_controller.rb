@@ -157,13 +157,14 @@ class CoursController < ApplicationController
     end
 
     @all_cours = @cours
+    @cours = @cours.includes(:formation, :intervenant, :salle)
 
-    if (params[:view] == 'list' and params[:paginate] == 'pages' and request.variant.include?(:desktop))
+    if (params[:view] == 'list' and ((params[:paginate] == 'pages' and request.variant.include?(:desktop)) || params[:filter] == 'all' ))
       @cours = @cours.paginate(page: clean_page(params[:page]))
     end
 
     if request.variant.include?(:phone)
-      @cours = @cours.includes(:formation, :intervenant, :salle).paginate(page: params[:page])
+      @cours = @cours.paginate(page: params[:page])
       @formations = Formation.not_archived.ordered.select(:nom).where(hors_catalogue: false).pluck(:nom)
     end
 
