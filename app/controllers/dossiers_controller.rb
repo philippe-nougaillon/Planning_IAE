@@ -149,7 +149,7 @@ class DossiersController < ApplicationController
   end
 
   def relancer
-    # Passe le dossier à l'état 'Validé'
+    # Passe le dossier à l'état 'Relancé'
     @dossier.relancer!
 
     # Informe l'intervenant
