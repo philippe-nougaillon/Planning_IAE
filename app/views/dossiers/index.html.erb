@@ -58,11 +58,11 @@
   <table class="table">
     <thead class="bg-slate-100 border">
       <tr>
-        <th>Période</th>
-        <th>Intervenant</th>
-        <th>Etat</th>
-        <th>Création</th>
-        <th>MàJ</th>
+        <th><%= sort_link 'dossiers.période', 'Période' %></th>
+        <th><%= sort_link 'intervenants.nom', 'Intervenant' %></th>
+        <th><%= sort_link 'dossiers.workflow_state', 'État' %></th>
+        <th><%= sort_link 'dossiers.created_at', 'Création' %></th>
+        <th><%= sort_link 'dossiers.updated_at', 'MÀJ' %></th>
         <th colspan="3"></th>
       </tr>
     </thead>

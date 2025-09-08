@@ -1,24 +1,25 @@
 class DossiersController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[ show deposer deposer_done ]
   before_action :set_dossier, only: %i[ show edit update destroy envoyer deposer deposer_done valider rejeter relancer archiver ]
-  before_action :set_période, :set_intervenants_list, only: %i[ new ]
   before_action :is_user_authorized, except: %i[ show ]
 
   layout :determine_layout
 
   # GET /dossiers or /dossiers.json
   def index
-    params[:période] ||= '2024/2025' 
+    params[:période] ||= AppConstants::PÉRIODE 
     params[:order_by]||= 'dossiers.updated_at'
+    params[:column_dossier] ||= session[:column_dossier]
+    params[:direction_dossier] ||= session[:direction_dossier]
 
     if params[:archive].blank?
-      @dossiers = Dossier.where.not(workflow_state: "archivé")
+      @dossiers = Dossier.where.not(workflow_state: "archivé").joins(:intervenant)
     else
-      @dossiers = Dossier.all
+      @dossiers = Dossier.all.joins(:intervenant)
     end
     
     unless params[:nom].blank?
-      @dossiers = @dossiers.joins(:intervenant).where("intervenants.nom ILIKE ?", "%#{params[:nom].upcase}%")
+      @dossiers = @dossiers.where("intervenants.nom ILIKE ?", "%#{params[:nom].upcase}%")
     end 
 
     unless params[:période].blank?
@@ -30,8 +31,13 @@ class DossiersController < ApplicationController
     end
 
     if params[:order_by] == 'intervenants.nom'
-      @dossiers = @dossiers.joins(:intervenant).reorder(params[:order_by])
+      @dossiers = @dossiers.reorder(params[:order_by])
     end
+
+    session[:column_dossier] = params[:column_dossier]
+    session[:direction_dossier] = params[:direction_dossier]
+
+    @dossiers = @dossiers.reorder(Arel.sql("#{sort_column} #{sort_direction}"))
 
     respond_to do |format|
       format.html do 
@@ -56,8 +62,9 @@ class DossiersController < ApplicationController
 
   # GET /dossiers/new
   def new
+    @intervenants = Intervenant.sans_dossier
     @dossier = Dossier.new
-    @dossier.période = @période
+    @dossier.période = AppConstants::PÉRIODE
   end
 
   # GET /dossiers/1/edit
@@ -210,32 +217,19 @@ private
       'public' unless user_signed_in?
     end
 
+    def sortable_columns
+      ['dossiers.période','intervenants.nom','dossiers.workflow_state', 'dossiers.created_at', 'dossiers.updated_at']
+    end
+
+    def sort_column
+      sortable_columns.include?(params[:column_dossier]) ? params[:column_dossier] : "nom"
+    end
+
+    def sort_direction
+      %w[asc desc].include?(params[:direction_dossier]) ? params[:direction_dossier] : "asc"
+    end
+
     def is_user_authorized
       authorize Dossier
-    end
-
-    def set_période
-      période = '2024/2025'
-      @début_période = '2024-09-01'
-      @fin_période = '2025-08-31'
-    end
-
-    def set_intervenants_list
-      # Lister toutes les personnes ayant eu cours comme intervenant principal ou en binome
-
-      # on garde les id des intervenants ayant eu cours sur la période
-      intervenants_ids = Cour.where("DATE(cours.debut) BETWEEN ? AND ?", @début_période, @fin_période).pluck(:intervenant_id)
-      # on y ajoute les intervenants ayants fait les cours comme binomes
-      intervenants_ids += Cour.where("DATE(cours.debut) BETWEEN ? AND ?", @début_période, @fin_période).pluck(:intervenant_binome_id)
-      # on ajoute les intervenants ayants fait des vacations
-      intervenants_ids += Intervenant.where(id: Vacation.where("DATE(vacations.date) BETWEEN ? AND ?", @début_période, @fin_période).pluck(:intervenant_id))
-
-      intervenants_avec_dossiers_sur_période = Dossier.where(période: @période).pluck(:intervenant_id)
-
-      @intervenants = Intervenant
-                            .where("id IN(?)", intervenants_ids.uniq)
-                            .where(status: ['CEV','CEV_ENS_C_CONTRACTUEL','CEV_TIT_CONT_FP','CEV_SAL_PRIV_IND'])
-                            .where.not(id: intervenants_avec_dossiers_sur_période)
-                            .uniq
     end
 end
