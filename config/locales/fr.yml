@@ -313,7 +313,7 @@ fr:
     edit:
       title: Modification d'un cours
     action:
-      title: Action groupée
+      title: Action groupée cours
     mes_sessions_etudiant:
       title: Ma journée (étudiant)
     mes_sessions_intervenant:
@@ -342,6 +342,8 @@ fr:
       title: Nouvelle formation
     edit:
       title: Modification d'une formation
+    action:
+      title: Action groupée formations
   intervenants:
     index:
       title: Liste des intervenants
