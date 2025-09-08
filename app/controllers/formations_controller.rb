@@ -137,6 +137,18 @@ class FormationsController < ApplicationController
         formation.archive = true
         if formation.save
           formations_modifiées_count += 1
+        else
+          # Vérifie si la seule erreur est "User doit exister"
+          if formation.errors.details[:user].any? { |e| e[:error] == :blank } && formation.errors.size == 1
+            # Corrige le user_id par un gestionnaire par défaut
+            formation.user_id = ENV['GESTIONNAIRE_PLACEHOLDER']
+            if formation.save
+              formations_modifiées_count += 1
+            end
+          end
+        end
+
+        if formation.persisted? && formation.archive?
           formation.etudiants.each do |etudiant|
             if user = etudiant.linked_user
               user.discard
