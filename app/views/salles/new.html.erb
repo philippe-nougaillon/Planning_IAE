@@ -1,5 +1,10 @@
 <div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
-	<h1 class="text-3xl"><%= fa_icon 'chalkboard' %> Ajouter une salle</h1>
+	<h1 class="flex items center gap-1 text-3xl">
+		<span class="material-symbols-outlined text-3xl">
+			meeting_room
+		</span>
+		Ajouter une salle
+	</h1>
 	<%= link_to salles_path, class: 'text-primary' do %>
 		<%= fa_icon 'list-alt' %> Retour
 	<% end %>

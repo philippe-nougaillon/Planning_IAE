@@ -68,8 +68,12 @@
 
 			<% if current_user.role_number >= 5 %>
 				<li class="mb-6">
-					<%= fa_icon 'calendar-check' %>
-					<%= link_to 'Invitations', invits_path, class: 'text-primary hover:underline' %>
+					<div class="flex items-center gap-1">
+						<span class="material-symbols-outlined text-xl">
+							calendar_check
+						</span>
+						<%= link_to 'Invitations', invits_path, class: 'text-primary hover:underline' %>
+					</div>
 				</li>
 			<% end %>
 
@@ -207,8 +211,12 @@
 				</li>
 
 				<li class="mb-6">
-					<%= fa_icon 'chalkboard' %>
-					<%= link_to "Salles", salles_path, class: 'text-primary hover:underline' %>
+					<div class="flex items-center gap-1">
+						<span class="material-symbols-outlined text-xl">
+							meeting_room
+						</span>
+						<%= link_to "Salles", salles_path, class: 'text-primary hover:underline' %>
+					</div>
 				</li>
 
 				<li class="mb-6">

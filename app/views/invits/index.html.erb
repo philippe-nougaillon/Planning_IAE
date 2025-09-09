@@ -1,6 +1,8 @@
 <div class="border-b mt-6 mb-2 pb-4">
-  <h1 class="text-3xl">
-    <%= fa_icon 'calendar-check' %>
+  <h1 class="text-3xl flex items-center gap-3">
+    <span class="material-symbols-outlined text-3xl">
+      calendar_check
+    </span>
     Invitations (Propositions de créneaux horaires)
   </h1>
 </div>
@@ -83,8 +85,12 @@
             <% if invit.cour.debut.to_date != current_date %>
               <tr class="hover shadow-sm bg-slate-100">
                 <th colspan=9>
-                  <%= fa_icon 'calendar-check' %>
-                  <b><%= l(invit.cour.debut.to_date, format: :long).humanize %></b> 
+                  <div class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-lg">
+                      calendar_check
+                    </span>
+                    <b><%= l(invit.cour.debut.to_date, format: :long).humanize %></b> 
+                  </div>
                 </th>
               </tr>
               <% current_date = invit.cour.debut.to_date %>
