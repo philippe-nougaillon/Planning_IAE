@@ -88,9 +88,9 @@
           <% end %>
         </li>
         <% if policy(Note).index? %>
-          <li class="nav-item indicator mr-4">
-            <%= link_to notes_path, class: "py-0 px-2" do %>
-              <span class="material-symbols-outlined text-xl">
+          <li class="indicator mr-4">
+            <%= link_to notes_path, class: "flex items-center gap-1 py-0" do %>
+              <span class="material-symbols-outlined text-xl mb-1">
                 lightbulb_2
               </span>
               <% notes = current_user.notes.count %>
