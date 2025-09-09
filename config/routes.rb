@@ -84,6 +84,10 @@ Rails.application.routes.draw do
       get :archiver
       patch :deposer
     end
+    collection do
+      post :action
+      post :action_do
+    end
   end
 
   resources :import_logs do

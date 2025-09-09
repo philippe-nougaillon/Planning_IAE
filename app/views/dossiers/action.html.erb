@@ -1,0 +1,81 @@
+<div class="border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'exclamation-triangle' %> <%= params[:action_name] %></h1>
+</div>
+
+<%= form_tag :action_do_dossiers do %>
+
+	<%= hidden_field_tag :action_name, params[:action_name] %>
+
+  <h3 class="text-2xl">Dossiers sélectionnés</h3>
+
+  <div class="overflow-x-auto">
+    <table class="table table-sm">
+      <thead class="bg-slate-100 border">
+        <tr>
+          <th></th>
+          <th>Période</th>
+          <th>Intervenant</th>
+          <th>État</th>
+          <th>Création</th>
+          <th>MÀJ</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @dossiers.each do |dossier| %>
+          <tr class="hover border">
+            <td><%= check_box_tag "dossiers_id[#{dossier.id}]", true, true %></td>
+            <td><%= dossier.période %></td>
+            <td><%= dossier.intervenant.nom_prenom %></td>
+            <td>
+              <span class="badge <%= dossier.style %> text-white">
+                <%= dossier.workflow_state.humanize %>
+              </span>
+              <% if dossier.envoyé? && (dossier.updated_at.to_date..Date.today).to_a.size >= 60 %>
+                <%= fa_icon 'exclamation-circle' %>
+              <% end %>
+              <% if dossier.workflow_state == 'relancé 1 fois' && (dossier.updated_at.to_date..Date.today).to_a.size >= 15 %>
+                <%= fa_icon 'exclamation-circle' %>
+              <% end %>
+              <% if dossier.workflow_state == 'relancé 2 fois' && (dossier.updated_at.to_date..Date.today).to_a.size >= 7 %>
+                <%= fa_icon 'exclamation-circle' %>
+              <% end %>
+              <% if dossier.workflow_state == 'relancé 3 fois' && (dossier.updated_at.to_date..Date.today).to_a.size >= 3 %>
+                <%= fa_icon 'exclamation-circle' %>
+              <% end %>
+            </td>
+            <td><%= time_ago_in_words dossier.created_at %></td>
+            <td><%= time_ago_in_words dossier.updated_at %></td>
+          </tr>
+        <% end%>
+
+      </tbody>
+
+      <tfoot>
+        <tr>
+          <th colspan=8></th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <% if params[:action_name] == "Changer d'état" %>
+    <h3 class="text-2xl">
+      Changer d'état
+    </h3>
+    <div class="sm:w-1/2">
+      <%= label_tag :workflow_state, "Nouvel état" %>
+      <%= select_tag :workflow_state,
+                      options_for_select(@dossiers.first.available_states.map(&:to_s), params[:workflow_state]),
+                      include_blank:true, class:"slim-select", required: true %>
+    </div>
+  <% end %>
+
+  <div class="flex flex-wrap mb-12 mt-4">
+    <div class="sm:w-full">
+      <%= submit_tag 'Appliquer', class:"btn btn-primary text-white", 'data-turbo': false %>
+      <%= link_to 'Annuler', dossiers_path, class:"btn btn-light" %>
+    </div>
+  </div>
+
+<% end %>

@@ -110,7 +110,7 @@ class Dossier < ApplicationRecord
       event :déposer, transitions_to: DEPOSE
     end
 
-    state ARCHIVE, meta: {style: 'badge-dark'}
+    state ARCHIVE, meta: {style: 'badge-secondary'}
   end
 
   # pour que le changement se voit dans l'audit trail
@@ -161,6 +161,128 @@ class Dossier < ApplicationRecord
     end
     return book
 
+  end
+  
+  def envoyer_dossier(id)
+    # Passe le dossier à l'état 'Envoyé'
+    self.envoyer!
+
+    # Informe l'intervenant
+    mailer_response = DossierMailer.with(dossier: self).dossier_email.deliver_now
+    MailLog.create(user_id: id, message_id: mailer_response.message_id, to: self.intervenant.email, subject: "Dossier de recrutement CEV (Envoyé)")
+  end
+
+  def valider_dossier(id)
+    # Valide tous les documents
+    self.documents.each do | doc |
+      doc.valider! if doc.can_valider?
+    end
+
+    # Passe le dossier à l'état 'Validé'
+    self.valider!
+
+    # Informe l'intervenant
+    mailer_response = DossierMailer.with(dossier: self).valider_email.deliver_now
+    MailLog.create(user_id: id, message_id: mailer_response.message_id, to: self.intervenant.email, subject: "Dossier de recrutement CEV (Validé)")
+  end
+
+  def relancer_dossier(id)
+    # Passe le dossier à l'état 'Relancé'
+    self.relancer!
+
+    # Informe l'intervenant
+    mailer_response = DossierMailer.with(dossier: self).dossier_email.deliver_now
+    MailLog.create(user_id: id, message_id: mailer_response.message_id, to: self.intervenant.email, subject: "Dossier de recrutement CEV (Relancé)")
+  end
+
+  def rejeter_dossier(id)
+    # Vérifier qu'il y a au moins un document à l'état rejeté
+    rejeter = false
+    self.documents.each do | doc |
+      rejeter = true if doc.non_conforme?
+    end
+    
+    if rejeter
+      # Passe le dossier à l'état 'Rejeté'
+      self.rejeter!
+
+      # Informe l'intervenant
+      mailer_response = DossierMailer.with(dossier: self).rejeter_email.deliver_now
+      MailLog.create(user_id: id, message_id: mailer_response.message_id, to: self.intervenant.email, subject: "Dossier de recrutement CEV (Rejeté)")
+
+      return true
+    else
+      return false
+    end
+  end
+
+  def archiver_dossier(id)
+    self.documents.each do | doc |
+      if doc.validé?
+        doc.fichier.purge
+        doc.archiver!
+      elsif doc.non_conforme?
+        doc.destroy
+      end
+    end
+    self.archiver!
+  end
+
+  def available_states
+    # On prends tous les états à l'exception de "déposé"
+    Dossier.workflow_spec.states.keys.to_a.select do |state|
+      case state
+      when :envoyé
+        self.can_envoyer?
+      when :"relancé 1 fois"
+        self.can_relancer? && self.current_state.to_s == "envoyé"
+      when :"relancé 2 fois"
+        self.can_relancer? && self.current_state.to_s == "relancé 1 fois"
+      when :"relancé 3 fois"
+        self.can_relancer? && self.current_state.to_s == "relancé 2 fois"
+      when :"relancé 4 fois"
+        self.can_relancer? && self.current_state.to_s == "relancé 3 fois"
+      when :"relancé 5 fois"
+        self.can_relancer? && self.current_state.to_s == "relancé 4 fois"
+      when :"relancé 6 fois"
+      self.can_relancer? && self.current_state.to_s == "relancé 5 fois"
+      when :"relancé 7 fois"
+      self.can_relancer? && self.current_state.to_s == "relancé 6 fois"
+      when :"relancé 8 fois"
+      self.can_relancer? && self.current_state.to_s == "relancé 7 fois"
+      when :"relancé 9 fois"
+      self.can_relancer? && self.current_state.to_s == "relancé 8 fois"
+      when :"relancé 10 fois"
+      self.can_relancer? && self.current_state.to_s == "relancé 9 fois"
+      when :validé
+        self.can_valider?
+      when :non_conforme
+        self.can_rejeter?
+      when :archivé
+        self.can_archiver?
+      else
+        false
+      end
+    end
+  end
+
+  def self.state_to_method 
+    return {
+      :envoyé             => :envoyer_dossier,
+      :"relancé 1 fois"   => :relancer_dossier,
+      :"relancé 2 fois"   => :relancer_dossier,
+      :"relancé 3 fois"   => :relancer_dossier,
+      :"relancé 4 fois"   => :relancer_dossier,
+      :"relancé 5 fois"   => :relancer_dossier,
+      :"relancé 6 fois"   => :relancer_dossier,
+      :"relancé 7 fois"   => :relancer_dossier,
+      :"relancé 8 fois"   => :relancer_dossier,
+      :"relancé 9 fois"   => :relancer_dossier,
+      :"relancé 10 fois"  => :relancer_dossier,
+      :validé             => :valider_dossier,
+      :non_conforme       => :rejeter_dossier,
+      :archivé            => :archiver_dossier 
+    }
   end
   
 private

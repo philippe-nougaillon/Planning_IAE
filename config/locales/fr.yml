@@ -530,6 +530,8 @@ fr:
       title: Nouveau dossier
     edit:
       title: Modification Dossier
+    action:
+      title: Action groupée dossiers
   notes:
     index:
       title: "Mes mémos"

@@ -116,12 +116,7 @@ class DossiersController < ApplicationController
   # 
 
   def envoyer
-    # Passe le dossier à l'état 'Envoyé'
-    @dossier.envoyer!
-
-    # Informe l'intervenant
-    mailer_response = DossierMailer.with(dossier: @dossier).dossier_email.deliver_now
-    MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: @dossier.intervenant.email, subject: "Dossier de recrutement CEV (Envoyé)")
+    @dossier.envoyer_dossier(current_user.id)
 
     redirect_to @dossier, notice: "Un email vient d'être envoyé à l'intervenant."
   end
@@ -140,48 +135,19 @@ class DossiersController < ApplicationController
   end
 
   def valider
-    # Valide tous les documents
-    @dossier.documents.each do | doc |
-      doc.valider! if doc.can_valider?
-    end
-
-    # Passe le dossier à l'état 'Validé'
-    @dossier.valider!
-
-    # Informe l'intervenant
-    mailer_response = DossierMailer.with(dossier: @dossier).valider_email.deliver_now
-    MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: @dossier.intervenant.email, subject: "Dossier de recrutement CEV (Validé)")
+    @dossier.valider_dossier(current_user.id)
 
     redirect_to @dossier, notice: "Dossier validé avec succès. L'intervenant vient d'être informé."
   end
 
   def relancer
-    # Passe le dossier à l'état 'Relancé'
-    @dossier.relancer!
-
-    # Informe l'intervenant
-    mailer_response = DossierMailer.with(dossier: @dossier).dossier_email.deliver_now
-    MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: @dossier.intervenant.email, subject: "Dossier de recrutement CEV (Relancé)")
+    @dossier.relancer_dossier(current_user.id)
 
     redirect_to @dossier, notice: "Dossier relancé avec succès. L'intervenant vient d'être informé."
   end
 
   def rejeter
-    # Vérifier qu'il y a au moins un document à l'état rejeté
-    rejeter = false
-    @dossier.documents.each do | doc |
-      rejeter = true if doc.non_conforme?
-    end
-    
-    if rejeter
-      # Passe le dossier à l'état 'Rejeté'
-      @dossier.rejeter!
-
-      # Informe l'intervenant
-      mailer_response = DossierMailer.with(dossier: @dossier).rejeter_email.deliver_now
-      MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: @dossier.intervenant.email, subject: "Dossier de recrutement CEV (Rejeté)")
-
-
+    if @dossier.rejeter_dossier(current_user.id)
       redirect_to @dossier, notice: "Dossier rejeté. L'intervenant vient d'être informé."
     else
       redirect_to @dossier, alert: "Pour rejeter ce dossier, il faut qu'un document soit en statut 'Non_conforme' !"
@@ -189,16 +155,49 @@ class DossiersController < ApplicationController
   end
 
   def archiver
-    @dossier.documents.each do | doc |
-      if doc.validé?
-        doc.fichier.purge
-        doc.archiver!
-      elsif doc.non_conforme?
-        doc.destroy
+    @dossier.archiver_dossier(current_user.id)
+    redirect_to @dossier, notice: 'Dossier archivé, les fichiers sources (PDF) des documents validés ont été supprimés'
+  end
+
+  def action
+    if params[:dossiers_id].present? && params[:action_name].present?
+      @dossiers = Dossier.where(id: params[:dossiers_id].keys)
+      if @dossiers.pluck(:workflow_state).uniq.many? && params[:action_name] == "Changer d'état"
+        redirect_to dossiers_path, alert: 'Veuillez choisir des dossiers avec le même état'
+      end
+    else
+      redirect_to dossiers_path, alert: 'Veuillez choisir des dossiers et une action à appliquer !'
+    end
+  end
+
+  def action_do
+    action_name = params[:action_name]
+
+    @dossiers = Dossier.where(id: params[:dossiers_id]&.keys)
+
+    case action_name
+    when "Changer d'état"
+      dossiers_modifiés = 0
+      method_name = Dossier.state_to_method[params[:workflow_state].to_sym]
+      @dossiers.each do |dossier|
+        old_state = dossier.workflow_state.to_sym
+        if method_name && dossier.respond_to?(method_name)
+          dossier.send(method_name, current_user.id)
+        end
+        new_state = dossier.reload.workflow_state.to_sym
+
+        dossiers_modifiés += 1 if old_state != new_state
+      end
+
+      if dossiers_modifiés < @dossiers.count
+        flash[:alert] = "#{@dossiers.count - dossiers_modifiés} modifications de dossiers ont échoués et #{dossiers_modifiés} dossiers modifiés avec succès."
       end
     end
-    @dossier.archiver!
-    redirect_to @dossier, notice: 'Dossier archivé, les fichiers sources (PDF) des documents validés ont été supprimés'
+
+    unless flash[:alert]
+      flash[:notice] = "Action '#{action_name}' appliquée à #{params.permit![:dossiers_id]&.keys&.size || 0} dossiers.s."
+    end
+    redirect_to dossiers_path
   end
 
 private
