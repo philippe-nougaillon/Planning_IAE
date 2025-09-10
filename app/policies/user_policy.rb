@@ -10,7 +10,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def show?
-    user && user.role_number >= 5
+    user && (user.role_number >= 5 || record.id == user.id)
   end
 
   def new?

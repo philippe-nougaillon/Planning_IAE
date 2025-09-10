@@ -48,6 +48,7 @@ class CoursController < ApplicationController
       session[:ue] = params[:ue] = nil
       session[:week_number] = params[:week_number] = nil
       session[:start_date] = params[:start_date] = Date.today.to_s
+      session[:start_date_mobile] = params[:start_date_mobile] = DateTime.beginning_of_day.to_s
       session[:etat] = params[:etat] = nil
       session[:view] = params[:view] = 'list'
       session[:filter] = params[:filter] = 'upcoming'
@@ -71,7 +72,7 @@ class CoursController < ApplicationController
       year, week = params[:week_number].split('-')
       @date = Date.commercial(year.to_i, week.gsub('W','').to_i, 1)
     else
-      unless params[:start_date].blank?
+      if params[:start_date].present?
         begin
           @date = Date.parse(params[:start_date])
         rescue
@@ -83,12 +84,21 @@ class CoursController < ApplicationController
     end
     params[:start_date] = @date.to_s
 
+    if request.variant.include?(:phone)
+      if params[:start_date_mobile].present?
+        selected_datetime = DateTime.parse(params[:start_date_mobile])
+      else
+        params[:start_date_mobile] = l(DateTime.now.at_beginning_of_day, format: :sql).to_s
+      end
+    end
     case params[:view]
       when 'list'
         @alert = Alert.visibles.first
         unless params[:filter] == 'all'
-          unless params[:week_number].blank?
+          if params[:week_number].present?
             @cours = @cours.where("cours.debut BETWEEN DATE(?) AND DATE(?)", @date, @date + 7.day)
+          elsif selected_datetime
+            @cours = @cours.where("cours.debut >= ?", l(selected_datetime, format: :sql))
           else
             @cours = @cours.where("cours.debut >= DATE(?)", @date)
           end
@@ -185,7 +195,11 @@ class CoursController < ApplicationController
     session[:paginate] = params[:paginate]
 
     respond_to do |format|
-      format.html
+      format.html do
+        if request.variant.include?(:phone)
+          @cours = @cours.where("fin > ?", DateTime.now)
+        end
+      end
 
       format.xls do
         book = CoursToXls.new(@cours, !params[:intervenant]).call
