@@ -7,12 +7,11 @@
     </div>
   <% end %>
 <% end %>
-
 <%= form_tag request.path, method: :get do %>
   <div class="flex flex-col gap-2">
     <div>
-      <%= label_tag :start_date, "Cours à partir du" %>
-      <%= text_field_tag :start_date, params[:start_date], type: 'date', onchange: 'this.form.submit()', class: "input input-bordered input-sm w-full" %>
+      <%= label_tag :start_date_mobile, "Cours à partir du" %>
+      <%= text_field_tag :start_date_mobile, params[:start_date_mobile], type: 'datetime-local', onchange: 'this.form.submit()', class: "input input-bordered input-sm w-full" %>
     </div>
     
     <div>
