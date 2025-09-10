@@ -39,7 +39,7 @@
   <% _date_cours = cours.debut.to_date %>
   <% if _date_cours != current_date %>
     <div class="flex items-center gap-1 bg-slate-100 mt-4 py-2 pl-4">
-      <span class="material-symbols-outlined text-lg">
+      <span class="material-symbols-outlined text-lg mb-0.5">
         today
       </span>
       <b><%= l(_date_cours, format: :long).humanize %></b>
