@@ -1,5 +1,10 @@
 <div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
-  <h1 class="text-3xl"><%= fa_icon 'chalkboard' %> Liste des salles</h1>
+  <h1 class="text-3xl flex items-center gap-3">
+    <span class="material-symbols-outlined text-3xl">
+      meeting_room
+    </span>
+    Liste des salles
+  </h1>
   <% if policy(Salle).new? %>
     <%= link_to new_salle_path, class: 'btn btn-sm btn-primary btn-outline hover:!text-white' do %>
       <%= fa_icon 'plus-circle' %> Salle

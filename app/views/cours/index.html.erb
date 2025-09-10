@@ -67,7 +67,7 @@
       <div class="sm:w-2/12 ">
         <%= label_tag :filter, "Cours" %>
         <br> 
-        <%= radio_button_tag :filter, "all", (params[:filter]=='all'), onchange:'this.form.submit()' %>
+        <%= radio_button_tag :filter, "all", (params[:filter]=='all'), onchange:'this.form.submit()', disabled: params[:paginate] == 'all' %>
         Tous 
         <span class="mr-5"></span>
         <%= radio_button_tag :filter, "upcoming", (params[:filter]=='upcoming'), onchange:'this.form.submit()' %>
@@ -109,7 +109,7 @@
           <br> 
           <%= radio_button_tag :paginate, "pages", (params[:paginate]=='pages'), onchange:'this.form.submit()' %>
           Pages 
-          <%= radio_button_tag :paginate, "all", (params[:paginate]=='all'), onchange:'this.form.submit()' %>
+          <%= radio_button_tag :paginate, "all", (params[:paginate]=='all'), onchange:'this.form.submit()', disabled: params[:filter] == 'all' %>
           Tout 
         <% end %>
       </div>

@@ -15,8 +15,8 @@ class IntervenantsController < ApplicationController
   # GET /intervenants.json
   def index
     
-    params[:column] ||= session[:column]
-    params[:direction] ||= session[:direction]
+    params[:column_intervenant] ||= session[:column_intervenant]
+    params[:direction_intervenant] ||= session[:direction_intervenant]
 
     @intervenants = Intervenant.all
 
@@ -32,8 +32,8 @@ class IntervenantsController < ApplicationController
       @intervenants = @intervenants.where("status = ?", params[:status])
     end
 
-    session[:column] = params[:column]
-    session[:direction] = params[:direction]
+    session[:column_intervenant] = params[:column_intervenant]
+    session[:direction_intervenant] = params[:direction_intervenant]
 
     @intervenants = @intervenants
                       .reorder(Arel.sql("#{sort_column} #{sort_direction}"))  
@@ -148,11 +148,11 @@ class IntervenantsController < ApplicationController
     end
 
     def sort_column
-        sortable_columns.include?(params[:column]) ? params[:column] : "nom"
+        sortable_columns.include?(params[:column_intervenant]) ? params[:column_intervenant] : "nom"
     end
 
     def sort_direction
-        %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
+        %w[asc desc].include?(params[:direction_intervenant]) ? params[:direction_intervenant] : "asc"
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

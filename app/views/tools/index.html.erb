@@ -11,8 +11,12 @@
 	<div class="sm:w-1/3 px-4">
 		<ul class="list-disc">
 			<li class="mb-6">
-				<%= fa_icon 'calendar-day' %>
-				<%= link_to "Réservation de créneaux horaires", tools_creation_cours_path, class: 'text-primary hover:underline' %>
+				<div class="flex items-center gap-1">
+					<span class="material-symbols-outlined text-xl">
+						today
+					</span>
+					<%= link_to "Réservation de créneaux horaires", tools_creation_cours_path, class: 'text-primary hover:underline' %>
+				</div>
 			</li>
 
 			<li class="mb-6">
@@ -64,8 +68,12 @@
 
 			<% if current_user.role_number >= 5 %>
 				<li class="mb-6">
-					<%= fa_icon 'calendar-check' %>
-					<%= link_to 'Invitations', invits_path, class: 'text-primary hover:underline' %>
+					<div class="flex items-center gap-1">
+						<span class="material-symbols-outlined text-xl">
+							calendar_check
+						</span>
+						<%= link_to 'Invitations', invits_path, class: 'text-primary hover:underline' %>
+					</div>
 				</li>
 			<% end %>
 
@@ -148,28 +156,29 @@
 			<div class="divider"></div>
 		</ul>
 
-		<div class="flex items-center gap-2 mt-4">
+		<div class="flex items-center gap-2 mt-4 mb-4">
 			<%= image_tag 'edusign.png', size: 32 %>
-			<span class="font-black">edusign</span>
+			<span class="font-black">Edusign</span>
 		</div>
 		<ul class="list-disc list-inside mt-2">
 			<% if current_user.admin? %>
+				<!--
 				<li>
-					<%= link_to "Création manuelle", tools_edusign_path, class: 'text-primary hover:underline' %>
+					<%# link_to "Synchronisation", tools_synchronisation_edusign_path, class: 'text-primary hover:underline' %>
 				</li>
+				-->
 				<li>
-					<%= link_to "Synchronisation automatique", tools_synchronisation_edusign_path, class: 'text-primary hover:underline' %>
-				</li>
-				<li>
-					<%= link_to "Initialisation synchronisation", tools_initialisation_edusign_path, class: 'text-primary hover:underline' %>
-				</li>
-				<li>
-					<%= link_to "Logs des synchronisations", edusign_logs_path, class: 'text-primary hover:underline' %>
+					<%= link_to "Historique des synchronisations", edusign_logs_path, class: 'text-primary hover:underline' %>
 				</li>
 			<% end %>
 			<li class='mt-2'>
 				<%= link_to "Justificatifs d'absences", justificatifs_path, class: 'text-primary hover:underline' %>
 			</li>
+			<% if policy(:tool).edusign? %>
+				<li class="mt-2">
+					<%= link_to "Synchronisation ponctuelle", tools_edusign_path, class: 'text-primary hover:underline' %>
+				</li>
+			<% end %>
 		</ul>
 	</div>
 
@@ -202,8 +211,12 @@
 				</li>
 
 				<li class="mb-6">
-					<%= fa_icon 'chalkboard' %>
-					<%= link_to "Salles", salles_path, class: 'text-primary hover:underline' %>
+					<div class="flex items-center gap-1">
+						<span class="material-symbols-outlined text-xl">
+							meeting_room
+						</span>
+						<%= link_to "Salles", salles_path, class: 'text-primary hover:underline' %>
+					</div>
 				</li>
 
 				<li class="mb-6">

@@ -145,8 +145,8 @@ Rails.application.routes.draw do
     get :commandes_v2
     get :commande_fait_v2
     get :edusign
-    get :synchronisation_edusign
-    get :initialisation_edusign
+    # get :synchronisation_edusign
+    # get :initialisation_edusign
 
     post :import_do
     post :creation_cours_do
@@ -169,8 +169,8 @@ Rails.application.routes.draw do
     post :rappel_des_examens_do
     post :acces_intervenants_do
     post :edusign_do
-    post :synchronisation_edusign_do
-    post :initialisation_edusign_do
+    # post :synchronisation_edusign_do
+    # post :initialisation_edusign_do
   end
 
   namespace :guide do

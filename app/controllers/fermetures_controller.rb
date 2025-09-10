@@ -10,8 +10,8 @@ class FermeturesController < ApplicationController
 
     params[:futur] ||= 'oui'
     params[:paginate] ||= 'pages'
-    params[:column] ||= session[:column]
-    params[:direction_fermetures] ||= session[:direction_fermetures]
+    params[:column_fermeture] ||= session[:column_fermeture]
+    params[:direction_fermeture] ||= session[:direction_fermeture]
 
     @fermetures = Fermeture.all
     @noms_périodes = Fermeture.where.not(nom: nil).pluck(:nom).uniq.sort
@@ -41,8 +41,8 @@ class FermeturesController < ApplicationController
        @fermetures = @fermetures.paginate(page: params[:page], per_page: 20)
     end
 
-    session[:column] = params[:column]
-    session[:direction_fermetures] = params[:direction_fermetures]
+    session[:column_fermeture] = params[:column_fermeture]
+    session[:direction_fermeture] = params[:direction_fermeture]
 
   end
 
@@ -135,11 +135,11 @@ class FermeturesController < ApplicationController
     end
 
     def sort_column
-      sortable_columns.include?(params[:column]) ? params[:column] : "date, updated_at"
+      sortable_columns.include?(params[:column_fermeture]) ? params[:column_fermeture] : "date, updated_at"
     end
 
     def sort_direction
-      %w[asc desc].include?(params[:direction_fermetures]) ? params[:direction_fermetures] : "asc"
+      %w[asc desc].include?(params[:direction_fermeture]) ? params[:direction_fermeture] : "asc"
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

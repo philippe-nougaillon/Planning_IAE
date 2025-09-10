@@ -11,8 +11,8 @@ class FormationsController < ApplicationController
     params[:nom] ||= session[:nom]  # ???? 
     params[:catalogue] ||= 'yes'
     params[:paginate] ||= 'pages'
-    params[:column] ||= session[:column]
-    params[:direction_formations] ||= session[:direction_formations]
+    params[:column_formation] ||= session[:column_formation]
+    params[:direction_formation] ||= session[:direction_formation]
     
     unless params[:archive].blank?
       @formations = Formation.where(archive: true)
@@ -41,8 +41,8 @@ class FormationsController < ApplicationController
     end
 
     session[:nom] = params[:nom] # ???? 
-    session[:column] = params[:column]
-    session[:direction_formations] = params[:direction_formations]
+    session[:column_formation] = params[:column_formation]
+    session[:direction_formation] = params[:direction_formation]
 
     @formations = @formations.reorder(Arel.sql("#{sort_column} #{sort_direction}"))
     
@@ -129,11 +129,11 @@ class FormationsController < ApplicationController
     end
 
     def sort_column
-        sortable_columns.include?(params[:column]) ? params[:column] : 'formations.nom'
+      sortable_columns.include?(params[:column_formation]) ? params[:column_formation] : 'formations.nom'
     end
 
     def sort_direction
-        %w[asc desc].include?(params[:direction_formations]) ? params[:direction_formations] : 'asc'
+      %w[asc desc].include?(params[:direction_formation]) ? params[:direction_formation] : 'asc'
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

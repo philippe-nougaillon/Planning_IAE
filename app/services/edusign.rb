@@ -3,7 +3,7 @@ class Edusign < ApplicationService
     def initialize
         # Pour le décalage horaire des cours entre Planning et Edusign
         @time_zone_difference = 2.hour
-        
+
         # Utilisés pour calculer le nombre d'éléments en erreur
         @nb_recovered_elements = 0
         @nb_sended_elements = 0
@@ -12,21 +12,22 @@ class Edusign < ApplicationService
     def call
         # Necessaire pour créer des formations sans étudiants et des formations avec que des étudiants déjà créés sur Edusign
         formations_ajoutés_ids = self.sync_formations("Post", nil)
-    
+
         etudiants_ajoutés_ids = self.sync_etudiants("Post", nil)
-    
+
         self.sync_etudiants("Patch", etudiants_ajoutés_ids)
-    
+
         self.sync_formations("Patch", formations_ajoutés_ids)
-    
-        intervenants_ajoutés_ids = self.sync_intervenants("Post")
-    
+
+        # Ajout des intervenants avant les cours, sinon les cours qui n'ont pas d'intervenant créé sur Edusign, ne seront pas créés
+        intervenants_ajoutés_ids = self.sync_intervenants("Post", nil)
+
         self.sync_intervenants("Patch", intervenants_ajoutés_ids)
-    
-        cours_ajoutés_ids = self.sync_cours("Post")
-    
+
+        cours_ajoutés_ids = self.sync_cours("Post", nil)
+
         self.sync_cours("Patch", cours_ajoutés_ids)
-    
+
         self.remove_deleted_and_unfollowed_cours_in_edusign
     end
 
@@ -40,18 +41,19 @@ class Edusign < ApplicationService
         @setup = true
 
         self.sync_formations("Post", nil)
-        
+
         self.sync_etudiants("Post", nil)
-    
-        self.sync_intervenants("Post")
-    
-        self.sync_cours("Post")
+
+        # Ajout des intervenants avant les cours, sinon les cours qui n'ont pas d'intervenant créé sur Edusign, ne seront pas créés
+        self.sync_intervenants("Post", nil)
+
+        self.sync_cours("Post", nil)
     end
 
     def prepare_request_with_message(url, method)
         puts "=" * 100
         puts "Préparation de la communication de l'API Edusign"
-        
+
         prepare_request(url, method)
     end
 
@@ -78,7 +80,7 @@ class Edusign < ApplicationService
 
     def get_response(without_message_response = false)
         response = JSON.parse(@http.request(@request).read_body)
-        
+
         if !without_message_response
             puts "Lancement de la requête terminée : "
             puts response
@@ -95,6 +97,12 @@ class Edusign < ApplicationService
         self
     end
 
+    def get_interval_of_time
+        # Modifier le Scheduler en conséquence, pour éviter les duplications
+        DateTime.now-1.hour..DateTime.now
+    end
+
+    # Cette fonction ne prend pas seulement des éléments créés aujourd'hui, mais aussi ceux qui viennent d'être considérés comme élément à ajouter sur edusign
     def get_all_element_created_today(model)
         interval = self.get_interval_of_time
 
@@ -102,39 +110,36 @@ class Edusign < ApplicationService
 
         if model == Formation
             model.where(
-              created_at: interval,
               edusign_id: nil,
               send_to_edusign: true
             )
         elsif model == Etudiant
             model.where(
               formation_id: formations_sent_to_edusign_ids,
-              created_at: interval,
               edusign_id: nil
             )
         elsif model == Cour
             model.where(
               formation_id: formations_sent_to_edusign_ids,
-              created_at: interval,
               edusign_id: nil,
               no_send_to_edusign: false
-            ).joins(:intervenant).where.not(intervenant: {id: Intervenant.intervenants_examens})
+            ).where.not(intervenant_id: Intervenant.intervenants_examens + Intervenant.sans_intervenant)
         elsif model == Intervenant
-            
+
             # On sélectionne que les intervenants qui sont liés à une formation cobaye.
             # Pour cela, on va passer par les cours qui appartienent aux formations cobayes et correspondent à l'intervalle.
             # Pour les cours, on se base sur updated_at pour ne pas rater un changement d'intervenant ou un ajout d'intervenant binome.
 
-            # Ce code est temporaire le temps que l'on sache à quel moment il faudra créer l'intervenant sur Edusign.
             intervenant_ids = Cour.where(
-              updated_at: interval,
-              formation_id: formations_sent_to_edusign_ids
+              formation_id: formations_sent_to_edusign_ids,
+              no_send_to_edusign: false
             ).pluck(:intervenant_id, :intervenant_binome_id).flatten.compact.uniq
 
-            model.where(id: intervenant_ids, edusign_id: nil)
+            model.where(id: intervenant_ids, edusign_id: nil).where.not(id: Intervenant.intervenants_examens + Intervenant.sans_intervenant)
         end
     end
 
+    # Récupère tous les éléments déjà sur Edusign, qui ont été modifiés dans l'interval sur AIKKU Plann
     def get_all_element_updated_today(model, record_ids = nil)
         interval = self.get_interval_of_time
 
@@ -156,7 +161,7 @@ class Edusign < ApplicationService
               updated_at: interval,
               no_send_to_edusign: false
               ).where.not(edusign_id: nil).where.not(id: record_ids)
-              .joins(:intervenant).where.not(intervenant: {id: Intervenant.intervenants_examens})
+              .where.not(intervenant_id: Intervenant.intervenants_examens + Intervenant.sans_intervenant)
         elsif model == Intervenant
             # Un intervenant peut ne plus avoir de cours avec des formations cobayes. Comme la requête permet de savoir qu'il est actif sur le planning, on l'update quand même sur Edusiugn.
             model.where(updated_at: interval).where.not(edusign_id: nil).where.not(id: record_ids)
@@ -176,24 +181,24 @@ class Edusign < ApplicationService
               edusign_id: nil,
               no_send_to_edusign: false
             ).where("debut >= ?", DateTime.now)
-              .joins(:intervenant).where.not(intervenant: {id: Intervenant.intervenants_examens})
+              .where.not(intervenant_id: Intervenant.intervenants_examens + Intervenant.sans_intervenant)
         elsif model == Etudiant
             model.where(
               formation_id: formations_sent_to_edusign_ids,
               edusign_id: nil
             )
         elsif model == Intervenant
-            
+
             # On sélectionne que les intervenants qui sont liés à une formation cobaye.
             # Pour cela, on va passer par les cours qui appartienent aux formations cobayes et correspondent à l'intervalle.
             # Pour les cours, on se base sur updated_at pour ne pas rater un changement d'intervenant ou un ajout d'intervenant binome.
 
-            # Ce code est temporaire le temps que l'on sache à quel moment il faudra créer l'intervenant sur Edusign.
             intervenant_ids = Cour.where(
-              formation_id: formations_sent_to_edusign_ids
+              formation_id: formations_sent_to_edusign_ids,
+              no_send_to_edusign: false
             ).where("debut >= ?", DateTime.now).pluck(:intervenant_id, :intervenant_binome_id).flatten.compact.uniq
 
-            model.where(id: intervenant_ids, edusign_id: nil)
+            model.where(id: intervenant_ids, edusign_id: nil).where.not(id: Intervenant.intervenants_examens + Intervenant.sans_intervenant)
         end
     end
 
@@ -281,7 +286,7 @@ class Edusign < ApplicationService
     end
 
     def import_attendances
-        self.prepare_request_with_message("https://ext.edusign.fr/v1/course", 'Get')
+        self.prepare_request_with_message("https://ext.edusign.fr/v1/course?start=#{(Date.today-90.days).iso8601}&end=#{Date.today.iso8601}", 'Get')
 
         response = self.get_response
 
@@ -332,7 +337,7 @@ class Edusign < ApplicationService
             # Sauvegarde l'attendance pour pouvoir la retrouver si elle vient d'être créé
             attendance.save
 
-            signature_email = SignatureEmail.find_by(attendance_id: attendance.id) || SignatureEmail.new(attendance_id: attendance.id)        
+            signature_email = SignatureEmail.find_by(attendance_id: attendance.id) || SignatureEmail.new(attendance_id: attendance.id)
             signature_email.nb_envoyee = attendance_edusign["signatureEmail"]["nbSent"]
             signature_email.requete_edusign_id = attendance_edusign["signatureEmail"]["requestId"]
             signature_email.limite = attendance_edusign["signatureEmail"]["signUntil"].to_datetime + @time_zone_difference
@@ -348,13 +353,13 @@ class Edusign < ApplicationService
 
         attendance.save
     end
-    
+
     def sync_formations(method, formations_ajoutés_ids = nil)
         self.prepare_request_with_message("https://ext.edusign.fr/v1/group", method)
         if @setup
             formations = self.get_all_elements_for_initialisation(Formation)
-            puts "Début de l'ajout des formations"
-        else 
+            puts "Début de l'ajout des formations (initialisation)"
+        else
             if method == 'Post'
                 formations = self.get_all_element_created_today(Formation)
                 puts "Début de l'ajout des formations"
@@ -363,7 +368,7 @@ class Edusign < ApplicationService
                 puts "Début de la modification des formations"
             end
         end
-        
+
         puts "#{formations.count} formations ont été récupérés : #{formations.pluck(:id, :nom)}"
 
         @nb_recovered_elements += formations.count
@@ -371,27 +376,31 @@ class Edusign < ApplicationService
         nb_audited = 0
 
         formations.each do |formation|
-            body =
-                {"group":{
-                    "NAME": formation.nom,
-                    "STUDENTS": formation.etudiants.pluck(:edusign_id).compact,
-                    "API_ID": formation.id
-                }}
+            if formation.valid?
+                body =
+                    {"group":{
+                        "NAME": formation.nom,
+                        "STUDENTS": formation.etudiants.pluck(:edusign_id).compact,
+                        "API_ID": formation.id
+                    }}
 
-            if method == 'Patch'
-                body[:group].merge!({"ID": formation.edusign_id})
-            end
-
-            response = self.prepare_body_request(body).get_response
-
-            puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de la formation réussie : #{formation.id}, #{formation.nom} "
-
-            if response["status"] == 'success' 
-                if method == 'Post'
-                    formation.edusign_id = response["result"]["ID"]
-                    formation.save
+                if method == 'Patch'
+                    body[:group].merge!({"ID": formation.edusign_id})
                 end
-                nb_audited += 1
+
+                response = self.prepare_body_request(body).get_response
+
+                puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de la formation réussie : #{formation.id}, #{formation.nom} "
+
+                if response["status"] == 'success'
+                    if method == 'Post'
+                        formation.edusign_id = response["result"]["ID"]
+                        formation.save
+                    end
+                    nb_audited += 1
+                end
+            else
+                puts "La formation #{formation.id}, #{formation.nom} n'est pas valide, elle ne peut pas être envoyée dans Edusign : #{formation.errors.full_messages}"
             end
         end
 
@@ -404,53 +413,13 @@ class Edusign < ApplicationService
         formations.pluck(:id) if method == "Post"
     end
 
-    def export_formation(formation_id)
-        self.prepare_request_with_message("https://ext.edusign.fr/v1/student", 'Post')
-
-        if formation = Formation.not_archived.find(formation_id)
-            @nb_recovered_elements += 1
-
-            if formation.edusign_id == nil && formation.etudiants.count > 0
-                body =
-                  {"group":{
-                    "NAME": formation.nom,
-                    "STUDENTS": formation.etudiants.pluck(:edusign_id).compact,
-                    "API_ID": formation.id
-                  }}
-
-                response = self.prepare_body_request(body).get_response
-
-                puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de la formation #{formation.id}, #{formation.nom} réussie"
-
-                if response["status"] == 'success'
-                    formation.edusign_id = response["result"]["ID"]
-                    formation.save
-                    @nb_sended_elements += 1
-                end
-            else
-                message = formation.edusign_id ? "Formation déjà existante dans Edusign, #{formation.edusign_id}." : "La formation n'a pas d'étudiant."
-                puts message
-
-                response = {}
-                response["status"] = 'error'
-                response["message"] = message
-            end
-        # else
-        #     response = {}
-        #     response["status"] = 'error'
-        #     response["message"] = "Error : Aucune formation ne correspond à cet id : #{formation_id}"
-        end
-
-        # response
-    end
-
     def sync_etudiants(method, etudiants_ajoutés_ids = nil)
         self.prepare_request_with_message("https://ext.edusign.fr/v1/student", method)
 
         if @setup
             etudiants = self.get_all_elements_for_initialisation(Etudiant)
-            puts "Début de l'ajout des etudiants"
-        else 
+            puts "Début de l'ajout des etudiants (initialisation)"
+        else
             if method == 'Post'
                 etudiants = self.get_all_element_created_today(Etudiant)
                 puts "Début de l'ajout des etudiants"
@@ -459,95 +428,60 @@ class Edusign < ApplicationService
                 puts "Début de la modification des etudiants"
             end
         end
-        
-        puts "#{etudiants.count} etudiants ont été récupéré : #{etudiants.pluck(:id, :nom)}"
+
+        puts "#{etudiants.count} etudiants ont été récupérés : #{etudiants.pluck(:id, :nom)}"
 
         @nb_recovered_elements += etudiants.count
 
         nb_audited = 0
 
         etudiants.each do |etudiant|
-            body =
-                {"student":{
-                "FIRSTNAME": etudiant.prénom,
-                "LASTNAME": etudiant.nom,
-                "EMAIL": etudiant.email,
-                "API_ID": etudiant.id,
-                "GROUPS": etudiant.formation&.edusign_id
-                }}
+            if etudiant.valid?
+                body =
+                    {"student":{
+                    "FIRSTNAME": etudiant.prénom,
+                    "LASTNAME": etudiant.nom,
+                    "EMAIL": etudiant.email,
+                    "API_ID": etudiant.id,
+                    "GROUPS": etudiant.formation&.edusign_id
+                    }}
 
-            if method == 'Patch'
-                body[:student].merge!({"ID": etudiant.edusign_id})
-            end
-
-            response = self.prepare_body_request(body).get_response
-
-            puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de l'étudiant réussie : #{etudiant.id}, #{etudiant.nom} "
-
-            if response["status"] == 'success' 
-                if method == 'Post'
-                    etudiant.edusign_id = response["result"]["ID"]
-                    etudiant.save
+                if method == 'Patch'
+                    body[:student].merge!({"ID": etudiant.edusign_id})
                 end
-                nb_audited += 1
+
+                response = self.prepare_body_request(body).get_response
+
+                puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de l'étudiant réussie : #{etudiant.id}, #{etudiant.nom} "
+
+                if response["status"] == 'success'
+                    if method == 'Post'
+                        etudiant.edusign_id = response["result"]["ID"]
+                        etudiant.save
+                    end
+                    nb_audited += 1
+                end
+            else
+                puts "L'étudiant #{etudiant.id}, #{etudiant.nom} n'est pas valide, il ne peut pas être envoyé dans Edusign : #{etudiant.errors.full_messages}"
             end
         end
 
-        puts "Exportation des étudiants terminée." 
+        puts "Exportation des étudiants terminée."
         puts "Etudiants #{method == 'Post' ? 'ajoutés' : "modifiés"} : #{nb_audited}"
-        
+
         @nb_sended_elements += nb_audited
 
         # La liste des etudiants pour ne pas update ceux qui ont été créés aujourd'hui
         etudiants.pluck(:id) if method == "Post"
     end
 
-    def export_etudiant(etudiant_id)
-        self.prepare_request_with_message("https://ext.edusign.fr/v1/student", 'Post')
-
-        if etudiant = Etudiant.find(etudiant_id)
-            @nb_recovered_elements += 1
-
-            if etudiant.edusign_id == nil
-                body =
-                {"student":{
-                    "FIRSTNAME": etudiant.prénom,
-                    "LASTNAME": etudiant.nom,
-                    "EMAIL": etudiant.email,
-                    "API_ID": etudiant.id,
-                    "GROUPS": etudiant.formation&.edusign_id
-                }}
-
-                response = self.prepare_body_request(body).get_response
-
-                puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de l'étudiant #{etudiant.id}, #{etudiant.nom} réussie"
-
-                if response["status"] == 'success'
-                    etudiant.edusign_id = response["result"]["ID"]
-                    etudiant.save
-                    @nb_sended_elements += 1
-                end
-            # else
-            #     response = {}
-            #     response["status"] = 'error'
-            #     response["message"] = "Apprenant déjà existant sur Edusign,  #{etudiant.edusign_id}."
-            end
-        # else
-        #     response = {}
-        #     response["status"] = 'error'
-        #     response["message"] = "Error : Aucun étudiant ne correspond à cet id : #{etudiant_id}"
-        end
-        #
-        # response
-    end
-
     def sync_intervenants(method, intervenants_ajoutés_ids = nil)
         self.prepare_request_with_message("https://ext.edusign.fr/v1/professor", method)
-        
+
         if @setup
             intervenants = self.get_all_elements_for_initialisation(Intervenant)
-            puts "Début de l'ajout des intervenants"
-        else 
+            puts "Début de l'ajout des intervenants (initialisation)"
+        else
             if method == 'Post'
                 intervenants = self.get_all_element_created_today(Intervenant)
                 puts "Début de l'ajout des intervenants"
@@ -556,38 +490,44 @@ class Edusign < ApplicationService
                 puts "Début de la modification des intervenants"
             end
         end
-        
-        puts "#{intervenants.count} intervenants ont été récupéré : #{intervenants.pluck(:id, :nom)}"
+
+        puts "#{intervenants.count} intervenants ont été récupérés : #{intervenants.pluck(:id, :nom)}"
 
         @nb_recovered_elements += intervenants.count
 
         nb_audited = 0
 
         intervenants.each do |intervenant|
-            body =
-              {"professor":{
-                "FIRSTNAME": intervenant.prenom,
-                "LASTNAME": intervenant.nom,
-                "EMAIL": intervenant.email,
-                "API_ID": intervenant.slug
-              }}
+            if intervenant.valid?
+                body =
+                {"professor":{
+                    "FIRSTNAME": intervenant.prenom,
+                    "LASTNAME": intervenant.nom,
+                    "EMAIL": intervenant.email,
+                    "API_ID": intervenant.slug
+                }}
 
-            if method == 'Post'
-                body[:professor].merge!({"dontSendCredentials": true})
-            else
-                body[:professor].merge!({"ID": intervenant.edusign_id})
-            end
-
-            response = self.prepare_body_request(body).get_response
-
-            puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de l'intervenant réussie :  #{intervenant.id}, #{intervenant.nom}"
-
-            if response["status"] == 'success'
                 if method == 'Post'
-                    intervenant.edusign_id = response["result"]["ID"]
-                    intervenant.save
+                    body[:professor].merge!({"dontSendCredentials": true})
+                else
+                    body[:professor].merge!({"ID": intervenant.edusign_id})
                 end
-                nb_audited += 1
+
+                response = self.prepare_body_request(body).get_response
+
+                # TODO : Voir s'il n'y a pas d'autres status que "error" ou "success"
+                puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de l'intervenant réussie :  #{intervenant.id}, #{intervenant.nom}"
+
+                if response["status"] == 'success'
+                    if method == 'Post'
+                        intervenant.edusign_id = response["result"]["ID"]
+                        # TODO: Checker que le save == true
+                        intervenant.save
+                    end
+                    nb_audited += 1
+                end
+            else
+                puts "L'intervenant #{intervenant.id}, #{intervenant.nom} n'est pas valide, il ne peut pas être envoyé dans Edusign : #{intervenant.errors.full_messages}"
             end
         end
 
@@ -596,52 +536,20 @@ class Edusign < ApplicationService
 
         @nb_sended_elements += nb_audited
 
-        # La liste des intervenants pour ne pas update ceux qui ont été créés aujourd'hui
-        intervenants.pluck(:id) if method == "Post"
-    end
-
-    def export_intervenant(intervenant_slug)
-        self.prepare_request_with_message("https://ext.edusign.fr/v1/professor", 'Post')
-
-        if intervenant = Intervenant.find_by(slug: intervenant_slug)
-            @nb_recovered_elements += 1
-
-            body =
-              {"professor":{
-                "FIRSTNAME": intervenant.prenom,
-                "LASTNAME": intervenant.nom,
-                "EMAIL": intervenant.email,
-                "API_ID": intervenant.slug
-              },
-               "dontSendCredentials": true
-              }
-
-            response = self.prepare_body_request(body).get_response
-
-            puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de l'intervenant #{intervenant.id}, #{intervenant.nom} réussie"
-
-            if response["status"] == 'success'
-                intervenant.edusign_id = response["result"]["ID"]
-                intervenant.save
-                @nb_sended_elements += 1
-            end
-        # else
-        #     response = {}
-        #     response["status"] = 'error'
-        #     response["message"] = "Error : Aucun intervenant ne correspond à ce slug : #{intervenant_slug}"
+        if method == "Post" && !@setup
+            # La liste des intervenants pour ne pas update ceux qui ont été créés aujourd'hui
+            return intervenants.pluck(:id)
         end
-
-        # response
     end
 
     def sync_cours(method, cours_ajoutés_ids = nil)
         self.prepare_request_with_message("https://ext.edusign.fr/v1/course", method)
-        
+
         if @setup
             cours = self.get_all_elements_for_initialisation(Cour)
-            puts "Début de l'ajout des cours"
+            puts "Début de l'ajout des cours (initialisation)"
             cours_a_supprimer = Cour.none
-        else 
+        else
             if method == 'Post'
                 cours = self.get_all_element_created_today(Cour).where.not(etat: ["annulé", "reporté"])
                 puts "Début de l'ajout des cours"
@@ -650,77 +558,81 @@ class Edusign < ApplicationService
                 cours = self.get_all_element_updated_today(Cour, cours_ajoutés_ids)
                 puts "Début de la modification des cours"
                 cours_a_supprimer = cours.where(etat: ["annulé", "reporté"])
-            end    
+            end
         end
-        
+
         # Cours à créer / modifier du côté d'Edusign
         cours_a_envoyer = cours.where(etat: ["planifié", "confirmé", "à_réserver"])
 
-        puts "#{cours.count} cours ont été récupéré : #{cours.pluck(:id, :nom)}"
+        puts "#{cours.count} cours ont été récupérés : #{cours.pluck(:id, :nom)}"
 
         @nb_recovered_elements += cours.count
 
         nb_audited = 0
 
-        if cours_a_envoyer 
+        if cours_a_envoyer
             cours_a_envoyer.each do |cour|
-                body =
-                {"course":{
-                    "NAME": "#{cour.formation.nom} - #{cour.nom_ou_ue}" || 'Nom du cours à valider',
-                    "START": cour.debut - @time_zone_difference,
-                    "END": cour.fin - @time_zone_difference,
-                    "PROFESSOR": Intervenant.find_by(id: cour.intervenant_id)&.edusign_id || ENV['EDUSIGN_DEFAULT_INTERVENANT_ID'],
-                    "PROFESSOR_2": Intervenant.find_by(id: cour.intervenant_binome_id)&.edusign_id,
-                    "API_ID": cour.id,
-                    "NEED_STUDENTS_SIGNATURE": true,
-                    "CLASSROOM": cour.salle&.nom,
-                    "SCHOOL_GROUP": [cour.formation.edusign_id]
+                if cour.valid?
+                    body =
+                    {"course":{
+                        "NAME": "#{cour.formation.nom} - #{cour.nom_ou_ue}" || 'Nom du cours à valider',
+                        "START": cour.debut - @time_zone_difference,
+                        "END": cour.fin - @time_zone_difference,
+                        "PROFESSOR": Intervenant.find_by(id: cour.intervenant_id)&.edusign_id || ENV['EDUSIGN_DEFAULT_INTERVENANT_ID'],
+                        "PROFESSOR_2": Intervenant.find_by(id: cour.intervenant_binome_id)&.edusign_id,
+                        "API_ID": cour.id,
+                        "NEED_STUDENTS_SIGNATURE": true,
+                        "CLASSROOM": cour.salle&.nom,
+                        "SCHOOL_GROUP": [cour.formation.edusign_id]
+                        }
                     }
-                }
 
-                if method == 'Patch'
-                    body[:course].merge!({"ID": cour.edusign_id})
-                    body.merge!({"editSurveys": false})
-                end
-
-                response = self.prepare_body_request(body).get_response
-
-                puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation du cours #{cour.id}, #{cour.nom} réussie"
-
-                if response["status"] == 'success' 
-                    if method == 'Post'
-                        cour.edusign_id = response["result"]["ID"]
-                        cour.save
+                    if method == 'Patch'
+                        body[:course].merge!({"ID": cour.edusign_id})
+                        body.merge!({"editSurveys": false})
                     end
-                    nb_audited += 1
+
+                    response = self.prepare_body_request(body).get_response
+
+                    puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation du cours #{cour.id}, #{cour.nom} réussie"
+
+                    if response["status"] == 'success'
+                        if method == 'Post'
+                            cour.edusign_id = response["result"]["ID"]
+                            cour.save
+                        end
+                        nb_audited += 1
+                    end
+                else
+                    puts "Le cours #{cour.id}, #{cour.nom} n'est pas valide, il ne peut pas être envoyé dans Edusign : #{cour.errors.full_messages}"
                 end
             end
         end
-        
+
         # Supprime les cours reportés ou annulés
         if cours_a_supprimer.any?
             puts "Début de la suppression des cours annulés ou reportés"
-            puts "#{cours_a_supprimer.count} cours ont été récupéré : #{cours_a_supprimer.pluck(:id, :nom)}"
-            
+            puts "#{cours_a_supprimer.count} cours ont été récupérés : #{cours_a_supprimer.pluck(:id, :nom)}"
+
             cours_a_supprimer.each do |cour|
 
                 if cour.edusign_id != nil
                     self.prepare_request("https://ext.edusign.fr/v1/course/#{cour.edusign_id}", "Delete")
-            
+
                     cour.edusign_id = nil
                     cour.save
-                                
+
                     response = self.get_response
-                    
+
                     puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation du cours #{cour.id}, #{cour.nom} pour la suppression réussie"
-                    
+
                     if response["status"] == 'success'
                         nb_audited += 1
                     end
                 end
             end
         end
-        
+
         puts "Exportation des cours terminée."
         puts "Cours #{method == 'Post' ? 'ajoutés' : "modifiés"} #{cours_a_supprimer.any? ? '/ supprimés' : ''}: #{nb_audited}"
 
@@ -730,14 +642,16 @@ class Edusign < ApplicationService
         cours_a_envoyer.pluck(:id) if method == "Post"
     end
 
+    # Cet export est différent des autres exports, c'est une méthode Patch. Toutes les fonctions export ne sont plus utlisés, sauf export_cours
     def export_cours(cours_id)
-        self.prepare_request_with_message("https://ext.edusign.fr/v1/course", 'Post')
+        self.prepare_request_with_message("https://ext.edusign.fr/v1/course", 'Patch')
 
         if cours = Cour.find(cours_id)
             @nb_recovered_elements += 1
 
             body =
               {"course":{
+                "ID": "#{cours.edusign_id}",
                 "NAME": "#{cours.formation.nom} - #{cours.nom_ou_ue}" || 'Nom du cours à valider',
                 "START": cours.debut - @time_zone_difference,
                 "END": cours.fin - @time_zone_difference,
@@ -752,7 +666,7 @@ class Edusign < ApplicationService
 
             response = self.prepare_body_request(body).get_response
 
-            puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de l'étudiant #{cours.id}, #{cours.nom} réussie"
+            puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Modification du cours #{cours.id}, #{cours.nom} (id Edusign : #{cours.edusign_id}) réussie"
 
             if response["status"] == 'success'
                 @nb_sended_elements += 1
@@ -769,7 +683,7 @@ class Edusign < ApplicationService
     def remove_deleted_and_unfollowed_cours_in_edusign
         puts "=" * 100
         puts "Préparation de la communication de l'API Edusign"
-        
+
         edusign_ids = []
         deleted_cours_to_sync_ids = []
 
@@ -787,7 +701,7 @@ class Edusign < ApplicationService
         cours_to_remove_in_edusign_ids = condition_1.or(condition_2).pluck(:id) + condition_3.pluck(:id)
 
         # Récupération des cours à supprimer
-        cours_unfollowed = Cour.where(id: cours_to_remove_in_edusign_ids.uniq)    
+        cours_unfollowed = Cour.where(id: cours_to_remove_in_edusign_ids.uniq)
 
         edusign_ids << cours_unfollowed.pluck(:edusign_id)
 
@@ -796,7 +710,7 @@ class Edusign < ApplicationService
             .where(auditable_type: "Cour")
             .where(action: "destroy")
             .where(created_at: get_interval_of_time)
-            
+
         # Pour les edusign ids des cours supprimés, on vérifie s'il existe encore sur Edusign
         deleted_cours.each do |deleted_cour|
             edusign_id = deleted_cour.audited_changes["edusign_id"]
@@ -814,7 +728,7 @@ class Edusign < ApplicationService
         puts "#{edusign_ids.count} cours ont été récupérés : #{deleted_cours_to_sync_ids}, #{cours_unfollowed.pluck(:id)}"
 
         @nb_recovered_elements += edusign_ids.count
-        
+
         nb_audited = 0
 
         # Suppression des cours sur Edusign avec les edusign ids qui ont été récupérés
@@ -822,7 +736,7 @@ class Edusign < ApplicationService
             self.prepare_request("https://ext.edusign.fr/v1/course/#{edusign_id}", "Delete")
 
             response = self.get_response
-            
+
             puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation du cours #{edusign_id} pour la suppression réussie"
 
             if response["status"] == 'success'
@@ -873,9 +787,117 @@ class Edusign < ApplicationService
         end
     end
 
-    def get_interval_of_time
-        # Modifier le Scheduler en conséquence, pour éviter les duplications
-        DateTime.now-1.day..DateTime.now
-    end
+    # def export_formation(formation_id)
+    #     self.prepare_request_with_message("https://ext.edusign.fr/v1/student", 'Post')
+
+    #     if formation = Formation.not_archived.find(formation_id)
+    #         @nb_recovered_elements += 1
+
+    #         if formation.edusign_id == nil && formation.etudiants.count > 0
+    #             body =
+    #               {"group":{
+    #                 "NAME": formation.nom,
+    #                 "STUDENTS": formation.etudiants.pluck(:edusign_id).compact,
+    #                 "API_ID": formation.id
+    #               }}
+
+    #             response = self.prepare_body_request(body).get_response
+
+    #             puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de la formation #{formation.id}, #{formation.nom} réussie"
+
+    #             if response["status"] == 'success'
+    #                 formation.edusign_id = response["result"]["ID"]
+    #                 formation.save
+    #                 @nb_sended_elements += 1
+    #             end
+    #         else
+    #             message = formation.edusign_id ? "Formation déjà existante dans Edusign, #{formation.edusign_id}." : "La formation n'a pas d'étudiant."
+    #             puts message
+
+    #             response = {}
+    #             response["status"] = 'error'
+    #             response["message"] = message
+    #         end
+    #     # else
+    #     #     response = {}
+    #     #     response["status"] = 'error'
+    #     #     response["message"] = "Error : Aucune formation ne correspond à cet id : #{formation_id}"
+    #     end
+
+    #     # response
+    # end
+
+    # def export_etudiant(etudiant_id)
+    #     self.prepare_request_with_message("https://ext.edusign.fr/v1/student", 'Post')
+
+    #     if etudiant = Etudiant.find(etudiant_id)
+    #         @nb_recovered_elements += 1
+
+    #         if etudiant.edusign_id == nil
+    #             body =
+    #             {"student":{
+    #                 "FIRSTNAME": etudiant.prénom,
+    #                 "LASTNAME": etudiant.nom,
+    #                 "EMAIL": etudiant.email,
+    #                 "API_ID": etudiant.id,
+    #                 "GROUPS": etudiant.formation&.edusign_id
+    #             }}
+
+    #             response = self.prepare_body_request(body).get_response
+
+    #             puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de l'étudiant #{etudiant.id}, #{etudiant.nom} réussie"
+
+    #             if response["status"] == 'success'
+    #                 etudiant.edusign_id = response["result"]["ID"]
+    #                 etudiant.save
+    #                 @nb_sended_elements += 1
+    #             end
+    #         # else
+    #         #     response = {}
+    #         #     response["status"] = 'error'
+    #         #     response["message"] = "Apprenant déjà existant sur Edusign,  #{etudiant.edusign_id}."
+    #         end
+    #     # else
+    #     #     response = {}
+    #     #     response["status"] = 'error'
+    #     #     response["message"] = "Error : Aucun étudiant ne correspond à cet id : #{etudiant_id}"
+    #     end
+    #     #
+    #     # response
+    # end
+
+    # def export_intervenant(intervenant_slug)
+    #     self.prepare_request_with_message("https://ext.edusign.fr/v1/professor", 'Post')
+
+    #     if intervenant = Intervenant.find_by(slug: intervenant_slug)
+    #         @nb_recovered_elements += 1
+
+    #         body =
+    #           {"professor":{
+    #             "FIRSTNAME": intervenant.prenom,
+    #             "LASTNAME": intervenant.nom,
+    #             "EMAIL": intervenant.email,
+    #             "API_ID": intervenant.slug
+    #           },
+    #            "dontSendCredentials": true
+    #           }
+
+    #         response = self.prepare_body_request(body).get_response
+
+    #         puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de l'intervenant #{intervenant.id}, #{intervenant.nom} réussie"
+
+    #         if response["status"] == 'success'
+    #             intervenant.edusign_id = response["result"]["ID"]
+    #             intervenant.save
+    #             @nb_sended_elements += 1
+    #         end
+    #     # else
+    #     #     response = {}
+    #     #     response["status"] = 'error'
+    #     #     response["message"] = "Error : Aucun intervenant ne correspond à ce slug : #{intervenant_slug}"
+    #     end
+
+    #     # response
+    # end
 
 end
