@@ -170,9 +170,7 @@ class Dossier < ApplicationRecord
     self.envoyer!
 
     # Informe l'intervenant
-    mailer_response = DossierMailer.with(dossier: self).dossier_email.deliver_now
-    self.mail_log_id = MailLog.create(user_id: id, message_id: mailer_response.message_id, to: self.intervenant.email, subject: "Dossier de recrutement CEV (Envoyé)").id
-    self.save
+    DossierJob.perform_later(self.id, id, :dossier_email)
   end
 
   def valider_dossier(id)
@@ -185,9 +183,7 @@ class Dossier < ApplicationRecord
     self.valider!
 
     # Informe l'intervenant
-    mailer_response = DossierMailer.with(dossier: self).valider_email.deliver_now
-    self.mail_log_id = MailLog.create(user_id: id, message_id: mailer_response.message_id, to: self.intervenant.email, subject: "Dossier de recrutement CEV (Validé)").id
-    self.save
+    DossierMailerJob.perform_later(self.id, id, :valider_email)
   end
 
   def relancer_dossier(id)
@@ -195,9 +191,7 @@ class Dossier < ApplicationRecord
     self.relancer!
 
     # Informe l'intervenant
-    mailer_response = DossierMailer.with(dossier: self).dossier_email.deliver_now
-    self.mail_log_id = MailLog.create(user_id: id, message_id: mailer_response.message_id, to: self.intervenant.email, subject: "Dossier de recrutement CEV (Relancé)").id
-    self.save
+    DossierMailerJob.perform_later(self.id, id, :dossier_email)
   end
 
   def rejeter_dossier(id)
@@ -212,9 +206,7 @@ class Dossier < ApplicationRecord
       self.rejeter!
 
       # Informe l'intervenant
-      mailer_response = DossierMailer.with(dossier: self).rejeter_email.deliver_now
-      self.mail_log_id = MailLog.create(user_id: id, message_id: mailer_response.message_id, to: self.intervenant.email, subject: "Dossier de recrutement CEV (Rejeté)").id
-      self.save
+      DossierMailerJob.perform_later(self.id, id, :rejeter_email)
 
       return true
     else

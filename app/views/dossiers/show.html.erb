@@ -32,7 +32,7 @@
       </p>
     <% end %>
 
-    <% if @dossier.mail_log %>
+    <% if @dossier.mail_log && user_signed_in? %>
       <p class="mb-4">
         <strong>Statut Mail :</strong> 
         <% if @dossier.mail_log.statut %>
