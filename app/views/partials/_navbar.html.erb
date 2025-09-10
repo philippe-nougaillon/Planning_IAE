@@ -1,9 +1,6 @@
 <nav class="navbar sticky top-0 z-50 shadow py-0 <%= ENV["STAGING_COLOR_MODE"].present? ? ENV["STAGING_COLOR_MODE"] : 'bg-base-100' %>">
   <div class="flex-1">
-    <a href="/" aria-label="logo" class="ml-3 mr-6">
-      <%= image_tag("Aikku_plann.png", width: 100, alt: 'Aikku plann') %>
-    </a>
-    <ul class="menu menu-horizontal px-1">
+    <ul class="menu menu-horizontal px-1 ml-48">
       <% if user_signed_in? %>
         <% if current_user.étudiant? %>
           <%= navbar_nav_item('ma journée', 'event', mes_sessions_etudiant_path, nil, 'mes_sessions_etudiant') %>
@@ -15,7 +12,7 @@
           <%= navbar_nav_item('cours', 'calendar_month', cours_path, 'Planning') %>
         <% end %>
       <% else %>
-        <%= navbar_nav_item('cours', 'calendar_month', cours_path, 'Planning', 'index') %>
+        <%= navbar_nav_item('cours', 'calendar_month', cours_path, 'Planning') %>
       <% end %>
       <%= navbar_nav_item('salles', 'meeting_room', occupation_salles_path) %>
       <%= navbar_nav_item('formations', 'work', formations_path) %>
