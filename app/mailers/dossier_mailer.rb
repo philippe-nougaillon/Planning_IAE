@@ -1,6 +1,6 @@
 class DossierMailer < ApplicationMailer
     default from: 'IAE-Paris <planning-iae@philnoug.com>', 
-            cc:   'cev.iae@univ-paris1.fr'
+            cc:   'pierreemmanuel.dacquet@gmail.com'
 
     def dossier_email
         @dossier = params[:dossier]
