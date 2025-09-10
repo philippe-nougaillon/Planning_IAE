@@ -53,7 +53,7 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
-    @audits = @user.audits.reorder(id: :desc).paginate(page:params[:page], per_page:20)
+    @audits = @user.audits.reorder(id: :desc).paginate(page:params[:page], per_page: 10)
   end
 
   # GET /users/new
@@ -139,6 +139,6 @@ class UsersController < ApplicationController
     end
 
     def is_user_authorized
-      authorize User
+      authorize @user ? @user : User
     end
 end

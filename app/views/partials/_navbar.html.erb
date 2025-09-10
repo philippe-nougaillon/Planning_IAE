@@ -80,11 +80,18 @@
   <div>
     <ul class="menu menu-horizontal items-center px-1">
       <% if user_signed_in? %>
-        <li class="mr-12">
-          <%= current_user.username %>
-          <% if current_page? root_path %>
-            <br>
-            Dernière connexion il y a <%= time_ago_in_words current_user.last_sign_in_at %>
+        <li class="flex flex-row items-center gap-2 mr-12">
+          <%= link_to current_user do %>
+            <span class="material-symbols-outlined p-0">
+              account_circle
+            </span>
+            <div class="p-0">
+              <%= current_user.username %>
+              <% if current_page? root_path %>
+                <br>
+                Dernière connexion il y a <%= time_ago_in_words current_user.last_sign_in_at %>
+              <% end %>
+            </div>
           <% end %>
         </li>
         <% if policy(Note).index? %>
@@ -107,12 +114,9 @@
         <% end %>
 
         <li>
-          <%= link_to destroy_user_session_path, 'data-turbo-method': :delete, title: "Fermer la session de #{current_user.email}", class: 'py-0 px-1' do %>
-            <span class="text-base-content flex items-center gap-1">
-              <span class="material-symbols-outlined text-xl mb-0.5">
-                logout
-              </span>
-              Déconnexion
+          <%= link_to destroy_user_session_path, 'data-turbo-method': :delete, title: "Fermer la session de #{current_user.email}", class: 'flex items-center gap-1 py-0' do %>
+            <span class="material-symbols-outlined text-xl mb-0.5">
+              logout
             </span>
           <% end %> 
         </li>
