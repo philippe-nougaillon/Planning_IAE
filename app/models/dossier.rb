@@ -10,6 +10,8 @@ class Dossier < ApplicationRecord
   belongs_to :intervenant
 
   has_many :documents, dependent: :destroy
+  belongs_to :mail_log, optional: true
+
   has_associated_audits
 
   accepts_nested_attributes_for :documents, 
@@ -169,7 +171,8 @@ class Dossier < ApplicationRecord
 
     # Informe l'intervenant
     mailer_response = DossierMailer.with(dossier: self).dossier_email.deliver_now
-    MailLog.create(user_id: id, message_id: mailer_response.message_id, to: self.intervenant.email, subject: "Dossier de recrutement CEV (Envoyé)")
+    self.mail_log_id = MailLog.create(user_id: id, message_id: mailer_response.message_id, to: self.intervenant.email, subject: "Dossier de recrutement CEV (Envoyé)").id
+    self.save
   end
 
   def valider_dossier(id)
@@ -183,7 +186,8 @@ class Dossier < ApplicationRecord
 
     # Informe l'intervenant
     mailer_response = DossierMailer.with(dossier: self).valider_email.deliver_now
-    MailLog.create(user_id: id, message_id: mailer_response.message_id, to: self.intervenant.email, subject: "Dossier de recrutement CEV (Validé)")
+    self.mail_log_id = MailLog.create(user_id: id, message_id: mailer_response.message_id, to: self.intervenant.email, subject: "Dossier de recrutement CEV (Validé)").id
+    self.save
   end
 
   def relancer_dossier(id)
@@ -192,7 +196,8 @@ class Dossier < ApplicationRecord
 
     # Informe l'intervenant
     mailer_response = DossierMailer.with(dossier: self).dossier_email.deliver_now
-    MailLog.create(user_id: id, message_id: mailer_response.message_id, to: self.intervenant.email, subject: "Dossier de recrutement CEV (Relancé)")
+    self.mail_log_id = MailLog.create(user_id: id, message_id: mailer_response.message_id, to: self.intervenant.email, subject: "Dossier de recrutement CEV (Relancé)").id
+    self.save
   end
 
   def rejeter_dossier(id)
@@ -208,7 +213,8 @@ class Dossier < ApplicationRecord
 
       # Informe l'intervenant
       mailer_response = DossierMailer.with(dossier: self).rejeter_email.deliver_now
-      MailLog.create(user_id: id, message_id: mailer_response.message_id, to: self.intervenant.email, subject: "Dossier de recrutement CEV (Rejeté)")
+      self.mail_log_id = MailLog.create(user_id: id, message_id: mailer_response.message_id, to: self.intervenant.email, subject: "Dossier de recrutement CEV (Rejeté)").id
+      self.save
 
       return true
     else

@@ -57,7 +57,7 @@
 <%= form_tag action_dossiers_path, name: 'action' do %>
   <div data-controller="checkbox-select-all action">
     <div class="overflow-x-auto">
-      <table class="table">
+      <table class="table mb-4">
         <thead class="bg-slate-100 border">
           <tr>
             <% if policy(Dossier).action? %>
@@ -70,6 +70,8 @@
             <th><%= sort_link 'dossiers.période', 'Période' %></th>
             <th><%= sort_link 'intervenants.nom', 'Intervenant' %></th>
             <th><%= sort_link 'dossiers.workflow_state', 'État' %></th>
+            <th>Statut Mail</th>
+            <th>État Mail</th>
             <th><%= sort_link 'dossiers.created_at', 'Création' %></th>
             <th><%= sort_link 'dossiers.updated_at', 'MÀJ' %></th>
             <th colspan="3"></th>
@@ -79,10 +81,6 @@
         <tbody>
           <%= render @dossiers %>
         </tbody>
-
-        <tfoot>
-          <tr><th colspan=8></th></tr>
-        </tfoot>
       </table>
     </div>
 
