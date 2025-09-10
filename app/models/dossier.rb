@@ -170,7 +170,7 @@ class Dossier < ApplicationRecord
     self.envoyer!
 
     # Informe l'intervenant
-    DossierJob.perform_later(self.id, id, :dossier_email)
+    DossierMailerJob.perform_later(self.id, id, :dossier_email)
   end
 
   def valider_dossier(id)
