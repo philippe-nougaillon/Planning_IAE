@@ -1,8 +1,6 @@
 <nav class="navbar mb-4 pr-0 sticky top-0 z-50 shadow <%= ENV["STAGING_COLOR_MODE"].present? ? ENV["STAGING_COLOR_MODE"] : 'bg-base-100' %>">
   <div class="navbar-start">
-    <%= link_to root_path do %>
-      <%= image_tag("Aikku_plann.png", width: 100, alt: 'Aikku plann') %>
-    <% end %>
+    <span class="font-black mr-12">AIKKU Plann (démo)</span>
   </div>
   <div class="navbar-end">
     <div class="dropdown dropdown-end">

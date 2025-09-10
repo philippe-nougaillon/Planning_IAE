@@ -1,6 +1,7 @@
 <nav class="navbar sticky top-0 z-50 shadow py-0 <%= ENV["STAGING_COLOR_MODE"].present? ? ENV["STAGING_COLOR_MODE"] : 'bg-base-100' %>">
   <div class="flex-1">
-    <ul class="menu menu-horizontal px-1 ml-48">
+    <span class="font-black mr-12">AIKKU Plann (démo)</span>
+    <ul class="menu menu-horizontal px-1">
       <% if user_signed_in? %>
         <% if current_user.étudiant? %>
           <%= navbar_nav_item('ma journée', 'event', mes_sessions_etudiant_path, nil, 'mes_sessions_etudiant') %>
