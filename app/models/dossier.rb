@@ -170,7 +170,7 @@ class Dossier < ApplicationRecord
     self.envoyer!
 
     # Informe l'intervenant
-    DossierMailerJob.perform_later(self.id, id, :dossier_email)
+    DossierMailerJob.perform_later(self.id, id, :dossier_email, "Envoyé")
   end
 
   def valider_dossier(id)
@@ -183,7 +183,7 @@ class Dossier < ApplicationRecord
     self.valider!
 
     # Informe l'intervenant
-    DossierMailerJob.perform_later(self.id, id, :valider_email)
+    DossierMailerJob.perform_later(self.id, id, :valider_email, "Validé")
   end
 
   def relancer_dossier(id)
@@ -191,7 +191,7 @@ class Dossier < ApplicationRecord
     self.relancer!
 
     # Informe l'intervenant
-    DossierMailerJob.perform_later(self.id, id, :dossier_email)
+    DossierMailerJob.perform_later(self.id, id, :dossier_email, "Relancé")
   end
 
   def rejeter_dossier(id)
@@ -206,7 +206,7 @@ class Dossier < ApplicationRecord
       self.rejeter!
 
       # Informe l'intervenant
-      DossierMailerJob.perform_later(self.id, id, :rejeter_email)
+      DossierMailerJob.perform_later(self.id, id, :rejeter_email, "Rejeté")
 
       return true
     else
