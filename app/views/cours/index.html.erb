@@ -27,19 +27,19 @@
 <div class="bs-container p-4 shadow mb-4">
   <%= form_tag cours_path, method: :get do %>
     <div class="flex flex-wrap">
-      <div class="sm:w-5/12 pr-2">
+      <div class="sm:w-5/12 pr-2 flex flex-col justify-between">
         <%= label_tag :formation %>   
         <%= select_tag :formation, grouped_options_for_select(Formation.for_select, params[:formation]), class: 'slim-select',
                         include_blank:true, onchange: 'this.form.submit()' %>
       </div>
 
-      <div class="sm:w-2/12 px-2">
+      <div class="sm:w-2/12 px-2 flex flex-col justify-between">
         <%= label_tag :ue, "U.E." %>   
         <%= select_tag :ue, options_for_select((0..20), params[:ue]), class:'slim-select',
                         include_blank:true, onchange: 'this.form.submit()' %>
       </div>
       <% if user_signed_in? %>
-        <div class="sm:w-5/12 pl-2">
+        <div class="sm:w-5/12 pl-2 flex flex-col justify-between">
           <%= label_tag :intervenant %>
           <div class="join w-full">
             <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
@@ -81,7 +81,7 @@
         </div >
       </div>
 
-      <div class="sm:w-2/12">
+      <div class="sm:w-2/12 px-2">
         <%= label_tag :start_date, "A partir du" %>    
         <%= text_field_tag :start_date, params[:start_date], type: 'date', onchange: 'this.form.submit()', class: "input input-bordered input-sm w-full" %>
       </div>
@@ -122,18 +122,17 @@
       <div class="sm:w-2/12 pl-2">
         <% if params[:view] == 'list' %>
           <%= label_tag :paginate, "Afficher" %>
-          <br>
-          <div class="join" title="<%= "La pagination est active lorsqu'il n'y a pas de formation ou d'intervenant sélectionné" if disabled_paginate?(params) %>">
-            <label class="btn btn-outline btn-xs join-item font-normal hover:!text-white <%= 'btn-active !text-primary' if params[:paginate] == 'pages' %>">
-              <%= radio_button_tag :paginate, "pages", (params[:paginate]=='pages'), onchange:'this.form.submit()', class: 'hidden' %>
-              Pages
+          <div class="flex gap-2 mt-1">
+            <label class="flex items-center gap-1 cursor-pointer">
+              <%= radio_button_tag :paginate, "pages", (params[:paginate]=='pages'), onchange:'this.form.submit()', class: 'radio radio-xs' %>
+              <span class="label-text">Pages</span>
             </label>
-            <label class="btn btn-outline btn-xs join-item font-normal hover:!text-white <%= 'btn-active !text-white' if params[:paginate] == 'all' %> <%= 'btn-disabled' if disabled_paginate?(params) %>">
-              <%= radio_button_tag :paginate, "all", (params[:paginate]=='all'), onchange:'this.form.submit()', disabled: disabled_paginate?(params), class: 'hidden' %>
-              Tout
+            <label class="flex items-center gap-1 cursor-pointer" title="<%= "La pagination est active lorsqu'il n'y a pas de formation ou d'intervenant sélectionné" if disabled_paginate?(params) %>">
+              <%= radio_button_tag :paginate, "all", (params[:paginate]=='all'), onchange:'this.form.submit()', disabled: disabled_paginate?(params), class: 'radio radio-xs' %>
+              <span class="label-text">Tout</span>
             </label>
           </div>
-  
+
         <% end %>
       </div>
     </div>
