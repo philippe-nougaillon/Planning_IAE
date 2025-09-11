@@ -1,6 +1,6 @@
 <nav class="navbar sticky top-0 z-50 shadow py-0 <%= ENV["STAGING_COLOR_MODE"].present? ? ENV["STAGING_COLOR_MODE"] : 'bg-base-100' %>">
   <div class="flex-1">
-    <span class="font-black mr-12">AIKKU Plann (démo)</span>
+    <span class="font-black mr-12">AIKKU Plann /<br>démonstration</span>
     <ul class="menu menu-horizontal px-1">
       <% if user_signed_in? %>
         <% if current_user.étudiant? %>
