@@ -132,8 +132,8 @@ namespace :cours do
     # Cour.all.order(:debut).first(2).delete_all
     7.times.each do |i|
       datetime = (DateTime.civil_from_format :local, Date.today.year, Date.today.month, Date.today.day) + i.day
-      Cour.create(debut: datetime + 9.hours, duree: 0.4e1, etat: "confirmé", formation: Formation.first, intervenant: Intervenant.first, salle: Salle.first, code_ue: 1)
-      Cour.create(debut: datetime + 14.hours, duree: 0.4e1, etat: "confirmé", formation: Formation.last, intervenant: Intervenant.last, salle: Salle.offset(1).first, code_ue: 2)
+      Cour.create(debut: datetime + 9.hours, duree: 0.4e1, etat: "confirmé", formation: Formation.first, intervenant: Intervenant.first, salle: Salle.first, code_ue: 1, no_send_to_edusign: false)
+      Cour.create(debut: datetime + 14.hours, duree: 0.4e1, etat: "confirmé", formation: Formation.last, intervenant: Intervenant.last, salle: Salle.offset(1).first, code_ue: 2, no_send_to_edusign: false)
     end
   end
 
