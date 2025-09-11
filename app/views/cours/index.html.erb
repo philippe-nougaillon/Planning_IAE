@@ -70,7 +70,7 @@
         <%= label_tag :filter, "Cours" %>
         <div class="flex gap-2 mt-1">
           <label class="flex items-center gap-1 cursor-pointer mr-5">
-            <%= radio_button_tag :filter, "all", (params[:filter]=='all'), onchange:'this.form.submit()', disabled: params[:paginate] == 'all', class: 'radio radio-xs' %>
+            <%= radio_button_tag :filter, "all", (params[:filter]=='all'), onchange:'this.form.submit()', class: 'radio radio-xs' %>
             <span class="label-text">Tous</span>
           </label> 
         
@@ -122,14 +122,15 @@
       <div class="sm:w-2/12 pl-2">
         <% if params[:view] == 'list' %>
           <%= label_tag :paginate, "Afficher" %>
-          <div class="flex gap-2 mt-1">
-            <label class="flex items-center gap-1 cursor-pointer">
-              <%= radio_button_tag :paginate, "pages", (params[:paginate]=='pages'), onchange:'this.form.submit()', class: 'radio radio-xs' %>
-              <span class="label-text">Pages</span>
+          <br>
+          <div class="join" title="<%= "La pagination est active lorsqu'il n'y a pas de formation ou d'intervenant sélectionné" if disabled_paginate?(params) %>">
+            <label class="btn btn-outline btn-xs join-item font-normal hover:!text-white <%= 'btn-active !text-primary' if params[:paginate] == 'pages' %>">
+              <%= radio_button_tag :paginate, "pages", (params[:paginate]=='pages'), onchange:'this.form.submit()', class: 'hidden' %>
+              Pages
             </label>
-            <label class="flex items-center gap-1 cursor-pointer">
-              <%= radio_button_tag :paginate, "all", (params[:paginate]=='all'), onchange:'this.form.submit()', disabled: params[:filter] == 'all', class: 'radio radio-xs' %>
-              <span class="label-text">Tout</span>
+            <label class="btn btn-outline btn-xs join-item font-normal hover:!text-white <%= 'btn-active !text-white' if params[:paginate] == 'all' %> <%= 'btn-disabled' if disabled_paginate?(params) %>">
+              <%= radio_button_tag :paginate, "all", (params[:paginate]=='all'), onchange:'this.form.submit()', disabled: disabled_paginate?(params), class: 'hidden' %>
+              Tout
             </label>
           </div>
   
