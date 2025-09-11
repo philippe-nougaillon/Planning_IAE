@@ -266,7 +266,7 @@ fr:
       sql: "%Y-%m-%d %H:%M:%S"
     pm: pm
   will_paginate:
-    next_label: "→"
+    next_label: "❯"
     next_aria_label: "Prochaine page"
     page_entries_info:
       multi_page: "%{model} %{from} - %{to} sur %{count} au total"
@@ -278,7 +278,7 @@ fr:
         one: "%{count} %{model} affiché(e)"
         other: "%{count} %{model} affiché(e)s"
     page_gap: "&hellip;"
-    previous_label: "←"
+    previous_label: "❮"
     previous_aria_label: "Page précédente"
   devise:
     sessions:

@@ -1,4 +1,4 @@
-<div class="border p-4" style="border-left: .3rem solid <%= cours.try(:formation).try(:positive_color) %>">
+<div class="border-b p-4 mt-2" style="border-left: .4rem solid <%= cours.try(:formation).try(:positive_color) %>">
   <div class="flex flex-wrap">
     
     <div class="relative flex-grow max-w-full flex-1">
@@ -17,10 +17,9 @@
     </div>
   </div>
 
-  <b>
+  <p class="font-black">
     <%= cours.try(:formation).try(:nom) %>
-  </b>
-  <br>
+  </p>
 
   <% if user_signed_in? %>
     <%= cours.try(:intervenant).try(:nom_prenom) %>
@@ -39,12 +38,12 @@
     <% else %>
       <i><%= cours.nom_ou_ue %></i>
     <% end %>
-  <% else %>
-    <i> <%= "UE ##{cours.code_ue}" if cours.code_ue %></i>
+  <% elsif cours.code_ue %>
+    <i><%= "UE ##{cours.code_ue}"%></i>
+    <br>
   <% end %>
 
   <% if cours.debut.to_date == Date.today %>
-    <br>
-    <progress data-debut="<%= cours.debut.to_i %>" data-fin="<%= cours.fin.to_i %>" class="progress progress-primary opacity-50" value="<%= cours.progress_bar_pct3 %>" max="100"></progress>
+    <progress data-debut="<%= cours.debut.to_i %>" data-fin="<%= cours.fin.to_i %>" class="progress progress-secondary !h-2" value="<%= cours.progress_bar_pct3 %>" max="100"></progress>
   <% end %>
 </div>

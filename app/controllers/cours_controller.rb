@@ -2,6 +2,7 @@
 
 class CoursController < ApplicationController
   include ApplicationHelper
+  include CoursHelper
 
   skip_before_action :authenticate_user!, only: %i[ index index_slide mes_sessions_intervenant signature_intervenant signature_intervenant_do ]
   before_action :set_cour, only: [:show, :edit, :update, :destroy, :delete_attachment]
@@ -23,6 +24,7 @@ class CoursController < ApplicationController
     session[:view] ||= 'list'
     session[:filter] ||= 'upcoming'
     session[:paginate] ||= 'pages'
+    params[:paginate] = 'pages' if disabled_paginate?(params)
 
     if current_user && params.keys.count == 2
       if (current_user.enseignant? || (current_user.intervenant? && !current_user.partenaire_qse?))
@@ -48,7 +50,7 @@ class CoursController < ApplicationController
       session[:ue] = params[:ue] = nil
       session[:week_number] = params[:week_number] = nil
       session[:start_date] = params[:start_date] = Date.today.to_s
-      session[:start_date_mobile] = params[:start_date_mobile] = DateTime.beginning_of_day.to_s
+      session[:start_date_mobile] = params[:start_date_mobile] = DateTime.now.at_beginning_of_day.to_s
       session[:etat] = params[:etat] = nil
       session[:view] = params[:view] = 'list'
       session[:filter] = params[:filter] = 'upcoming'
@@ -169,7 +171,7 @@ class CoursController < ApplicationController
     @all_cours = @cours
     @cours = @cours.includes(:formation, :intervenant, :salle)
 
-    if (params[:view] == 'list' and ((params[:paginate] == 'pages' and request.variant.include?(:desktop)) || params[:filter] == 'all' ))
+    if (params[:view] == 'list' and (params[:paginate] == 'pages' and request.variant.include?(:desktop) ))
       @cours = @cours.paginate(page: clean_page(params[:page]))
     end
 
