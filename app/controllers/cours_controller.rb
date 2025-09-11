@@ -71,8 +71,24 @@ class CoursController < ApplicationController
 
     # Si N° de semaine, afficher le premier jour de la semaine choisie, sinon date du jour
     unless params[:week_number].blank?
-      year, week = params[:week_number].split('-')
-      @date = Date.commercial(year.to_i, week.gsub('W','').to_i, 1)
+      raw = params[:week_number].to_s.strip
+      begin
+        if raw.match?(/^\d{4}-W\d{1,2}$/)
+          # Format "2025-W38"
+          year, week = raw.split('-')
+        elsif raw.match?(/^\d{1,2}$/)
+          # Format "38"
+          year = Date.today.year
+          week = raw
+        else
+          raise ArgumentError, "Format de semaine invalide"
+        end
+
+        week_number = week.gsub('W', '').to_i
+        @date = Date.commercial(year.to_i, week_number, 1)
+      rescue ArgumentError => e
+        @date = Date.today.beginning_of_week
+      end
     else
       if params[:start_date].present?
         begin
