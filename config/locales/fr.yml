@@ -440,6 +440,8 @@ fr:
       title: Initialisation Edusign
     nouvelle_saison_rh:
       title: Nouvelle saison RH
+    nouvelle_saison_rh_do:
+      title: Résultat nouvelle saison RH
   agents:
     index:
       title: Agents
