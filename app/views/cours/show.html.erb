@@ -86,7 +86,7 @@
             <%= @cour.salle.nom %>
           </span>             
 
-          <% if @cour.formation.try(:nbr_etudiants) && (@cour.formation.try(:nbr_etudiants) > @cour.salle.places) %>
+          <% if @cour.manque_de_places? %>
             <i title="Manque <%= @cour.formation.nbr_etudiants - @cour.salle.places %> place.s">
               <%= fa_icon 'exclamation-circle' %>
             </i>

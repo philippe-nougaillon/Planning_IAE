@@ -150,7 +150,7 @@ class Cour < ApplicationRecord
   end
 
   def manque_de_places? 
-    (self.salle.places > 0 && Formation.find(self.formation_id).nbr_etudiants > self.salle.places)
+    self.formation.nbr_etudiants > self.salle.places && self.salle.bloc != 'Z'
   end
 
   def nom_ou_ue
