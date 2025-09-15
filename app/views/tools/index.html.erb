@@ -147,6 +147,13 @@
 				<%= link_to "Créer accès intervenant", tools_acces_intervenants_path, class: 'text-primary hover:underline' %>
 			</li>
 
+			<% if current_user.rh? || current_user.admin? %>
+				<li class="mb-6">
+					<%= fa_icon 'folder' %>
+					<%= link_to "Nouvelle saison RH", tools_nouvelle_saison_rh_path, class: 'text-primary hover:underline' %>
+				</li>
+			<% end %>
+
 			<!--
 			<li class="mb-6">
 				<%# fa_icon 'file-signature' %>

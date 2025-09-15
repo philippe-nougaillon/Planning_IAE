@@ -1,6 +1,5 @@
 class DossierMailer < ApplicationMailer
-    default from: 'IAE-Paris <planning-iae@philnoug.com>', 
-            cc:   'cev.iae@univ-paris1.fr'
+    default from: 'IAE-Paris <planning-iae@philnoug.com>'
 
     def dossier_email
         @dossier = params[:dossier]
@@ -12,8 +11,6 @@ class DossierMailer < ApplicationMailer
 
         mail(to: @dossier.intervenant.email, 
              subject: "[Enseignement IAE-Paris #{ @dossier.période }] Dossier de recrutement")
-
-        @dossier.update!(audit_comment: "Notification 'Nouveau dossier' envoyée par email.")
     end
 
     def valider_email
@@ -21,8 +18,6 @@ class DossierMailer < ApplicationMailer
 
         mail(to: @dossier.intervenant.email, 
              subject: "[Enseignement IAE-Paris #{ @dossier.période }] Dossier de recrutement")
-    
-        @dossier.update!(audit_comment: "Notification 'Validation' envoyée par email.")
     end
 
     def rejeter_email
@@ -30,8 +25,6 @@ class DossierMailer < ApplicationMailer
 
         mail(to: @dossier.intervenant.email, 
              subject: "[Enseignement IAE-Paris #{ @dossier.période }] Dossier de recrutement")
-
-        @dossier.update!(audit_comment: "Notification 'Rejet' envoyée par email.")
     end
 
 end
