@@ -158,7 +158,7 @@ class ToolsController < ApplicationController
       log.update(etat: _etat, nbr_lignes: @importes + @errors, lignes_importees: @importes)
       log.update(message: (params[:save] == 'true' ? "Importation" : "Simulation") )
 
-      # log.update(message: log.message + " | Formation: #{ formation ? formation.try(:nom) : 'INCONNUE' }" )
+      # log.update(message: log.message + " | Formation: #{ formation ? formation.nom : 'INCONNUE' }" )
 
       if @errors > 0
         log.update(message: log.message + " | #{@errors} lignes rejetées !")
@@ -623,7 +623,7 @@ class ToolsController < ApplicationController
 	  	end
 	  	puts
 		  puts "=" * 120
-	  	puts "Création termninée | #{@cours_créés} cours #{'créé'.pluralize(@cours_créés)} | #{@erreurs} #{'erreur'.pluralize(@erreurs)}"
+	  	puts "Création terminée | #{@cours_créés} cours #{'créé'.pluralize(@cours_créés)} | #{@erreurs} #{'erreur'.pluralize(@erreurs)}"
 		  puts "=" * 120
 	  	puts
 	  	puts "--------!-!-! Les modifications n'ont pas été enregistrées !-!-!----------" unless params[:save] == 'true'
@@ -1513,6 +1513,36 @@ class ToolsController < ApplicationController
 
   #   redirect_to tools_initialisation_edusign_path, notice: "Lancement de l'initialisation effectuée."
   # end
+
+  def nouvelle_saison_rh
+  end
+
+  def nouvelle_saison_rh_do
+    @dossier_créées = 0
+    @erreurs = 0
+
+    @stream = capture_stdout do
+      Intervenant.sans_dossier.each do |intervenant|
+        new_dossier = Dossier.new(intervenant_id: intervenant.id, période: AppConstants::PÉRIODE)
+        msg = "#{intervenant.nom_prenom}"
+        if new_dossier.valid?
+          puts "[OK] #{msg}"
+          new_dossier.save if params[:save] == 'true'
+          @dossier_créées += 1
+        else
+          puts "[KO!] #{msg} => #{new_dossier.errors.full_messages.join(', ')}"
+          @erreurs += 1
+        end
+      end
+
+      puts
+		  puts "=" * 114
+	  	puts "Création terminée | #{@dossier_créées} dossiers #{'créé'.pluralize(@dossier_créées)} | #{@erreurs} #{'erreur'.pluralize(@erreurs)}"
+		  puts "=" * 114
+	  	puts
+	  	puts "--------!-!-! Les modifications n'ont pas été enregistrées !-!-!----------" unless params[:save] == 'true'
+    end
+  end
 
   private
 

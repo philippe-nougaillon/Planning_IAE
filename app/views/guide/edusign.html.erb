@@ -1,7 +1,9 @@
 <div class="bs-container mt-6 mb-12 pl-0 border-b pb-4">
-  <h1 class="text-4xl">
-    <%= fa_icon 'info-circle' %>
-      Guide Edusign/Planning
+  <h1 class="text-3xl flex items-center gap-3">
+    <span class="material-symbols-outlined text-3xl">
+      info
+    </span>
+    Guide Edusign/Planning
   </h1>
 </div>
 
@@ -10,12 +12,17 @@
 </div>
 
 <ul class="list-disc">
-  <li>L'outil Edusign est une extension du Planning pour gérer l'assiduité des étudiants</li>
-  <li>Le Planning permet d'envoyer cours, formations, étudiants et intervenants vers Edusign, afin qu'il ai des données nécessaires pour la gestion de l'assiduité (Création de feuilles de présences)
+  <li>L'outil Edusign est une extension du Planning IAE pour gérer l'assiduité des étudiants</li>
+  <li>Le Planning IAE doit envoyer cours, formations, étudiants et intervenants vers Edusign, afin qu'il y ait les données nécessaires pour la gestion de l'assiduité (Création de feuilles de présences).
 </ul>
 
 <div class="border-b mt-12 mb-2 pb-4">
-  <h3 class="text-3xl"><%= fa_icon 'toggle-on' %> Activer la synchronisation automatique vers Edusign</h3>
+  <h3 class="flex items-center gap-1 text-3xl">
+    <span class="material-symbols-outlined">
+      autorenew
+    </span>
+    Synchronisation vers Edusign
+  </h3>
 </div>
 
 <ul class="list-disc">
@@ -26,6 +33,8 @@
   </ul>
 </ul>
 
+<% if false %>
+<!--
 <div class="border-b mt-12 mb-2 pb-4">
   <h3 class="text-3xl"><%= fa_icon 'exchange-alt' %> Comment envoyer manuellement les données vers Edusign</h3>
 </div>
@@ -59,8 +68,16 @@
   <li>Après une synchronisation, le Planning réceptionne les justificatifs d'absences venant d'Edusign</li>
 </ul>
 
+-->
+<% end %>
+
 <div class="border-b mt-12 mb-2 pb-4">
-  <h3 class="text-3xl"><%= fa_icon 'search' %> Journalisation des synchronisations</h3>
+  <h3 class="flex items-center gap-1 text-3xl">
+    <span class="material-symbols-outlined">
+      search_activity
+    </span>
+    Journalisation des synchronisations
+  </h3>
 </div>
 
 <div class="flex flex-wrap mb-8">
@@ -98,6 +115,7 @@
 </div>
 
 <ul class="list-disc">
+  <li>La synchronisation se fait toutes les heures</li>
   <li>Les cours "Examen" et ceux qui sont déjà passés ne sont pas compris dans la synchronisation</li>
   <li>Les cours synchronisés sont toujours ceux qui viennent après la date actuelle (cours à venir)</li>
   <li>Les cours qui ne sont plus dans une formation synchronisée, seront supprimés dans Edusign</li>

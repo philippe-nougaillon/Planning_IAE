@@ -263,9 +263,10 @@ fr:
       heures_min: "%H:%M"
       heures_log: "%Hh%M"
       perso: "%d/%m/%Y %Hh%M"
+      sql: "%Y-%m-%d %H:%M:%S"
     pm: pm
   will_paginate:
-    next_label: "→"
+    next_label: "❯"
     next_aria_label: "Prochaine page"
     page_entries_info:
       multi_page: "%{model} %{from} - %{to} sur %{count} au total"
@@ -277,7 +278,7 @@ fr:
         one: "%{count} %{model} affiché(e)"
         other: "%{count} %{model} affiché(e)s"
     page_gap: "&hellip;"
-    previous_label: "←"
+    previous_label: "❮"
     previous_aria_label: "Page précédente"
   devise:
     sessions:
@@ -438,6 +439,10 @@ fr:
       title: Initialisation Edusign
     initialisation_edusign_do:
       title: Initialisation Edusign
+    nouvelle_saison_rh:
+      title: Nouvelle saison RH
+    nouvelle_saison_rh_do:
+      title: Résultat nouvelle saison RH
   agents:
     index:
       title: Agents
@@ -528,6 +533,8 @@ fr:
       title: Nouveau dossier
     edit:
       title: Modification Dossier
+    action:
+      title: Action groupée dossiers
   notes:
     index:
       title: "Mes mémos"

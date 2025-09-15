@@ -77,10 +77,14 @@
 
       <div class="flex flex-wrap">
         <div class="sm:w-1/5"></div>
-        <div class="sm:w-1/2">
+        <div class="sm:w-1/2 flex items-center gap-1">
           <%= f.check_box :hors_service_statutaire %>
           <%= f.label :hors_service_statutaire, "Cours non rémunéré (Hors Service Statutaire)" %>
-          <span class="hover:cursor-pointer" title="Cochez pour que les heures de cours ne soient pas imputées sur l'état de service de l'intervenant"><%= fa_icon 'info-circle' %></span>
+          <span class="hover:cursor-pointer" title="Cochez pour que les heures de cours ne soient pas imputées sur l'état de service de l'intervenant">
+            <span class="material-symbols-outlined text-lg">
+              info
+            </span>
+          </span>
         </div>
       </div>
 

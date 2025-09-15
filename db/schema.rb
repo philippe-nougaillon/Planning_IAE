@@ -10,8 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_08_26_123158) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_10_074622) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
 
   create_table "action_text_rich_texts", force: :cascade do |t|
@@ -181,7 +182,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_26_123158) do
     t.datetime "updated_at", null: false
     t.string "slug"
     t.string "mémo"
+    t.bigint "mail_log_id"
     t.index ["intervenant_id"], name: "index_dossiers_on_intervenant_id"
+    t.index ["mail_log_id"], name: "index_dossiers_on_mail_log_id"
     t.index ["slug"], name: "index_dossiers_on_slug"
   end
 
@@ -692,6 +695,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_08_26_123158) do
   add_foreign_key "attendances", "signature_emails"
   add_foreign_key "documents", "dossiers"
   add_foreign_key "dossier_etudiants", "etudiants"
+  add_foreign_key "dossiers", "mail_logs"
   add_foreign_key "evaluations", "etudiants"
   add_foreign_key "invits", "cours"
   add_foreign_key "invits", "intervenants"

@@ -23,12 +23,12 @@
     height: 1rem;"></progress>
   </td>
   
-  <td style="padding: .75rem 1rem; border-left: 1rem solid <%= le_cours.formation.try(:positive_color) %>">
+  <td style="padding: .75rem 1rem; border-left: 1rem solid <%= le_cours.formation.positive_color %>">
     <div>
       <h3 style="font-size: 1.875rem; line-height: 2.25rem">
         
         <span style="margin-left: 15px;">
-          <b><%= le_cours.formation.try(:nom_promo) %></b>
+          <b><%= le_cours.formation.nom_promo %></b>
         </span>
 
         <br><br>
