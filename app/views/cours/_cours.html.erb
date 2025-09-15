@@ -19,11 +19,11 @@
             <progress data-debut="<%= cours.debut.to_i %>" data-fin="<%= cours.fin.to_i %>" class="progress progress-primary opacity-50 mt-1" value="<%= cours.progress_bar_pct3 %>" max="100"></progress>
         <% end %>
     </td>
-    <td style="border-left: .3rem solid <%= cours.formation.try(:positive_color) %>">
+    <td style="border-left: .3rem solid <%= cours.formation.positive_color %>">
         <% if policy(Cour).action? %>
-            <%= link_to cours.formation.try(:nom_nbr_etudiants), cours.formation, class: 'text-primary hover:underline' %>
+            <%= link_to cours.formation.nom_nbr_etudiants, cours.formation, class: 'text-primary hover:underline' %>
         <% else %>
-            <%= link_to cours.formation.try(:nom), cours.formation, class: 'text-primary hover:underline' %>
+            <%= link_to cours.formation.nom, cours.formation, class: 'text-primary hover:underline' %>
         <% end %>
     </td>
     <td>

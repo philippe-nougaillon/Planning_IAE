@@ -158,7 +158,7 @@ class ToolsController < ApplicationController
       log.update(etat: _etat, nbr_lignes: @importes + @errors, lignes_importees: @importes)
       log.update(message: (params[:save] == 'true' ? "Importation" : "Simulation") )
 
-      # log.update(message: log.message + " | Formation: #{ formation ? formation.try(:nom) : 'INCONNUE' }" )
+      # log.update(message: log.message + " | Formation: #{ formation ? formation.nom : 'INCONNUE' }" )
 
       if @errors > 0
         log.update(message: log.message + " | #{@errors} lignes rejetées !")

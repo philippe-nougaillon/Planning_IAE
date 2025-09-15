@@ -61,7 +61,7 @@
         <small class="text-secondary">Formation</small><br>
         <% if @etudiant.formation_id %>
             <% formation = Formation.find(@etudiant.formation_id) %>
-            <span class="pl-2" style="border-left: .3rem solid <%= @etudiant.formation.try(:positive_color) %>">
+            <span class="pl-2" style="border-left: .3rem solid <%= @etudiant.formation.positive_color %>">
               <%= link_to formation.nom, formation, class: 'text-primary hover:underline' %>
             </span>
         <% end %>

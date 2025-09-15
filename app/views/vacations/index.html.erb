@@ -86,8 +86,8 @@
           <td><%= time_ago_in_words vacation.updated_at %></td>
           <td><%= link_to vacation.intervenant.nom_prenom, intervenant_path(vacation.intervenant.slug || vacation.intervenant.id), class: 'text-primary hover:underline font-bold' %></td>
           <td><%= vacation.intervenant.status %></td>
-          <td style="border-left: .3rem solid <%= vacation.formation.try(:positive_color) %>">
-            <%= vacation.formation.try(:abrg) %>
+          <td style="border-left: .3rem solid <%= vacation.formation.positive_color %>">
+            <%= vacation.formation.abrg %>
           </td>
           <td><%= l(vacation.date) %></td>
           <td>

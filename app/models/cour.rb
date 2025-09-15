@@ -170,7 +170,7 @@ class Cour < ApplicationRecord
   end
 
   def nom_et_étudiants
-    "#{self.nom} (#{self.formation.try(:nbr_etudiants)})" 
+    "#{self.nom} (#{self.formation.nbr_etudiants})" 
   end
 
   def url?
@@ -215,7 +215,7 @@ class Cour < ApplicationRecord
   # 
 
   def formation_json_v2
-    self.formation.try(:nom) || ""
+    self.formation.nom || ""
   end
 
   def salle_json_v2
@@ -227,7 +227,7 @@ class Cour < ApplicationRecord
   end
 
   def formation_color_json_v2
-      self.formation.try(:color)
+      self.formation.color
   end
 
   # render json methods V3
@@ -316,7 +316,7 @@ class Cour < ApplicationRecord
 
   # PGSearch Attributs
   def formation_nom
-    self.formation.try(:nom)
+    self.formation.nom
   end
 
   def intervenant_nom
