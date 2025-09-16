@@ -103,6 +103,6 @@ class User < ApplicationRecord
   private
 
     def timeout_in
-      self.étudiant? ? 4.hours : 24.hours
+      self.étudiant? ? 30.days : 24.hours
     end
 end
