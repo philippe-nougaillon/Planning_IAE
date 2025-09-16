@@ -10,10 +10,10 @@
         </div>
         <ul tabindex="0" class="menu menu-sm dropdown-content z-[1] p-0 shadow bg-slate-100 rounded-box w-screen">
           <% if current_user.étudiant? %>
-            <%= navbar_nav_item('ma journée', 'event', mes_sessions_etudiant_path, nil, 'mes_sessions_etudiant', 'py-2') %>
+            <%= navbar_nav_item('ma journée', 'today', mes_sessions_etudiant_path, nil, 'mes_sessions_etudiant', 'py-2') %>
             <%= navbar_nav_item('cours', 'calendar_month', cours_path, 'Planning', 'index', 'py-2') %>
           <% elsif current_user.intervenant? || current_user.enseignant? %>
-            <%= navbar_nav_item('ma journée', 'event', mes_sessions_intervenant_path, nil, 'mes_sessions_intervenant', 'py-2') %>
+            <%= navbar_nav_item('ma journée', 'today', mes_sessions_intervenant_path, nil, 'mes_sessions_intervenant', 'py-2') %>
             <%= navbar_nav_item('cours', 'calendar_month', cours_path, 'Planning', 'index', 'py-2') %>
           <% else %>
             <%= navbar_nav_item('cours', 'calendar_month', cours_path, 'Planning', nil, 'py-2') %>

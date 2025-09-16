@@ -147,6 +147,13 @@
 				<%= link_to "Créer accès intervenant", tools_acces_intervenants_path, class: 'text-primary hover:underline' %>
 			</li>
 
+			<% if current_user.rh? || current_user.admin? %>
+				<li class="mb-6">
+					<%= fa_icon 'folder' %>
+					<%= link_to "Nouvelle saison RH", tools_nouvelle_saison_rh_path, class: 'text-primary hover:underline' %>
+				</li>
+			<% end %>
+
 			<!--
 			<li class="mb-6">
 				<%# fa_icon 'file-signature' %>
@@ -206,8 +213,12 @@
 				</li>
 
 				<li class="mb-6">
-					<%= fa_icon 'search' %>
-					<%= link_to "Audit des modifications", tools_audits_path, class: 'text-primary hover:underline' %>
+					<div class="flex items-center gap-1">
+						<span class="material-symbols-outlined text-xl">
+							search_activity
+						</span>
+						<%= link_to "Audit des modifications", tools_audits_path, class: 'text-primary hover:underline' %>
+					</div>
 				</li>
 
 				<li class="mb-6">
@@ -231,8 +242,12 @@
 
 				<% if policy(:tool).audit_cours? %>
 					<li class="mb-6">
-						<%= fa_icon 'search' %>
-						<%= link_to 'Cours à booker', tools_audit_cours_path, class: 'text-primary hover:underline' %>
+						<div class="flex items-center gap-1">
+							<span class="material-symbols-outlined text-xl">
+								search_activity
+							</span>
+							<%= link_to 'Cours à booker', tools_audit_cours_path, class: 'text-primary hover:underline' %>
+						</div>
 					</li>
 				<% end %>
 

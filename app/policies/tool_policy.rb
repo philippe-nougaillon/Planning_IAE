@@ -260,4 +260,12 @@ class ToolPolicy < ApplicationPolicy
   #   initialisation_edusign?
   # end
 
+  def nouvelle_saison_rh?
+    user && (user.rh? || user.admin?)
+  end
+
+  def nouvelle_saison_rh_do?
+    nouvelle_saison_rh?
+  end
+
 end

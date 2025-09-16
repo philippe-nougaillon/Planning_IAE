@@ -14,7 +14,7 @@ class Unite < ApplicationRecord
   end	
 
   def nom_formation
-    self.formation.try(:nom)
+    self.formation.nom
   end
 
 end

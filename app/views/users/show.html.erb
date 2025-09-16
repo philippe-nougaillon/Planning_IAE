@@ -71,27 +71,29 @@
 <% end %>
 <br>
 
-<div class="text-lg">
-	Audit des modifications
-</div>
-<div class="overflow-x-auto bg-base-100"> 
-	<table class="table table-xs">
-		<thead class="bg-slate-100 border">
-			<th>Date</th>
-			<th>Utilisateur</th>
-			<th>Type</th>
-			<th>Record_id</th>
-			<th>Action</th>
-			<th>Modifications</th>
-		</thead>
-		<%= render partial: 'tools/audit', collection: @audits %>
-	</table>
-</div>
+<% if current_user && !current_user.étudiant? %>
+	<div class="text-lg">
+		Audit des modifications
+	</div>
+	<div class="overflow-x-auto bg-base-100"> 
+		<table class="table table-xs">
+			<thead class="bg-slate-100 border">
+				<th>Date</th>
+				<th>Utilisateur</th>
+				<th>Type</th>
+				<th>Record_id</th>
+				<th>Action</th>
+				<th>Modifications</th>
+			</thead>
+			<%= render partial: 'tools/audit', collection: @audits %>
+		</table>
+	</div>
 
-<div class="page_info">
-	<%= page_entries_info @audits, 'Audit' %>
-</div>
+	<div class="page_info">
+		<%= page_entries_info @audits, 'Audit' %>
+	</div>
 
-<div class="planning_pagination">
-	<%= will_paginate @audits %>
-</div>
+	<div class="planning_pagination">
+		<%= will_paginate @audits %>
+	</div>
+<% end %>

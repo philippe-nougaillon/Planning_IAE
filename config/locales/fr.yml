@@ -314,7 +314,7 @@ fr:
     edit:
       title: Modification d'un cours
     action:
-      title: Action groupée
+      title: Action groupée cours
     mes_sessions_etudiant:
       title: Ma journée (étudiant)
     mes_sessions_intervenant:
@@ -343,6 +343,8 @@ fr:
       title: Nouvelle formation
     edit:
       title: Modification d'une formation
+    action:
+      title: Action groupée formations
   intervenants:
     index:
       title: Liste des intervenants
@@ -439,6 +441,10 @@ fr:
       title: Initialisation Edusign
     initialisation_edusign_do:
       title: Initialisation Edusign
+    nouvelle_saison_rh:
+      title: Nouvelle saison RH
+    nouvelle_saison_rh_do:
+      title: Résultat nouvelle saison RH
   agents:
     index:
       title: Agents
@@ -529,6 +535,8 @@ fr:
       title: Nouveau dossier
     edit:
       title: Modification Dossier
+    action:
+      title: Action groupée dossiers
   notes:
     index:
       title: "Mes mémos"
