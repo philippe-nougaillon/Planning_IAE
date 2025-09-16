@@ -174,12 +174,8 @@
 
                 <% if cours.debut.to_date != current_date %>
                   <tr class="border bg-slate-50">
-                    <% if policy(Cour).action? %><th></th><% end %>
                     <th colspan=<%= policy(Cour).action? ? '9' : '8' %>>
-                      <div class="flex items-center gap-1">
-                        <span class="material-symbols-outlined text-lg mb-0.5">
-                          today
-                        </span>
+                      <div class="flex items-center gap-1 text-xl">
                         <%= l(cours.debut.to_date, format: :long).humanize %>
                       </div>
                     </th>

@@ -745,12 +745,13 @@ class CoursController < ApplicationController
   def mes_sessions_etudiant
     @etudiant = Etudiant.find_by("LOWER(etudiants.email) = ?", current_user.email.downcase)
     if @etudiant && @etudiant.formation
-      @cours = @etudiant
-              .formation
-              .cours
-              .confirmé
-              .where("DATE(debut) = ?", Date.today)
-              .order(:debut)
+      incoming_cours = @etudiant.formation.cours.confirmé.order(:debut)
+
+      @cours_today = incoming_cours.where("DATE(debut) = ?", Date.today)
+
+      if @cours_today.empty?
+        @next_cours = incoming_cours.where("DATE(debut) > ?", Date.today).first(3)
+      end
     else
       redirect_to root_path
     end
@@ -766,7 +767,11 @@ class CoursController < ApplicationController
     end
     
     if @intervenant
-      @cours = @intervenant.cours.confirmé.where("DATE(debut) = ?", Date.today).order(:debut)
+      incoming_cours = @intervenant.cours.confirmé.order(:debut)
+      @cours_today = incoming_cours.where("DATE(debut) = ?", Date.today)
+      if @cours_today.empty?
+        @next_cours = incoming_cours.where("DATE(debut) > ?", Date.today).first(3)
+      end
     else
       redirect_to root_path, alert: "Vous devez vous connecter ou cliquer sur le lien reçu par email pour accéder à cette page"
     end
