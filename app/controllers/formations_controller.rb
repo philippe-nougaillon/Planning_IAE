@@ -119,7 +119,7 @@ class FormationsController < ApplicationController
 
   def action
     unless params[:formations_id].blank? or params[:action_name].blank?
-      @formations = Formation.where(id: params[:formations_id].keys)
+      @formations = Formation.where(id: params[:formations_id].keys).ordered
     else
       redirect_to formations_path, alert:'Veuillez choisir des formations et une action à appliquer !'
     end
