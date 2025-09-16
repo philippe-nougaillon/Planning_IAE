@@ -50,7 +50,7 @@
       <h3 class="text-2xl mt-2">
         <small class="text-secondary">Statut</small><br>
       </h3>
-      <%= @intervenant.try(:status) %>
+      <%= @intervenant.status %>
 
       <% if @intervenant.année_entrée %>
         <h3 class="text-2xl mt-2">
@@ -94,7 +94,7 @@
       </h3>
 
       <div class="flex flex-wrap items-center gap-2">
-        <% @salles_habituelles.each do |salle_id, count| %>
+        <% @salles_habituelles_ids.each do |salle_id, count| %>
           <% salle = Salle.find(salle_id) %>
           <span class="text-success"
                 style="font-size: calc( .25rem + <%= [1.5, (count.fdiv(@average_count))].min %>rem); " 
@@ -133,7 +133,7 @@
   <% end %>
 
   <% if policy(:tool).can_see_RHGroup_private_tool? %>
-    <% if @intervenant.responsabilites.any? %>
+    <% if @intervenant_responsabilites.any? %>
       <div class="mt-8">
         <h3 class="text-xl text-secondary my-4">
           <%= fa_icon 'file-contract' %>
@@ -150,13 +150,13 @@
               <th>Commentaires</th>
             </thead>
 
-            <% @intervenant.responsabilites.each do |r| %>
+            <% @intervenant_responsabilites.each do |r| %>
               <tr class="hover border">
                   <td>
                     <%= l r.debut %>
                   </td>
                   <td>
-                    <%= link_to(Formation.find(r.formation_id).nom, formations_path(r.formation_id), class: 'text-primary hover:underline') %>
+                    <%= link_to(r.formation.nom, formations_path(r.formation_id), class: 'text-primary hover:underline') %>
                   </td>
                   <td>
                     <%= r.titre %>
@@ -177,7 +177,7 @@
   <% end %>
 
   <div class="mt-8">
-    <%= render partial: "partials/vacations", locals: {vacations: @intervenant.vacations} %>
+    <%= render partial: "partials/vacations", locals: {vacations: @intervenant_vacations} %>
   </div>
 
   <div tabindex="0" class="collapse collapse-arrow border border-base-300 bg-base-100 mt-8">
