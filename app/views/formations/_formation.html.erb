@@ -9,7 +9,7 @@
             </span>
         </td>
     <% end %>
-    <td style="border-left: .3rem solid <%= formation.try(:positive_color) %>">
+    <td style="border-left: .3rem solid <%= formation.positive_color %>">
         <b><%= link_to formation.nom, formation, class: 'text-primary hover:underline' %></b>
     </td>
     <td><%= formation.abrg %></td>

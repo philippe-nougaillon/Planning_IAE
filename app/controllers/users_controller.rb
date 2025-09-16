@@ -7,8 +7,8 @@ class UsersController < ApplicationController
   # GET /users
   # GET /users.json
   def index
-    params[:column] ||= session[:column]
-    params[:direction] ||= session[:direction]
+    params[:column_user] ||= session[:column_user]
+    params[:direction_user] ||= session[:direction_user]
 
     @users = User.kept
 
@@ -42,8 +42,8 @@ class UsersController < ApplicationController
       @users = @users.where(id: mauvais_email_users_ids)
     end
 
-    session[:column] = params[:column]
-    session[:direction] = params[:direction]
+    session[:column_user] = params[:column_user]
+    session[:direction_user] = params[:direction_user]
 
     @users = @users
                 .reorder(Arel.sql("#{sort_column} #{sort_direction}"))
@@ -53,7 +53,7 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
-    @audits = @user.audits.reorder(id: :desc).paginate(page:params[:page], per_page:20)
+    @audits = @user.audits.reorder(id: :desc).paginate(page:params[:page], per_page: 10)
   end
 
   # GET /users/new
@@ -126,11 +126,11 @@ class UsersController < ApplicationController
     end
 
     def sort_column
-      sortable_columns.include?(params[:column]) ? params[:column] : "id"
+      sortable_columns.include?(params[:column_user]) ? params[:column_user] : "id"
     end
 
     def sort_direction
-      %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
+      %w[asc desc].include?(params[:direction_user]) ? params[:direction_user] : "asc"
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
@@ -139,6 +139,6 @@ class UsersController < ApplicationController
     end
 
     def is_user_authorized
-      authorize User
+      authorize @user ? @user : User
     end
 end

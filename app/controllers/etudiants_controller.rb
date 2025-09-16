@@ -8,8 +8,8 @@ class EtudiantsController < ApplicationController
   # GET /etudiants.json
   def index
 
-    params[:column] ||= session[:column]
-    params[:direction_etudiants] ||= session[:direction_etudiants]
+    params[:column_etudiant] ||= session[:column_etudiant]
+    params[:direction_etudiant] ||= session[:direction_etudiant]
     params[:paginate] ||= 'pages'
 
     @etudiants = Etudiant.all
@@ -23,8 +23,8 @@ class EtudiantsController < ApplicationController
       @etudiants = @etudiants.where(formation_id:params[:formation_id])
     end
 
-    session[:column] = params[:column]
-    session[:direction_etudiants] = params[:direction_etudiants]
+    session[:column_etudiant] = params[:column_etudiant]
+    session[:direction_etudiant] = params[:direction_etudiant]
     
     @etudiants = @etudiants.reorder(Arel.sql("#{sort_column} #{sort_direction}"))
     if (params[:paginate] == 'pages')
@@ -175,11 +175,11 @@ class EtudiantsController < ApplicationController
     end
 
     def sort_column
-        sortable_columns.include?(params[:column]) ? params[:column] : "etudiants.nom"
+        sortable_columns.include?(params[:column_etudiant]) ? params[:column_etudiant] : "etudiants.nom"
     end
 
     def sort_direction
-        %w[asc desc].include?(params[:direction_etudiants]) ? params[:direction_etudiants] : "asc"
+        %w[asc desc].include?(params[:direction_etudiant]) ? params[:direction_etudiant] : "asc"
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

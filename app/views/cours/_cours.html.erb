@@ -19,11 +19,11 @@
             <progress data-debut="<%= cours.debut.to_i %>" data-fin="<%= cours.fin.to_i %>" class="progress progress-primary opacity-50 mt-1" value="<%= cours.progress_bar_pct3 %>" max="100"></progress>
         <% end %>
     </td>
-    <td style="border-left: .3rem solid <%= cours.formation.try(:positive_color) %>">
+    <td style="border-left: .3rem solid <%= cours.formation.positive_color %>">
         <% if policy(Cour).action? %>
-            <%= link_to cours.formation.try(:nom_nbr_etudiants), cours.formation, class: 'text-primary hover:underline' %>
+            <%= link_to cours.formation.nom_nbr_etudiants, cours.formation, class: 'text-primary hover:underline' %>
         <% else %>
-            <%= link_to cours.formation.try(:nom), cours.formation, class: 'text-primary hover:underline' %>
+            <%= link_to cours.formation.nom, cours.formation, class: 'text-primary hover:underline' %>
         <% end %>
     </td>
     <td>
@@ -37,9 +37,12 @@
 
         <% if user_signed_in? && current_user.admin? %>
             <% unless cours.invits.where.not("workflow_state = 'non_retenue' OR workflow_state = 'confirmée'").count.zero? %>
-                <br>
-                <%= fa_icon 'calendar-check' %>
-                <%= link_to 'Invitations en cours', invits_path(cours_id: cours.id), class: 'text-primary hover:underline' %>
+                <div class="flex items-start gap-1">
+                    <span class="material-symbols-outlined text-base">
+                        calendar_check
+                    </span>
+                    <%= link_to 'Invitations en cours', invits_path(cours_id: cours.id), class: 'text-primary hover:underline' %>
+                </div>
             <% end %>
         <% end %>
     </td>
@@ -61,7 +64,7 @@
                 </span>
             </h5>
             <% if user_signed_in? && !(current_user.étudiant?) %>
-                <% if cours.formation && (cours.formation.nbr_etudiants > cours.salle.places) && cours.salle.bloc != 'Z' %>
+                <% if cours.manque_de_places? %>
                     <i title="Manque <%= cours.formation.nbr_etudiants - cours.salle.places %> place.s">
                         <%= fa_icon 'exclamation-circle', class: 'mt-2' %>
                     </i>
@@ -130,8 +133,9 @@
         <% end %>
         <% if current_user && current_user.role_number >= 5 && !cours.edusign_id? %>
             <span title="Le cours n'est pas synchronisé avec Edusign" class="cursor-pointer">
-                <span class="text-sky-900 bg-orange-300 px-1 pb-1 rounded-sm text-xl font-bold"><u>e</u></span>
-                <%= fa_icon 'exclamation-triangle', class: 'text-warning' %>
+                <span class="material-symbols-outlined text-sky-900 bg-orange-300 text-lg rounded-full h-4 w-4 flex items-center font-black">
+                    error
+                </span>
             </span>
         <% end %>
     </td>

@@ -9,19 +9,20 @@
             </div>
             </td>
             <td>
-                <% cours = Cour.find(result.searchable_id) %>
-                <%= l(cours.debut, format: :long) %>
-                <br>
-                <span style="background-color:<%= cours.formation.color %>;padding-left: 5px;margin-right: 5px;"></span>
-                <%= cours.formation.nom %>
-                <p class="mx-2 inline mb-4">|</p>
-                <%= cours.nom_ou_ue %>
-                <p class="mx-2 inline mb-4">|</p>
-                <%= cours.intervenant.nom_prenom %>
-                <% if !cours.commentaires.blank? %>
+                <% if cours = Cour.find_by(id: result.searchable_id) %>
+                    <%= l(cours.debut, format: :long) %>
                     <br>
-                    <%= fa_icon 'comment-dots' %>
-                    <%= cours.commentaires %>
+                    <span style="background-color:<%= cours.formation.color %>;padding-left: 5px;margin-right: 5px;"></span>
+                    <%= cours.formation.nom %>
+                    <p class="mx-2 inline mb-4">|</p>
+                    <%= cours.nom_ou_ue %>
+                    <p class="mx-2 inline mb-4">|</p>
+                    <%= cours.intervenant.nom_prenom %>
+                    <% if !cours.commentaires.blank? %>
+                        <br>
+                        <%= fa_icon 'comment-dots' %>
+                        <%= cours.commentaires %>
+                    <% end %>
                 <% end %>
             </td>
             <% when 'Formation' %>

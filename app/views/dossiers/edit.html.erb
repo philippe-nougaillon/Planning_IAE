@@ -7,4 +7,4 @@
 <%= render 'form', dossier: @dossier %>
 
 <%= link_to 'Voir', @dossier, class: 'text-primary hover:underline' %> |
-<%= link_to 'Retour', dossiers_path, class: 'text-primary hover:underline' %>
+<%= link_to 'Retour', dossier_path(@dossier), class: 'text-primary hover:underline' %>

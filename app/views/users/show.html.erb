@@ -18,23 +18,23 @@
 <br>
 
 <p class="mb-4">
-	<strong>Nom:</strong>
+	<strong>Nom :</strong>
 	<%= @user.nom %>
 </p>
 <p class="mb-4">
-	<strong>Prénom:</strong>
+	<strong>Prénom :</strong>
 	<%= @user.prénom %>
 </p>
 <p class="mb-4">
-	<strong>Mobile:</strong>
+	<strong>Mobile :</strong>
 	<%= @user.mobile %>
 </p>
 <p class="mb-4">
-	<strong>Rôle:</strong>
+	<strong>Rôle :</strong>
 	<%= @user.role.humanize %>
 </p>
 <p class="mb-4">
-	<strong>Email:</strong>
+	<strong>Email :</strong>
 	<%= @user.email %>
 </p>
 <br>
@@ -54,50 +54,44 @@
 	</p>
 <% end %>
 
-<br>
-
 <% unless @user.sign_in_count.zero? %>
 	<p class="mb-4">
-		Connexion actuelle: 
+		Nbr connexions : <%= @user.sign_in_count %> 
+	</p>
+	<p class="mb-4">
+		Connexion actuelle : 
 		le <%= l(@user.current_sign_in_at) %> 
 		| Il y a <%= time_ago_in_words(@user.current_sign_in_at) %>
 	</p>
 	<p class="mb-4">
-		Dernière connexion: 
+		Dernière connexion : 
 		le <%= l(@user.last_sign_in_at) %> 
 		| Il y a <%= time_ago_in_words(@user.last_sign_in_at) %>
-	</p>
-	<p class="mb-4">
-		Nbr connexions: <%= @user.sign_in_count %> 
 	</p>
 <% end %>
 <br>
 
-<% if current_user.admin? %>
-	<div tabindex="0" class="collapse collapse-arrow border border-base-300 bg-base-100">
-		<div class="collapse-title text-lg">
-			Audit des modifications
-		</div>
-		<div class="overflow-x-auto collapse-content bg-base-100"> 
-			<table class="table table-xs">
-				<thead class="bg-slate-100 border">
-					<th>Date</th>
-					<th>Utilisateur</th>
-					<th>Type</th>
-					<th>Record_id</th>
-					<th>Action</th>
-					<th>Modifications</th>
-				</thead>
-				<%= render partial: 'tools/audit', collection: @audits %>
-			</table>
-		</div>
-	</div>
+<div class="text-lg">
+	Audit des modifications
+</div>
+<div class="overflow-x-auto bg-base-100"> 
+	<table class="table table-xs">
+		<thead class="bg-slate-100 border">
+			<th>Date</th>
+			<th>Utilisateur</th>
+			<th>Type</th>
+			<th>Record_id</th>
+			<th>Action</th>
+			<th>Modifications</th>
+		</thead>
+		<%= render partial: 'tools/audit', collection: @audits %>
+	</table>
+</div>
 
-	<div class="page_info">
-		<%= page_entries_info @audits, 'Audit' %>
-	</div>
+<div class="page_info">
+	<%= page_entries_info @audits, 'Audit' %>
+</div>
 
-	<div class="planning_pagination">
-		<%= will_paginate @audits %>
-	</div>
-<% end %>
+<div class="planning_pagination">
+	<%= will_paginate @audits %>
+</div>

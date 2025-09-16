@@ -89,6 +89,10 @@ Rails.application.routes.draw do
       get :archiver
       patch :deposer
     end
+    collection do
+      post :action
+      post :action_do
+    end
   end
 
   resources :import_logs do
@@ -152,6 +156,7 @@ Rails.application.routes.draw do
     get :edusign
     # get :synchronisation_edusign
     # get :initialisation_edusign
+    get :nouvelle_saison_rh
 
     post :import_do
     post :creation_cours_do
@@ -176,6 +181,7 @@ Rails.application.routes.draw do
     post :edusign_do
     # post :synchronisation_edusign_do
     # post :initialisation_edusign_do
+    post :nouvelle_saison_rh_do
   end
 
   namespace :guide do

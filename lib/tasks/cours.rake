@@ -73,7 +73,7 @@ namespace :cours do
           intitulé_cours = "#{I18n.l(c.debut.to_date, format: :day)} #{I18n.l(c.debut.to_date)} #{I18n.l(c.debut, format: :heures_min)}-#{I18n.l(c.fin, format: :heures_min)} #{c.try(:formation).try(:nom)}/#{c.nom_ou_ue}"
           liste_des_cours_a_envoyer << intitulé_cours
           if c.formation
-            liste_des_gestionnaires[c.formation.nom] = (c.formation.courriel ? c.formation.courriel : c.formation.try(:user).try(:email))
+            liste_des_gestionnaires[c.formation.nom] = (c.formation.courriel ? c.formation.courriel : c.formation.user.try(:email))
           end
         end
         puts "#{liste_des_cours_a_envoyer.count} cours à envoyer: #{liste_des_cours_a_envoyer}"  
@@ -118,7 +118,7 @@ namespace :cours do
       if now > cour.debut + 30.minute && now < cour.debut + 40.minute
         intervenant = cour.intervenant
         presence = Presence.find_or_create_by(cour_id: cour.id, intervenant_id: intervenant.id, code_ue: cour.code_ue)
-        mailer_response = IntervenantMailer.mes_sessions(intervenant, presence.slug, cour.formation.try(:user).try(:email)).deliver_now
+        mailer_response = IntervenantMailer.mes_sessions(intervenant, presence.slug, cour.formation.user.try(:email)).deliver_now
         MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: intervenant.email, subject: "Validation présences")
 
         puts "email envoyé à #{intervenant.nom_prenom}, email : #{intervenant.email}"

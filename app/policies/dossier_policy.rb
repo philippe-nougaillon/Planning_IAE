@@ -65,4 +65,11 @@ class DossierPolicy < ApplicationPolicy
     envoyer?
   end
 
+  def action?
+    user && (user.rh? || user.admin?)
+  end
+
+  def action_do?
+    action?
+  end
 end

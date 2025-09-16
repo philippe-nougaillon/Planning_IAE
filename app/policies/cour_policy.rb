@@ -38,7 +38,7 @@ class CourPolicy < ApplicationPolicy
   end
 
   def edit?
-    user && ((user.role_number >= 2 && !user.accueil_vacataire?) || (user.partenaire_qse? && record.formation.try(:partenaire_qse?)))
+    user && ((user.role_number >= 2 && !user.accueil_vacataire?) || (user.partenaire_qse? && record.formation.partenaire_qse?))
   end
 
   def update?
@@ -52,8 +52,8 @@ class CourPolicy < ApplicationPolicy
     # - le partenaire_qse d'une formation_qse
     # - un admin
     (record.audits.first.user == user) || 
-    (record.formation.try(:user) == user) ||
-    (record.formation.try(:partenaire_qse?) && user.partenaire_qse?) ||
+    (record.formation.user == user) ||
+    (record.formation.partenaire_qse? && user.partenaire_qse?) ||
     (user.admin?) 
   end
 
