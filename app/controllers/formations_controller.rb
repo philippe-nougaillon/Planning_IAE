@@ -54,7 +54,8 @@ class FormationsController < ApplicationController
   # GET /formations/1
   # GET /formations/1.json
   def show
-    @salles_habituelles = @formation.cours
+    # TODO : optimiser en scenic_view
+    @salles_habituelles_ids = @formation.cours
                                     .joins(:salle)
                                     .where("salles.bloc != 'Z'")
                                     .select('cours.id')
@@ -65,7 +66,7 @@ class FormationsController < ApplicationController
                                     .first(5)
 
     @average_count = 0
-    @salles_habituelles.map{|x| @average_count += x.last.to_i / 5}
+    @salles_habituelles_ids.map{|x| @average_count += x.last.to_i / 5}
   end
 
   # GET /formations/new

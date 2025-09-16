@@ -59,7 +59,11 @@ class IntervenantsController < ApplicationController
   def show
     @user = @intervenant.linked_user
     @formations = @intervenant.formations.uniq
-    @salles_habituelles = @intervenant.cours
+    @intervenant_vacations = @intervenant.vacations
+    @intervenant_responsabilites = @intervenant.responsabilites
+
+    # TODO: convertir en scenic_view (en vue SQL)
+    @salles_habituelles_ids = @intervenant.cours
                                       .joins(:salle)
                                       .where("salles.bloc != 'Z'")
                                       .select('cours.id')
@@ -70,7 +74,7 @@ class IntervenantsController < ApplicationController
                                       .first(5)
 
     @average_count = 0
-    @salles_habituelles.map{|x| @average_count += x.last.to_i / 5}
+    @salles_habituelles_ids.map{|x| @average_count += x.last.to_i / 5}
   end
 
   # GET /intervenants/new
