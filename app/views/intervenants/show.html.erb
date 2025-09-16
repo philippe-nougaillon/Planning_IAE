@@ -121,7 +121,7 @@
 
     <p class="mb-4">
       <% @formations.each_with_index do |formation, index| %>
-        <%= link_to formation.nom, 
+        <%= link_to_unless formation.archive, formation.nom, 
                     cours_path(formation_id: formation, 
                                 intervenant_id: @intervenant.id, 
                                 intervenant: @intervenant.nom_prenom,
