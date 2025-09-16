@@ -6,10 +6,10 @@
     <ul class="menu menu-horizontal px-1">
       <% if user_signed_in? %>
         <% if current_user.étudiant? %>
-          <%= navbar_nav_item('ma journée', 'event', mes_sessions_etudiant_path, nil, 'mes_sessions_etudiant') %>
+          <%= navbar_nav_item('ma journée', 'today', mes_sessions_etudiant_path, nil, 'mes_sessions_etudiant') %>
           <%= navbar_nav_item('cours', 'calendar_month', cours_path, 'Planning', 'index') %>
         <% elsif current_user.intervenant? || current_user.enseignant? %>
-          <%= navbar_nav_item('ma journée', 'event', mes_sessions_intervenant_path, nil, 'mes_sessions_intervenant') %>
+          <%= navbar_nav_item('ma journée', 'today', mes_sessions_intervenant_path, nil, 'mes_sessions_intervenant') %>
           <%= navbar_nav_item('cours', 'calendar_month', cours_path, 'Planning', 'index') %>
         <% else %>
           <%= navbar_nav_item('cours', 'calendar_month', cours_path, 'Planning') %>

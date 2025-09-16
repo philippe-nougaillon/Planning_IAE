@@ -1,15 +1,17 @@
 <h1 class="text-3xl flex items-center gap-3 mt-6 border-b pb-4">
   <span class="material-symbols-outlined text-3xl">
-    event
+    today
   </span>
-  <%= l(Date.today, format: :long).humanize %>
+  Aujourd'hui
 </h1>
 
 
-<% if @cours.any?%>
-  <% @cours.each do |cour| %>
-    <%= render partial: 'ma_session_intervenant', locals: {cour: cour} %>
-  <% end %>
+<% if @cours_today.any? %>
+  <div class="sm:flex sm:flex-wrap w-full gap-6">
+    <% @cours_today.each do |cour| %>
+      <%= render partial: 'ma_session_intervenant', locals: {cour: cour, next_cours: false} %>
+    <% end %>
+  </div>
 <% else %>
   <div role="alert" class="alert">
     <svg
@@ -25,8 +27,20 @@
     </svg>
     <span>Vous n'avez pas de cours planifiés pour aujourd'hui...</span>
   </div>
+
+  <h2 class="text-2xl flex items-center gap-3 mt-6 border-b pb-4">
+    <span class="material-symbols-outlined text-3xl">
+      event
+    </span>
+    Prochains cours
+  </h2>
+  <div class="sm:flex sm:flex-wrap w-full gap-6">
+    <% @next_cours.each do |next_cour| %>
+      <%= render partial: 'ma_session_intervenant', locals: {cour: next_cour, next_cours: true} %>
+    <% end %>
+  </div>
 <% end %>
 
-<% if user_signed_in? %>
-  <%= link_to 'Voir mes prochains cours...', cours_path(start_date: Date.tomorrow, intervenant_id: @intervenant.id, intervenant: @intervenant.nom + " " + @intervenant.prenom), class: 'btn rounded-lg btn-primary btn-outline hover:!text-white mt-4 w-full sm:w-fit' %>
+<% if user_signed_in?  %>
+  <%= link_to 'Voir tous mes cours...', cours_path(start_date: Date.today, intervenant_id: @intervenant.id, intervenant: @intervenant.nom + " " + @intervenant.prenom), class: 'btn rounded-lg btn-primary btn-outline hover:!text-white my-4 w-full sm:w-fit' %>
 <% end %>

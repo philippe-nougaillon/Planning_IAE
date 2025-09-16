@@ -1,14 +1,16 @@
-<div class="card shadow p-2 mb-6" style="border-left:6px; border-left-style:solid; border-left-color:<%= cour.formation.color %>;">
-  <div class="flex justify-between">
-    <p class="mb-0"><b><%= l(cour.debut, format: :heures_min) %></b> - <%= l(cour.fin, format: :heures_min) %></p>
-    <br><br>
+<div class="card shadow p-2 mb-6 flex-1" style="border-left:6px; border-left-style:solid; border-left-color:<%= cour.formation.color %>;">
+  <% if next_cours %>
+    <p class="text-lg font-bold mb-4"><%= l(cour.debut.to_date, format: :long).humanize %></p>
+  <% end %>
+  <div class="flex items-center gap-4 mb-4">
     <% if cour.salle %>
       <p class="mb-0">
-        <span class="badge badge-<%= cour.style %> text-white">
+        <span class="badge badge-<%= cour.style %> badge-lg text-white font-black">
           <%= cour.salle.nom %>
         </span>
       </p>
     <% end %>
+    <p class="mb-0"><b><%= l(cour.debut, format: :heures_min) %></b> - <%= l(cour.fin, format: :heures_min) %></p>
   </div>
   <div class="mb-2">
     <p class="mb-0 font-bold"><%= cour.formation.nom.humanize %></p>
@@ -16,8 +18,12 @@
     <p class="mb-0">(<%= cour.etudiants.count %> étudiants prévus)</p>
   </div>
 
-  <progress data-debut="<%= cour.debut.to_i %>" data-fin="<%= cour.fin.to_i %>" class="progress progress-primary opacity-50 mt-2" value="<%= cour.progress_bar_pct3 %>" max="100"></progress>
+  <% if cour.debut.to_date == Date.today %>
+    <progress data-debut="<%= cour.debut.to_i %>" data-fin="<%= cour.fin.to_i %>" class="progress progress-secondary !h-2 mt-2" value="<%= cour.progress_bar_pct3 %>" max="100"></progress>
+  <% end %>
 
+  <% if false %>
+  <!--
   <h6 class="mt-6 mb-0">Signatures présences :</h6>
     <% presences = cour.presences.where.not(etudiant_id: nil) %>
     <% if presences.any? %>
@@ -54,6 +60,8 @@
     <% if cour.signable_intervenant? && params[:presence_slug].present? && cour.presences.where(intervenant_id: @intervenant.id).where.not(workflow_state: 'attente signature').empty? %>
       <%= link_to 'Signer la feuille de présence', signature_intervenant_cours_path(presence_slug: params[:presence_slug]), class: 'btn btn-warning btn-lg mt-6' %>
     <% end %>
+  <% end %>
+  -->
   <% end %>
 </div>
 
