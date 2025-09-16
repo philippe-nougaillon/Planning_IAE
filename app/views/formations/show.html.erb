@@ -150,10 +150,10 @@
           <% @formation.unites.each do | unite | %>
             <tr class="hover border">
               <% cours = @formation.cours.where(code_ue: unite.code) %>
-              <td style="text-align: right;"><%= link_to unite.code, cours_path(formation_id: @formation, ue: unite.num), class: 'text-primary hover:underline' %></td>
+              <td style="text-align: right;"><%= link_to_unless @formation.archive, unite.code, cours_path(formation_id: @formation, ue: unite.num), class: 'text-primary hover:underline' %></td>
               <td><%= unite.nom %></td>
               <td style="text-align: right;"><%= unite.séances %></td>
-              <td style="text-align: right;"><%= link_to cours.count, cours_path(formation_id: @formation, ue: unite.num, filter: 'all'), class: 'text-primary hover:underline' %></td>
+              <td style="text-align: right;"><%= link_to_unless @formation.archive, cours.count, cours_path(formation_id: @formation, ue: unite.num, filter: 'all'), class: 'text-primary hover:underline' %></td>
               <td style="text-align: right;">
                 <%= total_prévu = unite.heures %> h
               </td>
