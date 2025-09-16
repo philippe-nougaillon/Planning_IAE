@@ -53,7 +53,9 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
-    @audits = @user.audits.reorder(id: :desc).paginate(page:params[:page], per_page: 10)
+    if current_user && !current_user.étudiant?
+      @audits = @user.audits.reorder(id: :desc).paginate(page:params[:page], per_page: 10)
+    end
   end
 
   # GET /users/new
