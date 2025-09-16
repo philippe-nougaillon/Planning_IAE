@@ -117,6 +117,69 @@ class FormationsController < ApplicationController
     end
   end
 
+  def action
+    unless params[:formations_id].blank? or params[:action_name].blank?
+      @formations = Formation.where(id: params[:formations_id].keys).ordered
+    else
+      redirect_to formations_path, alert:'Veuillez choisir des formations et une action à appliquer !'
+    end
+  end
+
+  def action_do
+    action_name = params[:action_name]
+
+    @formations = Formation.where(id: params[:formations_id]&.keys)
+    formations_modifiées_count = 0
+
+    case action_name
+    when "Archiver"
+      @formations.each do |formation|
+        formation.archive = true
+        if formation.save
+          formations_modifiées_count += 1
+        else
+          # Vérifie si la seule erreur est "User doit exister"
+          if formation.errors.details[:user].any? { |e| e[:error] == :blank } && formation.errors.size == 1
+            # Corrige le user_id par un gestionnaire par défaut
+            formation.user_id = ENV['GESTIONNAIRE_PLACEHOLDER']
+            if formation.save
+              formations_modifiées_count += 1
+            end
+          end
+        end
+
+        if formation.persisted? && formation.archive?
+          formation.etudiants.each do |etudiant|
+            if user = etudiant.linked_user
+              user.discard
+            end
+          end
+        end
+      end
+    when "Changer de gestionnaire"
+      @formations.each do |formation|
+        formation.user_id = params[:user_id].to_i
+        if formation.save
+          formations_modifiées_count += 1
+        end
+      end
+    when "Synchroniser sur Edusign"
+      @formations.each do |formation|
+        formation.send_to_edusign = true
+        if formation.save
+          formations_modifiées_count += 1
+        end
+      end
+    end
+    
+    if formations_modifiées_count < @formations.count
+      flash[:alert] = "#{@formations.count - formations_modifiées_count} modifications ont échouées et #{formations_modifiées_count} formations modifiées avec succès."
+    else
+      flash[:notice] = "Action '#{action_name}' appliquée à #{params.permit![:formations_id]&.keys&.size || 0} formation.s."
+    end
+    redirect_to formations_path
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_formation

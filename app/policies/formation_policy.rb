@@ -33,4 +33,12 @@ class FormationPolicy < ApplicationPolicy
     user.role_number >= 4
   end
 
+  def action?
+    user && user.role_number >= 5
+  end
+
+  def action_do?
+    action?
+  end
+
 end
