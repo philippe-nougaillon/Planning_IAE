@@ -2,6 +2,7 @@ class Edusign < ApplicationService
 
     def initialize
         # Pour le décalage horaire des cours entre Planning et Edusign
+        # N'est plus utilisé pour les cours, mais seulement pour les attendances/justificatifs
         @time_zone_difference = 2.hour
 
         # Utilisés pour calculer le nombre d'éléments en erreur
@@ -577,8 +578,8 @@ class Edusign < ApplicationService
                         body =
                         {"course":{
                             "NAME": "#{cour.formation.nom} - #{cour.nom_ou_ue}" || 'Nom du cours à valider',
-                            "START": cour.debut - @time_zone_difference,
-                            "END": cour.fin - @time_zone_difference,
+                            "START": cour.debut - paris_observed_offset_seconds(cour.debut),
+                            "END": cour.fin - paris_observed_offset_seconds(cour.debut),
                             "PROFESSOR": Intervenant.find_by(id: cour.intervenant_id)&.edusign_id,
                             "PROFESSOR_2": Intervenant.find_by(id: cour.intervenant_binome_id)&.edusign_id,
                             "API_ID": cour.id,
@@ -657,8 +658,8 @@ class Edusign < ApplicationService
               {"course":{
                 "ID": "#{cours.edusign_id}",
                 "NAME": "#{cours.formation.nom} - #{cours.nom_ou_ue}" || 'Nom du cours à valider',
-                "START": cours.debut - @time_zone_difference,
-                "END": cours.fin - @time_zone_difference,
+                "START": cours.debut - paris_observed_offset_seconds(cours.debut),
+                "END": cours.fin - paris_observed_offset_seconds(cours.debut),
                 "PROFESSOR": Intervenant.find_by(id: cours.intervenant_id)&.edusign_id || ENV['EDUSIGN_DEFAULT_INTERVENANT_ID'],
                 "PROFESSOR_2": Intervenant.find_by(id: cours.intervenant_binome_id)&.edusign_id,
                 "API_ID": cours.id,
@@ -789,6 +790,14 @@ class Edusign < ApplicationService
             motif.edusign_id = justificatif_edusign_id
             motif.save
         end
+    end
+
+    # Récupère le timezone de Paris sur un moment donné
+    def paris_observed_offset_seconds(time)
+        zone = ActiveSupport::TimeZone['Paris']
+        time = Time.utc(time.year, time.month, time.day, time.hour, time.min, time.sec)
+        period = zone.tzinfo.period_for_utc(time)
+        period.observed_utc_offset.seconds
     end
 
     # def export_formation(formation_id)
