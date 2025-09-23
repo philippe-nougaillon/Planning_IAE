@@ -24,5 +24,4 @@ namespace :edusign do
 
     EdusignLog.create(modele_type: 1, message: stream, user_id: 0, etat: etat)
   end
-
 end

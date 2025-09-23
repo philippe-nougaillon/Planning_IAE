@@ -2,6 +2,7 @@ class Edusign < ApplicationService
 
     def initialize
         # Pour le décalage horaire des cours entre Planning et Edusign
+        # N'est plus utilisé pour les cours, mais seulement pour les attendances/justificatifs
         @time_zone_difference = 2.hour
 
         # Utilisés pour calculer le nombre d'éléments en erreur
@@ -573,35 +574,39 @@ class Edusign < ApplicationService
         if cours_a_envoyer
             cours_a_envoyer.each do |cour|
                 if cour.valid?
-                    body =
-                    {"course":{
-                        "NAME": "#{cour.formation.nom} - #{cour.nom_ou_ue}" || 'Nom du cours à valider',
-                        "START": cour.debut - @time_zone_difference,
-                        "END": cour.fin - @time_zone_difference,
-                        "PROFESSOR": Intervenant.find_by(id: cour.intervenant_id)&.edusign_id || ENV['EDUSIGN_DEFAULT_INTERVENANT_ID'],
-                        "PROFESSOR_2": Intervenant.find_by(id: cour.intervenant_binome_id)&.edusign_id,
-                        "API_ID": cour.id,
-                        "NEED_STUDENTS_SIGNATURE": true,
-                        "CLASSROOM": cour.salle&.nom,
-                        "SCHOOL_GROUP": [cour.formation.edusign_id]
+                    if cour.formation.edusign_id
+                        body =
+                        {"course":{
+                            "NAME": "#{cour.formation.nom} - #{cour.nom_ou_ue}" || 'Nom du cours à valider',
+                            "START": cour.debut - paris_observed_offset_seconds(cour.debut),
+                            "END": cour.fin - paris_observed_offset_seconds(cour.debut),
+                            "PROFESSOR": Intervenant.find_by(id: cour.intervenant_id)&.edusign_id,
+                            "PROFESSOR_2": Intervenant.find_by(id: cour.intervenant_binome_id)&.edusign_id,
+                            "API_ID": cour.id,
+                            "NEED_STUDENTS_SIGNATURE": true,
+                            "CLASSROOM": cour.salle&.nom,
+                            "SCHOOL_GROUP": [cour.formation.edusign_id]
+                            }
                         }
-                    }
 
-                    if method == 'Patch'
-                        body[:course].merge!({"ID": cour.edusign_id})
-                        body.merge!({"editSurveys": false})
-                    end
-
-                    response = self.prepare_body_request(body).get_response
-
-                    puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation du cours #{cour.id}, #{cour.nom} réussie"
-
-                    if response["status"] == 'success'
-                        if method == 'Post'
-                            cour.edusign_id = response["result"]["ID"]
-                            cour.save
+                        if method == 'Patch'
+                            body[:course].merge!({"ID": cour.edusign_id})
+                            body.merge!({"editSurveys": false})
                         end
-                        nb_audited += 1
+
+                        response = self.prepare_body_request(body).get_response
+
+                        puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation du cours #{cour.id}, #{cour.nom} réussie"
+
+                        if response["status"] == 'success'
+                            if method == 'Post'
+                                cour.edusign_id = response["result"]["ID"]
+                                cour.save
+                            end
+                            nb_audited += 1
+                        end
+                    else
+                        puts "La formation #{cour.formation.nom} n'est pas encore reliée à Edusign. Le cours #{cour.id}, #{cour.nom} n'est pas envoyé"
                     end
                 else
                     puts "Le cours #{cour.id}, #{cour.nom} n'est pas valide, il ne peut pas être envoyé dans Edusign : #{cour.errors.full_messages}"
@@ -653,8 +658,8 @@ class Edusign < ApplicationService
               {"course":{
                 "ID": "#{cours.edusign_id}",
                 "NAME": "#{cours.formation.nom} - #{cours.nom_ou_ue}" || 'Nom du cours à valider',
-                "START": cours.debut - @time_zone_difference,
-                "END": cours.fin - @time_zone_difference,
+                "START": cours.debut - paris_observed_offset_seconds(cours.debut),
+                "END": cours.fin - paris_observed_offset_seconds(cours.debut),
                 "PROFESSOR": Intervenant.find_by(id: cours.intervenant_id)&.edusign_id || ENV['EDUSIGN_DEFAULT_INTERVENANT_ID'],
                 "PROFESSOR_2": Intervenant.find_by(id: cours.intervenant_binome_id)&.edusign_id,
                 "API_ID": cours.id,
@@ -785,6 +790,14 @@ class Edusign < ApplicationService
             motif.edusign_id = justificatif_edusign_id
             motif.save
         end
+    end
+
+    # Récupère le timezone de Paris sur un moment donné
+    def paris_observed_offset_seconds(time)
+        zone = ActiveSupport::TimeZone['Paris']
+        time = Time.utc(time.year, time.month, time.day, time.hour, time.min, time.sec)
+        period = zone.tzinfo.period_for_utc(time)
+        period.observed_utc_offset.seconds
     end
 
     # def export_formation(formation_id)

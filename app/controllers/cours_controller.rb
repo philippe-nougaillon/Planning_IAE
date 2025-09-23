@@ -612,7 +612,7 @@ class CoursController < ApplicationController
     end
 
     unless params[:formation].blank?
-      @cour.formation_id = Formation.not_archived.find_by(nom:params[:formation]).id
+      @cour.formation_id = Formation.not_archived.find_by(nom:params[:formation])&.id
     end
 
     unless params[:intervenant].blank?
