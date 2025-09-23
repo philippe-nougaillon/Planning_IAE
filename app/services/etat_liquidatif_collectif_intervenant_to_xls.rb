@@ -26,7 +26,7 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
     sheet.row(2).concat ["Décrets N°87-889 du 29/10/1987 et 88-994 du 18/10/1988 - CAr du 05/12/2023"]
 
     sheet.row(4).concat ['Type d\'intervention', 'Nom', 'Prénom','Formation', 'Intitulé', 'Code EOTP', 'Destination Finan.', 'Date', 'Nom Taux',
-      'Durée en Hres','HeTD', 'Nbre HTD', 'Taux TD','Mtnt total HTD']
+      'Durée en Hres','HeTD', 'Taux TD','Mtnt total HTD']
 
     sheet.row(4).default_format = bold
 
@@ -71,11 +71,11 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
       intervenant_vacations = intervenant.vacations.where(id: vacations.pluck(:id), intervenant_id: intervenant.id)
       intervenant_responsabilites = intervenant.responsabilites.where(id: responsabilites.pluck(:id), intervenant_id: intervenant.id)
 
-      cumul_hetd = cumul_vacations = cumul_responsabilites = cumul_tarif = cumul_td = 0 
+      cumul_hetd = cumul_vacations = cumul_responsabilites = cumul_tarif = 0 
 
       # V2 : Liste des cours de l'intervenant groupés par code_eotp
       formations_par_eotp.each do |code_eotp, formation_group|
-        ss_total_td = ss_total_hetd = ss_total_tarif = 0
+        ss_total_hetd = ss_total_tarif = 0
         any_cours_for_eotp = false
 
         intervenant_cours.select { |c| formation_group.map(&:id).include?(c.formation_id) }.each do |c|
@@ -85,15 +85,12 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
             when 'TD'
               montant_service = (c.duree.to_f * Cour.Tarif).round(2)
               ss_total_hetd += c.duree.to_f
-              ss_total_td += c.duree
             when '3xTD'
               montant_service = ((c.duree.to_f * 3) * Cour.Tarif).round(2)
               ss_total_hetd += c.duree.to_f * 3
-              ss_total_td += c.duree * 3
             when 'CM'
               montant_service = ((c.duree.to_f * 1.5) * Cour.Tarif).round(2)
               ss_total_hetd += c.duree.to_f * 1.5
-              ss_total_td += c.duree * 1.5
             else
               montant_service = 0
             end
@@ -117,10 +114,10 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
               formation.nomtauxtd,
               c.duree,
               *case formation.nomtauxtd
-                when 'TD' then [c.duree, c.duree]
-                when '3xTD' then [c.duree * 3, c.duree * 3]
-                when 'CM' then [c.duree * 1.5, c.duree * 1.5]
-                else [0, 0]
+                when 'TD' then c.duree
+                when '3xTD' then c.duree * 3
+                when 'CM' then c.duree * 1.5
+                else 0
               end,
               Cour.Tarif,
               montant_service
@@ -136,7 +133,6 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
             "C",
             "Sous total code EOTP #{code_eotp || '???'} : #{intervenant_cours.select { |c| formation_group.map(&:id).include?(c.formation_id) }.count} cours",
             nil, nil, nil, nil, nil, nil, nil, nil,
-            ss_total_td,
             ss_total_hetd,
             Cour.Tarif,
             ss_total_tarif
@@ -147,7 +143,6 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
           index += 1
         end
 
-        cumul_td += ss_total_td
         cumul_hetd += ss_total_hetd
         cumul_tarif += ss_total_tarif
       end
@@ -158,7 +153,6 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
           "C",
           "#{ intervenant_cours.count } cours au total",
           nil,nil,nil,nil,nil,nil,nil,nil,
-          cumul_td, # Nbre hres CM
           cumul_hetd, # Nbre HETD (ou HTD ou TD)
           Cour.Tarif,
           cumul_tarif
@@ -194,8 +188,6 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
           nil,
           vacation.qte,
           # Jusqu'au dessus c'est bon
-          # Nbre d'Hres CM
-          nil,
           # Nbre HTD
           nil,
           # Taux TD
@@ -212,7 +204,6 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
           "V",
           "#{ intervenant_vacations.count } vacations au total",
           nil,nil,nil,nil,nil,nil,nil,nil,
-          nil, # Nbre hres CM
           nil, # Nbre HTD
           nil,
           cumul_vacations
@@ -241,8 +232,6 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
           nil,
           resp.heures,
           # Jusqu'au dessus c'est bon
-          # Nbre d'Hres CM
-          nil,
           # Nbre HTD
           resp.heures,
           # Taux TD
@@ -259,7 +248,6 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
           "R",
           "#{ intervenant_responsabilites.count } responsabilités au total",
           nil,nil,nil,nil,nil,nil,nil,nil,
-          nil, # Nbre hres CM
           nil, # Nbre HTD
           nil,
           cumul_responsabilites
@@ -273,7 +261,7 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
       if !(cumul_tarif + cumul_vacations + cumul_responsabilites).zero?
         total = [
           "Total #{intervenant.nom_prenom}",
-          nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,
+          nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,
           cumul_tarif + cumul_vacations + cumul_responsabilites,
         ]
 
