@@ -1,0 +1,37 @@
+<%= form_with(model: sujet, class: "contents") do |form| %>
+  <% if sujet.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
+      <h2><%= pluralize(sujet.errors.count, "error") %> prohibited this sujet from being saved:</h2>
+
+      <ul class="list-disc ml-6">
+        <% sujet.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="my-5">
+    <%= form.label :cour_id %>
+    <%= form.text_field :cour_id, class: ["block shadow rounded-md border outline-none px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": sujet.errors[:cour_id].none?, "border-red-400 focus:outline-red-600": sujet.errors[:cour_id].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :mail_log_id %>
+    <%= form.text_field :mail_log_id, class: ["block shadow rounded-md border outline-none px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": sujet.errors[:mail_log_id].none?, "border-red-400 focus:outline-red-600": sujet.errors[:mail_log_id].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :workflow_state %>
+    <%= form.text_field :workflow_state, class: ["block shadow rounded-md border outline-none px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": sujet.errors[:workflow_state].none?, "border-red-400 focus:outline-red-600": sujet.errors[:workflow_state].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :slug %>
+    <%= form.text_field :slug, class: ["block shadow rounded-md border outline-none px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": sujet.errors[:slug].none?, "border-red-400 focus:outline-red-600": sujet.errors[:slug].any?}] %>
+  </div>
+
+  <div class="inline">
+    <%= form.submit class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
+  </div>
+<% end %>

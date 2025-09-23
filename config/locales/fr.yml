@@ -575,3 +575,8 @@ fr:
       title: "Edusign logs"
     show:
       title: "Edusign log"
+  sujets:
+    index:
+      title: "Sujets d'examens"
+    show:
+      title: "Sujet d'examen"

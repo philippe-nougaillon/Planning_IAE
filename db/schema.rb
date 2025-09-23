@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_10_074622) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_22_115942) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -614,6 +614,17 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_10_074622) do
     t.index ["key"], name: "index_solid_queue_semaphores_on_key", unique: true
   end
 
+  create_table "sujets", force: :cascade do |t|
+    t.bigint "cour_id", null: false
+    t.bigint "mail_log_id"
+    t.string "workflow_state"
+    t.string "slug"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cour_id"], name: "index_sujets_on_cour_id"
+    t.index ["mail_log_id"], name: "index_sujets_on_mail_log_id"
+  end
+
   create_table "unites", id: :serial, force: :cascade do |t|
     t.integer "formation_id"
     t.string "nom"
@@ -715,6 +726,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_10_074622) do
   add_foreign_key "solid_queue_ready_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "sujets", "cours"
+  add_foreign_key "sujets", "mail_logs"
   add_foreign_key "vacation_activite_tarifs", "vacation_activites"
   add_foreign_key "vacations", "vacation_activites"
 
