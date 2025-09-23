@@ -68,7 +68,7 @@
     <div class="flex flex-wrap">
       <div class="sm:w-2/12 ">
         <%= label_tag :filter, "Cours" %>
-        <div class="flex gap-2 mt-1">
+        <div class="flex flex-wrap gap-2 mt-1">
           <label class="flex items-center gap-1 cursor-pointer mr-5">
             <%= radio_button_tag :filter, "all", (params[:filter]=='all'), onchange:'this.form.submit()', class: 'radio radio-xs' %>
             <span class="label-text">Tous</span>
@@ -99,7 +99,7 @@
 
       <div class="sm:w-3/12 px-2">
         <%= label_tag :view, "Vue" %>
-        <div class="flex gap-2 mt-1">
+        <div class="flex flex-wrap gap-2 mt-1">
           <label class="flex items-center gap-1 cursor-pointer">
             <%= radio_button_tag :view, "list", (params[:view]=='list'), onchange:'this.form.submit()', class: 'radio radio-xs' %>
             <span class="label-text">Liste</span>
@@ -122,7 +122,7 @@
       <div class="sm:w-2/12 pl-2">
         <% if params[:view] == 'list' %>
           <%= label_tag :paginate, "Afficher" %>
-          <div class="flex gap-2 mt-1">
+          <div class="flex flex-wrap gap-2 mt-1">
             <label class="flex items-center gap-1 cursor-pointer">
               <%= radio_button_tag :paginate, "pages", (params[:paginate]=='pages'), onchange:'this.form.submit()', class: 'radio radio-xs' %>
               <span class="label-text">Pages</span>
