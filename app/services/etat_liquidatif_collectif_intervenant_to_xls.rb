@@ -26,7 +26,7 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
     sheet.row(2).concat ["Décrets N°87-889 du 29/10/1987 et 88-994 du 18/10/1988 - CAr du 05/12/2023"]
 
     sheet.row(4).concat ['Type d\'intervention', 'Nom', 'Prénom','Formation', 'Intitulé', 'Code EOTP', 'Destination Finan.', 'Date', 'Nom Taux',
-      'Durée en Hres','Binôme','HeTD', 'Nbre HTD', 'Taux TD','Mtnt total HTD']
+      'Durée en Hres','HeTD', 'Nbre HTD', 'Taux TD','Mtnt total HTD']
 
     sheet.row(4).default_format = bold
 
@@ -80,13 +80,16 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
 
         intervenant_cours.select { |c| formation_group.map(&:id).include?(c.formation_id) }.each do |c|
           formation = formation_group.find { |f| f.id == c.formation_id }
-          any_cours_for_eotp ||= true
           if c.imputable?            
             case formation.nomtauxtd
-            when 'TD', '3xTD'
+            when 'TD'
               montant_service = (c.duree.to_f * Cour.Tarif).round(2)
               ss_total_hetd += c.duree.to_f
               ss_total_td += c.duree
+            when '3xTD'
+              montant_service = ((c.duree.to_f * 3) * Cour.Tarif).round(2)
+              ss_total_hetd += c.duree.to_f * 3
+              ss_total_td += c.duree * 3
             when 'CM'
               montant_service = ((c.duree.to_f * 1.5) * Cour.Tarif).round(2)
               ss_total_hetd += c.duree.to_f * 1.5
@@ -97,38 +100,42 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
             ss_total_tarif += montant_service
           end
 
-          fields_to_export = [
-            'C',
-            intervenant.nom,
-            intervenant.prenom,
-            # Ligne pour avoir plus d'informations, désactivation de la ligne à alterner au besoin avec celle encore en dessous
-            # "#{formation.nom_promo_full} (nom taux td : #{formation.nomtauxtd}) [inputable : #{c.imputable?}] {hss? #{c.hors_service_statutaire || formation.hss}}",
-            "#{formation.nom_promo_full}",
-            c.nom_ou_ue,
-            formation.code_analytique_avec_indice(c.debut),
-            formation.code_analytique.include?('DISTR') ? "101PAIE" : "102PAIE",
-            I18n.l(c.debut.to_date),
-            formation.nomtauxtd,
-            c.duree,
-            (c.intervenant && c.intervenant_binome ? "OUI" : ''),
-            *case formation.nomtauxtd
-              when 'TD', '3xTD' then [c.duree, c.duree]
-              when 'CM' then [c.duree * 1.5, c.duree * 1.5]
-              else [0, 0]
-            end,
-            Cour.Tarif,
-            montant_service
-          ]
+          unless (montant_service.nil? || montant_service.zero?)
+            any_cours_for_eotp ||= true
 
-          sheet.row(index).replace fields_to_export
-          index += 1
+            fields_to_export = [
+              'C',
+              intervenant.nom,
+              intervenant.prenom,
+              # Ligne pour avoir plus d'informations, désactivation de la ligne à alterner au besoin avec celle encore en dessous
+              # "#{formation.nom_promo_full} (nom taux td : #{formation.nomtauxtd}) [inputable : #{c.imputable?}] {hss? #{c.hors_service_statutaire || formation.hss}}",
+              "#{formation.nom_promo_full}",
+              c.nom_ou_ue,
+              formation.code_analytique_avec_indice(c.debut),
+              formation.code_analytique.include?('DISTR') ? "101PAIE" : "102PAIE",
+              I18n.l(c.debut.to_date),
+              formation.nomtauxtd,
+              c.duree,
+              *case formation.nomtauxtd
+                when 'TD' then [c.duree, c.duree]
+                when '3xTD' then [c.duree * 3, c.duree * 3]
+                when 'CM' then [c.duree * 1.5, c.duree * 1.5]
+                else [0, 0]
+              end,
+              Cour.Tarif,
+              montant_service
+            ]
+
+            sheet.row(index).replace fields_to_export
+            index += 1
+          end
         end
         
         if any_cours_for_eotp
           total_eotp = [
             "C",
             "Sous total code EOTP #{code_eotp || '???'} : #{intervenant_cours.select { |c| formation_group.map(&:id).include?(c.formation_id) }.count} cours",
-            nil, nil, nil, nil, nil, nil, nil, nil, nil,
+            nil, nil, nil, nil, nil, nil, nil, nil,
             ss_total_td,
             ss_total_hetd,
             Cour.Tarif,
@@ -146,11 +153,11 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
       end
 
       # Total des cours de l'intervenant
-      if intervenant_cours.any?
+      if intervenant_cours.any? && !cumul_tarif.zero?
         total_cours = [
           "C",
           "#{ intervenant_cours.count } cours au total",
-          nil,nil,nil,nil,nil,nil,nil,nil,nil,
+          nil,nil,nil,nil,nil,nil,nil,nil,
           cumul_td, # Nbre hres CM
           cumul_hetd, # Nbre HETD (ou HTD ou TD)
           Cour.Tarif,
@@ -186,7 +193,6 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
           I18n.l(vacation.date),
           nil,
           vacation.qte,
-          nil,
           # Jusqu'au dessus c'est bon
           # Nbre d'Hres CM
           nil,
@@ -205,7 +211,7 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
         total_vacations = [
           "V",
           "#{ intervenant_vacations.count } vacations au total",
-          nil,nil,nil,nil,nil,nil,nil,nil,nil,
+          nil,nil,nil,nil,nil,nil,nil,nil,
           nil, # Nbre hres CM
           nil, # Nbre HTD
           nil,
@@ -234,7 +240,6 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
           I18n.l(resp.debut),
           nil,
           resp.heures,
-          nil,
           # Jusqu'au dessus c'est bon
           # Nbre d'Hres CM
           nil,
@@ -253,7 +258,7 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
         total_responsabilites = [
           "R",
           "#{ intervenant_responsabilites.count } responsabilités au total",
-          nil,nil,nil,nil,nil,nil,nil,nil,nil,
+          nil,nil,nil,nil,nil,nil,nil,nil,
           nil, # Nbre hres CM
           nil, # Nbre HTD
           nil,
@@ -265,15 +270,17 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
         index += 1
       end
 
-      total = [
-        "Total #{intervenant.nom_prenom}",
-        nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,
-        cumul_tarif + cumul_vacations + cumul_responsabilites,
-      ]
+      if !(cumul_tarif + cumul_vacations + cumul_responsabilites).zero?
+        total = [
+          "Total #{intervenant.nom_prenom}",
+          nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,
+          cumul_tarif + cumul_vacations + cumul_responsabilites,
+        ]
 
-      sheet.row(index).replace total
-      sheet.row(index).default_format = bold
-      index += 2
+        sheet.row(index).replace total
+        sheet.row(index).default_format = bold
+        index += 2
+      end
     end
 
     index += 3
