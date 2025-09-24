@@ -573,43 +573,39 @@ class Edusign < ApplicationService
 
         if cours_a_envoyer
             cours_a_envoyer.each do |cour|
-                if cour.valid?
-                    if cour.formation.edusign_id
-                        body =
-                        {"course":{
-                            "NAME": "#{cour.formation.nom} - #{cour.nom_ou_ue}" || 'Nom du cours à valider',
-                            "START": cour.debut - paris_observed_offset_seconds(cour.debut),
-                            "END": cour.fin - paris_observed_offset_seconds(cour.debut),
-                            "PROFESSOR": Intervenant.find_by(id: cour.intervenant_id)&.edusign_id,
-                            "PROFESSOR_2": Intervenant.find_by(id: cour.intervenant_binome_id)&.edusign_id,
-                            "API_ID": cour.id,
-                            "NEED_STUDENTS_SIGNATURE": true,
-                            "CLASSROOM": cour.salle&.nom,
-                            "SCHOOL_GROUP": [cour.formation.edusign_id]
-                            }
+                if cour.formation.edusign_id
+                    body =
+                    {"course":{
+                        "NAME": "#{cour.formation.nom} - #{cour.nom_ou_ue}" || 'Nom du cours à valider',
+                        "START": cour.debut - paris_observed_offset_seconds(cour.debut),
+                        "END": cour.fin - paris_observed_offset_seconds(cour.debut),
+                        "PROFESSOR": Intervenant.find_by(id: cour.intervenant_id)&.edusign_id,
+                        "PROFESSOR_2": Intervenant.find_by(id: cour.intervenant_binome_id)&.edusign_id,
+                        "API_ID": cour.id,
+                        "NEED_STUDENTS_SIGNATURE": true,
+                        "CLASSROOM": cour.salle&.nom,
+                        "SCHOOL_GROUP": [cour.formation.edusign_id]
                         }
+                    }
 
-                        if method == 'Patch'
-                            body[:course].merge!({"ID": cour.edusign_id})
-                            body.merge!({"editSurveys": false})
+                    if method == 'Patch'
+                        body[:course].merge!({"ID": cour.edusign_id})
+                        body.merge!({"editSurveys": false})
+                    end
+
+                    response = self.prepare_body_request(body).get_response
+
+                    puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation du cours #{cour.id}, #{cour.nom} réussie"
+
+                    if response["status"] == 'success'
+                        if method == 'Post'
+                            # pas de vérification si le cour est valide, sinon le cour sera créé sur Edusign mais sans edusign_id. Ça créerait des doublons.
+                            cour.update_attribute('edusign_id', response["result"]["ID"])
                         end
-
-                        response = self.prepare_body_request(body).get_response
-
-                        puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation du cours #{cour.id}, #{cour.nom} réussie"
-
-                        if response["status"] == 'success'
-                            if method == 'Post'
-                                cour.edusign_id = response["result"]["ID"]
-                                cour.save
-                            end
-                            nb_audited += 1
-                        end
-                    else
-                        puts "La formation #{cour.formation.nom} n'est pas encore reliée à Edusign. Le cours #{cour.id}, #{cour.nom} n'est pas envoyé"
+                        nb_audited += 1
                     end
                 else
-                    puts "Le cours #{cour.id}, #{cour.nom} n'est pas valide, il ne peut pas être envoyé dans Edusign : #{cour.errors.full_messages}"
+                    puts "La formation #{cour.formation.nom} n'est pas encore reliée à Edusign. Le cours #{cour.id}, #{cour.nom} n'est pas envoyé"
                 end
             end
         end
