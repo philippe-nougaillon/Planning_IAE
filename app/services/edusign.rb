@@ -565,9 +565,9 @@ class Edusign < ApplicationService
         # Cours à créer / modifier du côté d'Edusign
         cours_a_envoyer = cours.where(etat: ["planifié", "confirmé", "à_réserver"])
 
-        puts "#{cours.count} cours ont été récupérés : #{cours.pluck(:id, :nom)}"
+        puts "#{cours_a_envoyer.count} cours ont été récupérés : #{cours_a_envoyer.pluck(:id, :nom)}"
 
-        @nb_recovered_elements += cours.count
+        @nb_recovered_elements += cours_a_envoyer.count + cours_a_supprimer.count
 
         nb_audited = 0
 
@@ -643,7 +643,7 @@ class Edusign < ApplicationService
         cours_a_envoyer.pluck(:id) if method == "Post"
     end
 
-    # Cet export est différent des autres exports, c'est une méthode Patch. Toutes les fonctions export ne sont plus utlisés, sauf export_cours
+    # Cet export est différent des autres exports, c'est une méthode Patch utilisé pour le changement de salle. Toutes les fonctions export ne sont plus utlisés, sauf export_cours
     def export_cours(cours_id)
         self.prepare_request_with_message("https://ext.edusign.fr/v1/course", 'Patch')
 
