@@ -392,7 +392,7 @@ class Edusign < ApplicationService
 
                 response = self.prepare_body_request(body).get_response
 
-                puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de la formation réussie : #{formation.id}, #{formation.nom} "
+                puts response["status"] == 'error' ?  "<strong>Erreur d'exportation de la formation #{formation.id}, #{formation.nom} : #{response["message"]}</strong>" : "Exportation de la formation réussie : #{formation.id}, #{formation.nom}"
 
                 if response["status"] == 'success'
                     if method == 'Post'
@@ -453,7 +453,7 @@ class Edusign < ApplicationService
 
                 response = self.prepare_body_request(body).get_response
 
-                puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de l'étudiant réussie : #{etudiant.id}, #{etudiant.nom} "
+                puts response["status"] == 'error' ?  "<strong>Erreur d'exportation de l'étudiant #{etudiant.id}, #{etudiant.nom_prénom} : #{response["message"]}</strong>" : "Exportation de l'étudiant réussie : #{etudiant.id}, #{etudiant.nom_prénom} "
 
                 if response["status"] == 'success'
                     if method == 'Post'
@@ -516,7 +516,7 @@ class Edusign < ApplicationService
                 response = self.prepare_body_request(body).get_response
 
                 # TODO : Voir s'il n'y a pas d'autres status que "error" ou "success"
-                puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de l'intervenant réussie :  #{intervenant.id}, #{intervenant.nom}"
+                puts response["status"] == 'error' ?  "<strong>Erreur d'exportation de l'intervenant #{intervenant.id}, #{intervenant.nom_prenom} : #{response["message"]}</strong>" : "Exportation de l'intervenant réussie : #{intervenant.id}, #{intervenant.nom_prenom}"
 
                 if response["status"] == 'success'
                     if method == 'Post'
@@ -663,7 +663,7 @@ class Edusign < ApplicationService
 
             response = self.prepare_body_request(body).get_response
 
-            puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Modification du cours #{cours.id}, #{cours.nom_ou_ue} (id Edusign : #{cours.edusign_id}) réussie"
+            puts response["status"] == 'error' ?  "<strong>Erreur d'exportation du cours #{cour.id}, #{cour.nom_ou_ue} : #{response["message"]}</strong>" : "Modification du cours #{cours.id}, #{cours.nom_ou_ue} (id Edusign : #{cours.edusign_id}) réussie"
 
             if response["status"] == 'success'
                 @nb_sended_elements += 1
@@ -734,7 +734,7 @@ class Edusign < ApplicationService
 
             response = self.get_response
 
-            puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation du cours #{edusign_id} pour la suppression réussie"
+            puts response["status"] == 'error' ?  "<strong>Erreur lors de la suppression du cours #{edusign_id} : #{response["message"]}</strong>" : "Exportation du cours #{edusign_id} pour la suppression réussie"
 
             if response["status"] == 'success'
                 # Suppression de l'edusign_id du cours supprimé sur Edusign
