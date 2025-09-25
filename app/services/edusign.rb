@@ -8,6 +8,9 @@ class Edusign < ApplicationService
         # Utilisés pour calculer le nombre d'éléments en erreur
         @nb_recovered_elements = 0
         @nb_sended_elements = 0
+
+        # Déclaré ici pour éviter de synchroniser des éléments deux fois (à cause de la prochaine synchronisation qui se base sur le created_at de la synchronisation)
+        @interval_end = Time.zone.now
     end
 
     def call
@@ -100,8 +103,8 @@ class Edusign < ApplicationService
 
     def get_interval_of_time
         # Se base sur le dernier EdusignLog où il n'y a pas eu de crash. Le scheduler n'est plus à synchroniser avec cette fonction
-        puts "INTERVAL = #{EdusignLog.reorder(created_at: :desc).where.not(etat: 3).first.created_at..Time.zone.now}"
-        EdusignLog.reorder(created_at: :desc).where.not(etat: 3).first.created_at..Time.zone.now
+        puts "INTERVAL = #{EdusignLog.where(modele_type: 1).where.not(etat: 3).reorder(created_at: :desc).first.created_at..@interval_end}"
+        EdusignLog.where(modele_type: 1).where.not(etat: 3).reorder(created_at: :desc).first.created_at..@interval_end
     end
 
     # Cette fonction ne prend pas seulement des éléments créés aujourd'hui, mais aussi ceux qui viennent d'être considérés comme élément à ajouter sur edusign

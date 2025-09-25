@@ -38,8 +38,4 @@ class EdusignLog < ApplicationRecord
       ''
     end
   end
-
-  def self.get_types
-    ["Auto sync", "Manual sync", "Classroom changed"]
-  end
 end
