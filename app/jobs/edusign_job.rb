@@ -19,74 +19,94 @@ class EdusignJob < ApplicationJob
   end
 
   def synchronisation_edusign
-    etat = 0
+    etat = 3
+    edusign_log = EdusignLog.create(modele_type: 1, message: "", user_id: @current_user_id, etat: etat)
 
-    # capture output
-    @stream = capture_stdout do
-      request = Edusign.new
-      puts "C'est parti !"
+    begin
+      # capture output
+      @stream = capture_stdout do
+        request = Edusign.new
+        puts "C'est parti !"
 
-      request.call
-      
-      etat = request.get_etat
+        request.call
+        
+        etat = request.get_etat
+      end
+
+      edusign_log.update(message: @stream, etat: etat)
+    rescue => e
+      edusign_log.update(message: "Erreur: #{e.full_message}", etat: 3)
     end
-
-    EdusignLog.create(modele_type: 1, message: @stream, user_id: @current_user_id, etat: etat)
   end
 
   def initialisation_edusign
-    etat = 0
+    etat = 3
+    edusign_log = EdusignLog.create(modele_type: 0, message: "", user_id: @current_user_id, etat: etat)
 
-    # capture output
-    @stream = capture_stdout do
-      request = Edusign.new
-      puts "Démarrage de l'initialisation de la synchronisation avec Edusign !"
+    begin
+      # capture output
+      @stream = capture_stdout do
+        request = Edusign.new
+        puts "Démarrage de l'initialisation de la synchronisation avec Edusign !"
 
-      request.initialisation
-      
-      etat = request.get_etat
+        request.initialisation
+        
+        etat = request.get_etat
+      end
+
+      edusign_log.update(message: @stream, etat: etat)
+    rescue => e
+      edusign_log.update(message: "Erreur: #{e.full_message}", etat: 3)
     end
-
-    EdusignLog.create(modele_type: 0, message: @stream, user_id: @current_user_id, etat: etat)
   end
   
   def synchronisation_manuelle_edusign(args)
     record_type = args[:record_type]
     record_id = args[:record_id]
 
-    etat = 0
+    etat = 3
+    edusign_log = EdusignLog.create(modele_type: 2, message: "", user_id: @current_user_id, etat: etat)
 
-    # capture output
-    stream = capture_stdout do
-      request = Edusign.new
+    begin
+      # capture output
+      stream = capture_stdout do
+        request = Edusign.new
 
-      case record_type
-      when "intervenant"
-        request.export_intervenant(record_id)
-      when "formation"
-        request.export_formation(record_id)
-      when "etudiant"
-        request.export_etudiant(record_id)
+        case record_type
+        when "intervenant"
+          request.export_intervenant(record_id)
+        when "formation"
+          request.export_formation(record_id)
+        when "etudiant"
+          request.export_etudiant(record_id)
+        end
+
+        etat = request.get_etat
       end
 
-      etat = request.get_etat
+      edusign_log.update(message: stream, etat: etat)
+    rescue => e
+      edusign_log.update(message: "Erreur: #{e.full_message}", etat: 3)
     end
-
-    EdusignLog.create(modele_type: 2, message: stream, user_id: @current_user_id, etat: etat)
   end
 
   def changement_salle_edusign(args)
     cour_id = args[:cour_id]
     
-    etat = 0
+    etat = 3
+    edusign_log = EdusignLog.create(modele_type: 3, message: "", user_id: @current_user_id, etat: etat)
 
-    # capture output
-    stream = capture_stdout do
-      request = Edusign.new
-      request.export_cours(cour_id)
-      etat = request.get_etat
+    begin
+      # capture output
+      stream = capture_stdout do
+        request = Edusign.new
+        request.export_cours(cour_id)
+        etat = request.get_etat
+      end
+
+      edusign_log.update(message: stream, etat: etat)
+    rescue => e
+      edusign_log.update(message: "Erreur: #{e.full_message}", etat: 3)
     end
-
-    EdusignLog.create(modele_type: 3, message: stream, user_id: @current_user_id, etat: etat)
   end
 end

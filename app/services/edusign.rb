@@ -8,6 +8,9 @@ class Edusign < ApplicationService
         # Utilisés pour calculer le nombre d'éléments en erreur
         @nb_recovered_elements = 0
         @nb_sended_elements = 0
+
+        # Déclaré ici pour éviter de synchroniser des éléments deux fois (à cause de la prochaine synchronisation qui se base sur le created_at de la synchronisation)
+        @interval_end = Time.zone.now
     end
 
     def call
@@ -99,14 +102,13 @@ class Edusign < ApplicationService
     end
 
     def get_interval_of_time
-        # Modifier le Scheduler en conséquence, pour éviter les duplications
-        DateTime.now-1.hour..DateTime.now
+        # Se base sur le dernier EdusignLog où il n'y a pas eu de crash. Le scheduler n'est plus à synchroniser avec cette fonction
+        puts "INTERVAL = #{EdusignLog.where(modele_type: 1).where.not(etat: 3).reorder(created_at: :desc).first.created_at..@interval_end}"
+        EdusignLog.where(modele_type: 1).where.not(etat: 3).reorder(created_at: :desc).first.created_at..@interval_end
     end
 
     # Cette fonction ne prend pas seulement des éléments créés aujourd'hui, mais aussi ceux qui viennent d'être considérés comme élément à ajouter sur edusign
     def get_all_element_created_today(model)
-        interval = self.get_interval_of_time
-
         formations_sent_to_edusign_ids = Formation.not_archived.sent_to_edusign_ids
 
         if model == Formation
@@ -595,7 +597,7 @@ class Edusign < ApplicationService
 
                     response = self.prepare_body_request(body).get_response
 
-                    puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation du cours #{cour.id}, #{cour.nom} réussie"
+                    puts response["status"] == 'error' ?  "<strong>Erreur d'exportation du cours #{cour.id}, #{cour.nom_ou_ue} : #{response["message"]}</strong>" : "Exportation du cours #{cour.id}, #{cour.nom_ou_ue} réussie"
 
                     if response["status"] == 'success'
                         if method == 'Post'
@@ -605,7 +607,7 @@ class Edusign < ApplicationService
                         nb_audited += 1
                     end
                 else
-                    puts "La formation #{cour.formation.nom} n'est pas encore reliée à Edusign. Le cours #{cour.id}, #{cour.nom} n'est pas envoyé"
+                    puts "La formation #{cour.formation.nom} n'est pas encore reliée à Edusign. Le cours #{cour.id}, #{cour.nom_ou_ue} n'est pas envoyé"
                 end
             end
         end
@@ -625,7 +627,7 @@ class Edusign < ApplicationService
 
                     response = self.get_response
 
-                    puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation du cours #{cour.id}, #{cour.nom} pour la suppression réussie"
+                    puts response["status"] == 'error' ?  "<strong>Erreur d'exportation du cours #{cour.id}, #{cour.nom_ou_ue} : #{response["message"]}</strong>" : "Exportation du cours #{cour.id}, #{cour.nom_ou_ue} pour la suppression réussie"
 
                     if response["status"] == 'success'
                         nb_audited += 1
@@ -667,7 +669,7 @@ class Edusign < ApplicationService
 
             response = self.prepare_body_request(body).get_response
 
-            puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Modification du cours #{cours.id}, #{cours.nom} (id Edusign : #{cours.edusign_id}) réussie"
+            puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Modification du cours #{cours.id}, #{cours.nom_ou_ue} (id Edusign : #{cours.edusign_id}) réussie"
 
             if response["status"] == 'success'
                 @nb_sended_elements += 1
