@@ -107,8 +107,8 @@ class Edusign < ApplicationService
         EdusignLog.where(modele_type: 1).where.not(etat: 3).reorder(created_at: :desc).first.created_at..@interval_end
     end
 
-    # Cette fonction ne prend pas seulement des éléments créés aujourd'hui, mais aussi ceux qui viennent d'être considérés comme élément à ajouter sur edusign
-    def get_all_element_created_today(model)
+    # Cette fonction les éléments qui sont considérés comme élément à ajouter sur edusign
+    def get_all_element_to_post(model)
         formations_sent_to_edusign_ids = Formation.not_archived.sent_to_edusign_ids
 
         if model == Formation
@@ -129,9 +129,8 @@ class Edusign < ApplicationService
             ).where.not(intervenant_id: Intervenant.intervenants_examens + Intervenant.sans_intervenant)
         elsif model == Intervenant
 
-            # On sélectionne que les intervenants qui sont liés à une formation cobaye.
-            # Pour cela, on va passer par les cours qui appartienent aux formations cobayes et correspondent à l'intervalle.
-            # Pour les cours, on se base sur updated_at pour ne pas rater un changement d'intervenant ou un ajout d'intervenant binome.
+            # On sélectionne que les intervenants qui sont liés à une formation qui doit être sur Edusign.
+            # Pour cela, on va passer par les cours qui appartienent à ces formations.
 
             intervenant_ids = Cour.where(
               formation_id: formations_sent_to_edusign_ids,
@@ -142,8 +141,8 @@ class Edusign < ApplicationService
         end
     end
 
-    # Récupère tous les éléments déjà sur Edusign, qui ont été modifiés dans l'interval sur AIKKU Plann
-    def get_all_element_updated_today(model, record_ids = nil)
+    # Récupère tous les éléments déjà sur Edusign, qui ont été modifiés depuis la dernière synchronisation sur AIKKU Plann
+    def get_all_element_updated_since_last_sync(model, record_ids = nil)
         interval = self.get_interval_of_time
 
         formations_sent_to_edusign_ids = Formation.not_archived.sent_to_edusign_ids
@@ -364,10 +363,10 @@ class Edusign < ApplicationService
             puts "Début de l'ajout des formations (initialisation)"
         else
             if method == 'Post'
-                formations = self.get_all_element_created_today(Formation)
+                formations = self.get_all_element_to_post(Formation)
                 puts "Début de l'ajout des formations"
             else
-                formations = self.get_all_element_updated_today(Formation, formations_ajoutés_ids)
+                formations = self.get_all_element_updated_since_last_sync(Formation, formations_ajoutés_ids)
                 puts "Début de la modification des formations"
             end
         end
@@ -423,10 +422,10 @@ class Edusign < ApplicationService
             puts "Début de l'ajout des etudiants (initialisation)"
         else
             if method == 'Post'
-                etudiants = self.get_all_element_created_today(Etudiant)
+                etudiants = self.get_all_element_to_post(Etudiant)
                 puts "Début de l'ajout des etudiants"
             else
-                etudiants = self.get_all_element_updated_today(Etudiant, etudiants_ajoutés_ids)
+                etudiants = self.get_all_element_updated_since_last_sync(Etudiant, etudiants_ajoutés_ids)
                 puts "Début de la modification des etudiants"
             end
         end
@@ -484,10 +483,10 @@ class Edusign < ApplicationService
             puts "Début de l'ajout des intervenants (initialisation)"
         else
             if method == 'Post'
-                intervenants = self.get_all_element_created_today(Intervenant)
+                intervenants = self.get_all_element_to_post(Intervenant)
                 puts "Début de l'ajout des intervenants"
             else
-                intervenants = self.get_all_element_updated_today(Intervenant, intervenants_ajoutés_ids)
+                intervenants = self.get_all_element_updated_since_last_sync(Intervenant, intervenants_ajoutés_ids)
                 puts "Début de la modification des intervenants"
             end
         end
@@ -550,11 +549,11 @@ class Edusign < ApplicationService
             cours_a_supprimer = Cour.none
         else
             if method == 'Post'
-                cours = self.get_all_element_created_today(Cour).where.not(etat: ["annulé", "reporté"])
+                cours = self.get_all_element_to_post(Cour).where.not(etat: ["annulé", "reporté"])
                 puts "Début de l'ajout des cours"
                 cours_a_supprimer = Cour.none
             else
-                cours = self.get_all_element_updated_today(Cour, cours_ajoutés_ids)
+                cours = self.get_all_element_updated_since_last_sync(Cour, cours_ajoutés_ids)
                 puts "Début de la modification des cours"
                 cours_a_supprimer = cours.where(etat: ["annulé", "reporté"])
             end

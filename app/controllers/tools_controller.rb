@@ -1550,7 +1550,7 @@ class ToolsController < ApplicationController
 
   #   request = Edusign.new("https://ext.edusign.fr/v1/student", 'Post')
 
-  #   etudiants_added = request.get_all_element_created_today(Etudiant).where(edusign_id: nil)
+  #   etudiants_added = request.get_all_element_to_post(Etudiant).where(edusign_id: nil)
 
   #   etudiants_added.each do |etudiant|
   #     body =
@@ -1581,7 +1581,7 @@ class ToolsController < ApplicationController
 
   #   request = Edusign.new("https://ext.edusign.fr/v1/student", 'Patch')
 
-  #   etudiants_updated = request.get_all_element_updated_today(Etudiant).where("created_at != updated_at")
+  #   etudiants_updated = request.get_all_element_updated_since_last_sync(Etudiant).where("created_at != updated_at")
 
   #   etudiants_updated.each do |etudiant|
   #     body =
@@ -1632,7 +1632,7 @@ class ToolsController < ApplicationController
   # def modification_formations
   #   request = Edusign.new("https://ext.edusign.fr/v1/group/", 'Patch')
 
-  #   formations_updated = request.get_all_element_updated_today(Formation)
+  #   formations_updated = request.get_all_element_updated_since_last_sync(Formation)
 
   #   formations_updated.each do |formation|
   #     body =
@@ -1655,7 +1655,7 @@ class ToolsController < ApplicationController
 
   #   request = Edusign.new("https://ext.edusign.fr/v1/professor", 'Post')
 
-  #   intervenants_added = request.get_all_element_created_today(Intervenant)
+  #   intervenants_added = request.get_all_element_to_post(Intervenant)
 
   #   intervenants_added.each do |intervenant|
   #     body =
@@ -1684,7 +1684,7 @@ class ToolsController < ApplicationController
 
   #   request = Edusign.new("https://ext.edusign.fr/v1/professor", 'Patch')
 
-  #   intervenants_updated = request.get_all_element_updated_today(Intervenant)
+  #   intervenants_updated = request.get_all_element_updated_since_last_sync(Intervenant)
 
   #   intervenants_updated.each do |intervenant|
   #     body =
@@ -1708,7 +1708,7 @@ class ToolsController < ApplicationController
 
   #   request = Edusign.new("https://ext.edusign.fr/v1/course", 'Post')
 
-  #   cours_added = request.get_all_element_created_today(Cour)
+  #   cours_added = request.get_all_element_to_post(Cour)
 
   #   cours_added.each do |cours|
   #     body =
@@ -1738,7 +1738,7 @@ class ToolsController < ApplicationController
   # def modification_cours
   #   request = Edusign.new("https://ext.edusign.fr/v1/course", 'Patch')
 
-  #   cours_updated = request.get_all_element_updated_today(Cour)
+  #   cours_updated = request.get_all_element_updated_since_last_sync(Cour)
 
   #   cours_updated.each do |cours|
   #     body =
