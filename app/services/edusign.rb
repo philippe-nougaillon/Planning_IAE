@@ -397,8 +397,7 @@ class Edusign < ApplicationService
 
                 if response["status"] == 'success'
                     if method == 'Post'
-                        formation.edusign_id = response["result"]["ID"]
-                        formation.save
+                        formation.update_attribute('edusign_id', response["result"]["ID"])
                     end
                     nb_audited += 1
                 end
@@ -459,8 +458,7 @@ class Edusign < ApplicationService
 
                 if response["status"] == 'success'
                     if method == 'Post'
-                        etudiant.edusign_id = response["result"]["ID"]
-                        etudiant.save
+                        etudiant.update_attribute('edusign_id', response["result"]["ID"])
                     end
                     nb_audited += 1
                 end
@@ -523,9 +521,7 @@ class Edusign < ApplicationService
 
                 if response["status"] == 'success'
                     if method == 'Post'
-                        intervenant.edusign_id = response["result"]["ID"]
-                        # TODO: Checker que le save == true
-                        intervenant.save
+                        intervenant.update_attribute('edusign_id', response["result"]["ID"])
                     end
                     nb_audited += 1
                 end
@@ -622,8 +618,7 @@ class Edusign < ApplicationService
                 if cour.edusign_id != nil
                     self.prepare_request("https://ext.edusign.fr/v1/course/#{cour.edusign_id}", "Delete")
 
-                    cour.edusign_id = nil
-                    cour.save
+                    cour.update_attribute('edusign_id', nil)
 
                     response = self.get_response
 
@@ -744,8 +739,8 @@ class Edusign < ApplicationService
 
             if response["status"] == 'success'
                 # Suppression de l'edusign_id du cours supprimé sur Edusign
-                if cour_id = Cour.find_by(edusign_id: edusign_id).try(:id)
-                    Cour.update(cour_id, edusign_id: nil)
+                if cour = Cour.find_by(edusign_id: edusign_id)
+                    cour.update_attribute('edusign_id', nil)
                 end
                 nb_audited += 1
             end
@@ -817,8 +812,7 @@ class Edusign < ApplicationService
     #             puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de la formation #{formation.id}, #{formation.nom} réussie"
 
     #             if response["status"] == 'success'
-    #                 formation.edusign_id = response["result"]["ID"]
-    #                 formation.save
+    #                 formation.update_attribute('edusign_id', response["result"]["ID"])
     #                 @nb_sended_elements += 1
     #             end
     #         else
@@ -859,8 +853,7 @@ class Edusign < ApplicationService
     #             puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de l'étudiant #{etudiant.id}, #{etudiant.nom} réussie"
 
     #             if response["status"] == 'success'
-    #                 etudiant.edusign_id = response["result"]["ID"]
-    #                 etudiant.save
+    #                 etudiant.update_attribute('edusign_id', response["result"]["ID"])
     #                 @nb_sended_elements += 1
     #             end
     #         # else
@@ -898,8 +891,7 @@ class Edusign < ApplicationService
     #         puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de l'intervenant #{intervenant.id}, #{intervenant.nom} réussie"
 
     #         if response["status"] == 'success'
-    #             intervenant.edusign_id = response["result"]["ID"]
-    #             intervenant.save
+    #             intervenant.update_attribute('edusign_id', response["result"]["ID"])
     #             @nb_sended_elements += 1
     #         end
     #     # else
