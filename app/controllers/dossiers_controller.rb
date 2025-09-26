@@ -1,7 +1,7 @@
 class DossiersController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[ show deposer deposer_done ]
   before_action :set_dossier, only: %i[ show edit update destroy envoyer deposer deposer_done valider rejeter relancer archiver ]
-  before_action :is_user_authorized, except: %i[ show ]
+  before_action :is_user_authorized
 
   layout :determine_layout
 
@@ -57,7 +57,6 @@ class DossiersController < ApplicationController
 
   # GET /dossiers/1 or /dossiers/1.json
   def show
-    authorize @dossier
   end
 
   # GET /dossiers/new
@@ -204,6 +203,9 @@ private
     # Use callbacks to share common setup or constraints between actions.
     def set_dossier
       @dossier = Dossier.find_by(slug: params[:id])
+      if @dossier.nil?
+        redirect_to root_path, alert: "Dossier introuvable"
+      end
     end
 
     # Only allow a list of trusted parameters through.
@@ -229,6 +231,6 @@ private
     end
 
     def is_user_authorized
-      authorize Dossier
+      authorize @dossier ? @dossier : Dossier
     end
 end
