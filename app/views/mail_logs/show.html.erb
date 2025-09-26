@@ -34,7 +34,7 @@
 
 <p class="mb-4">
   <strong>État :</strong>
-  <% if @mail_log.opened %>
+  <% if @mail_log.opened && @mail_log.statut %>
     <span class="text-info">OUVERT</span>
   <% end %>
 </p>
