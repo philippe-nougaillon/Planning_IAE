@@ -400,7 +400,7 @@ class ToolsController < ApplicationController
         next unless row[0]
 
         etudiant = Etudiant
-                        .where("lower(nom) = ? AND lower(prénom) = ? AND lower(email) = ?", 
+                        .where("lower(trim(nom)) = ? AND lower(trim(prénom)) = ? AND lower(trim(email)) = ?", 
                           row[headers.index 'NOM'].try(:strip).try(:downcase), 
                           row[headers.index 'Prénom'].try(:strip).try(:downcase),
                           row[headers.index 'Mail'].try(:strip).try(:downcase))
