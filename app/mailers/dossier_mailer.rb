@@ -27,4 +27,11 @@ class DossierMailer < ApplicationMailer
              subject: "[Enseignement IAE-Paris #{ @dossier.période }] Dossier de recrutement")
     end
 
+    def mauvais_url
+        @dossier_id = params[:dossier_id]
+
+        mail(to: "philippe.nougaillon@aikku.eu, pierre-emmanuel.dacquet@aikku.eu, alexandre.meunier@aikku.eu", 
+             subject: "[IAE-PARIS MAUVAIS DOSSIER] ID : #{@dossier_id}")
+    end
+
 end
