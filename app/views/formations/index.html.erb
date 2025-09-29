@@ -93,7 +93,7 @@
           Choisir une action à exécuter sur les formations sélectionnées
         </span>
         <br>
-        <%= select_tag "action_name", options_for_select(["Archiver", "Changer de gestionnaire", "Synchroniser sur Edusign"]), include_blank:true, class:"select select-bordered select-sm", onchange:'this.form.submit()' %>
+        <%= select_tag "action_name", options_for_select(["Archiver formation et désactiver les étudiants", "Changer de gestionnaire", "Synchroniser sur Edusign"]), include_blank:true, class:"select select-bordered select-sm", onchange:'this.form.submit()' %>
       </div>
     </div>
   <% end %>
