@@ -71,6 +71,10 @@
                       options_from_collection_for_select(User.where.not(nom: nil).where.not(role: "étudiant").order(:nom), :id, :nom_prénom_role, params[:user_id]), 
                       include_blank:true, class:"slim-select" %>
     </div>
+  <% elsif params[:action_name] == "Archiver formation et désactiver les étudiants" %>
+    <p class="text-lg font-black">
+      Attention, l'archivage des formations provoquera la désactivation des comptes d'accès étudiants.
+    </p>
   <% end %>
 
   <div class="flex flex-wrap mb-12 mt-4">
