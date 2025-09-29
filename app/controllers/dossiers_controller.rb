@@ -204,7 +204,9 @@ private
     def set_dossier
       @dossier = Dossier.find_by(slug: params[:id])
       if @dossier.nil?
-        DossierMailer.with(dossier_id: params[:id]).mauvais_url.deliver_now
+        if !user_signed_in? || current_user.intervenant?
+          DossierMailer.with(dossier_id: params[:id]).mauvais_url.deliver_now
+        end
         redirect_to root_path, alert: "Dossier introuvable"
       end
     end
