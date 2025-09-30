@@ -166,7 +166,7 @@ class EtudiantsController < ApplicationController
       end
 
       if comptes_réactivés < @etudiants.count
-        flash[:alert] = "#{@etudiants.count - comptes_réactivés} créations de compte ont échoués et #{comptes_réactivés} comptes réactivés avec succès."
+        flash[:alert] = "#{@etudiants.count - comptes_réactivés} réactivations de compte ont échoués et #{comptes_réactivés} comptes réactivés avec succès."
       end
     end
 
