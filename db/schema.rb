@@ -12,7 +12,6 @@
 
 ActiveRecord::Schema[7.2].define(version: 2025_09_10_074622) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
 
   create_table "action_text_rich_texts", force: :cascade do |t|
@@ -719,10 +718,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_10_074622) do
   add_foreign_key "vacations", "vacation_activites"
 
   create_view "cours_non_planifies", materialized: true, sql_definition: <<-SQL
-      SELECT cours.id
+      SELECT id
      FROM cours
-    WHERE ((cours.id IN ( SELECT audits.auditable_id
+    WHERE ((id IN ( SELECT audits.auditable_id
              FROM audits
-            WHERE (((audits.auditable_type)::text = 'Cour'::text) AND (audits.user_id <> 41)))) AND (cours.etat = 0) AND ((cours.debut >= now()) AND (cours.debut <= (now() + 'P30D'::interval))));
+            WHERE (((audits.auditable_type)::text = 'Cour'::text) AND (audits.user_id <> 41)))) AND (etat = 0) AND ((debut >= now()) AND (debut <= (now() + 'P30D'::interval))));
   SQL
 end
