@@ -43,7 +43,7 @@
       </p>
       <p class="mb-4">
         <strong>État Mail :</strong> 
-        <% if @dossier.mail_log.opened %>
+        <% if @dossier.mail_log.opened && @dossier.mail_log.statut %>
           <span class="text-info">OUVERT</span>
         <% end %>
       </p>
