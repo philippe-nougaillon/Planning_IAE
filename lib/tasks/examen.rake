@@ -1,12 +1,17 @@
 namespace :examen do
   task rappel_examen_intervenant: :environment do
     jours_rappel = [60, 30, 20, 10, 5, 3, 2, 1]
-    
-    Cour.where("cours.debut >= DATE(?)", DateTime.now).each do |cour|
-      if cour.examen?
-        nombre_jours = cour.debut.to_date - Date.today
-        if jours_rappel.include?(nombre_jours)
-          IntervenantMailer.rappel_examen(cour.intervenant_binome, cour.debut, nombre_jours).deliver_now
+
+    examens = Cour.where("cours.debut >= ?", Date.today).select(&:examen?)
+
+    examens.each do |examen|
+      nombre_jours = (examen.debut.to_date - Date.today).to_i
+      if jours_rappel.include?(nombre_jours)
+        sujet = Sujet.find_or_create_by(cour_id: examen.id)
+        if !['déposé', 'validé', 'archivé'].include?(sujet.workflow_state)
+          mailer_response = IntervenantMailer.rappel_examen(examen.intervenant_binome, examen.debut, nombre_jours).deliver_now
+          mail_log = MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: examen.intervenant_binome.email, subject: "Sujet Examen")
+          sujet.update(mail_log_id: mail_log.id)
         end
       end
     end

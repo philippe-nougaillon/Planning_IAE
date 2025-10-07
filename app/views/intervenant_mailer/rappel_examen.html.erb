@@ -1,7 +1,7 @@
 <p style="margin-bottom: 0.5rem">
     Bonjour <%= @intervenant.nom_prenom %>,
     <br><br>
-    Vous avez un examen prévu dans <%= @jours %> jours, le <%= l @debut %>. Veuillez envoyer le sujet de l'examen aux gestionnaires avant la date limite.
+    Vous avez un examen prévu dans <%= @jours %> jours, le <%= l(@debut, format: :long) %>. Veuillez envoyer le sujet de l'examen aux gestionnaires avant la date limite.
     <br>
 </p>
 
