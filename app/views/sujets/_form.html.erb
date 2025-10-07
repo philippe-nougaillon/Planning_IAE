@@ -1,7 +1,7 @@
 <%= form_with(model: sujet, class: "contents") do |form| %>
   <% if sujet.errors.any? %>
-    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
-      <h2><%= pluralize(sujet.errors.count, "error") %> prohibited this sujet from being saved:</h2>
+    <div id="error_explanation">
+      <h2 class="text-3xl"><%= pluralize(dossier.errors.count, "error") %> empêche ce sujet d'être enregistré :</h2>
 
       <ul class="list-disc ml-6">
         <% sujet.errors.each do |error| %>

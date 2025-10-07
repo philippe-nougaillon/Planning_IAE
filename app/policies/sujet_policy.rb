@@ -10,11 +10,11 @@ class SujetPolicy < ApplicationPolicy
   end
 
   def show?
-    record.can_déposer? || (user && (user.rh? || user.admin?))
+    record.can_déposer? || index?
   end
 
   def new?
-    user.rh? || user.admin?
+    index?
   end
 
   def update?
@@ -34,7 +34,7 @@ class SujetPolicy < ApplicationPolicy
   end
 
   def audits?
-    user && (user.rh? || user.admin?)
+    index?
   end
 
   def deposer?
@@ -46,7 +46,7 @@ class SujetPolicy < ApplicationPolicy
   end
 
   def envoyer?
-    user.rh? || user.admin?
+    index?
   end
 
   def valider?
@@ -63,13 +63,5 @@ class SujetPolicy < ApplicationPolicy
 
   def archiver?
     envoyer?
-  end
-
-  def action?
-    user && (user.rh? || user.admin?)
-  end
-
-  def action_do?
-    action?
   end
 end

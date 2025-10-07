@@ -1,14 +1,21 @@
 class SujetsController < ApplicationController
-  before_action :set_sujet, only: %i[ show edit update destroy ]
+  before_action :set_sujet, only: %i[ show edit update destroy deposer deposer_done ]
   before_action :is_user_authorized
+  skip_before_action :authenticate_user!, only: %i[ show deposer deposer_done]
 
   # GET /sujets or /sujets.json
   def index
     @sujets = Sujet.ordered
 
-    if params[:archive].blank?
-      @sujets = @sujets.not_archived
+    if params[:nom].present?
+      # @sujets = @sujets.joins(:cours).where()
     end
+
+    if params[:workflow_state].present?
+      @sujets = @sujets.where("workflow_state = ?", params[:workflow_state].to_s.downcase)
+    end
+
+    @sujets = @sujets.paginate(page: params[:page], per_page: 20)
   end
 
   # GET /sujets/1 or /sujets/1.json
@@ -62,6 +69,42 @@ class SujetsController < ApplicationController
     end
   end
 
+  def deposer
+    if params[:sujet]
+      @sujet.update(sujet_params)
+      @sujet.déposer!
+      redirect_to deposer_done_sujet_path(@sujet)
+    else 
+      redirect_to request.referrer, alert: "Il faut ajouter le sujet"
+    end
+  end
+
+  def deposer_done
+  end
+
+  def valider
+    @sujet.valider_sujet(current_user.id)
+
+    redirect_to @sujet, notice: "Sujet validé avec succès."
+  end
+
+  def relancer
+    @sujet.relancer_sujet(current_user.id)
+
+    redirect_to @sujet, notice: "Sujet relancé avec succès."
+  end
+
+  def rejeter
+    @sujet.rejeter_sujet(current_user.id)
+    
+    redirect_to @sujet, notice: "Sujet rejeté avec succès. L'intervenant vient d'être informé."
+  end
+
+  def archiver
+    @sujet.archiver_sujet(current_user.id)
+    redirect_to @sujet, notice: 'Sujet archivé, le sujet a été supprimé'
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_sujet
@@ -73,7 +116,7 @@ class SujetsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def sujet_params
-      params.require(:sujet).permit(:cour_id, :mail_log_id, :workflow_state, :slug)
+      params.require(:sujet).permit(:sujet)
     end
 
     def sortable_columns

@@ -580,3 +580,5 @@ fr:
       title: "Sujets d'examens"
     show:
       title: "Sujet d'examen"
+    deposer_done:
+      title: "Sujet d'examen déposé"

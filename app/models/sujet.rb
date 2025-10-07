@@ -12,9 +12,10 @@ class Sujet < ApplicationRecord
 
   has_one_attached :sujet
 
+  scope :ordered, -> { order(updated_at: :desc) }
+
   # WORKFLOW
 
-  NOUVEAU = 'nouveau'
   ENVOYE  = 'envoyé'
   RELANCE1  = 'relancé 1 fois'
   RELANCE2  = 'relancé 2 fois'
@@ -32,10 +33,6 @@ class Sujet < ApplicationRecord
   ARCHIVE = 'archivé'
 
   workflow do
-    state NOUVEAU, meta: {style: 'badge-info'} do
-      event :envoyer, transitions_to: ENVOYE
-    end
-
     state ENVOYE, meta: {style: 'badge-primary'} do
       event :relancer, transitions_to: RELANCE1
       event :déposer, transitions_to: DEPOSE
@@ -105,6 +102,10 @@ class Sujet < ApplicationRecord
     end
 
     state ARCHIVE, meta: {style: 'badge-secondary'}
+  end
+
+  def style
+    self.current_state.meta[:style]
   end
 
   # pour que le changement se voit dans l'audit trail

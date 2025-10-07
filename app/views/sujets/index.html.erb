@@ -25,40 +25,31 @@
                             onchange: 'this.form.submit()' %>
       </div>
 
-      <div class="sm:w-1/5 px-4 mt-2">
-        <br>
-        <%= check_box_tag :archive, nil, params[:archive], onchange: 'this.form.submit()' %>
-        <%= label_tag :archive, "Inclure les archivés ?" %>
-      </div>
-      
     </div>
   <% end %>
 </div>
 
-    <div class="overflow-x-auto">
-      <table class="table mb-4">
-        <thead class="bg-slate-100 border">
-          <tr>
-            <% if policy(Dossier).action? %>
-              <th>
-                <span class="flex" data-action="click->action#click">
-                  <input type="checkbox" data-checkbox-select-all-target="checkboxAll" data-action-target="source">
-                </span>
-              </th>
-            <% end %>
-            <th><%= sort_link 'dossiers.période', 'Période' %></th>
-            <th><%= sort_link 'intervenants.nom', 'Intervenant' %></th>
-            <th><%= sort_link 'dossiers.workflow_state', 'État' %></th>
-            <th>Statut Mail</th>
-            <th>État Mail</th>
-            <th><%= sort_link 'dossiers.created_at', 'Création' %></th>
-            <th><%= sort_link 'dossiers.updated_at', 'MÀJ' %></th>
-            <th colspan="3"></th>
-          </tr>
-        </thead>
+<div class="overflow-x-auto">
+  <table class="table mb-4">
+    <thead class="bg-slate-100 border">
+      <tr>
+        <th><%= sort_link 'cours.debut', 'Cours le' %></th>
+        <th><%= sort_link 'sujets.updated_at', 'MÀJ' %></th>
+        <th><%= sort_link 'intervenants.nom', 'Intervenant' %></th>
+        <th><%= sort_link 'sujets.workflow_state', 'État' %></th>
+        <th><%= sort_link 'sujets.created_at', 'Création' %></th>
+        <th>Statut Mail</th>
+        <th>État Mail</th>
+        <th></th>
+      </tr>
+    </thead>
 
-        <tbody>
-          <%= render @dossiers %>
-        </tbody>
-      </table>
-    </div>
+    <tbody>
+      <%= render @sujets %>
+    </tbody>
+  </table>
+</div>
+
+<div class="planning_pagination">
+  <%= will_paginate @sujets %>
+</div>

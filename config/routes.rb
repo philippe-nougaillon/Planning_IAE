@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  resources :sujets
   mount MissionControl::Jobs::Engine, at: "/jobs"
 
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
@@ -241,6 +240,18 @@ Rails.application.routes.draw do
   resources :justificatifs, only: %i[ index show ]
 
   resources :edusign_logs, only: %i[ index show ]
+
+  resources :sujets do
+    member do
+      get :deposer_done
+      get :envoyer
+      get :valider
+      get :rejeter
+      get :relancer
+      get :archiver
+      patch :deposer
+    end
+  end
 
   controller :pages do
     get 'mentions_légales', to: 'pages#mentions_légales', as: :mentions_legales
