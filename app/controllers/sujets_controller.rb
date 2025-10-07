@@ -5,7 +5,7 @@ class SujetsController < ApplicationController
 
   # GET /sujets or /sujets.json
   def index
-    @sujets = Sujet.ordered
+    @sujets = Sujet.joins(:cour)
 
     if params[:nom].present?
       # @sujets = @sujets.joins(:cours).where()
@@ -15,11 +15,13 @@ class SujetsController < ApplicationController
       @sujets = @sujets.where("workflow_state = ?", params[:workflow_state].to_s.downcase)
     end
 
+    @sujets = @sujets.reorder(Arel.sql("#{sort_column} #{sort_direction}"))
     @sujets = @sujets.paginate(page: params[:page], per_page: 20)
   end
 
   # GET /sujets/1 or /sujets/1.json
   def show
+    @audits = @sujet.audits.reorder(id: :desc).paginate(page:params[:page], per_page: 10)
   end
 
   # GET /sujets/new
@@ -120,11 +122,11 @@ class SujetsController < ApplicationController
     end
 
     def sortable_columns
-      ['cours.debut', 'intervenants.nom','sujets.workflow_state', 'sujets.created_at', 'sujets.updated_at']
+      ['cours.debut','sujets.workflow_state', 'sujets.created_at', 'sujets.updated_at']
     end
 
     def sort_column
-      sortable_columns.include?(params[:column_sujet]) ? params[:column_sujet] : "nom"
+      sortable_columns.include?(params[:column_sujet]) ? params[:column_sujet] : "debut"
     end
 
     def sort_direction

@@ -3,9 +3,6 @@
     <%= l(sujet.cour.debut, format: :short) %>
   </td>
   <td>
-    <%= l(sujet.updated_at, format: :short) %>
-  </td>
-  <td>
     <%= sujet.cour.intervenant_binome.nom_prenom %>
   </td>
   <td>
@@ -14,7 +11,10 @@
     </span>
   </td>
   <td>
-    <%= l(sujet.created_at, format: :short) %>
+    <%= time_ago_in_words sujet.updated_at %>
+  </td>
+  <td>
+    <%= time_ago_in_words sujet.created_at %>
   </td>
   <% if sujet.mail_log %>
     <% if sujet.mail_log.statut %>

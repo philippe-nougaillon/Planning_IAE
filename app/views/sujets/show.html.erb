@@ -93,8 +93,14 @@
         <th>Action</th>
         <th>Modifications</th>
       </thead>
-      <%= render partial: 'tools/audit', collection: @sujet.own_and_associated_audits.reorder(id: :desc) %>
+      <%= render partial: 'tools/audit', collection: @audits %>
     </table>
   </div>
-  <br>
+  <div class="page_info">
+		<%= page_entries_info @audits, 'Audit' %>
+	</div>
+
+	<div class="planning_pagination">
+		<%= will_paginate @audits %>
+	</div>
 <% end %>
