@@ -42,10 +42,11 @@ class IntervenantMailer < ApplicationMailer
         end
     end
 
-    def rappel_examen(intervenant, debut, jours)
+    def rappel_examen(intervenant, debut, sujet, jours)
         @debut = debut
         @intervenant = intervenant
         @jours = jours
+        @sujet = sujet
         mail(to: @intervenant.email, subject:"[PLANNING] Rappel de votre examen à l'IAE Paris du #{l @debut}")
     end
 

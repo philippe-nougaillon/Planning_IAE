@@ -1,9 +1,19 @@
 <p style="margin-bottom: 0.5rem">
     Bonjour <%= @intervenant.nom_prenom %>,
     <br><br>
-    Vous avez un examen prévu dans <%= @jours %> jours, le <%= l(@debut, format: :long) %>. Veuillez envoyer le sujet de l'examen aux gestionnaires avant la date limite.
+    Vous avez un examen prévu dans <b><%= @jours %> jours</b>, le <b><%= l(@debut, format: :long) %></b>.
+    <br>
+    Veuillez envoyer le sujet de l'examen aux gestionnaires avant la date limite.
     <br>
 </p>
+
+<p style="margin-bottom: 0.5rem">
+    Pour déposer votre sujet en, 
+    <%= link_to 'cliquant ici', url_for(sujet_url(@sujet)) %>
+     ou en copiant le lien suivant
+    <%= url_for(sujet_url(@sujet)) %>
+</p>
+
 
 <p style="margin-bottom: 0.5rem">
     <b>Vous remerciant par avance du respect des délais et des consignes indiqués ci-dessus,</b>
