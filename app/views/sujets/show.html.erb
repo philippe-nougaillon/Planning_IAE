@@ -23,7 +23,7 @@
       </p>
     <% end %>
 
-    <% if @sujet.mail_log && policy(@sujet).index? %>
+    <% if @sujet.mail_log && policy(Sujet).index? %>
       <p class="mb-4">
         <strong>Statut Mail :</strong> 
         <% if @sujet.mail_log.statut %>
@@ -46,7 +46,7 @@
     <h5 class="text-lg">Sujet d'examen</h5>
 
     <% if !@sujet.sujet.attached? %>
-      <% if policy(@sujet).index? %>
+      <% if policy(Sujet).index? %>
         <p class="mb-4">
           Aucun sujet pour l'instant.
         </p>
@@ -60,7 +60,7 @@
     <% end %>
 
 
-    <% if !policy(@sujet).index? %>
+    <% if !policy(Sujet).index? %>
       <%= form_with url: deposer_sujet_path, model: @sujet, data: { controller: 'nested-form', nested_form_wrapper_selector_value: '.nested-form-wrapper' } do |f| %>
         <%= f.file_field :sujet, required: true, label: 'Fichier PDF', accept: 'application/pdf', class: 'file-input file-input-bordered file-input-sm file-input-success flex-1' %>
         <br>
