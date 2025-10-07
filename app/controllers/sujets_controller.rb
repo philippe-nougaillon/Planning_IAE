@@ -7,8 +7,29 @@ class SujetsController < ApplicationController
   def index
     @sujets = Sujet.joins(:cour)
 
-    if params[:nom].present?
-      # @sujets = @sujets.joins(:cours).where()
+    if params[:gestionnaire].present?
+      formations = Formation.where(user_id: current_user.id)
+      sujet_ids = []
+      @sujets.each do |sujet|
+        if formations.include?(sujet.formation)
+          sujet_ids << sujet.id
+        end
+      end
+
+      @sujets = @sujets.where(id: sujet_ids)
+    end
+
+    if params[:formation].present?
+      formation_id = Formation.find_by(nom: params[:formation]).id
+      examens_from_formation = Cour.where(formation_id: formation_id).select{|cour| cour.examen?}
+      @sujets = @sujets.where(cour_id: examens_from_formation)
+    end
+
+    if params[:intervenant].present?
+      nom_prenom_intervenant = params[:intervenant].split(' ', 2)
+      intervenant_id = Intervenant.find_by(nom: nom_prenom_intervenant.first, prenom: nom_prenom_intervenant.last.rstrip).id
+      examens_from_intervenant = Cour.where(intervenant_binome_id: intervenant_id).select{|cour| cour.examen?}
+      @sujets = @sujets.where(cour_id: examens_from_intervenant)
     end
 
     if params[:workflow_state].present?

@@ -9,6 +9,8 @@ class Sujet < ApplicationRecord
 
   belongs_to :cour
   belongs_to :mail_log, optional: true
+  
+  has_one :formation, through: :cour
 
   has_one_attached :sujet
 
