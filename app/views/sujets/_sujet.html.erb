@@ -1,0 +1,40 @@
+<tr class="hover border">
+  <td>
+    <%= l(sujet.cour.debut, format: :short) %>
+  </td>
+  <td>
+    <%= l(sujet.updated_at, format: :short) %>
+  </td>
+  <td>
+    <%= sujet.cour.intervenant_binome.nom_prenom %>
+  </td>
+  <td>
+    <span class="badge <%= sujet.style %> text-white">
+      <%= sujet.workflow_state.humanize %>
+    </span>
+  </td>
+  <td>
+    <%= l(sujet.created_at, format: :short) %>
+  </td>
+  <% if sujet.mail_log %>
+    <% if sujet.mail_log.statut %>
+      <td>
+        <span class="text-success">OK</span>
+      </td>
+      <td>
+        <% if sujet.mail_log&.opened %>
+          <span class="text-info">OUVERT</span>
+        <% end %>
+      </td>
+    <% else %>
+      <td>
+        <span class="text-error">KO</span>
+      </td>
+      <td></td>
+    <% end %>
+  <% else %>
+    <td></td>
+    <td></td>
+  <% end %>
+  <td><%= link_to 'Voir', sujet, class: 'text-primary hover:underline' %></td>
+</tr>

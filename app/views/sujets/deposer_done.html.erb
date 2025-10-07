@@ -1,0 +1,16 @@
+<p class="text-2xl font-bold text-success mt-12">
+    Sujet déposé avec succès. Merci.
+</p>
+<br>
+
+<p class="mb-4">
+    Déposé le : <b><%= l DateTime.now.to_date %></b>
+</p>
+
+<p class="mb-8">
+    Référence : <b><%= @sujet.slug %></b>
+</p>
+
+<p class="alert alert-success text-white mb-4">
+    <b>Vous pouvez maintenant fermer cette fenêtre.</b>
+</p>

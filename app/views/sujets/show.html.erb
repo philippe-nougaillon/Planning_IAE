@@ -1,0 +1,100 @@
+<h1 class="font-bold text-4xl">Sujet</h1>
+
+<div class="flex flex-wrap shadow-lg gap-8 p-6 mt-4">
+  <div>
+    <p class="mb-4">
+      <strong>Intervenant</strong>
+      <br>
+      <%= @sujet.cour.intervenant_binome.nom_prenom %>
+    </p>
+
+    <p class="mb-4">
+      <strong>Email</strong>
+      <br>
+      <%= @sujet.cour.intervenant_binome.email %>
+    </p>
+
+    <% if @sujet.validé? || @sujet.non_conforme? %>
+      <p class="mb-4">
+        <strong>État :</strong> 
+        <span class="badge <%= @sujet.style %> text-white">
+          <%= @sujet.workflow_state.humanize %>
+        </span>
+      </p>
+    <% end %>
+
+    <% if @sujet.mail_log && policy(@sujet).index? %>
+      <p class="mb-4">
+        <strong>Statut Mail :</strong> 
+        <% if @sujet.mail_log.statut %>
+          <span class="text-success">OK</span>
+        <% else %>
+          <span class="text-error">KO</span>
+        <% end %>
+      </p>
+      <p class="mb-4">
+        <strong>État Mail :</strong> 
+        <% if @sujet.mail_log.opened && @sujet.mail_log.statut %>
+          <span class="text-info">OUVERT</span>
+        <% end %>
+      </p>
+    <% end %>
+
+  </div>
+
+  <div class="relative flex-grow max-w-full flex-1">
+    <h5 class="text-lg">Sujet d'examen</h5>
+
+    <% if !@sujet.sujet.attached? %>
+      <% if policy(@sujet).index? %>
+        <p class="mb-4">
+          Aucun sujet pour l'instant.
+        </p>
+      <% else %>
+        <p class="alert mb-4">
+          Veuillez ajouter le sujet
+        </p>
+      <% end %>
+    <% else %>
+      <%= link_to @sujet.sujet.filename, url_for(@sujet.sujet), target: '_blank', class: 'text-primary hover:underline' %>
+    <% end %>
+
+
+    <% if !policy(@sujet).index? %>
+      <%= form_with url: deposer_sujet_path, model: @sujet, data: { controller: 'nested-form', nested_form_wrapper_selector_value: '.nested-form-wrapper' } do |f| %>
+        <%= f.file_field :sujet, required: true, label: 'Fichier PDF', accept: 'application/pdf', class: 'file-input file-input-bordered file-input-sm file-input-success flex-1' %>
+        <br>
+
+        <button type="submit" name="commit" value="Déposer le sujet" class="btn btn-success btn-wide btn-lg text-white mt-6" data-disable-with="Déposer le sujet" data-turbo-confirm="ATTENTION ! Une fois déposé, vous ne pourrez plus modifier le sujet. Confirmez-vous le dépôt de votre sujet">
+          <i class="far fa-arrow-alt-circle-down"></i>
+          Déposer le sujet
+        </button>
+      <% end %>
+    <% end %>
+
+  </div>
+</div>
+
+<%= link_to 'Retour', sujets_path, class: 'text-primary hover:underline mb-12' %>
+
+
+<% if policy(@sujet).audits? %>
+  <br>
+  <br>
+  <h4 class="text-xl mb-4">Audit des modifications</h4>
+
+  <div class="overflow-x-auto">
+    <table class="table table-xs">
+      <thead class="bg-slate-100 border">
+        <th>Date</th>
+        <th>Utilisateur</th>            
+        <th>Type</th>
+        <th>Id</th>
+        <th>Action</th>
+        <th>Modifications</th>
+      </thead>
+      <%= render partial: 'tools/audit', collection: @sujet.own_and_associated_audits.reorder(id: :desc) %>
+    </table>
+  </div>
+  <br>
+<% end %>
