@@ -157,6 +157,18 @@ class EtudiantsController < ApplicationController
       if comptes_créés < @etudiants.count
         flash[:alert] = "#{@etudiants.count - comptes_créés} créations de compte ont échoués et #{comptes_créés} comptes créés avec succès."
       end
+    when "Réactiver compte d'accès"
+      comptes_réactivés = 0
+      @etudiants.each do |etudiant|
+        if user = etudiant.linked_user
+          user.undiscard
+          comptes_réactivés += 1
+        end
+      end
+
+      if comptes_réactivés < @etudiants.count
+        flash[:alert] = "#{@etudiants.count - comptes_réactivés} réactivations de compte ont échoués et #{comptes_réactivés} comptes réactivés avec succès."
+      end
     end
 
     unless flash[:alert]

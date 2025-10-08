@@ -8,6 +8,9 @@ class Edusign < ApplicationService
         # Utilisés pour calculer le nombre d'éléments en erreur
         @nb_recovered_elements = 0
         @nb_sended_elements = 0
+
+        # Déclaré ici pour éviter de synchroniser des éléments deux fois (à cause de la prochaine synchronisation qui se base sur le created_at de la synchronisation)
+        @interval_end = Time.zone.now
     end
 
     def call
@@ -99,14 +102,13 @@ class Edusign < ApplicationService
     end
 
     def get_interval_of_time
-        # Modifier le Scheduler en conséquence, pour éviter les duplications
-        DateTime.now-1.hour..DateTime.now
+        # Se base sur le dernier EdusignLog où il n'y a pas eu de crash. Le scheduler n'est plus à synchroniser avec cette fonction
+        puts "INTERVAL = #{EdusignLog.where(modele_type: 1).where.not(etat: 3).reorder(created_at: :desc).first.created_at..@interval_end}"
+        EdusignLog.where(modele_type: 1).where.not(etat: 3).reorder(created_at: :desc).first.created_at..@interval_end
     end
 
-    # Cette fonction ne prend pas seulement des éléments créés aujourd'hui, mais aussi ceux qui viennent d'être considérés comme élément à ajouter sur edusign
-    def get_all_element_created_today(model)
-        interval = self.get_interval_of_time
-
+    # Cette fonction les éléments qui sont considérés comme élément à ajouter sur edusign
+    def get_all_element_to_post(model)
         formations_sent_to_edusign_ids = Formation.not_archived.sent_to_edusign_ids
 
         if model == Formation
@@ -127,9 +129,8 @@ class Edusign < ApplicationService
             ).where.not(intervenant_id: Intervenant.intervenants_examens + Intervenant.sans_intervenant)
         elsif model == Intervenant
 
-            # On sélectionne que les intervenants qui sont liés à une formation cobaye.
-            # Pour cela, on va passer par les cours qui appartienent aux formations cobayes et correspondent à l'intervalle.
-            # Pour les cours, on se base sur updated_at pour ne pas rater un changement d'intervenant ou un ajout d'intervenant binome.
+            # On sélectionne que les intervenants qui sont liés à une formation qui doit être sur Edusign.
+            # Pour cela, on va passer par les cours qui appartienent à ces formations.
 
             intervenant_ids = Cour.where(
               formation_id: formations_sent_to_edusign_ids,
@@ -140,8 +141,8 @@ class Edusign < ApplicationService
         end
     end
 
-    # Récupère tous les éléments déjà sur Edusign, qui ont été modifiés dans l'interval sur AIKKU Plann
-    def get_all_element_updated_today(model, record_ids = nil)
+    # Récupère tous les éléments déjà sur Edusign, qui ont été modifiés depuis la dernière synchronisation sur AIKKU Plann
+    def get_all_element_updated_since_last_sync(model, record_ids = nil)
         interval = self.get_interval_of_time
 
         formations_sent_to_edusign_ids = Formation.not_archived.sent_to_edusign_ids
@@ -362,10 +363,10 @@ class Edusign < ApplicationService
             puts "Début de l'ajout des formations (initialisation)"
         else
             if method == 'Post'
-                formations = self.get_all_element_created_today(Formation)
+                formations = self.get_all_element_to_post(Formation)
                 puts "Début de l'ajout des formations"
             else
-                formations = self.get_all_element_updated_today(Formation, formations_ajoutés_ids)
+                formations = self.get_all_element_updated_since_last_sync(Formation, formations_ajoutés_ids)
                 puts "Début de la modification des formations"
             end
         end
@@ -391,12 +392,11 @@ class Edusign < ApplicationService
 
                 response = self.prepare_body_request(body).get_response
 
-                puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de la formation réussie : #{formation.id}, #{formation.nom} "
+                puts response["status"] == 'error' ?  "<strong>Erreur d'exportation de la formation #{formation.id}, #{formation.nom} : #{response["message"]}</strong>" : "Exportation de la formation réussie : #{formation.id}, #{formation.nom}"
 
                 if response["status"] == 'success'
                     if method == 'Post'
-                        formation.edusign_id = response["result"]["ID"]
-                        formation.save
+                        formation.update_attribute('edusign_id', response["result"]["ID"])
                     end
                     nb_audited += 1
                 end
@@ -422,10 +422,10 @@ class Edusign < ApplicationService
             puts "Début de l'ajout des etudiants (initialisation)"
         else
             if method == 'Post'
-                etudiants = self.get_all_element_created_today(Etudiant)
+                etudiants = self.get_all_element_to_post(Etudiant)
                 puts "Début de l'ajout des etudiants"
             else
-                etudiants = self.get_all_element_updated_today(Etudiant, etudiants_ajoutés_ids)
+                etudiants = self.get_all_element_updated_since_last_sync(Etudiant, etudiants_ajoutés_ids)
                 puts "Début de la modification des etudiants"
             end
         end
@@ -453,12 +453,11 @@ class Edusign < ApplicationService
 
                 response = self.prepare_body_request(body).get_response
 
-                puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de l'étudiant réussie : #{etudiant.id}, #{etudiant.nom} "
+                puts response["status"] == 'error' ?  "<strong>Erreur d'exportation de l'étudiant #{etudiant.id}, #{etudiant.nom_prénom} : #{response["message"]}</strong>" : "Exportation de l'étudiant réussie : #{etudiant.id}, #{etudiant.nom_prénom} "
 
                 if response["status"] == 'success'
                     if method == 'Post'
-                        etudiant.edusign_id = response["result"]["ID"]
-                        etudiant.save
+                        etudiant.update_attribute('edusign_id', response["result"]["ID"])
                     end
                     nb_audited += 1
                 end
@@ -484,10 +483,10 @@ class Edusign < ApplicationService
             puts "Début de l'ajout des intervenants (initialisation)"
         else
             if method == 'Post'
-                intervenants = self.get_all_element_created_today(Intervenant)
+                intervenants = self.get_all_element_to_post(Intervenant)
                 puts "Début de l'ajout des intervenants"
             else
-                intervenants = self.get_all_element_updated_today(Intervenant, intervenants_ajoutés_ids)
+                intervenants = self.get_all_element_updated_since_last_sync(Intervenant, intervenants_ajoutés_ids)
                 puts "Début de la modification des intervenants"
             end
         end
@@ -517,13 +516,11 @@ class Edusign < ApplicationService
                 response = self.prepare_body_request(body).get_response
 
                 # TODO : Voir s'il n'y a pas d'autres status que "error" ou "success"
-                puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de l'intervenant réussie :  #{intervenant.id}, #{intervenant.nom}"
+                puts response["status"] == 'error' ?  "<strong>Erreur d'exportation de l'intervenant #{intervenant.id}, #{intervenant.nom_prenom} : #{response["message"]}</strong>" : "Exportation de l'intervenant réussie : #{intervenant.id}, #{intervenant.nom_prenom}"
 
                 if response["status"] == 'success'
                     if method == 'Post'
-                        intervenant.edusign_id = response["result"]["ID"]
-                        # TODO: Checker que le save == true
-                        intervenant.save
+                        intervenant.update_attribute('edusign_id', response["result"]["ID"])
                     end
                     nb_audited += 1
                 end
@@ -552,11 +549,11 @@ class Edusign < ApplicationService
             cours_a_supprimer = Cour.none
         else
             if method == 'Post'
-                cours = self.get_all_element_created_today(Cour).where.not(etat: ["annulé", "reporté"])
+                cours = self.get_all_element_to_post(Cour).where.not(etat: ["annulé", "reporté"])
                 puts "Début de l'ajout des cours"
                 cours_a_supprimer = Cour.none
             else
-                cours = self.get_all_element_updated_today(Cour, cours_ajoutés_ids)
+                cours = self.get_all_element_updated_since_last_sync(Cour, cours_ajoutés_ids)
                 puts "Début de la modification des cours"
                 cours_a_supprimer = cours.where(etat: ["annulé", "reporté"])
             end
@@ -565,51 +562,47 @@ class Edusign < ApplicationService
         # Cours à créer / modifier du côté d'Edusign
         cours_a_envoyer = cours.where(etat: ["planifié", "confirmé", "à_réserver"])
 
-        puts "#{cours.count} cours ont été récupérés : #{cours.pluck(:id, :nom)}"
+        puts "#{cours_a_envoyer.count} cours ont été récupérés : #{cours_a_envoyer.pluck(:id, :nom)}"
 
-        @nb_recovered_elements += cours.count
+        @nb_recovered_elements += cours_a_envoyer.count + cours_a_supprimer.count
 
         nb_audited = 0
 
         if cours_a_envoyer
             cours_a_envoyer.each do |cour|
-                if cour.valid?
-                    if cour.formation.edusign_id
-                        body =
-                        {"course":{
-                            "NAME": "#{cour.formation.nom} - #{cour.nom_ou_ue}" || 'Nom du cours à valider',
-                            "START": cour.debut - paris_observed_offset_seconds(cour.debut),
-                            "END": cour.fin - paris_observed_offset_seconds(cour.debut),
-                            "PROFESSOR": Intervenant.find_by(id: cour.intervenant_id)&.edusign_id,
-                            "PROFESSOR_2": Intervenant.find_by(id: cour.intervenant_binome_id)&.edusign_id,
-                            "API_ID": cour.id,
-                            "NEED_STUDENTS_SIGNATURE": true,
-                            "CLASSROOM": cour.salle&.nom,
-                            "SCHOOL_GROUP": [cour.formation.edusign_id]
-                            }
+                if cour.formation.edusign_id
+                    body =
+                    {"course":{
+                        "NAME": "#{cour.formation.nom} - #{cour.nom_ou_ue}" || 'Nom du cours à valider',
+                        "START": cour.debut - paris_observed_offset_seconds(cour.debut),
+                        "END": cour.fin - paris_observed_offset_seconds(cour.debut),
+                        "PROFESSOR": Intervenant.find_by(id: cour.intervenant_id)&.edusign_id,
+                        "PROFESSOR_2": Intervenant.find_by(id: cour.intervenant_binome_id)&.edusign_id,
+                        "API_ID": cour.id,
+                        "NEED_STUDENTS_SIGNATURE": true,
+                        "CLASSROOM": cour.salle&.nom,
+                        "SCHOOL_GROUP": [cour.formation.edusign_id]
                         }
+                    }
 
-                        if method == 'Patch'
-                            body[:course].merge!({"ID": cour.edusign_id})
-                            body.merge!({"editSurveys": false})
+                    if method == 'Patch'
+                        body[:course].merge!({"ID": cour.edusign_id})
+                        body.merge!({"editSurveys": false})
+                    end
+
+                    response = self.prepare_body_request(body).get_response
+
+                    puts response["status"] == 'error' ?  "<strong>Erreur d'exportation du cours #{cour.id}, #{cour.nom_ou_ue} : #{response["message"]}</strong>" : "Exportation du cours #{cour.id}, #{cour.nom_ou_ue} réussie"
+
+                    if response["status"] == 'success'
+                        if method == 'Post'
+                            # pas de vérification si le cour est valide, sinon le cour sera créé sur Edusign mais sans edusign_id. Ça créerait des doublons.
+                            cour.update_attribute('edusign_id', response["result"]["ID"])
                         end
-
-                        response = self.prepare_body_request(body).get_response
-
-                        puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation du cours #{cour.id}, #{cour.nom} réussie"
-
-                        if response["status"] == 'success'
-                            if method == 'Post'
-                                cour.edusign_id = response["result"]["ID"]
-                                cour.save
-                            end
-                            nb_audited += 1
-                        end
-                    else
-                        puts "La formation #{cour.formation.nom} n'est pas encore reliée à Edusign. Le cours #{cour.id}, #{cour.nom} n'est pas envoyé"
+                        nb_audited += 1
                     end
                 else
-                    puts "Le cours #{cour.id}, #{cour.nom} n'est pas valide, il ne peut pas être envoyé dans Edusign : #{cour.errors.full_messages}"
+                    puts "La formation #{cour.formation.nom} n'est pas encore reliée à Edusign. Le cours #{cour.id}, #{cour.nom_ou_ue} n'est pas envoyé"
                 end
             end
         end
@@ -624,12 +617,11 @@ class Edusign < ApplicationService
                 if cour.edusign_id != nil
                     self.prepare_request("https://ext.edusign.fr/v1/course/#{cour.edusign_id}", "Delete")
 
-                    cour.edusign_id = nil
-                    cour.save
+                    cour.update_attribute('edusign_id', nil)
 
                     response = self.get_response
 
-                    puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation du cours #{cour.id}, #{cour.nom} pour la suppression réussie"
+                    puts response["status"] == 'error' ?  "<strong>Erreur d'exportation du cours #{cour.id}, #{cour.nom_ou_ue} : #{response["message"]}</strong>" : "Exportation du cours #{cour.id}, #{cour.nom_ou_ue} pour la suppression réussie"
 
                     if response["status"] == 'success'
                         nb_audited += 1
@@ -647,7 +639,7 @@ class Edusign < ApplicationService
         cours_a_envoyer.pluck(:id) if method == "Post"
     end
 
-    # Cet export est différent des autres exports, c'est une méthode Patch. Toutes les fonctions export ne sont plus utlisés, sauf export_cours
+    # Cet export est différent des autres exports, c'est une méthode Patch utilisé pour le changement de salle. Toutes les fonctions export ne sont plus utlisés, sauf export_cours
     def export_cours(cours_id)
         self.prepare_request_with_message("https://ext.edusign.fr/v1/course", 'Patch')
 
@@ -671,7 +663,7 @@ class Edusign < ApplicationService
 
             response = self.prepare_body_request(body).get_response
 
-            puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Modification du cours #{cours.id}, #{cours.nom} (id Edusign : #{cours.edusign_id}) réussie"
+            puts response["status"] == 'error' ?  "<strong>Erreur d'exportation du cours #{cour.id}, #{cour.nom_ou_ue} : #{response["message"]}</strong>" : "Modification du cours #{cours.id}, #{cours.nom_ou_ue} (id Edusign : #{cours.edusign_id}) réussie"
 
             if response["status"] == 'success'
                 @nb_sended_elements += 1
@@ -742,12 +734,12 @@ class Edusign < ApplicationService
 
             response = self.get_response
 
-            puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation du cours #{edusign_id} pour la suppression réussie"
+            puts response["status"] == 'error' ?  "<strong>Erreur lors de la suppression du cours #{edusign_id} : #{response["message"]}</strong>" : "Exportation du cours #{edusign_id} pour la suppression réussie"
 
             if response["status"] == 'success'
                 # Suppression de l'edusign_id du cours supprimé sur Edusign
-                if cour_id = Cour.find_by(edusign_id: edusign_id).try(:id)
-                    Cour.update(cour_id, edusign_id: nil)
+                if cour = Cour.find_by(edusign_id: edusign_id)
+                    cour.update_attribute('edusign_id', nil)
                 end
                 nb_audited += 1
             end
@@ -819,8 +811,7 @@ class Edusign < ApplicationService
     #             puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de la formation #{formation.id}, #{formation.nom} réussie"
 
     #             if response["status"] == 'success'
-    #                 formation.edusign_id = response["result"]["ID"]
-    #                 formation.save
+    #                 formation.update_attribute('edusign_id', response["result"]["ID"])
     #                 @nb_sended_elements += 1
     #             end
     #         else
@@ -861,8 +852,7 @@ class Edusign < ApplicationService
     #             puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de l'étudiant #{etudiant.id}, #{etudiant.nom} réussie"
 
     #             if response["status"] == 'success'
-    #                 etudiant.edusign_id = response["result"]["ID"]
-    #                 etudiant.save
+    #                 etudiant.update_attribute('edusign_id', response["result"]["ID"])
     #                 @nb_sended_elements += 1
     #             end
     #         # else
@@ -900,8 +890,7 @@ class Edusign < ApplicationService
     #         puts response["status"] == 'error' ?  "<strong>Error : #{response["message"]}</strong>" : "Exportation de l'intervenant #{intervenant.id}, #{intervenant.nom} réussie"
 
     #         if response["status"] == 'success'
-    #             intervenant.edusign_id = response["result"]["ID"]
-    #             intervenant.save
+    #             intervenant.update_attribute('edusign_id', response["result"]["ID"])
     #             @nb_sended_elements += 1
     #         end
     #     # else

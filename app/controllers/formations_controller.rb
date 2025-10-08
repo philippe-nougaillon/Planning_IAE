@@ -134,7 +134,7 @@ class FormationsController < ApplicationController
     formations_modifiées_count = 0
 
     case action_name
-    when "Archiver"
+    when "Archiver formation et désactiver les étudiants"
       @formations.each do |formation|
         formation.archive = true
         if formation.save
