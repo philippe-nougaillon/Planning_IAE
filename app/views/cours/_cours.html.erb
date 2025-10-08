@@ -133,6 +133,13 @@
                 </span>
             </span>
         <% end %>
+        <% if cours.sujet_à_envoyer? %>
+            <span class="flex items-center">
+                <span class="material-symbols-outlined text-xl text-<%= cours.color_sujet %>">
+                    docs
+                </span>
+            </span>
+        <% end %>
     </td>
 
     <% if policy(cours).edit? %>

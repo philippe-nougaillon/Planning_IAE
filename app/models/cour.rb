@@ -384,6 +384,37 @@ class Cour < ApplicationRecord
     saved_changes.except("updated_at", "created_at")
   end
 
+  def days_between_today_and_debut
+    (self.debut.to_date - Date.today).to_i
+  end
+
+  def color_sujet
+    days = self.days_between_today_and_debut
+    case days
+    when (0..3)
+      "error"
+    when (4..5)
+      "orange-400"
+    when (6..10)
+      "warning"
+    else
+      "secondary"
+    end
+  end
+
+  def sujet_à_envoyer?
+    if self.examen?
+      sujet = Sujet.find_by(cour_id: self.id)
+      if !['déposé', 'validé', 'archivé'].include?(sujet&.workflow_state)
+        true
+      else
+        false
+      end
+    else
+      false
+    end
+  end
+
   private
     def update_date_fin
       if self.debut and self.duree
