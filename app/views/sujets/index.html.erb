@@ -36,10 +36,16 @@
                             onchange: 'this.form.submit()' %>
       </div>
 
-      <div class="sm:w-1/6 px-4">
-        <%= label_tag :gestionnaire, "Que mes formations ?", class: "whitespace-nowrap" %>
-        <br>
-        <%= check_box_tag :gestionnaire, 1, params[:gestionnaire], onchange:'this.form.submit()' %>
+      <div class="sm:w-1/6 px-4 self-end">
+        <div class="flex gap-1">
+          <%= check_box_tag :gestionnaire, 1, params[:gestionnaire], onchange:'this.form.submit()' %>
+          <%= label_tag :gestionnaire, "Que mes formations ?", class: "whitespace-nowrap" %>
+        </div>
+
+        <div class="flex gap-1">
+          <%= check_box_tag :archive, nil, params[:archive], onchange: 'this.form.submit()' %>
+          <%= label_tag :archive, "Inclure les archivés ?", class: "whitespace-nowrap" %>
+        </div>
       </div>
 
     </div>

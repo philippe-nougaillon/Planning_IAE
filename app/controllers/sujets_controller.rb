@@ -1,11 +1,15 @@
 class SujetsController < ApplicationController
-  before_action :set_sujet, only: %i[ show edit update destroy deposer deposer_done ]
+  before_action :set_sujet, only: %i[ show edit update destroy deposer deposer_done valider rejeter relancer archiver ]
   before_action :is_user_authorized
   skip_before_action :authenticate_user!, only: %i[ show deposer deposer_done]
 
   # GET /sujets or /sujets.json
   def index
-    @sujets = Sujet.joins(:cour)
+    if params[:archive].blank?
+      @sujets = Sujet.where.not(workflow_state: "archivé").joins(:cour)
+    else
+      @sujets = Sujet.all.joins(:cour)
+    end
 
     if params[:gestionnaire].present?
       formations = Formation.where(user_id: current_user.id)
@@ -106,26 +110,26 @@ class SujetsController < ApplicationController
   end
 
   def valider
-    @sujet.valider_sujet(current_user.id)
+    @sujet.valider!
 
     redirect_to @sujet, notice: "Sujet validé avec succès."
   end
 
   def relancer
-    @sujet.relancer_sujet(current_user.id)
+    @sujet.relancer!
 
     redirect_to @sujet, notice: "Sujet relancé avec succès."
   end
 
   def rejeter
-    @sujet.rejeter_sujet(current_user.id)
+    @sujet.rejeter!
     
-    redirect_to @sujet, notice: "Sujet rejeté avec succès. L'intervenant vient d'être informé."
+    redirect_to @sujet, notice: "Sujet rejeté avec succès."
   end
 
   def archiver
-    @sujet.archiver_sujet(current_user.id)
-    redirect_to @sujet, notice: 'Sujet archivé, le sujet a été supprimé'
+    @sujet.archiver!
+    redirect_to @sujet, notice: 'Sujet archivé avec succès.'
   end
 
   private

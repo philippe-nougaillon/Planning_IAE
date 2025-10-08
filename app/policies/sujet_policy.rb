@@ -45,23 +45,19 @@ class SujetPolicy < ApplicationPolicy
     deposer?
   end
 
-  def envoyer?
-    index?
-  end
-
   def valider?
-    envoyer?
+    user && user.role_number >= 5
   end
 
   def rejeter?
-    envoyer?
+    valider?
   end
 
   def relancer?
-    envoyer?
+    valider?
   end
 
   def archiver?
-    envoyer?
+    valider?
   end
 end

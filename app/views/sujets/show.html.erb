@@ -3,6 +3,13 @@
 <div class="flex flex-wrap shadow-lg gap-8 p-6 mt-4">
   <div>
     <p class="mb-4">
+      <strong>Examen</strong>
+      <br>
+      <%= @sujet.cour.nom_ou_ue %>
+      <br>
+      Le <%= l @sujet.cour.debut.to_date %>
+    </p>
+    <p class="mb-4">
       <strong>Intervenant</strong>
       <br>
       <%= @sujet.cour.intervenant_binome.nom_prenom %>
@@ -14,7 +21,7 @@
       <%= @sujet.cour.intervenant_binome.email %>
     </p>
 
-    <% if @sujet.validé? || @sujet.non_conforme? %>
+    <% if policy(@sujet).valider? %>
       <p class="mb-4">
         <strong>État :</strong> 
         <span class="badge <%= @sujet.style %> text-white">
@@ -75,7 +82,14 @@
   </div>
 </div>
 
-<%= link_to 'Retour', sujets_path, class: 'text-primary hover:underline mb-12' %>
+<% if policy(@sujet).valider? %>
+  <br>
+  <%= link_to_if @sujet.can_valider?, 'Valider', valider_sujet_path(@sujet), class: 'btn btn-sm btn-success text-white', 'data-turbo': false %> |
+  <%= link_to_if @sujet.can_rejeter?, 'Rejeter', rejeter_sujet_path(@sujet), class: 'btn btn-sm btn-error text-white', 'data-turbo': false %> |
+  <%= link_to_if @sujet.can_relancer?, 'Relancer', relancer_sujet_path(@sujet), class: 'btn btn-sm btn-info text-white', 'data-turbo': false %> |
+  <%= link_to_if @sujet.can_archiver?, 'Archiver', archiver_sujet_path(@sujet), class: 'btn btn-sm btn-secondary text-white', 'data-turbo': false %> |
+  <%= link_to 'Retour', sujets_path, class: 'text-primary hover:underline' %>
+<% end %>
 
 
 <% if policy(@sujet).audits? %>
