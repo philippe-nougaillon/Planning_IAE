@@ -16,6 +16,18 @@ namespace :cours do
           .update_all(etat: Cour.etats[:réalisé])
   end
 
+  desc "Automatiser pleinement l'envoi de la liste des cours aux intervenants"
+  task auto_envoyer_liste_cours: :environment do
+    # Lancé tous les 20 du mois
+    if Date.today.day == 20
+      EnvoiLog.create(date_prochain: DateTime.now, cible: 'Tous les intervenants', date_début: Date.today.next_month.beginning_of_month, date_fin: Date.today.next_month.end_of_month, workflow_state: "prêt")
+
+      EnvoiLog.with_prêt_state.each do |envoi_log|
+        EnvoyerNotificationsJob.perform_later(envoi_log.id, false)
+      end
+    end
+  end
+
   desc "Envoyer la liste des cours aux intervenants" 
   task :envoyer_liste_cours, [:envoi_log_id, :test] => :environment do |task, args|
 
