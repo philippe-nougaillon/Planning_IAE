@@ -133,7 +133,7 @@
                 </span>
             </span>
         <% end %>
-        <% if cours.sujet_à_envoyer? %>
+        <% if current_user && current_user.role_number >= 5 && cours.sujet_à_envoyer? %>
             <span class="flex items-center">
                 <span class="material-symbols-outlined text-xl text-<%= cours.color_sujet %>">
                     docs
