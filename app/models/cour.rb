@@ -393,17 +393,15 @@ class Cour < ApplicationRecord
     case days
     when (0..3)
       "error"
-    when (4..5)
+    when (4..10)
       "orange-400"
-    when (6..10)
-      "warning"
     else
-      "secondary"
+      "warning"
     end
   end
 
-  def sujet_à_envoyer?
-    if self.examen?
+  def sujet_manquant?
+    if self.examen? && self.days_between_today_and_debut <= 30
       sujet = Sujet.find_by(cour_id: self.id)
       if !['déposé', 'validé', 'archivé'].include?(sujet&.workflow_state)
         true

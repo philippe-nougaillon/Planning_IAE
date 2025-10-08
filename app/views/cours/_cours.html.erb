@@ -133,12 +133,18 @@
                 </span>
             </span>
         <% end %>
-        <% if current_user && current_user.role_number >= 5 && cours.sujet_à_envoyer? %>
-            <span class="flex items-center">
-                <span class="material-symbols-outlined text-xl text-<%= cours.color_sujet %>">
+        <% if current_user && current_user.role_number >= 5 && cours.sujet_manquant? %>
+            <% if sujet = Sujet.find_by(cour_id: cours.id) %>
+                <%= link_to sujet_path(sujet) do %>
+                    <span class="material-symbols-outlined text-xl text-<%= cours.color_sujet %> cursor-pointer" title="Le sujet de l'examen n'est pas encore envoyé">
+                        docs
+                    </span>
+                <% end %>
+            <% else %>
+                <span class="material-symbols-outlined text-xl text-<%= cours.color_sujet %> cursor-pointer" title="Le sujet de l'examen n'est pas encore envoyé">
                     docs
                 </span>
-            </span>
+            <% end %>
         <% end %>
     </td>
 
