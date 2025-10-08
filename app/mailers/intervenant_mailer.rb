@@ -48,7 +48,7 @@ class IntervenantMailer < ApplicationMailer
         @jours = jours
         @sujet = sujet
         attachments['PDG_Examen.docx']   = File.read('app/assets/attachments/PDG_Examen.docx')
-        mail(to: @intervenant.email, subject:"[PLANNING] Rappel de votre examen à l'IAE Paris du #{l @debut}")
+        mail(to: @intervenant.email, subject:"[PLANNING] Rappel de votre examen à l'IAE Paris du #{l @debut.to_date, format: :long} à #{l @debut, format: :heures_log}")
     end
 
     def welcome_intervenant
