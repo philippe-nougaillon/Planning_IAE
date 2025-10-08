@@ -5,7 +5,7 @@ namespace :examen do
     examens = Cour.where("DATE(cours.debut) >= ?", Date.today).where(intervenant_id: [169, 1166])
 
     examens.each do |examen|
-      nombre_jours = (examen.debut.to_date - Date.today).to_i
+      nombre_jours = examen.days_between_today_and_debut
       if jours_rappel.include?(nombre_jours)
         sujet = Sujet.find_or_create_by(cour_id: examen.id)
         if !['déposé', 'validé', 'archivé'].include?(sujet.workflow_state)
