@@ -41,4 +41,11 @@ class SallePolicy < ApplicationPolicy
     true
   end
 
+  def favoris_formation?
+    true
+  end
+
+  def favoris_intervenant?
+    true
+  end
 end

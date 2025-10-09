@@ -3,7 +3,7 @@
 
   <%= hidden_field_tag :from, params[:from] %>
 
-  <div class="flex flex-col gap-4 mb-4">
+  <div class="flex flex-col gap-4 mb-4" data-controller="salles-suggérées-réservation">
     <div data-controller="dispo" class="flex flex-col gap-4">
       <%= hidden_field_tag :id, @cour.id, data: { "dispo-target": "id" } %>
 
@@ -27,7 +27,7 @@
                                 data: { "dispo-target": "duree" } %>
       </div>
       
-      <div class="flex flex-wrap">
+      <div class="flex flex-wrap" data-action="change->salles-suggérées-réservation#get_salles_formation">
         <%= f.label :formation_id, "Formation *", class: 'sm:w-1/5' %>
         <%= f.collection_select :formation_id, 
                                 @formations, 
@@ -36,10 +36,11 @@
                                 {include_blank: true},
                                 required: true, 
                                 class: "slim-select sm:w-1/2",
-                                data: { "dispo-target": "formation_id"} %>
+                                data: { "dispo-target": "formation_id", "salles-suggérées-réservation-target": "formationId"} %>
+        <div class="flex flew-wrap items-center gap-2 ml-4" data-salles-suggérées-réservation-target="sallesFormation"></div>
       </div>
       
-      <div class="flex flex-wrap">
+      <div class="flex flex-wrap" data-action="change->salles-suggérées-réservation#get_salles_intervenant">
         <%= f.label :intervenant_id, "Intervenant *", class: 'sm:w-1/5' %>
         <%= f.collection_select :intervenant_id, 
                                 Intervenant.all, 
@@ -51,8 +52,10 @@
                                 class: "slim-select sm:w-1/2",
                                 data: {
                                   "dispo-target": "intervenant_id",
-                                  "action": (@cour.new_record? ? "change->dispo#show_dispo" : '') 
+                                  "action": (@cour.new_record? ? "change->dispo#show_dispo" : ''),
+                                  "salles-suggérées-réservation-target": "intervenantId" 
                                 } %>
+        <div class="flex flew-wrap items-center gap-2 ml-4" data-salles-suggérées-réservation-target="sallesIntervenant"></div>
       </div>
 
       <div class="flex flex-wrap">

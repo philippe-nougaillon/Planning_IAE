@@ -76,6 +76,8 @@ Rails.application.routes.draw do
     collection do
       get :occupation
       get :libres
+      get :favoris_formation
+      get :favoris_intervenant
     end
   end
 
