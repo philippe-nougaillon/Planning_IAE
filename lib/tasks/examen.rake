@@ -9,11 +9,7 @@ namespace :examen do
       if jours_rappel.include?(nombre_jours)
         sujet = Sujet.find_or_create_by(cour_id: examen.id)
         if !['déposé', 'validé', 'archivé'].include?(sujet.workflow_state)
-          mailer_response = IntervenantMailer.rappel_examen(examen.intervenant_binome, examen.debut, sujet, nombre_jours).deliver_now
-          mail_log = MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: examen.intervenant_binome.email, subject: "Sujet Examen")
-          
-          sujet.relancer! if sujet.mail_log
-          sujet.update(mail_log_id: mail_log.id)
+          SujetExamenJob.perform_later(examen, sujet, nombre_jours)
         end
       end
     end
