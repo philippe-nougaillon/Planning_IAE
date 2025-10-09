@@ -1,98 +1,103 @@
-<h1 class="font-bold text-4xl">Sujet</h1>
+<div class="border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl flex items-center gap-3">
+    <span class="material-symbols-outlined text-3xl">
+      docs
+    </span>
+    Sujet d'examen
+  </h1>
+</div>
 
-<div class="flex flex-wrap shadow-lg gap-8 p-6 mt-4">
-  <div>
-    <p class="mb-4">
-      <strong>Examen</strong>
-      <br>
-      <%= @sujet.cour.nom_ou_ue %>
-      <br>
-      Le <%= l @sujet.cour.debut.to_date %>
-    </p>
-    <p class="mb-4">
-      <strong>Intervenant</strong>
-      <br>
-      <%= @sujet.cour.intervenant_binome.nom_prenom %>
-    </p>
+<h2 class="text-lg">
+  En vue de l'examen, merci de bien vouloir déposer votre sujet avec la page de garde (en y indiquant les consignes) en <b>format PDF</b>.
+</h2>
 
-    <p class="mb-4">
-      <strong>Email</strong>
-      <br>
-      <%= @sujet.cour.intervenant_binome.email %>
-    </p>
+<% if policy(@sujet).valider? %>
+  <div class="flex flex-wrap justify-between shadow-lg gap-8 p-6 mt-4">
+    <div>
+      <p class="mb-4">
+        <strong>Examen</strong>
+        <br>
+        Le <%= l @sujet.cour.debut.to_date %>
+        <br>
+        <%= @sujet.cour.nom_ou_ue %>
+      </p>
+      <p class="mb-4">
+        <strong>Intervenant</strong>
+        <br>
+        <%= @sujet.cour.intervenant_binome.nom_prenom %>
+        <br>
+        <%= @sujet.cour.intervenant_binome.email %>
+      </p>
 
-    <% if policy(@sujet).valider? %>
       <p class="mb-4">
         <strong>État :</strong> 
         <span class="badge <%= @sujet.style %> text-white">
           <%= @sujet.workflow_state.humanize %>
         </span>
       </p>
-    <% end %>
 
-    <% if @sujet.mail_log && policy(Sujet).index? %>
-      <p class="mb-4">
-        <strong>Statut Mail :</strong> 
-        <% if @sujet.mail_log.statut %>
-          <span class="text-success">OK</span>
+      <% if @sujet.mail_log %>
+        <div class="flex flex-wrap gap-4">
+          <p class="mb-4">
+            <strong>Mail envoyé ? :</strong> 
+            <% if @sujet.mail_log.statut %>
+              <span class="text-success">OK</span>
+            <% else %>
+              <span class="text-error">KO</span>
+            <% end %>
+          </p>
+          <p class="mb-4">
+            <strong>Ouvert ? :</strong> 
+            <% if @sujet.mail_log.opened && @sujet.mail_log.statut %>
+              <span class="text-info">OUI</span>
+            <% else %>
+            <span>NON</span>
+            <% end %>
+          </p>
+        </div>
+      <% end %>
+    </div>
+
+    <div>
+      <strong class="font-bold">Document reçu</strong>
+      <br>
+
+      <% if !@sujet.sujet.attached? %>
+        <% if policy(Sujet).index? %>
+          <p class="mb-4">
+            Aucun sujet pour l'instant.
+          </p>
         <% else %>
-          <span class="text-error">KO</span>
+          <p class="alert mb-4">
+            Veuillez ajouter le sujet
+          </p>
         <% end %>
+      <% else %>
+        <%= link_to @sujet.sujet.filename, url_for(@sujet.sujet), target: '_blank', class: 'text-primary hover:underline' %>
+      <% end %>
+    </div>
+
+    <div>
+      <p class="mb-4">
+        <strong>Créé le</strong>
+        <br>
+        <%= l(@sujet.created_at, format: :long) %>
       </p>
       <p class="mb-4">
-        <strong>État Mail :</strong> 
-        <% if @sujet.mail_log.opened && @sujet.mail_log.statut %>
-          <span class="text-info">OUVERT</span>
-        <% end %>
-      </p>
-    <% end %>
-
-  </div>
-
-  <div class="relative flex-grow max-w-full flex-1">
-    <h5 class="text-lg">Sujet d'examen</h5>
-
-    <% if !@sujet.sujet.attached? %>
-      <% if policy(Sujet).index? %>
-        <p class="mb-4">
-          Aucun sujet pour l'instant.
-        </p>
-      <% else %>
-        <p class="alert mb-4">
-          Veuillez ajouter le sujet
-        </p>
-      <% end %>
-    <% else %>
-      <%= link_to @sujet.sujet.filename, url_for(@sujet.sujet), target: '_blank', class: 'text-primary hover:underline' %>
-    <% end %>
-
-
-    <% if !policy(Sujet).index? %>
-      <%= form_with url: deposer_sujet_path, model: @sujet, data: { controller: 'nested-form', nested_form_wrapper_selector_value: '.nested-form-wrapper' } do |f| %>
-        <%= f.file_field :sujet, required: true, label: 'Fichier PDF', accept: 'application/pdf', class: 'file-input file-input-bordered file-input-sm file-input-success flex-1' %>
+        <strong>MÀJ</strong>
         <br>
-
-        <button type="submit" name="commit" value="Déposer le sujet" class="btn btn-success btn-wide btn-lg text-white mt-6" data-disable-with="Déposer le sujet" data-turbo-confirm="ATTENTION ! Une fois déposé, vous ne pourrez plus modifier le sujet. Confirmez-vous le dépôt de votre sujet">
-          <i class="far fa-arrow-alt-circle-down"></i>
-          Déposer le sujet
-        </button>
-      <% end %>
-    <% end %>
-
+        <%= l(@sujet.updated_at, format: :long) %>
+      </p>
+    </div>
   </div>
-</div>
 
-<% if policy(@sujet).valider? %>
   <br>
   <%= link_to_if @sujet.can_valider?, 'Valider', valider_sujet_path(@sujet), class: 'btn btn-sm btn-success text-white', 'data-turbo': false %> |
   <%= link_to_if @sujet.can_rejeter?, 'Rejeter', rejeter_sujet_path(@sujet), class: 'btn btn-sm btn-error text-white', 'data-turbo': false %> |
   <%= link_to_if @sujet.can_relancer?, 'Relancer', relancer_sujet_path(@sujet), class: 'btn btn-sm btn-info text-white', 'data-turbo': false %> |
   <%= link_to_if @sujet.can_archiver?, 'Archiver', archiver_sujet_path(@sujet), class: 'btn btn-sm btn-secondary text-white', 'data-turbo': false %> |
   <%= link_to 'Retour', sujets_path, class: 'text-primary hover:underline' %>
-<% end %>
 
-
-<% if policy(@sujet).audits? %>
   <br>
   <br>
   <h4 class="text-xl mb-4">Audit des modifications</h4>
@@ -117,4 +122,52 @@
 	<div class="planning_pagination">
 		<%= will_paginate @audits %>
 	</div>
+
+<% else %>
+  <div class="flex flex-wrap shadow-lg gap-8 lg:gap-24 p-6 mt-4">
+    <div>
+      <p class="mb-4">
+        <strong>Examen</strong>
+        <br>
+        Le <%= l @sujet.cour.debut.to_date %>
+        <br>
+        <%= @sujet.cour.nom_ou_ue %>
+      </p>
+      <p class="mb-4">
+        <strong>Intervenant</strong>
+        <br>
+        <%= @sujet.cour.intervenant_binome.nom_prenom %>
+        <br>
+        <%= @sujet.cour.intervenant_binome.email %>
+      </p>
+    </div>
+
+    <div class="relative flex-grow max-w-full">
+
+      <% if !@sujet.sujet.attached? %>
+        <% if policy(Sujet).index? %>
+          <p class="mb-4">
+            Aucun sujet pour l'instant.
+          </p>
+        <% else %>
+          <p class="alert mb-4">
+            Veuillez choisir le fichier (PDF) du sujet d'examen, et cliquer sur "Déposer" pour transmettre le document
+          </p>
+        <% end %>
+      <% else %>
+        <%= link_to @sujet.sujet.filename, url_for(@sujet.sujet), target: '_blank', class: 'text-primary hover:underline' %>
+      <% end %>
+
+      <%= form_with url: deposer_sujet_path, model: @sujet, data: { controller: 'nested-form', nested_form_wrapper_selector_value: '.nested-form-wrapper' } do |f| %>
+        <%= f.file_field :sujet, required: true, label: 'Fichier PDF', accept: 'application/pdf', class: 'file-input file-input-bordered file-input-sm file-input-success flex-1' %>
+        <br>
+
+        <button type="submit" name="commit" value="Déposer le sujet" class="btn btn-success btn-wide btn-lg text-white mt-6" data-disable-with="Déposer le sujet" data-turbo-confirm="ATTENTION ! Une fois déposé, vous ne pourrez plus modifier le sujet. Confirmez-vous le dépôt de votre sujet">
+          <i class="far fa-arrow-alt-circle-down"></i>
+          Déposer
+        </button>
+      <% end %>
+
+    </div>
+  </div>
 <% end %>

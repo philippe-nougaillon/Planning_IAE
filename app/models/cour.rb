@@ -394,7 +394,7 @@ class Cour < ApplicationRecord
     when (0..3)
       "error"
     when (4..10)
-      "orange-400"
+      "orange-500"
     else
       "warning"
     end

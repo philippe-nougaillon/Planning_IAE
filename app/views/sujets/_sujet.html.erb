@@ -1,5 +1,8 @@
 <tr class="hover border">
   <td>
+    <%= time_ago_in_words sujet.updated_at %>
+  </td>
+  <td>
     <%= l(sujet.cour.debut, format: :short) %>
   </td>
   <td>
@@ -9,12 +12,6 @@
     <span class="badge <%= sujet.style %> text-white">
       <%= sujet.workflow_state.humanize %>
     </span>
-  </td>
-  <td>
-    <%= time_ago_in_words sujet.updated_at %>
-  </td>
-  <td>
-    <%= time_ago_in_words sujet.created_at %>
   </td>
   <% if sujet.mail_log %>
     <% if sujet.mail_log.statut %>

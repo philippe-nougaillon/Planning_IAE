@@ -42,9 +42,10 @@ class IntervenantMailer < ApplicationMailer
         end
     end
 
-    def rappel_examen(intervenant, debut, sujet, jours)
-        @debut = debut
-        @intervenant = intervenant
+    def rappel_examen(examen, sujet, jours)
+        @debut = examen.debut
+        @intervenant = examen.intervenant_binome
+        @nom_examen = examen.nom
         @jours = jours
         @sujet = sujet
         attachments['PDG_Examen.docx']   = File.read('app/assets/attachments/PDG_Examen.docx')

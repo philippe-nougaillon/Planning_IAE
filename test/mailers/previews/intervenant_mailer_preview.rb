@@ -29,7 +29,7 @@ class IntervenantMailerPreview < ActionMailer::Preview
 
     def rappel_examen
         examen = Cour.where(intervenant_id: [169, 1166]).last
-        IntervenantMailer.rappel_examen(examen.intervenant_binome, examen.debut, Sujet.last, 60).deliver_now
+        IntervenantMailer.rappel_examen(examen, Sujet.last, 60).deliver_now
     end
 
     def welcome_intervenant
