@@ -2,11 +2,16 @@ import { Controller } from "@hotwired/stimulus"
 import Rails from "@rails/ujs";
 
 export default class extends Controller {
-    static targets = ['formationId', 'sallesFormation', 'intervenantId', 'sallesIntervenant']
-    // Récupérer la formation si modifié eet non vide
+    static targets = ['formationId', 'sallesFormation']
+
+    // Afficher les salles de la formation si elle est déjà sélectionné au chargement de la page
+    connect() {
+        if (this.formationIdTarget.value !== "") {
+            this.get_salles_formation()
+        }
+    }
 
     get_salles_formation() {
-        // Faire une requete ajax pour récupérer les salles favoris de la formation
         Rails.ajax({
             type: "GET",
             url: "/salles/favoris_formation.json",
@@ -19,35 +24,21 @@ export default class extends Controller {
 
     afficher_salles_formation(data) {
         const salles_formation = this.sallesFormationTarget
-        salles_formation.innerHTML = ''
-        data.forEach(salle => {
+
+        salles_formation.innerHTML = '<span>Salles prioritaires :</span>'
+
+        if(data.length === 0){
+            salles_formation.innerHTML += 'aucune'
+            return
+        }
+
+        data.forEach((salle, index) => {
             let span = document.createElement("span")
             span.textContent = salle
-            salles_formation.appendChild(span)
-        })
-    }
-
-    // Faire pareil avec les intervenants
-
-    get_salles_intervenant() {
-        // Faire une requete ajax pour récupérer les salles favoris de l'intervenant
-        Rails.ajax({
-            type: "GET",
-            url: "/salles/favoris_intervenant.json",
-            data: "intervenant_id=" + this.intervenantIdTarget.value,
-            success: (data) => {
-                this.afficher_salles_intervenant(data)
+            if(index<data.length-1){
+                span.textContent += ", "
             }
-        })
-    }
-
-    afficher_salles_intervenant(data) {
-        const salles_intervenant = this.sallesIntervenantTarget
-        salles_intervenant.innerHTML = ''
-        data.forEach(salle => {
-            let span = document.createElement("span")
-            span.textContent = salle
-            salles_intervenant.appendChild(span)
+            salles_formation.appendChild(span)
         })
     }
 }

@@ -235,30 +235,6 @@ class SallesController < ApplicationController
     end
   end
 
-  # Afficher les salles favoris de l'intervenant en JSON
-  def favoris_intervenant
-    salles_habituelles_ids = []
-
-    if !params[:intervenant_id].blank?
-      intervenant = Intervenant.find(params[:intervenant_id])
-      # Chercher les salles favoris de l'intervenant
-      salles_habituelles_ids = intervenant.cours
-        .joins(:salle)
-        .where("salles.bloc != 'Z'")
-        .select('cours.id')
-        .pluck(:salle_id)
-        .uniq
-        .sort
-        .first(5)
-    end
-
-    respond_to do |format|
-      format.json do
-        render json: Salle.where(id: salles_habituelles_ids).pluck(:nom).to_json
-      end
-    end
-  end
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_salle
