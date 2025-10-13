@@ -140,6 +140,23 @@ class IntervenantsController < ApplicationController
     end
   end
 
+  def sujets
+    @sujets = Sujet.joins(:cour).where('cour.intervenant_binome_id': current_user.id)
+
+    if params[:formation].present?
+      formation_id = Formation.find_by(nom: params[:formation]).id
+      examens_from_formation = Cour.where(formation_id: formation_id).select{|cour| cour.examen?}
+      @sujets = @sujets.where(cour_id: examens_from_formation)
+    end
+
+    if params[:workflow_state].present?
+      @sujets = @sujets.where("workflow_state = ?", params[:workflow_state].to_s.downcase)
+    end
+
+    @sujets = @sujets.reorder(Arel.sql("#{sort_column} #{sort_direction}"))
+    @sujets = @sujets.paginate(page: params[:page], per_page: 20)
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_intervenant

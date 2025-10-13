@@ -41,4 +41,8 @@ class IntervenantPolicy < ApplicationPolicy
     true
   end
 
+  def sujets?
+    true
+  end
+
 end

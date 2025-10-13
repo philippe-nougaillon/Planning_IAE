@@ -33,6 +33,7 @@ Rails.application.routes.draw do
     member do
       get :invitations
       get :calendrier
+      get :sujets
     end
   end
 

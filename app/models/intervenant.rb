@@ -153,6 +153,17 @@ class Intervenant < ApplicationRecord
 								.uniq
 	end
 
+	def self.formation_for_select(user_id)
+		intervenant = Intervenant.find_by(email: User.find(user_id).email)
+		if intervenant.present?
+		# Chercher les formations des examen
+		end
+		{
+		  'Formations catalogue' => Formation.where(hors_catalogue:false).not_archived.ordered.map { |i| i.nom }.uniq,
+		  'Formations hors catalogue' => Formation.where(hors_catalogue:true).not_archived.ordered.map { |i| i.nom }.uniq
+		}
+	end
+
 	private
 	# only one candidate for an nice id; one random UDID
 	def slug_candidates
