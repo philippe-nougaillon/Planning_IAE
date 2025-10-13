@@ -80,7 +80,7 @@ class DossiersController < ApplicationController
         format.html { redirect_to @dossier, notice: "Nouveau dossier créé avec succès" }
         format.json { render :show, status: :created, location: @dossier }
       else
-        set_intervenants_list
+        @intervenants = Intervenant.sans_dossier
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @dossier.errors, status: :unprocessable_entity }
       end
@@ -94,7 +94,7 @@ class DossiersController < ApplicationController
         format.html { redirect_to @dossier, notice: "Dossier modifié." }
         format.json { render :show, status: :ok, location: @dossier }
       else
-        set_intervenants_list
+        @intervenants = Intervenant.sans_dossier
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @dossier.errors, status: :unprocessable_entity }
       end
