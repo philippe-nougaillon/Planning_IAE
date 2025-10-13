@@ -1408,7 +1408,7 @@ class ToolsController < ApplicationController
 
     intervenants = Intervenant.where(id: params[:intervenants_id].keys)
     intervenants.each do |intervenant|
-      new_password = SecureRandom.hex(10)
+      new_password = SecureRandom.base64(12)
       # Création du compte d'accès (user) et envoi du mail de bienvenue
       user = User.new(role: "intervenant", nom: intervenant.nom, prénom: intervenant.prenom, email: intervenant.email, mobile: intervenant.téléphone_mobile, password: new_password)
       if user.valid?
