@@ -61,6 +61,7 @@ class DossiersController < ApplicationController
 
   # GET /dossiers/new
   def new
+    # En cas de changement : changer également dans create et update
     @intervenants = Intervenant.sans_dossier
     @dossier = Dossier.new
     @dossier.période = AppConstants::PÉRIODE
