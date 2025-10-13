@@ -112,17 +112,25 @@ class SujetsController < ApplicationController
   def valider
     @sujet.valider!
 
+    examen = @sujet.cour
+    nombre_jours = examen.days_between_today_and_debut
+    ValidationSujetJob.perform_later(examen, nombre_jours)
+
     redirect_to @sujet, notice: "Sujet validé avec succès."
   end
 
   def relancer
     @sujet.relancer!
 
+    RelancerSujetJob.perform_later(@sujet)
+
     redirect_to @sujet, notice: "Sujet relancé avec succès."
   end
 
   def rejeter
     @sujet.rejeter!
+
+    RejeterSujetJob.perform_later(@sujet)
     
     redirect_to @sujet, notice: "Sujet rejeté avec succès."
   end
