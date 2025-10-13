@@ -137,6 +137,9 @@ class SujetsController < ApplicationController
 
   def archiver
     @sujet.archiver!
+
+    @sujet.sujet.purge
+
     redirect_to @sujet, notice: 'Sujet archivé avec succès.'
   end
 
