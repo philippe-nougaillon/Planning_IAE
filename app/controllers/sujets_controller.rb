@@ -130,6 +130,11 @@ class SujetsController < ApplicationController
   def rejeter
     @sujet.rejeter!
 
+    if params[:raisons]
+      @sujet.message = params[:raisons]
+      @sujet.save
+    end
+
     RejeterSujetJob.perform_later(@sujet)
     
     redirect_to @sujet, notice: "Sujet rejeté avec succès."

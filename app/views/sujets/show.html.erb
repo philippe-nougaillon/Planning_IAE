@@ -91,12 +91,30 @@
     </div>
   </div>
 
-  <br>
-  <%= link_to_if @sujet.can_valider?, 'Valider', valider_sujet_path(@sujet), class: 'btn btn-sm btn-success text-white', 'data-turbo': false %> |
-  <%= link_to_if @sujet.can_rejeter?, 'Rejeter', rejeter_sujet_path(@sujet), class: 'btn btn-sm btn-error text-white', 'data-turbo': false %> |
-  <%= link_to_if @sujet.can_relancer?, 'Relancer', relancer_sujet_path(@sujet), class: 'btn btn-sm btn-info text-white', 'data-turbo': false %> |
-  <%= link_to_if @sujet.can_archiver?, 'Archiver', archiver_sujet_path(@sujet), class: 'btn btn-sm btn-secondary text-white', 'data-turbo': false %> |
-  <%= link_to 'Retour', sujets_path, class: 'text-primary hover:underline' %>
+  <div data-controller="rejet-sujet">
+    <br>
+    <%= link_to_if @sujet.can_valider?, 'Valider', valider_sujet_path(@sujet), class: 'btn btn-sm btn-success text-white', 'data-turbo': false %> |
+    <% if @sujet.can_rejeter? %>
+      <button id='rejeter-btn' class='btn btn-sm btn-error text-white' data-action="click->rejet-sujet#showForm">Rejeter</button>
+    <% else %>
+      Rejeter
+    <% end %>
+    |
+    <%= link_to_if @sujet.can_relancer?, 'Relancer', relancer_sujet_path(@sujet), class: 'btn btn-sm btn-info text-white', 'data-turbo': false %> |
+    <%= link_to_if @sujet.can_archiver?, 'Archiver', archiver_sujet_path(@sujet), class: 'btn btn-sm btn-secondary text-white', 'data-turbo': false %> |
+    <%= link_to 'Retour', sujets_path, class: 'text-primary hover:underline' %>
+
+    <%= form_with url: rejeter_sujet_path(@sujet), method: :get, onsubmit: "return confirm('Voulez vous vraiment quitter la page sans avoir rejeter ?')" do |f| %>
+      <div id='rejeter-form' style="display: none;" data-rejet-sujet-target="rejeterForm">
+        <div class="flex flex-wrap gap-4 mt-4">
+          <%= f.label :raisons, 'Raison (optionnel) :' %>
+          <%= f.text_field :raisons, class: 'input input-bordered input-sm' %>
+          <%= f.submit 'Rejeter', class: 'btn btn-sm btn-error text-white'%>
+        </div>
+      </div>
+    <% end %>
+
+  </div>
 
   <br>
   <br>
