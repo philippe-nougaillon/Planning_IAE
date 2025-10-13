@@ -61,7 +61,7 @@ class DossiersController < ApplicationController
 
   # GET /dossiers/new
   def new
-    # En cas de changement : changer également dans create et update
+    # En cas de changement : changer également dans create
     @intervenants = Intervenant.sans_dossier
     @dossier = Dossier.new
     @dossier.période = AppConstants::PÉRIODE
@@ -69,7 +69,6 @@ class DossiersController < ApplicationController
 
   # GET /dossiers/1/edit
   def edit
-    @intervenants = Intervenant.where(id: @dossier.intervenant)
   end
 
   # POST /dossiers or /dossiers.json
@@ -95,7 +94,6 @@ class DossiersController < ApplicationController
         format.html { redirect_to @dossier, notice: "Dossier modifié." }
         format.json { render :show, status: :ok, location: @dossier }
       else
-        @intervenants = Intervenant.sans_dossier
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @dossier.errors, status: :unprocessable_entity }
       end
