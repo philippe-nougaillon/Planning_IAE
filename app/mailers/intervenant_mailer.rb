@@ -59,11 +59,13 @@ class IntervenantMailer < ApplicationMailer
         mail(to: @intervenant.email, subject:"[PLANNING] Validation de votre dépôt de sujet pour votre examen à l'IAE Paris du #{l @debut.to_date, format: :long} à #{l @debut, format: :heures_log}")
     end
 
-    def rejet_sujet(examen, jours, raisons)
+    def rejet_sujet(examen, jours, raisons, sujet)
         @debut = examen.debut
         @intervenant = examen.intervenant_binome
         @jours = jours
         @raisons = raisons
+        @sujet = sujet
+        attachments['PDG_Examen.docx']   = File.read('app/assets/attachments/PDG_Examen.docx')
         mail(to: @intervenant.email, subject:"[PLANNING] Rejet de votre dépôt de sujet pour votre examen à l'IAE Paris du #{l @debut.to_date, format: :long} à #{l @debut, format: :heures_log}")
     end
 

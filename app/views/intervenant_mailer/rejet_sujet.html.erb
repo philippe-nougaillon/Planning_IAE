@@ -3,8 +3,23 @@
     <br><br>
     Nous vous informont que le sujet pour votre examen du <b><%= l(@debut.to_date, format: :long) %> à <%= l @debut, format: :heures_log %></b>, prévu dans <b><%= @jours %> jours</b> a été rejeté.
     <br><br>
-    Les raisons sont les suivantes :
+    La raison est la suivante :
     <%= @raisons %>
+    <br><br>
+    Merci de bien vouloir nous faire parvenir <b>au plus tard 1 mois</b> avant la date de l'examen, votre <b>sujet</b> avec <b>la page de garde</b> (en y indiquant les <b>consignes</b>) en format pdf, afin que le/la gestionnaire puisse envoyer les convocations aux étudiants. Vous trouverez ci-joint la page de garde type.
+    <br>
+    Tout sujet envoyé sans page de garde, sera imprimé tel quel.
+</p>
+
+<p style="margin-bottom: 0.5rem">
+    Pour déposer votre sujet en, 
+    <%= link_to 'cliquant ici', url_for(sujet_url(@sujet)) %>
+     ou en copiant le lien suivant
+    <%= url_for(sujet_url(@sujet)) %>
+</p>
+
+<p style="margin-bottom: 0.5rem">
+    <b>Vous remerciant par avance du respect des délais et des consignes indiqués ci-dessus,</b>
 </p>
 
 <p style="margin-bottom: 0.5rem">

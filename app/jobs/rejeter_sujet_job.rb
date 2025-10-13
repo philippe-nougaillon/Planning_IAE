@@ -7,7 +7,7 @@ class RejeterSujetJob < ApplicationJob
         nombre_jours = examen.days_between_today_and_debut
         raisons = sujet.message
 
-        mailer_response = IntervenantMailer.rejet_sujet(examen, nombre_jours, raisons).deliver_now
+        mailer_response = IntervenantMailer.rejet_sujet(examen, nombre_jours, raisons, sujet).deliver_now
         mail_log = MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: examen.intervenant_binome.email, subject: "Relance Sujet Examen")
         
         sujet.relancer! if sujet.mail_log
