@@ -7,9 +7,6 @@
   </h1>
 </div>
 
-<h2 class="text-lg">
-  En vue de l'examen, merci de bien vouloir déposer votre sujet avec la page de garde (en y indiquant les consignes) en <b>format PDF</b>.
-</h2>
 
 <% if policy(@sujet).valider? %>
   <div class="flex flex-wrap justify-between shadow-lg gap-8 p-6 mt-4">
@@ -142,6 +139,9 @@
 	</div>
 
 <% else %>
+  <h2 class="text-lg">
+    En vue de l'examen, merci de bien vouloir déposer votre sujet avec la page de garde (en y indiquant les consignes) en <b>format PDF</b>.
+  </h2>
   <div class="flex flex-wrap shadow-lg gap-8 lg:gap-24 p-6 mt-4">
     <div>
       <p class="mb-4">
