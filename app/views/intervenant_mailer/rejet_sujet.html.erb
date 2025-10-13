@@ -2,7 +2,10 @@
     Bonjour,
     <br><br>
     Nous vous informont que le sujet pour votre examen du <b><%= l(@debut.to_date, format: :long) %> à <%= l @debut, format: :heures_log %></b>, prévu dans <b><%= @jours %> jours</b> a été rejeté.
-    </p>
+    <br><br>
+    Les raisons sont les suivantes :
+    <%= @raisons %>
+</p>
 
 <p style="margin-bottom: 0.5rem">
     Bien cordialement,

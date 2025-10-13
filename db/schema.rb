@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_22_115942) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_13_114153) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -620,6 +620,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_22_115942) do
     t.string "slug"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "message"
     t.index ["cour_id"], name: "index_sujets_on_cour_id"
     t.index ["mail_log_id"], name: "index_sujets_on_mail_log_id"
   end
