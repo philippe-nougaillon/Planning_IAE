@@ -110,42 +110,80 @@ class SujetsController < ApplicationController
   end
 
   def valider
-    @sujet.valider!
+    if @sujet.valid?
+      if @sujet.can_valider?
+        @sujet.valider!
 
-    examen = @sujet.cour
-    nombre_jours = examen.days_between_today_and_debut
-    ValidationSujetJob.perform_later(examen, nombre_jours)
+        ValidationSujetJob.perform_later(@sujet)
 
-    redirect_to @sujet, notice: "Sujet validé avec succès."
+        redirect_to @sujet, notice: "Sujet validé avec succès."
+      elsif @sujet.validé?
+        redirect_to @sujet, alert: "Le sujet est déjà validé."
+      else
+        redirect_to @sujet, alert: "Le sujet ne peut pas être validé."
+      end
+    else
+      redirect_to @sujet, alert: "Le sujet n'est pas valide."
+    end
   end
 
   def relancer
-    @sujet.relancer!
+    if @sujet.valid?
+      if @sujet.can_relancer?
+        @sujet.relancer!
 
-    RelancerSujetJob.perform_later(@sujet)
+        RelancerSujetJob.perform_later(@sujet)
 
-    redirect_to @sujet, notice: "Sujet relancé avec succès."
+        redirect_to @sujet, notice: "Sujet relancé avec succès."
+      elsif @sujet.relancé?
+        redirect_to @sujet, alert: "Le sujet est déjà relancé."
+      else
+        redirect_to @sujet, alert: "Le sujet ne peut pas être relancé."
+      end
+    else
+      redirect_to @sujet, alert: "Le sujet n'est pas valide."
+    end
   end
 
   def rejeter
-    @sujet.rejeter!
+    if @sujet.valid?
+      if @sujet.can_rejeter?
+        @sujet.rejeter!
 
-    if params[:raisons]
-      @sujet.message = params[:raisons]
-      @sujet.save
+        if params[:raisons].present?
+          @sujet.message = params[:raisons]
+          @sujet.save
+        end
+
+        RejeterSujetJob.perform_later(@sujet)
+
+        redirect_to @sujet, notice: "Sujet rejeté avec succès."
+      elsif @sujet.non_conforme?
+        redirect_to @sujet, alert: "Le sujet est déjà rejeté."
+      else
+        redirect_to @sujet, alert: "Le sujet ne peut pas être rejeté."
+      end
+    else
+      redirect_to @sujet, alert: "Le sujet n'est pas valide."
     end
-
-    RejeterSujetJob.perform_later(@sujet)
-    
-    redirect_to @sujet, notice: "Sujet rejeté avec succès."
   end
 
   def archiver
-    @sujet.archiver!
+    if @sujet.valid?
+      if @sujet.can_archiver?
+        @sujet.archiver!
 
-    @sujet.sujet.purge
+        @sujet.sujet.purge
 
-    redirect_to @sujet, notice: 'Sujet archivé avec succès.'
+        redirect_to @sujet, notice: "Sujet archivé avec succès."
+      elsif @sujet.archivé?
+        redirect_to @sujet, alert: "Le sujet est déjà archivé."
+      else
+        redirect_to @sujet, alert: "Le sujet ne peut pas être archivé."
+      end
+    else
+      redirect_to @sujet, alert: "Le sujet n'est pas valide."
+    end
   end
 
   private
