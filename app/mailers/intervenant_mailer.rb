@@ -9,7 +9,7 @@ class IntervenantMailer < ApplicationMailer
         mail(to: @intervenant.email, subject:"[PLANNING] Etat de services")
     end
 
-    def notifier_cours(debut, fin, intervenant, cours, gestionnaires, envoi_log_id, test)
+    def notifier_cours(debut, fin, intervenant, cours, gestionnaires, envoi_log_id, test, title)
         @debut = debut
         @fin = fin - 1.day
         @cours = cours
@@ -18,13 +18,13 @@ class IntervenantMailer < ApplicationMailer
         @message = EnvoiLog.find(envoi_log_id).message
         if test
             mail(to: "fitsch-mouras.iae@univ-paris1.fr", cc: "philippe.nougaillon@gmail.com, pierreemmanuel.dacquet@gmail.com",
-                subject:"[PLANNING] TEST / Rappel des cours de #{@intervenant.nom_prenom} du #{l @debut} au #{l @fin}")
+                subject: title)
         else
-            mail(to: @intervenant.email, subject:"[PLANNING] Rappel de vos cours à l'IAE Paris du #{l @debut} au #{l @fin}")
+            mail(to: @intervenant.email, subject: title)
         end
     end
 
-    def notifier_examens(debut, fin, intervenant, cours, gestionnaires, envoi_log_id, test)
+    def notifier_examens(debut, fin, intervenant, cours, gestionnaires, envoi_log_id, test, title)
         @debut = debut
         @fin = fin - 1.day
         @cours = cours
@@ -35,10 +35,10 @@ class IntervenantMailer < ApplicationMailer
         attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
 
         if test
-            mail(to: "fitsch-mouras.iae@univ-paris1.fr", cc: "philippe.nougaillon@gmail.com, pierreemmanuel.dacquet@gmail.com",
-                subject:"[PLANNING] TEST / Rappel des examens de #{@intervenant.nom_prenom} du #{l @debut} au #{l @fin}")
+            mail(to: "fitsch-mouras.iae@univ-paris1.fr", cc: "philippe.nougaillon@gmail.com, pierreemmanuel.dacquet@aikku.eu",
+                subject: title)
         else
-            mail(to: @intervenant.email, subject:"[PLANNING] Rappel de vos examens à l'IAE Paris du #{l @debut} au #{l @fin}")
+            mail(to: @intervenant.email, subject: title)
         end
     end
 
@@ -85,18 +85,18 @@ class IntervenantMailer < ApplicationMailer
         @user = params[:user]
         @password = params[:password]
         mail(to: @user.email,
-            subject:"[PLANNING IAE Paris] Bienvenue !").tap do |message|
+            subject: params[:title]).tap do |message|
                 message.mailgun_options = {
                     "tag" => [@user.nom, @user.prénom, "nouvel accès intervenant"]
                 }
         end
     end
 
-    def mes_sessions(intervenant, presence_slug, gestionnaire_email)
+    def mes_sessions(intervenant, presence_slug, gestionnaire_email, title)
         @intervenant = intervenant
         @presence_slug = presence_slug
         mail(to: @intervenant.email, cc: gestionnaire_email,
-            subject:"[PLANNING] Validation des émargements pour la session en cours").tap do |message|
+            subject: title).tap do |message|
                 message.mailgun_options = {
                     "tag" => [@intervenant.nom, @intervenant.prenom, "émargements"]
                 }

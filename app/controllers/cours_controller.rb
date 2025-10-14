@@ -426,8 +426,12 @@ class CoursController < ApplicationController
                                     nom: invit[:nom].values.to_a[i])
                 invits_créées += 1
               end
-              mailer_response = InvitMailer.with(invit: Invit.first).envoyer_invitation.deliver_now
-              MailLog.create(user_id: current_user.id, message_id:mailer_response.message_id, to:Invit.first.intervenant.email, subject: "Invitation")
+
+              # ATTENTION : Invit.first ne sera plus correct si le default_scope est modifié. Peut-être que ce n'a sera plus correct en mettant ce code dans un job
+              title = "[PLANNING] Proposition de créneaux pour placer vos cours #{ Invit.first.cour.formation.nom } à l’IAE Paris-Sorbonne"
+              mailer_response = InvitMailer.with(invit: Invit.first, title: title).envoyer_invitation.deliver_now
+              # Pareil ici, Invit.first ne sera plus correct si le default_scope change
+              MailLog.create(user_id: current_user.id, message_id:mailer_response.message_id, to:Invit.first.intervenant.email, subject: "Invitation", title: title)
             end
           end
         end
@@ -516,8 +520,9 @@ class CoursController < ApplicationController
             étudiants.each do |étudiant|
               pdf = ExportPdf.new
               pdf.convocation(@cours.first, étudiant, (params[:papier]=='1'), (params[:calculatrice]=='1'), (params[:ordi_tablette]=='1'), (params[:téléphone]=='1'), (params[:dictionnaire]=='1'))
-              mailer_response = EtudiantMailer.convocation(étudiant, pdf, @cours.first).deliver_now
-              MailLog.create(subject: "Convocation UE##{@cours.first.code_ue}", user_id: current_user.id, message_id: mailer_response.message_id, to: étudiant.email)
+              title = "Convocation #{@cours.first.type_examen} - #{@cours.first.nom_ou_ue}"
+              mailer_response = EtudiantMailer.convocation(étudiant, pdf, @cours.first, title).deliver_now
+              MailLog.create(subject: "Convocation UE##{@cours.first.code_ue}", user_id: current_user.id, message_id: mailer_response.message_id, to: étudiant.email, title: title)
             end
           else
             flash[:alert] = "Aucun étudiant n'a été sélectionné, il ne s'est rien passé"
@@ -698,8 +703,9 @@ class CoursController < ApplicationController
 
           # notifier l'accueil s'il y a un bypass
           if @cour.commentaires.include?("BYPASS=#{@cour.id}")
-            mailer_response = AccueilMailer.notifier_cours_bypass(@cour, current_user.email).deliver_now
-            MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: "accueil@iae.pantheonsorbonne.fr", subject: "BYPASS")
+            title = "[PLANNING IAE Paris] BYPASS utilisé !"
+            mailer_response = AccueilMailer.notifier_cours_bypass(@cour, current_user.email, title).deliver_now
+            MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: "accueil@iae.pantheonsorbonne.fr", subject: "BYPASS", title: title)
           end
 
           # repartir à la page où a eu lieu la demande de modification

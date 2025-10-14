@@ -389,6 +389,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_13_114153) do
     t.boolean "statut", default: true
     t.boolean "opened", default: false
     t.json "error_message"
+    t.string "title"
   end
 
   create_table "motifs", force: :cascade do |t|
