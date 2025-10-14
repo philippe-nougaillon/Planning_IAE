@@ -356,6 +356,8 @@ fr:
       title: Modification d'un intervenant
     invitations:
       title: Invitations
+    sujets:
+      title: sujets d'examens
   etudiants:
     index:
       title: Liste des étudiants
