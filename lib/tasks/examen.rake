@@ -16,16 +16,16 @@ namespace :examen do
   end
 
   task archiver_sujet_passe: :environment do
-    examen_yesterday = Cour.where("DATE(cours.fin) = ?", Date.today-1.day).where(intervenant_id: [169, 1166])
+    examen_yesterday = Cour.where("DATE(cours.fin) <= ?", Date.today-1.day).where(intervenant_id: [169, 1166])
     examen_yesterday.each do |cour|
-      sujet = Sujet.find_by(cour_id: cour.id)
+      if sujet = Sujet.find_by(cour_id: cour.id)
 
-      # Archive le sujet des examens d'hier
-      # Si l'archivage est impossible, on ne fait rien
-      if sujet.can_archiver?
-        sujet.archiver!
-        sujet.sujet.purge
-        sujet.save
+        # Archive le sujet des examens passés
+        # Si l'archivage est impossible, on ne fait rien
+        if sujet.can_archiver?
+          sujet.archiver!
+          sujet.sujet.purge
+        end
       end
     end
   end
