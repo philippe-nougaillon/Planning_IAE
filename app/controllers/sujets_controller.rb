@@ -123,7 +123,7 @@ class SujetsController < ApplicationController
         redirect_to @sujet, alert: "Le sujet ne peut pas être validé."
       end
     else
-      redirect_to @sujet, alert: "Le sujet n'est pas valide."
+      redirect_to @sujet, alert: "Le sujet n'est pas valide. Impossible de valider."
     end
   end
 
@@ -141,7 +141,7 @@ class SujetsController < ApplicationController
         redirect_to @sujet, alert: "Le sujet ne peut pas être relancé."
       end
     else
-      redirect_to @sujet, alert: "Le sujet n'est pas valide."
+      redirect_to @sujet, alert: "Le sujet n'est pas valide. Impossible de relancer."
     end
   end
 
@@ -164,7 +164,7 @@ class SujetsController < ApplicationController
         redirect_to @sujet, alert: "Le sujet ne peut pas être rejeté."
       end
     else
-      redirect_to @sujet, alert: "Le sujet n'est pas valide."
+      redirect_to @sujet, alert: "Le sujet n'est pas valide. Impossible de rejeter."
     end
   end
 
@@ -182,7 +182,7 @@ class SujetsController < ApplicationController
         redirect_to @sujet, alert: "Le sujet ne peut pas être archivé."
       end
     else
-      redirect_to @sujet, alert: "Le sujet n'est pas valide."
+      redirect_to @sujet, alert: "Le sujet n'est pas valide. Impossible d'archiver."
     end
   end
 

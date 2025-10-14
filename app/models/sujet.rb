@@ -99,6 +99,7 @@ class Sujet < ApplicationRecord
 
     state REJETE, meta: {style: 'badge-error'} do
       event :déposer, transitions_to: DEPOSE
+      event :relancer, transitions_to: RELANCE1
     end
 
     state ARCHIVE, meta: {style: 'badge-secondary'}

@@ -38,6 +38,11 @@ class IntervenantMailerPreview < ActionMailer::Preview
         IntervenantMailer.rappel_examen(examen, Sujet.last, 60).deliver_now
     end
 
+    def validation_sujet
+        examen = Cour.where(intervenant_id: [169, 1166]).last
+        IntervenantMailer.validation_sujet(examen, Sujet.last).deliver_now
+    end
+
     def welcome_intervenant
         IntervenantMailer.with(user: User.find(1), password: SecureRandom.base64(12)).welcome_intervenant
     end

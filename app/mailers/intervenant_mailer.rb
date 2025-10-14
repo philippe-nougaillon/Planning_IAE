@@ -60,7 +60,7 @@ class IntervenantMailer < ApplicationMailer
     end
 
     def rejet_sujet(sujet)
-        examen = sujet.examen
+        examen = sujet.cour
         @debut = examen.debut
         @intervenant = examen.intervenant_binome
         @jours = examen.days_between_today_and_debut
@@ -71,11 +71,10 @@ class IntervenantMailer < ApplicationMailer
     end
 
     def relance_sujet(sujet)
-        examen = sujet.examen
+        examen = sujet.cour
         @debut = examen.debut
         @intervenant = examen.intervenant_binome
         @jours = examen.days_between_today_and_debut
-        @relances = sujet.workflow_state
         @sujet = sujet
         attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
         mail(to: @intervenant.email, subject:"[PLANNING] Relance de votre dépôt de sujet pour votre examen à l'IAE Paris du #{l @debut.to_date, format: :long} à #{l @debut, format: :heures_log}")
