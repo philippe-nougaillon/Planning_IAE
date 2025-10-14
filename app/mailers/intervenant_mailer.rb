@@ -32,7 +32,7 @@ class IntervenantMailer < ApplicationMailer
         @intervenant = intervenant
         @message = EnvoiLog.find(envoi_log_id).message
 
-        attachments['PDG_Examen.docx']   = File.read('app/assets/attachments/PDG_Examen.docx')
+        attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
 
         if test
             mail(to: "fitsch-mouras.iae@univ-paris1.fr", cc: "philippe.nougaillon@gmail.com, pierreemmanuel.dacquet@gmail.com",
@@ -48,7 +48,7 @@ class IntervenantMailer < ApplicationMailer
         @nom_examen = examen.nom
         @jours = jours
         @sujet = sujet
-        attachments['PDG_Examen.docx']   = File.read('app/assets/attachments/PDG_Examen.docx')
+        attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
         mail(to: @intervenant.email, subject:"[PLANNING] Rappel de votre examen à l'IAE Paris du #{l @debut.to_date, format: :long} à #{l @debut, format: :heures_log}")
     end
 
@@ -59,23 +59,25 @@ class IntervenantMailer < ApplicationMailer
         mail(to: @intervenant.email, subject:"[PLANNING] Validation de votre dépôt de sujet pour votre examen à l'IAE Paris du #{l @debut.to_date, format: :long} à #{l @debut, format: :heures_log}")
     end
 
-    def rejet_sujet(examen, jours, raisons, sujet)
+    def rejet_sujet(sujet)
+        examen = sujet.examen
         @debut = examen.debut
         @intervenant = examen.intervenant_binome
-        @jours = jours
-        @raisons = raisons
+        @jours = examen.days_between_today_and_debut
+        @raisons = sujet.message
         @sujet = sujet
-        attachments['PDG_Examen.docx']   = File.read('app/assets/attachments/PDG_Examen.docx')
+        attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
         mail(to: @intervenant.email, subject:"[PLANNING] Rejet de votre dépôt de sujet pour votre examen à l'IAE Paris du #{l @debut.to_date, format: :long} à #{l @debut, format: :heures_log}")
     end
 
-    def relance_sujet(examen, sujet, jours, relances)
+    def relance_sujet(sujet)
+        examen = sujet.examen
         @debut = examen.debut
         @intervenant = examen.intervenant_binome
-        @jours = jours
-        @relances = relances
+        @jours = examen.days_between_today_and_debut
+        @relances = sujet.workflow_state
         @sujet = sujet
-        attachments['PDG_Examen.docx']   = File.read('app/assets/attachments/PDG_Examen.docx')
+        attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
         mail(to: @intervenant.email, subject:"[PLANNING] Relance de votre dépôt de sujet pour votre examen à l'IAE Paris du #{l @debut.to_date, format: :long} à #{l @debut, format: :heures_log}")
     end
 
