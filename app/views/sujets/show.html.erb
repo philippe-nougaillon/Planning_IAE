@@ -176,14 +176,16 @@
         <%= link_to @sujet.sujet.filename, url_for(@sujet.sujet), target: '_blank', class: 'text-primary hover:underline' %>
       <% end %>
 
-      <%= form_with url: deposer_sujet_path, model: @sujet, data: { controller: 'nested-form', nested_form_wrapper_selector_value: '.nested-form-wrapper' } do |f| %>
-        <%= f.file_field :sujet, required: true, label: 'Fichier PDF', accept: 'application/pdf', class: 'file-input file-input-bordered file-input-sm file-input-success flex-1' %>
-        <br>
+      <% if @sujet.can_déposer? %>
+        <%= form_with url: deposer_sujet_path, model: @sujet, data: { controller: 'nested-form', nested_form_wrapper_selector_value: '.nested-form-wrapper' } do |f| %>
+          <%= f.file_field :sujet, required: true, label: 'Fichier PDF', accept: 'application/pdf', class: 'file-input file-input-bordered file-input-sm file-input-success flex-1' %>
+          <br>
 
-        <button type="submit" name="commit" value="Déposer le sujet" class="btn btn-success btn-wide btn-lg text-white mt-6" data-disable-with="Déposer le sujet" data-turbo-confirm="ATTENTION ! Une fois déposé, vous ne pourrez plus modifier le sujet. Confirmez-vous le dépôt de votre sujet">
-          <i class="far fa-arrow-alt-circle-down"></i>
-          Déposer
-        </button>
+          <button type="submit" name="commit" value="Déposer le sujet" class="btn btn-success btn-wide btn-lg text-white mt-6" data-disable-with="Déposer le sujet" data-turbo-confirm="ATTENTION ! Une fois déposé, vous ne pourrez plus modifier le sujet. Confirmez-vous le dépôt de votre sujet">
+            <i class="far fa-arrow-alt-circle-down"></i>
+            Déposer
+          </button>
+        <% end %>
       <% end %>
 
     </div>

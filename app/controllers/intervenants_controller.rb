@@ -2,8 +2,8 @@
 
 class IntervenantsController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[ invitations calendrier ]
-  before_action :set_intervenant, only: [:show, :invitations, :edit, :update, :destroy, :calendrier]
-  before_action :is_user_authorized
+  before_action :set_intervenant, only: [:show, :invitations, :edit, :update, :destroy, :calendrier, :sujets]
+  before_action :is_user_authorized, except: [:sujets]
 
   # check if logged and admin  
   # before_filter do 
@@ -141,6 +141,8 @@ class IntervenantsController < ApplicationController
   end
 
   def sujets
+    authorize @intervenant
+
     @sujets = Sujet.joins(:cour).where('cour.intervenant_binome_id': @intervenant_user_id)
 
     # Si on a pas de workflow, on récupère tous les sujets, et on prend ceux archivés si la case "Inclure les archivés ?" est coché

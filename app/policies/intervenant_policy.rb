@@ -42,7 +42,7 @@ class IntervenantPolicy < ApplicationPolicy
   end
 
   def sujets?
-    user && user.role_number == 1
+    user && user.role_number == 1 && record.linked_user == user
   end
 
 end

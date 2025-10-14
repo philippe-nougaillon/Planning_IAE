@@ -10,7 +10,7 @@ class SujetPolicy < ApplicationPolicy
   end
 
   def show?
-    record.can_déposer? || index?
+    record.can_déposer? || index? || (user && user.intervenant?)
   end
 
   def new?
