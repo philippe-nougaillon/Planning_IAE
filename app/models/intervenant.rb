@@ -153,14 +153,14 @@ class Intervenant < ApplicationRecord
 								.uniq
 	end
 
-	def self.formation_for_select(user_id)
-		intervenant = Intervenant.find_by(email: User.find(user_id).email)
-		if intervenant.present?
+	def self.formation_for_select(intervenant_id)
 		# Chercher les formations des examen
-		end
+		examens_intervenant = Cour.where(intervenant_binome_id: intervenant_id).select{|cour| cour.examen?}
+		formations_intervenant_from_examens = Formation.where(id: examens_intervenant.pluck(:formation_id))
+
 		{
-		  'Formations catalogue' => Formation.where(hors_catalogue:false).not_archived.ordered.map { |i| i.nom }.uniq,
-		  'Formations hors catalogue' => Formation.where(hors_catalogue:true).not_archived.ordered.map { |i| i.nom }.uniq
+		  'Formations catalogue' => formations_intervenant_from_examens.where(hors_catalogue:false).not_archived.ordered.map { |i| i.nom }.uniq,
+		  'Formations hors catalogue' => formations_intervenant_from_examens.where(hors_catalogue:true).not_archived.ordered.map { |i| i.nom }.uniq
 		}
 	end
 
