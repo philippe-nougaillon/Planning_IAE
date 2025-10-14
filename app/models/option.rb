@@ -35,26 +35,32 @@ class Option < ApplicationRecord
   end
 
   def send_email_commande_v2(commande_status, old_commentaires)
+    title = ""
     case commande_status
     when 'modifiée'
-      mailer_response = ToolsMailer.with(cour: self.cour, old_commentaires: old_commentaires).commande_modifiée_v2.deliver_now
+      title = "[PLANNING] Commande modifiée pour le #{I18n.l self.cour.debut, format: :long}"
+      mailer_response = ToolsMailer.with(cour: self.cour, old_commentaires: old_commentaires, title: title).commande_modifiée_v2.deliver_now
     when 'supprimée'
-      mailer_response = ToolsMailer.with(cour: self.cour, old_commentaires: old_commentaires).commande_supprimée_v2.deliver_now
+      title = "[PLANNING] Commande supprimée pour le #{I18n.l self.cour.debut, format: :long}"
+      mailer_response = ToolsMailer.with(cour: self.cour, old_commentaires: old_commentaires, title: title).commande_supprimée_v2.deliver_now
     when 'ajoutée'
-      mailer_response = ToolsMailer.with(cour: self.cour).nouvelle_commande_v2.deliver_now
+      title = "[PLANNING] Nouvelle commande pour le #{I18n.l self.cour.debut, format: :long}"
+      mailer_response = ToolsMailer.with(cour: self.cour, title: title).nouvelle_commande_v2.deliver_now
     end
-    MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: "logistique@iae.pantheonsorbonne.fr", subject: "Commande #{commande_status}")
+    MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: "logistique@iae.pantheonsorbonne.fr", subject: "Commande #{commande_status}", title: title)
   end
 
   def check_send_new_commande_email_v2
-    mailer_response = ToolsMailer.with(cour: self.cour).nouvelle_commande_v2.deliver_now
-    MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: "logistique@iae.pantheonsorbonne.fr", subject: "Commande ajoutée")
+    title = "[PLANNING] Nouvelle commande pour le #{I18n.l self.cour.debut, format: :long}"
+    mailer_response = ToolsMailer.with(cour: self.cour, title: title).nouvelle_commande_v2.deliver_now
+    MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: "logistique@iae.pantheonsorbonne.fr", subject: "Commande ajoutée", title: title)
   end
 
   def send_delete_commande_email_v2
     description = self.description
     yield
-    mailer_response = ToolsMailer.with(cour: self.cour, old_commentaires: description).commande_supprimée_v2.deliver_now
-    MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: "logistique@iae.pantheonsorbonne.fr", subject: "Commande supprimée")
+    title = "[PLANNING] Commande supprimée pour le #{I18n.l self.cour.debut, format: :long}"
+    mailer_response = ToolsMailer.with(cour: self.cour, old_commentaires: description, title: title).commande_supprimée_v2.deliver_now
+    MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: "logistique@iae.pantheonsorbonne.fr", subject: "Commande supprimée", title: title)
   end
 end

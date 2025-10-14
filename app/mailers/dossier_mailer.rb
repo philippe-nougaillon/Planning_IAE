@@ -10,21 +10,21 @@ class DossierMailer < ApplicationMailer
         attachments['Etat prévisionnel.pdf']        = File.read('app/assets/attachments/Formulaire_V02-1.pdf')
 
         mail(to: @dossier.intervenant.email, 
-             subject: "[Enseignement IAE-Paris #{ @dossier.période }] Dossier de recrutement")
+             subject: params[:title])
     end
 
     def valider_email
         @dossier = params[:dossier]
 
         mail(to: @dossier.intervenant.email, 
-             subject: "[Enseignement IAE-Paris #{ @dossier.période }] Dossier de recrutement")
+             subject: params[:title])
     end
 
     def rejeter_email
         @dossier = params[:dossier]
 
         mail(to: @dossier.intervenant.email, 
-             subject: "[Enseignement IAE-Paris #{ @dossier.période }] Dossier de recrutement")
+             subject: params[:title])
     end
 
     def mauvais_url

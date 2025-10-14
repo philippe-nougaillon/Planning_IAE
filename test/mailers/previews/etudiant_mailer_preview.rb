@@ -2,11 +2,11 @@ class EtudiantMailerPreview < ActionMailer::Preview
   include Roadie::Rails::Automatic
 
   def notifier_modification_cours
-    EtudiantMailer.with(to: "test@gmail.com").notifier_modification_cours(Etudiant.first, Cour.find(23173))
+    EtudiantMailer.with(to: "test@gmail.com").notifier_modification_cours(Etudiant.first, Cour.find(23173), "[PLANNING IAE Paris] Votre cours du #{I18n.l(Cour.find(23173).debut.to_date, format: :long)} a changé !")
   end
 
   def welcome_student
-    EtudiantMailer.welcome_student(User.first)
+    EtudiantMailer.welcome_student(User.first, "[PLANNING IAE Paris] Bienvenue !")
   end
 
   def convocation
@@ -14,7 +14,7 @@ class EtudiantMailerPreview < ActionMailer::Preview
     cour = Cour.where(intervenant_id: [169, 522, 1166]).last
     etudiant = cour.etudiants.first
     pdf.convocation(cour, etudiant, true, false, false, true, false)
-    EtudiantMailer.convocation(etudiant, pdf, cour)
+    EtudiantMailer.convocation(etudiant, pdf, cour, "Convocation #{cour.type_examen} - #{cour.nom_ou_ue}")
   end
 
 end

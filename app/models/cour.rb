@@ -590,25 +590,31 @@ class Cour < ApplicationRecord
     end
 
     def send_email_examen(examen_status, old_cour)
+      title = ""
       case examen_status
       when 'modifié'
-        mailer_response = CourMailer.with(cour: self).examen_modifié.deliver_now
+        title = "[PLANNING] Examen modifié pour le #{I18n.l self.debut, format: :long}"
+        mailer_response = CourMailer.with(cour: self, title: title).examen_modifié.deliver_now
       when 'supprimé'
-        mailer_response = CourMailer.with(cour: self).examen_supprimé.deliver_now
+        title = "[PLANNING] Examen supprimé pour le #{I18n.l self.debut, format: :long}"
+        mailer_response = CourMailer.with(cour: self, title: title).examen_supprimé.deliver_now
       when 'ajouté'
-        mailer_response = CourMailer.with(cour: self).examen_ajouté.deliver_now
+        title = "[PLANNING] Nouvel examen pour le #{I18n.l self.debut, format: :long}"
+        mailer_response = CourMailer.with(cour: self, title: title).examen_ajouté.deliver_now
       end
-      MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen #{examen_status}")
+      MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen #{examen_status}", title: title)
     end
 
     def send_new_examen_email
-      mailer_response = CourMailer.with(cour: self).examen_ajouté.deliver_now
-      MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen ajouté")
+      title = "[PLANNING] Nouvel examen pour le #{I18n.l self.debut, format: :long}"
+      mailer_response = CourMailer.with(cour: self, title: title).examen_ajouté.deliver_now
+      MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen ajouté", title: title)
     end
 
   def send_delete_examen_email
-    mailer_response = CourMailer.with(cour: self).examen_supprimé.deliver_now
-    MailLog.create!(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen supprimé")
+    title = "[PLANNING] Examen supprimé pour le #{I18n.l self.debut, format: :long}"
+    mailer_response = CourMailer.with(cour: self, title: title).examen_supprimé.deliver_now
+    MailLog.create!(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen supprimé", title: title)
   end
 
   def synchronisation_edusign
