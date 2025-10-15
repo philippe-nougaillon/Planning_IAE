@@ -19,6 +19,7 @@ class Cour < ApplicationRecord
                                 reject_if: lambda{|attributes| attributes['catégorie'].blank? || attributes['description'].blank?},
                                 allow_destroy:true
   has_many :attendances, dependent: :destroy
+  has_one :sujet, dependent: :destroy
 
   has_one_attached :document
 
