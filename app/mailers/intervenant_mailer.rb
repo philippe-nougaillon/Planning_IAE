@@ -42,24 +42,24 @@ class IntervenantMailer < ApplicationMailer
         end
     end
 
-    def rappel_examen(examen, sujet, jours)
+    def rappel_examen(examen, sujet, jours, title)
         @debut = examen.debut
         @intervenant = examen.intervenant_binome
-        @nom_examen = examen.nom
+        @nom_examen = examen.nom_ou_ue
         @jours = jours
         @sujet = sujet
         attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
-        mail(to: @intervenant.email, subject:"[PLANNING] Rappel de votre examen à l'IAE Paris du #{l @debut.to_date, format: :long} à #{l @debut, format: :heures_log}")
+        mail(to: @intervenant.email, subject: title)
     end
 
-    def validation_sujet(examen, jours)
+    def validation_sujet(examen, jours, title)
         @debut = examen.debut
         @intervenant = examen.intervenant_binome
         @jours = jours
-        mail(to: @intervenant.email, subject:"[PLANNING] Validation de votre dépôt de sujet pour votre examen à l'IAE Paris du #{l @debut.to_date, format: :long} à #{l @debut, format: :heures_log}")
+        mail(to: @intervenant.email, subject: title)
     end
 
-    def rejet_sujet(sujet)
+    def rejet_sujet(sujet, title)
         examen = sujet.cour
         @debut = examen.debut
         @intervenant = examen.intervenant_binome
@@ -67,17 +67,17 @@ class IntervenantMailer < ApplicationMailer
         @raisons = sujet.message
         @sujet = sujet
         attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
-        mail(to: @intervenant.email, subject:"[PLANNING] Rejet de votre dépôt de sujet pour votre examen à l'IAE Paris du #{l @debut.to_date, format: :long} à #{l @debut, format: :heures_log}")
+        mail(to: @intervenant.email, subject: title)
     end
 
-    def relance_sujet(sujet)
+    def relance_sujet(sujet, title)
         examen = sujet.cour
         @debut = examen.debut
         @intervenant = examen.intervenant_binome
         @jours = examen.days_between_today_and_debut
         @sujet = sujet
         attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
-        mail(to: @intervenant.email, subject:"[PLANNING] Relance de votre dépôt de sujet pour votre examen à l'IAE Paris du #{l @debut.to_date, format: :long} à #{l @debut, format: :heures_log}")
+        mail(to: @intervenant.email, subject: title)
     end
 
     def welcome_intervenant

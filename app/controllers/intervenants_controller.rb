@@ -143,7 +143,7 @@ class IntervenantsController < ApplicationController
   def sujets
     authorize @intervenant
 
-    @sujets = Sujet.joins(:cour).where('cour.intervenant_binome_id': @intervenant_user_id)
+    @sujets = Sujet.joins(:cour).where('cour.intervenant_binome_id': @intervenant_user_id).ordered
 
     # Si on a pas de workflow, on récupère tous les sujets, et on prend ceux archivés si la case "Inclure les archivés ?" est coché
     # Sinon, on prend en fonction du workflow choisi sans prendre en compte la case pour les archives
@@ -161,7 +161,6 @@ class IntervenantsController < ApplicationController
       @sujets = @sujets.where(cour_id: examens_from_formation)
     end
 
-    @sujets = @sujets.reorder(Arel.sql("#{sort_column} #{sort_direction}"))
     @sujets = @sujets.paginate(page: params[:page], per_page: 20)
   end
 

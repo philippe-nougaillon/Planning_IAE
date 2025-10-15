@@ -35,12 +35,26 @@ class IntervenantMailerPreview < ActionMailer::Preview
 
     def rappel_examen
         examen = Cour.where(intervenant_id: [169, 1166]).last
-        IntervenantMailer.rappel_examen(examen, Sujet.last, 60).deliver_now
+        title = "[PLANNING] Rappel de votre examen à l'IAE Paris du #{I18n.l examen.debut.to_date, format: :long} à #{I18n.l examen.debut, format: :heures_log}"
+        IntervenantMailer.rappel_examen(examen, Sujet.last, 60, title).deliver_now
     end
 
     def validation_sujet
         examen = Cour.where(intervenant_id: [169, 1166]).last
-        IntervenantMailer.validation_sujet(examen, Sujet.last).deliver_now
+        title = "[PLANNING] Validation de votre dépôt de sujet pour votre examen à l'IAE Paris du #{I18n.l examen.debut.to_date, format: :long} à #{I18n.l examen.debut, format: :heures_log}"
+        IntervenantMailer.validation_sujet(examen, Sujet.last, title).deliver_now
+    end
+
+    def rejet_sujet
+        examen = Cour.where(intervenant_id: [169, 1166]).last
+        title = "[PLANNING] Rejet de votre dépôt de sujet pour votre examen à l'IAE Paris du #{I18n.l examen.debut.to_date, format: :long} à #{I18n.l examen.debut, format: :heures_log}"
+        IntervenantMailer.rejet_sujet(Sujet.last, title).deliver_now
+    end
+
+    def relance_sujet
+        examen = Cour.where(intervenant_id: [169, 1166]).last
+        title = "[PLANNING] Relance de votre dépôt de sujet pour votre examen à l'IAE Paris du #{I18n.l examen.debut.to_date, format: :long} à #{I18n.l examen.debut, format: :heures_log}"
+        IntervenantMailer.relance_sujet(Sujet.last, title).deliver_now
     end
 
     def welcome_intervenant

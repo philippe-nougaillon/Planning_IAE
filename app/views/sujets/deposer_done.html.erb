@@ -1,16 +1,14 @@
 <p class="text-2xl font-bold text-success mt-12">
-    Sujet déposé avec succès. Merci.
+    Sujet déposé avec succès. Merci !
 </p>
 <br>
 
 <p class="mb-4">
-    Déposé le : <b><%= l DateTime.now.to_date %></b>
+    Déposé le : <b><%= l(DateTime.now, format: :long) %></b>
 </p>
 
 <p class="mb-8">
     Référence : <b><%= @sujet.slug %></b>
 </p>
 
-<p class="alert alert-success text-white mb-4">
-    <b>Vous pouvez maintenant fermer cette fenêtre.</b>
-</p>
+<%= link_to "Consultez la liste de vos sujets d'examens", sujets_intervenant_path(Intervenant.find_by(id: @sujet.cour.intervenant_binome_id).slug), class: 'underline' %>

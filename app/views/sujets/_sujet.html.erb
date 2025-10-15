@@ -1,37 +1,45 @@
 <tr class="hover border">
   <td>
-    <%= time_ago_in_words sujet.updated_at %>
+    il y a <%= time_ago_in_words sujet.updated_at %>
   </td>
   <td>
-    <%= l(sujet.cour.debut, format: :short) %>
+    <%= link_to l(sujet.cour.debut.to_date, format: :long), cours_path(start_date: sujet.cour.debut.to_date, intervenant_id: sujet.cour.intervenant_binome_id, formation_id: sujet.cour.formation_id) %>
+    <br>
+    <% if sujet.cour.debut > DateTime.now %>
+      <small>Dans <%= time_ago_in_words(sujet.cour.debut.to_date) %></small>
+    <% end %>
   </td>
+  <% if params[:action] == 'index' && params[:controller] == 'sujet' %>
+    <td>
+      <%= sujet.cour.intervenant_binome.nom_prenom %>
+    </td>
+  <% end %>
   <td>
-    <%= sujet.cour.intervenant_binome.nom_prenom %>
-  </td>
-  <td>
-    <span class="badge <%= sujet.style %> text-white">
+    <span class="badge badge-lg <%= sujet.style %> text-white">
       <%= sujet.workflow_state.humanize %>
     </span>
   </td>
-  <% if sujet.mail_log %>
-    <% if sujet.mail_log.statut %>
-      <td>
-        <span class="text-success">OK</span>
-      </td>
-      <td>
-        <% if sujet.mail_log&.opened %>
-          <span class="text-info">OUVERT</span>
-        <% end %>
-      </td>
+  <% if params[:action] == 'index' && params[:controller] == 'sujet' %>
+    <% if sujet.mail_log %>
+      <% if sujet.mail_log.statut %>
+        <td>
+          <span class="text-success">OK</span>
+        </td>
+        <td>
+          <% if sujet.mail_log&.opened %>
+            <span class="text-info">OUVERT</span>
+          <% end %>
+        </td>
+      <% else %>
+        <td>
+          <span class="text-error">KO</span>
+        </td>
+        <td></td>
+      <% end %>
     <% else %>
-      <td>
-        <span class="text-error">KO</span>
-      </td>
+      <td></td>
       <td></td>
     <% end %>
-  <% else %>
-    <td></td>
-    <td></td>
   <% end %>
   <td><%= link_to 'Voir', sujet, class: 'text-primary hover:underline' %></td>
 </tr>

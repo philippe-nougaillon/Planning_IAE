@@ -29,7 +29,7 @@
         <% end %>
 
         <% if current_user.intervenant? %>
-          <%= navbar_nav_item('sujets', 'docs', sujets_intervenant_path(@intervenant_user_id)) %>
+          <%= navbar_nav_item('sujets', 'docs', sujets_intervenant_path(Intervenant.find_by(id: @intervenant_user_id)), 'Sujets d\'examens') %>
         <% end %>
 
         <% if policy(:tool).audit_cours? %>

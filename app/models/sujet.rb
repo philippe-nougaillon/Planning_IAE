@@ -14,6 +14,8 @@ class Sujet < ApplicationRecord
 
   has_one_attached :sujet
 
+  scope :ordered, -> {order(updated_at: :desc)}
+
   # WORKFLOW
 
   ENVOYE  = 'envoyé'

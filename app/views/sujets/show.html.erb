@@ -59,18 +59,24 @@
       <strong class="font-bold">Document reçu</strong>
       <br>
 
-      <% if !@sujet.sujet.attached? %>
-        <% if policy(Sujet).index? %>
-          <p class="mb-4">
-            Aucun sujet pour l'instant.
-          </p>
-        <% else %>
-          <p class="alert mb-4">
-            Veuillez ajouter le sujet
-          </p>
-        <% end %>
+      <% if @sujet.archivé? %>
+        <p class="mb-4">
+          Document supprimé
+        </p>
       <% else %>
-        <%= link_to @sujet.sujet.filename, url_for(@sujet.sujet), target: '_blank', class: 'text-primary hover:underline' %>
+        <% if !@sujet.sujet.attached? %>
+          <% if policy(Sujet).index? %>
+            <p class="mb-4">
+              Aucun sujet pour l'instant.
+            </p>
+          <% else %>
+            <p class="alert mb-4">
+              Veuillez ajouter le sujet
+            </p>
+          <% end %>
+        <% else %>
+          <%= link_to @sujet.sujet.filename, url_for(@sujet.sujet), target: '_blank', class: 'text-primary hover:underline' %>
+        <% end %>
       <% end %>
     </div>
 
@@ -104,9 +110,8 @@
     <%= form_with url: rejeter_sujet_path(@sujet), method: :get, onsubmit: "return confirm('Voulez vous vraiment quitter la page sans avoir rejeter ?')" do |f| %>
       <div id='rejeter-form' style="display: none;" data-rejet-sujet-target="rejeterForm">
         <div class="flex flex-wrap gap-4 mt-4">
-          <%= f.label :raisons, 'Raison (optionnel) :' %>
-          <%= f.text_field :raisons, class: 'input input-bordered input-sm' %>
-          <%= f.submit 'Rejeter', class: 'btn btn-sm btn-error text-white'%>
+          <%= f.text_field :raisons, class: 'input input-bordered input-sm', placeholder: 'Pour quelle raison ?' %>
+          <%= f.submit 'Notifier l\'intervenant', class: 'btn btn-sm btn-primary text-white'%>
         </div>
       </div>
     <% end %>
@@ -139,28 +144,33 @@
 	</div>
 
 <% else %>
-  <h2 class="text-lg">
-    En vue de l'examen, merci de bien vouloir déposer votre sujet avec la page de garde (en y indiquant les consignes) en <b>format PDF</b>.
-  </h2>
-  <div class="flex flex-wrap shadow-lg gap-8 lg:gap-24 p-6 mt-4">
+  <% if @sujet.can_déposer? %>
+    <h2 class="text-lg">
+      Merci de <b>déposer votre sujet</b> (avec la page de garde et en y indiquant les consignes) en <b>format PDF</b> <u>protégé par mot de passe</u>.
+    </h2>
+  <% end %>
+  <div class="flex flex-wrap shadow-lg gap-8 lg:gap-24 p-6 my-4">
     <div>
       <p class="mb-4">
         <strong>Examen</strong>
         <br>
-        Le <%= l @sujet.cour.debut.to_date %>
+        <%= l(@sujet.cour.debut, format: :long) %>
         <br>
         <%= @sujet.cour.nom_ou_ue %>
       </p>
-      <p class="mb-4">
-        <strong>Intervenant</strong>
-        <br>
-        <%= @sujet.cour.intervenant_binome.nom_prenom %>
-        <br>
-        <%= @sujet.cour.intervenant_binome.email %>
-      </p>
+
+      <% if !@sujet.can_déposer? %>
+        <p class="mb-4">
+          <strong>État</strong>
+          <br>
+          <span class="badge <%= @sujet.style %> text-white">
+            <%= @sujet.workflow_state.humanize %>
+          </span>
+        </p>
+      <% end %>
     </div>
 
-    <div class="relative flex-grow max-w-full">
+    <div class="flex-1">
 
       <% if !@sujet.sujet.attached? %>
         <% if policy(Sujet).index? %>
@@ -173,7 +183,11 @@
           </p>
         <% end %>
       <% else %>
-        <%= link_to @sujet.sujet.filename, url_for(@sujet.sujet), target: '_blank', class: 'text-primary hover:underline' %>
+        <p class="mb-4">
+          <strong>Fichier PDF</strong>
+          <br>
+          <%= link_to @sujet.sujet.filename, url_for(@sujet.sujet), target: '_blank', class: 'text-primary hover:underline' %>
+        </p>
       <% end %>
 
       <% if @sujet.can_déposer? %>
@@ -181,7 +195,7 @@
           <%= f.file_field :sujet, required: true, label: 'Fichier PDF', accept: 'application/pdf', class: 'file-input file-input-bordered file-input-sm file-input-success flex-1' %>
           <br>
 
-          <button type="submit" name="commit" value="Déposer le sujet" class="btn btn-success btn-wide btn-lg text-white mt-6" data-disable-with="Déposer le sujet" data-turbo-confirm="ATTENTION ! Une fois déposé, vous ne pourrez plus modifier le sujet. Confirmez-vous le dépôt de votre sujet">
+          <button type="submit" name="commit" value="Déposer le sujet" class="btn btn-success w-full sm:w-48 btn-lg text-white mt-6" data-disable-with="Déposer le sujet" data-turbo-confirm="ATTENTION ! Une fois déposé, vous ne pourrez plus modifier le sujet. Confirmez-vous le dépôt de votre sujet">
             <i class="far fa-arrow-alt-circle-down"></i>
             Déposer
           </button>
