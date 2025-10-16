@@ -437,15 +437,17 @@ class ToolsController < ApplicationController
         msg = "ETUDIANT #{etudiant.new_record? ? 'NEW' : 'UPDATE'} => id:#{etudiant.id} changes:#{etudiant.changes}"
 
         if etudiant.valid? 
-          if etudiant.new_record? && params[:notify] == '1' && params[:save] == 'true'
+          if params[:notify] == '1' && params[:save] == 'true'
             etudiant.save
             # Création du compte d'accès (user) et envoi du mail de bienvenue
-            user = User.new(nom: etudiant.nom, prénom: etudiant.prénom, email: etudiant.email, mobile: etudiant.mobile, password: SecureRandom.base64(12))
-            if user.valid?
-              user.save
-              title = "[PLANNING IAE Paris] Bienvenue !"
-              mailer_response = EtudiantMailer.welcome_student(user, title).deliver_now
-              MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: etudiant.email, subject: "Nouvel accès étudiant", title: title)
+            if !etudiant.linked_user
+              user = User.new(nom: etudiant.nom, prénom: etudiant.prénom, email: etudiant.email, mobile: etudiant.mobile, password: SecureRandom.base64(12))
+              if user.valid?
+                user.save
+                title = "[PLANNING IAE Paris] Bienvenue !"
+                mailer_response = EtudiantMailer.welcome_student(user, title).deliver_now
+                MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: etudiant.email, subject: "Nouvel accès étudiant", title: title)
+              end
             end
           else
             # Mise à jour des étudiants existants
