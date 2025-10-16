@@ -117,6 +117,19 @@ class UsersController < ApplicationController
     end
   end
 
+  def disable_otp
+    current_user.otp_required_for_login = false
+    current_user.save!
+    redirect_to user_path(current_user), notice: "Double authentification désactivée avec succès !"
+  end
+
+  def enable_otp
+    current_user.otp_secret = User.generate_otp_secret
+    current_user.otp_required_for_login = true
+    current_user.save!
+    redirect_to user_path(current_user), notice: "Double authentification activée avec succès !"
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user

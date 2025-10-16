@@ -40,6 +40,10 @@ Rails.application.routes.draw do
     member do
       get :reactivate
     end
+    collection do
+      post :enable_otp
+      post :disable_otp
+    end
   end
 
   resources :fermetures
