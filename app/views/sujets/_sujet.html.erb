@@ -9,7 +9,7 @@
       <small>Dans <%= time_ago_in_words(sujet.cour.debut.to_date) %></small>
     <% end %>
   </td>
-  <% if params[:action] == 'index' && params[:controller] == 'sujet' %>
+  <% if params[:action] == 'index' && params[:controller] == 'sujets' %>
     <td>
       <%= sujet.cour.intervenant_binome.nom_prenom %>
     </td>
@@ -19,7 +19,7 @@
       <%= sujet.workflow_state.humanize %>
     </span>
   </td>
-  <% if params[:action] == 'index' && params[:controller] == 'sujet' %>
+  <% if params[:action] == 'index' && params[:controller] == 'sujets' %>
     <% if sujet.mail_log %>
       <% if sujet.mail_log.statut %>
         <td>
