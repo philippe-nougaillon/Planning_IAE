@@ -10,8 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_16_095832) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_16_142825) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
 
   create_table "action_text_rich_texts", force: :cascade do |t|
@@ -663,6 +664,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_16_095832) do
     t.string "otp_secret"
     t.integer "consumed_timestep"
     t.boolean "otp_required_for_login"
+    t.string "unique_session_id"
     t.index ["discarded_at"], name: "index_users_on_discarded_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["formation_id"], name: "index_users_on_formation_id"
@@ -736,10 +738,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_16_095832) do
   add_foreign_key "vacations", "vacation_activites"
 
   create_view "cours_non_planifies", materialized: true, sql_definition: <<-SQL
-      SELECT id
+      SELECT cours.id
      FROM cours
-    WHERE ((id IN ( SELECT audits.auditable_id
+    WHERE ((cours.id IN ( SELECT audits.auditable_id
              FROM audits
-            WHERE (((audits.auditable_type)::text = 'Cour'::text) AND (audits.user_id <> 41)))) AND (etat = 0) AND ((debut >= now()) AND (debut <= (now() + 'P30D'::interval))));
+            WHERE (((audits.auditable_type)::text = 'Cour'::text) AND (audits.user_id <> 41)))) AND (cours.etat = 0) AND ((cours.debut >= now()) AND (cours.debut <= (now() + 'P30D'::interval))));
   SQL
 end
