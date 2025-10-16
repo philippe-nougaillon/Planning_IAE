@@ -80,6 +80,11 @@ class IntervenantMailer < ApplicationMailer
         mail(to: @intervenant.email, subject: title)
     end
 
+    def deposer_sujet(sujet, title)
+        @sujet = sujet
+        mail(to: sujet.cour.formation.user.email, subject: title)
+    end
+
     def welcome_intervenant
         @user = params[:user]
         @password = params[:password]

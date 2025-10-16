@@ -98,9 +98,18 @@ class SujetsController < ApplicationController
 
   def deposer
     if params[:sujet]
-      @sujet.update(sujet_params)
-      @sujet.déposer!
-      redirect_to deposer_done_sujet_path(@sujet)
+      if @sujet.valid?
+        if @sujet.can_déposer?
+          @sujet.update(sujet_params)
+          @sujet.déposer!
+          DeposerSujetJob.perform_later(@sujet, current_user&.id)
+          redirect_to deposer_done_sujet_path(@sujet)
+        else
+          redirect_to request.referrer, alert: "Le sujet ne peut pas être déposé."
+        end
+      else
+        redirect_to request.referrer, alert: "Il y a un problème avec l'enregistrement du sujet. Veuillez contacter le gestionnaire"
+      end
     else 
       redirect_to request.referrer, alert: "Il faut ajouter le sujet"
     end
@@ -114,7 +123,7 @@ class SujetsController < ApplicationController
       if @sujet.can_valider?
         @sujet.valider!
 
-        ValidationSujetJob.perform_later(@sujet)
+        ValidationSujetJob.perform_later(@sujet, current_user&.id)
 
         redirect_to @sujet, notice: "Sujet validé avec succès."
       elsif @sujet.validé?
@@ -132,7 +141,7 @@ class SujetsController < ApplicationController
       if @sujet.can_relancer?
         @sujet.relancer!
 
-        RelancerSujetJob.perform_later(@sujet)
+        RelancerSujetJob.perform_later(@sujet, current_user&.id)
 
         redirect_to @sujet, notice: "Sujet relancé avec succès."
       elsif @sujet.relancé?
@@ -155,7 +164,7 @@ class SujetsController < ApplicationController
           @sujet.save
         end
 
-        RejeterSujetJob.perform_later(@sujet)
+        RejeterSujetJob.perform_later(@sujet, current_user&.id)
 
         redirect_to @sujet, notice: "Sujet rejeté avec succès."
       elsif @sujet.non_conforme?

@@ -28,7 +28,7 @@
 
       <p class="mb-4">
         <strong>État :</strong> 
-        <span class="badge <%= @sujet.style %> text-white">
+        <span class="badge badge-lg <%= @sujet.style %> text-white">
           <%= @sujet.workflow_state.humanize %>
         </span>
       </p>
@@ -163,7 +163,7 @@
         <p class="mb-4">
           <strong>État</strong>
           <br>
-          <span class="badge <%= @sujet.style %> text-white">
+          <span class="badge badge-lg <%= @sujet.style %> text-white">
             <%= @sujet.workflow_state.humanize %>
           </span>
         </p>
