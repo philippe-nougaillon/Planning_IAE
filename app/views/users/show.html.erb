@@ -69,6 +69,16 @@
 		| Il y a <%= time_ago_in_words(@user.last_sign_in_at) %>
 	</p>
 <% end %>
+
+<div class="mt-8">
+	<% if policy(User).enable_otp? && current_user == @user %>
+		<% if !current_user.otp_required_for_login %>
+			<%= link_to "Activer la double authentification", enable_otp_users_path, class: "btn" %>
+		<% else %>
+			<%= button_to "Désactiver la double authentification", disable_otp_users_path, class: "btn"  %>
+		<% end %>
+	<% end %>
+</div>
 <br>
 
 <% if current_user && !current_user.étudiant? %>

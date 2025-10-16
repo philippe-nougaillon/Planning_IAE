@@ -123,11 +123,22 @@ class UsersController < ApplicationController
     redirect_to user_path(current_user), notice: "Double authentification désactivée avec succès !"
   end
 
+  def enable_otp_do
+    # Si code de vérification est correct, activer 2FA
+    # Sinon redemander le code
+    if current_user.validate_and_consume_otp!(params[:otp_attempt])
+      current_user.otp_required_for_login = true
+      current_user.save!
+      redirect_to user_path(current_user), notice: "Double authentification activée avec succès !"
+    else
+      redirect_to enable_otp_users_path(current_user), alert: "Code de vérification incorrect, veuillez réessayer !"
+    end
+    
+  end
+
   def enable_otp
-    current_user.otp_secret = User.generate_otp_secret
-    current_user.otp_required_for_login = true
-    current_user.save!
-    redirect_to user_path(current_user), notice: "Double authentification activée avec succès !"
+      current_user.otp_secret = User.generate_otp_secret
+      current_user.save!
   end
 
   private

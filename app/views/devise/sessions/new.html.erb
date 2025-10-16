@@ -19,6 +19,11 @@
             <%= f.password_field :password, autocomplete: "current-password", required: true, class: "input input-bordered w-full mt-2" %>
           </div>
 
+          <div class="form-control my-4">
+            <%= f.label :otp_attempt, label: "Code de vérification" %>
+            <%= f.password_field :otp_attempt, class: "input input-bordered w-full mt-2" %>
+          </div>
+
           <%= f.submit t('.sign_in'), class: "btn btn-primary text-white w-full mt-2 mb-4 text-xl font-normal", 'data-turbo': false %>
           <div class="flex flex-wrap justify-between my-4 gap-2">
             <%- if devise_mapping.recoverable? && controller_name != 'passwords' %>
