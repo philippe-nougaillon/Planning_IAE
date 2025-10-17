@@ -42,8 +42,9 @@ Rails.application.routes.draw do
       get :reactivate
     end
     collection do
-      get :enable_otp
-      post :enable_otp_do
+      get :qrcode_otp
+      get :mail_otp
+      post :enable_otp
       post :disable_otp
     end
   end

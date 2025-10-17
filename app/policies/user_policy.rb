@@ -53,11 +53,15 @@ class UserPolicy < ApplicationPolicy
     user && user.role_number >= 4
   end
 
-  def enable_otp_do?
+  def disable_otp?
     enable_otp?
   end
 
-  def disable_otp?
+  def qrcode_otp?
+    enable_otp?
+  end
+
+  def mail_otp?
     enable_otp?
   end
 
