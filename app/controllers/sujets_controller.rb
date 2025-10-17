@@ -136,24 +136,6 @@ class SujetsController < ApplicationController
     end
   end
 
-  def relancer
-    if @sujet.valid?
-      if @sujet.can_relancer?
-        @sujet.relancer!
-
-        RelancerSujetJob.perform_later(@sujet, current_user&.id)
-
-        redirect_to @sujet, notice: "Sujet relancé avec succès."
-      elsif @sujet.relancé?
-        redirect_to @sujet, alert: "Le sujet est déjà relancé."
-      else
-        redirect_to @sujet, alert: "Le sujet ne peut pas être relancé."
-      end
-    else
-      redirect_to @sujet, alert: "Le sujet n'est pas valide. Impossible de relancer."
-    end
-  end
-
   def rejeter
     if @sujet.valid?
       if @sujet.can_rejeter?
@@ -175,24 +157,6 @@ class SujetsController < ApplicationController
       end
     else
       redirect_to @sujet, alert: "Le sujet n'est pas valide. Impossible de rejeter."
-    end
-  end
-
-  def archiver
-    if @sujet.valid?
-      if @sujet.can_archiver?
-        @sujet.archiver!
-
-        @sujet.sujet.purge
-
-        redirect_to @sujet, notice: "Sujet archivé avec succès."
-      elsif @sujet.archivé?
-        redirect_to @sujet, alert: "Le sujet est déjà archivé."
-      else
-        redirect_to @sujet, alert: "Le sujet ne peut pas être archivé."
-      end
-    else
-      redirect_to @sujet, alert: "Le sujet n'est pas valide. Impossible d'archiver."
     end
   end
 
