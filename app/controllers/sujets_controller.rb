@@ -102,7 +102,7 @@ class SujetsController < ApplicationController
         if @sujet.can_déposer?
           @sujet.update(sujet_params)
           @sujet.déposer!
-          DeposerSujetJob.perform_later(@sujet, current_user&.id)
+          DeposerSujetJob.perform_later(@sujet, current_user&.id || 0)
           redirect_to deposer_done_sujet_path(@sujet)
         else
           redirect_to request.referrer, alert: "Le sujet ne peut pas être déposé."
