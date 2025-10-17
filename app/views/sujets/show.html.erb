@@ -75,7 +75,12 @@
             </p>
           <% end %>
         <% else %>
-          <%= link_to @sujet.sujet.filename, url_for(@sujet.sujet), target: '_blank', class: 'text-primary hover:underline' %>
+          <% if current_user.otp_required_for_login %>
+            <%= link_to @sujet.sujet.filename, url_for(@sujet.sujet), target: '_blank', class: 'text-primary hover:underline' %>
+          <% else %>
+            <p class="mb-4">Pour voir le sujet, veuillez d'abord activer la double authentification</p>
+            <%= link_to "Activer la double authentification", enable_otp_users_path, class: "btn btn-error text-white btn-sm" %>
+          <% end %>
         <% end %>
       <% end %>
     </div>
