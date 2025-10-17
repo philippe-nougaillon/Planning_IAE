@@ -82,7 +82,7 @@ class IntervenantMailer < ApplicationMailer
 
     def deposer_sujet(sujet, title)
         @sujet = sujet
-        mail(to: sujet.cour.formation.user.email, subject: title)
+        mail(to: ["#{sujet.cour.formation.user.email}, examens@iae.pantheonsorbonne.fr"], subject: title)
     end
 
     def welcome_intervenant

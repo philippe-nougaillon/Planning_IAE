@@ -16,7 +16,7 @@ namespace :examen do
   end
 
   task archiver_sujet_passe: :environment do
-    examen_yesterday = Cour.where("DATE(cours.fin) <= ?", Date.today-1.day).where(intervenant_id: [169, 1166])
+    examen_yesterday = Cour.where("DATE(cours.fin) < ?", Date.today).where(intervenant_id: [169, 1166])
     examen_yesterday.each do |cour|
       if sujet = Sujet.find_by(cour_id: cour.id)
 
