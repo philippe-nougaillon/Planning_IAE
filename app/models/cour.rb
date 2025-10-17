@@ -392,10 +392,8 @@ class Cour < ApplicationRecord
   def color_sujet
     days = self.days_between_today_and_debut
     case days
-    when (0..3)
+    when (0..10)
       "error"
-    when (4..10)
-      "orange-500"
     else
       "warning"
     end
