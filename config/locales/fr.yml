@@ -301,6 +301,8 @@ fr:
     registrations:
       new:
         title: Inscription
+    enable_otp:
+      title: Activation 2FA
   pages:
     mentions_légales:
       title: Mentions légales

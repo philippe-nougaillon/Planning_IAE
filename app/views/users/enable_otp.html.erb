@@ -1,0 +1,22 @@
+
+<div class="border-b mt-6 mb-2 pb-4">
+    <div class="float-right">
+        <%= link_to user_path(current_user), class: 'btn btn-ghost' do %>
+            <%= fa_icon 'list-alt', text: ' Retour' %>
+        <% end %>
+    </div>
+	<h1 class="text-3xl"><%= fa_icon 'key' %> Activation de la double authentification</h1>
+</div>
+
+<div>
+    <% totp_uri = current_user.otp_provisioning_uri(current_user.email, issuer: "IAE-Planning") %>
+    <p class="mb-8">Veuillez scanner ce QRCode avec votre <b>application mobile d'authentification</b> (Ex : Google Autenticator) :</p>
+    <%= raw RQRCode::QRCode.new(totp_uri).as_svg(module_size: 4) %>
+    <br>
+    
+    <p>Code de vérification obtenu</p>
+    <%= form_with url: enable_otp_do_users_path, method: :post, class: "flex flex-col w-min gap-4" do |f| %>
+        <%= f.text_field :otp_attempt, class: 'input input-bordered input-sm', required: true, autofocus: true %>
+        <%= f.submit "Activer la double authentification", class: "btn btn-error text-white" %>
+    <% end %>
+</div>
