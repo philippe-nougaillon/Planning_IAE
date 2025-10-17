@@ -10,17 +10,17 @@
       <div class="flex flex-wrap">
         <div class="relative flex-grow max-w-full flex-1">
           <div class="form-control">
-            <%= f.label :email, label: "Email *" %>
+            <%= f.label :email, "Email *" %>
             <%= f.email_field :email, autofocus: true, autocomplete: "email", required: true, class: "input input-bordered w-full mt-2" %>
           </div>
 
           <div class="form-control my-4">
-            <%= f.label :password, label: "Mot de passe *" %>
+            <%= f.label :password, "Mot de passe *" %>
             <%= f.password_field :password, autocomplete: "current-password", required: true, class: "input input-bordered w-full mt-2" %>
           </div>
 
           <div class="form-control my-4">
-            <%= f.label :otp_attempt, label: "Code de vérification" %>
+            <%= f.label :otp_attempt, "Code de vérification" %>
             <%= f.password_field :otp_attempt, class: "input input-bordered w-full mt-2" %>
           </div>
 

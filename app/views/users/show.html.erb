@@ -73,9 +73,10 @@
 <div class="mt-8">
 	<% if policy(User).enable_otp? && current_user == @user %>
 		<% if !current_user.otp_required_for_login %>
-			<%= link_to "Activer la double authentification", enable_otp_users_path, class: "btn" %>
+			<%= link_to "Activer la double authentification", enable_otp_users_path, class: "btn btn-error text-white btn-sm" %>
 		<% else %>
-			<%= button_to "Désactiver la double authentification", disable_otp_users_path, class: "btn"  %>
+			<%# (Si jamais il y a	besoin de désactiver la 2FA) %>
+			<%# button_to "Désactiver la double authentification", disable_otp_users_path, class: "btn btn-warning text-white btn-sm"  %>
 		<% end %>
 	<% end %>
 </div>

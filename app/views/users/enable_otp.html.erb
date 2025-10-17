@@ -10,13 +10,13 @@
 
 <div>
     <% totp_uri = current_user.otp_provisioning_uri(current_user.email, issuer: "IAE-Planning") %>
-    <p>Veuillez scanner ce QRCode avec l'application mobile Google Autenticator :</p>
-    <%= raw RQRCode::QRCode.new(totp_uri).as_svg(module_size: 3) %>
+    <p class="mb-8">Veuillez scanner ce QRCode avec votre <b>application mobile d'authentification</b> (Ex : Google Autenticator) :</p>
+    <%= raw RQRCode::QRCode.new(totp_uri).as_svg(module_size: 4) %>
     <br>
     
-    <p>Veuillez saisir le code de vérification sur l'application :</p>
-    <%= form_with url: enable_otp_do_users_path, method: :post do |f| %>
-        <%= f.text_field :otp_attempt, class: 'input input-bordered input-sm', required: true %>
-        <%= f.submit "Valider", class: "btn" %>
+    <p>Code de vérification obtenu</p>
+    <%= form_with url: enable_otp_do_users_path, method: :post, class: "flex flex-col w-min gap-4" do |f| %>
+        <%= f.text_field :otp_attempt, class: 'input input-bordered input-sm', required: true, autofocus: true %>
+        <%= f.submit "Activer la double authentification", class: "btn btn-error text-white" %>
     <% end %>
 </div>
