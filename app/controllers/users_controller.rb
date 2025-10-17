@@ -146,6 +146,7 @@ class UsersController < ApplicationController
     current_user.save!
 
     # Envoyer le otp par mail
+    UserMailer.mail_otp(current_user).deliver_now
   end
 
   private

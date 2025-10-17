@@ -72,7 +72,7 @@
 
 <div class="mt-8">
 	<% if policy(User).enable_otp? && current_user == @user %>
-		<% if !current_user.otp_required_for_login %>
+		<% if current_user.otp_required_for_login %>
 			<div class="text-lg">Activer la double authentification</div>
 			<%= link_to "Par QR Code", qrcode_otp_users_path, class: "btn btn-error text-white btn-sm" %> ou <%= link_to "Par email", mail_otp_users_path, class: "btn btn-error text-white btn-sm" %>
 		<% else %>
