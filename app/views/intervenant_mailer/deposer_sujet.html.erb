@@ -1,7 +1,7 @@
 <p style="margin-bottom: 0.5rem">
     Bonjour,
     <br><br>
-    L'intervenant <%= @sujet.cour.intervenant_binome&.nom_prenom %> a déposé son sujet pour l'examen du <b><%= l(@sujet.cour.debut.to_date, format: :long) %> à <%= l @sujet.cour.debut, format: :heures_log %></b>.
+    L'intervenant <%= @sujet.cour.intervenant_binome&.nom_prenom %> a déposé son sujet pour l'examen du <b><%= l(@sujet.cour.debut.to_date, format: :long) %> à <%= l @sujet.cour.debut, format: :heures_log %> - <%= @sujet.cour.nom_ou_ue %> </b>.
     <br>
 </p>
 

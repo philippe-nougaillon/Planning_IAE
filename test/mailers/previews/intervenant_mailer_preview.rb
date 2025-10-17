@@ -60,7 +60,7 @@ class IntervenantMailerPreview < ActionMailer::Preview
     def deposer_sujet
         sujet = Sujet.last
         title = "[PLANNING] Sujet déposé pour l'examen du #{I18n.l sujet.cour.debut.to_date, format: :long} à #{I18n.l sujet.cour.debut, format: :heures_log}"
-        IntervenantMailer.relance_sujet(sujet, title).deliver_now
+        IntervenantMailer.deposer_sujet(sujet, title).deliver_now
     end
 
     def welcome_intervenant
