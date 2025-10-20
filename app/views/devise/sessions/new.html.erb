@@ -3,7 +3,7 @@
     <%= image_tag "logo@2000.png", style: "width: 100%; max-width: 500px;" %>
   <% end %>
   <div class="w-full mt-8" style="max-width: 500px" data-controller="otp">
-    <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: {"data-otp-target": "credentials", "data-turbo": false}) do |f| %>
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: {"data-otp-target": "formCredentials", "data-turbo": false}) do |f| %>
       <h1 class="text-3xl text-center border-b mb-4 pb-4">
         <%= t('.sign_in') %>
       </h1>

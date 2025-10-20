@@ -152,10 +152,15 @@ class UsersController < ApplicationController
 
   def send_otp
     if (user = User.find_by(email: params[:email])) && user.valid_password?(params[:password])
-      UserMailer.mail_otp(user).deliver_now
-      render json: { message: "OTP envoyé" }
+      if user.otp_required_for_login
+        UserMailer.mail_otp(user).deliver_now
+        render json: { otp_required: true }
+      else
+        render json: { otp_required: false }
+      end
+      # Vérifier si otp activé
     else
-      render json: { error: "Invalid credentials" }
+      render json: { error: "Email ou mot de passe incorrect."}
     end
   end
 

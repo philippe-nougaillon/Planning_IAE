@@ -3,7 +3,7 @@ import Rails from "@rails/ujs";
 
 // Connects to data-controller="send-otp-with-credentials"
 export default class extends Controller {
-  static targets = ["email", "password", "credentials", "otp", "btnConnexion"]
+  static targets = ["email", "password", "formCredentials", "otp", "btnConnexion"]
   
   send_otp(event){
     if(this.otpTarget.style.display != "none"){
@@ -24,8 +24,13 @@ export default class extends Controller {
       data: crendentialsFormData,
       success: (data) => {
         console.log("Message :", data);
-        this.otpTarget.style.display = "block"
-        this.btnConnexionTarget.onclick = null
+        if(data.otp_required == true){
+          this.otpTarget.style.display = "block"
+          this.btnConnexionTarget.onclick = null
+        } else {
+          console.log("submit")
+          this.formCredentialsTarget.submit()
+        }
       },
       error: (err) => {
         console.error("Erreur :", err);
