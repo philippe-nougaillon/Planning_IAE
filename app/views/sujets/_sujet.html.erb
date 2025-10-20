@@ -3,15 +3,23 @@
     il y a <%= time_ago_in_words sujet.updated_at %>
   </td>
   <td>
-    <%= link_to l(sujet.cour.debut.to_date, format: :long), cours_path(start_date: sujet.cour.debut.to_date, intervenant_id: sujet.cour.intervenant_binome_id, formation_id: sujet.cour.formation_id) %>
+    <%= link_to l(sujet.cour.debut, format: :long), cours_path(start_date: sujet.cour.debut.to_date, intervenant_id: sujet.cour.intervenant_binome_id, formation_id: sujet.cour.formation_id), class: 'hover:underline' %>
+
     <br>
     <% if sujet.cour.debut > DateTime.now %>
-      <small>Dans <%= time_ago_in_words(sujet.cour.debut.to_date) %></small>
+      <small>Dans <%= time_ago_in_words(sujet.cour.debut) %></small>
+    <% end %>
+  </td>
+  <td style="border-left: .3rem solid <%= sujet.cour.formation.positive_color %>">
+    <% if policy(Formation).show? %>
+      <%= link_to sujet.cour.formation.nom_nbr_etudiants, sujet.cour.formation, class: 'hover:underline' %>
+    <% else %>
+      <%= sujet.cour.formation.nom %>
     <% end %>
   </td>
   <% if params[:action] == 'index' && params[:controller] == 'sujets' %>
     <td>
-      <%= sujet.cour.intervenant_binome.nom_prenom %>
+      <%= link_to sujet.cour.intervenant_binome.nom_prenom, sujet.cour.intervenant_binome, class: 'hover:underline' %>
     </td>
   <% end %>
   <td>

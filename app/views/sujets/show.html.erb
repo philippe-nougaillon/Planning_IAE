@@ -10,11 +10,11 @@
 
 <% if policy(@sujet).valider? %>
   <div class="flex flex-wrap justify-between shadow-lg gap-8 p-6 mt-4">
-    <div>
+    <div class="flex-1">
       <p class="mb-4">
         <strong>Examen</strong>
         <br>
-        Le <%= l @sujet.cour.debut.to_date %>
+        Le <%= l(@sujet.cour.debut, format: :long) %>
         <br>
         <%= @sujet.cour.nom_ou_ue %>
       </p>
@@ -24,6 +24,12 @@
         <%= @sujet.cour.intervenant_binome.nom_prenom %>
         <br>
         <%= @sujet.cour.intervenant_binome.email %>
+      </p>
+
+      <p class="mb-4">
+        <strong>Formation</strong>
+        <br>
+        <%= @sujet.cour.formation.nom_promo_full %>
       </p>
 
       <p class="mb-4">
@@ -55,7 +61,7 @@
       <% end %>
     </div>
 
-    <div>
+    <div class="flex-1">
       <strong class="font-bold">Document reçu</strong>
       <br>
 
@@ -85,7 +91,7 @@
       <% end %>
     </div>
 
-    <div>
+    <div class="flex-1">
       <p class="mb-4">
         <strong>Créé le</strong>
         <br>
@@ -157,9 +163,15 @@
       <p class="mb-4">
         <strong>Examen</strong>
         <br>
-        <%= l(@sujet.cour.debut, format: :long) %>
+        Le <%= l(@sujet.cour.debut, format: :long) %>
         <br>
         <%= @sujet.cour.nom_ou_ue %>
+      </p>
+
+      <p class="mb-4">
+        <strong>Formation</strong>
+        <br>
+        <%= @sujet.cour.formation.nom_promo_full %>
       </p>
 
       <% if !@sujet.can_déposer? %>
