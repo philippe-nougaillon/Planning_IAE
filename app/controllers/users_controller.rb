@@ -3,7 +3,8 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy, :reactivate]
   before_action :is_user_authorized
-  
+  skip_before_action :authenticate_user!, only: [:send_otp]
+
   # GET /users
   # GET /users.json
   def index
@@ -145,8 +146,17 @@ class UsersController < ApplicationController
     current_user.otp_secret = User.generate_otp_secret
     current_user.save!
 
-    # Envoyer le otp par mail
+    # Envoie le otp par mail
     UserMailer.mail_otp(current_user).deliver_now
+  end
+
+  def send_otp
+    if (user = User.find_by(email: params[:email])) && user.valid_password?(params[:password])
+      UserMailer.mail_otp(user).deliver_now
+      render json: { message: "OTP envoyé" }
+    else
+      render json: { error: "Invalid credentials" }
+    end
   end
 
   private

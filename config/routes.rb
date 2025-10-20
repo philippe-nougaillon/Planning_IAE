@@ -46,6 +46,7 @@ Rails.application.routes.draw do
       get :mail_otp
       post :enable_otp
       post :disable_otp
+      post :send_otp
     end
   end
 

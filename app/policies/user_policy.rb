@@ -65,4 +65,8 @@ class UserPolicy < ApplicationPolicy
     enable_otp?
   end
 
+  def send_otp?
+    true
+  end
+
 end
