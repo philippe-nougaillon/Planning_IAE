@@ -1,5 +1,5 @@
 class SujetsController < ApplicationController
-  before_action :set_sujet, only: %i[ show edit update destroy deposer deposer_done valider rejeter relancer archiver ]
+  before_action :set_sujet, only: %i[ show edit update destroy deposer deposer_done valider rejeter ]
   before_action :is_user_authorized
   skip_before_action :authenticate_user!, only: %i[ show deposer deposer_done]
 
