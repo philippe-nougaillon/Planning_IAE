@@ -6,7 +6,7 @@ module ApplicationHelper
             <li>
                 <%= link_to '#{ url_for(path) }', 
                             class: 'flex items-center gap-1 py-0 text-#{ is_active ? 'primary font-bold' : 'base-content' } #{classes}' do %>
-                    <span class="material-symbols-outlined text-xl mb-1">
+                    <span class="material-symbols-outlined text-xl">
                         #{ icon }
                     </span>
                     #{ label ? label : name.humanize }
