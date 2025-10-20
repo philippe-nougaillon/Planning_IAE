@@ -25,6 +25,8 @@ class User < ApplicationRecord
               rh: 4, 
               gestionnaire: 5,
               administrateur: 6 }
+  
+  enum :otp_method, {email: 0, app: 1}
 
   default_scope { order(:nom) } 
 

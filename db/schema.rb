@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_16_142825) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_20_105928) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -665,6 +665,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_16_142825) do
     t.integer "consumed_timestep"
     t.boolean "otp_required_for_login"
     t.string "unique_session_id"
+    t.integer "otp_method"
     t.index ["discarded_at"], name: "index_users_on_discarded_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["formation_id"], name: "index_users_on_formation_id"

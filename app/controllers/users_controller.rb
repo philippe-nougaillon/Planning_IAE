@@ -129,6 +129,7 @@ class UsersController < ApplicationController
     # Sinon redemander le code
     if current_user.validate_and_consume_otp!(params[:otp_attempt])
       current_user.otp_required_for_login = true
+      current_user.otp_method = params[:method]
       current_user.save!
       redirect_to user_path(current_user), notice: "Double authentification activée avec succès !"
     else
@@ -153,12 +154,13 @@ class UsersController < ApplicationController
   def send_otp
     if (user = User.find_by(email: params[:email])) && user.valid_password?(params[:password])
       if user.otp_required_for_login
-        UserMailer.mail_otp(user).deliver_now
+        if user.otp_method == 0
+          UserMailer.mail_otp(user).deliver_now
+        end
         render json: { otp_required: true }
       else
         render json: { otp_required: false }
       end
-      # Vérifier si otp activé
     else
       render json: { error: "Email ou mot de passe incorrect."}
     end

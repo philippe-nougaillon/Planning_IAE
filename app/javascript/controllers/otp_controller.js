@@ -17,24 +17,22 @@ export default class extends Controller {
     crendentialsFormData.append("email", email)
     crendentialsFormData.append("password", password)
 
-    // Dans l'action du controller user, vérifier les crendentials envoyés puis envoyer par mail si c'est par mail
+    // Dans l'action du controller user, vérifie les crendentials envoyés puis envoie par mail si la méthode de l'otp est par mail
     Rails.ajax({
       type: "POST",
       url:  "/users/send_otp.json",
       data: crendentialsFormData,
       success: (data) => {
-        console.log("Message :", data);
         if(data.otp_required == true){
           this.otpTarget.style.display = "block"
           this.btnConnexionTarget.onclick = null
         } else {
-          console.log("submit")
           this.formCredentialsTarget.submit()
         }
       },
       error: (err) => {
-        console.error("Erreur :", err);
-        // effacer pareil en cas d'erreur
+        // Si problème avec les credentials, soumet le formulaire pour afficher les potentiels erreurs par le controller
+        this.formCredentialsTarget.submit()
       }
     })
   }
