@@ -2,12 +2,9 @@ import { Controller } from "@hotwired/stimulus"
 
 // Connects to data-controller="rejet-sujet"
 export default class extends Controller {
-  static targets = ["rejeterForm"]
+  static targets = ["rejeterForm", "btnRejeter"]
 
   connect() {
-    // Pour tester que le contrôleur est bien connecté
-    this.rejeterFormTarget.style.display = "none"
-
     // // Attache les événements globaux
     // window.addEventListener("beforeunload", this.confirmRejet)
     // document.addEventListener("turbo:before-visit", this.confirmRejet)
@@ -15,6 +12,7 @@ export default class extends Controller {
 
   showForm() {
     this.rejeterFormTarget.style.display = "block"
+    this.btnRejeterTarget.disabled = true
   }
 
   // confirmRejet = (event) => {

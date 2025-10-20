@@ -122,7 +122,7 @@
     <br>
     <%= link_to_if @sujet.can_valider?, 'Valider', valider_sujet_path(@sujet), class: 'btn btn-sm btn-success text-white', 'data-turbo': false %> |
     <% if @sujet.can_rejeter? %>
-      <button id='rejeter-btn' class='btn btn-sm btn-error text-white' data-action="click->rejet-sujet#showForm">Rejeter</button>
+      <button id='rejeter-btn' class='btn btn-sm btn-error text-white' data-action="click->rejet-sujet#showForm" data-rejet-sujet-target="btnRejeter">Rejeter</button>
     <% else %>
       Rejeter
     <% end %>
@@ -133,7 +133,7 @@
       <div id='rejeter-form' style="display: none;" data-rejet-sujet-target="rejeterForm">
         <div class="flex flex-wrap gap-4 mt-4">
           <%= f.text_field :raisons, class: 'input input-bordered input-sm', placeholder: 'Pour quelle raison ?' %>
-          <%= f.submit 'Notifier l\'intervenant', class: 'btn btn-sm btn-primary text-white'%>
+          <%= f.submit 'Notifier l\'intervenant', class: 'btn btn-sm btn-error text-white'%>
         </div>
       </div>
     <% end %>
