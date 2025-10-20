@@ -70,7 +70,7 @@
 	</p>
 <% end %>
 
-<div class="mt-8">
+<div id="activer_eotp" class="mt-8">
 	<% if policy(User).enable_otp? && current_user == @user %>
 		<% if !current_user.otp_required_for_login %>
 			<div class="text-lg">Activer la double authentification</div>
