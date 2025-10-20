@@ -129,11 +129,11 @@
     |
     <%= link_to 'Retour', sujets_path, class: 'text-primary hover:underline' %>
 
-    <%= form_with url: rejeter_sujet_path(@sujet), method: :get, onsubmit: "return confirm('Voulez vous vraiment quitter la page sans avoir rejeter ?')" do |f| %>
+    <%= form_with url: rejeter_sujet_path(@sujet), method: :get do |f| %>
       <div id='rejeter-form' style="display: none;" data-rejet-sujet-target="rejeterForm">
         <div class="flex flex-wrap gap-4 mt-4">
           <%= f.text_field :raisons, class: 'input input-bordered input-sm', placeholder: 'Pour quelle raison ?' %>
-          <%= f.submit 'Notifier l\'intervenant', class: 'btn btn-sm btn-error text-white'%>
+          <%= f.submit 'Notifier l\'intervenant', class: 'btn btn-sm btn-error text-white', 'data-rejet-sujet-target': 'btnSubmit' %>
         </div>
       </div>
     <% end %>
