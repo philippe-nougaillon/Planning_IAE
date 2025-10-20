@@ -258,6 +258,7 @@ Rails.application.routes.draw do
       get :relancer
       get :archiver
       patch :deposer
+      patch :deposer_admin
     end
   end
 

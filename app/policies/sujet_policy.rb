@@ -45,6 +45,10 @@ class SujetPolicy < ApplicationPolicy
     deposer?
   end
 
+  def deposer_admin?
+    user && user.role_number >= 5
+  end
+
   def valider?
     user && user.role_number >= 5
   end

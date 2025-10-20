@@ -72,9 +72,22 @@
       <% else %>
         <% if !@sujet.sujet.attached? %>
           <% if policy(Sujet).index? %>
-            <p class="mb-4">
+            <div class="mb-4">
               Aucun sujet pour l'instant.
-            </p>
+              <% if @sujet.can_déposer? %>
+                <br><br>
+                Vous pouvez ajouter vous-même le sujet si l'intervenant vous l'a transmi autrement
+                <%= form_with url: deposer_admin_sujet_path, model: @sujet, data: { controller: 'nested-form', nested_form_wrapper_selector_value: '.nested-form-wrapper' } do |f| %>
+                  <%= f.file_field :sujet, required: true, label: 'Fichier PDF', accept: 'application/pdf', class: 'file-input file-input-bordered file-input-sm file-input-success flex-1' %>
+                  <br>
+
+                  <button type="submit" name="commit" value="Déposer le sujet" class="btn btn-success w-full sm:w-48 btn-lg text-white mt-6" data-disable-with="Déposer le sujet" data-turbo-confirm="ATTENTION ! Une fois déposé, vous ne pourrez plus modifier le sujet. Confirmez-vous le dépôt de votre sujet">
+                    <i class="far fa-arrow-alt-circle-down"></i>
+                    Déposer
+                  </button>
+                <% end %>
+              <% end %>
+            </div>
           <% else %>
             <p class="alert mb-4">
               Veuillez ajouter le sujet

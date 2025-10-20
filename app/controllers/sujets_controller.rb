@@ -1,5 +1,5 @@
 class SujetsController < ApplicationController
-  before_action :set_sujet, only: %i[ show edit update destroy deposer deposer_done valider rejeter ]
+  before_action :set_sujet, only: %i[ show edit update destroy deposer deposer_done deposer_admin valider rejeter ]
   before_action :is_user_authorized
   skip_before_action :authenticate_user!, only: %i[ show deposer deposer_done]
 
@@ -108,14 +108,32 @@ class SujetsController < ApplicationController
           redirect_to request.referrer, alert: "Le sujet ne peut pas être déposé."
         end
       else
-        redirect_to request.referrer, alert: "Il y a un problème avec l'enregistrement du sujet. Veuillez contacter le gestionnaire"
+        redirect_to request.referrer, alert: "Il y a une erreur lors de l'enregistrement du sujet."
       end
     else 
-      redirect_to request.referrer, alert: "Il faut ajouter le sujet"
+      redirect_to request.referrer, alert: "Le sujet est manquant."
     end
   end
 
   def deposer_done
+  end
+
+  def deposer_admin
+    if params[:sujet]
+      if @sujet.valid?
+        if @sujet.can_déposer?
+          @sujet.update(sujet_params)
+          @sujet.update(workflow_state: "validé")
+          redirect_to sujet_path(@sujet), notice: "Sujet enregistré avec succès."
+        else
+          redirect_to request.referrer, alert: "Le sujet ne peut pas être déposé."
+        end
+      else
+        redirect_to request.referrer, alert: "Il y a une erreur lors de l'enregistrement du sujet."
+      end
+    else 
+      redirect_to request.referrer, alert: "Le sujet est manquant."
+    end
   end
 
   def valider
