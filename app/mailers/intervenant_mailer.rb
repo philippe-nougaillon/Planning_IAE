@@ -42,7 +42,8 @@ class IntervenantMailer < ApplicationMailer
         end
     end
 
-    def rappel_examen(examen, sujet, jours, title)
+    def demande_sujet(sujet, jours, title)
+        examen = sujet.cour
         @debut = examen.debut
         @intervenant = examen.intervenant_binome
         @nom_examen = examen.nom_ou_ue
