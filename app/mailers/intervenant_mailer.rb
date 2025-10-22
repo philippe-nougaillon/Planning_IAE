@@ -80,6 +80,104 @@ class IntervenantMailer < ApplicationMailer
         mail(to: @intervenant.email, subject: title)
     end
 
+    def relance_sujet_60_jours(sujet, title)
+        examen = sujet.cour
+        intervenant = examen.intervenant_binome
+
+        @debut = examen.debut
+        @sujet = sujet
+        @ue = examen.nom_ou_ue
+        @formation = examen.formation.nom
+        @deadline = examen.debut - 1.month
+
+        attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
+        mail(to: intervenant.email, subject: title)
+    end
+
+    def relance_sujet_30_jours(sujet, title)
+        examen = sujet.cour
+        intervenant = examen.intervenant_binome
+
+        @debut = examen.debut
+        @sujet = sujet
+        @ue = examen.nom_ou_ue
+        @formation = examen.formation.nom
+
+        attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
+        mail(to: intervenant.email, subject: title)
+    end
+
+    def relance_sujet_20_jours(sujet, title)
+        examen = sujet.cour
+        intervenant = examen.intervenant_binome
+
+        @debut = examen.debut
+        @sujet = sujet
+        @ue = examen.nom_ou_ue
+        @formation = examen.formation.nom
+        @first_relance = sujet.created_at
+
+        attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
+        mail(to: intervenant.email, subject: title)
+    end
+
+    def relance_sujet_10_jours(sujet, title)
+        examen = sujet.cour
+        intervenant = examen.intervenant_binome
+
+        @debut = examen.debut
+        @sujet = sujet
+        @ue = examen.nom_ou_ue
+        @formation = examen.formation.nom
+        @first_relance = sujet.created_at
+
+        attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
+        mail(to: intervenant.email, subject: title)
+    end
+
+    def relance_sujet_7_jours(sujet, title)
+        examen = sujet.cour
+        intervenant = examen.intervenant_binome
+
+        @debut = examen.debut
+        @sujet = sujet
+        @ue = examen.nom_ou_ue
+        @formation = examen.formation.nom
+        @first_relance = sujet.created_at
+
+        attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
+        mail(to: intervenant.email, subject: title)
+    end
+
+    def relance_sujet_5_jours(sujet, title)
+        examen = sujet.cour
+        intervenant = examen.intervenant_binome
+
+        @debut = examen.debut
+        @sujet = sujet
+        @ue = examen.nom_ou_ue
+        @formation = examen.formation.nom
+        @first_relance = sujet.created_at
+
+        attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
+        mail(to: intervenant.email, subject: title)
+    end
+
+    def relance_sujet_3_jours(sujet, title)
+        examen = sujet.cour
+        intervenant = examen.intervenant_binome
+
+        @debut = examen.debut
+        @sujet = sujet
+        @ue = examen.nom_ou_ue
+        @formation = examen.formation.nom
+        @first_relance = sujet.created_at
+        @jour_avant_debut = examen.debut.to_date - 1.day
+
+        attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
+        mail(to: intervenant.email, subject: title)
+    end
+
     def deposer_sujet(sujet, title)
         @sujet = sujet
         mail(to: ["#{sujet.cour.formation.user.email}, examens@iae.pantheonsorbonne.fr"], subject: title)

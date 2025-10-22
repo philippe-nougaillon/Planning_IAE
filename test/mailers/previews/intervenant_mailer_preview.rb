@@ -57,6 +57,48 @@ class IntervenantMailerPreview < ActionMailer::Preview
         IntervenantMailer.relance_sujet(sujet, title).deliver_now
     end
 
+    def relance_sujet_60_jours
+        sujet = Sujet.last
+        title = "[PLANNING] Demande SUJET pour EXAMEN du #{I18n.l sujet.cour.debut.to_date, format: :long}"
+        IntervenantMailer.relance_sujet_60_jours(sujet, title).deliver_now
+    end
+
+    def relance_sujet_30_jours
+        sujet = Sujet.last
+        title = "[PLANNING] RAPPEL 1 > demande SUJET pour EXAMEN du #{I18n.l sujet.cour.debut.to_date, format: :long}"
+        IntervenantMailer.relance_sujet_30_jours(sujet, title).deliver_now
+    end
+
+    def relance_sujet_20_jours
+        sujet = Sujet.last
+        title = "[PLANNING] RAPPEL 2 > demande SUJET pour EXAMEN du #{I18n.l sujet.cour.debut.to_date, format: :long}"
+        IntervenantMailer.relance_sujet_20_jours(sujet, title).deliver_now
+    end
+
+    def relance_sujet_10_jours
+        sujet = Sujet.last
+        title = "[PLANNING] RAPPEL 3 > demande SUJET pour EXAMEN du #{I18n.l sujet.cour.debut.to_date, format: :long}"
+        IntervenantMailer.relance_sujet_10_jours(sujet, title).deliver_now
+    end
+
+    def relance_sujet_7_jours
+        sujet = Sujet.last
+        title = "[PLANNING] RAPPEL 4 > demande SUJET pour EXAMEN du #{I18n.l sujet.cour.debut.to_date, format: :long}"
+        IntervenantMailer.relance_sujet_7_jours(sujet, title).deliver_now
+    end
+
+    def relance_sujet_5_jours
+        sujet = Sujet.last
+        title = "[PLANNING] RAPPEL 5 > demande SUJET pour EXAMEN du #{I18n.l sujet.cour.debut.to_date, format: :long}"
+        IntervenantMailer.relance_sujet_5_jours(sujet, title).deliver_now
+    end
+
+    def relance_sujet_3_jours
+        sujet = Sujet.last
+        title = "[PLANNING] DERNIERE RELANCE - RAPPEL 6 > demande SUJET pour EXAMEN du #{I18n.l sujet.cour.debut.to_date, format: :long}"
+        IntervenantMailer.relance_sujet_3_jours(sujet, title).deliver_now
+    end
+
     def deposer_sujet
         sujet = Sujet.last
         title = "[PLANNING] Sujet déposé pour l'examen du #{I18n.l sujet.cour.debut.to_date, format: :long} à #{I18n.l sujet.cour.debut, format: :heures_log}"
