@@ -96,6 +96,9 @@
         <% else %>
           <% if current_user.otp_required_for_login %>
             <%= link_to @sujet.sujet.filename, url_for(@sujet.sujet), target: '_blank', class: 'text-primary hover:underline' %>
+            <% if @sujet.sujet.representable? %>
+              <%= link_to image_tag(@sujet.sujet.representation(resize_to_limit: [100, 100])), url_for(@sujet.sujet), title: @sujet.sujet.filename %>
+            <% end %>
           <% else %>
             <p class="mb-4">Pour voir le sujet, veuillez d'abord activer la double authentification</p>
             <%= link_to "Activer la double authentification", user_path(current_user, anchor: 'activer_eotp'), class: "btn btn-error text-white btn-sm" %>
