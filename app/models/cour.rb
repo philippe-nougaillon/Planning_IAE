@@ -41,9 +41,11 @@ class Cour < ApplicationRecord
   around_update :check_send_commande_email
   after_create :check_send_new_commande_email
 
-  after_create   :send_new_examen_email, if: Proc.new { |cours| cours.examen? }
-  around_update  :check_send_examen_email
-  after_destroy :send_delete_examen_email, if: Proc.new { |cours| cours.examen? }
+  if ENV["SEND_EXAMEN_EMAILS"] == "true"
+    after_create   :send_new_examen_email, if: Proc.new { |cours| cours.examen? }
+    around_update  :check_send_examen_email
+    after_destroy :send_delete_examen_email, if: Proc.new { |cours| cours.examen? }
+  end
   
   after_update :synchronisation_edusign, if: Proc.new { |cours| cours.audits.last.audited_changes["salle_id"] && cours.edusign_id && !cours.no_send_to_edusign && cours.formation.send_to_edusign}
 
