@@ -154,7 +154,7 @@ class UsersController < ApplicationController
   def send_otp
     if (user = User.find_by(email: params[:email])) && user.valid_password?(params[:password])
       if user.otp_required_for_login
-        if user.otp_method == 0
+        if user.otp_method == "email"
           UserMailer.mail_otp(user).deliver_now
         end
         render json: { otp_required: true }
