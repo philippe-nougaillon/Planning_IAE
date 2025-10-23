@@ -110,7 +110,20 @@ class CoursController < ApplicationController
       end
     end
     case params[:view]
-      when 'list'
+      when 'calendar_rooms'
+        _date = Date.parse(params[:start_date]).beginning_of_week(start_day = :monday)
+        @cours = @cours.where(debut: (_date .. _date + 7.day))
+        params[:calendar_rooms_starts_at] = _date
+      when 'calendar_week'
+        _date = Date.parse(params[:start_date]).beginning_of_week(start_day = :monday)
+        @cours = @cours.where("cours.debut BETWEEN DATE(?) AND DATE(?)", _date, _date + 7.day)
+        params[:calendar_week_starts_at] = _date
+      when 'calendar_month'
+        _date = Date.parse(params[:start_date]).beginning_of_month
+        @cours = @cours.where("cours.debut BETWEEN DATE(?) AND DATE(?)", _date, _date + 1.month)
+      else
+        # Pour éviter le crash au moment du rendu d'un partial inconnu
+        params[:view] = 'list'
         @alert = Alert.visibles.first
         unless params[:filter] == 'all'
           if params[:week_number].present?
@@ -123,17 +136,6 @@ class CoursController < ApplicationController
         else
           @date = nil
         end
-      when 'calendar_rooms'
-        _date = Date.parse(params[:start_date]).beginning_of_week(start_day = :monday)
-        @cours = @cours.where(debut: (_date .. _date + 7.day))
-        params[:calendar_rooms_starts_at] = _date
-      when 'calendar_week'
-        _date = Date.parse(params[:start_date]).beginning_of_week(start_day = :monday)
-        @cours = @cours.where("cours.debut BETWEEN DATE(?) AND DATE(?)", _date, _date + 7.day)
-        params[:calendar_week_starts_at] = _date
-      when 'calendar_month'
-        _date = Date.parse(params[:start_date]).beginning_of_month
-        @cours = @cours.where("cours.debut BETWEEN DATE(?) AND DATE(?)", _date, _date + 1.month)
     end
 
     unless params[:formation_id].blank?
