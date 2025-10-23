@@ -663,7 +663,7 @@ class Edusign < ApplicationService
 
             response = self.prepare_body_request(body).get_response
 
-            puts response["status"] == 'error' ?  "<strong>Erreur d'exportation du cours #{cour.id}, #{cour.nom_ou_ue} : #{response["message"]}</strong>" : "Modification du cours #{cours.id}, #{cours.nom_ou_ue} (id Edusign : #{cours.edusign_id}) réussie"
+            puts response["status"] == 'error' ?  "<strong>Erreur d'exportation du cours #{cours.id}, #{cours.nom_ou_ue} : #{response["message"]}</strong>" : "Modification du cours #{cours.id}, #{cours.nom_ou_ue} (id Edusign : #{cours.edusign_id}) réussie"
 
             if response["status"] == 'success'
                 @nb_sended_elements += 1
