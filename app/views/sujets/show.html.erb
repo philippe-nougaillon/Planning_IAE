@@ -79,8 +79,7 @@
             <div class="mb-4">
               Aucun sujet pour l'instant.
               <% if @sujet.can_déposer? %>
-                <br><br>
-                Vous pouvez ajouter vous-même le sujet si l'intervenant vous l'a transmi autrement
+                <p class="mt-8 mb-4">Vous pouvez ajouter vous-même le sujet si l'intervenant vous l'a transmi autrement</p>
                 <%= form_with url: deposer_admin_sujet_path, model: @sujet, data: { controller: 'nested-form', nested_form_wrapper_selector_value: '.nested-form-wrapper' } do |f| %>
                   <%= f.file_field :sujet, required: true, label: 'Fichier PDF', accept: 'application/pdf', class: 'file-input file-input-bordered file-input-sm file-input-success flex-1' %>
                   <br>
