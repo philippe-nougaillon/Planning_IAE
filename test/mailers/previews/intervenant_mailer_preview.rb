@@ -36,7 +36,7 @@ class IntervenantMailerPreview < ActionMailer::Preview
     def demande_sujet
         sujet = Sujet.last
         title = "[PLANNING] Rappel de votre examen à l'IAE Paris du #{I18n.l sujet.cour.debut.to_date, format: :long} à #{I18n.l sujet.cour.debut, format: :heures_log}"
-        IntervenantMailer.rappel_examen(sujet, title).deliver_now
+        IntervenantMailer.demande_sujet(sujet, title).deliver_now
     end
 
     def validation_sujet

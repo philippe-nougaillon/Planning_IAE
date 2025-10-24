@@ -42,12 +42,12 @@ class IntervenantMailer < ApplicationMailer
         end
     end
 
-    def demande_sujet(sujet, jours, title)
+    def demande_sujet(sujet, title)
         examen = sujet.cour
         @debut = examen.debut
         @intervenant = examen.intervenant_binome
         @nom_examen = examen.nom_ou_ue
-        @jours = jours
+        @jours = examen.days_between_today_and_debut
         @sujet = sujet
         attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
         mail(to: @intervenant.email, subject: title)

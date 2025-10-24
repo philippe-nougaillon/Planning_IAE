@@ -187,7 +187,11 @@
     <div>
       <p class="mb-4">
         <strong>Examen</strong>
-        <br>
+        <% if @sujet.cour.debut > DateTime.now %>
+          <br>
+          <small>(dans <%= time_ago_in_words(@sujet.cour.debut) %>)</small>
+          <br>
+        <% end %>
         Le <%= l(@sujet.cour.debut, format: :long) %>
         <br>
         <%= @sujet.cour.nom_ou_ue %>
@@ -225,8 +229,14 @@
       <% else %>
         <p class="mb-4">
           <strong>Fichier PDF</strong>
-          <br>
-          <%= link_to @sujet.sujet.filename, url_for(@sujet.sujet), target: '_blank', class: 'text-primary hover:underline' %>
+          <div class="text-center w-fit">
+            <% if @sujet.sujet.representable? %>
+              <div class="shadow w-fit p-4 mb-2">
+                <%= link_to image_tag(@sujet.sujet.representation(resize_to_limit: [300, 300])), url_for(@sujet.sujet), title: @sujet.sujet.filename, target: '_blank' %>
+              </div>
+            <% end %>
+            <%= link_to @sujet.sujet.filename, url_for(@sujet.sujet), target: '_blank', class: 'text-primary hover:underline text-center' %>
+          </div>
         </p>
       <% end %>
 
