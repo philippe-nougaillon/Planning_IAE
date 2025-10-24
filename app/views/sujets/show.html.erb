@@ -107,6 +107,13 @@
               <%= link_to @sujet.sujet.filename, url_for(@sujet.sujet), target: '_blank', class: 'text-primary hover:underline text-center' %>
             </div>
           <% else %>
+            <div class="text-center w-fit">
+              <% if @sujet.sujet.representable? %>
+                <div class="shadow w-fit p-4 mb-2">
+                  <%= image_tag(@sujet.sujet.representation(resize_to_limit: [300, 300])) %>
+                </div>
+              <% end %>
+            </div>
             <p class="mb-4">
               <%= link_to "Activer la double authentification", user_path(current_user), class: "text-primary hover:underline font-black" %>
               pour ouvrir le document
@@ -229,15 +236,14 @@
       <% else %>
         <p class="mb-4">
           <strong>Fichier PDF</strong>
-          <div class="text-center w-fit">
-            <% if @sujet.sujet.representable? %>
-              <div class="shadow w-fit p-4 mb-2">
-                <%= link_to image_tag(@sujet.sujet.representation(resize_to_limit: [300, 300])), url_for(@sujet.sujet), title: @sujet.sujet.filename, target: '_blank' %>
-              </div>
-            <% end %>
-            <%= link_to @sujet.sujet.filename, url_for(@sujet.sujet), target: '_blank', class: 'text-primary hover:underline text-center' %>
-          </div>
         </p>
+        <div class="text-center w-fit">
+          <% if @sujet.sujet.representable? %>
+            <div class="shadow w-fit p-4 mb-2">
+              <%= image_tag(@sujet.sujet.representation(resize_to_limit: [300, 300])) %>
+            </div>
+          <% end %>
+        </div>
       <% end %>
 
       <% if @sujet.can_déposer? %>

@@ -158,7 +158,6 @@ class SujetsController < ApplicationController
     if @sujet.valid?
       if @sujet.can_rejeter?
         @sujet.rejeter!
-        @sujet.sujet.purge
 
         if params[:raisons].present?
           @sujet.message = params[:raisons]
