@@ -37,6 +37,11 @@
         <span class="badge badge-lg <%= @sujet.style %> text-white">
           <%= @sujet.workflow_state.humanize %>
         </span>
+        <% if @sujet.non_conforme? %>
+          <br>
+          <strong>Raison :</strong> 
+          <%= @sujet.message %>
+        <% end %>
       </p>
 
       <% if @sujet.mail_log %>
