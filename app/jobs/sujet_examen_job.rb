@@ -3,7 +3,7 @@ class SujetExamenJob < ApplicationJob
   
     def perform(examen, sujet, nombre_jours)
         # Setup pour l'envoi du mail en fonction du nombre de jours restant
-        title = "Demande SUJET pour EXAMEN du #{examen.debut.to_date}"
+        title = "[PLANNING] Demande SUJET pour EXAMEN du #{I18n.l examen.debut.to_date}"
         préfixe_title, method = case nombre_jours
         when 60
             ["", :demande_sujet]

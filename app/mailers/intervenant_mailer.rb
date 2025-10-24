@@ -44,13 +44,16 @@ class IntervenantMailer < ApplicationMailer
 
     def demande_sujet(sujet, title)
         examen = sujet.cour
+        intervenant = examen.intervenant_binome
+
         @debut = examen.debut
-        @intervenant = examen.intervenant_binome
-        @nom_examen = examen.nom_ou_ue
-        @jours = examen.days_between_today_and_debut
         @sujet = sujet
+        @ue = examen.nom_ou_ue
+        @formation = examen.formation.nom
+        @deadline = examen.debut - 1.month
+
         attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
-        mail(to: @intervenant.email, subject: title)
+        mail(to: intervenant.email, subject: title)
     end
 
     def validation_sujet(examen, jours, title)
@@ -79,20 +82,6 @@ class IntervenantMailer < ApplicationMailer
         @sujet = sujet
         attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
         mail(to: @intervenant.email, subject: title)
-    end
-
-    def relance_sujet_60_jours(sujet, title)
-        examen = sujet.cour
-        intervenant = examen.intervenant_binome
-
-        @debut = examen.debut
-        @sujet = sujet
-        @ue = examen.nom_ou_ue
-        @formation = examen.formation.nom
-        @deadline = examen.debut - 1.month
-
-        attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
-        mail(to: intervenant.email, subject: title)
     end
 
     def relance_sujet_30_jours(sujet, title)

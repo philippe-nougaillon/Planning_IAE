@@ -35,7 +35,7 @@ class IntervenantMailerPreview < ActionMailer::Preview
 
     def demande_sujet
         sujet = Sujet.last
-        title = "[PLANNING] Rappel de votre examen à l'IAE Paris du #{I18n.l sujet.cour.debut.to_date, format: :long} à #{I18n.l sujet.cour.debut, format: :heures_log}"
+        title = "[PLANNING] Demande SUJET pour EXAMEN du #{I18n.l sujet.cour.debut.to_date, format: :long}"
         IntervenantMailer.demande_sujet(sujet, title).deliver_now
     end
 
@@ -55,12 +55,6 @@ class IntervenantMailerPreview < ActionMailer::Preview
         sujet = Sujet.last
         title = "[PLANNING] Relance de votre dépôt de sujet pour votre examen à l'IAE Paris du #{I18n.l sujet.cour.debut.to_date, format: :long} à #{I18n.l sujet.cour.debut, format: :heures_log}"
         IntervenantMailer.relance_sujet(sujet, title).deliver_now
-    end
-
-    def relance_sujet_60_jours
-        sujet = Sujet.last
-        title = "[PLANNING] Demande SUJET pour EXAMEN du #{I18n.l sujet.cour.debut.to_date, format: :long}"
-        IntervenantMailer.relance_sujet_60_jours(sujet, title).deliver_now
     end
 
     def relance_sujet_30_jours

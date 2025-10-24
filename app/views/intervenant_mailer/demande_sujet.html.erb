@@ -1,21 +1,10 @@
 <p style="margin-bottom: 0.5rem">
     Bonjour,
     <br><br>
-    En vue de l'examen "<%= @nom_examen %>" de votre UE, merci de bien vouloir nous faire parvenir <b>au plus tard 1 mois</b> avant la date de l'examen, votre <b>sujet</b> avec <b>la page de garde</b> (en y indiquant les <b>consignes</b>) en format pdf, afin que le/la gestionnaire puisse envoyer les convocations aux étudiants. Vous trouverez ci-joint la page de garde type.
-    <br>
-    Tout sujet envoyé sans page de garde, sera imprimé tel quel.
+    En vue de l'examen de votre UE <b><%= @ue %> (<%= @formation %>)</b>, en date du <b><%= l(@debut.to_date, format: :long) %></b>, merci de bien vouloir nous faire parvenir <b>au plus tard le <%= l(@deadline.to_date, format: :long) %> </b> votre <b>sujet</b> avec <b>la page de garde</b> (en y indiquant les <b>consignes</b>) <b>en format pdf</b>, afin que le/la gestionnaire puisse envoyer les convocations aux étudiants. Tout sujet envoyé sans page de garde, sera imprimé tel quel. À toutes fins utiles, vous trouverez ci-joint la page de garde type (champs en jaune à personnaliser).
     <br><br>
-    L'examen est prévu dans <b><%= @jours %> jours</b>, le <b><%= l(@debut.to_date, format: :long) %> à <%= l @debut, format: :heures_log %></b>.
+    Merci de déposer votre sujet en <%= link_to 'cliquant ici', url_for(sujet_url(@sujet)) %> ou en copiant ce lien <%= url_for(sujet_url(@sujet)) %> dans votre navigateur.
 </p>
-
-<p style="margin-bottom: 0.5rem">
-    Vous pouvez déposer votre sujet en
-    <%= link_to 'cliquant ici', url_for(sujet_url(@sujet)) %>
-    ou en copiant le lien suivant :
-    <br><br>
-    <%= url_for(sujet_url(@sujet)) %>
-</p>
-
 
 <p style="margin-bottom: 0.5rem">
     <b>Vous remerciant par avance du respect des délais et des consignes indiqués ci-dessus,</b>
