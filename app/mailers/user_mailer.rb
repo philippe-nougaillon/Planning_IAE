@@ -16,6 +16,6 @@ class UserMailer < ApplicationMailer
 
   def mail_otp(user)
     @current_otp = user.current_otp
-    mail(to: user.email , subject: "[PLANNING] Code à usage unique")
+    mail(to: user.email , subject: "[PLANNING] Double authentification : votre code à usage unique")
   end
 end

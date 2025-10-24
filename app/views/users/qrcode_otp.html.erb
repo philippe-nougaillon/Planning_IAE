@@ -9,7 +9,7 @@
 
 <div>
     <% totp_uri = current_user.otp_provisioning_uri(current_user.email, issuer: "IAE-Planning") %>
-    <p class="mb-8">Veuillez scanner ce QRCode avec votre <b>application mobile d'authentification</b> (Ex : Google Autenticator) :</p>
+    <p class="mb-8">Veuillez scanner ce QRCode avec votre <b>application mobile d'authentification</b> comme <%= link_to 'Google Authenticator', "https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=fr", class: 'text-primary hover:underline' %></p>
     <%= raw RQRCode::QRCode.new(totp_uri).as_svg(module_size: 4) %>
     <br>
     

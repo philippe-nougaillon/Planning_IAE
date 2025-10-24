@@ -87,7 +87,7 @@
         <li class="flex flex-row items-center gap-2 mr-4">
           <%= link_to current_user do %>
             <span class="material-symbols-outlined p-0">
-              account_circle
+              <%= current_user.otp_required_for_login? ? 'person_shield' : 'person' %>
             </span>
             <div class="p-0">
               <%= current_user.prénom.humanize %>
