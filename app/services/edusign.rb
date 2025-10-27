@@ -3,7 +3,7 @@ class Edusign < ApplicationService
     def initialize
         # Pour le décalage horaire des cours entre Planning et Edusign
         # N'est plus utilisé pour les cours, mais seulement pour les attendances/justificatifs
-        @time_zone_difference = 2.hour
+        @time_zone_difference = 1.hour
 
         # Utilisés pour calculer le nombre d'éléments en erreur
         @nb_recovered_elements = 0
