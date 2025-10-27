@@ -1,24 +1,38 @@
 class SujetExamenJob < ApplicationJob
     queue_as :mailers
-  
+
     def perform(examen, sujet, nombre_jours)
         # Setup pour l'envoi du mail en fonction du nombre de jours restant
         title = "[PLANNING] Demande SUJET pour EXAMEN du #{I18n.l examen.debut.to_date, format: :long}"
         préfixe_title, method = case nombre_jours
-        when 60
-            ["", :demande_sujet]
+        # when 60
+        #     ["", :demande_sujet]
+        # when 30
+        #     ["RAPPEL 1 > ", :relance_sujet_30_jours]
+        # when 20
+        #     ["RAPPEL 2 > ", :relance_sujet_20_jours]
+        # when 10
+        #     ["RAPPEL 3 > ", :relance_sujet_10_jours]
+        # when 7
+        #     ["RAPPEL 4 > ", :relance_sujet_7_jours]
+        # when 5
+        #     ["RAPPEL 5 > ", :relance_sujet_5_jours]
+        # when 3
+        #     ["DERNIÈRE RELANCE - RAPPEL 6 > ", :relance_sujet_3_jours]
+        # end
+
         when 30
-            ["RAPPEL 1 > ", :relance_sujet_30_jours]
+            ["", :demande_sujet]
         when 20
-            ["RAPPEL 2 > ", :relance_sujet_20_jours]
+            ["RAPPEL > ", :relance_sujet_20_jours]
         when 10
-            ["RAPPEL 3 > ", :relance_sujet_10_jours]
+            ["RAPPEL > ", :relance_sujet_10_jours]
         when 7
-            ["RAPPEL 4 > ", :relance_sujet_7_jours]
+            ["RAPPEL > ", :relance_sujet_7_jours]
         when 5
-            ["RAPPEL 5 > ", :relance_sujet_5_jours]
+            ["RAPPEL > ", :relance_sujet_5_jours]
         when 3
-            ["DERNIÈRE RELANCE - RAPPEL 6 > ", :relance_sujet_3_jours]
+            ["DERNIÈRE RELANCE - RAPPEL > ", :relance_sujet_3_jours]
         end
         # Ajout du préfixe du titre correspondant au nombre de jours restant
         title.insert(0, préfixe_title) 
