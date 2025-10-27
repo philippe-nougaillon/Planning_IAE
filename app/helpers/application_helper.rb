@@ -6,7 +6,7 @@ module ApplicationHelper
             <li>
                 <%= link_to '#{ url_for(path) }', 
                             class: 'flex items-center gap-1 py-0 text-#{ is_active ? 'primary font-bold' : 'base-content' } #{classes}' do %>
-                    <span class="material-symbols-outlined text-xl mb-1">
+                    <span class="material-symbols-outlined text-xl">
                         #{ icon }
                     </span>
                     #{ label ? label : name.humanize }
@@ -31,17 +31,17 @@ module ApplicationHelper
     def time_in_paris_selon_la_saison
         #
         # PENSER À CHANGER :
-        # - "const now = parseInt((Date.now() + 7200000) / 1000)" dans refreshProgressBar()
-        # - "-2.hour" dans _commande.html.erb
-        # - "-2.hour" dans _commandev2.html.erb
-        # - "2.hour" dans @time_zone_difference dans l'initialisation du service d'Edusign
+        # - "const now = parseInt((Date.now() + 3600000) / 1000)" dans refreshProgressBar()
+        # - "-1.hour" dans _commande.html.erb
+        # - "-1.hour" dans _commandev2.html.erb
+        # - "1.hour" dans @time_zone_difference dans l'initialisation du service d'Edusign
         #
 
         # Heure d'hiver
-        # DateTime.now.in_time_zone('Europe/Paris') + 1.hours
+        DateTime.now.in_time_zone('Europe/Paris') + 1.hours
 
         # Heure d'été
-        DateTime.now.in_time_zone('Europe/Paris') + 2.hours
+        # DateTime.now.in_time_zone('Europe/Paris') + 2.hours
     end
 
     def clean_page(page)

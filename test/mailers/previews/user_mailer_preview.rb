@@ -2,7 +2,7 @@
 class UserMailerPreview < ActionMailer::Preview
 
   def welcome_email
-    UserMailer.welcome_email(User.last.id, SecureRandom.hex(10))
+    UserMailer.welcome_email(User.last.id, SecureRandom.base64(12))
   end
 
   def cours_changed

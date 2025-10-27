@@ -102,7 +102,7 @@ class Intervenant < ApplicationRecord
 	end
 
 	def create_user_access
-		new_password = SecureRandom.hex(10)
+		new_password = SecureRandom.base64(12)
 		# Création du compte d'accès (user) et envoi du mail de bienvenue
 		user = User.new(role: "intervenant", nom: self.nom, prénom: self.prenom, email: self.email, mobile: self.téléphone_mobile, password: new_password)
 		if user.valid?
