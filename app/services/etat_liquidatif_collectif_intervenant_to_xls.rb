@@ -2,14 +2,16 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
   require 'spreadsheet'
   include ActionView::Helpers::NumberHelper
   attr_reader :cours
+  include DossiersHelper
 
-  def initialize(start_date, end_date, status, is_cours_showed, is_vacations_showed, is_responsabilites_showed)
+  def initialize(start_date, end_date, statuses, is_cours_showed, is_vacations_showed, is_responsabilites_showed, is_dossiers_showed)
     @start_date = start_date
     @end_date = end_date
-    @status = status
+    @statuses = statuses
     @is_cours_showed = is_cours_showed
     @is_vacations_showed = is_vacations_showed
     @is_responsabilites_showed = is_responsabilites_showed
+    @is_dossiers_showed = is_dossiers_showed
   end
 
   def call    
@@ -21,7 +23,7 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
     
     sheet.row(0).concat ['IAE PARIS']
     sheet.row(0).default_format = Spreadsheet::Format.new :weight => :bold, :size => 20
-    sheet.row(1).concat ["ÉTAT LIQUIDATIF DES VACATIONS D'ENSEIGNEMENTS. Du #{I18n.l @start_date.to_date} au #{I18n.l @end_date.to_date}. Statut : #{Intervenant.statuses.keys[@status.to_i]}"]
+    sheet.row(1).concat ["ÉTAT LIQUIDATIF DES VACATIONS D'ENSEIGNEMENTS. Du #{I18n.l @start_date.to_date} au #{I18n.l @end_date.to_date}. Statuts : #{Intervenant.statuses.keys.values_at(*Array(@statuses).map(&:to_i)).join(", ")}"]
     sheet.row(1).default_format = bold
     sheet.row(2).concat ["Décrets N°87-889 du 29/10/1987 et 88-994 du 18/10/1988 - CAr du 05/12/2023"]
 
@@ -57,7 +59,7 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
       responsabilites = Responsabilite.none
     end
 
-    intervenants = Intervenant.where(status: @status, id: [cours.pluck(:intervenant_id).uniq, cours.pluck(:intervenant_binome_id).uniq, vacations.pluck(:intervenant_id).uniq, responsabilites.pluck(:intervenant_id).uniq].flatten.uniq)
+    intervenants = Intervenant.where(status: @statuses, id: [cours.pluck(:intervenant_id).uniq, cours.pluck(:intervenant_binome_id).uniq, vacations.pluck(:intervenant_id).uniq, responsabilites.pluck(:intervenant_id).uniq].flatten.uniq)
     formations_par_eotp = Formation.includes(:cours).group_by(&:code_analytique)
 
     intervenants.each do | intervenant |
@@ -72,6 +74,24 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
       intervenant_responsabilites = intervenant.responsabilites.where(id: responsabilites.pluck(:id), intervenant_id: intervenant.id)
 
       cumul_hetd = cumul_vacations = cumul_responsabilites = cumul_tarif = 0 
+
+      # Affichage de l'état du/des dossier.s selon la période
+      if @is_dossiers_showed
+        @dossiers = Dossier.where(intervenant_id: intervenant.id, période: school_years_in_range(@start_date.to_date, @end_date.to_date))
+        @dossiers.each do |dossier|
+          fields_to_export = [
+            'D',
+            intervenant.nom,
+            intervenant.prenom,
+            dossier.période,
+            dossier.workflow_state.humanize,
+          ]
+
+          sheet.row(index).replace fields_to_export
+          index += 1
+        end
+      end
+
 
       # V2 : Liste des cours de l'intervenant groupés par code_eotp
       formations_par_eotp.each do |code_eotp, formation_group|

@@ -883,10 +883,10 @@ class ToolsController < ApplicationController
     end_date = params[:end_date]
 
     if params[:group_by] == 'intervenant'
-      book = EtatLiquidatifCollectifIntervenantToXls.new(start_date, end_date, params[:status], params[:cours], params[:vacations], params[:responsabilites]).call
+      book = EtatLiquidatifCollectifIntervenantToXls.new(start_date, end_date, params[:statuses], params[:cours], params[:vacations], params[:responsabilites], params[:dossiers]).call
       filename = "Export_Etat_liquidatif_collectif_intervenant.xls"
     else
-      book = EtatLiquidatifCollectifFormationToXls.new(start_date, end_date, params[:status], params[:cours], params[:vacations], params[:responsabilites]).call
+      book = EtatLiquidatifCollectifFormationToXls.new(start_date, end_date, params[:statuses], params[:cours], params[:vacations], params[:responsabilites]).call
       filename = "Export_Etat_liquidatif_collectif_formation.xls"
     end
 
