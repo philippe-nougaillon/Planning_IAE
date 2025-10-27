@@ -9,7 +9,7 @@
     <% end %>
   </td>
   <td class="<%= color %>">
-    <%= time_ago_in_words commande.debut - 2.hour %>
+    <%= time_ago_in_words commande.debut - 1.hour %>
   </td>
   <td><b><%= link_to l(commande.debut, format: :long), commande, class: 'text-primary hover:underline' %></b></td>
   <td>
