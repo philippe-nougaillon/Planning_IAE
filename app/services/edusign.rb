@@ -3,7 +3,7 @@ class Edusign < ApplicationService
     def initialize
         # Pour le décalage horaire des cours entre Planning et Edusign
         # N'est plus utilisé pour les cours, mais seulement pour les attendances/justificatifs
-        @time_zone_difference = 2.hour
+        @time_zone_difference = 1.hour
 
         # Utilisés pour calculer le nombre d'éléments en erreur
         @nb_recovered_elements = 0
@@ -663,7 +663,7 @@ class Edusign < ApplicationService
 
             response = self.prepare_body_request(body).get_response
 
-            puts response["status"] == 'error' ?  "<strong>Erreur d'exportation du cours #{cour.id}, #{cour.nom_ou_ue} : #{response["message"]}</strong>" : "Modification du cours #{cours.id}, #{cours.nom_ou_ue} (id Edusign : #{cours.edusign_id}) réussie"
+            puts response["status"] == 'error' ?  "<strong>Erreur d'exportation du cours #{cours.id}, #{cours.nom_ou_ue} : #{response["message"]}</strong>" : "Modification du cours #{cours.id}, #{cours.nom_ou_ue} (id Edusign : #{cours.edusign_id}) réussie"
 
             if response["status"] == 'success'
                 @nb_sended_elements += 1
