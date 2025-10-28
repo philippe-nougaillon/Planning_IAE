@@ -13,7 +13,12 @@
 
 	<% end %>
 
-	<h1 class="text-3xl"><%= fa_icon 'user' %> <%= @user.email %></h1>
+	<h1 class="text-3xl flex items-center gap-3">
+		<span class="material-symbols-outlined text-3xl">
+			<%= @user.otp_required_for_login? ? 'person_shield' : 'person' %>
+		</span>
+		<%= @user.email %>
+	</h1>
 </div>
 <br>
 
@@ -69,6 +74,21 @@
 		| Il y a <%= time_ago_in_words(@user.last_sign_in_at) %>
 	</p>
 <% end %>
+
+<div class="mt-4 mb-12">
+	<% if policy(User).enable_otp? && current_user == @user %>
+		<% if !current_user.otp_required_for_login %>
+			<div class="text-lg"></div>
+			<%= link_to "Activer la double authentification par QRCODE", qrcode_otp_users_path, class: "btn btn-success btn-outline hover:!text-white btn-sm", 'data-turbo': false %>
+			|
+			<%= link_to "Activer la double authentification par EMAIL", mail_otp_users_path, class: "btn btn-success btn-outline hover:!text-white btn-sm", 'data-turbo': false %>
+		<% else %>
+			<%# (Si jamais il y a besoin de désactiver la 2FA) %>
+			<%# button_to "Désactiver la double authentification", disable_otp_users_path, class: "btn btn-warning text-white btn-sm"  %>
+			Double authentification activée
+		<% end %>
+	<% end %>
+</div>
 <br>
 
 <% if current_user && !current_user.étudiant? %>

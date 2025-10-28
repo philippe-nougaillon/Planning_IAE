@@ -2,24 +2,30 @@
   <% unless request.variant.include?(:phone) %>
     <%= image_tag "logo@2000.png", style: "width: 100%; max-width: 500px;" %>
   <% end %>
-  <div class="w-full mt-8" style="max-width: 500px">
-    <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+  <div class="w-full mt-8" style="max-width: 500px" data-controller="otp">
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: {"data-otp-target": "formCredentials", "data-turbo": false}) do |f| %>
       <h1 class="text-3xl text-center border-b mb-4 pb-4">
         <%= t('.sign_in') %>
       </h1>
       <div class="flex flex-wrap">
         <div class="relative flex-grow max-w-full flex-1">
           <div class="form-control">
-            <%= f.label :email, label: "Email *" %>
-            <%= f.email_field :email, autofocus: true, autocomplete: "email", required: true, class: "input input-bordered w-full mt-2" %>
+            <%= f.label :email, "Email *" %>
+            <%= f.email_field :email, autofocus: true, autocomplete: "email", required: true, class: "input input-bordered w-full mt-2", "data-otp-target": "email" %>
           </div>
 
           <div class="form-control my-4">
-            <%= f.label :password, label: "Mot de passe *" %>
-            <%= f.password_field :password, autocomplete: "current-password", required: true, class: "input input-bordered w-full mt-2" %>
+            <%= f.label :password, "Mot de passe *" %>
+            <%= f.password_field :password, autocomplete: "current-password", required: true, class: "input input-bordered w-full mt-2", "data-otp-target": "password" %>
           </div>
 
-          <%= f.submit t('.sign_in'), class: "btn btn-primary text-white w-full mt-2 mb-4 text-xl font-normal", 'data-turbo': false %>
+          <div class="form-control my-4" style="display:none" data-otp-target="otp">
+            <%= f.label :otp_attempt, "Code de vérification" %>
+            <%= f.password_field :otp_attempt, class: "input input-bordered w-full mt-2" %>
+          </div>
+
+          <%# <button class="btn btn-primary text-white w-full mt-2 mb-4 text-xl font-normal" style="display:block" data-action='click->otp#send_otp'>Connexion</button> %>
+          <%= f.submit t('.sign_in'), class: "btn btn-primary text-white w-full mt-2 mb-4 text-xl font-normal", onclick: "event.preventDefault()", data: {turbo: false, action: 'click->otp#send_otp', 'otp-target': "btnConnexion"} %>
           <div class="flex flex-wrap justify-between my-4 gap-2">
             <%- if devise_mapping.recoverable? && controller_name != 'passwords' %>
               <%= link_to "Mot de passe oublié ?", new_password_path(resource_name), class: 'hover:underline' %>

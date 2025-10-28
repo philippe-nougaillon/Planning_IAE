@@ -3,7 +3,8 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy, :reactivate]
   before_action :is_user_authorized
-  
+  skip_before_action :authenticate_user!, only: [:send_otp]
+
   # GET /users
   # GET /users.json
   def index
@@ -114,6 +115,54 @@ class UsersController < ApplicationController
     respond_to do |format|
       format.html { redirect_to user_path, notice: 'Utilisateur réactivé !' }
       format.json { head :no_content }
+    end
+  end
+
+  def disable_otp
+    current_user.otp_required_for_login = false
+    current_user.save!
+    redirect_to user_path(current_user), notice: "Double authentification désactivée avec succès !"
+  end
+
+  def enable_otp
+    # Si code de vérification est correct, activer 2FA
+    # Sinon redemander le code
+    if current_user.validate_and_consume_otp!(params[:otp_attempt])
+      current_user.otp_required_for_login = true
+      current_user.otp_method = params[:method]
+      current_user.save!
+      redirect_to user_path(current_user), notice: "Double authentification activée avec succès !"
+    else
+      redirect_to enable_otp_users_path(current_user), alert: "Code de vérification incorrect, veuillez réessayer !"
+    end
+    
+  end
+
+  def qrcode_otp
+    current_user.otp_secret = User.generate_otp_secret
+    current_user.save!
+  end
+
+  def mail_otp
+    current_user.otp_secret = User.generate_otp_secret
+    current_user.save!
+
+    # Envoie le otp par mail
+    UserMailer.mail_otp(current_user).deliver_now
+  end
+
+  def send_otp
+    if (user = User.find_by(email: params[:email])) && user.valid_password?(params[:password])
+      if user.otp_required_for_login
+        if user.otp_method == "email"
+          UserMailer.mail_otp(user).deliver_now
+        end
+        render json: { otp_required: true }
+      else
+        render json: { otp_required: false }
+      end
+    else
+      render json: { error: "Email ou mot de passe incorrect."}
     end
   end
 

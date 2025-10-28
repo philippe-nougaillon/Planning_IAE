@@ -301,6 +301,10 @@ fr:
     registrations:
       new:
         title: Inscription
+    mail_otp:
+      title: Activation 2FA par email
+    qrcode_otp:
+      title: Activation 2FA par QR Code
   pages:
     mentions_légales:
       title: Mentions légales
@@ -356,6 +360,8 @@ fr:
       title: Modification d'un intervenant
     invitations:
       title: Invitations
+    sujets:
+      title: Sujets d'examens
   etudiants:
     index:
       title: Liste des étudiants
@@ -575,3 +581,10 @@ fr:
       title: "Edusign logs"
     show:
       title: "Edusign log"
+  sujets:
+    index:
+      title: "Sujets d'examens"
+    show:
+      title: "Sujet d'examen"
+    deposer_done:
+      title: "Sujet d'examen déposé"

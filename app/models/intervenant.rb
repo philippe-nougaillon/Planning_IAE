@@ -107,8 +107,9 @@ class Intervenant < ApplicationRecord
 		user = User.new(role: "intervenant", nom: self.nom, prénom: self.prenom, email: self.email, mobile: self.téléphone_mobile, password: new_password)
 		if user.valid?
 			user.save
-			mailer_response = IntervenantMailer.with(user: user, password: new_password).welcome_intervenant.deliver_now
-			MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: user.email, subject: "Nouvel accès intervenant")
+			title = "[PLANNING IAE Paris] Bienvenue !"
+			mailer_response = IntervenantMailer.with(user: user, password: new_password, title: title).welcome_intervenant.deliver_now
+			MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: user.email, subject: "Nouvel accès intervenant", title: title)
 		end
 	end
 
@@ -151,6 +152,17 @@ class Intervenant < ApplicationRecord
 								.where(status: ['CEV','CEV_ENS_C_CONTRACTUEL','CEV_TIT_CONT_FP','CEV_SAL_PRIV_IND'])
 								.where.not(id: intervenants_avec_dossiers_sur_période)
 								.uniq
+	end
+
+	def self.formation_for_select(intervenant_id)
+		# Chercher les formations des examen
+		examens_intervenant = Cour.where(intervenant_binome_id: intervenant_id).select{|cour| cour.examen?}
+		formations_intervenant_from_examens = Formation.where(id: examens_intervenant.pluck(:formation_id))
+
+		{
+		  'Formations catalogue' => formations_intervenant_from_examens.where(hors_catalogue:false).not_archived.ordered.map { |i| i.nom }.uniq,
+		  'Formations hors catalogue' => formations_intervenant_from_examens.where(hors_catalogue:true).not_archived.ordered.map { |i| i.nom }.uniq
+		}
 	end
 
 	private
