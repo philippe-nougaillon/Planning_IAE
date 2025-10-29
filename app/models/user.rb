@@ -10,8 +10,8 @@ class User < ApplicationRecord
   
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :rememberable and :omniauthable,
-  devise :database_authenticatable,
-         :recoverable, :trackable, :validatable, :registerable, :timeoutable
+  devise :two_factor_authenticatable,
+         :recoverable, :trackable, :validatable, :registerable, :timeoutable, :session_limitable
 
   belongs_to :formation, optional: true   
   has_many :notes
@@ -25,6 +25,8 @@ class User < ApplicationRecord
               rh: 4, 
               gestionnaire: 5,
               administrateur: 6 }
+  
+  enum :otp_method, {email: 0, app: 1}
 
   default_scope { order(:nom) } 
 

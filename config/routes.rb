@@ -33,12 +33,20 @@ Rails.application.routes.draw do
     member do
       get :invitations
       get :calendrier
+      get :sujets
     end
   end
 
   resources :users do
     member do
       get :reactivate
+    end
+    collection do
+      get :qrcode_otp
+      get :mail_otp
+      post :enable_otp
+      post :disable_otp
+      post :send_otp
     end
   end
 
@@ -240,6 +248,19 @@ Rails.application.routes.draw do
   resources :justificatifs, only: %i[ index show ]
 
   resources :edusign_logs, only: %i[ index show ]
+
+  resources :sujets, except: %i[ edit update ] do
+    member do
+      get :deposer_done
+      get :envoyer
+      get :valider
+      get :rejeter
+      get :relancer
+      get :archiver
+      patch :deposer
+      patch :deposer_admin
+    end
+  end
 
   controller :pages do
     get 'mentions_légales', to: 'pages#mentions_légales', as: :mentions_legales

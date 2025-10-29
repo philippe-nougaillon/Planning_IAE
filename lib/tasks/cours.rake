@@ -16,6 +16,18 @@ namespace :cours do
           .update_all(etat: Cour.etats[:réalisé])
   end
 
+  desc "Automatiser pleinement l'envoi de la liste des cours aux intervenants"
+  task auto_envoyer_liste_cours: :environment do
+    # Lancé tous les 20 du mois
+    if Date.today.day == 20
+      EnvoiLog.create(date_prochain: DateTime.now, cible: 'Tous les intervenants', date_début: Date.today.next_month.beginning_of_month, date_fin: Date.today.next_month.end_of_month, workflow_state: "prêt")
+
+      EnvoiLog.with_prêt_state.each do |envoi_log|
+        EnvoyerNotificationsJob.perform_later(envoi_log.id, false)
+      end
+    end
+  end
+
   desc "Envoyer la liste des cours aux intervenants" 
   task :envoyer_liste_cours, [:envoi_log_id, :test] => :environment do |task, args|
 
@@ -118,8 +130,9 @@ namespace :cours do
       if now > cour.debut + 30.minute && now < cour.debut + 40.minute
         intervenant = cour.intervenant
         presence = Presence.find_or_create_by(cour_id: cour.id, intervenant_id: intervenant.id, code_ue: cour.code_ue)
-        mailer_response = IntervenantMailer.mes_sessions(intervenant, presence.slug, cour.formation.user.try(:email)).deliver_now
-        MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: intervenant.email, subject: "Validation présences")
+        title = "[PLANNING] Validation des émargements pour la session en cours"
+        mailer_response = IntervenantMailer.mes_sessions(intervenant, presence.slug, cour.formation.user.try(:email), title: title).deliver_now
+        MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: intervenant.email, subject: "Validation présences", title: title)
 
         puts "email envoyé à #{intervenant.nom_prenom}, email : #{intervenant.email}"
         puts "slug : #{presence.slug}"
@@ -131,17 +144,36 @@ namespace :cours do
     if !intervenant.email.blank? && intervenant.email != '?'
       puts "OK => Planning envoyé à: #{intervenant.email}"
 
+      title = subject = to = ""
       if !examen
+        if test
+          title = "[PLANNING] TEST / Rappel des cours de #{intervenant.nom_prenom} du #{I18n.l debut} au #{I18n.l fin}"
+          subject = "Test rappel des cours"
+          to = "testeurs"
+        else
+          title = "[PLANNING] Rappel de vos cours à l'IAE Paris du #{I18n.l debut} au #{I18n.l fin}"
+          subject = "Rappel des cours"
+          to = intervenant.email
+        end
         mailer_response = IntervenantMailer
-                                          .notifier_cours(debut, fin, intervenant, cours, gestionnaires, envoi_log_id, test)
+                                          .notifier_cours(debut, fin, intervenant, cours, gestionnaires, envoi_log_id, test, title)
                                           .deliver_now
       else
+        if test
+          title = "[PLANNING] TEST / Rappel des examens de #{intervenant.nom_prenom} du #{I18n.l debut} au #{I18n.l fin}"
+          subject = "Rappel des examens"
+          to = "testeurs"
+        else
+          title = "[PLANNING] Rappel de vos examens à l'IAE Paris du #{I18n.l debut} au #{I18n.l fin}"
+          subject = "Test rappel des examens"
+          to = intervenant.email
+        end
         mailer_response = IntervenantMailer
-                                        .notifier_examens(debut, fin, intervenant, cours, gestionnaires, envoi_log_id, test)
+                                        .notifier_examens(debut, fin, intervenant, cours, gestionnaires, envoi_log_id, test, title)
                                         .deliver_now
       end
 
-      MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: intervenant.email, subject: "Rappel des cours")
+      MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: to, subject: subject, title: title)
 
       return true
     else

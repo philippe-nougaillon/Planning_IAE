@@ -444,8 +444,9 @@ class ToolsController < ApplicationController
               user = User.new(nom: etudiant.nom, prénom: etudiant.prénom, email: etudiant.email, mobile: etudiant.mobile, password: SecureRandom.base64(12))
               if user.valid?
                 user.save
-                mailer_response = EtudiantMailer.welcome_student(user).deliver_now
-                MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: etudiant.email, subject: "Nouvel accès étudiant")
+                title = "[PLANNING IAE Paris] Bienvenue !"
+                mailer_response = EtudiantMailer.welcome_student(user, title).deliver_now
+                MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: etudiant.email, subject: "Nouvel accès étudiant", title: title)
               end
             end
           else
@@ -1416,8 +1417,9 @@ class ToolsController < ApplicationController
       if user.valid?
         user.save
         valids += 1
-        mailer_response = IntervenantMailer.with(user: user, password: new_password).welcome_intervenant.deliver_now
-        MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: user.email, subject: "Nouvel accès intervenant")
+        title = "[PLANNING IAE Paris] Bienvenue !"
+        mailer_response = IntervenantMailer.with(user: user, password: new_password, title: title).welcome_intervenant.deliver_now
+        MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: user.email, subject: "Nouvel accès intervenant", title: title)
       else
         errors += 1
       end

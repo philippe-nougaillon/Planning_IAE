@@ -19,6 +19,7 @@ class Cour < ApplicationRecord
                                 reject_if: lambda{|attributes| attributes['catégorie'].blank? || attributes['description'].blank?},
                                 allow_destroy:true
   has_many :attendances, dependent: :destroy
+  has_one :sujet, dependent: :destroy
 
   has_one_attached :document
 
@@ -40,9 +41,11 @@ class Cour < ApplicationRecord
   around_update :check_send_commande_email
   after_create :check_send_new_commande_email
 
-  after_create   :send_new_examen_email, if: Proc.new { |cours| cours.examen? }
-  around_update  :check_send_examen_email
-  after_destroy :send_delete_examen_email, if: Proc.new { |cours| cours.examen? }
+  if ENV["SEND_EXAMEN_EMAILS"] == "true"
+    after_create   :send_new_examen_email, if: Proc.new { |cours| cours.examen? }
+    around_update  :check_send_examen_email
+    after_destroy :send_delete_examen_email, if: Proc.new { |cours| cours.examen? }
+  end
   
   after_update :synchronisation_edusign, if: Proc.new { |cours| cours.audits.last.audited_changes["salle_id"] && cours.edusign_id && !cours.no_send_to_edusign && cours.formation.send_to_edusign}
 
@@ -384,6 +387,33 @@ class Cour < ApplicationRecord
     saved_changes.except("updated_at", "created_at")
   end
 
+  def days_between_today_and_debut
+    (self.debut.to_date - Date.today).to_i
+  end
+
+  def color_sujet
+    days = self.days_between_today_and_debut
+    case days
+    when (0..10)
+      "error"
+    else
+      "warning"
+    end
+  end
+
+  def sujet_manquant?
+    if self.examen? && self.days_between_today_and_debut <= 30
+      sujet = Sujet.find_by(cour_id: self.id)
+      if !['déposé', 'validé', 'archivé'].include?(sujet&.workflow_state)
+        true
+      else
+        false
+      end
+    else
+      false
+    end
+  end
+
   private
     def update_date_fin
       if self.debut and self.duree
@@ -590,25 +620,31 @@ class Cour < ApplicationRecord
     end
 
     def send_email_examen(examen_status, old_cour)
+      title = ""
       case examen_status
       when 'modifié'
-        mailer_response = CourMailer.with(cour: self).examen_modifié.deliver_now
+        title = "[PLANNING] Examen modifié pour le #{I18n.l self.debut, format: :long}"
+        mailer_response = CourMailer.with(cour: self, title: title).examen_modifié.deliver_now
       when 'supprimé'
-        mailer_response = CourMailer.with(cour: self).examen_supprimé.deliver_now
+        title = "[PLANNING] Examen supprimé pour le #{I18n.l self.debut, format: :long}"
+        mailer_response = CourMailer.with(cour: self, title: title).examen_supprimé.deliver_now
       when 'ajouté'
-        mailer_response = CourMailer.with(cour: self).examen_ajouté.deliver_now
+        title = "[PLANNING] Nouvel examen pour le #{I18n.l self.debut, format: :long}"
+        mailer_response = CourMailer.with(cour: self, title: title).examen_ajouté.deliver_now
       end
-      MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen #{examen_status}")
+      MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen #{examen_status}", title: title)
     end
 
     def send_new_examen_email
-      mailer_response = CourMailer.with(cour: self).examen_ajouté.deliver_now
-      MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen ajouté")
+      title = "[PLANNING] Nouvel examen pour le #{I18n.l self.debut, format: :long}"
+      mailer_response = CourMailer.with(cour: self, title: title).examen_ajouté.deliver_now
+      MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen ajouté", title: title)
     end
 
   def send_delete_examen_email
-    mailer_response = CourMailer.with(cour: self).examen_supprimé.deliver_now
-    MailLog.create!(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen supprimé")
+    title = "[PLANNING] Examen supprimé pour le #{I18n.l self.debut, format: :long}"
+    mailer_response = CourMailer.with(cour: self, title: title).examen_supprimé.deliver_now
+    MailLog.create!(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen supprimé", title: title)
   end
 
   def synchronisation_edusign

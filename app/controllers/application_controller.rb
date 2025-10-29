@@ -18,13 +18,13 @@ class ApplicationController < ActionController::Base
   protected
 
     def configure_permitted_parameters
-      devise_parameter_sanitizer.permit(:sign_up) { |u| u.permit(:nom, :prénom, :email, :password, :password_confirmation)}
+      devise_parameter_sanitizer.permit(:sign_up) { |u| u.permit(:nom, :prénom, :email, :password, :password_confirmation, :otp_attempt)}
     end
 
   private
     def set_layout_variables
       @sitename ||= request.subdomains.any? ? request.subdomains(0).first.upcase : 'IAE-Planning DEV'
-      @sitename.concat(' v5.14.f')
+      @sitename.concat(' v5.15')
 
       if user_signed_in? && ( current_user.intervenant?  || current_user.enseignant? )
         @intervenant_user_id = Intervenant.where("LOWER(intervenants.email) = ?", current_user.email.downcase).first.id
