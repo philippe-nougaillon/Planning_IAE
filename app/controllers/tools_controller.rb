@@ -896,6 +896,23 @@ class ToolsController < ApplicationController
     send_data file_contents.string.force_encoding('binary'), filename: filename
   end
 
+  def export_codir
+    params[:start_date] ||= Date.today.at_beginning_of_month.last_month
+    params[:end_date]   ||= Date.today.last_month.at_end_of_month
+  end
+
+  def export_codir_do
+    start_date = params[:start_date]
+    end_date = params[:end_date]
+
+    book = ExportCodirToXls.new(start_date, end_date, params[:statuses], params[:cours], params[:vacations], params[:responsabilites]).call
+    filename = "Export_codir.xls"
+
+    file_contents = StringIO.new
+    book.write file_contents # => Now file_contents contains the rendered file output
+    send_data file_contents.string.force_encoding('binary'), filename: filename
+  end
+
   def audits
     @audits = Audited::Audit.order("id DESC")
     @types  = Audited::Audit.pluck(:auditable_type).uniq.sort

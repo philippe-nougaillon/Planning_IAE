@@ -121,6 +121,14 @@ class ToolPolicy < ApplicationPolicy
     export_etat_liquidatif_collectif?
   end
 
+  def export_codir?
+    user.rh? || user.admin?
+  end
+
+  def export_codir_do?
+    export_codir?
+  end
+
   def audits?
     user.admin?
   end
