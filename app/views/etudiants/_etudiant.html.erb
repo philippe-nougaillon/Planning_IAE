@@ -10,20 +10,29 @@
     <td><%= etudiant.prénom %></td>
     <td>
         <%= etudiant.email %>
-        <% if !etudiant.linked_user && Formation.unscoped.find(etudiant.formation_id).cours.confirmé.count.positive? %>
+        <% if !etudiant.linked_user && Formation.find(etudiant.formation_id).cours.confirmé.count.positive? %>
             <%= link_to users_path(search: etudiant.nom, role: 0) do %>
                 <%= fa_icon 'exclamation-circle', class: 'text-error' , title: 'L\'étudiant n\'a pas de compte de connexion (utilisateur) associé à cet email' %>
             <% end %>
+        <% elsif etudiant.linked_user&.discarded? %>
+            <%= link_to users_path(search: etudiant.nom, role: 0, discarded: 1) do %>
+                <%= fa_icon 'exclamation-circle', class: 'text-orange-400', title: 'L\'étudiant a son compte d\'accès désactivé' %>
+            <% end %>
         <% end %>
     </td>
-    <td style="border-left: .3rem solid <%= etudiant.formation.try(:positive_color) %>">
+    <td style="border-left: .3rem solid <%= etudiant.formation.positive_color %>">
         <% if etudiant.formation_id %>
-            <% formation = Formation.unscoped.find(etudiant.formation_id) %>
+            <% formation = Formation.find(etudiant.formation_id) %>
             <%= link_to formation.nom, formation, class: 'text-primary hover:underline' %>
         <% end %>
     </td>
     <td>
         <%= time_ago_in_words etudiant.updated_at %>
+    </td>
+    <td class="text-center">
+        <% if etudiant.edusign_id? %>
+            <%= fa_icon 'check' %>
+        <% end %>
     </td>
     <td>
         <% if policy(Etudiant).edit? %>

@@ -8,7 +8,12 @@
 				<%= fa_icon 'eye', text: 'Voir' %>
 		<% end %>
 	</div>
-	<h1 class="text-3xl"><%= fa_icon 'chalkboard' %> Modification d'une salle</h1>
+	<h1 class="flex items center gap-1 text-3xl">
+		<span class="material-symbols-outlined text-3xl">
+			meeting_room
+		</span>
+		Modification d'une salle
+	</h1>
 </div>
 
 <%= render 'form' %>

@@ -42,7 +42,7 @@
                     <% cumul_tarif += montant_service %>
                 <% end %>
 
-                <% formation = Formation.unscoped.find(c.formation_id) %>
+                <% formation = Formation.find(c.formation_id) %>
 
                 <tr class="hover border">
                     <td>C</td>
@@ -53,21 +53,25 @@
                     <td><%= link_to "#{c.ue} #{c.nom_ou_ue}", edit_cour_path(c), target:"_new", class: 'text-primary hover:underline' %></td>
                     <td class="text-center">
                         <% unless c.commentaires.blank? %>
-                            <span title="<%= c.commentaires %>">
+                            <span title="<%= c.commentaires %>" class="cursor-help">
                                 <%= fa_icon 'comment-dots' %>
                             </span>
                         <% end %>
                         <% if c.elearning %>
-                            <%= fa_icon 'laptop-house' %>
+                            <span title="Cour en eLearning" class="cursor-help">
+                                <%= fa_icon 'laptop-house' %>
+                            </span>
                         <% end %>
                         <% if c.hors_service_statutaire || formation.hss %>
-                            <%= fa_icon 'calendar-times' %>
+                            <span title="Hors Service Statutaire" class="cursor-help">
+                                <%= fa_icon 'calendar-times' %>
+                            </span>
                         <% end %>
                         <% if c.intervenant_id && c.intervenant_binome_id %>
-                            <span title="<%= c.intervenant.nom_prenom %>">
+                            <span title="<%= c.intervenant.nom_prenom %>" class="cursor-help">
                                 <%= fa_icon 'user' %>
                             </span>
-                            <span title="<%= c.intervenant_binome.nom_prenom %>">
+                            <span title="<%= c.intervenant_binome.nom_prenom %>" class="cursor-help">
                                 <%= fa_icon 'user' %>
                             </span>
                         <% end %>
@@ -107,7 +111,7 @@
                     <% end %>
                 <% end %>
                 <% cumul_vacations += vacation.montant || 0 %>
-                <% formation = Formation.unscoped.find(vacation.formation_id) %> 
+                <% formation = Formation.find(vacation.formation_id) %> 
                 <tr class="hover border">
                     <td>V</td>
                     <td><%= l vacation.date %></td>
@@ -148,7 +152,7 @@
                 <% montant_responsabilite = (resp.heures * Cour.Tarif).round(2) %>
                 <% cumul_resps += montant_responsabilite %>
                 <% cumul_hetd += resp.heures %>
-                <% formation = Formation.unscoped.find(resp.formation_id) %>
+                <% formation = Formation.find(resp.formation_id) %>
 
                 <tr class="hover border">
                     <td>R</td>

@@ -21,25 +21,41 @@
     Contact : <%= link_to "iae-paris.com/nous-contacter", "https://www.iae-paris.com/fr/nous-contacter0", class: 'text-primary hover:underline' %>
   </p>
 
-  <h2 class="text-xl font-bold mb-6">
-    2. Conception et développement
-  </h2>
-  <p class="mb-6">
-    <strong>Philippe NOUGAILLON (Consulting IT)</strong>
+    <h2 class="text-xl font-black mt-8 mb-4">
+      2. Conception et développement
+    </h2>
+    <p class="mb-6">
+    <%= link_to 'https://www.aikku.eu/' do %>
+      <%= image_tag 'logo_aikku.png', size: 200 %>
+    <% end %>
+
+    <b>AÏKKU (SAS)</b>
     <br><br>
-    Pôle de développement de l’entreprenariat 
-    de l’EPT Grand Paris Grand Est
+
+    Siège social :
+    <br><br>
+    Tour Ariane - La Défense 
     <br>
-    106-112 allée Notre Dame des Anges
+    5, Place de la Pyramide
     <br>
-    93370 Montfermeil
+    92800 PUTEAUX
+    <br>
+    FRANCE
+    <br><br>
+
+    SIREN : 934 780 735 R.C.S. Nanterre
+    <br><br>
+    
+    Contact : <%= mail_to "contact@aikku.eu", class:"link" %> ou 
+    <%= link_to "envoyer un message via notre formulaire de contact", "https://www.aikku.eu/fr/contact?objet=Aikku%20PLANN", class:'hover:underline' %>
 
     <br><br>
-    SIRET : 384 396 719 00047
-    <br>
-    APE : 5829C
+    Directeur de la publication : Philippe Nougaillon
+
     <br><br>
-    Contact : <%= link_to "www.philnoug.com/contact", "https://www.philnoug.com/contact", class: 'text-primary hover:underline' %>
+    Création d'AIKKU Plann en 2017
+    <br>
+    AIKKU Plann a été conçu et développé par nous-même en Ruby on Rails, est édité sous licence Open Source (GLP GNU v3).
   </p>
 
   <h2 class="text-xl font-bold mb-6">

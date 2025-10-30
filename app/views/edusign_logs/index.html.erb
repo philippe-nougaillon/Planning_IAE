@@ -1,0 +1,80 @@
+<div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl">
+    <%= image_tag 'edusign.png', size: 32, class: 'inline' %>
+    Historique des synchronisations
+  </h1>
+</div>
+
+<div class="bs-container p-4 shadow mb-4">
+  <%= form_tag request.path, method: :get do %>
+    <div class="flex flex-wrap">
+
+      <div class="sm:w-2/12">
+        <%= label_tag :du, "Du" %>
+        <%= text_field_tag :du, params[:du], type: 'date', onchange: 'this.form.submit()', class: "input input-bordered input-sm w-full" %>
+      </div>
+
+      <div class="sm:w-2/12 px-2">
+        <%= label_tag :au, "Au" %>
+        <%= text_field_tag :au, params[:au], type: 'date', onchange: 'this.form.submit()', class: "input input-bordered input-sm w-full" %>
+      </div>
+
+      <div class="sm:w-1/5 px-2">
+        <%= label_tag :type, "Type" %>
+        <%= select_tag :type, options_for_select(EdusignLog.modele_types.map { |k, v| [k.humanize, v]},
+                                                 params[:type]), include_blank:true,
+                       class: 'select select-bordered select-sm w-full', onchange: 'this.form.submit()' %>
+      </div>
+
+      <div class="relative flex-grow max-w-full flex-1 px-2">
+        <%= label_tag :user_id, 'Par' %>
+        <%= select_tag :user_id,
+                       options_for_select(User.for_edusign_logs_select, params[:user_id]),
+                       class: 'slim-select',
+                       include_blank: true,
+                       onchange: 'this.form.submit()' %>
+      </div>
+
+      <div class="sm:w-1/5 px-2">
+        <%= label_tag :etat, "État" %>
+        <%= select_tag :etat, options_for_select(EdusignLog.etats.map { |k, v| [k.humanize, v]},
+                                                   params[:etat]), include_blank:true,
+                       class: 'select select-bordered select-sm w-full', onchange: 'this.form.submit()' %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<div class="overflow-x-auto">
+  <table class="table">
+    <thead class="bg-slate-100 border">
+    <tr>
+      <th></th>
+      <th>Il y a</th>
+      <th>Type</th>
+      <th>Par</th>
+      <th>État</th>
+      <th></th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <%= render @edusign_logs %>
+    </tbody>
+
+    <tfoot>
+    <tr>
+      <td colspan="9">
+      </td>
+    </tr>
+    </tfoot>
+  </table>
+</div>
+
+<div class="page_info">
+  <%= page_entries_info @edusign_logs %>
+</div>
+
+<div class="planning_pagination">
+  <%= will_paginate @edusign_logs %>
+</div>

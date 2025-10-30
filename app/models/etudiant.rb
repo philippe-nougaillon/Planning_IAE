@@ -19,6 +19,14 @@ class Etudiant < ApplicationRecord
 
   before_destroy :delete_user
 
+  has_many :attendances, dependent: :destroy
+  has_many :justificatifs, dependent: :destroy
+
+  normalizes :nom, with: -> nom { nom.strip }
+  normalizes :"prénom", with: ->(value) { value&.strip }
+
+  scope :ordered, -> { order(:nom, :prénom) }
+
   workflow do
     state :prospect
     state :candidat
@@ -54,4 +62,8 @@ class Etudiant < ApplicationRecord
   def linked_user
     return User.étudiant.find_by("LOWER(users.email) = ?", self.try(:email).try(:downcase))
   end
+
+  def self.for_select
+		all.map { |i| "#{i.nom} #{i.prénom}"  }
+	end
 end

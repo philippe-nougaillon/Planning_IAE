@@ -1,0 +1,139 @@
+<div class="border-b mt-6 mb-2 pb-4">
+
+  <div class="buttons-group float-right">
+    <%= link_to attendances_path, class: 'btn btn-ghost' do %>
+      <%= fa_icon 'list-alt', text: ' Retour' %>
+    <% end %>
+  </div>
+
+  <h1 class="flex items-center gap-1 text-3xl">
+    <span class="material-symbols-outlined text-4xl mt-1">
+			calendar_check
+		</span>
+    Présence
+  </h1>
+
+</div>
+
+<div class="bs-container card shadow p-4 my-4">
+  <div class="flex flex-wrap">
+    <div class="relative flex-grow max-w-full flex-1">
+      <p class="mb-4">
+        <strong>
+          <%= l(@attendance.cour.debut, format: :long).humanize %>
+          <br>
+          <%= link_to @attendance.cour.nom, @attendance.cour, class: 'text-primary hover:underline' %>
+        </strong>
+      </p>
+
+      <p class="mb-4">
+        <span style="background-color:<%= @attendance.cour.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
+        <%= @attendance.cour.formation.nom %>
+        </span>
+      </p>
+
+      <p class="mb-4">
+        <strong>Intervenant :</strong>
+        <%= link_to @attendance.cour.intervenant.nom_prenom, @attendance.cour.intervenant, class: 'text-primary hover:underline' %>
+      </p>
+
+      <% if @attendance.cour.intervenant_binome_id %>
+        <p class="mb-4">
+          <strong>Intervenant binôme :</strong>
+          <%= link_to @attendance.cour.intervenant_binome.nom_prenom, @attendance.cour.intervenant_binome, class: 'text-primary hover:underline' %>
+        </p>
+      <% end %>
+
+      <p class="mb-4">
+        <strong>Etudiant :</strong>
+        <%= link_to @attendance.etudiant.nom_prénom, @attendance.etudiant, class: 'text-primary hover:underline' %>
+      </p>
+
+      <p class="mb-4">
+        <strong>Etat :</strong>
+        <span class="badge <%= @attendance.style%> text-white"><%= @attendance.état_text %></span>
+      </p>
+
+      <% if @attendance.exclu_le %>
+        <p class="mb-4">
+          <strong>Exclu le :</strong>
+          <%= l(@attendance.exclu_le, format: :long).humanize %>
+        </p>
+      <% end %>
+
+      <% if @attendance.a_un_retard %>
+        <p class="mb-4">
+          <strong>Retard de :</strong>
+          <%= @attendance.retard %> minutes
+        </p>
+      <% end %>
+
+      <% if @attendance.signatureEmail %>
+        <div>
+          <p class="mb-4">
+            <strong>Mail envoyé le :</strong>
+            <%= l(@attendance.signatureEmail.envoi_email, format: :long).humanize %>
+          </p>
+
+          <p class="mb-4">
+            <strong>Nombre de mails envoyés :</strong>
+            <%= @attendance.signatureEmail.nb_envoyee %>
+          </p>
+
+          <p class="mb-4">
+            <strong>Envoyé deux fois :</strong>
+            <%= @attendance.signatureEmail.second_envoi ? "Oui" : "Non" %>
+          </p>
+
+          <p class="mb-4">
+            <strong>Date limite pour signer :</strong>
+            <%= l(@attendance.signatureEmail.limite, format: :long).humanize %>
+          </p>
+        </div>
+      <% end %>
+
+      <% if @justificatif %>
+        <h3 class="text-xl text-secondary my-4">
+          <%= fa_icon 'file-contract' %>
+          Justificatif
+        </h3>
+
+        <p class="mb-4">
+          <strong>Motif :</strong>
+          <%= @justificatif.motif.nom.humanize %>
+        </p>
+
+        <p class="mb-4">
+          <strong>Commentaires :</strong>
+          <%= @justificatif.commentaires %>
+        </p>
+
+        <p class="mb-4">
+          <strong>Accepté le :</strong>
+          <%= l(@justificatif.accepte_le, format: :long).humanize %>
+        </p>
+
+        <p class="mb-4">
+          <strong>Date de début :</strong>
+          <%= l(@justificatif.debut, format: :long).humanize %>
+        </p>
+
+        <p class="mb-4">
+          <strong>Date de fin :</strong>
+          <%= l(@justificatif.fin, format: :long).humanize %>
+        </p>
+      <% end %>
+
+      <% if @attendance.signée_le %>
+        <p class="mb-4">
+          <strong>Signée le :</strong>
+          <%= l(@attendance.signée_le, format: :long).humanize %>
+        </p>
+
+        <div>
+          <img src=<%= @attendance.signature %>>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

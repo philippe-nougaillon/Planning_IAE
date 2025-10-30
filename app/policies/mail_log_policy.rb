@@ -12,4 +12,8 @@ class MailLogPolicy < ApplicationPolicy
   def show?
     index?
   end
+
+  def refresh?
+    index?
+  end
 end

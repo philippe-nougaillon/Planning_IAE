@@ -32,7 +32,7 @@ class Intervenant < ApplicationRecord
 	normalizes :nom, with: -> nom { nom.strip }
 	normalizes :prenom, with: -> prenom { prenom.strip }
 	
-	enum status: [:CEV, :Permanent, :PR, :MCF, :MCF_HDR, :PAST, :PRAG, :Admin, :CEV_HSS, :CEV_ENS_C_CONTRACTUEL, :CEV_TIT_CONT_FP, :CEV_SAL_PRIV_IND]
+	enum :status, [:CEV, :Permanent, :PR, :MCF, :MCF_HDR, :PAST, :PRAG, :Admin, :CEV_HSS, :CEV_ENS_C_CONTRACTUEL, :CEV_TIT_CONT_FP, :CEV_SAL_PRIV_IND]
 
 	default_scope { order(:nom, :prenom) } 
 
@@ -102,13 +102,14 @@ class Intervenant < ApplicationRecord
 	end
 
 	def create_user_access
-		new_password = SecureRandom.hex(10)
+		new_password = SecureRandom.base64(12)
 		# Création du compte d'accès (user) et envoi du mail de bienvenue
 		user = User.new(role: "intervenant", nom: self.nom, prénom: self.prenom, email: self.email, mobile: self.téléphone_mobile, password: new_password)
 		if user.valid?
 			user.save
-			mailer_response = IntervenantMailer.with(user: user, password: new_password).welcome_intervenant.deliver_now
-			MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: user.email, subject: "Nouvel accès intervenant")
+			title = "[PLANNING IAE Paris] Bienvenue !"
+			mailer_response = IntervenantMailer.with(user: user, password: new_password, title: title).welcome_intervenant.deliver_now
+			MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: user.email, subject: "Nouvel accès intervenant", title: title)
 		end
 	end
 
@@ -123,7 +124,46 @@ class Intervenant < ApplicationRecord
 	# Si c'est un examen IAE / examen rattrapage / Tiers-temps
   def examen?
     [169, 1166, 522].include?(self.id)
-  end
+	end
+
+	def self.intervenants_examens
+		ENV["INTERVENANTS_EXAMENS"].to_s.split(',').map(&:to_i)
+	end
+
+	def self.sans_intervenant
+		ENV["INTERVENANTS_PLACEHOLDER"].to_s.split(',').map(&:to_i)
+	end
+
+	def self.sans_dossier
+		début_période = '2025-09-01'
+		fin_période = '2026-08-31'
+		# Lister toutes les personnes ayant eu cours comme intervenant principal ou en binome
+
+		# on garde les id des intervenants ayant eu cours sur la période
+		intervenants_ids = Cour.where("DATE(cours.debut) BETWEEN ? AND ?", début_période, fin_période).pluck(:intervenant_id)
+		# on y ajoute les intervenants ayants fait les cours comme binomes
+		intervenants_ids += Cour.where("DATE(cours.debut) BETWEEN ? AND ?", début_période, fin_période).pluck(:intervenant_binome_id)
+		# on ajoute les intervenants ayants fait des vacations
+		intervenants_ids += Intervenant.where(id: Vacation.where("DATE(vacations.date) BETWEEN ? AND ?", début_période, fin_période).pluck(:intervenant_id))
+
+		intervenants_avec_dossiers_sur_période = Dossier.where(période: AppConstants::PÉRIODE).pluck(:intervenant_id)
+
+		Intervenant.where("id IN(?)", intervenants_ids.uniq)
+								.where(status: ['CEV','CEV_ENS_C_CONTRACTUEL','CEV_TIT_CONT_FP','CEV_SAL_PRIV_IND'])
+								.where.not(id: intervenants_avec_dossiers_sur_période)
+								.uniq
+	end
+
+	def self.formation_for_select(intervenant_id)
+		# Chercher les formations des examen
+		examens_intervenant = Cour.where(intervenant_binome_id: intervenant_id).select{|cour| cour.examen?}
+		formations_intervenant_from_examens = Formation.where(id: examens_intervenant.pluck(:formation_id))
+
+		{
+		  'Formations catalogue' => formations_intervenant_from_examens.where(hors_catalogue:false).not_archived.ordered.map { |i| i.nom }.uniq,
+		  'Formations hors catalogue' => formations_intervenant_from_examens.where(hors_catalogue:true).not_archived.ordered.map { |i| i.nom }.uniq
+		}
+	end
 
 	private
 	# only one candidate for an nice id; one random UDID

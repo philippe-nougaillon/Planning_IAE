@@ -4,8 +4,14 @@ class AgentsController < ApplicationController
 
   # GET /agents or /agents.json
   def index
+    params[:column_agent] ||= session[:column_agent]
+    params[:direction_agent] ||= session[:direction_agent]
+
     @agents = Agent.reorder(Arel.sql("#{sort_column} #{sort_direction}"))
                    .paginate(page: params[:page], per_page: 10)
+
+    session[:column_agent] = params[:column_agent]
+    session[:direction_agent] = params[:direction_agent]
   end
 
   # GET /agents/1 or /agents/1.json
@@ -74,11 +80,11 @@ class AgentsController < ApplicationController
     end
 
     def sort_column
-        sortable_columns.include?(params[:column]) ? params[:column] : "nom"
+      sortable_columns.include?(params[:column_agent]) ? params[:column_agent] : "nom"
     end
 
     def sort_direction
-        %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
+      %w[asc desc].include?(params[:direction_agent]) ? params[:direction_agent] : "asc"
     end
 
     def is_user_authorized

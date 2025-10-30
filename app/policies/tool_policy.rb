@@ -121,6 +121,14 @@ class ToolPolicy < ApplicationPolicy
     export_etat_liquidatif_collectif?
   end
 
+  def export_codir?
+    user.rh? || user.admin?
+  end
+
+  def export_codir_do?
+    export_codir?
+  end
+
   def audits?
     user.admin?
   end
@@ -234,6 +242,38 @@ class ToolPolicy < ApplicationPolicy
 
   def commande_fait_v2?
     commande_fait?
+  end
+  
+  def edusign?
+    user && user.super_admin?
+  end
+
+  def edusign_do?
+    edusign?
+  end
+
+  # def synchronisation_edusign?
+  #   user && user.admin?
+  # end
+
+  # def synchronisation_edusign_do?
+  #   synchronisation_edusign?
+  # end
+
+  # def initialisation_edusign?
+  #   user && user.super_admin?
+  # end
+
+  # def initialisation_edusign_do?
+  #   initialisation_edusign?
+  # end
+
+  def nouvelle_saison_rh?
+    user && (user.rh? || user.admin?)
+  end
+
+  def nouvelle_saison_rh_do?
+    nouvelle_saison_rh?
   end
 
 end

@@ -3,12 +3,13 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit, :update, :destroy, :reactivate]
   before_action :is_user_authorized
-  
+  skip_before_action :authenticate_user!, only: [:send_otp]
+
   # GET /users
   # GET /users.json
   def index
-    params[:column] ||= session[:column]
-    params[:direction] ||= session[:direction]
+    params[:column_user] ||= session[:column_user]
+    params[:direction_user] ||= session[:direction_user]
 
     @users = User.kept
 
@@ -42,8 +43,8 @@ class UsersController < ApplicationController
       @users = @users.where(id: mauvais_email_users_ids)
     end
 
-    session[:column] = params[:column]
-    session[:direction] = params[:direction]
+    session[:column_user] = params[:column_user]
+    session[:direction_user] = params[:direction_user]
 
     @users = @users
                 .reorder(Arel.sql("#{sort_column} #{sort_direction}"))
@@ -53,8 +54,9 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
-    @audits = Audited.audit_class.where(user_id:@user.id).order("id DESC")
-    @audits = @audits.paginate(page:params[:page], per_page:20)
+    if current_user && !current_user.étudiant?
+      @audits = @user.audits.reorder(id: :desc).paginate(page:params[:page], per_page: 10)
+    end
   end
 
   # GET /users/new
@@ -116,6 +118,54 @@ class UsersController < ApplicationController
     end
   end
 
+  def disable_otp
+    current_user.otp_required_for_login = false
+    current_user.save!
+    redirect_to user_path(current_user), notice: "Double authentification désactivée avec succès !"
+  end
+
+  def enable_otp
+    # Si code de vérification est correct, activer 2FA
+    # Sinon redemander le code
+    if current_user.validate_and_consume_otp!(params[:otp_attempt])
+      current_user.otp_required_for_login = true
+      current_user.otp_method = params[:method]
+      current_user.save!
+      redirect_to user_path(current_user), notice: "Double authentification activée avec succès !"
+    else
+      redirect_to enable_otp_users_path(current_user), alert: "Code de vérification incorrect, veuillez réessayer !"
+    end
+    
+  end
+
+  def qrcode_otp
+    current_user.otp_secret = User.generate_otp_secret
+    current_user.save!
+  end
+
+  def mail_otp
+    current_user.otp_secret = User.generate_otp_secret
+    current_user.save!
+
+    # Envoie le otp par mail
+    UserMailer.mail_otp(current_user).deliver_now
+  end
+
+  def send_otp
+    if (user = User.find_by(email: params[:email])) && user.valid_password?(params[:password])
+      if user.otp_required_for_login
+        if user.otp_method == "email"
+          UserMailer.mail_otp(user).deliver_now
+        end
+        render json: { otp_required: true }
+      else
+        render json: { otp_required: false }
+      end
+    else
+      render json: { error: "Email ou mot de passe incorrect."}
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
@@ -127,11 +177,11 @@ class UsersController < ApplicationController
     end
 
     def sort_column
-      sortable_columns.include?(params[:column]) ? params[:column] : "id"
+      sortable_columns.include?(params[:column_user]) ? params[:column_user] : "id"
     end
 
     def sort_direction
-      %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
+      %w[asc desc].include?(params[:direction_user]) ? params[:direction_user] : "asc"
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
@@ -140,6 +190,6 @@ class UsersController < ApplicationController
     end
 
     def is_user_authorized
-      authorize User
+      authorize @user ? @user : User
     end
 end

@@ -1,0 +1,30 @@
+<div class="border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl">
+    <%= image_tag 'edusign.png', size: 32, class: 'inline' %>
+    Synchronisation
+  </h1>
+</div>
+<br>
+
+<div>
+  <h4 class="text-xl">
+    Cette fonction analyse les <b>changements</b> intervenus dans le Planning IAE 
+    <span class="material-symbols-outlined cursor-help text-xl text-info" title="Ajout/modification des Cours,Intervenants,Formations et Étudiants et les suppression de Cours">
+      info
+    </span>
+    au cours de la <b>dernière heure</b> pour les <b>synchroniser dans Edusign</b>.
+    <br>
+    Seuls les examens et les cours sans intervenant (A CONFIRMER, E-LEARNING Hors_IAE, ETUDIANTS IAE, IAE Interne, EXTERIEUR IAE EXTERIEUR IAE) ne sont pas envoyés.
+  </h4>
+</div>
+<br>
+
+<%= form_tag({action: "synchronisation_edusign_do", method: :post}) do %>
+
+  <div class="flex flex-wrap">
+    <div class="sm:w-1/3">
+      <%= submit_tag "Lancer la synchronisation", class: "btn btn-primary text-white", data: {turbo: false, turbo_confirm: 'Confirmez-vous vouloir démarrer la synchronisation ?'} %>
+    </div>
+  </div>
+
+<% end %>

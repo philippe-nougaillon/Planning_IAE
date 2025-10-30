@@ -10,8 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_12_23_083609) do
+ActiveRecord::Schema[7.2].define(version: 2025_10_20_105928) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
 
   create_table "action_text_rich_texts", force: :cascade do |t|
@@ -69,6 +70,24 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_23_083609) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "attendances", force: :cascade do |t|
+    t.boolean "état"
+    t.datetime "signée_le"
+    t.string "justificatif_edusign_id"
+    t.integer "retard"
+    t.datetime "exclu_le"
+    t.bigint "etudiant_id", null: false
+    t.bigint "cour_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "signature_email_id"
+    t.string "signature"
+    t.integer "edusign_id"
+    t.index ["cour_id"], name: "index_attendances_on_cour_id"
+    t.index ["etudiant_id"], name: "index_attendances_on_etudiant_id"
+    t.index ["signature_email_id"], name: "index_attendances_on_signature_email_id"
+  end
+
   create_table "audits", id: :serial, force: :cascade do |t|
     t.integer "auditable_id"
     t.string "auditable_type"
@@ -108,6 +127,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_23_083609) do
     t.string "commentaires"
     t.boolean "elearning"
     t.integer "code_ue"
+    t.string "edusign_id"
+    t.boolean "no_send_to_edusign"
     t.index ["debut"], name: "index_cours_on_debut"
     t.index ["etat"], name: "index_cours_on_etat"
     t.index ["formation_id"], name: "index_cours_on_formation_id"
@@ -161,8 +182,19 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_23_083609) do
     t.datetime "updated_at", null: false
     t.string "slug"
     t.string "mémo"
+    t.bigint "mail_log_id"
     t.index ["intervenant_id"], name: "index_dossiers_on_intervenant_id"
+    t.index ["mail_log_id"], name: "index_dossiers_on_mail_log_id"
     t.index ["slug"], name: "index_dossiers_on_slug"
+  end
+
+  create_table "edusign_logs", force: :cascade do |t|
+    t.integer "modele_type"
+    t.text "message"
+    t.integer "user_id"
+    t.integer "etat"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "envoi_logs", force: :cascade do |t|
@@ -208,6 +240,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_23_083609) do
     t.string "ville_entreprise"
     t.string "workflow_state"
     t.integer "table", default: 0
+    t.string "edusign_id"
     t.index ["formation_id"], name: "index_etudiants_on_formation_id"
     t.index ["workflow_state"], name: "index_etudiants_on_workflow_state"
   end
@@ -253,6 +286,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_23_083609) do
     t.boolean "hss"
     t.string "courriel"
     t.string "nomtauxtd"
+    t.string "edusign_id"
+    t.boolean "send_to_edusign"
     t.index ["archive"], name: "index_formations_on_archive"
     t.index ["user_id"], name: "index_formations_on_user_id"
   end
@@ -307,6 +342,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_23_083609) do
     t.string "slug"
     t.integer "année_entrée"
     t.string "email2"
+    t.string "edusign_id"
     t.index ["slug"], name: "index_intervenants_on_slug", unique: true
   end
 
@@ -328,6 +364,22 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_23_083609) do
     t.index ["user_id"], name: "index_invits_on_user_id"
   end
 
+  create_table "justificatifs", force: :cascade do |t|
+    t.string "edusign_id"
+    t.string "commentaires"
+    t.bigint "etudiant_id", null: false
+    t.datetime "edusign_created_at"
+    t.datetime "accepte_le"
+    t.datetime "debut"
+    t.datetime "fin"
+    t.string "file_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "motif_id", null: false
+    t.index ["etudiant_id"], name: "index_justificatifs_on_etudiant_id"
+    t.index ["motif_id"], name: "index_justificatifs_on_motif_id"
+  end
+
   create_table "mail_logs", force: :cascade do |t|
     t.string "to"
     t.string "subject"
@@ -335,6 +387,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_23_083609) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id"
+    t.boolean "statut", default: true
+    t.boolean "opened", default: false
+    t.json "error_message"
+    t.string "title"
+  end
+
+  create_table "motifs", force: :cascade do |t|
+    t.integer "edusign_id"
+    t.string "nom"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "notes", force: :cascade do |t|
@@ -419,6 +482,151 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_23_083609) do
     t.index ["discarded_at"], name: "index_salles_on_discarded_at"
   end
 
+  create_table "signature_emails", force: :cascade do |t|
+    t.integer "nb_envoyee"
+    t.string "requete_edusign_id"
+    t.datetime "limite"
+    t.boolean "second_envoi"
+    t.datetime "envoi_email"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "attendance_id"
+    t.index ["attendance_id"], name: "index_signature_emails_on_attendance_id"
+  end
+
+  create_table "solid_queue_blocked_executions", force: :cascade do |t|
+    t.bigint "job_id", null: false
+    t.string "queue_name", null: false
+    t.integer "priority", default: 0, null: false
+    t.string "concurrency_key", null: false
+    t.datetime "expires_at", null: false
+    t.datetime "created_at", null: false
+    t.index ["concurrency_key", "priority", "job_id"], name: "index_solid_queue_blocked_executions_for_release"
+    t.index ["expires_at", "concurrency_key"], name: "index_solid_queue_blocked_executions_for_maintenance"
+    t.index ["job_id"], name: "index_solid_queue_blocked_executions_on_job_id", unique: true
+  end
+
+  create_table "solid_queue_claimed_executions", force: :cascade do |t|
+    t.bigint "job_id", null: false
+    t.bigint "process_id"
+    t.datetime "created_at", null: false
+    t.index ["job_id"], name: "index_solid_queue_claimed_executions_on_job_id", unique: true
+    t.index ["process_id", "job_id"], name: "index_solid_queue_claimed_executions_on_process_id_and_job_id"
+  end
+
+  create_table "solid_queue_failed_executions", force: :cascade do |t|
+    t.bigint "job_id", null: false
+    t.text "error"
+    t.datetime "created_at", null: false
+    t.index ["job_id"], name: "index_solid_queue_failed_executions_on_job_id", unique: true
+  end
+
+  create_table "solid_queue_jobs", force: :cascade do |t|
+    t.string "queue_name", null: false
+    t.string "class_name", null: false
+    t.text "arguments"
+    t.integer "priority", default: 0, null: false
+    t.string "active_job_id"
+    t.datetime "scheduled_at"
+    t.datetime "finished_at"
+    t.string "concurrency_key"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["active_job_id"], name: "index_solid_queue_jobs_on_active_job_id"
+    t.index ["class_name"], name: "index_solid_queue_jobs_on_class_name"
+    t.index ["finished_at"], name: "index_solid_queue_jobs_on_finished_at"
+    t.index ["queue_name", "finished_at"], name: "index_solid_queue_jobs_for_filtering"
+    t.index ["scheduled_at", "finished_at"], name: "index_solid_queue_jobs_for_alerting"
+  end
+
+  create_table "solid_queue_pauses", force: :cascade do |t|
+    t.string "queue_name", null: false
+    t.datetime "created_at", null: false
+    t.index ["queue_name"], name: "index_solid_queue_pauses_on_queue_name", unique: true
+  end
+
+  create_table "solid_queue_processes", force: :cascade do |t|
+    t.string "kind", null: false
+    t.datetime "last_heartbeat_at", null: false
+    t.bigint "supervisor_id"
+    t.integer "pid", null: false
+    t.string "hostname"
+    t.text "metadata"
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.index ["last_heartbeat_at"], name: "index_solid_queue_processes_on_last_heartbeat_at"
+    t.index ["name", "supervisor_id"], name: "index_solid_queue_processes_on_name_and_supervisor_id", unique: true
+    t.index ["supervisor_id"], name: "index_solid_queue_processes_on_supervisor_id"
+  end
+
+  create_table "solid_queue_ready_executions", force: :cascade do |t|
+    t.bigint "job_id", null: false
+    t.string "queue_name", null: false
+    t.integer "priority", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.index ["job_id"], name: "index_solid_queue_ready_executions_on_job_id", unique: true
+    t.index ["priority", "job_id"], name: "index_solid_queue_poll_all"
+    t.index ["queue_name", "priority", "job_id"], name: "index_solid_queue_poll_by_queue"
+  end
+
+  create_table "solid_queue_recurring_executions", force: :cascade do |t|
+    t.bigint "job_id", null: false
+    t.string "task_key", null: false
+    t.datetime "run_at", null: false
+    t.datetime "created_at", null: false
+    t.index ["job_id"], name: "index_solid_queue_recurring_executions_on_job_id", unique: true
+    t.index ["task_key", "run_at"], name: "index_solid_queue_recurring_executions_on_task_key_and_run_at", unique: true
+  end
+
+  create_table "solid_queue_recurring_tasks", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "schedule", null: false
+    t.string "command", limit: 2048
+    t.string "class_name"
+    t.text "arguments"
+    t.string "queue_name"
+    t.integer "priority", default: 0
+    t.boolean "static", default: true, null: false
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["key"], name: "index_solid_queue_recurring_tasks_on_key", unique: true
+    t.index ["static"], name: "index_solid_queue_recurring_tasks_on_static"
+  end
+
+  create_table "solid_queue_scheduled_executions", force: :cascade do |t|
+    t.bigint "job_id", null: false
+    t.string "queue_name", null: false
+    t.integer "priority", default: 0, null: false
+    t.datetime "scheduled_at", null: false
+    t.datetime "created_at", null: false
+    t.index ["job_id"], name: "index_solid_queue_scheduled_executions_on_job_id", unique: true
+    t.index ["scheduled_at", "priority", "job_id"], name: "index_solid_queue_dispatch_all"
+  end
+
+  create_table "solid_queue_semaphores", force: :cascade do |t|
+    t.string "key", null: false
+    t.integer "value", default: 1, null: false
+    t.datetime "expires_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["expires_at"], name: "index_solid_queue_semaphores_on_expires_at"
+    t.index ["key", "value"], name: "index_solid_queue_semaphores_on_key_and_value"
+    t.index ["key"], name: "index_solid_queue_semaphores_on_key", unique: true
+  end
+
+  create_table "sujets", force: :cascade do |t|
+    t.bigint "cour_id", null: false
+    t.bigint "mail_log_id"
+    t.string "workflow_state"
+    t.string "slug"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "message"
+    t.index ["cour_id"], name: "index_sujets_on_cour_id"
+    t.index ["mail_log_id"], name: "index_sujets_on_mail_log_id"
+  end
+
   create_table "unites", id: :serial, force: :cascade do |t|
     t.integer "formation_id"
     t.string "nom"
@@ -453,6 +661,11 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_23_083609) do
     t.boolean "reserver"
     t.datetime "discarded_at", precision: nil
     t.integer "role", default: 0
+    t.string "otp_secret"
+    t.integer "consumed_timestep"
+    t.boolean "otp_required_for_login"
+    t.string "unique_session_id"
+    t.integer "otp_method"
     t.index ["discarded_at"], name: "index_users_on_discarded_at"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["formation_id"], name: "index_users_on_formation_id"
@@ -495,18 +708,33 @@ ActiveRecord::Schema[7.1].define(version: 2024_12_23_083609) do
   end
 
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "attendances", "cours"
+  add_foreign_key "attendances", "etudiants"
+  add_foreign_key "attendances", "signature_emails"
   add_foreign_key "documents", "dossiers"
   add_foreign_key "dossier_etudiants", "etudiants"
+  add_foreign_key "dossiers", "mail_logs"
   add_foreign_key "evaluations", "etudiants"
   add_foreign_key "invits", "cours"
   add_foreign_key "invits", "intervenants"
   add_foreign_key "invits", "users"
+  add_foreign_key "justificatifs", "etudiants"
+  add_foreign_key "justificatifs", "motifs"
   add_foreign_key "notes", "users"
   add_foreign_key "options", "cours"
   add_foreign_key "options", "users"
   add_foreign_key "presences", "cours"
   add_foreign_key "presences", "etudiants"
   add_foreign_key "presences", "intervenants"
+  add_foreign_key "signature_emails", "attendances", on_delete: :nullify
+  add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "solid_queue_failed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "solid_queue_ready_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "sujets", "cours"
+  add_foreign_key "sujets", "mail_logs"
   add_foreign_key "vacation_activite_tarifs", "vacation_activites"
   add_foreign_key "vacations", "vacation_activites"
 

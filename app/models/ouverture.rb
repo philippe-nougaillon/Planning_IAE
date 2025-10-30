@@ -1,7 +1,7 @@
 class Ouverture < ApplicationRecord
   audited
 
-  enum jour: {dimanche: 0, lundi: 1, mardi: 2, mercredi: 3, jeudi: 4, vendredi: 5, samedi: 6}
+  enum :jour, {dimanche: 0, lundi: 1, mardi: 2, mercredi: 3, jeudi: 4, vendredi: 5, samedi: 6}
 
   default_scope {order(:bloc, :jour)}
 

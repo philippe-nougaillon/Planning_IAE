@@ -16,7 +16,7 @@ class VacationsController < ApplicationController
     end
 
     if params[:formation].present?
-      formation_id = Formation.find_by(nom: params[:formation].rstrip)
+      formation_id = Formation.not_archived.find_by(nom: params[:formation].rstrip).id
       @vacations = @vacations.where(formation_id: formation_id)
     end
 

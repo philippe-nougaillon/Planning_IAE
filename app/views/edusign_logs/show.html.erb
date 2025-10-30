@@ -1,0 +1,34 @@
+<div class="border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl">
+    <%= image_tag 'edusign.png', size: 32, class: 'inline' %>
+    Log synchro Edusign #<%= @edusign_log.id %>
+  </h1>
+</div>
+
+<dl class="flex flex-wrap">
+  <div class="relative flex-grow max-w-full flex-1">
+    <strong>Le</strong>
+    <p class="mb-4"><%= l(@edusign_log.created_at.in_time_zone('Paris')) %></p>
+    
+    <strong>État</strong>
+    <p class="mb-4">
+      <%= fa_icon @edusign_log.icon_etat, class: @edusign_log.icon_color %>
+      <%= @edusign_log.etat.humanize %>
+    </p>
+    
+
+  </div>
+
+  <div class="relative flex-grow max-w-full flex-1">
+    <strong>Type</strong>
+    <p class="mb-4"><%= @edusign_log.modele_type.humanize %></p>
+
+    <strong>Par</strong>
+    <p class="mb-4"><%= @edusign_log.username %></p>
+  </div>
+</dl>
+
+<div class="mb-4">
+  <strong>Message</strong>
+  <%= simple_format(@edusign_log.message) %>
+</div>

@@ -1,0 +1,87 @@
+<div class="border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'exclamation-triangle' %> <%= params[:action_name] %></h1>
+</div>
+
+<%= form_tag :action_do_formations do %>
+
+	<%= hidden_field_tag :action_name, params[:action_name] %>
+
+  <h3 class="text-2xl">Formations sélectionnées</h3>
+
+  <div class="overflow-x-auto">
+    <table class="table table-sm">
+      <thead class="bg-slate-100 border">
+        <tr>
+          <th></th>
+          <th>Nom</th>
+          <th>Abrg.</th>
+          <th>Etudiants</th>
+          <th>Code</th>
+          <th>Planifiés</th>
+          <th>Confirmés</th>
+          <th>Réalisés</th>
+          <th>Edusign ID?</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @formations.each do |formation| %>
+          <% formation_cours = formation.cours %>
+          <% formation_cours_planifié_count = formation_cours.planifié.count %>
+          <tr class="hover border">
+            <td><%= check_box_tag "formations_id[#{formation.id}]", true, true %></td>
+            <td><b><%= link_to formation.nom, formation, class: 'text-primary hover:underline' %></b></td>
+            <td><%= formation.abrg %></td>
+            <td class="text-right"><%= formation.nbr_etudiants %></td>
+            <td><%= formation.code_analytique %></td>
+            <td class="text-right">
+                <%= link_to_unless formation_cours_planifié_count.zero?, formation_cours_planifié_count, cours_path(ids:formation_cours.planifié.pluck(:id)), class: 'text-primary hover:underline' %>
+            </td>
+            <td class="text-right">
+                <% formation_cours_confirmé_count = formation_cours.confirmé.count %>
+                <%= link_to_unless (formation.archive || formation_cours_confirmé_count.zero?), formation_cours_confirmé_count, cours_path(ids:formation_cours.confirmé.pluck(:id), filter:'all'), class: 'text-primary hover:underline' %>
+            </td>
+            <td class="text-right">
+                <% formation_cours_réalisé_count = formation_cours.réalisé.count %>
+                <%= link_to_unless (formation.archive || formation_cours_réalisé_count.zero?), formation_cours_réalisé_count, cours_path(ids:formation_cours.réalisé.pluck(:id), filter:'all'), class: 'text-primary hover:underline' %>
+            </td>
+            <td class="text-center">
+              <%= fa_icon 'check' if formation.edusign_id? %>
+            </td>
+          </tr>
+        <% end%>
+
+      </tbody>
+
+      <tfoot>
+        <tr>
+          <th colspan=8></th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <% if params[:action_name] == "Changer de gestionnaire" %>
+    <h3 class="text-2xl">
+      Changer de gestionnaire
+    </h3>
+    <div class="sm:w-1/2">
+      <%= label_tag :user_id, "Nouveau gestionnaire" %>    
+      <%= select_tag :user_id, 
+                      options_from_collection_for_select(User.where.not(nom: nil).where.not(role: "étudiant").order(:nom), :id, :nom_prénom_role, params[:user_id]), 
+                      include_blank:true, class:"slim-select" %>
+    </div>
+  <% elsif params[:action_name] == "Archiver formation et désactiver les étudiants" %>
+    <p class="text-lg font-black">
+      Attention, l'archivage des formations provoquera la désactivation des comptes d'accès étudiants.
+    </p>
+  <% end %>
+
+  <div class="flex flex-wrap mb-12 mt-4">
+    <div class="sm:w-full">
+      <%= submit_tag 'Appliquer', class:"btn btn-primary text-white", 'data-turbo': false %>
+      <%= link_to 'Annuler', formations_path, class:"btn btn-light" %>
+    </div>
+  </div>
+
+<% end %>

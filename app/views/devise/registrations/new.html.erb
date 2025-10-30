@@ -2,7 +2,7 @@
   <% unless request.variant.include?(:phone) %>
     <%= image_tag "logo@2000.png", style: "width: 100%; max-width: 500px;" %>
   <% end %>
-  <div class="border border-gray-900 rounded shadow p-6 w-full" style="max-width: 500px">
+  <div class="w-full" style="max-width: 500px">
     <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
       <%= render "devise/shared/error_messages", resource: resource %>
       <h1 class="text-4xl text-center border-b mb-4 pb-4">

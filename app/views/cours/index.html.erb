@@ -8,13 +8,18 @@
   <% end %>
 <% end %>
 
-<div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
-  <h1 class="text-3xl"><%= fa_icon 'calendar-alt' %> Planning des cours</h1>
+<div class="flex items-center justify-between border-b mt-6 mb-4 pb-4">
+  <h1 class="text-3xl flex items-center gap-3">
+    <span class="material-symbols-outlined text-3xl">
+      calendar_month
+    </span>
+    Planning des cours
+  </h1>
   <% if policy(Cour).new? %>
     <%= link_to new_cour_path(formation: session[:formation], 
                               debut: DateTime.now), 
-                              class: 'text-primary' do %>
-      <%= fa_icon 'plus-circle' %> Cours
+                              class: 'btn btn-sm btn-primary btn-outline hover:!text-white' do %>
+      <%= fa_icon 'plus-circle' %> Nouvelle réservation
     <% end %>
   <% end %>
 </div>
@@ -22,31 +27,33 @@
 <div class="bs-container p-4 shadow mb-4">
   <%= form_tag cours_path, method: :get do %>
     <div class="flex flex-wrap">
-      <div class="sm:w-5/12 pr-2">
+      <div class="sm:w-5/12 pr-2 flex flex-col justify-between">
         <%= label_tag :formation %>   
         <%= select_tag :formation, grouped_options_for_select(Formation.for_select, params[:formation]), class: 'slim-select',
                         include_blank:true, onchange: 'this.form.submit()' %>
       </div>
 
-      <div class="sm:w-2/12 px-2">
+      <div class="sm:w-2/12 px-2 flex flex-col justify-between">
         <%= label_tag :ue, "U.E." %>   
         <%= select_tag :ue, options_for_select((0..20), params[:ue]), class:'slim-select',
                         include_blank:true, onchange: 'this.form.submit()' %>
       </div>
       <% if user_signed_in? %>
-        <div class="sm:w-5/12 pl-2">
+        <div class="sm:w-5/12 pl-2 flex flex-col justify-between">
           <%= label_tag :intervenant %>
           <div class="join w-full">
             <%= select_tag :intervenant, grouped_options_for_select(Intervenant.for_select, params[:intervenant]), 
-                            class: "slim-select join-item",
+                            class: "slim-select",
                             include_blank:true,
                             onchange: 'this.form.submit()' %>
-            <% if params.values.count(nil) < 5 %>
-              <%= button_tag name: 'commit', value: 'RàZ', class: "btn text-slate-500 btn-sm join-item", title: "Remise à zéro des filtres" do %>
+            <!--
+            <%# if params.values.count(nil) < 5 %>
+              <%# button_tag name: 'commit', value: 'RàZ', class: "btn text-slate-500 btn-sm", title: "Remise à zéro des filtres" do %>
                 <i class="fas fa-times"></i> 
                 RàZ
-              <% end %>
-            <% end %>
+              <%# end %>
+            <%# end %>
+            -->
           </div>
         </div>
       <% else %>
@@ -61,15 +68,20 @@
     <div class="flex flex-wrap">
       <div class="sm:w-2/12 ">
         <%= label_tag :filter, "Cours" %>
-        <br> 
-        <%= radio_button_tag :filter, "all", (params[:filter]=='all'), onchange:'this.form.submit()' %>
-        Tous 
-        <span class="mr-5"></span>
-        <%= radio_button_tag :filter, "upcoming", (params[:filter]=='upcoming'), onchange:'this.form.submit()' %>
-        À venir :
+        <div class="flex flex-wrap gap-2 mt-1">
+          <label class="flex items-center gap-1 cursor-pointer mr-5">
+            <%= radio_button_tag :filter, "all", (params[:filter]=='all'), onchange:'this.form.submit()', class: 'radio radio-xs' %>
+            <span class="label-text">Tous</span>
+          </label> 
+        
+          <label class="flex items-center gap-1 cursor-pointer">
+            <%= radio_button_tag :filter, "upcoming", (params[:filter]=='upcoming'), onchange:'this.form.submit()', class: 'radio radio-xs' %>
+            <span class="label-text">À venir :</span>
+          </label>
+        </div >
       </div>
 
-      <div class="sm:w-2/12">
+      <div class="sm:w-2/12 px-2">
         <%= label_tag :start_date, "A partir du" %>    
         <%= text_field_tag :start_date, params[:start_date], type: 'date', onchange: 'this.form.submit()', class: "input input-bordered input-sm w-full" %>
       </div>
@@ -87,25 +99,40 @@
 
       <div class="sm:w-3/12 px-2">
         <%= label_tag :view, "Vue" %>
-        <br>
-        <%= radio_button_tag :view, "list", (params[:view]=='list'), onchange:'this.form.submit()' %>
-        Liste 
-        <%= radio_button_tag :view, "calendar_rooms", (params[:view]=='calendar_rooms'), onchange:'this.form.submit()' %>    
-        Salles
-        <%= radio_button_tag :view, "calendar_week", (params[:view]=='calendar_week'), onchange:'this.form.submit()' %>
-        Sem
-        <%= radio_button_tag :view, "calendar_month", (params[:view]=='calendar_month'), onchange:'this.form.submit()' %>
-        Mois 
+        <div class="flex flex-wrap gap-2 mt-1">
+          <label class="flex items-center gap-1 cursor-pointer">
+            <%= radio_button_tag :view, "list", (params[:view]=='list'), onchange:'this.form.submit()', class: 'radio radio-xs' %>
+            <span class="label-text">Liste</span>
+          </label>
+          <label class="flex items-center gap-1 cursor-pointer">
+            <%= radio_button_tag :view, "calendar_rooms", (params[:view]=='calendar_rooms'), onchange:'this.form.submit()', class: 'radio radio-xs' %>    
+            <span class="label-text">Salles</span>
+          </label>
+          <label class="flex items-center gap-1 cursor-pointer">
+            <%= radio_button_tag :view, "calendar_week", (params[:view]=='calendar_week'), onchange:'this.form.submit()', class: 'radio radio-xs' %>
+            <span class="label-text">Sem.</span>
+          </label>
+          <label class="flex items-center gap-1 cursor-pointer">
+            <%= radio_button_tag :view, "calendar_month", (params[:view]=='calendar_month'), onchange:'this.form.submit()', class: 'radio radio-xs' %>
+            <span class="label-text">Mois</span>
+          </label>
+        </div>
       </div>
 
       <div class="sm:w-2/12 pl-2">
         <% if params[:view] == 'list' %>
           <%= label_tag :paginate, "Afficher" %>
-          <br> 
-          <%= radio_button_tag :paginate, "pages", (params[:paginate]=='pages'), onchange:'this.form.submit()' %>
-          Pages 
-          <%= radio_button_tag :paginate, "all", (params[:paginate]=='all'), onchange:'this.form.submit()' %>
-          Tout 
+          <div class="flex flex-wrap gap-2 mt-1">
+            <label class="flex items-center gap-1 cursor-pointer">
+              <%= radio_button_tag :paginate, "pages", (params[:paginate]=='pages'), onchange:'this.form.submit()', class: 'radio radio-xs' %>
+              <span class="label-text">Pages</span>
+            </label>
+            <label class="flex items-center gap-1 cursor-pointer" title="<%= "La pagination est active lorsqu'il n'y a pas de formation ou d'intervenant sélectionné" if disabled_paginate?(params) %>">
+              <%= radio_button_tag :paginate, "all", (params[:paginate]=='all'), onchange:'this.form.submit()', disabled: disabled_paginate?(params), class: 'radio radio-xs' %>
+              <span class="label-text">Tout</span>
+            </label>
+          </div>
+
         <% end %>
       </div>
     </div>
@@ -146,11 +173,11 @@
               <% @cours.includes(:formation, :intervenant, :salle).each do | cours | %>
 
                 <% if cours.debut.to_date != current_date %>
-                  <tr class="shadow bg-slate-50">
-                    <% if policy(Cour).action? %><th></th><% end %>
+                  <tr class="border bg-slate-50">
                     <th colspan=<%= policy(Cour).action? ? '9' : '8' %>>
-                      <%= fa_icon 'calendar-day' %>
-                      <b><%= l(cours.debut.to_date, format: :long).humanize %></b> 
+                      <div class="flex items-center gap-1 text-xl font-normal">
+                        <%= l(cours.debut.to_date, format: :long).humanize %>
+                      </div>
                     </th>
                   </tr>
                   <% current_date = cours.debut.to_date %>

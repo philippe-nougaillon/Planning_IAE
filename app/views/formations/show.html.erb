@@ -1,4 +1,4 @@
-<div class="card shadow p-4 my-8" style="border-left: .3rem solid <%= @formation.try(:positive_color) %>">
+<div class="card shadow p-4 my-8" style="border-left: .3rem solid <%= @formation.positive_color %>">
   <div class="mb-6">
     <div class="join float-right">
       <% if policy(@formation).edit? %>
@@ -17,7 +17,9 @@
     <div class="sm:w-1/12 pr-4">
       <h2 class="text-3xl">
         <span style="opacity: 80%;color:<%= @formation.color %>">
-          <%= fa_icon 'briefcase 2x' %>
+          <span class="material-symbols-outlined text-6xl">
+            work
+          </span>
         </span>
       </h2>
     </div>    
@@ -56,12 +58,12 @@
     <div class="sm:w-1/3 px-4">
       <h3 class="text-2xl">
         <small class="text-secondary">Abrégé</small><br>
-        <%= @formation.try(:abrg) %>
+        <%= @formation.abrg %>
       </h3>
       <br> 
       <h4 class="text-xl">
         <small class="text-secondary">Gestionnaire de formation</small><br>
-        <%= @formation.try(:user).try(:email) %>
+        <%= @formation.user.try(:email) %>
       </h4>
     </div>
   </div>
@@ -111,7 +113,7 @@
       </h3>
 
       <div class="flex flex-wrap items-center gap-2">
-        <% @salles_habituelles.each do |salle_id, count| %>
+        <% @salles_habituelles_ids.each do |salle_id, count| %>
           <% salle = Salle.find(salle_id) %>
           <span class="text-success"
                 style="font-size: calc( .25rem + <%= [1.5, (count.fdiv(@average_count))].min %>rem); " 
@@ -148,10 +150,10 @@
           <% @formation.unites.each do | unite | %>
             <tr class="hover border">
               <% cours = @formation.cours.where(code_ue: unite.code) %>
-              <td style="text-align: right;"><%= link_to unite.code, cours_path(formation_id: @formation, ue: unite.num), class: 'text-primary hover:underline' %></td>
+              <td style="text-align: right;"><%= link_to_unless @formation.archive, unite.code, cours_path(formation_id: @formation, ue: unite.num), class: 'text-primary hover:underline' %></td>
               <td><%= unite.nom %></td>
               <td style="text-align: right;"><%= unite.séances %></td>
-              <td style="text-align: right;"><%= link_to cours.count, cours_path(formation_id: @formation, ue: unite.num, filter: 'all'), class: 'text-primary hover:underline' %></td>
+              <td style="text-align: right;"><%= link_to_unless @formation.archive, cours.count, cours_path(formation_id: @formation, ue: unite.num, filter: 'all'), class: 'text-primary hover:underline' %></td>
               <td style="text-align: right;">
                 <%= total_prévu = unite.heures %> h
               </td>

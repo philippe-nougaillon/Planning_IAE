@@ -2,7 +2,14 @@
 <% formation_cours_planifié_count = formation_cours.planifié.count %>
 
 <tr class="hover border <%= formation_cours_planifié_count != 0 ? 'bg-info' : '' %>">
-    <td style="border-left: .3rem solid <%= formation.try(:positive_color) %>">
+    <% if policy(Formation).action? %>
+        <td>
+            <span class="flex" data-action="click->action#click">
+            <%= check_box_tag "formations_id[#{formation.id}]", 'yes', false, data: {"action-target": "source", "checkbox-select-all-target": "checkbox"} %>
+            </span>
+        </td>
+    <% end %>
+    <td style="border-left: .3rem solid <%= formation.positive_color %>">
         <b><%= link_to formation.nom, formation, class: 'text-primary hover:underline' %></b>
     </td>
     <td><%= formation.abrg %></td>
@@ -19,6 +26,9 @@
         <% formation_cours_réalisé_count = formation_cours.réalisé.count %>
         <%= link_to_unless (formation.archive || formation_cours_réalisé_count.zero?), formation_cours_réalisé_count, cours_path(ids:formation_cours.réalisé.pluck(:id), filter:'all'), class: 'text-primary hover:underline' %>
     </td>
+    <td class="text-center">
+        <%= fa_icon 'check' if formation.edusign_id? %>
+    </td>
     <td>
         <%= link_to edit_formation_path(formation), class: "btn btn-ghost btn-xs" do %>
             <%= fa_icon 'edit' %>
@@ -27,7 +37,7 @@
     <td>
         <% unless formation_cours.any? %>
             <%= link_to(formation, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: "btn btn-ghost btn-xs") do %>
-                <%= fa_icon 'trash-alt' %>
+                <%= fa_icon 'trash' %>
             <% end %>
         <% end %>
     </td>

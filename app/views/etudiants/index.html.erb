@@ -1,7 +1,12 @@
 <div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
-  <h1 class="text-3xl"><%= fa_icon 'graduation-cap' %> Liste des étudiants</h1>
+  <h1 class="text-3xl flex items-center gap-3">
+    <span class="material-symbols-outlined text-3xl">
+      school
+    </span>
+    Liste des étudiants
+  </h1>
   <% if policy(Etudiant).new? %>
-    <%= link_to new_etudiant_path, class: 'text-primary' do %>
+    <%= link_to new_etudiant_path, class: 'btn btn-sm btn-primary btn-outline hover:!text-white' do %>
       <%= fa_icon 'plus-circle' %> Etudiant
     <% end %>
   <% end %>
@@ -54,6 +59,7 @@
             <th>Email</th>
             <th>Formation</th>
             <th><%= sort_link 'etudiants.updated_at', 'MàJ il y a' %></th>
+            <th><%= sort_link 'etudiants.edusign_id', 'Edusign' %></th>
             <th colspan="2"></th>
           </tr>
         </thead>
@@ -75,7 +81,7 @@
         Choisir une action à exécuter sur les étudiants sélectionnés
       </span>
       <br>
-      <%= select_tag "action_name", options_for_select(["Création de compte d'accès", "Changer de formation", "Supprimer"]), include_blank:true, class:"select select-bordered select-sm", onchange:'this.form.submit()' %>
+      <%= select_tag "action_name", options_for_select(["Création de compte d'accès", "Réactiver compte d'accès", "Changer de formation", "Supprimer"]), include_blank:true, class:"select select-bordered select-sm", onchange:'this.form.submit()' %>
     </div>
   </div>
 <% end %>
