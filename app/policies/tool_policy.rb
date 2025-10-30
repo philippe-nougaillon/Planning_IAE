@@ -233,7 +233,7 @@ class ToolPolicy < ApplicationPolicy
 
   def commande_fait?
     # Accueil et utilisateurs autorisés
-    user && (user.accueil? || ENV["USER_COMMAND_FAIT_IDS"].split(',').map(&:to_i).include?(user.id))
+    user && (user.accueil? || ENV["USER_COMMAND_AUTHORIZATION_IDS"].split(',').map(&:to_i).include?(user.id))
   end
 
   def commandes_v2?
