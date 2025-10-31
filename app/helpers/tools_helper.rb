@@ -144,7 +144,7 @@ module ToolsHelper
                 if salle_before
                     return "Salle changée de '#{salle_before}' à '#{salle_after}'"
                 else
-                    return "Cours mis en salle '#{salle_after}"
+                    return "Cours mis en salle '#{salle_after}'"
                 end
             else 
                 if salle_id.class.name == 'Integer' 
