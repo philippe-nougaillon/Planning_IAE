@@ -66,7 +66,7 @@ namespace :cours do
         cours = cours.where("intervenant_id = ? AND intervenant_binome_id = ?", envoi_specs.cible_id, intervenant.id)
       else
         # Tous les examens
-        cours = cours.where("intervenant_id = ANY ('{#{ENV["ALL_EXAMENS_IDS"]}}'::int[]) AND intervenant_binome_id = ?", intervenant.id)
+        cours = cours.where("intervenant_id = ANY ('{#{ENV["ALL_INTERVENANT_EXAMENS_IDS"]}}'::int[]) AND intervenant_binome_id = ?", intervenant.id)
       end
 
       cours = cours.order(:debut)

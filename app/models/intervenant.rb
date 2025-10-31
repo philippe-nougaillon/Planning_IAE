@@ -127,7 +127,7 @@ class Intervenant < ApplicationRecord
   end
 
 	def self.examens_ids
-		ENV["ALL_EXAMENS_IDS"].split(',').map(&:to_i)
+		ENV["ALL_INTERVENANT_EXAMENS_IDS"].split(',').map(&:to_i)
 	end
 
 	def self.intervenants_examens

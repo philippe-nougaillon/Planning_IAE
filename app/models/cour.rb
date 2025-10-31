@@ -355,14 +355,12 @@ class Cour < ApplicationRecord
 
   def type_examen
     case self.intervenant_id
-    when ENV["EXAMEN_ID"].to_i
+    when ENV["INTERVENANT_EXAMEN_ID"].to_i
       "Examen"
-    when ENV["EXAMEN_RATTRAPRAGE_ID"].to_i
+    when ENV["INTERVENANT_EXAMEN_RATTRAPRAGE_ID"].to_i
       "Examen Rattrapage"
-    when ENV["EXAMEN_TIERS_TEMPS_ID"].to_i
+    when ENV["INTERVENANT_EXAMEN_TIERS_TEMPS_ID"].to_i
       "Examen Tiers-Temps"
-    else
-      puts ENV["EXAMEN_ID"].to_i
     end
   end
 

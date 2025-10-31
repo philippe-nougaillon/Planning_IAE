@@ -811,7 +811,7 @@ class ExportPdf
     end
 
     def convocation(cour, étudiant, papier, calculatrice, ordi_tablette, téléphone, dictionnaire)
-        is_examen_rattrapage = cour.intervenant_id == ENV["EXAMEN_RATTRAPRAGE_ID"].to_i
+        is_examen_rattrapage = cour.intervenant_id == ENV["INTERVENANT_EXAMEN_RATTRAPRAGE_ID"].to_i
 
         font "OpenSans"
 
