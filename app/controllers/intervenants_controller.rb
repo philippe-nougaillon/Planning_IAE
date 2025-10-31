@@ -2,8 +2,8 @@
 
 class IntervenantsController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[ invitations calendrier ]
-  before_action :set_intervenant, only: [:show, :invitations, :edit, :update, :destroy, :calendrier]
-  before_action :is_user_authorized
+  before_action :set_intervenant, only: [:show, :invitations, :edit, :update, :destroy, :calendrier, :sujets]
+  before_action :is_user_authorized, except: [:sujets]
 
   # check if logged and admin  
   # before_filter do 
@@ -138,6 +138,30 @@ class IntervenantsController < ApplicationController
         render plain: @calendar.to_ical
       end
     end
+  end
+
+  def sujets
+    authorize @intervenant
+
+    @sujets = Sujet.joins(:cour).where('cour.intervenant_binome_id': @intervenant_user_id).ordered
+
+    # Si on a pas de workflow, on récupère tous les sujets, et on prend ceux archivés si la case "Inclure les archivés ?" est coché
+    # Sinon, on prend en fonction du workflow choisi sans prendre en compte la case pour les archives
+    if params[:workflow_state].blank?
+      if params[:archive].blank?
+        @sujets = @sujets.where.not(workflow_state: "archivé")
+      end
+    else
+      @sujets = @sujets.where("workflow_state = ?", params[:workflow_state].to_s.downcase)
+    end
+
+    if params[:formation].present?
+      formation_id = Formation.find_by(nom: params[:formation]).id
+      examens_from_formation = Cour.where(formation_id: formation_id).select{|cour| cour.examen?}
+      @sujets = @sujets.where(cour_id: examens_from_formation)
+    end
+
+    @sujets = @sujets.paginate(page: params[:page], per_page: 20)
   end
 
   private

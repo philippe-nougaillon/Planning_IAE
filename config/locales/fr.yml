@@ -301,6 +301,10 @@ fr:
     registrations:
       new:
         title: Inscription
+    mail_otp:
+      title: Activation 2FA par email
+    qrcode_otp:
+      title: Activation 2FA par QR Code
   pages:
     mentions_légales:
       title: Mentions légales
@@ -356,6 +360,8 @@ fr:
       title: Modification d'un intervenant
     invitations:
       title: Invitations
+    sujets:
+      title: Sujets d'examens
   etudiants:
     index:
       title: Liste des étudiants
@@ -387,6 +393,8 @@ fr:
       title: États de services
     export_etat_liquidatif_collectif:
       title: Export état liquidatif collectif
+    export_codir:
+      title: Export CoDir
     liste_surveillants_examens:
       title: Liste des surveillances d'examens
     liste_surveillants_examens_v2:

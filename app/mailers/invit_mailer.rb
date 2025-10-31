@@ -3,7 +3,7 @@ class InvitMailer < ApplicationMailer
   def envoyer_invitation
     @invit = params[:invit]
     mail(to: @invit.intervenant.email, 
-         subject:"[PLANNING] Proposition de créneaux pour placer vos cours #{ @invit.cour.formation.nom } à l’IAE Paris-Sorbonne").tap do |message|
+         subject: params[:title]).tap do |message|
           message.mailgun_options = {
             "tag" => [@invit.intervenant.email, "invitation"]
           }

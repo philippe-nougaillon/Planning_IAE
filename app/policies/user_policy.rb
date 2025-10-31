@@ -49,4 +49,24 @@ class UserPolicy < ApplicationPolicy
     user.role_number >= 2 || (user.role_number == 1 && user.partenaire_qse?)
   end
 
+  def enable_otp?
+    user && user.role_number >= 4
+  end
+
+  def disable_otp?
+    enable_otp?
+  end
+
+  def qrcode_otp?
+    enable_otp?
+  end
+
+  def mail_otp?
+    enable_otp?
+  end
+
+  def send_otp?
+    true
+  end
+
 end

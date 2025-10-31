@@ -63,8 +63,9 @@ class EtudiantsController < ApplicationController
           user = User.new(nom: @etudiant.nom, prénom: @etudiant.prénom, email: @etudiant.email, mobile: @etudiant.mobile, password: SecureRandom.base64(12))
           if user.valid?
             user.save
-            mailer_response = EtudiantMailer.welcome_student(user).deliver_now
-            MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: @etudiant.email, subject: "Nouvel accès étudiant")
+            title = "[PLANNING IAE Paris] Bienvenue !"
+            mailer_response = EtudiantMailer.welcome_student(user, title).deliver_now
+            MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: @etudiant.email, subject: "Nouvel accès étudiant", title: title)
             flash[:notice] = "Etudiant créé avec succès. Accès créé, étudiant informé"
           else
             flash.delete(:notice)
@@ -144,11 +145,12 @@ class EtudiantsController < ApplicationController
       comptes_créés = 0
       @etudiants.each do |etudiant|
         unless User.find_by(email: etudiant.email)
-          user = User.new(nom: etudiant.nom, prénom: etudiant.prénom, email: etudiant.email, mobile: etudiant.mobile, password: SecureRandom.hex(10))
+          user = User.new(nom: etudiant.nom, prénom: etudiant.prénom, email: etudiant.email, mobile: etudiant.mobile, password: SecureRandom.base64(12))
           if user.valid? && user.email.include?('@etu.univ-paris1.fr')
             user.save
-            mailer_response = EtudiantMailer.welcome_student(user).deliver_now
-            MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: etudiant.email, subject: "Nouvel accès étudiant")
+            title = "[PLANNING IAE Paris] Bienvenue !"
+            mailer_response = EtudiantMailer.welcome_student(user, title).deliver_now
+            MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: etudiant.email, subject: "Nouvel accès étudiant", title: title)
             comptes_créés += 1
           end
         end

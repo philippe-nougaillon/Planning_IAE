@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-ruby "3.4.5"
+ruby "3.4.7"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.2"
@@ -152,3 +152,7 @@ gem "rqrcode", "~> 2.2"
 gem "solid_queue", "~> 1.2"
 
 gem "mission_control-jobs", "~> 1.1"
+
+gem "devise-two-factor", "~> 6.1"
+
+gem "devise-security", "~> 0.18.0"

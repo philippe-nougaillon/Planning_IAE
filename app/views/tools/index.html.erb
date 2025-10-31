@@ -45,6 +45,11 @@
 					<%= link_to "État liquidatif collectif", tools_export_etat_liquidatif_collectif_path, class: 'text-primary hover:underline' %>
 				</li>
 
+				<li class="mb-6">
+					<%= fa_icon 'list-alt' %>
+					<%= link_to "Export CoDir", tools_export_codir_path, class: 'text-primary hover:underline' %>
+				</li>
+
 				<li class="mb-12">
 					<%= fa_icon 'user-md' %>
 					<%= link_to "Activités", vacation_activites_path, class: 'text-primary hover:underline' %>
@@ -98,7 +103,7 @@
 						<span class="material-symbols-outlined text-xl">
 							docs
 						</span>
-						<%= link_to "Sujets d'Examen", sujets_path, class: 'text-primary hover:underline' %>
+						<%= link_to "Sujets d'Examens", sujets_path, class: 'text-primary hover:underline' %>
 					</div>
 				</li>
 			<% end %>

@@ -14,6 +14,8 @@ class Sujet < ApplicationRecord
 
   has_one_attached :sujet
 
+  scope :ordered, -> {order(updated_at: :desc)}
+
   # WORKFLOW
 
   ENVOYE  = 'envoyé'
@@ -36,61 +38,73 @@ class Sujet < ApplicationRecord
     state ENVOYE, meta: {style: 'badge-primary'} do
       event :relancer, transitions_to: RELANCE1
       event :déposer, transitions_to: DEPOSE
+      event :archiver, transitions_to: ARCHIVE
     end
 
     state RELANCE1, meta: {style: 'badge-info'} do
       event :relancer, transitions_to: RELANCE2
       event :déposer, transitions_to: DEPOSE
+      event :archiver, transitions_to: ARCHIVE
     end
 
     state RELANCE2, meta: {style: 'badge-info'} do
       event :relancer, transitions_to: RELANCE3
       event :déposer, transitions_to: DEPOSE
+      event :archiver, transitions_to: ARCHIVE
     end
     
     state RELANCE3, meta: {style: 'badge-info'} do
       event :relancer, transitions_to: RELANCE4
       event :déposer, transitions_to: DEPOSE
+      event :archiver, transitions_to: ARCHIVE
     end
 
     state RELANCE4, meta: {style: 'badge-info'} do
       event :relancer, transitions_to: RELANCE5
       event :déposer, transitions_to: DEPOSE
+      event :archiver, transitions_to: ARCHIVE
     end
 
     state RELANCE5, meta: {style: 'badge-info'} do
       event :relancer, transitions_to: RELANCE6
       event :déposer, transitions_to: DEPOSE
+      event :archiver, transitions_to: ARCHIVE
     end
 
     state RELANCE6, meta: {style: 'badge-info'} do
       event :relancer, transitions_to: RELANCE7
       event :déposer, transitions_to: DEPOSE
+      event :archiver, transitions_to: ARCHIVE
     end
 
     state RELANCE7, meta: {style: 'badge-info'} do
       event :relancer, transitions_to: RELANCE8
       event :déposer, transitions_to: DEPOSE
+      event :archiver, transitions_to: ARCHIVE
     end
 
     state RELANCE8, meta: {style: 'badge-info'} do
       event :relancer, transitions_to: RELANCE9
       event :déposer, transitions_to: DEPOSE
+      event :archiver, transitions_to: ARCHIVE
     end
 
     state RELANCE9, meta: {style: 'badge-info'} do
       event :relancer, transitions_to: RELANCE10
       event :déposer, transitions_to: DEPOSE
+      event :archiver, transitions_to: ARCHIVE
     end
 
     state RELANCE10, meta: {style: 'badge-info'} do
       event :relancer, transitions_to: RELANCE1
       event :déposer, transitions_to: DEPOSE
+      event :archiver, transitions_to: ARCHIVE
     end
     
     state DEPOSE, meta: {style: 'badge-warning'} do
       event :valider, transitions_to: VALIDE
       event :rejeter, transitions_to: REJETE
+      event :archiver, transitions_to: ARCHIVE
     end
 
     state VALIDE, meta: {style: 'badge-success'} do
@@ -99,6 +113,8 @@ class Sujet < ApplicationRecord
 
     state REJETE, meta: {style: 'badge-error'} do
       event :déposer, transitions_to: DEPOSE
+      event :relancer, transitions_to: RELANCE1
+      event :archiver, transitions_to: ARCHIVE
     end
 
     state ARCHIVE, meta: {style: 'badge-secondary'}

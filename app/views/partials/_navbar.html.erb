@@ -28,6 +28,10 @@
           <%= navbar_nav_item('vacations', 'co_present', vacations_path) %>
         <% end %>
 
+        <% if current_user.intervenant? %>
+          <%= navbar_nav_item('sujets', 'docs', sujets_intervenant_path(Intervenant.find_by(id: @intervenant_user_id)), 'Sujets d\'examens') %>
+        <% end %>
+
         <% if policy(:tool).audit_cours? %>
           <li class="nav-item">
             <% is_active = params[:action] == 'audit_cours' %>
@@ -83,7 +87,7 @@
         <li class="flex flex-row items-center gap-2 mr-4">
           <%= link_to current_user do %>
             <span class="material-symbols-outlined p-0">
-              account_circle
+              <%= current_user.otp_required_for_login? ? 'person_shield' : 'person' %>
             </span>
             <div class="p-0">
               <%= current_user.prénom.humanize %>

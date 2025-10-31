@@ -33,12 +33,20 @@ Rails.application.routes.draw do
     member do
       get :invitations
       get :calendrier
+      get :sujets
     end
   end
 
   resources :users do
     member do
       get :reactivate
+    end
+    collection do
+      get :qrcode_otp
+      get :mail_otp
+      post :enable_otp
+      post :disable_otp
+      post :send_otp
     end
   end
 
@@ -135,6 +143,7 @@ Rails.application.routes.draw do
     get :export_formations
     get :export_vacations
     get :export_etat_liquidatif_collectif
+    get :export_codir
 
     get :swap_intervenant
     get :etats_services
@@ -172,6 +181,7 @@ Rails.application.routes.draw do
     post :export_formations_do
     post :export_vacations_do
     post :export_etat_liquidatif_collectif_do
+    post :export_codir_do
     post :swap_intervenant_do
     post :taux_occupation_jours_do
     post :taux_occupation_salles_do
@@ -252,6 +262,7 @@ Rails.application.routes.draw do
       get :relancer
       get :archiver
       patch :deposer
+      patch :deposer_admin
     end
   end
 

@@ -1,5 +1,5 @@
 class SujetsController < ApplicationController
-  before_action :set_sujet, only: %i[ show edit update destroy deposer deposer_done valider rejeter relancer archiver ]
+  before_action :set_sujet, only: %i[ show edit update destroy deposer deposer_done deposer_admin valider rejeter ]
   before_action :is_user_authorized
   skip_before_action :authenticate_user!, only: %i[ show deposer deposer_done]
 
@@ -98,38 +98,83 @@ class SujetsController < ApplicationController
 
   def deposer
     if params[:sujet]
-      @sujet.update(sujet_params)
-      @sujet.déposer!
-      redirect_to deposer_done_sujet_path(@sujet)
+      if @sujet.valid?
+        if @sujet.can_déposer?
+          @sujet.update(sujet_params)
+          @sujet.déposer!
+          DeposerSujetJob.perform_later(@sujet, current_user&.id || 0)
+          redirect_to deposer_done_sujet_path(@sujet)
+        else
+          redirect_to request.referrer, alert: "Le sujet ne peut pas être déposé."
+        end
+      else
+        redirect_to request.referrer, alert: "Il y a une erreur lors de l'enregistrement du sujet."
+      end
     else 
-      redirect_to request.referrer, alert: "Il faut ajouter le sujet"
+      redirect_to request.referrer, alert: "Le sujet est manquant."
     end
   end
 
   def deposer_done
   end
 
-  def valider
-    @sujet.valider!
-
-    redirect_to @sujet, notice: "Sujet validé avec succès."
+  def deposer_admin
+    if params[:sujet]
+      if @sujet.valid?
+        if @sujet.can_déposer?
+          @sujet.update(sujet_params)
+          @sujet.update(workflow_state: "validé")
+          redirect_to sujet_path(@sujet), notice: "Sujet enregistré avec succès."
+        else
+          redirect_to request.referrer, alert: "Le sujet ne peut pas être déposé."
+        end
+      else
+        redirect_to request.referrer, alert: "Il y a une erreur lors de l'enregistrement du sujet."
+      end
+    else 
+      redirect_to request.referrer, alert: "Le sujet est manquant."
+    end
   end
 
-  def relancer
-    @sujet.relancer!
+  def valider
+    if @sujet.valid?
+      if @sujet.can_valider?
+        @sujet.valider!
 
-    redirect_to @sujet, notice: "Sujet relancé avec succès."
+        ValidationSujetJob.perform_later(@sujet, current_user&.id)
+
+        redirect_to @sujet, notice: "Sujet validé avec succès."
+      elsif @sujet.validé?
+        redirect_to @sujet, alert: "Le sujet est déjà validé."
+      else
+        redirect_to @sujet, alert: "Le sujet ne peut pas être validé."
+      end
+    else
+      redirect_to @sujet, alert: "Le sujet n'est pas valide. Impossible de valider."
+    end
   end
 
   def rejeter
-    @sujet.rejeter!
-    
-    redirect_to @sujet, notice: "Sujet rejeté avec succès."
-  end
+    if @sujet.valid?
+      if @sujet.can_rejeter?
+        @sujet.rejeter!
 
-  def archiver
-    @sujet.archiver!
-    redirect_to @sujet, notice: 'Sujet archivé avec succès.'
+        if params[:raisons].present?
+          @sujet.message = params[:raisons]
+          @sujet.save
+        end
+
+        RejeterSujetJob.perform_later(@sujet, current_user&.id)
+
+        redirect_to @sujet, notice: "Sujet rejeté avec succès."
+      elsif @sujet.non_conforme?
+        redirect_to @sujet, alert: "Le sujet est déjà rejeté."
+      else
+        redirect_to @sujet, alert: "Le sujet ne peut pas être rejeté."
+      end
+    else
+      redirect_to @sujet, alert: "Le sujet n'est pas valide. Impossible de rejeter."
+    end
   end
 
   private

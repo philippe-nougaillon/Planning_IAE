@@ -10,7 +10,7 @@ class SujetPolicy < ApplicationPolicy
   end
 
   def show?
-    record.can_déposer? || index?
+    record.can_déposer? || index? || (user && user.intervenant?)
   end
 
   def new?
@@ -43,6 +43,10 @@ class SujetPolicy < ApplicationPolicy
 
   def deposer_done?
     deposer?
+  end
+
+  def deposer_admin?
+    user && user.role_number >= 5
   end
 
   def valider?
