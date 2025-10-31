@@ -416,6 +416,10 @@ class Cour < ApplicationRecord
     end
   end
 
+  def has_intervenant_vacataire?
+    self.intervenant_id == ENV["SURVEILLANT_EXAMEN_VACATAIRE_ID"].to_i
+  end
+
   private
     def update_date_fin
       if self.debut and self.duree

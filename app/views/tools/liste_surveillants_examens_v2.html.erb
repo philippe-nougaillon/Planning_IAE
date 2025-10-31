@@ -54,7 +54,7 @@
                 <% exam.options.surveillance.first.description.split('[').each do |item| %>
                     <% unless item.blank? %>
                         <% surveillant = item.gsub(']', '').delete("\r\n\\") %>
-                        <% durée = exam.duree + ((exam.intervenant_id == 1314) ? 0 : 1) %>
+                        <% durée = exam.duree + (exam.has_intervenant_vacataire? ? 0 : 1) %>
                         <% @cumuls[surveillant] ? @cumuls[surveillant] += durée : @cumuls[surveillant] = durée %>
                         <tr class="hover border">
                             <td><%= link_to l(exam.debut, format: :long), cour_path(exam.id), class: 'text-primary hover:underline' %></td>

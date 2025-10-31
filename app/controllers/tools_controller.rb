@@ -1104,8 +1104,8 @@ class ToolsController < ApplicationController
     # Créer des créneaux vides sur toutes une année pour une formation
     # Permet de faire des réservations au nom de l'intervenant 'A CONFIRMER'
 
-    if Intervenant.exists?(445)
-      _intervenant = Intervenant.find(445) # A CONFIRMER
+    if Intervenant.exists?(Intervenant.a_confirmer_id)
+      _intervenant = Intervenant.find(Intervenant.a_confirmer_id) # A CONFIRMER
       _date_debut = Date.parse(params[:date_debut])
       _date_fin = Date.parse(params[:date_fin])
       _formation = Formation.not_archived.find(params[:formation_id])
@@ -1159,7 +1159,7 @@ class ToolsController < ApplicationController
 
       flash[:notice] = "#{ @ids_ok.count } cours créés"
     else
-      flash[:alert] = "L'intervenant générique 'A CONFIRMER' (445) doit exister !"
+      flash[:alert] = "L'intervenant générique 'A CONFIRMER' (#{Intervenant.a_confirmer_id}) doit exister !"
     end
 
   end

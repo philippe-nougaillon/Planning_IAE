@@ -27,7 +27,7 @@ class CoursEtatsServicesToXls < ApplicationService
     @intervenants.each do | intervenant |
 
       # Passe au suivant si intervenant est 'A CONFIRMER'
-      next if intervenant.id == 445
+      next if intervenant.is_a_confirmer?
 
       nbr_heures_statutaire = intervenant.nbr_heures_statutaire || 0
 

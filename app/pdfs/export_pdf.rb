@@ -319,7 +319,7 @@ class ExportPdf
                 unless item.blank? 
                     surveillant_item = item.gsub(']', '').delete("\r\n\\")
                     if surveillant_item == surveillant
-                        is_vacataire = (exam.intervenant_id == 1314)
+                        is_vacataire = exam.has_intervenant_vacataire?
                         index += 1
                         durée = exam.duree + (is_vacataire ? 0 : 1)
                         cumul_durée += durée
@@ -328,7 +328,7 @@ class ExportPdf
                                     is_vacataire ? "Vacataire" : "Surveillance Examen",
                                     exam.formation.nom_promo,
                                     '7322GRH',
-                                    (exam.formation.diplome.upcase == 'LICENCE' ? '101PAIE' : exam.intervenant.id == 1314 ? '115PAIE' : '102PAIE'),
+                                    (exam.formation.diplome.upcase == 'LICENCE' ? '101PAIE' : exam.has_intervenant_vacataire? ? '115PAIE' : '102PAIE'),
                                     exam.formation.code_analytique_avec_indice(exam.debut).gsub('HCO','VAC'),
                                     durée 
                                 ]]
@@ -445,7 +445,7 @@ class ExportPdf
                 unless item.blank? 
                     surveillant_item = item.gsub(']', '').delete("\r\n\\")
                     if surveillant_item == surveillant
-                        is_vacataire = (exam.intervenant_id == 1314)
+                        is_vacataire = exam.has_intervenant_vacataire?
                         index += 1
                         durée = exam.duree + (is_vacataire ? 0 : 1)
                         cumul_durée += durée
@@ -454,7 +454,7 @@ class ExportPdf
                                     is_vacataire ? "Vacataire" : "Surveillance Examen",
                                     exam.formation.nom_promo,
                                     '7322GRH',
-                                    (exam.formation.diplome.upcase == 'LICENCE' ? '101PAIE' : exam.intervenant.id == 1314 ? '115PAIE' : '102PAIE'),
+                                    (exam.formation.diplome.upcase == 'LICENCE' ? '101PAIE' : exam.has_intervenant_vacataire? ? '115PAIE' : '102PAIE'),
                                     exam.formation.code_analytique_avec_indice(exam.debut).gsub('HCO','VAC'),
                                     durée 
                                 ]]
@@ -811,7 +811,7 @@ class ExportPdf
     end
 
     def convocation(cour, étudiant, papier, calculatrice, ordi_tablette, téléphone, dictionnaire)
-        is_examen_rattrapage = cour.intervenant_id == 1166
+        is_examen_rattrapage = cour.intervenant_id == ENV["EXAMEN_RATTRAPRAGE_ID"].to_i
 
         font "OpenSans"
 

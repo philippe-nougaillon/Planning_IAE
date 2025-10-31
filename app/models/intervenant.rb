@@ -139,7 +139,15 @@ class Intervenant < ApplicationRecord
 	end
 
 	def self.surveillants
-		ENV["SURVEILLANTS_IDS"].split(',').map(&:to_i)
+		ENV["SURVEILLANTS_EXAMEN_IDS"].split(',').map(&:to_i)
+	end
+
+	def self.is_a_confirmer?
+		self.id == Intervenant.a_confirmer_id
+	end
+
+	def self.a_confirmer_id
+		ENV["A_CONFIRMER_ID"].to_i
 	end
 
 	def self.sans_dossier
