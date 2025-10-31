@@ -6,9 +6,7 @@ export default class extends Controller {
 
     // Afficher les salles de la formation si elle est déjà sélectionné au chargement de la page
     connect() {
-        if (this.formationIdTarget.value !== "") {
-            this.get_salles_formation()
-        }
+        this.get_salles_formation()
     }
 
     get_salles_formation() {
