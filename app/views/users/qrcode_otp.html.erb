@@ -4,30 +4,33 @@
             <%= fa_icon 'list-alt', text: ' Retour' %>
         <% end %>
     </div>
-	<h1 class="text-3xl"><%= fa_icon 'key' %> Activation de la double authentification par application d'authentification</h1>
+    <h1 class="text-3xl flex items-center gap-3">
+        <span class="material-symbols-outlined text-3xl">
+            person_shield
+        </span>
+        Activation de la double authentification
+    </h1>
 </div>
 
 <div>
     <% totp_uri = current_user.otp_provisioning_uri(current_user.email, issuer: "IAE-Planning") %>
     <p class="mb-8">
-        Veuillez scanner ce QRCode avec votre <b>application mobile d'authentification</b> comme 
-        <%= link_to 'Google Authenticator', "https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=fr", class: 'text-primary hover:underline' %>
-        <%= image_tag "Google_Authenticator.svg.png", width: 40, class: 'inline' %>,
-        <%= link_to 'Microsoft Authenticator', "https://play.google.com/store/apps/details?id=com.azure.authenticator", class: 'text-primary hover:underline' %>
-        <%= image_tag "microsoft_authenticator_icon.png", width: 40, class: 'inline' %>,
-        ou autre.
+        Veuillez scanner ce QRCode avec une <b>application mobile d'authentification</b>.
+        <br>
+        Si vous n'en avez pas, téléchargez sur votre téléphone
+        <%= image_tag "Google_Authenticator.svg.png", width: 40, class: 'inline' %>
+        <b>Google Authenticator</b>
+        ou
+        <%= image_tag "microsoft_authenticator_icon.png", width: 40, class: 'inline' %>
+        <b>Microsoft Authenticator</b>.
     </p>
 
     <%= raw RQRCode::QRCode.new(totp_uri).as_svg(module_size: 4) %>
-    <br>
     
-    <p>Code de vérification obtenu</p>
+    <p class="mt-6">Saisir ici votre code de vérification</p>
     <%= form_with url: enable_otp_users_path, method: :post, class: "flex flex-col w-min gap-4" do |f| %>
         <%= f.text_field :otp_attempt, class: 'input input-bordered input-sm', required: true, autofocus: true %>
         <%= hidden_field_tag :method, "app" %>
-        <div class="flex flex-wrap mb-12 mt-4 gap-4">
-            <%= f.submit "Activer la double authentification", class: "btn btn-success btn-outline hover:!text-white" %>
-            <%= link_to 'Annuler', request.referrer, class:"btn btn-light" %>
-        </div>
+        <%= f.submit "Activer la double authentification", class: "btn btn-success btn-outline hover:!text-white" %>
     <% end %>
 </div>
