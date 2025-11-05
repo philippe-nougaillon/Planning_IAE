@@ -86,8 +86,11 @@
 			<br>
 			<%= link_to "Obtenir le code de vérification via Application d'authentification", qrcode_otp_users_path, class: "btn btn-success btn-outline hover:!text-white btn-sm", 'data-turbo': false %>
 		<% else %>
-			<p class="text-success">Double authentification activée</p>
-			<%= button_to "Désactiver la double authentification", disable_otp_users_path, class: "btn btn-warning text-white btn-sm" %>
+			<div class="flex gap-1">
+				<p>Double authentification <b>activée</b></p>
+				|
+				<%= button_to "Désactiver", disable_otp_users_path, class: "hover:text-primary hover:underline" %>
+			</p>
 		<% end %>
 	<% end %>
 </div>
