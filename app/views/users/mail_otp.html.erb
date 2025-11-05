@@ -13,6 +13,9 @@
     <%= form_with url: enable_otp_users_path, method: :post, class: "flex flex-col w-min gap-4" do |f| %>
         <%= f.text_field :otp_attempt, class: 'input input-bordered input-sm mb-2', required: true, autofocus: true %>
         <%= hidden_field_tag :method, "email" %>
-        <%= f.submit "Activer la double authentification", class: "btn btn-success btn-outline hover:!text-white mt-2" %>
+        <div class="flex flex-wrap mb-12 mt-4 gap-4">
+            <%= f.submit "Activer la double authentification", class: "btn btn-success btn-outline hover:!text-white mt-2" %>
+            <%= link_to 'Annuler', request.referrer, class:"btn btn-light" %>
+        </div>
     <% end %>
 </div>
