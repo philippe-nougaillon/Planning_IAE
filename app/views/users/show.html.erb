@@ -79,13 +79,13 @@
 	<% if policy(User).enable_otp? && current_user == @user %>
 		<% if !current_user.otp_required_for_login %>
 			<div class="text-lg"></div>
-			<%= link_to "Activer la double authentification par QRCODE", qrcode_otp_users_path, class: "btn btn-success btn-outline hover:!text-white btn-sm", 'data-turbo': false %>
+			Activer la double authentification
+			<%= link_to "par mail", mail_otp_users_path, class: "btn btn-success btn-outline hover:!text-white btn-sm", 'data-turbo': false %>
 			|
-			<%= link_to "Activer la double authentification par EMAIL", mail_otp_users_path, class: "btn btn-success btn-outline hover:!text-white btn-sm", 'data-turbo': false %>
+			<%= link_to "avec une application d'authentification", qrcode_otp_users_path, class: "btn btn-success btn-outline hover:!text-white btn-sm", 'data-turbo': false %>
 		<% else %>
-			<%# (Si jamais il y a besoin de désactiver la 2FA) %>
-			<%# button_to "Désactiver la double authentification", disable_otp_users_path, class: "btn btn-warning text-white btn-sm"  %>
-			Double authentification activée
+			<p class="text-success">Double authentification activée</p>
+			<%= button_to "Désactiver la double authentification", disable_otp_users_path, class: "btn btn-warning text-white btn-sm" %>
 		<% end %>
 	<% end %>
 </div>
