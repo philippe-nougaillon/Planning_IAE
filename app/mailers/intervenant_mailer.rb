@@ -49,6 +49,7 @@ class IntervenantMailer < ApplicationMailer
         @debut = examen.debut
         @sujet = sujet
         @ue = examen.nom_ou_ue
+        @code_ue = examen.code_ue
         @formation = examen.formation.nom
         @deadline = examen.debut - 1.month
 
@@ -78,6 +79,7 @@ class IntervenantMailer < ApplicationMailer
         examen = sujet.cour
         @debut = examen.debut
         @intervenant = examen.intervenant_binome
+        @code_ue = examen.code_ue
         @jours = examen.days_between_today_and_debut
         @sujet = sujet
         attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
@@ -91,6 +93,7 @@ class IntervenantMailer < ApplicationMailer
         @debut = examen.debut
         @sujet = sujet
         @ue = examen.nom_ou_ue
+        @code_ue = examen.code_ue
         @formation = examen.formation.nom
 
         attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
@@ -104,6 +107,7 @@ class IntervenantMailer < ApplicationMailer
         @debut = examen.debut
         @sujet = sujet
         @ue = examen.nom_ou_ue
+        @code_ue = examen.code_ue
         @formation = examen.formation.nom
         @first_relance = sujet.created_at
 
@@ -118,6 +122,7 @@ class IntervenantMailer < ApplicationMailer
         @debut = examen.debut
         @sujet = sujet
         @ue = examen.nom_ou_ue
+        @code_ue = examen.code_ue
         @formation = examen.formation.nom
         @first_relance = sujet.created_at
 
@@ -132,6 +137,7 @@ class IntervenantMailer < ApplicationMailer
         @debut = examen.debut
         @sujet = sujet
         @ue = examen.nom_ou_ue
+        @code_ue = examen.code_ue
         @formation = examen.formation.nom
         @first_relance = sujet.created_at
 
@@ -146,6 +152,7 @@ class IntervenantMailer < ApplicationMailer
         @debut = examen.debut
         @sujet = sujet
         @ue = examen.nom_ou_ue
+        @code_ue = examen.code_ue
         @formation = examen.formation.nom
         @first_relance = sujet.created_at
 
@@ -160,6 +167,7 @@ class IntervenantMailer < ApplicationMailer
         @debut = examen.debut
         @sujet = sujet
         @ue = examen.nom_ou_ue
+        @code_ue = examen.code_ue
         @formation = examen.formation.nom
         @first_relance = sujet.created_at
         @jour_avant_debut = examen.debut.to_date - 1.day

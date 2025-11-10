@@ -1,7 +1,7 @@
 <p style="margin-bottom: 0.5rem">
     Bonjour,
     <br><br>
-    Comme indiqué dans notre précédent mail nous sommes toujours dans l'attente de votre sujet pour l'examen de votre UE <b><%= @ue %> (<%= @formation %>)</b> en date du <b><%= l(@debut.to_date, format: :long) %></b>.
+    Comme indiqué dans notre précédent mail nous sommes toujours dans l'attente de votre sujet pour l'examen de votre UE#<%= @code_ue %> <b><%= @ue %> (<%= @formation %>)</b> en date du <b><%= l(@debut.to_date, format: :long) %></b>.
     <br>
     Nous vous rappellons que le sujet doit être déposé <%= link_to 'ici', url_for(sujet_url(@sujet)) %> ou en copiant ce lien <%= url_for(sujet_url(@sujet)) %> dans votre navigateur, en <b>format pdf avec la page de garde</b>.
     <br>
@@ -10,6 +10,8 @@
 
 <p style="margin-bottom: 0.5rem">
     Bien cordialement,
+    <br>
+    Les gestionnaires en charge des examens (examens@iae.pantheonsorbonne.fr)
     <br>
     IAE Paris
 </p>
