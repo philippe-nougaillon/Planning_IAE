@@ -134,7 +134,7 @@ class Edusign < ApplicationService
 
             intervenant_ids = Cour.where(
               formation_id: formations_sent_to_edusign_ids,
-              no_send_to_edusign: false
+              no_send_to_edusign: [false, nil]
             ).pluck(:intervenant_id, :intervenant_binome_id).flatten.compact.uniq
 
             model.where(id: intervenant_ids, edusign_id: nil).where.not(id: Intervenant.intervenants_examens + Intervenant.sans_intervenant)
@@ -197,7 +197,7 @@ class Edusign < ApplicationService
 
             intervenant_ids = Cour.where(
               formation_id: formations_sent_to_edusign_ids,
-              no_send_to_edusign: false
+              no_send_to_edusign: [false, nil]
             ).where("debut >= ?", DateTime.now).pluck(:intervenant_id, :intervenant_binome_id).flatten.compact.uniq
 
             model.where(id: intervenant_ids, edusign_id: nil).where.not(id: Intervenant.intervenants_examens + Intervenant.sans_intervenant)
