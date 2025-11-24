@@ -80,6 +80,7 @@
               Aucun sujet pour l'instant.
               <% if @sujet.can_déposer? %>
                 <p class="mt-8 mb-4">Vous pouvez ajouter vous-même le sujet si l'intervenant vous l'a transmi autrement</p>
+                <%= render "partials/script_accept_pdf" %>
                 <%= form_with id:'sujet_form', url: deposer_admin_sujet_path, model: @sujet, data: { controller: 'nested-form', nested_form_wrapper_selector_value: '.nested-form-wrapper' } do |f| %>
                   <%= f.file_field :sujet, required: true, label: 'Fichier PDF', accept: 'application/pdf', class: 'file-input file-input-bordered file-input-sm file-input-success flex-1' %>
                   <br>
@@ -247,6 +248,7 @@
       <% end %>
 
       <% if @sujet.can_déposer? %>
+        <%= render "partials/script_accept_pdf" %>
         <%= form_with id:'sujet_form', url: deposer_sujet_path, model: @sujet, data: { controller: 'nested-form', nested_form_wrapper_selector_value: '.nested-form-wrapper' } do |f| %>
           <%= f.file_field :sujet, required: true, label: 'Fichier PDF', accept: 'application/pdf', class: 'file-input file-input-bordered file-input-sm file-input-success flex-1' %>
           <br>
@@ -261,22 +263,3 @@
     </div>
   </div>
 <% end %>
-
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('sujet_form');
-    const fileInput = document.getElementById('sujet_sujet'); // Remplacez par l'ID réel de votre champ
-
-    form.addEventListener('submit', function(event) {
-      if (fileInput.files.length > 0) {
-        const file = fileInput.files[0];
-        // Vérifie si le type MIME est exactement 'application/pdf'
-        if (file.type !== 'application/pdf') {
-          event.preventDefault(); // Empêche l'envoi du formulaire
-          alert('Seuls les fichiers PDF sont autorisés.');
-        }
-      }
-    });
-  });
-</script>
