@@ -392,12 +392,13 @@ class Cour < ApplicationRecord
   end
 
   def color_sujet
-    days = self.days_between_today_and_debut
-    case days
-    when (0..10)
-      "error"
-    else
+    case self.sujet&.workflow_state
+    when 'validé'
+      "success"
+    when 'déposé'
       "warning"
+    else
+      "error"
     end
   end
 
