@@ -181,7 +181,7 @@ class Edusign < ApplicationService
             model.where(
               formation_id: formations_sent_to_edusign_ids,
               edusign_id: nil,
-              no_send_to_edusign: false
+              no_send_to_edusign: [false, nil]
             ).where("debut >= ?", DateTime.now)
               .where.not(intervenant_id: Intervenant.intervenants_examens + Intervenant.sans_intervenant)
         elsif model == Etudiant
