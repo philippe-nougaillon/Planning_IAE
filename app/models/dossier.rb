@@ -109,6 +109,7 @@ class Dossier < ApplicationRecord
     end
 
     state REJETE, meta: {style: 'badge-error'} do
+      event :relancer, transitions_to: RELANCE1
       event :déposer, transitions_to: DEPOSE
     end
 
@@ -282,8 +283,8 @@ class Dossier < ApplicationRecord
       :archivé            => :archiver_dossier 
     }
   end
-  
-private
+
+  private
 
   # only one candidate for an nice id; one random UDID
   def slug_candidates
