@@ -31,6 +31,7 @@ class Cour < ApplicationRecord
   validate :jour_ouverture, if: Proc.new { |cours| cours.salle && cours.salle.bloc != 'Z' && !(cours.bypass?) }
   validate :check_invits_en_cours
   validate :check_hss
+  validate :check_intervenant_not_also_appear_in_binome, if: Proc.new {|cours| cours.intervenant_binome.present?}
 
   before_validation :update_date_fin
   before_validation :sunday_morning_praise_the_dawning
@@ -651,6 +652,12 @@ class Cour < ApplicationRecord
   def synchronisation_edusign
     # Modifier la salle sur Edusign si changement
     EdusignJob.perform_later("salle changée", self.audits.last.user_id, {cour_id: self.id})
+  end
+
+  def check_intervenant_not_also_appear_in_binome
+    if self.intervenant == self.intervenant_binome
+      errors.add(:cours, "ne peut pas avoir l'intervenant apparaitre aussi en tant que binôme !")
+    end
   end
 
 end
