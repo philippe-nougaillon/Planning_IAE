@@ -451,19 +451,19 @@ class CoursController < ApplicationController
           cours_B = Cour.find(params[:cours_id].keys.last)
           if params[:intervertir_intervenants]
             # Intervertit les sujets si les cours sont des examens
-            sujet_A = Sujet.find_by(cour_id: cours_A.id)
-            sujet_B = Sujet.find_by(cour_id: cours_B.id)
+            # sujet_A = Sujet.find_by(cour_id: cours_A.id)
+            # sujet_B = Sujet.find_by(cour_id: cours_B.id)
 
-            if cours_A.examen? && sujet_A && cours_B.examen? && sujet_B
-              sujet_A.update_columns(cour_id: cours_B.id)
-              sujet_B.update_columns(cour_id: cours_A.id)
+            # if cours_A.examen? && sujet_A && cours_B.examen? && sujet_B
+            #   sujet_A.update_columns(cour_id: cours_B.id)
+            #   sujet_B.update_columns(cour_id: cours_A.id)
 
-            elsif cours_A.examen? && sujet_A
-              sujet_A.update_columns(cour_id: cours_B.id)
+            # elsif cours_A.examen? && sujet_A
+            #   sujet_A.update_columns(cour_id: cours_B.id)
 
-            elsif cours_B.examen? && sujet_B
-              sujet_B.update_columns(cour_id: cours_A.id)
-            end
+            # elsif cours_B.examen? && sujet_B
+            #   sujet_B.update_columns(cour_id: cours_A.id)
+            # end
 
             # Intervertit les deux intervenants
             intervenant_A = cours_A.intervenant_id
