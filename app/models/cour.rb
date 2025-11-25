@@ -394,7 +394,7 @@ class Cour < ApplicationRecord
 
   def color_sujet
     case self.sujet&.workflow_state
-    when 'validé'
+    when 'validé', 'archivé'
       "success"
     when 'déposé'
       "warning"
@@ -404,7 +404,7 @@ class Cour < ApplicationRecord
   end
 
   def sujet_manquant?
-    if self.examen? && self.days_between_today_and_debut <= 30
+    if [169, 1166].include?(self.intervenant_id)
       sujet = Sujet.find_by(cour_id: self.id)
       if !['déposé', 'validé', 'archivé'].include?(sujet&.workflow_state)
         true
