@@ -133,10 +133,10 @@
                 </span>
             </span>
         <% end %>
-        <% if current_user && current_user.role_number >= 5 && cours.sujet_manquant? %>
+        <% if current_user && current_user.role_number >= 5 %>
             <% if sujet = Sujet.find_by(cour_id: cours.id) %>
                 <%= link_to sujet_path(sujet) do %>
-                    <span class="material-symbols-outlined text-xl text-<%= cours.color_sujet %> cursor-pointer" title="Sujet d'examen pas reçu !">
+                    <span class="material-symbols-outlined text-xl text-<%= cours.color_sujet %> cursor-pointer" title="<%= !['déposé', 'validé', 'archivé'].include?(sujet.workflow_state) ? "Sujet d'examen pas reçu !" : "Sujet d'examen reçu" %>">
                         docs
                     </span>
                 <% end %>
