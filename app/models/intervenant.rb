@@ -134,9 +134,7 @@ class Intervenant < ApplicationRecord
 		ENV["INTERVENANTS_PLACEHOLDER"].to_s.split(',').map(&:to_i)
 	end
 
-	def self.sans_dossier
-		début_période = '2025-09-01'
-		fin_période = '2026-08-31'
+	def self.sans_dossier(début_période = '2025-09-01', fin_période = '2026-08-31')
 		# Lister toutes les personnes ayant eu cours comme intervenant principal ou en binome
 
 		# on garde les id des intervenants ayant eu cours sur la période
