@@ -1542,9 +1542,11 @@ class ToolsController < ApplicationController
     @dossier_créées = 0
     @erreurs = 0
 
+    @période = params[:période]
+
     @stream = capture_stdout do
-      Intervenant.sans_dossier(params[:période]).each do |intervenant|
-        new_dossier = Dossier.new(intervenant_id: intervenant.id, période: params[:période])
+      Intervenant.sans_dossier(@période).each do |intervenant|
+        new_dossier = Dossier.new(intervenant_id: intervenant.id, période: @période)
         msg = "#{intervenant.nom_prenom}"
         if new_dossier.valid?
           puts "[OK] #{msg}"
