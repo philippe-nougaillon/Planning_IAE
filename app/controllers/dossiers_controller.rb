@@ -61,10 +61,19 @@ class DossiersController < ApplicationController
 
   # GET /dossiers/new
   def new
+    période = params[:période] || AppConstants::PÉRIODE
+
+    # En fonction de la période, on prend la date de début et de fin de l'année scolaire
+    date_début_année, date_fin_année = période.split("/")
+
+    # Création des dates en fonction des années, du mois (septembre, août) et du jour (1er septembre, 31 août)
+    début_année_scolaire = Date.new(date_début_année.to_i, 9, 01)
+    fin_année_scolaire = Date.new(date_fin_année.to_i, 8, 31)
+
     # En cas de changement : changer également dans create
-    @intervenants = Intervenant.sans_dossier
+    @intervenants = Intervenant.sans_dossier(début_année_scolaire, fin_année_scolaire)
     @dossier = Dossier.new
-    @dossier.période = AppConstants::PÉRIODE
+    @dossier.période = période
   end
 
   # GET /dossiers/1/edit
