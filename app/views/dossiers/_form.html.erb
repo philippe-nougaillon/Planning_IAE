@@ -20,6 +20,9 @@
           <%= form.label :période %>
           <%= form.text_field :période, class: 'input input-bordered input-sm w-full', disabled: true %>
         </div>
+
+        <%= form.hidden_field :période %>
+
         <div class="form-control">
           <%= form.label :intervenant_id %>
           <%= form.select :intervenant_id, 

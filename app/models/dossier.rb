@@ -284,6 +284,15 @@ class Dossier < ApplicationRecord
     }
   end
 
+  # En fonction de la période, on prend la date de début et de fin de l'année scolaire
+  def self.dates_début_fin_année_scolaire(période)
+    # On récupère les deux années de la période
+    date_début_année, date_fin_année = période.split("/")
+
+    # Création des dates en fonction des années, du mois (septembre, août) et du jour (1er septembre, 31 août)
+    [Date.new(date_début_année.to_i, 9, 01), Date.new(date_fin_année.to_i, 8, 31)]
+  end
+
   private
 
   # only one candidate for an nice id; one random UDID
