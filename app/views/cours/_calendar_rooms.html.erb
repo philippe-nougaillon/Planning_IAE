@@ -25,7 +25,12 @@
 <div class="flex flex-wrap">
   <div class="relative flex-grow max-w-full flex-1">
     <% bloc = 'A' %> 
-    <% Salle.all.reorder(:bloc, :nom).each do |salle| %>
+    <% if !user_signed_in? || !(current_user.role_number >= 1) %>
+      <% salles = Salle.where(privée: false) %>
+    <% else %>
+      <% salles = Salle.all %>
+    <% end %>
+    <% salles.reorder(:bloc, :nom).each do |salle| %>
       <% @salle = salle %>
       <% if bloc != salle.nom[0] %>
         <% bloc = salle.nom[0] %>

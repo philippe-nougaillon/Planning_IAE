@@ -32,6 +32,13 @@
       <strong>Places:</strong>
       <%= @salle.places %>
     </p>
+    <% if @salle.privée? %>
+      <p class="mb-4">
+        <strong>Privée:</strong>
+        <%= fa_icon 'check' %>
+      </p>
+    <% end %>
+    
   </div>
   <div class="flex-1 flex justify-end">
     <p class="mb-4 w-1/2">

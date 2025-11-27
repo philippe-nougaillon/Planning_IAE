@@ -277,6 +277,8 @@ class CoursController < ApplicationController
 
     @tous_les_cours = Cour.where(etat: Cour.etats.values_at(:planifié, :confirmé))
                           .where("DATE(fin) = ? AND fin > ?", @planning_date.to_date, @planning_date.to_formatted_s(:db))
+                          .left_outer_joins(:salle)
+                          .where("salles.privée = ? OR salles.id IS NULL", false)
                           .reorder(:debut, :fin)
                           .pluck(:id)
 
