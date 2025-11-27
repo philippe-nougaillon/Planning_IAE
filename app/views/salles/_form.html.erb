@@ -20,6 +20,11 @@
       </div>
     </div>
 
+    <div>
+      <%= f.check_box :privée %>
+      <%= f.label :privée, "Privée ?" %>
+    </div>
+
     <%= f.submit class: "btn btn-primary text-white", 'data-turbo': false %>
   </div>  
 <% end %>

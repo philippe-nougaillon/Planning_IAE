@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_10_20_105928) do
+ActiveRecord::Schema[7.2].define(version: 2025_11_26_152912) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -479,6 +479,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_10_20_105928) do
     t.datetime "updated_at", precision: nil, null: false
     t.string "bloc"
     t.datetime "discarded_at", precision: nil
+    t.boolean "privée", default: false
     t.index ["discarded_at"], name: "index_salles_on_discarded_at"
   end
 

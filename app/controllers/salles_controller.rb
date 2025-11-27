@@ -220,7 +220,7 @@ class SallesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def salle_params
-      params.require(:salle).permit(:nom, :places, :bloc)
+      params.require(:salle).permit(:nom, :places, :bloc, :privée)
     end
 
     def is_user_authorized
