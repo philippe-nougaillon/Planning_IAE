@@ -130,10 +130,6 @@ class Intervenant < ApplicationRecord
 		ENV["ALL_INTERVENANT_EXAMENS_IDS"].split(',').map(&:to_i)
 	end
 
-	def self.intervenants_examens
-		ENV["INTERVENANTS_EXAMENS"].split(',').map(&:to_i)
-	end
-
 	def self.sans_intervenant
 		ENV["INTERVENANTS_PLACEHOLDER"].split(',').map(&:to_i)
 	end
