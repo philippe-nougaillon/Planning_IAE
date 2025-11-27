@@ -27,9 +27,9 @@
       <p class="mb-4">
         <strong>Intervenant</strong>
         <br>
-        <%= @sujet.cour.intervenant_binome.nom_prenom %>
+        <%= @sujet.cour.intervenant_binome&.nom_prenom %>
         <br>
-        <%= @sujet.cour.intervenant_binome.email %>
+        <%= @sujet.cour.intervenant_binome&.email %>
       </p>
 
       <p class="mb-4">
@@ -80,7 +80,8 @@
               Aucun sujet pour l'instant.
               <% if @sujet.can_déposer? %>
                 <p class="mt-8 mb-4">Vous pouvez ajouter vous-même le sujet si l'intervenant vous l'a transmi autrement</p>
-                <%= form_with url: deposer_admin_sujet_path, model: @sujet, data: { controller: 'nested-form', nested_form_wrapper_selector_value: '.nested-form-wrapper' } do |f| %>
+                <%= render "partials/script_accept_pdf" %>
+                <%= form_with id:'sujet_form', url: deposer_admin_sujet_path, model: @sujet, data: { controller: 'nested-form', nested_form_wrapper_selector_value: '.nested-form-wrapper' } do |f| %>
                   <%= f.file_field :sujet, required: true, label: 'Fichier PDF', accept: 'application/pdf', class: 'file-input file-input-bordered file-input-sm file-input-success flex-1' %>
                   <br>
 
@@ -247,7 +248,8 @@
       <% end %>
 
       <% if @sujet.can_déposer? %>
-        <%= form_with url: deposer_sujet_path, model: @sujet, data: { controller: 'nested-form', nested_form_wrapper_selector_value: '.nested-form-wrapper' } do |f| %>
+        <%= render "partials/script_accept_pdf" %>
+        <%= form_with id:'sujet_form', url: deposer_sujet_path, model: @sujet, data: { controller: 'nested-form', nested_form_wrapper_selector_value: '.nested-form-wrapper' } do |f| %>
           <%= f.file_field :sujet, required: true, label: 'Fichier PDF', accept: 'application/pdf', class: 'file-input file-input-bordered file-input-sm file-input-success flex-1' %>
           <br>
 

@@ -12,7 +12,7 @@
   </td>
   <% if params[:action] == 'index' && params[:controller] == 'sujets' %>
     <td>
-      <%= link_to sujet.cour.intervenant_binome.nom_prenom, sujet.cour.intervenant_binome, class: 'text-primary hover:underline' %>
+      <%= link_to sujet.cour.intervenant_binome&.nom_prenom, sujet.cour.intervenant_binome, class: 'text-primary hover:underline' %>
     </td>
   <% end %>
   <td style="border-left: .3rem solid <%= sujet.cour.formation.positive_color %>">

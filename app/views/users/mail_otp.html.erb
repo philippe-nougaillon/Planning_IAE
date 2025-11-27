@@ -4,12 +4,21 @@
             <%= fa_icon 'list-alt', text: ' Retour' %>
         <% end %>
     </div>
-	<h1 class="text-3xl"><%= fa_icon 'key' %> Activation de la double authentification par mail</h1>
+    <h1 class="text-3xl flex items-center gap-3">
+        <span class="material-symbols-outlined text-3xl">
+            person_shield
+        </span>
+        Activation de la double authentification
+    </h1>
 </div>
 
 <div>
-    <p class="text-xl my-8">Nous venons de vous envoyer le code. Vérifiez votre boîte mail.</p>
-    <p>Code de vérification obtenu</p>
+    <p class="alert my-8">
+        Nous venons de vous envoyer le code de vérification par Email.
+        <br>
+        Merci de vérifier vos nouveaux messages, puis de saisir ci-dessous le code obtenu, et de cliquer sur le bouton [Activer la double authentification].
+    </p>
+    <p>Saisir ici votre code de vérification</p>
     <%= form_with url: enable_otp_users_path, method: :post, class: "flex flex-col w-min gap-4" do |f| %>
         <%= f.text_field :otp_attempt, class: 'input input-bordered input-sm mb-2', required: true, autofocus: true %>
         <%= hidden_field_tag :method, "email" %>

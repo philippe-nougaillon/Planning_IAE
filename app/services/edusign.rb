@@ -107,7 +107,7 @@ class Edusign < ApplicationService
         EdusignLog.where(modele_type: 1).where.not(etat: 3).reorder(created_at: :desc).first.created_at..@interval_end
     end
 
-    # Cette fonction les éléments qui sont considérés comme élément à ajouter sur edusign
+    # Cette fonction prend les éléments qui sont considérés comme élément à ajouter sur edusign
     def get_all_element_to_post(model)
         formations_sent_to_edusign_ids = Formation.not_archived.sent_to_edusign_ids
 
@@ -125,7 +125,7 @@ class Edusign < ApplicationService
             model.where(
               formation_id: formations_sent_to_edusign_ids,
               edusign_id: nil,
-              no_send_to_edusign: false
+              no_send_to_edusign: [false, nil]
             ).where.not(intervenant_id: Intervenant.examens_ids + Intervenant.sans_intervenant)
         elsif model == Intervenant
 
@@ -134,7 +134,7 @@ class Edusign < ApplicationService
 
             intervenant_ids = Cour.where(
               formation_id: formations_sent_to_edusign_ids,
-              no_send_to_edusign: false
+              no_send_to_edusign: [false, nil]
             ).pluck(:intervenant_id, :intervenant_binome_id).flatten.compact.uniq
 
             model.where(id: intervenant_ids, edusign_id: nil).where.not(id: Intervenant.examens_ids + Intervenant.sans_intervenant)
@@ -161,7 +161,7 @@ class Edusign < ApplicationService
             model.where(
               formation_id: formations_sent_to_edusign_ids,
               updated_at: interval,
-              no_send_to_edusign: false
+              no_send_to_edusign: [false, nil]
               ).where.not(edusign_id: nil).where.not(id: record_ids)
               .where.not(intervenant_id: Intervenant.examens_ids + Intervenant.sans_intervenant)
         elsif model == Intervenant
@@ -181,7 +181,7 @@ class Edusign < ApplicationService
             model.where(
               formation_id: formations_sent_to_edusign_ids,
               edusign_id: nil,
-              no_send_to_edusign: false
+              no_send_to_edusign: [false, nil]
             ).where("debut >= ?", DateTime.now)
               .where.not(intervenant_id: Intervenant.examens_ids + Intervenant.sans_intervenant)
         elsif model == Etudiant
@@ -197,7 +197,7 @@ class Edusign < ApplicationService
 
             intervenant_ids = Cour.where(
               formation_id: formations_sent_to_edusign_ids,
-              no_send_to_edusign: false
+              no_send_to_edusign: [false, nil]
             ).where("debut >= ?", DateTime.now).pluck(:intervenant_id, :intervenant_binome_id).flatten.compact.uniq
 
             model.where(id: intervenant_ids, edusign_id: nil).where.not(id: Intervenant.examens_ids + Intervenant.sans_intervenant)

@@ -46,14 +46,12 @@
                             class: "slim-select",
                             include_blank:true,
                             onchange: 'this.form.submit()' %>
-            <!--
-            <%# if params.values.count(nil) < 5 %>
-              <%# button_tag name: 'commit', value: 'RàZ', class: "btn text-slate-500 btn-sm", title: "Remise à zéro des filtres" do %>
+            <% if params.values.count(nil) < 5 %>
+              <%= button_tag name: 'commit', value: 'RàZ', class: "btn text-slate-500 btn-sm", title: "Remise à zéro des filtres" do %>
                 <i class="fas fa-times"></i> 
                 RàZ
-              <%# end %>
-            <%# end %>
-            -->
+              <% end %>
+            <% end %>
           </div>
         </div>
       <% else %>

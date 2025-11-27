@@ -13,4 +13,9 @@ class DossierMailerPreview < ActionMailer::Preview
         DossierMailer.with(dossier: Dossier.first).rejeter_email
     end
 
+    def rapppel_dossier
+        DossierMailer.with(intervenants: Intervenant.last(5)).rappel_dossier
+    end
+
+
 end
