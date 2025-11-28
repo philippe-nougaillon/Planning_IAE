@@ -23,7 +23,7 @@ export default class extends Controller {
     afficher_salles_formation(data) {
         const salles_formation = this.sallesFormationTarget
 
-        salles_formation.innerHTML = '<span>Salles prioritaires :</span>'
+        salles_formation.innerHTML = '<span>Salles à choisir en priorité :</span>'
 
         if(data.length === 0){
             salles_formation.innerHTML += 'aucune'

@@ -29,15 +29,17 @@
       
       <div class="flex flex-wrap" data-controller="salles-suggérées-réservation" data-action="change->salles-suggérées-réservation#get_salles_formation">
         <%= f.label :formation_id, "Formation *", class: 'sm:w-1/5' %>
-        <%= f.collection_select :formation_id, 
-                                @formations, 
-                                :id, 
-                                :nom_promo_hss, 
-                                {include_blank: true},
-                                required: true, 
-                                class: "slim-select sm:w-1/2",
-                                data: { "dispo-target": "formation_id", "salles-suggérées-réservation-target": "formationId"} %>
-        <div class="flex flew-wrap items-center gap-2 ml-4" data-salles-suggérées-réservation-target="sallesFormation"></div>
+        <div class="flex flex-wrap gap-2 w-full sm:w-1/2">
+          <%= f.collection_select :formation_id, 
+                                  @formations, 
+                                  :id, 
+                                  :nom_promo_hss, 
+                                  {include_blank: true},
+                                  required: true, 
+                                  class: "w-full slim-select",
+                                  data: { "dispo-target": "formation_id", "salles-suggérées-réservation-target": "formationId"} %>
+          <div class="flex flex-wrap items-center gap-2" data-salles-suggérées-réservation-target="sallesFormation"></div>
+        </div>
       </div>
 
       <div class="flex flex-wrap">
