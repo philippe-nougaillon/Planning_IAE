@@ -48,7 +48,7 @@ class VacationsToXls < ApplicationService
         vacation.formation.nbr_etudiants,
         vacation.formation.nbr_heures, 
         vacation.formation.abrg,
-        vacation.formation.user.email,
+        vacation.formation.user&.email,
         vacation.formation.code_analytique,
         vacation.date,
         vacation.titre,
