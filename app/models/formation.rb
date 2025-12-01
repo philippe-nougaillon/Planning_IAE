@@ -26,6 +26,7 @@ class Formation < ApplicationRecord
 
 	validates :nom, :nbr_etudiants, :nbr_heures, :abrg, presence: true
 	validates :nom, uniqueness: { scope: :promo }
+	validate :archivable_only_when_no_more_cours, if: Proc.new {|formation| (formation.archive)}
 
 	normalizes :nom, with: -> nom { nom.strip }
 	
@@ -107,6 +108,17 @@ class Formation < ApplicationRecord
 	def self.sent_to_edusign_ids
 		self.where(send_to_edusign: true).ids
 	end
+
+	def remaining_cours?
+		(self.cours.where("debut > ?", DateTime.now).any?)
+	end
+
+	def archivable_only_when_no_more_cours
+		if self.remaining_cours?
+			errors.add(:formation, 'ne peut être archivé, des cours ne sont pas encore passés')
+		end
+	end
+
 
 end
 
