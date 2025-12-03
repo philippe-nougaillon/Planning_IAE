@@ -29,6 +29,7 @@ class Formation < ApplicationRecord
 	validate :archivable_only_when_no_more_cours, if: Proc.new {|formation| (formation.archive)}
 
 	normalizes :nom, with: -> nom { nom.strip }
+	normalizes :code_analytique, with: -> code { code.strip }
 	
 	scope :not_archived, -> { where("archive is null OR archive is false") }
 	scope :ordered, -> {order(:nom, :promo)}
