@@ -18,4 +18,13 @@ namespace :dossiers do
     end
   end
 
+  desc "Liste les Intervenants CEV qui donneront un cours le mois suivant et qui n'ont pas de dossier RH"
+  task notif_dossiers_rh_manquants: :environment do
+
+    intervenants_sans_dossier = Intervenant.sans_dossier(Date.today.next_month.beginning_of_month, Date.today.next_month.end_of_month)
+
+    if intervenants_sans_dossier.present?
+      NotifDossiersRhManquantsJob.perform_later(intervenants_sans_dossier)
+    end
+  end
 end
