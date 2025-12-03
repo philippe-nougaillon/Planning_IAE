@@ -37,7 +37,7 @@ class DossierMailer < ApplicationMailer
     def notif_dossiers_rh_manquants
         @intervenants = params[:intervenants]
 
-        mail(to: "cev.iae@univ-paris1.fr",
+        mail(to: "cev.iae@univ-paris1.fr, srh.iae@univ-paris1.fr",
              subject: params[:title])
     end
 end
