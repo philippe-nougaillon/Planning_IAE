@@ -498,6 +498,13 @@ class CoursController < ApplicationController
             salle_B = cours_B.salle_id
             cours_A.update_columns(salle_id: salle_B)
             cours_B.update_columns(salle_id: salle_A)
+            
+            # Création manuelle des audits des salles pour les cours.
+            cours_A.audits.create!(audited_changes: {"salle_id"=>[salle_A, salle_B]}, action: "create", user_id: current_user.id, user_type: "User", remote_address: current_user.current_sign_in_ip)
+            cours_B.audits.create!(audited_changes: {"salle_id"=>[salle_B, salle_A]}, action: "create", user_id: current_user.id, user_type: "User", remote_address: current_user.current_sign_in_ip)
+            # Permet de lancer la synchronisation edusign avec les nouvelles salles des cours.
+            cours_B.save
+            cours_A.save
           end
         else
           flash[:alert] = "Il faut deux cours à intervertir ! Opération annulée"
