@@ -27,7 +27,7 @@ class CoursToXls < ApplicationService
         c.debut.to_formatted_s(:time), 
         I18n.l(c.fin.to_date), 
         c.fin.to_formatted_s(:time), 
-        c.formation_id, formation.nom_promo, formation.code_analytique, 
+        c.formation_id, formation.nom_promo, formation.code_analytique_avec_indice(c.debut), 
         c.intervenant_id, c.intervenant.nom_prenom,
         c.intervenant_binome.try(:nom_prenom), 
         c.code_ue, c.nom, 
