@@ -49,7 +49,7 @@ class VacationsToXls < ApplicationService
         vacation.formation.nbr_heures, 
         vacation.formation.abrg,
         vacation.formation.user&.email,
-        vacation.formation.code_analytique,
+        vacation.formation.code_analytique_avec_indice(vacation.date),
         vacation.date,
         vacation.titre,
         vacation.qte,
