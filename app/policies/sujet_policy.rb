@@ -6,7 +6,7 @@ class SujetPolicy < ApplicationPolicy
   end
 
   def index?
-    user && user.role_number >= 5
+    user && (user.role_number >= 5 || user.partenaire_qse?)
   end
 
   def show?
@@ -46,11 +46,11 @@ class SujetPolicy < ApplicationPolicy
   end
 
   def deposer_admin?
-    user && user.role_number >= 5
+    user && (user.role_number >= 5 || user.partenaire_qse?)
   end
 
   def valider?
-    user && user.role_number >= 5
+    user && (user.role_number >= 5 || user.partenaire_qse?)
   end
 
   def rejeter?

@@ -639,7 +639,7 @@ class CoursController < ApplicationController
     @salles = Salle.all
 
     if current_user.partenaire_qse?
-      @formations = @formations.select{ |f| f.partenaire_qse? }
+      @formations = @formations.partenaire_qse
       @salles = @salles.where(nom: ["ICP 1", "ICP 2"])
     end
 
@@ -672,7 +672,7 @@ class CoursController < ApplicationController
     @salles = Salle.all
 
     if current_user.partenaire_qse?
-      @formations = @formations.select{ |f| f.partenaire_qse? }
+      @formations = @formations.partenaire_qse
       @salles = @salles.where(nom: ["ICP 1", "ICP 2"])
     end
   end
@@ -704,7 +704,7 @@ class CoursController < ApplicationController
           @salles = Salle.all
 
           if current_user.partenaire_qse?
-            @formations = @formations.select{ |f| f.partenaire_qse? }
+            @formations = @formations.partenaire_qse
             @salles = @salles.where(nom: ["ICP 1", "ICP 2"])
           end
           render :new
@@ -753,7 +753,7 @@ class CoursController < ApplicationController
           @salles = Salle.all
 
           if current_user.partenaire_qse?
-            @formations = @formations.select{ |f| f.partenaire_qse? }
+            @formations = @formations.partenaire_qse
             @salles = @salles.where(nom: ["ICP 1", "ICP 2"])
           end
           render :edit, params
