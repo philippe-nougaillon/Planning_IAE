@@ -33,6 +33,7 @@ class Formation < ApplicationRecord
 	
 	scope :not_archived, -> { where("archive is null OR archive is false") }
 	scope :ordered, -> {order(:nom, :promo)}
+	scope :partenaire_qse, -> { where("LEFT(abrg, 5) IN ('M1QSE', 'M2QSE')") }
 	
 	def nom_promo
 		self.promo.blank? ? self.nom : "#{self.nom} - #{self.promo}" 
@@ -95,11 +96,6 @@ class Formation < ApplicationRecord
 		else
 			self.color
 		end
-	end
-
-	# Pour savoir si cette formation est gérée par un partenaire QSE
-	def partenaire_qse?
-		%w[M1QSE M2QSE].include?(self.abrg[0..4])
 	end
 
 	def self.cobayes_émargement
