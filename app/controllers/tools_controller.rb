@@ -797,8 +797,7 @@ class ToolsController < ApplicationController
   end
 
   def etats_services
-
-    @intervenants ||= []
+    @intervenants_for_select = Intervenant.all
 
     if params[:start_date].present? && params[:end_date].present?
       @start_date = params[:start_date]
@@ -808,40 +807,38 @@ class ToolsController < ApplicationController
       params[:end_date]   ||= Date.today.last_month.at_end_of_month
     end
 
+    if params[:commit].present? && params[:status].blank? && params[:intervenant_id].blank?
+      redirect_to tools_etats_services_path, alert: "Il faut sélectionner au moins un status ou un intervenant"
+    end
+    @cours = Cour
+              .where(etat: Cour.etats.values_at(:confirmé, :réalisé))
+              .where("debut between ? and ?", @start_date, @end_date)
+
+    ids = @cours.distinct(:intervenant_id).pluck(:intervenant_id)
+    ids << @cours.distinct(:intervenant_binome_id).pluck(:intervenant_binome_id)
+
+    # Ajouter les vacataires
+    ids << Vacation
+              .where("date between ? and ?", @start_date, @end_date)
+              .distinct(:intervenant_id)
+              .pluck(:intervenant_id)
+
+    # Ajouter les responsables
+
+    ids << Responsabilite
+              .where("debut between ? and ?", @start_date, @end_date)
+              .distinct(:intervenant_id)
+              .pluck(:intervenant_id)
+
+    @intervenants = Intervenant.where(id: ids.flatten)
+
     if params[:status].present?
-      # Peupler la liste des intervenants ayant eu des cours en principal ou binome
-      @cours = Cour
-                .where(etat: Cour.etats.values_at(:confirmé, :réalisé))
-                .where("debut between ? and ?", @start_date, @end_date)
+      @intervenants = @intervenants.where(status: params[:status])
+    end
 
-      ids = @cours.distinct(:intervenant_id).pluck(:intervenant_id)
-      ids << @cours.distinct(:intervenant_binome_id).pluck(:intervenant_binome_id)
-
-      # Ajouter les vacataires
-      ids << Vacation
-                .where("date between ? and ?", @start_date, @end_date)
-                .distinct(:intervenant_id)
-                .pluck(:intervenant_id)
-
-      # Ajouter les responsables
-
-      ids << Responsabilite
-                .where("debut between ? and ?", @start_date, @end_date)
-                .distinct(:intervenant_id)
-                .pluck(:intervenant_id)
-
-      @intervenants = Intervenant.where(id: ids.flatten).where(status: params[:status])
-      @intervenants_for_select = @intervenants
-
-      if params[:intervenant_id].present?
-        intervenant = Intervenant.find_by(id: params[:intervenant_id])
-        if intervenant && intervenant.status == Intervenant.statuses.key(params[:status].to_i)
-          @intervenants = Intervenant.where(id: intervenant.id)
-        else
-          params[:intervenant_id] = nil  # on "vide" le param si ça ne colle pas
-        end
-      end
-    end 
+    if params[:intervenant_id].present?
+      @intervenants = Intervenant.where(id: params[:intervenant_id])
+    end
 
 
     @cumul_hetd = @cumul_vacations = @cumul_resps = 0

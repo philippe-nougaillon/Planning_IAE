@@ -13,29 +13,27 @@
             <%= text_field_tag :start_date, params[:start_date], type: 'date', class: "input input-bordered input-sm w-full" %>
         </div>
 
-        <div class="sm:w-1/6 pr-4">
+        <div class="w-full sm:w-1/6 pr-4">
             <%= label_tag :end_date, "Au" %>    
             <%= text_field_tag :end_date, params[:end_date], type: 'date', class: "input input-bordered input-sm w-full" %>
         </div>
 
-        <div class="sm:w-1/3 px-4">
+        <div class="w-full sm:w-1/4 px-4">
             <%= label_tag :status, "Statut" %>
             <%= select_tag :status, 
                 options_for_select(Intervenant.statuses, 
                 params[:status]), include_blank:true,
-                class: "slim-select", onchange: 'this.form.submit()' %>
-        </div>
+                class: "slim-select" %>
+        </div>  
 
-        <div class="sm:w-1/3 px-4">
-            <% if @intervenants_for_select %>
-                <%= label_tag :intervenant_id, "Intervenant" %>
-                <%= select_tag :intervenant_id,
-                                    options_from_collection_for_select(@intervenants_for_select, :id, :nom_prenom, params[:intervenant_id]), 
-                                    include_blank:true, 
-                                    onchange:'this.form.submit()', 
-                                    class: "slim-select" %>
-            <% end %>
+        <div class="w-full sm:w-1/4 px-4">
+            <%= label_tag :intervenant_id, "Intervenant" %>
+            <%= select_tag :intervenant_id,
+                                options_from_collection_for_select(@intervenants_for_select, :id, :nom_prenom, params[:intervenant_id]), 
+                                include_blank:true,
+                                class: "slim-select" %>
        </div>
+       <%= submit_tag "Rechercher", class: 'btn btn-outline btn-success btn-sm' %>
     </div>
 <% end %>
 
