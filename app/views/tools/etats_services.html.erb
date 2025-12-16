@@ -33,6 +33,24 @@
                                 include_blank:true,
                                 class: "slim-select" %>
        </div>
+        <div class="sm:w-fit">
+            <%= label_tag "Inclure ?" %>
+            <div class="relative flex-grow max-w-full flex-1 flex gap-1 items-center">
+                <%= check_box_tag :cours, 1, params[:cours], class: 'checkbox checkbox-xs checkbox-primary' %>
+                <%= label_tag :cours, "Cours", class: 'whitespace-nowrap' %>
+            </div>
+
+            <div class="relative flex-grow max-w-full flex-1 flex gap-1 items-center">
+                <%= check_box_tag :vacations, 1, params[:vacations], class: 'checkbox checkbox-xs checkbox-primary' %>
+                <%= label_tag :vacations, "Vacations", class: 'whitespace-nowrap' %>
+            </div>
+
+            <div class="relative flex-grow max-w-full flex-1 flex gap-1 items-center">
+                <%= check_box_tag :responsabilites, 1, params[:responsabilites], class: 'checkbox checkbox-xs checkbox-primary' %>
+                <%= label_tag :responsabilites, "Responsabilités", class: 'whitespace-nowrap' %>
+            </div>
+        </div>
+
        <%= submit_tag "Rechercher", class: 'btn btn-outline btn-success btn-sm' %>
     </div>
 <% end %>
@@ -44,7 +62,7 @@
 
     <div class="text-right">
         <%= link_to url_for(params
-                                .permit(:start_date, :end_date, :status)
+                                .permit(:start_date, :end_date, :status, :cours, :vacations, :responsabilites)
                                 .merge(intervenant_id: intervenant.id, format: 'xls')), 
                             class: 'btn btn-ghost btn-xs' do %>
                 <%= fa_icon 'file-excel' %>
@@ -52,7 +70,7 @@
         <% end %>
 
         <%= link_to url_for(params
-                                .permit(:start_date, :end_date, :status)
+                                .permit(:start_date, :end_date, :status, :cours, :vacations, :responsabilites)
                                 .merge(intervenant_id: intervenant.id, format: 'pdf')), 
                             class: 'btn btn-error btn-xs text-white' do %>
                 <%= fa_icon 'file-pdf' %>

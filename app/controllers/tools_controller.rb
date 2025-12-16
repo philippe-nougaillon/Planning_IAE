@@ -798,6 +798,7 @@ class ToolsController < ApplicationController
 
   def etats_services
     @intervenants_for_select = Intervenant.all
+    intervenants_ids = []
 
     if params[:start_date].present? && params[:end_date].present?
       @start_date = params[:start_date]
@@ -808,66 +809,74 @@ class ToolsController < ApplicationController
     end
 
     if params[:commit].present? && params[:status].blank? && params[:intervenant_id].blank?
-      redirect_to tools_etats_services_path, alert: "Il faut sélectionner au moins un status ou un intervenant"
-    end
-    @cours = Cour
-              .where(etat: Cour.etats.values_at(:confirmé, :réalisé))
-              .where("debut between ? and ?", @start_date, @end_date)
+      # Ne fait pas la suite s'il n'y a pas de filtre sur le status ou l'intervenant
+      redirect_to tools_etats_services_path(start_date: params[:start_date], end_date: params[:end_date], status: params[:status], intervenant_id: params[:intervenant_id], cours: params[:cours], vacations: params[:vacations], responsabilites: params[:responsabilites]), alert: "Il faut sélectionner au moins un status ou un intervenant"
+    else
 
-    ids = @cours.distinct(:intervenant_id).pluck(:intervenant_id)
-    ids << @cours.distinct(:intervenant_binome_id).pluck(:intervenant_binome_id)
+      if params[:cours] == '1'
+        @cours = Cour
+                  .where(etat: Cour.etats.values_at(:confirmé, :réalisé))
+                  .where("debut between ? and ?", @start_date, @end_date)
 
-    # Ajouter les vacataires
-    ids << Vacation
-              .where("date between ? and ?", @start_date, @end_date)
-              .distinct(:intervenant_id)
-              .pluck(:intervenant_id)
-
-    # Ajouter les responsables
-
-    ids << Responsabilite
-              .where("debut between ? and ?", @start_date, @end_date)
-              .distinct(:intervenant_id)
-              .pluck(:intervenant_id)
-
-    @intervenants = Intervenant.where(id: ids.flatten)
-
-    if params[:status].present?
-      @intervenants = @intervenants.where(status: params[:status])
-    end
-
-    if params[:intervenant_id].present?
-      @intervenants = Intervenant.where(id: params[:intervenant_id])
-    end
-
-
-    @cumul_hetd = @cumul_vacations = @cumul_resps = 0
-
-    respond_to do |format|
-      format.html
-
-      format.xls do
-        book = CoursEtatsServicesToXls.new(@cours, @intervenants, @start_date, @end_date).call
-        file_contents = StringIO.new
-        book.write file_contents # => Now file_contents contains the rendered file output
-        filename = "Export_Cours.xls"
-        send_data file_contents.string.force_encoding('binary'), filename: filename 
+        intervenants_ids << @cours.distinct(:intervenant_id).pluck(:intervenant_id)
+        intervenants_ids << @cours.distinct(:intervenant_binome_id).pluck(:intervenant_binome_id)
       end
 
-      format.pdf do
-        filename = "Etats_de_services_#{Date.today.to_s}"
-        pdf = ExportPdf.new
-        pdf.export_etats_de_services(@cours, @intervenants, @start_date, @end_date)
-
-        send_data pdf.render,
-            filename: filename.concat('.pdf'),
-            type: 'application/pdf',
-            disposition: 'inline'	
-
-        # response.headers['Content-Disposition'] = 'attachment; filename="' + filename + '.pdf"'
-        # render pdf: filename, :layout => 'pdf.html'
+      if params[:vacations] == '1'
+        # Ajouter les vacataires
+        intervenants_ids << Vacation
+                  .where("date between ? and ?", @start_date, @end_date)
+                  .distinct(:intervenant_id)
+                  .pluck(:intervenant_id)
       end
 
+      if params[:responsabilites] == '1'
+        # Ajouter les responsables
+        intervenants_ids << Responsabilite
+                  .where("debut between ? and ?", @start_date, @end_date)
+                  .distinct(:intervenant_id)
+                  .pluck(:intervenant_id)
+      end
+
+      @intervenants = Intervenant.where(id: intervenants_ids.flatten)
+
+      if params[:status].present?
+        @intervenants = @intervenants.where(status: params[:status])
+      end
+
+      if params[:intervenant_id].present?
+        @intervenants = Intervenant.where(id: params[:intervenant_id])
+      end
+
+
+      @cumul_hetd = @cumul_vacations = @cumul_resps = 0
+
+      respond_to do |format|
+        format.html
+
+        format.xls do
+          book = CoursEtatsServicesToXls.new(@cours, @intervenants, @start_date, @end_date, params[:cours], params[:vacations], params[:responsabilites]).call
+          file_contents = StringIO.new
+          book.write file_contents # => Now file_contents contains the rendered file output
+          filename = "Export_Cours.xls"
+          send_data file_contents.string.force_encoding('binary'), filename: filename 
+        end
+
+        format.pdf do
+          filename = "Etats_de_services_#{Date.today.to_s}"
+          pdf = ExportPdf.new
+          pdf.export_etats_de_services(@cours, @intervenants, @start_date, @end_date, params[:cours], params[:vacations], params[:responsabilites])
+
+          send_data pdf.render,
+              filename: filename.concat('.pdf'),
+              type: 'application/pdf',
+              disposition: 'inline'	
+
+          # response.headers['Content-Disposition'] = 'attachment; filename="' + filename + '.pdf"'
+          # render pdf: filename, :layout => 'pdf.html'
+        end
+
+      end
     end
   end
 

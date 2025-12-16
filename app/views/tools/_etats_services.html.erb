@@ -1,38 +1,44 @@
-<% cours_ids = @cours.where(intervenant: intervenant).order(:debut).pluck(:id) %>
-<% cours_ids << @cours.where(intervenant_binome: intervenant).order(:debut).pluck(:id) %>
-<% cours_ids = cours_ids.flatten %>
+<% if params[:cours] == '1' %>
+    <% cours_ids = @cours.where(intervenant: intervenant).order(:debut).pluck(:id) %>
+    <% cours_ids << @cours.where(intervenant_binome: intervenant).order(:debut).pluck(:id) %>
+    <% cours_ids = cours_ids.flatten %>
+<% end %>
 
-<% if cours_ids %>
-    <div class="page-header"> 
-        <h2 class="text-3xl"><%= link_to intervenant.nom_prenom, intervenant, target:"_new", class: 'text-primary hover:underline' %></h2>
-    </div> 
-
+<% if params[:vacations] == '1' %>
     <% @vacations = intervenant.vacations.where("date BETWEEN ? AND ?", @start_date, @end_date) %>
+<% end %>
+<% if params[:responsabilites] == '1' %>
     <% @responsabilites = intervenant.responsabilites.where("debut BETWEEN ? AND ?", @start_date, @end_date) %>
-    <% cumul_hetd = cumul_vacations = cumul_resps = cumul_tarif = cumul_duree = 0 %>
-    <% nbr_heures_statutaire = intervenant.nbr_heures_statutaire || 0 %>
+<% end %>
+<% cumul_hetd = cumul_vacations = cumul_resps = cumul_tarif = cumul_duree = 0 %>
+<% nbr_heures_statutaire = intervenant.nbr_heures_statutaire || 0 %>
 
-    <div class="overflow-x-auto">
-        <table class="table table-sm">
-            <thead class="bg-slate-100 border">
-                <tr>
-                    <th>Type</th>
-                    <th>Date</th>
-                    <th>Heure</th>
-                    <th>Formation</th>
-                    <th>Code</th>
-                    <th>Intitulé</th>
-                    <th></th>
-                    <th>Durée/Qté</th>
-                    <th>CM/TD</th>
-                    <th>Taux</th>
-                    <th>HETD</th>
-                    <th style="width: 120px">Montant</th>
-                    <th>Cumul_HETD</th>
-                </tr>
-            </thead>
+<div class="page-header"> 
+    <h2 class="text-3xl"><%= link_to intervenant.nom_prenom, intervenant, target:"_new", class: 'text-primary hover:underline' %></h2>
+</div> 
 
-            <% cours_ids.each do |id| %>
+<div class="overflow-x-auto">
+    <table class="table table-sm">
+        <thead class="bg-slate-100 border">
+            <tr>
+                <th>Type</th>
+                <th>Date</th>
+                <th>Heure</th>
+                <th>Formation</th>
+                <th>Code</th>
+                <th>Intitulé</th>
+                <th></th>
+                <th>Durée/Qté</th>
+                <th>CM/TD</th>
+                <th>Taux</th>
+                <th>HETD</th>
+                <th style="width: 120px">Montant</th>
+                <th>Cumul_HETD</th>
+            </tr>
+        </thead>
+
+        <% if params[:cours] == '1' %>
+            <% cours_ids.each_with_index do |id, index| %>
                 <% c = Cour.find(id) %>
                 <% cumul_duree += c.duree %> 
 
@@ -89,19 +95,24 @@
                         <% end %>
                     </td>
                 </tr>
+
+                <% if index == cours_ids.size - 1 %>
+                    <tr class="hover border">
+                        <th>C</th>
+                        <th colspan="5"><%= cours_ids.count %> cours au total</th>
+                        <th />
+                        <th class="text-right"><%= cumul_duree %></th>
+                        <th /><th /> 
+                        <th class="text-right"><%= cumul_hetd %></th>
+                        <th class="text-right"><%= number_to_currency(cumul_tarif) %></th> 
+                        <th class="text-right"><%= cumul_hetd %></th>   
+                    </tr>
+                <% end %>
             <% end %>
 
-            <tr class="hover border">
-                <th>C</th>
-                <th colspan="5"><%= cours_ids.count %> cours au total</th>
-                <th />
-                <th class="text-right"><%= cumul_duree %></th>
-                <th /><th /> 
-                <th class="text-right"><%= cumul_hetd %></th>
-                <th class="text-right"><%= number_to_currency(cumul_tarif) %></th> 
-                <th class="text-right"><%= cumul_hetd %></th>   
-            </tr>
+        <% end %>
 
+        <% if params[:vacations] == '1' %>
             <% @vacations.each_with_index do |vacation, index| %>
                 <% if vacation.vacation_activite %>
                     <% intitulé = vacation.vacation_activite.nom %>
@@ -147,7 +158,9 @@
                     </tr>
                 <% end %>
             <% end %>
+        <% end %>
 
+        <% if params[:responsabilites] == '1' %>
             <% @responsabilites.each_with_index do |resp, index| %>
                 <% montant_responsabilite = (resp.heures * Cour.Tarif).round(2) %>
                 <% cumul_resps += montant_responsabilite %>
@@ -182,25 +195,25 @@
                     </tr>
                 <% end %>
             <% end %>
+        <% end %>
 
-            <tfoot>
-                <tr>
-                    <th colspan="11" class="text-right">
-                        TOTAL <br>
-                        <% if nbr_heures_statutaire > 0 %>
-                            <small>
-                                Nbr Heures Statutaires: 
-                                <%= nbr_heures_statutaire %> h
-                                <% if (nbr_heures_statutaire > 0) && (cumul_hetd >= nbr_heures_statutaire) %>
-                                    | Dépassement: 
-                                    <%= (cumul_hetd - nbr_heures_statutaire) %> h
-                                <% end %>
-                            </small>
-                        <% end %>
-                    </th>
-                    <th class="text-right"><%= number_to_currency(cumul_resps + cumul_vacations + cumul_tarif) %></th>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
-<% end %>
+        <tfoot>
+            <tr>
+                <th colspan="11" class="text-right">
+                    TOTAL <br>
+                    <% if nbr_heures_statutaire > 0 %>
+                        <small>
+                            Nbr Heures Statutaires: 
+                            <%= nbr_heures_statutaire %> h
+                            <% if (nbr_heures_statutaire > 0) && (cumul_hetd >= nbr_heures_statutaire) %>
+                                | Dépassement: 
+                                <%= (cumul_hetd - nbr_heures_statutaire) %> h
+                            <% end %>
+                        </small>
+                    <% end %>
+                </th>
+                <th class="text-right"><%= number_to_currency(cumul_resps + cumul_vacations + cumul_tarif) %></th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
