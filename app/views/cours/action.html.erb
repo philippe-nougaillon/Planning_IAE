@@ -137,6 +137,15 @@
         <%= @intervertir_alerte %>
       </div>
     <% end %>
+    <% @cours.each do |cour|  %>
+      <% if cour.sujet.present? %>
+        <p class="text-error font-bold">
+          <%= fa_icon 'exclamation-triangle' %>
+          Attention, le sujet de l'examen ne sera pas interverti.
+        </p>
+        <% break %>
+      <% end %>
+    <% end %>
   <% elsif params[:action_name] == "Inviter" %>
     <p class="mb-4">
       <b>Intervenant(s) à inviter</b> 

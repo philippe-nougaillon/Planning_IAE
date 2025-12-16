@@ -232,17 +232,17 @@
             </div>
             <% if user_signed_in? && (params[:formation].present? || params[:intervenant].present?) %>
               <div class="float-right">
-                <%= link_to cours_url(format: :xls), class: 'btn btn-xs btn-success btn-outline' do %>
+                <%= link_to url_for(request.parameters.merge(format: :xls)), class: 'btn btn-xs btn-success btn-outline' do %>
                   <%= fa_icon 'file-excel' %>
                   Feuille Excel
                 <% end %>
 
-                <%= link_to cours_url(format: :pdf), class: 'btn btn-xs btn-error btn-outline' do %>
+                <%= link_to url_for(request.parameters.merge(format: :pdf)), class: 'btn btn-xs btn-error btn-outline' do %>
                   <%= fa_icon 'file-pdf' %>
                   Document PDF
                 <% end %>
 
-                <%= link_to cours_url(format: :ics), class: 'btn btn-xs btn-info btn-outline' do %>
+                <%= link_to url_for(request.parameters.merge(format: :ics)), class: 'btn btn-xs btn-info btn-outline' do %>
                   <%= fa_icon 'calendar' %>
                   Calendrier
                 <% end %>

@@ -12,9 +12,14 @@
     <div class="flex flex-wrap">
 
       <div class="sm:w-2/6 px-4">
-        <%= label_tag :formation %>   
-        <%= select_tag :formation, grouped_options_for_select(Formation.for_select, params[:formation]), class: 'slim-select',
-                        include_blank:true, onchange: 'this.form.submit()' %>
+        <%= label_tag :formation %>  
+        <% if current_user.partenaire_qse? %>
+          <%= select_tag :formation, options_for_select(@formations.pluck(:nom), params[:formation]), class: 'slim-select',
+                          include_blank:true, onchange: 'this.form.submit()' %>
+        <% else %>
+          <%= select_tag :formation, grouped_options_for_select(@formations, params[:formation]), class: 'slim-select',
+                          include_blank:true, onchange: 'this.form.submit()' %>
+        <% end %>
       </div>
 
       <div class="sm:w-2/6 px-4">

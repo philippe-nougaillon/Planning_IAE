@@ -6,10 +6,19 @@ class SujetsController < ApplicationController
   # GET /sujets or /sujets.json
   def index
     if params[:archive].blank?
-      @sujets = Sujet.where.not(workflow_state: "archivé").joins(:cour)
+      @sujets = Sujet.where.not(workflow_state: "archivé")
     else
-      @sujets = Sujet.all.joins(:cour)
+      @sujets = Sujet.all
     end
+
+    if current_user.partenaire_qse?
+      @sujets = @sujets.joins(cour: :formation).merge(Formation.partenaire_qse)
+      @formations = Formation.partenaire_qse.ordered
+    else
+      @formations = Formation.for_select
+    end
+
+    @sujets = @sujets.joins(:cour)
 
     if params[:gestionnaire].present?
       formations = Formation.where(user_id: current_user.id)
