@@ -195,6 +195,14 @@ class Dossier < ApplicationRecord
     DossierMailerJob.perform_later(self.id, id, :dossier_email, "Relancé")
   end
 
+  def relancer_dossier_urgent(id)
+    # Passe le dossier à l'état 'Relancé'
+    self.relancer!
+
+    # Informe l'intervenant
+    DossierMailerJob.perform_later(self.id, id, :relancer_dossier_urgent, "Relance urgente")
+  end
+
   def rejeter_dossier(id)
     # Vérifier qu'il y a au moins un document à l'état rejeté
     rejeter = false

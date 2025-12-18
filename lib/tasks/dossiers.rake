@@ -27,4 +27,22 @@ namespace :dossiers do
       end
     end
   end
+
+  desc "Relance automatique des dossiers qui sont ne sont pas validés, lorsque l'intervenant a bientôt un cours"
+  task relance_dossiers_urgents: :environment do
+    date_debut_p, date_fin_p = Dossier.dates_début_fin_année_scolaire(AppConstants::PÉRIODE)
+    cible = Date.today + 15.days
+
+    dossiers_à_relancer = Dossier.joins(intervenant: :cours)
+      .where(période: AppConstants::PÉRIODE)
+      .where.not(workflow_state: ["nouveau", "déposé", "validé", "archivé"])
+      .where(cours: { debut: date_debut_p..date_fin_p }) # Uniquement les cours de la période
+      .group("dossiers.id")
+      .having("DATE(MIN(cours.debut)) = ?", cible)
+
+    # Pour chaque dossier à relancer, on passe à l'état suivant et on envoie le mail
+    dossiers_à_relancer.each do |dossier|
+      dossier.relancer_dossier_urgent(0)
+    end
+  end
 end
