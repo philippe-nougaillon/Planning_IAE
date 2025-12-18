@@ -4,7 +4,7 @@ namespace :dossiers do
 
     # Dossiers à relancer dans la période actuelle
     dossiers = Dossier.where(période: AppConstants::PÉRIODE)
-                      .where.not(workflow_state: ["nouveau", "déposé", "validé", "archivé"])
+                      .where.not(workflow_state: ["nouveau", "déposé", "validé", "archivé", "relancé 10 fois"])
 
     dossiers_à_relancer = dossiers.where("DATE(updated_at) < ?", Date.today - 30.days)
 
