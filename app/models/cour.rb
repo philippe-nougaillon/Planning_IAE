@@ -11,8 +11,8 @@ class Cour < ApplicationRecord
   belongs_to :intervenant_binome, class_name: :Intervenant, foreign_key: :intervenant_binome_id, optional: true 
   belongs_to :salle, optional: true
 
-  has_many :invits
-  has_many :presences
+  has_many :invits, dependent: :destroy
+  has_many :presences, dependent: :destroy
   has_many :etudiants, through: :formation
   has_many :options, dependent: :destroy
   accepts_nested_attributes_for :options,
