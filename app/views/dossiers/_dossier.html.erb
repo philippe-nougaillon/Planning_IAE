@@ -15,16 +15,10 @@
       <%= dossier.workflow_state.humanize %>
     </span>
     <% if dossier.envoyé? && (dossier.updated_at.to_date..Date.today).to_a.size >= 60 %>
-      <%= fa_icon 'exclamation-circle' %>
+      <%= fa_icon 'exclamation-circle', title: "L'intervenant a envoyé son dossier mais n'a pas été traité depuis plus de 60 jours", class: 'hover:cursor-help' %>
     <% end %>
-    <% if dossier.workflow_state == 'relancé 1 fois' && (dossier.updated_at.to_date..Date.today).to_a.size >= 15 %>
-      <%= fa_icon 'exclamation-circle' %>
-    <% end %>
-    <% if dossier.workflow_state == 'relancé 2 fois' && (dossier.updated_at.to_date..Date.today).to_a.size >= 7 %>
-      <%= fa_icon 'exclamation-circle' %>
-    <% end %>
-    <% if dossier.workflow_state == 'relancé 3 fois' && (dossier.updated_at.to_date..Date.today).to_a.size >= 3 %>
-      <%= fa_icon 'exclamation-circle' %>
+    <% if !["nouveau", "déposé", "validé", "archivé"].include?(dossier.workflow_state) && (dossier.updated_at.to_date..Date.today).to_a.size > 30 %>
+      <%= fa_icon 'exclamation-circle', title: "Le dossier n'est pas validé et n'a pas été relancé depuis au moins 30 jours", class: 'hover:cursor-help' %>
     <% end %>
   </td>
   <% if dossier.mail_log %>
