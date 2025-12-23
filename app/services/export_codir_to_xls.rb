@@ -152,7 +152,7 @@ class ExportCodirToXls < ApplicationService
       end
 
       if !(cumul_tarif + cumul_vacations + cumul_responsabilites).zero?
-        total = ["Total N°#{formation.eotp_nom}"]
+        total = ["N°#{formation.eotp_nom}"]
         if @cours_showed
           # Cumul heures des cours (sans prendre en compte si c'est un CM/TD/3xTD)
           total << cumul_heures_cours
@@ -176,7 +176,7 @@ class ExportCodirToXls < ApplicationService
 
         sheet.row(index).replace total
         sheet.row(index).default_format = bold
-        index += 2
+        index += 1
       end
 
     end

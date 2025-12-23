@@ -18,8 +18,11 @@
       <% if dossier.new_record? %>
         <div class="form-control mb-4">
           <%= form.label :période %>
-          <%= form.select :période, options_for_select(Dossier.périodes, dossier.période), {}, class: 'select select-bordered select-sm w-full' %>
+          <%= form.text_field :période, class: 'input input-bordered input-sm w-full', disabled: true %>
         </div>
+
+        <%= form.hidden_field :période %>
+
         <div class="form-control">
           <%= form.label :intervenant_id %>
           <%= form.select :intervenant_id, 

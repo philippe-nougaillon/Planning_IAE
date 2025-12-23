@@ -797,8 +797,8 @@ class ToolsController < ApplicationController
   end
 
   def etats_services
-
-    @intervenants ||= []
+    @intervenants_for_select = Intervenant.all
+    intervenants_ids = []
 
     if params[:start_date].present? && params[:end_date].present?
       @start_date = params[:start_date]
@@ -808,69 +808,75 @@ class ToolsController < ApplicationController
       params[:end_date]   ||= Date.today.last_month.at_end_of_month
     end
 
-    if params[:status].present?
-      # Peupler la liste des intervenants ayant eu des cours en principal ou binome
-      @cours = Cour
-                .where(etat: Cour.etats.values_at(:confirmé, :réalisé))
-                .where("debut between ? and ?", @start_date, @end_date)
+    if params[:commit].present? && params[:status].blank? && params[:intervenant_id].blank?
+      # Ne fait pas la suite s'il n'y a pas de filtre sur le status ou l'intervenant
+      redirect_to tools_etats_services_path(start_date: params[:start_date], end_date: params[:end_date], status: params[:status], intervenant_id: params[:intervenant_id], cours: params[:cours], vacations: params[:vacations], responsabilites: params[:responsabilites]), alert: "Il faut sélectionner au moins un status ou un intervenant"
+    else
 
-      ids = @cours.distinct(:intervenant_id).pluck(:intervenant_id)
-      ids << @cours.distinct(:intervenant_binome_id).pluck(:intervenant_binome_id)
+      if params[:cours] == '1'
+        @cours = Cour
+                  .where(etat: Cour.etats.values_at(:confirmé, :réalisé))
+                  .where("debut between ? and ?", @start_date, @end_date)
 
-      # Ajouter les vacataires
-      ids << Vacation
-                .where("date between ? and ?", @start_date, @end_date)
-                .distinct(:intervenant_id)
-                .pluck(:intervenant_id)
+        intervenants_ids << @cours.distinct(:intervenant_id).pluck(:intervenant_id)
+        intervenants_ids << @cours.distinct(:intervenant_binome_id).pluck(:intervenant_binome_id)
+      end
 
-      # Ajouter les responsables
+      if params[:vacations] == '1'
+        # Ajouter les vacataires
+        intervenants_ids << Vacation
+                  .where("date between ? and ?", @start_date, @end_date)
+                  .distinct(:intervenant_id)
+                  .pluck(:intervenant_id)
+      end
 
-      ids << Responsabilite
-                .where("debut between ? and ?", @start_date, @end_date)
-                .distinct(:intervenant_id)
-                .pluck(:intervenant_id)
+      if params[:responsabilites] == '1'
+        # Ajouter les responsables
+        intervenants_ids << Responsabilite
+                  .where("debut between ? and ?", @start_date, @end_date)
+                  .distinct(:intervenant_id)
+                  .pluck(:intervenant_id)
+      end
 
-      @intervenants = Intervenant.where(id: ids.flatten).where(status: params[:status])
-      @intervenants_for_select = @intervenants
+      @intervenants = Intervenant.where(id: intervenants_ids.flatten)
+
+      if params[:status].present?
+        @intervenants = @intervenants.where(status: params[:status])
+      end
 
       if params[:intervenant_id].present?
-        intervenant = Intervenant.find_by(id: params[:intervenant_id])
-        if intervenant && intervenant.status == Intervenant.statuses.key(params[:status].to_i)
-          @intervenants = Intervenant.where(id: intervenant.id)
-        else
-          params[:intervenant_id] = nil  # on "vide" le param si ça ne colle pas
+        @intervenants = Intervenant.where(id: params[:intervenant_id])
+      end
+
+
+      @cumul_hetd = @cumul_vacations = @cumul_resps = 0
+
+      respond_to do |format|
+        format.html
+
+        format.xls do
+          book = CoursEtatsServicesToXls.new(@cours, @intervenants, @start_date, @end_date, params[:cours], params[:vacations], params[:responsabilites]).call
+          file_contents = StringIO.new
+          book.write file_contents # => Now file_contents contains the rendered file output
+          filename = "Export_Cours.xls"
+          send_data file_contents.string.force_encoding('binary'), filename: filename 
         end
+
+        format.pdf do
+          filename = "Etats_de_services_#{Date.today.to_s}"
+          pdf = ExportPdf.new
+          pdf.export_etats_de_services(@cours, @intervenants, @start_date, @end_date, params[:cours], params[:vacations], params[:responsabilites])
+
+          send_data pdf.render,
+              filename: filename.concat('.pdf'),
+              type: 'application/pdf',
+              disposition: 'inline'	
+
+          # response.headers['Content-Disposition'] = 'attachment; filename="' + filename + '.pdf"'
+          # render pdf: filename, :layout => 'pdf.html'
+        end
+
       end
-    end 
-
-
-    @cumul_hetd = @cumul_vacations = @cumul_resps = 0
-
-    respond_to do |format|
-      format.html
-
-      format.xls do
-        book = CoursEtatsServicesToXls.new(@cours, @intervenants, @start_date, @end_date).call
-        file_contents = StringIO.new
-        book.write file_contents # => Now file_contents contains the rendered file output
-        filename = "Export_Cours.xls"
-        send_data file_contents.string.force_encoding('binary'), filename: filename 
-      end
-
-      format.pdf do
-        filename = "Etats_de_services_#{Date.today.to_s}"
-        pdf = ExportPdf.new
-        pdf.export_etats_de_services(@cours, @intervenants, @start_date, @end_date)
-
-        send_data pdf.render,
-            filename: filename.concat('.pdf'),
-            type: 'application/pdf',
-            disposition: 'inline'	
-
-        # response.headers['Content-Disposition'] = 'attachment; filename="' + filename + '.pdf"'
-        # render pdf: filename, :layout => 'pdf.html'
-      end
-
     end
   end
 
@@ -1542,9 +1548,11 @@ class ToolsController < ApplicationController
     @dossier_créées = 0
     @erreurs = 0
 
+    @période = params[:période]
+
     @stream = capture_stdout do
-      Intervenant.sans_dossier.each do |intervenant|
-        new_dossier = Dossier.new(intervenant_id: intervenant.id, période: AppConstants::PÉRIODE)
+      Intervenant.sans_dossier(@période).each do |intervenant|
+        new_dossier = Dossier.new(intervenant_id: intervenant.id, période: @période)
         msg = "#{intervenant.nom_prenom}"
         if new_dossier.valid?
           puts "[OK] #{msg}"
