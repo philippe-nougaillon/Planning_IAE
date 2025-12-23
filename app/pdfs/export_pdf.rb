@@ -58,28 +58,37 @@ class ExportPdf
         ] 
     end
   
-    def export_etats_de_services(cours, intervenants, start_date, end_date)
+    def export_etats_de_services(cours, intervenants, start_date, end_date, is_cours_showed, is_vacations_showed, is_responsabilites_showed)
         intervenant = intervenants.first
 
-        cours_ids = cours.where(intervenant: intervenant)
-                         .where("hors_service_statutaire IS NOT TRUE")
-                         .joins(:formation)
-                         .pluck(:id)
-                         .flatten
+        if is_cours_showed
+            cours_ids = cours.where(intervenant: intervenant)
+                            .where("hors_service_statutaire IS NOT TRUE")
+                            .joins(:formation)
+                            .pluck(:id)
+                            .flatten
 
-        cours_ids << cours
-                        .where(intervenant_binome: intervenant)
-                        .where("hors_service_statutaire IS NOT TRUE")
-                        .joins(:formation)
-                        .pluck(:id)
-                        .flatten
+            cours_ids << cours
+                            .where(intervenant_binome: intervenant)
+                            .where("hors_service_statutaire IS NOT TRUE")
+                            .joins(:formation)
+                            .pluck(:id)
+                            .flatten
+            
+            cumul_eotp, cumul_eotp_durée = {}, {}
+        end
         
-        vacations = intervenant.vacations.where("date BETWEEN ? AND ?", start_date, end_date)
-        responsabilites = intervenant.responsabilites.where("debut BETWEEN ? AND ?", start_date, end_date)
+        if is_vacations_showed
+            vacations = intervenant.vacations.where("date BETWEEN ? AND ?", start_date, end_date)
+        end
+
+        if is_responsabilites_showed
+            responsabilites = intervenant.responsabilites.where("debut BETWEEN ? AND ?", start_date, end_date)
+        end
         
         cumul_hetd = cumul_vacations = cumul_resps = cumul_tarif = cumul_duree = 0 
         nbr_heures_statutaire = intervenant.nbr_heures_statutaire || 0
-        cumul_eotp, cumul_eotp_durée = {}, {}
+
 
         image "#{@image_path}/logo@100.png", :height => 40, :position => :center
         move_down @margin_down
@@ -97,112 +106,117 @@ class ExportPdf
 
         data = [ ['Code','Dest. fi.','Date','Heure','Formation','Intitulé','Durée','CM/TD','Taux','HETD','Montant'] ]
 
-        # Cours 
-        cours_ids.flatten.each do |id|
-            c = Cour.find(id)
-            cumul_duree += c.duree 
-    
-            if c.imputable?
-                cumul_hetd += c.duree.to_f * c.HETD
-                montant_service = c.montant_service.round(2)
-                cumul_tarif += montant_service
-                formation = Formation.find(c.formation_id)
-                eotp = formation.code_analytique_avec_indice(c.debut)
-                cumul_eotp.keys.include?(eotp) ? cumul_eotp[eotp] += montant_service : cumul_eotp[eotp] = montant_service
-                cumul_eotp_durée.keys.include?(eotp) ? cumul_eotp_durée[eotp] += c.duree : cumul_eotp_durée[eotp] = c.duree
-            end
-    
-            formation = Formation.find(c.formation_id)
-
-            data += [ [
-                formation.code_analytique_avec_indice(c.debut),
-                formation.code_analytique.include?('DISTR') ? "101PAIE" : "102PAIE",
-                I18n.l(c.debut.to_date),
-                c.debut.strftime("%k:%M"),
-                formation.abrg,
-                "#{c.ue} #{c.nom_ou_ue}",
-                c.duree.to_f,
-                formation.nomtauxtd,
-                c.taux_td,
-                c.HETD,
-                number_to_currency(montant_service)
-            ] ]
-        end    
-
-        # Sous-total des Cours
-        data += [ [   
-            "<i><b>#{ cours_ids.flatten.count } cours au total</i></b>",
-            nil, nil, nil, nil, nil,
-            cumul_duree,
-            nil, nil,
-            cumul_hetd,
-            "<b>#{number_to_currency(cumul_tarif)}</b>"
-        ] ]
-
-
-        # Vacations
-        vacations.each_with_index do | vacation, index |
-            if vacation.vacation_activite
-                intitulé = vacation.vacation_activite.nom
-                tarif = vacation.vacation_activite.vacation_activite_tarifs.find_by(statut: VacationActiviteTarif.statuts[vacation.intervenant.status])
-                if tarif && tarif.forfait_hetd
-                    cumul_hetd += tarif.forfait_hetd
+        if is_cours_showed
+            # Cours 
+            cours_ids.flatten.each do |id|
+                c = Cour.find(id)
+                cumul_duree += c.duree 
+        
+                if c.imputable?
+                    cumul_hetd += c.duree.to_f * c.HETD
+                    montant_service = c.montant_service.round(2)
+                    cumul_tarif += montant_service
+                    formation = Formation.find(c.formation_id)
+                    eotp = formation.code_analytique_avec_indice(c.debut)
+                    cumul_eotp.keys.include?(eotp) ? cumul_eotp[eotp] += montant_service : cumul_eotp[eotp] = montant_service
+                    cumul_eotp_durée.keys.include?(eotp) ? cumul_eotp_durée[eotp] += c.duree : cumul_eotp_durée[eotp] = c.duree
                 end
-            end
-            cumul_vacations += vacation.montant || 0
+        
+                formation = Formation.find(c.formation_id)
 
-            formation = Formation.find(vacation.formation_id) 
-            
-            data += [ [
-                formation.code_analytique_avec_indice(vacation.date),
-                formation.code_analytique.include?('DISTR') ? "101PAIE" : "102PAIE",
-                I18n.l(vacation.date),
-                nil,
-                formation.nom,
-                intitulé || vacation.titre,
-                vacation.qte,
-                nil, nil,
-                vacation.forfaithtd,
-                number_to_currency(vacation.montant)
-            ] ] 
-    
-            if index == vacations.size - 1
                 data += [ [
-                    "<b><i>#{vacations.size} vacation.s au total</i></b>",
-                    nil, nil, nil, nil, nil, nil, nil, nil, nil,  
-                    "<b>#{number_to_currency(cumul_vacations)}</b>"
+                    formation.code_analytique_avec_indice(c.debut),
+                    formation.code_analytique.include?('DISTR') ? "101PAIE" : "102PAIE",
+                    I18n.l(c.debut.to_date),
+                    c.debut.strftime("%k:%M"),
+                    formation.abrg,
+                    "#{c.ue} #{c.nom_ou_ue}",
+                    c.duree.to_f,
+                    formation.nomtauxtd,
+                    c.taux_td,
+                    c.HETD,
+                    number_to_currency(montant_service)
                 ] ]
+            end    
+
+            # Sous-total des Cours
+            data += [ [   
+                "<i><b>#{ cours_ids.flatten.count } cours au total</i></b>",
+                nil, nil, nil, nil, nil,
+                cumul_duree,
+                nil, nil,
+                cumul_hetd,
+                "<b>#{number_to_currency(cumul_tarif)}</b>"
+            ] ]
+        end
+
+        if is_vacations_showed
+            # Vacations
+            vacations.each_with_index do | vacation, index |
+                if vacation.vacation_activite
+                    intitulé = vacation.vacation_activite.nom
+                    tarif = vacation.vacation_activite.vacation_activite_tarifs.find_by(statut: VacationActiviteTarif.statuts[vacation.intervenant.status])
+                    if tarif && tarif.forfait_hetd
+                        cumul_hetd += tarif.forfait_hetd
+                    end
+                end
+                cumul_vacations += vacation.montant || 0
+
+                formation = Formation.find(vacation.formation_id) 
+                
+                data += [ [
+                    formation.code_analytique_avec_indice(vacation.date),
+                    formation.code_analytique.include?('DISTR') ? "101PAIE" : "102PAIE",
+                    I18n.l(vacation.date),
+                    nil,
+                    formation.nom,
+                    intitulé || vacation.titre,
+                    vacation.qte,
+                    nil, nil,
+                    vacation.forfaithtd,
+                    number_to_currency(vacation.montant)
+                ] ] 
+        
+                if index == vacations.size - 1
+                    data += [ [
+                        "<b><i>#{vacations.size} vacation.s au total</i></b>",
+                        nil, nil, nil, nil, nil, nil, nil, nil, nil,  
+                        "<b>#{number_to_currency(cumul_vacations)}</b>"
+                    ] ]
+                end
             end
         end
 
-        # Responsabilités
-        responsabilites.each_with_index do |resp, index|
-            montant_responsabilite = (resp.heures * Cour.Tarif).round(2)
-            cumul_resps += montant_responsabilite
-            cumul_hetd += resp.heures
+        if is_responsabilites_showed
+            # Responsabilités
+            responsabilites.each_with_index do |resp, index|
+                montant_responsabilite = (resp.heures * Cour.Tarif).round(2)
+                cumul_resps += montant_responsabilite
+                cumul_hetd += resp.heures
 
-            data += [ [
-                resp.formation.code_analytique_avec_indice(resp.debut),
-                resp.formation.code_analytique.include?('DISTR') ? "101PAIE" : "102PAIE",
-                I18n.l(resp.debut),
-                nil,
-                resp.formation.nom,
-                resp.titre,
-                resp.heures,
-                'TD', 
-                Cour.Tarif,
-                nil,
-                number_to_currency(montant_responsabilite)
-                ] ]
-
-            if index == responsabilites.size - 1
                 data += [ [
-                    "<i><b>#{ responsabilites.count } #{ responsabilites.count > 1 ? 'responsabilités' : 'responsabilité' } au total</i></b>",
-                    nil, nil, nil, nil, nil,
+                    resp.formation.code_analytique_avec_indice(resp.debut),
+                    resp.formation.code_analytique.include?('DISTR') ? "101PAIE" : "102PAIE",
+                    I18n.l(resp.debut),
                     nil,
-                    nil, nil, nil,
-                    "<b>#{ number_to_currency(cumul_resps) }</b>"
+                    resp.formation.nom,
+                    resp.titre,
+                    resp.heures,
+                    'TD', 
+                    Cour.Tarif,
+                    nil,
+                    number_to_currency(montant_responsabilite)
                     ] ]
+
+                if index == responsabilites.size - 1
+                    data += [ [
+                        "<i><b>#{ responsabilites.count } #{ responsabilites.count > 1 ? 'responsabilités' : 'responsabilité' } au total</i></b>",
+                        nil, nil, nil, nil, nil,
+                        nil,
+                        nil, nil, nil,
+                        "<b>#{ number_to_currency(cumul_resps) }</b>"
+                        ] ]
+                end
             end
         end
 
@@ -226,25 +240,27 @@ class ExportPdf
                     table.column(6..10).style(:align => :right)
                 end
 
-        move_down @margin_down
+                move_down @margin_down
+                
+        if is_cours_showed
+            # Tableau récap par code OTP
+            data = [ ['Code EOTP', 'Total services', 'Nbr heures de cours' ]]    
 
-        # Tableau récap par code OTP
-        data = [ ['Code EOTP', 'Total services', 'Nbr heures de cours' ]]    
+            cumul_eotp.each do |eotp|
+                data += [ [
+                    eotp.first,
+                    eotp.last,
+                    cumul_eotp_durée[eotp.first].to_f,
+                ] ]
+            end
 
-        cumul_eotp.each do |eotp|
-            data += [ [
-                eotp.first,
-                eotp.last,
-                cumul_eotp_durée[eotp.first].to_f,
-            ] ]
+            table data, header: true, row_colors: ["F0F0F0", "FFFFFF"] do 
+                column(1..2).style(:align => :right)
+                cells.style(inline_format: true, border_width: 1, border_color: 'C0C0C0')
+            end
+
+            move_down @margin_down
         end
-
-        table data, header: true, row_colors: ["F0F0F0", "FFFFFF"] do 
-            column(1..2).style(:align => :right)
-            cells.style(inline_format: true, border_width: 1, border_color: 'C0C0C0')
-        end
-
-        move_down @margin_down
 
         font "Helvetica"
         font_size 10

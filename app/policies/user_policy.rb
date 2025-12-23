@@ -50,7 +50,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def enable_otp?
-    user && user.role_number >= 4
+    user && (user.role_number >= 4 || user.partenaire_qse?)
   end
 
   def disable_otp?

@@ -6,37 +6,40 @@
     <ul class="menu menu-horizontal px-1">
       <% if user_signed_in? %>
         <% if current_user.étudiant? %>
-          <%= navbar_nav_item('ma journée', 'today', mes_sessions_etudiant_path, nil, 'mes_sessions_etudiant') %>
-          <%= navbar_nav_item('cours', 'calendar_month', cours_path, 'Planning', 'index') %>
+          <%= navbar_nav_item('Ma journée', 'today', mes_sessions_etudiant_path, nil, 'mes_sessions_etudiant') %>
+          <%= navbar_nav_item('Planning', 'calendar_month', cours_path, 'cours', nil, 'mes_sessions_etudiant') %>
         <% elsif current_user.intervenant? || current_user.enseignant? %>
-          <%= navbar_nav_item('ma journée', 'today', mes_sessions_intervenant_path, nil, 'mes_sessions_intervenant') %>
-          <%= navbar_nav_item('cours', 'calendar_month', cours_path, 'Planning', 'index') %>
+          <%= navbar_nav_item('Ma journée', 'today', mes_sessions_intervenant_path, nil, 'mes_sessions_intervenant') %>
+          <%= navbar_nav_item('Planning', 'calendar_month', cours_path, 'cours', nil, 'mes_sessions_intervenant') %>
         <% else %>
-          <%= navbar_nav_item('cours', 'calendar_month', cours_path, 'Planning') %>
+          <%= navbar_nav_item('Planning', 'calendar_month', cours_path, 'cours') %>
         <% end %>
         <% unless current_user.étudiant? %>
-          <%= navbar_nav_item('salles', 'meeting_room', occupation_salles_path) %>
+          <%= navbar_nav_item('Salles', 'meeting_room', occupation_salles_path, 'salles') %>
         <% end %>
         <% if policy(current_user).left_navbar? %>
-          <%= navbar_nav_item('formations', 'work', formations_path, nil, nil, "py-0") %>
-          <%= navbar_nav_item('intervenants', 'co_present', intervenants_path) %>
-          <%= navbar_nav_item('etudiants', 'school', etudiants_path) %>
+          <%= navbar_nav_item('Formations', 'work', formations_path, 'formations', nil, [], "py-0") %>
+          <%= navbar_nav_item('Intervenants', 'co_present', intervenants_path, 'intervenants', nil) %>
+          <%= navbar_nav_item('Étudiants', 'school', etudiants_path, 'etudiants') %>
         <% end %>
         
         <% if current_user.rh? %>
-          <%= navbar_nav_item('dossiers', 'folder', dossiers_path) %>
-          <%= navbar_nav_item('vacations', 'co_present', vacations_path) %>
+          <%= navbar_nav_item('Dossiers', 'folder', dossiers_path, 'dossiers') %>
+          <%= navbar_nav_item('Vacations', 'co_present', vacations_path, 'vacations') %>
         <% end %>
 
-        <% if current_user.intervenant? %>
-          <%= navbar_nav_item('sujets', 'docs', sujets_intervenant_path(Intervenant.find_by(id: @intervenant_user_id)), 'Sujets d\'examens') %>
+        <% if current_user.intervenant? && !current_user.partenaire_qse? %>
+          <%= navbar_nav_item('Sujets d\'examens', 'docs', sujets_intervenant_path(Intervenant.find_by(id: @intervenant_user_id)), 'intervenants', 'sujets') %>
+        <% end %>
+        <% if current_user.partenaire_qse? %>
+          <%= navbar_nav_item('Sujets d\'examens', 'docs', sujets_path(), 'sujets') %>
         <% end %>
 
         <% if policy(:tool).audit_cours? %>
           <li class="nav-item">
             <% is_active = params[:action] == 'audit_cours' %>
             <%= link_to tools_audit_cours_path, class: "flex items-center gap-1 py-0 text-#{ is_active ? 'primary' : 'base-content' }" do %>
-              <span class="material-symbols-outlined text-xl mb-1">
+              <span class="material-symbols-outlined text-xl">
                 calendar_check
               </span>
               À booker
@@ -52,7 +55,7 @@
           <li class="nav-item">
             <% is_active = params[:action] == 'commandes' %>
             <%= link_to tools_commandes_path, class: "flex items-center gap-1 py-0 text-#{ is_active ? 'primary' : 'base-content' }" do %>
-              <span class="material-symbols-outlined text-xl mb-1">
+              <span class="material-symbols-outlined text-xl">
                 local_cafe
               </span>
               Commandes
@@ -65,7 +68,7 @@
           <li class="nav-item">
             <% is_active = params[:action] == 'commandes_v2' %>
             <%= link_to tools_commandes_v2_path, class: "flex items-center gap-1 py-0 text-#{ is_active ? 'primary' : 'base-content' }" do %>
-              <span class="material-symbols-outlined text-xl mb-1">
+              <span class="material-symbols-outlined text-xl">
                 local_cafe
               </span>
               Commandes v2

@@ -26,11 +26,14 @@ class Formation < ApplicationRecord
 
 	validates :nom, :nbr_etudiants, :nbr_heures, :abrg, presence: true
 	validates :nom, uniqueness: { scope: :promo }
+	validate :archivable_only_when_no_more_cours, if: Proc.new {|formation| (formation.archive)}
 
 	normalizes :nom, with: -> nom { nom.strip }
+	normalizes :code_analytique, with: -> code { code.strip }
 	
 	scope :not_archived, -> { where("archive is null OR archive is false") }
 	scope :ordered, -> {order(:nom, :promo)}
+	scope :partenaire_qse, -> { where("LEFT(abrg, 5) IN ('M1QSE', 'M2QSE')") }
 	
 	def nom_promo
 		self.promo.blank? ? self.nom : "#{self.nom} - #{self.promo}" 
@@ -95,11 +98,6 @@ class Formation < ApplicationRecord
 		end
 	end
 
-	# Pour savoir si cette formation est gérée par un partenaire QSE
-	def partenaire_qse?
-		%w[M1QSE M2QSE].include?(self.abrg[0..4])
-	end
-
 	def self.cobayes_émargement
 		[258, 599, 671, 672, 683, 687, 695]
 	end
@@ -107,6 +105,17 @@ class Formation < ApplicationRecord
 	def self.sent_to_edusign_ids
 		self.where(send_to_edusign: true).ids
 	end
+
+	def remaining_cours?
+		(self.cours.where("debut > ?", DateTime.now).any?)
+	end
+
+	def archivable_only_when_no_more_cours
+		if self.remaining_cours?
+			errors.add(:formation, 'ne peut être archivé, des cours ne sont pas encore passés')
+		end
+	end
+
 
 end
 

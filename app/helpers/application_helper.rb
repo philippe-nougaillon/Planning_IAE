@@ -1,7 +1,15 @@
 module ApplicationHelper
     
-    def navbar_nav_item(name, icon, path, label = nil, action = nil, classes = nil)
-        is_active = action ? action_name == action : controller_name == name
+    def navbar_nav_item(label, icon, path, controller = nil, action = nil, exclude_action = nil, classes = nil)
+        is_active = if controller && action
+                        controller_name == controller && action_name == action
+                    elsif controller
+                        controller_name == controller && exclude_action != action_name
+                    elsif action
+                        action_name == action
+                    else
+                        controller_name == label && exclude_action != action_name
+                    end
         render(inline: %{
             <li>
                 <%= link_to '#{ url_for(path) }', 
@@ -9,7 +17,7 @@ module ApplicationHelper
                     <span class="material-symbols-outlined text-xl">
                         #{ icon }
                     </span>
-                    #{ label ? label : name.humanize }
+                    #{ label }
                 <% end %>
             </li>
         })

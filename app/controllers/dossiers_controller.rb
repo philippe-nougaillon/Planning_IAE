@@ -61,10 +61,11 @@ class DossiersController < ApplicationController
 
   # GET /dossiers/new
   def new
+    période = params[:période] || AppConstants::PÉRIODE
     # En cas de changement : changer également dans create
-    @intervenants = Intervenant.sans_dossier
+    @intervenants = Intervenant.sans_dossier(période)
     @dossier = Dossier.new
-    @dossier.période = AppConstants::PÉRIODE
+    @dossier.période = période
   end
 
   # GET /dossiers/1/edit
@@ -80,7 +81,7 @@ class DossiersController < ApplicationController
         format.html { redirect_to @dossier, notice: "Nouveau dossier créé avec succès" }
         format.json { render :show, status: :created, location: @dossier }
       else
-        @intervenants = Intervenant.sans_dossier
+        @intervenants = Intervenant.sans_dossier(params[:dossier][:période])
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @dossier.errors, status: :unprocessable_entity }
       end
