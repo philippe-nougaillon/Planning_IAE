@@ -292,8 +292,8 @@
           <h4 class="text-xl font-bold"><%= c.formation.nom %></h4>
           <% c.formation.etudiants.order(:nom, :prénom).each do |etudiant| %>
             <span class="flex gap-1" data-action="click->action#click">
-              <%= check_box_tag "etudiants_id[#{etudiant.id}]", true, false, data: {"action-target": "source", "checkbox-select-all-target": "checkbox"} %>
-              <%= etudiant.nom_prénom %>
+              <%= check_box_tag "etudiants_id[#{etudiant.id}]", true, false, data: {"action-target": "source", "checkbox-select-all-target": "checkbox"}, class: 'hover:cursor-pointer' %>
+              <%= label_tag "etudiants_id[#{etudiant.id}]", etudiant.nom_prénom, class: 'hover:cursor-pointer' %>
             </span>
           <% end %>
           <br>
