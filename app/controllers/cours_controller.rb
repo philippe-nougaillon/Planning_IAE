@@ -610,10 +610,14 @@ class CoursController < ApplicationController
 
           send_data pdf.render, filename: filename, type: 'application/pdf'
         when "Générer Pochette Examen PDF"
-          if params[:etudiants_id]
+            etudiants_ids = []
+            etudiants_ids += params[:etudiants_id].keys if params[:etudiants_id].present?
+            etudiants_ids += params[:etudiants_en_rattrapage_ids] if params[:etudiants_en_rattrapage_ids].present?
+            etudiants_ids.uniq!
+          if etudiants_ids.any?
             filename = "Pochette_Examen_#{ Date.today }.pdf"
             pdf = ExportPdf.new
-            pdf.pochette_examen(@cours, params[:etudiants_id].try(:keys).count, params[:papier], params[:calculatrice], params[:ordi_tablette], params[:téléphone], params[:dictionnaire])
+            pdf.pochette_examen(@cours, etudiants_ids.count, params[:papier], params[:calculatrice], params[:ordi_tablette], params[:téléphone], params[:dictionnaire])
 
             send_data pdf.render, filename: filename, type: 'application/pdf'
           else 

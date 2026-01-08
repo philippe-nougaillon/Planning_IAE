@@ -309,6 +309,10 @@
       </div>
     <% elsif ["Générer Pochette Examen PDF", "Convocation étudiants PDF"].include?(params[:action_name]) %>
       <% wrong_parameter = false %>
+      <% if params[:action_name] == "Générer Pochette Examen PDF" %>
+        Étudiants d'autres promotions :
+        <%= select_tag :etudiants_en_rattrapage_ids, options_from_collection_for_select(Etudiant.where.not(formation_id: @cours.first.formation_id), :id, :nom_prénom), multiple: true, class: 'slim-select' %>
+      <% end %>
       <% if @cours.count == 1 && @cours.first.examen? %>
         <h3 class="text-2xl mt-4">Sélectionnez les options d'examens</h3>
         <i>Cochez les options autorisées.</i>
