@@ -541,7 +541,7 @@ class CoursController < ApplicationController
 
       when 'Convocation étudiants PDF'
         if @cours.count == 1 && @cours.first.examen?
-          étudiants = Etudiant.where(id: params[:etudiants_id].try(:keys))
+          étudiants = Etudiant.where(id: etudiants_selected_ids)
           if étudiants.any?
             étudiants.each do |étudiant|
               pdf = ExportPdf.new
@@ -610,10 +610,7 @@ class CoursController < ApplicationController
 
           send_data pdf.render, filename: filename, type: 'application/pdf'
         when "Générer Pochette Examen PDF"
-            etudiants_ids = []
-            etudiants_ids += params[:etudiants_id].keys if params[:etudiants_id].present?
-            etudiants_ids += params[:etudiants_en_rattrapage_ids] if params[:etudiants_en_rattrapage_ids].present?
-            etudiants_ids.uniq!
+            etudiants_ids = etudiants_selected_ids
           if etudiants_ids.any?
             filename = "Pochette_Examen_#{ Date.today }.pdf"
             pdf = ExportPdf.new
@@ -890,6 +887,14 @@ class CoursController < ApplicationController
 
     def is_user_authorized
       authorize Cour
+    end
+
+    def etudiants_selected_ids
+      etudiants_ids = []
+      etudiants_ids += params[:etudiants_id].keys if params[:etudiants_id].present?
+      etudiants_ids += params[:etudiants_en_rattrapage_ids] if params[:etudiants_en_rattrapage_ids].present?
+      etudiants_ids.uniq!
+      etudiants_ids
     end
 
   end
