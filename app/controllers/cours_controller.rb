@@ -346,6 +346,10 @@ class CoursController < ApplicationController
                   .where(id: @action_ids)
                   .order(:debut)
 
+      if ["Générer Pochette Examen PDF", "Convocation étudiants PDF"].include?(params[:action_name])
+        @sujet = @cours.first.sujet
+      end
+
     else
       redirect_to cours_path, alert:'Veuillez choisir des cours et une action à appliquer !'
     end
@@ -545,7 +549,7 @@ class CoursController < ApplicationController
           if étudiants.any?
             étudiants.each do |étudiant|
               pdf = ExportPdf.new
-              pdf.convocation(@cours.first, étudiant, (params[:papier]=='1'), (params[:calculatrice]=='1'), (params[:ordi_tablette]=='1'), (params[:téléphone]=='1'), (params[:dictionnaire]=='1'))
+              pdf.convocation(@cours.first, étudiant, params[:papier], params[:calculatrice], params[:ordi_tablette], params[:téléphone], params[:dictionnaire])
               title = "Convocation #{@cours.first.type_examen} - #{@cours.first.nom_ou_ue}"
               mailer_response = EtudiantMailer.convocation(étudiant, pdf, @cours.first, title).deliver_now
               MailLog.create(subject: "Convocation UE##{@cours.first.code_ue}", user_id: current_user.id, message_id: mailer_response.message_id, to: étudiant.email, title: title)

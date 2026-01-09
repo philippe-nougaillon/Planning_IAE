@@ -64,6 +64,47 @@
           </p>
         </div>
       <% end %>
+
+      <% if !@sujet.can_déposer? %>
+        <p class="mb-4">
+          <strong>Options</strong>
+          <br>
+          Papier : 
+          <% if @sujet.papier %>
+            <span class='text-success'>Oui</span>
+          <% else %>
+            <span class='text-error'>Non</span>
+          <% end %>
+          <br>
+          Calculatrice :
+          <% if @sujet.calculatrice %>
+            <span class='text-success'>Oui</span>
+          <% else %>
+            <span class='text-error'>Non</span>
+          <% end %>
+          <br>
+          Ordinateur et tablette :
+          <% if @sujet.ordi_tablette %>
+            <span class='text-success'>Oui</span>
+          <% else %>
+            <span class='text-error'>Non</span>
+          <% end %>
+          <br>
+          Téléphone :
+          <% if @sujet.téléphone %>
+            <span class='text-success'>Oui</span>
+          <% else %>
+            <span class='text-error'>Non</span>
+          <% end %>
+          <br>
+          Dictionnaire :
+          <% if @sujet.dictionnaire %>
+            <span class='text-success'>Oui</span>
+          <% else %>
+            <span class='text-error'>Non</span>
+          <% end %>
+        </p>
+      <% end %>
     </div>
 
     <div class="flex-1">
@@ -219,6 +260,45 @@
             <%= @sujet.workflow_state.humanize %>
           </span>
         </p>
+
+        <p class="mb-4">
+          <strong>Options</strong>
+          <br>
+          Papier : 
+          <% if @sujet.papier %>
+            <span class='text-success'>Oui</span>
+          <% else %>
+            <span class='text-error'>Non</span>
+          <% end %>
+          <br>
+          Calculatrice :
+          <% if @sujet.calculatrice %>
+            <span class='text-success'>Oui</span>
+          <% else %>
+            <span class='text-error'>Non</span>
+          <% end %>
+          <br>
+          Ordinateur et tablette :
+          <% if @sujet.ordi_tablette %>
+            <span class='text-success'>Oui</span>
+          <% else %>
+            <span class='text-error'>Non</span>
+          <% end %>
+          <br>
+          Téléphone :
+          <% if @sujet.téléphone %>
+            <span class='text-success'>Oui</span>
+          <% else %>
+            <span class='text-error'>Non</span>
+          <% end %>
+          <br>
+          Dictionnaire :
+          <% if @sujet.dictionnaire %>
+            <span class='text-success'>Oui</span>
+          <% else %>
+            <span class='text-error'>Non</span>
+          <% end %>
+        </p>
       <% end %>
     </div>
 
@@ -252,6 +332,35 @@
         <%= form_with id:'sujet_form', url: deposer_sujet_path, model: @sujet, data: { controller: 'nested-form', nested_form_wrapper_selector_value: '.nested-form-wrapper' } do |f| %>
           <%= f.file_field :sujet, required: true, label: 'Fichier PDF', accept: 'application/pdf', class: 'file-input file-input-bordered file-input-sm file-input-success flex-1' %>
           <br>
+
+          <div class="mt-8 mb-4">
+            <h3 class="text-2xl mt-4">Sélectionnez les options d'examens</h3>
+            <i>Cochez les options autorisées.</i>
+          </div>
+
+          <div class="relative flex-grow max-w-full flex-1 gap-4">
+            <%= f.check_box :papier, class: 'hover:cursor-pointer' %>
+            <%= f.label :papier, 'Papiers autorisés ?', class: 'hover:cursor-pointer' %>
+          </div>
+
+          <div class="relative flex-grow max-w-full flex-1 gap-4">
+            <%= f.check_box :calculatrice, class: 'hover:cursor-pointer' %>
+            <%= f.label :calculatrice, 'Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission autorisés ?', class: 'hover:cursor-pointer' %>
+          </div>
+          <div class="relative flex-grow max-w-full flex-1 gap-4">
+            <%= f.check_box :ordi_tablette, class: 'hover:cursor-pointer' %>
+            <%= f.label :ordi_tablette, 'Ordinateurs et tablettes autorisés ?', class: 'hover:cursor-pointer' %>
+          </div>
+
+          <div class="relative flex-grow max-w-full flex-1 gap-4">
+            <%= f.check_box :téléphone, class: 'hover:cursor-pointer' %>
+            <%= f.label :téléphone, 'Téléphones portables autorisés ?', class: 'hover:cursor-pointer' %>
+          </div>
+
+          <div class="relative flex-grow max-w-full flex-1 gap-4">
+            <%= f.check_box :dictionnaire, class: 'hover:cursor-pointer' %>
+            <%= f.label :dictionnaire, 'Dictionnaires autorisés ?', class: 'hover:cursor-pointer' %>
+          </div>
 
           <button type="submit" name="commit" value="Déposer le sujet" class="btn btn-success w-full sm:w-48 btn-lg text-white mt-6" data-disable-with="Déposer le sujet" data-turbo-confirm="ATTENTION ! Une fois déposé, vous ne pourrez plus modifier le sujet. Confirmez-vous le dépôt de votre sujet">
             <i class="far fa-arrow-alt-circle-down"></i>
