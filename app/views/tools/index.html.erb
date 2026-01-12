@@ -34,6 +34,13 @@
 				<%= link_to "Taux d'occupation salles", tools_taux_occupation_salles_path, class: 'text-primary hover:underline' %>
 			</li>
 
+			<% if policy(Dossier).index? %>
+				<li class="mb-6">
+					<%= fa_icon 'folder' %>
+					<%= link_to "Dossiers", dossiers_path, class: 'text-primary hover:underline' %>
+				</li>
+			<% end %>
+
 			<% if current_user.rh? || current_user.admin? %>
 				<li class="mb-6">
 					<%= fa_icon 'list-alt' %>
