@@ -6,15 +6,16 @@ class DossierPolicy < ApplicationPolicy
   end
 
   def index?
-    user && (user.rh? || user.admin?)
+    # inclus tous les RH, gestionnaires, et certains admin
+    user && [4,5].include?(user.role_number) || ENV["USER_DOSSIER_AUTHORIZATION_IDS"].to_s.split(',').map(&:to_i).include?(user.id)
   end
 
   def show?
-    record.can_déposer? || (user && (user.rh? || user.admin?))
+    record.can_déposer? || (user && (user.rh? || ENV["SUPER_ADMIN_IDS"].to_s.split(',').map(&:to_i).include?(user.id)))
   end
 
   def new?
-    user.rh? || user.admin?
+    user && (user.rh? || ENV["SUPER_ADMIN_IDS"].to_s.split(',').map(&:to_i).include?(user.id))
   end
 
   def update?
@@ -22,7 +23,7 @@ class DossierPolicy < ApplicationPolicy
   end
 
   def edit?
-    index?
+    user && (user.rh? || ENV["SUPER_ADMIN_IDS"].to_s.split(',').map(&:to_i).include?(user.id))
   end
 
   def create?
@@ -30,11 +31,11 @@ class DossierPolicy < ApplicationPolicy
   end
 
   def destroy?
-    index?
+    user && (user.rh? || ENV["SUPER_ADMIN_IDS"].to_s.split(',').map(&:to_i).include?(user.id))
   end
 
   def audits?
-    user && (user.rh? || user.admin?)
+    user && (user.rh? || ENV["SUPER_ADMIN_IDS"].to_s.split(',').map(&:to_i).include?(user.id))
   end
 
   def deposer?
@@ -46,7 +47,7 @@ class DossierPolicy < ApplicationPolicy
   end
 
   def envoyer?
-    user.rh? || user.admin?
+    user && (user.rh? || ENV["SUPER_ADMIN_IDS"].to_s.split(',').map(&:to_i).include?(user.id))
   end
 
   def valider?
@@ -66,7 +67,7 @@ class DossierPolicy < ApplicationPolicy
   end
 
   def action?
-    user && (user.rh? || user.admin?)
+    user && (user.rh? || ENV["SUPER_ADMIN_IDS"].to_s.split(',').map(&:to_i).include?(user.id))
   end
 
   def action_do?

@@ -82,7 +82,9 @@
             <th>État Mail</th>
             <th><%= sort_link 'dossiers.created_at', 'Création' %></th>
             <th><%= sort_link 'dossiers.updated_at', 'MÀJ' %></th>
-            <th colspan="3"></th>
+            <% if policy(Dossier).destroy? %>
+              <th colspan="3"></th>
+            <% end %>
           </tr>
         </thead>
 
