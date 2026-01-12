@@ -16,7 +16,7 @@ class ExportCodirToXls < ApplicationService
     Spreadsheet.client_encoding = 'UTF-8'
 
     book = Spreadsheet::Workbook.new
-    sheet = book.create_worksheet name: 'Etats de services'
+    sheet = book.create_worksheet name: 'Export CoDir'
 		bold = Spreadsheet::Format.new :weight => :bold, :size => 10
 
     sheet.row(0).concat ['IAE PARIS']

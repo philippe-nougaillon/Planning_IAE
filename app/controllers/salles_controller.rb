@@ -184,6 +184,7 @@ class SallesController < ApplicationController
     if !(params[:id].blank?)
       cours = Cour.find(params[:id])
     elsif !(params[:date].blank? || params[:duree].blank? || params[:formation_id].blank? || params[:intervenant_id].blank?)
+      # TODO: Salle.first peut ne pas exister si la base de données n'a pas encore de salles créées
       cours = Cour.new(debut: DateTime.parse(params[:date]), 
                         duree: params[:duree], 
                         formation_id: params[:formation_id], 

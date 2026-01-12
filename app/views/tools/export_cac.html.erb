@@ -1,0 +1,22 @@
+<div class="border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'list-alt' %>Export CAC</h1>
+</div>
+<br>
+
+<h3 class="text-2xl mb-4">Exporte vers Excel la liste des intervenants ayant eu cours sur la période sélectionné</h3>
+
+<%= form_tag({action: "export_cac_do", method: :post}, class: 'mt-12') do %>
+  <div class="flex flex-wrap items-start gap-4">
+
+    <div class="sm:w-1/5">
+      <%= label_tag :période, "Période" %>
+      <%= select_tag :période, 
+                          options_for_select(Dossier.périodes, params[:période]), 
+                          include_blank: true,
+                          class: 'select select-bordered select-sm w-full' %>
+    </div>
+
+  </div>
+
+  <%= submit_tag "Exporter", class: 'btn btn-sm btn-success btn-outline mt-8', 'data-turbo': false %>
+<% end %>
