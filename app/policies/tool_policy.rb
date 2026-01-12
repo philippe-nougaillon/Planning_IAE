@@ -129,6 +129,14 @@ class ToolPolicy < ApplicationPolicy
     export_codir?
   end
 
+  def export_cac?
+    user.rh? || user.admin?
+  end
+
+  def export_cac_do?
+    export_cac?
+  end
+
   def audits?
     user.admin?
   end

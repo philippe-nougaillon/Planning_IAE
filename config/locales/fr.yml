@@ -395,6 +395,8 @@ fr:
       title: Export état liquidatif collectif
     export_codir:
       title: Export CoDir
+    export_cac:
+      title: Export CAC
     liste_surveillants_examens:
       title: Liste des surveillances d'examens
     liste_surveillants_examens_v2:

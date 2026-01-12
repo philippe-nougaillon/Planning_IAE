@@ -919,6 +919,20 @@ class ToolsController < ApplicationController
     send_data file_contents.string.force_encoding('binary'), filename: filename
   end
 
+  def export_cac
+    params[:période] ||= AppConstants::PÉRIODE
+  end
+
+  def export_cac_do
+    book = ExportCacToXls.new(params[:période]).call
+    filename = "Export_cac.xls"
+
+    file_contents = StringIO.new
+    book.write file_contents # => Now file_contents contains the rendered file output
+    send_data file_contents.string.force_encoding('binary'), filename: filename
+  end
+
+
   def audits
     @audits = Audited::Audit.order("id DESC")
     @types  = Audited::Audit.pluck(:auditable_type).uniq.sort
