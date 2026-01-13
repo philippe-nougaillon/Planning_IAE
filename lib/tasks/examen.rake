@@ -3,9 +3,13 @@ namespace :examen do
     # Envoyer ou relancer le lien du sujet aux intervenants
     jours_rappel = [60, 30, 20, 10, 7, 5, 3]
 
-    examens = Cour.where("DATE(cours.debut) >= ?", Date.new(2025,12,01)).where(intervenant_id: [169, 1166])
+    examens = Cour
+                .where("DATE(cours.debut) >= ?", Date.new(2025,12,01))
+                .where(intervenant_id: [169, 1166])
+                .order(:debut)
+                .uniq{|cour| cour.debut && cour.intervenant_binome_id && cour.nom}
 
-    examens.order(:debut).each do |examen|
+    examens.each do |examen|
       nombre_jours = examen.days_between_today_and_debut
       # Si le nombre de jours restant avant la date d'examen atteint le seuil de relance, envoyer le mail de rappel correspondant
       if jours_rappel.include?(nombre_jours)
