@@ -7,10 +7,10 @@ class Sujet < ApplicationRecord
   extend FriendlyId
   friendly_id :slug_candidates, use: :slugged
 
-  belongs_to :cour
   belongs_to :mail_log, optional: true
   
   has_one :formation, through: :cour
+  has_many :cours
 
   has_one_attached :sujet
 
@@ -128,6 +128,10 @@ class Sujet < ApplicationRecord
   def persist_workflow_state(new_value)
     self[:workflow_state] = new_value
     save!
+  end
+
+  def cour
+    self.cours.first
   end
 
 private

@@ -12,13 +12,13 @@ class SujetsController < ApplicationController
     end
 
     if current_user.partenaire_qse?
-      @sujets = @sujets.joins(cour: :formation).merge(Formation.partenaire_qse)
+      @sujets = @sujets.joins(cours: :formation).merge(Formation.partenaire_qse)
       @formations = Formation.partenaire_qse.ordered
     else
       @formations = Formation.for_select
     end
 
-    @sujets = @sujets.joins(:cour)
+    @sujets = @sujets.joins(:cours)
 
     if params[:gestionnaire].present?
       formations = Formation.where(user_id: current_user.id)

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_01_08_164313) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_13_135032) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -129,11 +129,13 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_08_164313) do
     t.integer "code_ue"
     t.string "edusign_id"
     t.boolean "no_send_to_edusign"
+    t.bigint "sujet_id"
     t.index ["debut"], name: "index_cours_on_debut"
     t.index ["etat"], name: "index_cours_on_etat"
     t.index ["formation_id"], name: "index_cours_on_formation_id"
     t.index ["intervenant_id"], name: "index_cours_on_intervenant_id"
     t.index ["salle_id"], name: "index_cours_on_salle_id"
+    t.index ["sujet_id"], name: "index_cours_on_sujet_id"
   end
 
   create_table "documents", force: :cascade do |t|
@@ -479,6 +481,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_08_164313) do
     t.datetime "updated_at", precision: nil, null: false
     t.string "bloc"
     t.datetime "discarded_at", precision: nil
+    t.boolean "privée", default: false
     t.index ["discarded_at"], name: "index_salles_on_discarded_at"
   end
 
@@ -616,7 +619,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_08_164313) do
   end
 
   create_table "sujets", force: :cascade do |t|
-    t.bigint "cour_id", null: false
     t.bigint "mail_log_id"
     t.string "workflow_state"
     t.string "slug"
@@ -628,7 +630,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_08_164313) do
     t.boolean "ordi_tablette", default: false
     t.boolean "téléphone", default: false
     t.boolean "dictionnaire", default: false
-    t.index ["cour_id"], name: "index_sujets_on_cour_id"
+    t.string "commentaires"
+    t.bigint "cour_id"
     t.index ["mail_log_id"], name: "index_sujets_on_mail_log_id"
   end
 
@@ -716,6 +719,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_08_164313) do
   add_foreign_key "attendances", "cours"
   add_foreign_key "attendances", "etudiants"
   add_foreign_key "attendances", "signature_emails"
+  add_foreign_key "cours", "sujets"
   add_foreign_key "documents", "dossiers"
   add_foreign_key "dossier_etudiants", "etudiants"
   add_foreign_key "dossiers", "mail_logs"
@@ -738,7 +742,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_08_164313) do
   add_foreign_key "solid_queue_ready_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
-  add_foreign_key "sujets", "cours"
   add_foreign_key "sujets", "mail_logs"
   add_foreign_key "vacation_activite_tarifs", "vacation_activites"
   add_foreign_key "vacations", "vacation_activites"
