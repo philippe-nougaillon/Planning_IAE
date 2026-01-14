@@ -184,7 +184,7 @@ class SujetsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def sujet_params
-      params.require(:sujet).permit(:sujet, :papier, :calculatrice, :ordi_tablette, :téléphone, :dictionnaire)
+      params.require(:sujet).permit(:sujet, :papier, :calculatrice, :ordi_tablette, :téléphone, :dictionnaire, :commentaires)
     end
 
     def sortable_columns
