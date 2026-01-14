@@ -6,9 +6,9 @@ class SujetsController < ApplicationController
   # GET /sujets or /sujets.json
   def index
     if params[:archive].blank?
-      @sujets = Sujet.where.not(workflow_state: "archivé")
+      @sujets = Sujet.where.not(workflow_state: "archivé").joins(:cours)
     else
-      @sujets = Sujet.all
+      @sujets = Sujet.all.joins(:cours)
     end
 
     if current_user.partenaire_qse?
@@ -18,38 +18,25 @@ class SujetsController < ApplicationController
       @formations = Formation.for_select
     end
 
-    @sujets = @sujets.joins(:cours)
-
     if params[:gestionnaire].present?
-      formations = Formation.where(user_id: current_user.id)
-      sujet_ids = []
-      @sujets.each do |sujet|
-        if formations.include?(sujet.formation)
-          sujet_ids << sujet.id
-        end
-      end
-
-      @sujets = @sujets.where(id: sujet_ids)
+      @sujets = @sujets.joins(:formations).where(formations: {user_id: current_user.id})
     end
 
     if params[:formation].present?
       formation_id = Formation.find_by(nom: params[:formation]).id
-      examens_from_formation = Cour.where(formation_id: formation_id).select{|cour| cour.examen?}
-      @sujets = @sujets.where(cour_id: examens_from_formation)
+      @sujets = @sujets.where(cours: {formation_id: formation_id})
     end
 
     if params[:intervenant].present?
       nom_prenom_intervenant = params[:intervenant].split(' ', 2)
       intervenant_id = Intervenant.find_by(nom: nom_prenom_intervenant.first, prenom: nom_prenom_intervenant.last.rstrip).id
-      examens_from_intervenant = Cour.where(intervenant_binome_id: intervenant_id).select{|cour| cour.examen?}
-      @sujets = @sujets.where(cour_id: examens_from_intervenant)
+      @sujets = @sujets.where(cours: {intervenant_binome_id: intervenant_id})
     end
 
     if params[:workflow_state].present?
       @sujets = @sujets.where("workflow_state = ?", params[:workflow_state].to_s.downcase)
     end
 
-    @sujets = @sujets.reorder(Arel.sql("#{sort_column} #{sort_direction}"))
     @sujets = @sujets.paginate(page: params[:page], per_page: 20)
   end
 
@@ -201,11 +188,11 @@ class SujetsController < ApplicationController
     end
 
     def sortable_columns
-      ['cours.debut','sujets.workflow_state', 'sujets.created_at', 'sujets.updated_at']
+      ['sujets.workflow_state', 'sujets.created_at', 'sujets.updated_at']
     end
 
     def sort_column
-      sortable_columns.include?(params[:column_sujet]) ? params[:column_sujet] : "debut"
+      sortable_columns.include?(params[:column_sujet]) ? params[:column_sujet] : "updated_at"
     end
 
     def sort_direction
