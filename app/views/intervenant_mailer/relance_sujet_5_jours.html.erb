@@ -5,6 +5,10 @@
     <br><br>
     La bonne organisation et la tenue de l'examen dépendent de la réception de votre sujet. Il devient urgent de nous le faire parvenir en le déposant <%= link_to 'ici', url_for(sujet_url(@sujet)) %>, en <b>format pdf avec la page de garde</b>, ou en copiant ce lien <%= url_for(sujet_url(@sujet)) %> dans votre navigateur,
     <br>
+    <br><br>
+    <% if @examens_count > 1 %>
+        <b>Attention : <%= @examens_count %> examens sont liés à ce sujet mais le sujet n'est à déposer qu'une fois.</b>
+    <% end %>
 </p>
 
 <p style="margin-bottom: 0.5rem">

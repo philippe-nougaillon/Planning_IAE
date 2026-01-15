@@ -52,6 +52,7 @@ class IntervenantMailer < ApplicationMailer
         @code_ue = examen.code_ue
         @formation = examen.formation.nom
         @deadline = examen.debut - 1.month
+        @examens_count = sujet.cours.count
 
         attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
         mail(to: intervenant.email, subject: title)
@@ -82,6 +83,7 @@ class IntervenantMailer < ApplicationMailer
         @code_ue = examen.code_ue
         @jours = examen.days_between_today_and_debut
         @sujet = sujet
+        @examens_count = sujet.cours.count
         attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
         mail(to: @intervenant.email, subject: title)
     end
@@ -95,6 +97,7 @@ class IntervenantMailer < ApplicationMailer
         @ue = examen.nom_ou_ue
         @code_ue = examen.code_ue
         @formation = examen.formation.nom
+        @examens_count = sujet.cours.count
 
         attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
         mail(to: intervenant.email, subject: title)
@@ -110,6 +113,7 @@ class IntervenantMailer < ApplicationMailer
         @code_ue = examen.code_ue
         @formation = examen.formation.nom
         @first_relance = sujet.created_at
+        @examens_count = sujet.cours.count
 
         attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
         mail(to: intervenant.email, subject: title)
@@ -125,6 +129,7 @@ class IntervenantMailer < ApplicationMailer
         @code_ue = examen.code_ue
         @formation = examen.formation.nom
         @first_relance = sujet.created_at
+        @examens_count = sujet.cours.count
 
         attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
         mail(to: intervenant.email, subject: title)
@@ -140,6 +145,7 @@ class IntervenantMailer < ApplicationMailer
         @code_ue = examen.code_ue
         @formation = examen.formation.nom
         @first_relance = sujet.created_at
+        @examens_count = sujet.cours.count
 
         attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
         mail(to: intervenant.email, subject: title)
@@ -155,6 +161,7 @@ class IntervenantMailer < ApplicationMailer
         @code_ue = examen.code_ue
         @formation = examen.formation.nom
         @first_relance = sujet.created_at
+        @examens_count = sujet.cours.count
 
         attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
         mail(to: intervenant.email, subject: title)
@@ -171,6 +178,7 @@ class IntervenantMailer < ApplicationMailer
         @formation = examen.formation.nom
         @first_relance = sujet.created_at
         @jour_avant_debut = examen.debut.to_date - 1.day
+        @examens_count = sujet.cours.count
 
         attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
         mail(to: intervenant.email, subject: title)

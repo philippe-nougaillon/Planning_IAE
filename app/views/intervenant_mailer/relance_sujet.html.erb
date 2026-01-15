@@ -6,6 +6,10 @@
     Tout sujet envoyé sans page de garde, sera imprimé tel quel.
     <br><br>
     L'examen est prévu dans <b><%= @jours %> jours</b>, le <b><%= l(@debut.to_date, format: :long) %> à <%= l @debut, format: :heures_log %></b>.
+    <br><br>
+    <% if @examens_count > 1 %>
+        <b>Attention : <%= @examens_count %> examens sont liés à ce sujet mais le sujet n'est à déposer qu'une fois.</b>
+    <% end %>
 
 </p>
 

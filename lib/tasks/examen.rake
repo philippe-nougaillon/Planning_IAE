@@ -22,8 +22,9 @@ namespace :examen do
         sujet = model_examen.sujet
         unless sujet.present?
           sujet = Sujet.create
-          cours_examen.each do |cours|
-            cours.update(sujet_id: sujet.id)
+          cours_examen.each do |examen|
+            examen.sujet_id = sujet.id
+            examen.save(validate: false)
           end
         end
         
@@ -38,8 +39,7 @@ namespace :examen do
   task archiver_sujet_passe: :environment do
     examen_yesterday = Cour.where("DATE(cours.fin) < ?", Date.today).where(intervenant_id: [169, 1166])
     examen_yesterday.each do |cour|
-      if sujet = Sujet.find_by(cour_id: cour.id)
-
+      if sujet = cour.sujet
         # Archive le sujet des examens passés
         # Si l'archivage est impossible, on ne fait rien
         if sujet.can_archiver?

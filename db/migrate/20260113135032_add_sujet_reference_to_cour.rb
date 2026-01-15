@@ -5,7 +5,7 @@ class AddSujetReferenceToCour < ActiveRecord::Migration[7.2]
     Sujet.all.each do |sujet|
       c = Cour.find_by(id: sujet.cour_id)
       c.sujet_id = sujet.id
-      c.save
+      c.save(validate: false)
     end
   end
 end

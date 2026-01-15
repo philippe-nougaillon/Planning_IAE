@@ -11,6 +11,8 @@ class SujetsController < ApplicationController
       @sujets = Sujet.all.joins(:cours)
     end
 
+    @sujets = @sujets.distinct
+
     if current_user.partenaire_qse?
       @sujets = @sujets.joins(cours: :formation).merge(Formation.partenaire_qse)
       @formations = Formation.partenaire_qse.ordered

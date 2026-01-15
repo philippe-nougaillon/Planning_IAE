@@ -5,6 +5,10 @@
     <br>
     Nous vous rappellons que le sujet doit être déposé <%= link_to 'ici', url_for(sujet_url(@sujet)) %>, en <b>format pdf avec la page de garde</b>, ou en copiant ce lien <%= url_for(sujet_url(@sujet)) %> dans votre navigateur,
     <br>
+    <br><br>
+    <% if @examens_count > 1 %>
+        <b>Attention : <%= @examens_count %> examens sont liés à ce sujet mais le sujet n'est à déposer qu'une fois.</b>
+    <% end %>
 </p>
 
 <p style="margin-bottom: 0.5rem">

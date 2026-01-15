@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_01_13_135032) do
+ActiveRecord::Schema[7.2].define(version: 2026_01_13_144318) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -481,7 +481,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_13_135032) do
     t.datetime "updated_at", precision: nil, null: false
     t.string "bloc"
     t.datetime "discarded_at", precision: nil
-    t.boolean "privée", default: false
     t.index ["discarded_at"], name: "index_salles_on_discarded_at"
   end
 
@@ -631,7 +630,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_13_135032) do
     t.boolean "téléphone", default: false
     t.boolean "dictionnaire", default: false
     t.string "commentaires"
-    t.bigint "cour_id"
     t.index ["mail_log_id"], name: "index_sujets_on_mail_log_id"
   end
 
