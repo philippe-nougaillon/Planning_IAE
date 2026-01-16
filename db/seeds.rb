@@ -11,104 +11,12 @@
 # EnvoiLog.create(date_prochain: Date.parse('2021-09-24')) unless EnvoiLog.any?
 
 Ouverture.create([
-  { bloc: "P",
-  jour: "lundi",
-  début: "2000-01-01 08:00:00.000000000 +0000",
-  fin: "2000-01-01 22:00:00.000000000 +0000"},
-  { bloc: "P",
-  jour: "mardi",
-  début: "2000-01-01 08:00:00.000000000 +0000",
-  fin: "2000-01-01 22:00:00.000000000 +0000"},
-  { bloc: "P",
-  jour: "mercredi",
-  début: "2000-01-01 08:00:00.000000000 +0000",
-  fin: "2000-01-01 22:00:00.000000000 +0000"},
-  { bloc: "P",
-  jour: "jeudi",
-  début: "2000-01-01 08:00:00.000000000 +0000",
-  fin: "2000-01-01 22:00:00.000000000 +0000"},
-  { bloc: "P",
-  jour: "vendredi",
-  début: "2000-01-01 08:00:00.000000000 +0000",
-  fin: "2000-01-01 22:00:00.000000000 +0000"},
-  { bloc: "P",
-  jour: "samedi",
-  début: "2000-01-01 08:00:00.000000000 +0000",
-  fin: "2000-01-01 22:00:00.000000000 +0000"},
-  # { bloc: "A",
-  # jour: "lundi",
-  # début: "2000-01-01 08:00:00.000000000 +0000",
-  # fin: "2000-01-01 22:00:00.000000000 +0000"},
-  # { bloc: "A",
-  # jour: "mardi",
-  # début: "2000-01-01 08:00:00.000000000 +0000",
-  # fin: "2000-01-01 22:00:00.000000000 +0000"},
-  # { bloc: "A",
-  # jour: "mercredi",
-  # début: "2000-01-01 08:00:00.000000000 +0000",
-  # fin: "2000-01-01 22:00:00.000000000 +0000"},
-  # { bloc: "A",
-  # jour: "jeudi",
-  # début: "2000-01-01 08:00:00.000000000 +0000",
-  # fin: "2000-01-01 22:00:00.000000000 +0000"},
-  # { bloc: "A",
-  # jour: "vendredi",
-  # début: "2000-01-01 08:00:00.000000000 +0000",
-  # fin: "2000-01-01 22:00:00.000000000 +0000"},
-  # { bloc: "A",
-  # jour: "samedi",
-  # début: "2000-01-01 08:00:00.000000000 +0000",
-  # fin: "2000-01-01 22:00:00.000000000 +0000"},
-
-  # { bloc: "B",
-  # jour: "lundi",
-  # début: "2000-01-01 08:00:00.000000000 +0000",
-  # fin: "2000-01-01 22:00:00.000000000 +0000"},
-  # { bloc: "B",
-  # jour: "mardi",
-  # début: "2000-01-01 08:00:00.000000000 +0000",
-  # fin: "2000-01-01 22:00:00.000000000 +0000"},
-  # { bloc: "B",
-  # jour: "mercredi",
-  # début: "2000-01-01 08:00:00.000000000 +0000",
-  # fin: "2000-01-01 22:00:00.000000000 +0000"},
-  # { bloc: "B",
-  # jour: "jeudi",
-  # début: "2000-01-01 08:00:00.000000000 +0000",
-  # fin: "2000-01-01 22:00:00.000000000 +0000"},
-  # { bloc: "B",
-  # jour: "vendredi",
-  # début: "2000-01-01 08:00:00.000000000 +0000",
-  # fin: "2000-01-01 22:00:00.000000000 +0000"},
-  # { bloc: "B",
-  # jour: "samedi",
-  # début: "2000-01-01 08:00:00.000000000 +0000",
-  # fin: "2000-01-01 22:00:00.000000000 +0000"},
-
-  # { bloc: "D",
-  #   jour: "lundi",
-  #   début: "2000-01-01 08:00:00.000000000 +0000",
-  #   fin: "2000-01-01 22:00:00.000000000 +0000"},
-  #   { bloc: "D",
-  #   jour: "mardi",
-  #   début: "2000-01-01 08:00:00.000000000 +0000",
-  #   fin: "2000-01-01 22:00:00.000000000 +0000"},
-  #   { bloc: "D",
-  #   jour: "mercredi",
-  #   début: "2000-01-01 08:00:00.000000000 +0000",
-  #   fin: "2000-01-01 22:00:00.000000000 +0000"},
-  #   { bloc: "D",
-  #   jour: "jeudi",
-  #   début: "2000-01-01 08:00:00.000000000 +0000",
-  #   fin: "2000-01-01 22:00:00.000000000 +0000"},
-  #   { bloc: "D",
-  #   jour: "vendredi",
-  #   début: "2000-01-01 08:00:00.000000000 +0000",
-  #   fin: "2000-01-01 22:00:00.000000000 +0000"},
-  #   { bloc: "D",
-  #   jour: "samedi",
-  #   début: "2000-01-01 08:00:00.000000000 +0000",
-  #   fin: "2000-01-01 22:00:00.000000000 +0000"}
+  { bloc: "P", jour: "lundi", début: "2000-01-01 08:00:00.000000000 +0000", fin: "2000-01-01 22:00:00.000000000 +0000"},
+  { bloc: "P", jour: "mardi", début: "2000-01-01 08:00:00.000000000 +0000", fin: "2000-01-01 22:00:00.000000000 +0000"},
+  { bloc: "P", jour: "mercredi", début: "2000-01-01 08:00:00.000000000 +0000", fin: "2000-01-01 22:00:00.000000000 +0000"},
+  { bloc: "P", jour: "jeudi", début: "2000-01-01 08:00:00.000000000 +0000", fin: "2000-01-01 22:00:00.000000000 +0000"},
+  { bloc: "P", jour: "vendredi", début: "2000-01-01 08:00:00.000000000 +0000", fin: "2000-01-01 22:00:00.000000000 +0000"},
+  { bloc: "P", jour: "samedi", début: "2000-01-01 08:00:00.000000000 +0000", fin: "2000-01-01 22:00:00.000000000 +0000"},
 ])
 
 amphithéâtre = Salle.create(nom: "Amphithéâtre", bloc: "P", places: 90)
@@ -143,18 +51,19 @@ salle_6_a = Salle.create(nom: "6.A", bloc: "P", places: 6, privée: true)
 salle_6_b = Salle.create(nom: "6.B", bloc: "P", places: 12, privée: true)
 
 
-date_limite = Date.new(2026,1,1)
-Cour.where(salle_id: 6).where("DATE(debut) > ?", date_limite).update_all(salle_id: amphithéâtre.id)
-Cour.where(salle_id: 15).where("DATE(debut) > ?", date_limite).update_all(salle_id: rdj_1.id)
-Cour.where(salle_id: 7).where("DATE(debut) > ?", date_limite).update_all(salle_id: auditorium.id)
-Cour.where(salle_id: 13).where("DATE(debut) > ?", date_limite).update_all(salle_id: rdc_1.id)
-Cour.where(salle_id: 2).where("DATE(debut) > ?", date_limite).update_all(salle_id: salle_1_1.id)
-Cour.where(salle_id: 16).where("DATE(debut) > ?", date_limite).update_all(salle_id: salle_1_2.id)
-Cour.where(salle_id: 9).where("DATE(debut) > ?", date_limite).update_all(salle_id: salle_1_3.id)
-Cour.where(salle_id: 14).where("DATE(debut) > ?", date_limite).update_all(salle_id: salle_2_1.id)
-Cour.where(salle_id: 5).where("DATE(debut) > ?", date_limite).update_all(salle_id: salle_2_2.id)
-Cour.where(salle_id: 1).where("DATE(debut) > ?", date_limite).update_all(salle_id: salle_2_3.id)
-Cour.where(salle_id: 10).where("DATE(debut) > ?", date_limite).update_all(salle_id: salle_2_4.id)
-Cour.where(salle_id: 11).where("DATE(debut) > ?", date_limite).update_all(salle_id: salle_2_5.id)
-Cour.where(salle_id: 3).where("DATE(debut) > ?", date_limite).update_all(salle_id: salle_2_6.id)
-Cour.where(salle_id: 8).where("DATE(debut) > ?", date_limite).update_all(salle_id: salle_3_6.id)
+date_limite = Date.new(2026,4,1)
+cours = Cour.where("DATE(debut) > ?", date_limite)
+cours.where(salle_id: Salle.find_by(nom: "B1").id).update_all(salle_id: amphithéâtre.id)
+cours.where(salle_id: Salle.find_by(nom: "D5").id).update_all(salle_id: rdj_1.id)
+cours.where(salle_id: Salle.find_by(nom: "B2").id).update_all(salle_id: auditorium.id)
+cours.where(salle_id: Salle.find_by(nom: "D4").id).update_all(salle_id: rdc_1.id)
+cours.where(salle_id: Salle.find_by(nom: "A2").id).update_all(salle_id: salle_1_1.id)
+cours.where(salle_id: Salle.find_by(nom: "D6").id).update_all(salle_id: salle_1_2.id)
+cours.where(salle_id: Salle.find_by(nom: "D1").id).update_all(salle_id: salle_1_3.id)
+cours.where(salle_id: Salle.find_by(nom: "A4").id).update_all(salle_id: salle_2_1.id)
+cours.where(salle_id: Salle.find_by(nom: "A5").id).update_all(salle_id: salle_2_2.id)
+cours.where(salle_id: Salle.find_by(nom: "A1").id).update_all(salle_id: salle_2_3.id)
+cours.where(salle_id: Salle.find_by(nom: "D2").id).update_all(salle_id: salle_2_4.id)
+cours.where(salle_id: Salle.find_by(nom: "D3").id).update_all(salle_id: salle_2_5.id)
+cours.where(salle_id: Salle.find_by(nom: "A3").id).update_all(salle_id: salle_2_6.id)
+cours.where(salle_id: Salle.find_by(nom: "B3").id).update_all(salle_id: salle_3_6.id)
