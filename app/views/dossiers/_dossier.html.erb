@@ -14,7 +14,7 @@
     <span class="badge <%= dossier.style %> text-white">
       <%= dossier.workflow_state.humanize %>
     </span>
-    <% if dossier.envoyé? && (dossier.updated_at.to_date..Date.today).to_a.size >= 60 %>
+    <% if dossier.déposé? && (dossier.updated_at.to_date..Date.today).to_a.size >= 60 %>
       <%= fa_icon 'exclamation-circle', title: "L'intervenant a envoyé son dossier mais n'a pas été traité depuis plus de 60 jours", class: 'hover:cursor-help' %>
     <% end %>
     <% if !["nouveau", "déposé", "validé", "archivé"].include?(dossier.workflow_state) && (dossier.updated_at.to_date..Date.today).to_a.size > 30 %>
