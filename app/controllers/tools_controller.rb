@@ -1287,6 +1287,14 @@ class ToolsController < ApplicationController
                   type: 'application/pdf',
                   disposition: 'inline'	
       end
+
+      format.xls do
+        book = VacationsAdministrativesToXls.new(@examens, @start_date, @end_date).call
+        file_contents = StringIO.new
+        book.write file_contents # => Now file_contents contains the rendered file output
+        filename = "Export_Vacations_Administratives_du_#{@start_date}_au_#{@end_date}.xls"
+        send_data file_contents.string.force_encoding('binary'), filename: filename
+      end
     end
 
   end
@@ -1322,6 +1330,14 @@ class ToolsController < ApplicationController
                   filename: filename.concat('.pdf'),
                   type: 'application/pdf',
                   disposition: 'inline'	
+      end
+
+      format.xls do
+        book = VacationsAdministrativesV2ToXls.new(@examens, @start_date, @end_date).call
+        file_contents = StringIO.new
+        book.write file_contents # => Now file_contents contains the rendered file output
+        filename = "Export_Vacations_Administratives_V2_du_#{@start_date}_au_#{@end_date}.xls"
+        send_data file_contents.string.force_encoding('binary'), filename: filename
       end
     end
 
