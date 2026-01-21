@@ -551,7 +551,7 @@ class Cour < ApplicationRecord
     end
 
     def check_hss
-      if self.formation.hss && !self.hors_service_statutaire
+      if self.formation&.hss && !self.hors_service_statutaire
         errors.add(:hors_service_statutaire, 'ne correspond pas à celui de la formation')
       end
     end
