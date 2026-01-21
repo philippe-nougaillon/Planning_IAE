@@ -41,7 +41,6 @@ module ApplicationHelper
         # PENSER À CHANGER :
         # - "const now = parseInt((Date.now() + 3600000) / 1000)" dans refreshProgressBar()
         # - "-1.hour" dans _commande.html.erb
-        # - "-1.hour" dans _commandev2.html.erb
         # - "1.hour" dans @time_zone_difference dans l'initialisation du service d'Edusign
         #
 

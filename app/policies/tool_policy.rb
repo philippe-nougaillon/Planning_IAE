@@ -235,22 +235,14 @@ class ToolPolicy < ApplicationPolicy
   end
 
   def commandes?
-    # Accueil ou gestionnaire ou admin
-    user && ([3,5,6].include?(user.role_number))
+    # Admins et personnes autorisées
+    user && (user.admin? || ENV["USER_COMMAND_AUTHORIZATION_IDS"].split(',').map(&:to_i).include?(user.id))
   end
 
   def commande_fait?
-    # Accueil et Thierry.D ou Thémoline ou Romuald
-    user && (user.accueil? || [41,35,3132].include?(user.id))
-  end
-
-  def commandes_v2?
     commandes?
   end
 
-  def commande_fait_v2?
-    commande_fait?
-  end
   
   def edusign?
     user && user.super_admin?

@@ -118,18 +118,10 @@ class Cour < ApplicationRecord
   end  
 
   def self.commandes
-    Cour.confirmé.where("DATE(cours.debut) >= ?", Date.today).where("cours.commentaires LIKE '+%'").order(:debut)
-  end
-
-  def self.commandes_archivées
-    Cour.réalisé.where("DATE(cours.debut) < ?", Date.today).where("cours.commentaires LIKE '+%'").order(debut: :desc)
-  end
-
-  def self.commandes_v2
     Cour.confirmé.where("DATE(cours.debut) >= ?", Date.today).joins(:options).where(options: {catégorie: :commande}).order(:debut)
   end
 
-  def self.commandes_archivées_v2
+  def self.commandes_archivées
     Cour.réalisé.where("DATE(cours.debut) < ?", Date.today).joins(:options).where(options: {catégorie: :commande}).order(debut: :desc)
   end
 
