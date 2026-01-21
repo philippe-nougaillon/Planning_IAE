@@ -246,7 +246,7 @@
 <% else %>
   <% if @sujet.can_déposer? %>
     <h2 class="text-lg">
-      Merci de <b>déposer votre sujet</b> (avec la page de garde et en y indiquant les consignes) en <b>format PDF <u>protégé par mot de passe</u></b>.
+      Merci de <b>déposer votre sujet</b> (avec la page de garde et en y indiquant les consignes) en <b>format PDF</b>.
     </h2>
   <% end %>
   <%= form_with id:'sujet_form', url: deposer_sujet_path, model: @sujet do |f| %>
@@ -259,6 +259,7 @@
             <small>(dans <%= time_ago_in_words(@sujet.cour.debut) %>)</small>
             <br>
           <% end %>
+          <br>
           Le <%= l(@sujet.cour.debut, format: :long) %>
           <br>
           <%= @sujet.cour.nom_ou_ue %>
@@ -319,7 +320,7 @@
           </p>
         <% else %>
           <div class="mt-8 mb-4">
-            <h3 class="text-xl mt-4">Sélectionnez les options d'examens</h3>
+            <h3 class="text-xl mt-4">Sélectionnez les consignes d'examens</h3>
             <i>Cochez les options autorisées</i>
           </div>
 

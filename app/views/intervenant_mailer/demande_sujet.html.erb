@@ -6,7 +6,7 @@
     Merci de déposer votre sujet en <%= link_to 'cliquant ici', url_for(sujet_url(@sujet)) %> ou en copiant ce lien <%= url_for(sujet_url(@sujet)) %> dans votre navigateur.
     <br><br>
     <% if @examens_count > 1 %>
-        <b>Attention : <%= @examens_count %> examens sont liés à ce sujet mais le sujet n'est à déposer qu'une fois.</b>
+        <b>Attention : <%= @examens_count %> groupes d'étudiants sont liés à ce sujet.</b>
     <% end %>
 
 </p>
