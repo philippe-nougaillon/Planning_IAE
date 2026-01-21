@@ -385,6 +385,8 @@ fr:
       title: Chercher
     creation_cours:
       title: Réservation de créneaux horaires
+    creation_cours_do:
+      title: Réservation de créneaux horaires
     taux_occupation_jours:
       title: Taux d'occupation jours
     taux_occupation_salles:
