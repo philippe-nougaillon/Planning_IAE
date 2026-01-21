@@ -32,15 +32,13 @@ class Cour < ApplicationRecord
   validate :check_invits_en_cours
   validate :check_hss
   validate :check_intervenant_not_also_appear_in_binome, if: Proc.new {|cours| cours.intervenant_binome.present?}
+  validate :check_no_old_commandes_method
 
   before_validation :update_date_fin
   before_validation :sunday_morning_praise_the_dawning
 
   before_save :change_etat_si_salle
   before_save :annuler_salle_si_cours_est_annulé
-
-  around_update :check_send_commande_email
-  after_create :check_send_new_commande_email
 
   if ENV["SEND_EXAMEN_EMAILS"] == "true"
     after_create   :send_new_examen_email, if: Proc.new { |cours| cours.examen? }
@@ -120,18 +118,10 @@ class Cour < ApplicationRecord
   end  
 
   def self.commandes
-    Cour.confirmé.where("DATE(cours.debut) >= ?", Date.today).where("cours.commentaires LIKE '+%'").order(:debut)
-  end
-
-  def self.commandes_archivées
-    Cour.réalisé.where("DATE(cours.debut) < ?", Date.today).where("cours.commentaires LIKE '+%'").order(debut: :desc)
-  end
-
-  def self.commandes_v2
     Cour.confirmé.where("DATE(cours.debut) >= ?", Date.today).joins(:options).where(options: {catégorie: :commande}).order(:debut)
   end
 
-  def self.commandes_archivées_v2
+  def self.commandes_archivées
     Cour.réalisé.where("DATE(cours.debut) < ?", Date.today).joins(:options).where(options: {catégorie: :commande}).order(debut: :desc)
   end
 
@@ -556,37 +546,9 @@ class Cour < ApplicationRecord
       end
     end
 
-    def check_send_commande_email
-      old_commentaires = commentaires_was
-      yield
-      commande_status = determine_statut_commande(old_commentaires, commentaires)
-      send_email_commande(commande_status, old_commentaires)
-    end
-
-    def determine_statut_commande(old_commentaires, new_commentaires)
-      if old_commentaires && old_commentaires.include?('+')
-        new_commentaires.include?('+') ? 'modifiée' : 'supprimée'
-      elsif new_commentaires && new_commentaires.include?('+')
-        'ajoutée'
-      else
-        ''
-      end
-    end
-
-    def send_email_commande(commande_status, old_commentaires)
-      case commande_status
-      when 'modifiée'
-        ToolsMailer.with(cour: self, old_commentaires: old_commentaires).commande_modifiée.deliver_now
-      when 'supprimée'
-        ToolsMailer.with(cour: self, old_commentaires: old_commentaires).commande_supprimée.deliver_now
-      when 'ajoutée'
-        ToolsMailer.with(cour: self).nouvelle_commande.deliver_now
-      end
-    end
-
-    def check_send_new_commande_email
-      if self.commentaires && self.commentaires.include?('+')
-        ToolsMailer.with(cour: self).nouvelle_commande.deliver_now
+    def check_no_old_commandes_method
+      if self.commentaires&.include?('+') && self.debut > DateTime.now 
+        errors.add(:cours, ": Les commandes ne sont plus gérées via les commentaires mais dans les options du cours")
       end
     end
 

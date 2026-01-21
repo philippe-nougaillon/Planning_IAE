@@ -1492,32 +1492,11 @@ class ToolsController < ApplicationController
     end
 
     if params[:search_cmd].present?
-      @commandes = @commandes.where("cours.commentaires ILIKE ?", "%#{params[:search_cmd]}%")
-    end
-  end
-
-  def commande_fait
-    commande = Cour.find(params[:commande_id])
-    commande.commentaires.concat("\r\n\r\n")
-    commande.commentaires.concat("Fait le #{l DateTime.now, format: :short}, #{current_user.nom_et_prénom}")
-    commande.save
-
-    redirect_to request.referrer, notice: "Commande traitée avec succès"
-  end
-
-  def commandes_v2
-    if params[:archive].present?
-      @commandes = Cour.commandes_archivées_v2
-    else
-      @commandes = Cour.commandes_v2
-    end
-
-    if params[:search_cmd].present?
       @commandes = @commandes.where("options.description ILIKE ?", "%#{params[:search_cmd]}%")
     end
   end
 
-  def commande_fait_v2
+  def commande_fait
     commande = Cour.find(params[:commande_id]).options.commande.first
     commande.fait = true
     commande.description.concat("\r\n\r\n")
