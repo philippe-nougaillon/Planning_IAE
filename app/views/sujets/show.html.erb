@@ -232,26 +232,28 @@
     
   </div>
 
-  <div data-controller="rejet-sujet">
-    <br>
-    <%= link_to_if @sujet.can_valider?, 'Valider', valider_sujet_path(@sujet), class: 'btn btn-sm btn-success text-white', 'data-turbo': false %> |
-    <% if @sujet.can_rejeter? %>
-      <button id='rejeter-btn' class='btn btn-sm btn-error text-white' data-action="click->rejet-sujet#showForm" data-rejet-sujet-target="btnRejeter">Rejeter</button>
-    <% else %>
-      Rejeter
-    <% end %>
-    |
-    <%= link_to 'Retour', sujets_path, class: 'text-primary hover:underline' %>
+  <div class="flex w-full mt-4">
+    <div data-controller="rejet-sujet" class="flex-1">
+      <%= link_to_if @sujet.can_valider?, 'Valider', valider_sujet_path(@sujet), class: 'btn btn-sm btn-success text-white', 'data-turbo': false %> |
+      <% if @sujet.can_rejeter? %>
+        <button id='rejeter-btn' class='btn btn-sm btn-error text-white' data-action="click->rejet-sujet#showForm" data-rejet-sujet-target="btnRejeter">Rejeter</button>
+      <% else %>
+        Rejeter
+      <% end %>
+      |
+      <%= link_to 'Retour', sujets_path, class: 'text-primary hover:underline' %>
 
-    <%= form_with url: rejeter_sujet_path(@sujet), method: :get do |f| %>
-      <div id='rejeter-form' style="display: none;" data-rejet-sujet-target="rejeterForm">
-        <div class="flex flex-wrap gap-4 mt-4">
-          <%= f.text_field :raisons, class: 'input input-bordered input-sm', placeholder: 'Pour quelle raison ?' %>
-          <%= f.submit 'Notifier l\'intervenant', class: 'btn btn-sm btn-error text-white', 'data-rejet-sujet-target': 'btnSubmit' %>
+      <%= form_with url: rejeter_sujet_path(@sujet), method: :get do |f| %>
+        <div id='rejeter-form' style="display: none;" data-rejet-sujet-target="rejeterForm">
+          <div class="flex flex-wrap gap-4 mt-4">
+            <%= f.text_field :raisons, class: 'input input-bordered input-sm', placeholder: 'Pour quelle raison ?' %>
+            <%= f.submit 'Notifier l\'intervenant', class: 'btn btn-sm btn-error text-white', 'data-rejet-sujet-target': 'btnSubmit' %>
+          </div>
         </div>
-      </div>
-    <% end %>
+      <% end %>
 
+    </div>
+    <%= link_to "Supprimer le sujet", sujet_path(@sujet), 'data-turbo-method': :delete, 'data-turbo-confirm': 'ATTENTION : Avez-vous bien téléchargé le sujet d\'examen avant de le supprimer ? Il ne sera plus possible de le faire après la suppression !', class: "btn btn-error btn-outline btn-sm" %>
   </div>
 
   <br>

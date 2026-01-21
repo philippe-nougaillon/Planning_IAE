@@ -20,7 +20,6 @@ class Cour < ApplicationRecord
                                 allow_destroy:true
   has_many :attendances, dependent: :destroy
   belongs_to :sujet, optional: true
-  #TODO : Supprimer le sujet quand le cour est supprimé, s'il n'y a pas d'autres cours lié à ce sujet
 
   has_one_attached :document
 
