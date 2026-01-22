@@ -178,8 +178,8 @@ class ToolPolicy < ApplicationPolicy
   end
 
   def audit_cours?
-    # Accès à la vue 'à booker' que pour Philippe, Barbara et Thierry.D
-    [1,6,41].include?(user.id)
+    # Accès à la vue 'à booker' que pour les utilisateurs autorisés
+    ENV["USER_A_BOOKER_AUTORIZATION_IDS"].split(',').map(&:to_i).include?(user.id)
   end
 
   def liste_surveillants_examens?

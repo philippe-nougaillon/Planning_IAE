@@ -1124,8 +1124,8 @@ class ToolsController < ApplicationController
     # Créer des créneaux vides sur toutes une année pour une formation
     # Permet de faire des réservations au nom de l'intervenant 'A CONFIRMER'
 
-    if Intervenant.exists?(445)
-      _intervenant = Intervenant.find(445) # A CONFIRMER
+    if Intervenant.exists?(Intervenant.a_confirmer_id)
+      _intervenant = Intervenant.find(Intervenant.a_confirmer_id) # A CONFIRMER
       _date_debut = Date.parse(params[:date_debut])
       _date_fin = Date.parse(params[:date_fin])
       _formation = Formation.not_archived.find(params[:formation_id])
@@ -1179,7 +1179,7 @@ class ToolsController < ApplicationController
 
       flash[:notice] = "#{ @ids_ok.count } cours créés"
     else
-      flash[:alert] = "L'intervenant générique 'A CONFIRMER' (445) doit exister !"
+      flash[:alert] = "L'intervenant générique 'A CONFIRMER' (#{Intervenant.a_confirmer_id}) doit exister !"
     end
 
   end
@@ -1225,7 +1225,7 @@ class ToolsController < ApplicationController
   def audit_cours
     # Afficher les cours 'planifiés' 
     # entre deux dates
-    # créés par un utilisateur autre que Thierry.D (#41)
+    # créés par un utilisateur autre que par l'admin de l'accueil
     
     params[:start_date] ||= Date.today
     params[:end_date] ||= Date.today + 6.months
@@ -1237,8 +1237,8 @@ class ToolsController < ApplicationController
       @date_fin = params[:end_date]
     end
 
-    # ids des cours créés par utilisateur autre que Thierry.D (#41)
-    id_cours = Audited::Audit.where(auditable_type: 'Cour').where.not(user_id: 41).pluck(:auditable_id).uniq
+    # ids des cours créés par utilisateur autre que par l'admin de l'accueil
+    id_cours = Audited::Audit.where(auditable_type: 'Cour').where.not(user_id: ENV["USER_WITHOUT_AUDIT_IDS"].split(',').map(&:to_i)).pluck(:auditable_id).uniq
 
     # vérifie que la date de début de cours est dans la période observée
     @cours = Cour.where("id IN (?)", id_cours)
@@ -1268,7 +1268,7 @@ class ToolsController < ApplicationController
     surveillant = params[:surveillant]
     @cumuls = {}
     @examens = Cour
-                  .where("intervenant_id IN (:surveillants) OR intervenant_binome_id IN (:surveillants)", {surveillants: [169, 1166, 522, 1314]} )
+                  .where("intervenant_id IN (:surveillants) OR intervenant_binome_id IN (:surveillants)", {surveillants: Intervenant.surveillants} )
                   .where("commentaires like '%[%'")
                   .where("debut between ? and ?", @start_date, @end_date.to_date + 1.day)
                   .includes(:formation)
@@ -1311,7 +1311,7 @@ class ToolsController < ApplicationController
     surveillant = params[:surveillant]
     @cumuls = {}
     @examens = Cour
-                  .where("intervenant_id IN (:surveillants) OR intervenant_binome_id IN (:surveillants)", {surveillants: [169, 1166, 522, 1314]} )
+                  .where("intervenant_id IN (:surveillants) OR intervenant_binome_id IN (:surveillants)", {surveillants: Intervenant.surveillants} )
                   .joins(:options).where(options: {catégorie: :surveillance})
                   .where("options.description LIKE '%[%'")
                   .where("debut BETWEEN ? AND ?", @start_date, @end_date.to_date + 1.day)
@@ -1414,7 +1414,7 @@ class ToolsController < ApplicationController
   end
 
   def rappel_des_examens
-    @examens = Intervenant.where(id: [169, 522, 1166])
+    @examens = Intervenant.where(id: Intervenant.examens_ids)
     @formations = Formation.not_archived.ordered
   end
 

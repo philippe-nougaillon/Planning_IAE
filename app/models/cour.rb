@@ -341,16 +341,16 @@ class Cour < ApplicationRecord
 
   # Si c'est un examen IAE / examen rattrapage / Tiers-temps
   def examen?
-    [169, 1166, 522].include?(self.intervenant.id)
+    Intervenant.examens_ids.include?(self.intervenant.id)
   end
 
   def type_examen
     case self.intervenant_id
-    when 169
+    when ENV["INTERVENANT_EXAMEN_ID"].to_i
       "Examen"
-    when 1166
+    when ENV["INTERVENANT_EXAMEN_RATTRAPRAGE_ID"].to_i
       "Examen Rattrapage"
-    when 522
+    when ENV["INTERVENANT_EXAMEN_TIERS_TEMPS_ID"].to_i
       "Examen Tiers-Temps"
     end
   end
@@ -404,6 +404,10 @@ class Cour < ApplicationRecord
     else
       false
     end
+  end
+
+  def has_intervenant_vacataire?
+    self.intervenant_id == ENV["SURVEILLANT_EXAMEN_VACATAIRE_ID"].to_i
   end
 
   private
