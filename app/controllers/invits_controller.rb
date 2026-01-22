@@ -8,7 +8,7 @@ class InvitsController < ApplicationController
     params[:sort_by] ||= 'MàJ'
 
     @invits = Invit.all
-    unless current_user.id == 1
+    unless current_user.id == ENV["SUPER_ADMIN_ID"].to_i
       @invits = Invit
                   .where(user_id: current_user.id)
                   .where.not("invits.workflow_state = 'non_retenue'") 
@@ -43,7 +43,7 @@ class InvitsController < ApplicationController
       @invits = @invits.where(cour_id: params[:cours_id].to_i)
     end
 
-    @formations = Formation.where(id: @invits.joins(:formation).pluck("formations.id").uniq)
+    @formations = Formation.not_archived.where(id: @invits.joins(:formation).pluck("formations.id").uniq).ordered
     @intervenants = Intervenant.where(id: @invits.pluck(:intervenant_id).uniq)
     @invits = @invits.paginate(page: params[:page], per_page: 20)
   end
@@ -150,17 +150,37 @@ class InvitsController < ApplicationController
   end
 
   def valider
-    @invit.valider!
-    if user_signed_in?
-      redirect_to invits_path, notice: "Invitation mise à jour avec succès"
+    if @invit.valid?
+      if @invit.can_valider?
+        @invit.valider!
+        flash[:notice] = "Invitation mise à jour avec succès."
+      elsif @invit.disponible?
+        flash[:alert] = "L'invitation est déjà validée"
+      else
+        flash[:alert] = "L'invitation ne peux plus être validée"
+      end
     else
-      redirect_to invitations_intervenant_path(@invit.intervenant), notice: "Invitation mise à jour avec succès."
+      flash[:alert] = "L'invitation est invalide. Elle ne peut donc pas être modifiée"
     end
+
+    redirect_to request.referrer || root_path
   end
 
   def rejeter
-    @invit.rejeter!
-    redirect_to invitations_intervenant_path(@invit.intervenant), notice: "Invitation mise à jour avec succès."
+    if @invit.valid?
+      if @invit.can_rejeter?
+        @invit.rejeter!
+        flash[:notice] = "Invitation mise à jour avec succès."
+      elsif @invit.pas_disponible?
+        flash[:alert] = "L'invitation est déjà rejetée"
+      else
+        flash[:alert] = "L'invitation ne peux plus être rejetée"
+      end
+    else
+      flash[:alert] = "L'invitation est invalide. Elle ne peut donc pas être modifiée"
+    end
+
+    redirect_to request.referrer || root_path
   end
 
   def confirmer

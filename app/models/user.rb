@@ -10,21 +10,23 @@ class User < ApplicationRecord
   
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :rememberable and :omniauthable,
-  devise :database_authenticatable,
-         :recoverable, :trackable, :validatable, :registerable, :timeoutable
+  devise :two_factor_authenticatable,
+         :recoverable, :trackable, :validatable, :registerable, :timeoutable, :session_limitable
 
   belongs_to :formation, optional: true   
   has_many :notes
 
   validates :nom, :prénom, :role, presence: true    
 
-  enum role: {étudiant: 0, 
+  enum :role, {étudiant: 0, 
               intervenant: 1, 
               enseignant: 2, 
               accueil: 3, 
               rh: 4, 
               gestionnaire: 5,
               administrateur: 6 }
+  
+  enum :otp_method, {email: 0, app: 1}
 
   default_scope { order(:nom) } 
 
@@ -75,7 +77,7 @@ class User < ApplicationRecord
   # Pour donner le role 'gestionnaire' à un partenaire
   # qui pourra modifier que les cours de ses formations
   def partenaire_qse?
-    ["d.gbedemah@icp.fr","m.danet@icp.fr"].include?(self.email)
+    ["d.gbedemah@icp.fr","m.danet@icp.fr","c.bouteloup@icp.fr","c.demazieres@icp.fr"].include?(self.email)
   end
 
   def unlinked?
@@ -92,9 +94,17 @@ class User < ApplicationRecord
     users.sort
   end
 
+  def super_admin?
+    ENV['USER_JOBS_AUTHORIZATION_IDS']
+      .to_s
+      .split(',')
+      .map(&:to_i)
+      .include?(id)
+  end
+
   private
 
     def timeout_in
-      self.étudiant? ? 4.hours : 24.hours
+      self.étudiant? ? 30.days : 24.hours
     end
 end

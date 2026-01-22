@@ -7,12 +7,11 @@
     </div>
   <% end %>
 <% end %>
-
 <%= form_tag request.path, method: :get do %>
   <div class="flex flex-col gap-2">
     <div>
-      <%= label_tag :start_date, "Cours à partir du" %>
-      <%= text_field_tag :start_date, params[:start_date], type: 'date', onchange: 'this.form.submit()', class: "input input-bordered input-sm w-full" %>
+      <%= label_tag :start_date_mobile, "Cours à partir du" %>
+      <%= text_field_tag :start_date_mobile, params[:start_date_mobile], type: 'datetime-local', onchange: 'this.form.submit()', class: "input input-bordered input-sm w-full" %>
     </div>
     
     <div>
@@ -38,8 +37,10 @@
 <% @cours.each do | cours | %>
   <% _date_cours = cours.debut.to_date %>
   <% if _date_cours != current_date %>
-    <div class="shadow bg-slate-100 mt-4 py-2 pl-4">
-      <%= fa_icon 'calendar-day' %>
+    <div class="flex items-center gap-1 bg-slate-100 mt-4 py-2 pl-4">
+      <span class="material-symbols-outlined text-lg mb-0.5">
+        today
+      </span>
       <b><%= l(_date_cours, format: :long).humanize %></b>
     </div>
     <% current_date = _date_cours %>
@@ -51,7 +52,7 @@
 <br>
 
 <% if @cours.length > 0 %>
-  <div class="planning_pagination w-full justify-center">
+  <div class="planning_pagination w-full justify-center mb-6">
     <%= will_paginate @cours, inner_window: 0, 
                               outer_window: 0, 
                               class: 'pagination' %>

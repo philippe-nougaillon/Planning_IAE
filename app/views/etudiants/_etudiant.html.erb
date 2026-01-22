@@ -10,15 +10,19 @@
     <td><%= etudiant.prénom %></td>
     <td>
         <%= etudiant.email %>
-        <% if !etudiant.linked_user && Formation.unscoped.find(etudiant.formation_id).cours.confirmé.count.positive? %>
+        <% if !etudiant.linked_user && Formation.find(etudiant.formation_id).cours.confirmé.count.positive? %>
             <%= link_to users_path(search: etudiant.nom, role: 0) do %>
                 <%= fa_icon 'exclamation-circle', class: 'text-error' , title: 'L\'étudiant n\'a pas de compte de connexion (utilisateur) associé à cet email' %>
             <% end %>
+        <% elsif etudiant.linked_user&.discarded? %>
+            <%= link_to users_path(search: etudiant.nom, role: 0, discarded: 1) do %>
+                <%= fa_icon 'exclamation-circle', class: 'text-orange-400', title: 'L\'étudiant a son compte d\'accès désactivé' %>
+            <% end %>
         <% end %>
     </td>
-    <td style="border-left: .3rem solid <%= etudiant.formation.try(:positive_color) %>">
+    <td style="border-left: .3rem solid <%= etudiant.formation.positive_color %>">
         <% if etudiant.formation_id %>
-            <% formation = Formation.unscoped.find(etudiant.formation_id) %>
+            <% formation = Formation.find(etudiant.formation_id) %>
             <%= link_to formation.nom, formation, class: 'text-primary hover:underline' %>
         <% end %>
     </td>
@@ -37,12 +41,8 @@
             <% end %>
         <% end %>
         <% if policy(Etudiant).destroy? %>
-            <% if etudiant.attendances.any? %>
-                <%= fa_icon 'trash', title:"L'étudiant.e ne peut pas être supprimé.e car il/elle a des signatures", class:"btn btn-ghost btn-xs text-secondary pt-1 cursor-not-allowed"%>
-            <% else %>
-                <%= link_to(etudiant, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: 'btn btn-ghost btn-xs') do %>
-                    <%= fa_icon 'trash' %>
-                <% end %>
+            <%= link_to(etudiant, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: 'btn btn-ghost btn-xs') do %>
+                <%= fa_icon 'trash' %>
             <% end %>
         <% end %>
     </td>

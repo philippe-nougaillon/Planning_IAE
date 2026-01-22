@@ -1,13 +1,20 @@
 <div class="border-b mt-6 mb-2 pb-4">
-  <h1 class="text-3xl"><%= fa_icon 'signature' %> Synchronisation automatique Edusign </h1>
+  <h1 class="text-3xl">
+    <%= image_tag 'edusign.png', size: 32, class: 'inline' %>
+    Synchronisation
+  </h1>
 </div>
 <br>
 
 <div>
   <h4 class="text-xl">
-    Cette fonction analyse les <b>changements intervenus dans le Planning IAE</b> durant les dernières <b>24 heures</b> pour <b>les appliquer dans Edusign</b>
-    (ajout/modification des cours/intervenants/formations/étudiants et les suppression de cours).
+    Cette fonction analyse les <b>changements</b> intervenus dans le Planning IAE 
+    <span class="material-symbols-outlined cursor-help text-xl text-info" title="Ajout/modification des Cours,Intervenants,Formations et Étudiants et les suppression de Cours">
+      info
+    </span>
+    au cours de la <b>dernière heure</b> pour les <b>synchroniser dans Edusign</b>.
     <br>
+    Seuls les examens et les cours sans intervenant (A CONFIRMER, E-LEARNING Hors_IAE, ETUDIANTS IAE, IAE Interne, EXTERIEUR IAE EXTERIEUR IAE) ne sont pas envoyés.
   </h4>
 </div>
 <br>

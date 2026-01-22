@@ -13,4 +13,9 @@ class UserMailer < ApplicationMailer
     @etat = etat
   	mail(to: email , subject: "[PLANNING] Cours du #{l(@cours.debut, format: :long).humanize} (#{@cours.nom_ou_ue}) est #{@etat}")
   end
+
+  def mail_otp(user)
+    @current_otp = user.current_otp
+    mail(to: user.email , subject: "[PLANNING] Double authentification : votre code à usage unique")
+  end
 end

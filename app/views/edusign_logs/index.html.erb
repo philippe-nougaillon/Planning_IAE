@@ -1,5 +1,8 @@
 <div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
-  <h1 class="text-3xl"><%= fa_icon 'signature' %> Logs des synchronisations avec Edusign</h1>
+  <h1 class="text-3xl">
+    <%= image_tag 'edusign.png', size: 32, class: 'inline' %>
+    Historique des synchronisations
+  </h1>
 </div>
 
 <div class="bs-container p-4 shadow mb-4">
@@ -23,8 +26,8 @@
                        class: 'select select-bordered select-sm w-full', onchange: 'this.form.submit()' %>
       </div>
 
-      <div class="sm:w-1/5 pl-4">
-        <%= label_tag :user_id %>
+      <div class="relative flex-grow max-w-full flex-1 px-2">
+        <%= label_tag :user_id, 'Par' %>
         <%= select_tag :user_id,
                        options_for_select(User.for_edusign_logs_select, params[:user_id]),
                        class: 'slim-select',

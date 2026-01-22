@@ -263,9 +263,10 @@ fr:
       heures_min: "%H:%M"
       heures_log: "%Hh%M"
       perso: "%d/%m/%Y %Hh%M"
+      sql: "%Y-%m-%d %H:%M:%S"
     pm: pm
   will_paginate:
-    next_label: "→"
+    next_label: "❯"
     next_aria_label: "Prochaine page"
     page_entries_info:
       multi_page: "%{model} %{from} - %{to} sur %{count} au total"
@@ -277,7 +278,7 @@ fr:
         one: "%{count} %{model} affiché(e)"
         other: "%{count} %{model} affiché(e)s"
     page_gap: "&hellip;"
-    previous_label: "←"
+    previous_label: "❮"
     previous_aria_label: "Page précédente"
   devise:
     sessions:
@@ -300,6 +301,10 @@ fr:
     registrations:
       new:
         title: Inscription
+    mail_otp:
+      title: Activation 2FA par email
+    qrcode_otp:
+      title: Activation 2FA par QR Code
   pages:
     mentions_légales:
       title: Mentions légales
@@ -313,7 +318,7 @@ fr:
     edit:
       title: Modification d'un cours
     action:
-      title: Action groupée
+      title: Action groupée cours
     mes_sessions_etudiant:
       title: Ma journée (étudiant)
     mes_sessions_intervenant:
@@ -342,6 +347,8 @@ fr:
       title: Nouvelle formation
     edit:
       title: Modification d'une formation
+    action:
+      title: Action groupée formations
   intervenants:
     index:
       title: Liste des intervenants
@@ -351,6 +358,10 @@ fr:
       title: Nouvel intervenant
     edit:
       title: Modification d'un intervenant
+    invitations:
+      title: Invitations
+    sujets:
+      title: Sujets d'examens
   etudiants:
     index:
       title: Liste des étudiants
@@ -374,6 +385,8 @@ fr:
       title: Chercher
     creation_cours:
       title: Réservation de créneaux horaires
+    creation_cours_do:
+      title: Réservation de créneaux horaires
     taux_occupation_jours:
       title: Taux d'occupation jours
     taux_occupation_salles:
@@ -382,6 +395,10 @@ fr:
       title: États de services
     export_etat_liquidatif_collectif:
       title: Export état liquidatif collectif
+    export_codir:
+      title: Export CoDir
+    export_cac:
+      title: Export CAC
     liste_surveillants_examens:
       title: Liste des surveillances d'examens
     liste_surveillants_examens_v2:
@@ -424,8 +441,6 @@ fr:
       title: Liste des cours "à booker"
     commandes:
       title: Commandes
-    commandes_v2:
-      title: Commandes_v2
     edusign:
       title: Edusign
     synchronisation_edusign:
@@ -436,6 +451,10 @@ fr:
       title: Initialisation Edusign
     initialisation_edusign_do:
       title: Initialisation Edusign
+    nouvelle_saison_rh:
+      title: Nouvelle saison RH
+    nouvelle_saison_rh_do:
+      title: Résultat nouvelle saison RH
   agents:
     index:
       title: Agents
@@ -526,6 +545,8 @@ fr:
       title: Nouveau dossier
     edit:
       title: Modification Dossier
+    action:
+      title: Action groupée dossiers
   notes:
     index:
       title: "Mes mémos"
@@ -564,3 +585,10 @@ fr:
       title: "Edusign logs"
     show:
       title: "Edusign log"
+  sujets:
+    index:
+      title: "Sujets d'examens"
+    show:
+      title: "Sujet d'examen"
+    deposer_done:
+      title: "Sujet d'examen déposé"

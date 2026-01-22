@@ -1,0 +1,16 @@
+<p style="margin-bottom: 0.5rem">
+    Bonjour,
+    <br><br>
+    Depuis notre premier mail en date du <%= l(@first_relance.to_date, format: :long) %>, nous sommes toujours dans l'attente de votre sujet pour l'examen de votre UE#<%= @code_ue %> <b><%= @ue %> (<%= @formation %>)</b> en date du <b><%= l(@debut.to_date, format: :long) %></b>.
+    <br>
+    Nous vous rappellons que le sujet doit être déposé <%= link_to 'ici', url_for(sujet_url(@sujet)) %>, en <b>format pdf avec la page de garde</b>, ou en copiant ce lien <%= url_for(sujet_url(@sujet)) %> dans votre navigateur,
+    <br>
+</p>
+
+<p style="margin-bottom: 0.5rem">
+    Bien cordialement,
+    <br>
+    Les gestionnaires en charge des examens (examens@iae.pantheonsorbonne.fr)
+    <br>
+    IAE Paris
+</p>

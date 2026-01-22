@@ -50,13 +50,16 @@
         </script>
 
         <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
-        <script src="https://unpkg.com/slim-select@latest/dist/slimselect.min.js"></script>
-        <link href="https://unpkg.com/slim-select@latest/dist/slimselect.css" rel="stylesheet">
+        <script src="https://unpkg.com/slim-select@2.13.1/dist/slimselect.umd.min.js"></script>
+        <link href="https://unpkg.com/slim-select@2.13.1/dist/slimselect.css" rel="stylesheet"></link>
         <style>
         .turbolinks-progress-bar {
             visibility: hidden;
         }
         </style>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     </head>
 
     <body class="bg-base-100">
@@ -66,6 +69,10 @@
             <%= render 'partials/notification' %>
             <%= yield %>
         </div>
+
+        <% if !(user_signed_in?) && current_page?("/users/sign_in") %>
+            <%= render 'partials/footer' %>
+        <% end %>
 
         <%= render 'partials/slim_select' %>
     </body>

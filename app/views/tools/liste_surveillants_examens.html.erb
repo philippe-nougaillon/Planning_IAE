@@ -53,7 +53,7 @@
                 <% exam.commentaires.split('[').each do |item| %>
                     <% unless item.blank? %>
                         <% surveillant = item.gsub(']', '').delete("\r\n\\") %>
-                        <% durée = exam.duree + ((exam.intervenant_id == 1314) ? 0 : 1) %>
+                        <% durée = exam.duree + (exam.has_intervenant_vacataire? ? 0 : 1) %>
                         <% @cumuls[surveillant] ? @cumuls[surveillant] += durée : @cumuls[surveillant] = durée %>
                         <tr class="hover border">
                             <td><%= link_to l(exam.debut, format: :long), cour_path(exam.id), class: 'text-primary hover:underline' %></td>
@@ -70,6 +70,11 @@
     </table>
 </div>
 <br><br>
+
+<%= link_to url_for(params.permit(:start_date, :end_date).merge(format: :xls)), class: 'btn btn-sm btn-success btn-outline mb-12' do %>
+  <%= fa_icon 'file-excel' %>
+  Exporter vers Excel
+<% end %>
 
 <h4 class="text-xl">
     <%= "Total par surveillant (du #{l @start_date.to_date} au #{l @end_date.to_date})" %>

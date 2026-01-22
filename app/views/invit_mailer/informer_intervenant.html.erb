@@ -10,8 +10,8 @@
 <% @gestionnaire_email = "" %>
 <% @invits = @intervenant.invits.with_confirmée_state.where("DATE(updated_at) = ?", Date.today) %>
 <% @invits.each do | invit | %>
-  <span style="background-color:<%= invit.cour.formation.try(:color) %>;padding-left: 7px;margin-right: 5px;"></span>
-    <%= invit.cour.formation.try(:nom) %>
+  <span style="background-color:<%= invit.cour.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
+    <%= invit.cour.formation.nom %>
   </span>
   <br>
   <br>

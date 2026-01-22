@@ -1,0 +1,28 @@
+<div class="border-b mt-6 mb-2 pb-4">
+  <h2 class="text-3xl">
+    <%= fa_icon 'folder' %> Nouvelle saison RH
+    <br>
+    <small>Envoi des dossiers pour une année universitaire</small>
+  </h2>
+</div>
+
+<%= form_tag({action: "nouvelle_saison_rh_do", method: :post}) do %>
+  <div class="flex flex-col flex-wrap sm:w-1/2 gap-4 mt-4">
+
+    <div class="form-control mb-4">
+      <%= label :période, "Période" %>
+      <%= select_tag :période, options_for_select(Dossier.périodes, AppConstants::PÉRIODE), class: 'select select-bordered select-sm w-full' %>
+    </div>
+
+    <div class="field">
+      <b>Enregistrer les changements ?</b> <br>
+      <%= label :save, "Oui", :value => "true" %>
+      <%= radio_button_tag :save, true %>
+      <%= label :save, "Non", :value => "false" %>
+      <%= radio_button_tag :save, false, :checked => true %>
+      <br><i>Choisissez 'Non' pour tester votre création car <b>elle est irréversible !</b></i><br />
+    </div>
+
+    <%= submit_tag "Lancer la création", class: "btn btn-primary text-white", 'data-turbo': false %>
+  </div>
+<% end %>

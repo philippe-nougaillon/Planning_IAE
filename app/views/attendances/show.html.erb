@@ -6,8 +6,10 @@
     <% end %>
   </div>
 
-  <h1 class="text-3xl">
-    <%= fa_icon 'calendar-check' %>
+  <h1 class="flex items-center gap-1 text-3xl">
+    <span class="material-symbols-outlined text-4xl mt-1">
+			calendar_check
+		</span>
     Présence
   </h1>
 
@@ -25,8 +27,8 @@
       </p>
 
       <p class="mb-4">
-        <span style="background-color:<%= @attendance.cour.formation.try(:color) %>;padding-left: 7px;margin-right: 5px;"></span>
-        <%= @attendance.cour.formation.try(:nom) %>
+        <span style="background-color:<%= @attendance.cour.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
+        <%= @attendance.cour.formation.nom %>
         </span>
       </p>
 

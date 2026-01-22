@@ -6,33 +6,42 @@
     <ul class="menu menu-horizontal px-1">
       <% if user_signed_in? %>
         <% if current_user.étudiant? %>
-          <%= navbar_nav_item('ma journée', 'calendar-day', mes_sessions_etudiant_path, nil, 'mes_sessions_etudiant') %>
-          <%= navbar_nav_item('cours', 'calendar-alt', cours_path, 'Planning', 'index') %>
+          <%= navbar_nav_item('Ma journée', 'today', mes_sessions_etudiant_path, nil, 'mes_sessions_etudiant') %>
+          <%= navbar_nav_item('Planning', 'calendar_month', cours_path, 'cours', nil, 'mes_sessions_etudiant') %>
         <% elsif current_user.intervenant? || current_user.enseignant? %>
-          <%= navbar_nav_item('ma journée', 'calendar-day', mes_sessions_intervenant_path, nil, 'mes_sessions_intervenant') %>
-          <%= navbar_nav_item('cours', 'calendar-alt', cours_path, 'Planning', 'index') %>
+          <%= navbar_nav_item('Ma journée', 'today', mes_sessions_intervenant_path, nil, 'mes_sessions_intervenant') %>
+          <%= navbar_nav_item('Planning', 'calendar_month', cours_path, 'cours', nil, 'mes_sessions_intervenant') %>
         <% else %>
-          <%= navbar_nav_item('cours', 'calendar-alt', cours_path, 'Planning') %>
+          <%= navbar_nav_item('Planning', 'calendar_month', cours_path, 'cours') %>
         <% end %>
         <% unless current_user.étudiant? %>
-          <%= navbar_nav_item('salles', 'chalkboard', occupation_salles_path) %>
+          <%= navbar_nav_item('Salles', 'meeting_room', occupation_salles_path, 'salles') %>
         <% end %>
         <% if policy(current_user).left_navbar? %>
-          <%= navbar_nav_item('formations', 'briefcase', formations_path) %>
-          <%= navbar_nav_item('intervenants', 'chalkboard-teacher', intervenants_path) %>
-          <%= navbar_nav_item('etudiants', 'graduation-cap', etudiants_path) %>
+          <%= navbar_nav_item('Formations', 'work', formations_path, 'formations', nil, [], "py-0") %>
+          <%= navbar_nav_item('Intervenants', 'co_present', intervenants_path, 'intervenants', nil) %>
+          <%= navbar_nav_item('Étudiants', 'school', etudiants_path, 'etudiants') %>
         <% end %>
         
         <% if current_user.rh? %>
-          <%= navbar_nav_item('dossiers', 'folder', dossiers_path) %>
-          <%= navbar_nav_item('vacations', 'user-md', vacations_path) %>
+          <%= navbar_nav_item('Dossiers', 'folder', dossiers_path, 'dossiers') %>
+          <%= navbar_nav_item('Vacations', 'co_present', vacations_path, 'vacations') %>
+        <% end %>
+
+        <% if current_user.intervenant? && !current_user.partenaire_qse? %>
+          <%= navbar_nav_item('Sujets d\'examens', 'docs', sujets_intervenant_path(Intervenant.find_by(id: @intervenant_user_id)), 'intervenants', 'sujets') %>
+        <% end %>
+        <% if current_user.partenaire_qse? %>
+          <%= navbar_nav_item('Sujets d\'examens', 'docs', sujets_path(), 'sujets') %>
         <% end %>
 
         <% if policy(:tool).audit_cours? %>
           <li class="nav-item">
             <% is_active = params[:action] == 'audit_cours' %>
-            <%= link_to tools_audit_cours_path, class: "nav-link text-#{ is_active ? 'primary' : 'base-content' }" do %>
-              <%= fa_icon 'calendar-check' %>
+            <%= link_to tools_audit_cours_path, class: "flex items-center gap-1 py-0 text-#{ is_active ? 'primary' : 'base-content' }" do %>
+              <span class="material-symbols-outlined text-xl">
+                calendar_check
+              </span>
               À booker
               <% aplanifier = CoursNonPlanifie.count %>
               <% if aplanifier > 0 %>
@@ -42,26 +51,17 @@
           </li>
         <% end %>
 
-        <% if current_user.accueil? || [41,35,3132].include?(current_user.id) %>
+        <% if ENV["USER_COMMAND_AUTHORIZATION_IDS"].split(',').map(&:to_i).include?(current_user.id) %>
           <li class="nav-item">
             <% is_active = params[:action] == 'commandes' %>
-            <%= link_to tools_commandes_path, class: "nav-link text-#{ is_active ? 'primary' : 'base-content' }" do %>
-              <%= fa_icon 'mug-hot' %>
+            <%= link_to tools_commandes_path, class: "flex items-center gap-1 py-0 text-#{ is_active ? 'primary' : 'base-content' }" do %>
+              <span class="material-symbols-outlined text-xl">
+                local_cafe
+              </span>
               Commandes
-              <% commandes = Cour.commandes.where.not("commentaires ILIKE ?", '%Fait le%').count %>
-              <% if commandes > 0 %>
-                <span class="badge badge-info text-white"><%= commandes %></span>
-              <% end %>
-            <% end %>
-          </li>
-          <li class="nav-item">
-            <% is_active = params[:action] == 'commandes_v2' %>
-            <%= link_to tools_commandes_v2_path, class: "nav-link text-#{ is_active ? 'primary' : 'base-content' }" do %>
-              <%= fa_icon 'coffee' %>
-              Commandes v2
-              <% commandes_v2 = Cour.joins(:options).where(options: {catégorie: :commande}).where.not("options.description ILIKE ?", '%Fait le%').count %>
-              <% if commandes_v2 > 0 %>
-                <span class="badge badge-info text-white"><%= commandes_v2 %></span>
+              <% commandes_count = Cour.joins(:options).where(options: {catégorie: :commande}).where.not("options.description ILIKE ?", '%Fait le%').count %>
+              <% if commandes_count > 0 %>
+                <span class="badge badge-info text-white"><%= commandes_count %></span>
               <% end %>
             <% end %>
           </li>
@@ -74,17 +74,26 @@
   <div>
     <ul class="menu menu-horizontal items-center px-1">
       <% if user_signed_in? %>
-        <li class="mr-12">
-          <%= current_user.username %>
-          <% if current_page? root_path %>
-            <br>
-            Dernière connexion il y a <%= time_ago_in_words current_user.last_sign_in_at %>
+        <li class="flex flex-row items-center gap-2 mr-4">
+          <%= link_to current_user do %>
+            <span class="material-symbols-outlined p-0">
+              <%= current_user.otp_required_for_login? ? 'person_shield' : 'person' %>
+            </span>
+            <div class="p-0">
+              <%= current_user.prénom.humanize %>
+              <% if current_page? root_path %>
+                <br>
+                Dernière connexion il y a <%= time_ago_in_words current_user.last_sign_in_at %>
+              <% end %>
+            </div>
           <% end %>
         </li>
         <% if policy(Note).index? %>
-          <li class="nav-item indicator mr-4">
-            <%= link_to notes_path, class: "nav-link" do %>
-              <i class="far fa-lightbulb"></i>
+          <li class="indicator mr-4">
+            <%= link_to notes_path, class: "flex items-center gap-1 py-0" do %>
+              <span class="material-symbols-outlined text-xl mb-1">
+                lightbulb_2
+              </span>
               <% notes = current_user.notes.count %>
               <% if notes > 0 %>
                 <span class="indicator-item badge badge-warning"><%= notes %></span> 
@@ -93,22 +102,21 @@
           </li>
         <% end %>
         <% if policy(current_user).right_navbar? %>
-          <%= navbar_nav_item('', 'wrench', tools_index_path) %>
-          <%= navbar_nav_item('', 'search-plus', tools_rechercher_path) %>
-          <%= navbar_nav_item('', 'info-circle', guide_index_path) %>
+          <%= navbar_nav_item('', 'build', tools_index_path) %>
+          <%= navbar_nav_item('', 'search', tools_rechercher_path) %>
+          <%= navbar_nav_item('', 'info', guide_index_path) %>
         <% end %>
 
         <li>
-          <%= link_to destroy_user_session_path, 'data-turbo-method': :delete, title: "Fermer la session de #{current_user.email}", class: 'p-1.5' do %>
-            <span class="text-base-content">
-              <i class="fas fa-fw fa-sign-out-alt"></i>
-              Déconnexion
+          <%= link_to destroy_user_session_path, 'data-turbo-method': :delete, title: "Fermer la session de #{current_user.email}", class: 'flex items-center gap-1 py-0' do %>
+            <span class="material-symbols-outlined text-xl mb-0.5">
+              logout
             </span>
           <% end %> 
         </li>
 
       <% else %>
-        <%= navbar_nav_item('Se connecter', 'sign-in-alt', new_user_session_path) %>
+        <%= navbar_nav_item('Se connecter', 'login', new_user_session_path) %>
       <% end %>
     </ul>
   </div>

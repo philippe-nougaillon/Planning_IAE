@@ -10,19 +10,24 @@ namespace :edusign do
   end
 
   task :export_data_to_edusign => :environment do
-    etat = 0
+    etat = 3
+    edusign_log = EdusignLog.create(modele_type: 1, message: "", user_id: 0, etat: etat)
 
-    stream = capture_stdout do
-      request = Edusign.new
+    begin
+      stream = capture_stdout do
+        request = Edusign.new
 
-      puts "Lancement automatique de la synchronisatioin."
+        puts "Lancement automatique de la synchronisatioin."
 
-      request.call
+        request.call
 
-      etat = request.get_etat
+        etat = request.get_etat
+      end
+
+      edusign_log.update(message: stream, etat: etat)
+
+    rescue => e
+      edusign_log.update(message: "Erreur: #{e.full_message}", etat: 3)
     end
-
-    EdusignLog.create(modele_type: 1, message: stream, user_id: 0, etat: etat)
   end
-
 end

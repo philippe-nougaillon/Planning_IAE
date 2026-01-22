@@ -19,8 +19,11 @@ class Etudiant < ApplicationRecord
 
   before_destroy :delete_user
 
-  has_many :attendances
-  has_many :justificatifs
+  has_many :attendances, dependent: :destroy
+  has_many :justificatifs, dependent: :destroy
+
+  normalizes :nom, with: -> nom { nom.strip }
+  normalizes :"prénom", with: ->(value) { value&.strip }
 
   scope :ordered, -> { order(:nom, :prénom) }
 

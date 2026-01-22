@@ -1,7 +1,12 @@
 <div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
-  <h1 class="text-3xl"><%= fa_icon 'chalkboard-teacher' %> Liste des intervenants</h1>
+  <h1 class="text-3xl flex items-center gap-3">
+    <span class="material-symbols-outlined text-3xl">
+      co_present
+    </span>
+    Liste des intervenants
+  </h1>
   <% if policy(Intervenant).new? %>
-    <%= link_to new_intervenant_path, class: 'text-primary' do %>
+    <%= link_to new_intervenant_path, class: 'btn btn-sm btn-primary btn-outline hover:!text-white' do %>
       <%= fa_icon 'plus-circle' %> Intervenant
     <% end %>
   <% end %>
@@ -44,7 +49,7 @@
           <th><%= sort_link 'intervenants.nbr_heures_statutaire', 'Heures' %></th>
           <th><%= sort_link 'intervenants.remise_dossier_srh', 'Date_SRH' %></th>
           <th><%= sort_link 'intervenants.created_at', 'Créé il y a' %></th>
-          <th><%= sort_link 'intervenants.edusign_id', 'Edusign ID?' %></th>
+          <th><%= sort_link 'intervenants.edusign_id', 'Edusign' %></th>
           <th></th>
         </tr>
       </thead>

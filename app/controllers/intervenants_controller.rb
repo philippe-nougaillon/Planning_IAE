@@ -2,8 +2,8 @@
 
 class IntervenantsController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[ invitations calendrier ]
-  before_action :set_intervenant, only: [:show, :invitations, :edit, :update, :destroy, :calendrier]
-  before_action :is_user_authorized
+  before_action :set_intervenant, only: [:show, :invitations, :edit, :update, :destroy, :calendrier, :sujets]
+  before_action :is_user_authorized, except: [:sujets]
 
   # check if logged and admin  
   # before_filter do 
@@ -14,8 +14,8 @@ class IntervenantsController < ApplicationController
   # GET /intervenants.json
   def index
     
-    params[:column] ||= session[:column]
-    params[:direction] ||= session[:direction]
+    params[:column_intervenant] ||= session[:column_intervenant]
+    params[:direction_intervenant] ||= session[:direction_intervenant]
 
     @intervenants = Intervenant.all
 
@@ -31,8 +31,8 @@ class IntervenantsController < ApplicationController
       @intervenants = @intervenants.where("status = ?", params[:status])
     end
 
-    session[:column] = params[:column]
-    session[:direction] = params[:direction]
+    session[:column_intervenant] = params[:column_intervenant]
+    session[:direction_intervenant] = params[:direction_intervenant]
 
     @intervenants = @intervenants
                       .reorder(Arel.sql("#{sort_column} #{sort_direction}"))  
@@ -50,7 +50,7 @@ class IntervenantsController < ApplicationController
       @invits = @invits.where("invits.workflow_state = ?", params[:workflow_state].to_s.downcase)
     end
 
-    @formations = Formation.where(id: @invits.joins(:formation).pluck("formations.id").uniq)
+    @formations = Formation.not_archived.ordered.where(id: @invits.joins(:formation).pluck("formations.id").uniq)
     @invits = @invits.joins(:cour).reorder('cours.debut').paginate(page: params[:page], per_page: 20)
   end
 
@@ -59,7 +59,11 @@ class IntervenantsController < ApplicationController
   def show
     @user = @intervenant.linked_user
     @formations = @intervenant.formations.uniq
-    @salles_habituelles = @intervenant.cours
+    @intervenant_vacations = @intervenant.vacations
+    @intervenant_responsabilites = @intervenant.responsabilites
+
+    # TODO: convertir en scenic_view (en vue SQL)
+    @salles_habituelles_ids = @intervenant.cours
                                       .joins(:salle)
                                       .where("salles.bloc != 'Z'")
                                       .select('cours.id')
@@ -70,7 +74,7 @@ class IntervenantsController < ApplicationController
                                       .first(5)
 
     @average_count = 0
-    @salles_habituelles.map{|x| @average_count += x.last.to_i / 5}
+    @salles_habituelles_ids.map{|x| @average_count += x.last.to_i / 5}
   end
 
   # GET /intervenants/new
@@ -136,6 +140,30 @@ class IntervenantsController < ApplicationController
     end
   end
 
+  def sujets
+    authorize @intervenant
+
+    @sujets = Sujet.joins(:cour).where('cour.intervenant_binome_id': @intervenant_user_id).ordered
+
+    # Si on a pas de workflow, on récupère tous les sujets, et on prend ceux archivés si la case "Inclure les archivés ?" est coché
+    # Sinon, on prend en fonction du workflow choisi sans prendre en compte la case pour les archives
+    if params[:workflow_state].blank?
+      if params[:archive].blank?
+        @sujets = @sujets.where.not(workflow_state: "archivé")
+      end
+    else
+      @sujets = @sujets.where("workflow_state = ?", params[:workflow_state].to_s.downcase)
+    end
+
+    if params[:formation].present?
+      formation_id = Formation.find_by(nom: params[:formation]).id
+      examens_from_formation = Cour.where(formation_id: formation_id).select{|cour| cour.examen?}
+      @sujets = @sujets.where(cour_id: examens_from_formation)
+    end
+
+    @sujets = @sujets.paginate(page: params[:page], per_page: 20)
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_intervenant
@@ -147,11 +175,11 @@ class IntervenantsController < ApplicationController
     end
 
     def sort_column
-        sortable_columns.include?(params[:column]) ? params[:column] : "nom"
+        sortable_columns.include?(params[:column_intervenant]) ? params[:column_intervenant] : "nom"
     end
 
     def sort_direction
-        %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
+        %w[asc desc].include?(params[:direction_intervenant]) ? params[:direction_intervenant] : "asc"
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

@@ -1,24 +1,25 @@
 class DossiersController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[ show deposer deposer_done ]
   before_action :set_dossier, only: %i[ show edit update destroy envoyer deposer deposer_done valider rejeter relancer archiver ]
-  before_action :set_période, :set_intervenants_list, only: %i[ new ]
-  before_action :is_user_authorized, except: %i[ show ]
+  before_action :is_user_authorized
 
   layout :determine_layout
 
   # GET /dossiers or /dossiers.json
   def index
-    params[:période] ||= '2024/2025' 
+    params[:période] ||= AppConstants::PÉRIODE 
     params[:order_by]||= 'dossiers.updated_at'
+    params[:column_dossier] ||= session[:column_dossier]
+    params[:direction_dossier] ||= session[:direction_dossier]
 
     if params[:archive].blank?
-      @dossiers = Dossier.where.not(workflow_state: "archivé")
+      @dossiers = Dossier.where.not(workflow_state: "archivé").joins(:intervenant)
     else
-      @dossiers = Dossier.all
+      @dossiers = Dossier.all.joins(:intervenant)
     end
     
     unless params[:nom].blank?
-      @dossiers = @dossiers.joins(:intervenant).where("intervenants.nom ILIKE ?", "%#{params[:nom].upcase}%")
+      @dossiers = @dossiers.where("intervenants.nom ILIKE ?", "%#{params[:nom].upcase}%")
     end 
 
     unless params[:période].blank?
@@ -30,8 +31,13 @@ class DossiersController < ApplicationController
     end
 
     if params[:order_by] == 'intervenants.nom'
-      @dossiers = @dossiers.joins(:intervenant).reorder(params[:order_by])
+      @dossiers = @dossiers.reorder(params[:order_by])
     end
+
+    session[:column_dossier] = params[:column_dossier]
+    session[:direction_dossier] = params[:direction_dossier]
+
+    @dossiers = @dossiers.reorder(Arel.sql("#{sort_column} #{sort_direction}"))
 
     respond_to do |format|
       format.html do 
@@ -51,18 +57,19 @@ class DossiersController < ApplicationController
 
   # GET /dossiers/1 or /dossiers/1.json
   def show
-    authorize @dossier
   end
 
   # GET /dossiers/new
   def new
+    période = params[:période] || AppConstants::PÉRIODE
+    # En cas de changement : changer également dans create
+    @intervenants = Intervenant.sans_dossier(période)
     @dossier = Dossier.new
-    @dossier.période = @période
+    @dossier.période = période
   end
 
   # GET /dossiers/1/edit
   def edit
-    @intervenants = Intervenant.where(id: @dossier.intervenant)
   end
 
   # POST /dossiers or /dossiers.json
@@ -74,7 +81,7 @@ class DossiersController < ApplicationController
         format.html { redirect_to @dossier, notice: "Nouveau dossier créé avec succès" }
         format.json { render :show, status: :created, location: @dossier }
       else
-        set_intervenants_list
+        @intervenants = Intervenant.sans_dossier(params[:dossier][:période])
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @dossier.errors, status: :unprocessable_entity }
       end
@@ -88,7 +95,6 @@ class DossiersController < ApplicationController
         format.html { redirect_to @dossier, notice: "Dossier modifié." }
         format.json { render :show, status: :ok, location: @dossier }
       else
-        set_intervenants_list
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @dossier.errors, status: :unprocessable_entity }
       end
@@ -109,12 +115,7 @@ class DossiersController < ApplicationController
   # 
 
   def envoyer
-    # Passe le dossier à l'état 'Envoyé'
-    @dossier.envoyer!
-
-    # Informe l'intervenant
-    mailer_response = DossierMailer.with(dossier: @dossier).dossier_email.deliver_now
-    MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: @dossier.intervenant.email, subject: "Dossier de recrutement CEV (Envoyé)")
+    @dossier.envoyer_dossier(current_user.id)
 
     redirect_to @dossier, notice: "Un email vient d'être envoyé à l'intervenant."
   end
@@ -133,48 +134,19 @@ class DossiersController < ApplicationController
   end
 
   def valider
-    # Valide tous les documents
-    @dossier.documents.each do | doc |
-      doc.valider! if doc.can_valider?
-    end
-
-    # Passe le dossier à l'état 'Validé'
-    @dossier.valider!
-
-    # Informe l'intervenant
-    mailer_response = DossierMailer.with(dossier: @dossier).valider_email.deliver_now
-    MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: @dossier.intervenant.email, subject: "Dossier de recrutement CEV (Validé)")
+    @dossier.valider_dossier(current_user.id)
 
     redirect_to @dossier, notice: "Dossier validé avec succès. L'intervenant vient d'être informé."
   end
 
   def relancer
-    # Passe le dossier à l'état 'Validé'
-    @dossier.relancer!
-
-    # Informe l'intervenant
-    mailer_response = DossierMailer.with(dossier: @dossier).dossier_email.deliver_now
-    MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: @dossier.intervenant.email, subject: "Dossier de recrutement CEV (Relancé)")
+    @dossier.relancer_dossier(current_user.id)
 
     redirect_to @dossier, notice: "Dossier relancé avec succès. L'intervenant vient d'être informé."
   end
 
   def rejeter
-    # Vérifier qu'il y a au moins un document à l'état rejeté
-    rejeter = false
-    @dossier.documents.each do | doc |
-      rejeter = true if doc.non_conforme?
-    end
-    
-    if rejeter
-      # Passe le dossier à l'état 'Rejeté'
-      @dossier.rejeter!
-
-      # Informe l'intervenant
-      mailer_response = DossierMailer.with(dossier: @dossier).rejeter_email.deliver_now
-      MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: @dossier.intervenant.email, subject: "Dossier de recrutement CEV (Rejeté)")
-
-
+    if @dossier.rejeter_dossier(current_user.id)
       redirect_to @dossier, notice: "Dossier rejeté. L'intervenant vient d'être informé."
     else
       redirect_to @dossier, alert: "Pour rejeter ce dossier, il faut qu'un document soit en statut 'Non_conforme' !"
@@ -182,22 +154,61 @@ class DossiersController < ApplicationController
   end
 
   def archiver
-    @dossier.documents.each do | doc |
-      if doc.validé?
-        doc.fichier.purge
-        doc.archiver!
-      elsif doc.non_conforme?
-        doc.destroy
+    @dossier.archiver_dossier(current_user.id)
+    redirect_to @dossier, notice: 'Dossier archivé, les fichiers sources (PDF) des documents validés ont été supprimés'
+  end
+
+  def action
+    if params[:dossiers_id].present? && params[:action_name].present?
+      @dossiers = Dossier.where(id: params[:dossiers_id].keys)
+      if @dossiers.pluck(:workflow_state).uniq.many? && params[:action_name] == "Changer d'état"
+        redirect_to dossiers_path, alert: 'Veuillez choisir des dossiers avec le même état'
+      end
+    else
+      redirect_to dossiers_path, alert: 'Veuillez choisir des dossiers et une action à appliquer !'
+    end
+  end
+
+  def action_do
+    action_name = params[:action_name]
+
+    @dossiers = Dossier.where(id: params[:dossiers_id]&.keys)
+
+    case action_name
+    when "Changer d'état"
+      dossiers_modifiés = 0
+      method_name = Dossier.state_to_method[params[:workflow_state].to_sym]
+      @dossiers.each do |dossier|
+        old_state = dossier.workflow_state.to_sym
+        if method_name && dossier.respond_to?(method_name)
+          dossier.send(method_name, current_user.id)
+        end
+        new_state = dossier.reload.workflow_state.to_sym
+
+        dossiers_modifiés += 1 if old_state != new_state
+      end
+
+      if dossiers_modifiés < @dossiers.count
+        flash[:alert] = "#{@dossiers.count - dossiers_modifiés} modifications de dossiers ont échoués et #{dossiers_modifiés} dossiers modifiés avec succès."
       end
     end
-    @dossier.archiver!
-    redirect_to @dossier, notice: 'Dossier archivé, les fichiers sources (PDF) des documents validés ont été supprimés'
+
+    unless flash[:alert]
+      flash[:notice] = "Action '#{action_name}' appliquée à #{params.permit![:dossiers_id]&.keys&.size || 0} dossiers.s."
+    end
+    redirect_to dossiers_path
   end
 
 private
     # Use callbacks to share common setup or constraints between actions.
     def set_dossier
       @dossier = Dossier.find_by(slug: params[:id])
+      if @dossier.nil?
+        if !user_signed_in? || current_user.intervenant?
+          DossierMailer.with(dossier_id: params[:id]).mauvais_url.deliver_now
+        end
+        redirect_to root_path, alert: "Dossier introuvable"
+      end
     end
 
     # Only allow a list of trusted parameters through.
@@ -210,32 +221,19 @@ private
       'public' unless user_signed_in?
     end
 
+    def sortable_columns
+      ['dossiers.période','intervenants.nom','dossiers.workflow_state', 'dossiers.created_at', 'dossiers.updated_at']
+    end
+
+    def sort_column
+      sortable_columns.include?(params[:column_dossier]) ? params[:column_dossier] : "nom"
+    end
+
+    def sort_direction
+      %w[asc desc].include?(params[:direction_dossier]) ? params[:direction_dossier] : "asc"
+    end
+
     def is_user_authorized
-      authorize Dossier
-    end
-
-    def set_période
-      période = '2024/2025'
-      @début_période = '2024-09-01'
-      @fin_période = '2025-08-31'
-    end
-
-    def set_intervenants_list
-      # Lister toutes les personnes ayant eu cours comme intervenant principal ou en binome
-
-      # on garde les id des intervenants ayant eu cours sur la période
-      intervenants_ids = Cour.where("DATE(cours.debut) BETWEEN ? AND ?", @début_période, @fin_période).pluck(:intervenant_id)
-      # on y ajoute les intervenants ayants fait les cours comme binomes
-      intervenants_ids += Cour.where("DATE(cours.debut) BETWEEN ? AND ?", @début_période, @fin_période).pluck(:intervenant_binome_id)
-      # on ajoute les intervenants ayants fait des vacations
-      intervenants_ids += Intervenant.where(id: Vacation.where("DATE(vacations.date) BETWEEN ? AND ?", @début_période, @fin_période).pluck(:intervenant_id))
-
-      intervenants_avec_dossiers_sur_période = Dossier.where(période: @période).pluck(:intervenant_id)
-
-      @intervenants = Intervenant
-                            .where("id IN(?)", intervenants_ids.uniq)
-                            .where(status: ['CEV','CEV_ENS_C_CONTRACTUEL','CEV_TIT_CONT_FP','CEV_SAL_PRIV_IND'])
-                            .where.not(id: intervenants_avec_dossiers_sur_période)
-                            .uniq
+      authorize @dossier ? @dossier : Dossier
     end
 end

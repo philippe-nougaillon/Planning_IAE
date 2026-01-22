@@ -10,7 +10,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def show?
-    user && user.role_number >= 5
+    user && (user.role_number >= 5 || record.id == user.id)
   end
 
   def new?
@@ -47,6 +47,26 @@ class UserPolicy < ApplicationPolicy
 
   def peut_réserver?
     user.role_number >= 2 || (user.role_number == 1 && user.partenaire_qse?)
+  end
+
+  def enable_otp?
+    user && (user.role_number >= 4 || user.partenaire_qse?)
+  end
+
+  def disable_otp?
+    enable_otp?
+  end
+
+  def qrcode_otp?
+    enable_otp?
+  end
+
+  def mail_otp?
+    enable_otp?
+  end
+
+  def send_otp?
+    true
   end
 
 end

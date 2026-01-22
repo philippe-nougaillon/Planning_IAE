@@ -11,14 +11,15 @@ class Cour < ApplicationRecord
   belongs_to :intervenant_binome, class_name: :Intervenant, foreign_key: :intervenant_binome_id, optional: true 
   belongs_to :salle, optional: true
 
-  has_many :invits
-  has_many :presences
+  has_many :invits, dependent: :destroy
+  has_many :presences, dependent: :destroy
   has_many :etudiants, through: :formation
   has_many :options, dependent: :destroy
   accepts_nested_attributes_for :options,
                                 reject_if: lambda{|attributes| attributes['catégorie'].blank? || attributes['description'].blank?},
                                 allow_destroy:true
-  has_many :attendances
+  has_many :attendances, dependent: :destroy
+  has_one :sujet, dependent: :destroy
 
   has_one_attached :document
 
@@ -30,6 +31,8 @@ class Cour < ApplicationRecord
   validate :jour_ouverture, if: Proc.new { |cours| cours.salle && cours.salle.bloc != 'Z' && !(cours.bypass?) }
   validate :check_invits_en_cours
   validate :check_hss
+  validate :check_intervenant_not_also_appear_in_binome, if: Proc.new {|cours| cours.intervenant_binome.present?}
+  validate :check_no_old_commandes_method
 
   before_validation :update_date_fin
   before_validation :sunday_morning_praise_the_dawning
@@ -37,22 +40,20 @@ class Cour < ApplicationRecord
   before_save :change_etat_si_salle
   before_save :annuler_salle_si_cours_est_annulé
 
-  around_update :check_send_commande_email
-  after_create :check_send_new_commande_email
-
-  after_create   :send_new_examen_email, if: Proc.new { |cours| cours.examen? }
-  around_update  :check_send_examen_email
-  after_destroy :send_delete_examen_email, if: Proc.new { |cours| cours.examen? }
+  if ENV["SEND_EXAMEN_EMAILS"] == "true"
+    after_create   :send_new_examen_email, if: Proc.new { |cours| cours.examen? }
+    around_update  :check_send_examen_email
+    after_destroy :send_delete_examen_email, if: Proc.new { |cours| cours.examen? }
+  end
   
-  after_update :synchronisation_edusign, if: Proc.new { |cours| cours.audits.last.audited_changes["salle_id"]}
+  after_update :synchronisation_edusign, if: Proc.new { |cours| cours.audits.last.audited_changes["salle_id"] && cours.edusign_id && !cours.no_send_to_edusign && cours.formation.send_to_edusign}
 
   # Mettre à jour les SCENIC VIEWS
   after_commit {
     CoursNonPlanifie.refresh
   }
 
-  enum etat: [:planifié, :à_réserver, :confirmé, :reporté, :annulé, :réalisé]
-  
+  enum :etat, [:planifié, :à_réserver, :confirmé, :reporté, :annulé, :réalisé]
 
   self.per_page = 20
 
@@ -117,18 +118,10 @@ class Cour < ApplicationRecord
   end  
 
   def self.commandes
-    Cour.confirmé.where("DATE(cours.debut) >= ?", Date.today).where("cours.commentaires LIKE '+%'").order(:debut)
-  end
-
-  def self.commandes_archivées
-    Cour.réalisé.where("DATE(cours.debut) < ?", Date.today).where("cours.commentaires LIKE '+%'").order(debut: :desc)
-  end
-
-  def self.commandes_v2
     Cour.confirmé.where("DATE(cours.debut) >= ?", Date.today).joins(:options).where(options: {catégorie: :commande}).order(:debut)
   end
 
-  def self.commandes_archivées_v2
+  def self.commandes_archivées
     Cour.réalisé.where("DATE(cours.debut) < ?", Date.today).joins(:options).where(options: {catégorie: :commande}).order(debut: :desc)
   end
 
@@ -151,7 +144,7 @@ class Cour < ApplicationRecord
   end
 
   def manque_de_places? 
-    (self.salle.places > 0 && Formation.unscoped.find(self.formation_id).nbr_etudiants > self.salle.places)
+    self.formation.nbr_etudiants > self.salle.places && self.salle.bloc != 'Z'
   end
 
   def nom_ou_ue
@@ -171,7 +164,7 @@ class Cour < ApplicationRecord
   end
 
   def nom_et_étudiants
-    "#{self.nom} (#{self.formation.try(:nbr_etudiants)})" 
+    "#{self.nom} (#{self.formation.nbr_etudiants})" 
   end
 
   def url?
@@ -216,7 +209,7 @@ class Cour < ApplicationRecord
   # 
 
   def formation_json_v2
-    self.formation.try(:nom) || ""
+    self.formation.nom || ""
   end
 
   def salle_json_v2
@@ -228,7 +221,7 @@ class Cour < ApplicationRecord
   end
 
   def formation_color_json_v2
-      self.formation.try(:color)
+      self.formation.color
   end
 
   # render json methods V3
@@ -250,7 +243,7 @@ class Cour < ApplicationRecord
   end
 
   def taux_td
-    case Formation.unscoped.find(self.formation_id).nomtauxtd
+    case Formation.find(self.formation_id).nomtauxtd
     when 'TD'
       Cour.Tarif
     when 'CM'
@@ -263,7 +256,7 @@ class Cour < ApplicationRecord
   end
 
   def HETD
-    case Formation.unscoped.find(self.formation_id).nomtauxtd
+    case Formation.find(self.formation_id).nomtauxtd
     when 'TD'
       1
     when 'CM'
@@ -280,7 +273,7 @@ class Cour < ApplicationRecord
   end
 
   def imputable?
-    !(self.hors_service_statutaire || Formation.unscoped.find(self.formation_id).hss)
+    !(self.hors_service_statutaire || Formation.find(self.formation_id).hss)
   end
 
 
@@ -317,7 +310,7 @@ class Cour < ApplicationRecord
 
   # PGSearch Attributs
   def formation_nom
-    self.formation.try(:nom)
+    self.formation.nom
   end
 
   def intervenant_nom
@@ -348,16 +341,16 @@ class Cour < ApplicationRecord
 
   # Si c'est un examen IAE / examen rattrapage / Tiers-temps
   def examen?
-    [169, 1166, 522].include?(self.intervenant.id)
+    Intervenant.examens_ids.include?(self.intervenant.id)
   end
 
   def type_examen
     case self.intervenant_id
-    when 169
+    when ENV["INTERVENANT_EXAMEN_ID"].to_i
       "Examen"
-    when 1166
+    when ENV["INTERVENANT_EXAMEN_RATTRAPRAGE_ID"].to_i
       "Examen Rattrapage"
-    when 522
+    when ENV["INTERVENANT_EXAMEN_TIERS_TEMPS_ID"].to_i
       "Examen Tiers-Temps"
     end
   end
@@ -376,13 +369,45 @@ class Cour < ApplicationRecord
     (self.commentaires && self.commentaires.include?("BYPASS=#{self.id}"))
   end
 
-  def désynchronisé?
-    # Regarde si un cours réalisé d'une formation étant sur Edusign n'a aucune présence de créé.
-    Formation.cobayes_émargement.include?(self.formation_id) && self.réalisé? && self.attendances.empty?
-  end
+  # def désynchronisé?
+  #   # Regarde si un cours réalisé d'une formation étant sur Edusign n'a aucune présence de créé.
+  #   Formation.where(send_to_edusign: true).pluck(:id).include?(self.formation_id) && self.réalisé? && self.attendances.empty?
+  # end
 
   def changements_examen
     saved_changes.except("updated_at", "created_at")
+  end
+
+  def days_between_today_and_debut
+    (self.debut.to_date - Date.today).to_i
+  end
+
+  def color_sujet
+    case self.sujet&.workflow_state
+    when 'validé', 'archivé'
+      "success"
+    when 'déposé'
+      "warning"
+    else
+      "error"
+    end
+  end
+
+  def sujet_manquant?
+    if [169, 1166].include?(self.intervenant_id)
+      sujet = Sujet.find_by(cour_id: self.id)
+      if !['déposé', 'validé', 'archivé'].include?(sujet&.workflow_state)
+        true
+      else
+        false
+      end
+    else
+      false
+    end
+  end
+
+  def has_intervenant_vacataire?
+    self.intervenant_id == ENV["SURVEILLANT_EXAMEN_VACATAIRE_ID"].to_i
   end
 
   private
@@ -520,42 +545,14 @@ class Cour < ApplicationRecord
     end
 
     def check_hss
-      if self.formation.hss && !self.hors_service_statutaire
+      if self.formation&.hss && !self.hors_service_statutaire
         errors.add(:hors_service_statutaire, 'ne correspond pas à celui de la formation')
       end
     end
 
-    def check_send_commande_email
-      old_commentaires = commentaires_was
-      yield
-      commande_status = determine_statut_commande(old_commentaires, commentaires)
-      send_email_commande(commande_status, old_commentaires)
-    end
-
-    def determine_statut_commande(old_commentaires, new_commentaires)
-      if old_commentaires && old_commentaires.include?('+')
-        new_commentaires.include?('+') ? 'modifiée' : 'supprimée'
-      elsif new_commentaires && new_commentaires.include?('+')
-        'ajoutée'
-      else
-        ''
-      end
-    end
-
-    def send_email_commande(commande_status, old_commentaires)
-      case commande_status
-      when 'modifiée'
-        ToolsMailer.with(cour: self, old_commentaires: old_commentaires).commande_modifiée.deliver_now
-      when 'supprimée'
-        ToolsMailer.with(cour: self, old_commentaires: old_commentaires).commande_supprimée.deliver_now
-      when 'ajoutée'
-        ToolsMailer.with(cour: self).nouvelle_commande.deliver_now
-      end
-    end
-
-    def check_send_new_commande_email
-      if self.commentaires && self.commentaires.include?('+')
-        ToolsMailer.with(cour: self).nouvelle_commande.deliver_now
+    def check_no_old_commandes_method
+      if self.commentaires&.include?('+') && self.debut > DateTime.now 
+        errors.add(:cours, ": Les commandes ne sont plus gérées via les commentaires mais dans les options du cours")
       end
     end
 
@@ -591,30 +588,42 @@ class Cour < ApplicationRecord
     end
 
     def send_email_examen(examen_status, old_cour)
+      title = ""
       case examen_status
       when 'modifié'
-        mailer_response = CourMailer.with(cour: self).examen_modifié.deliver_now
+        title = "[PLANNING] Examen modifié pour le #{I18n.l self.debut, format: :long}"
+        mailer_response = CourMailer.with(cour: self, title: title).examen_modifié.deliver_now
       when 'supprimé'
-        mailer_response = CourMailer.with(cour: self).examen_supprimé.deliver_now
+        title = "[PLANNING] Examen supprimé pour le #{I18n.l self.debut, format: :long}"
+        mailer_response = CourMailer.with(cour: self, title: title).examen_supprimé.deliver_now
       when 'ajouté'
-        mailer_response = CourMailer.with(cour: self).examen_ajouté.deliver_now
+        title = "[PLANNING] Nouvel examen pour le #{I18n.l self.debut, format: :long}"
+        mailer_response = CourMailer.with(cour: self, title: title).examen_ajouté.deliver_now
       end
-      MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen #{examen_status}")
+      MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen #{examen_status}", title: title)
     end
 
     def send_new_examen_email
-      mailer_response = CourMailer.with(cour: self).examen_ajouté.deliver_now
-      MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen ajouté")
+      title = "[PLANNING] Nouvel examen pour le #{I18n.l self.debut, format: :long}"
+      mailer_response = CourMailer.with(cour: self, title: title).examen_ajouté.deliver_now
+      MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen ajouté", title: title)
     end
 
   def send_delete_examen_email
-    mailer_response = CourMailer.with(cour: self).examen_supprimé.deliver_now
-    MailLog.create!(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen supprimé")
+    title = "[PLANNING] Examen supprimé pour le #{I18n.l self.debut, format: :long}"
+    mailer_response = CourMailer.with(cour: self, title: title).examen_supprimé.deliver_now
+    MailLog.create!(user_id: 0, message_id: mailer_response.message_id, to: "examens@iae.pantheonsorbonne.fr", subject: "Examen supprimé", title: title)
   end
 
   def synchronisation_edusign
     # Modifier la salle sur Edusign si changement
     EdusignJob.perform_later("salle changée", self.audits.last.user_id, {cour_id: self.id})
+  end
+
+  def check_intervenant_not_also_appear_in_binome
+    if self.intervenant == self.intervenant_binome
+      errors.add(:cours, "ne peut pas avoir l'intervenant apparaitre aussi en tant que binôme !")
+    end
   end
 
 end

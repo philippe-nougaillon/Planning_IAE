@@ -1,26 +1,38 @@
 <p style="margin-bottom: 0.5rem">
     Madame, Monsieur
     <br><br>
-    Nous vous remercions d’avoir accepté d’intervenir à l’IAE Paris-Sorbonne en qualité d’enseignant vacataire, 
-    pour l’année universitaire <%= @dossier.période %>.
-    <br><br>
-    Vous trouverez le lien permettant la transmission du dossier de recrutement nécessaire au paiement, 
-    ainsi que les pièces justificatives.
-    <br><br>
-    Conformément à la réglementation, vous devez le transmettre au service RH 
-    <b>avant votre première intervention à l’IAE Paris-Sorbonne</b>.
-    <br><br>
-    A cet effet, vous trouverez la liste des pièces à fournir selon 
-    votre situation et une note relative à la réglementation qui régit le 
-    recrutement d’enseignants vacataires dans l’enseignement supérieur public.
-    <br><br>
-    Pour rappel, le paiement se fait uniquement sous réserve de réception 
-    de votre dossier 2023/2024 complet et validé par le SRH et a lieu dans 
-    un délai de 2 mois après prestation. Le bulletin de paie sera accessible 
-    sur le site sécurisé <%= link_to 'ensap.gouv.fr', 'https://ensap.gouv.fr/web/accueilnonconnecte' %>.
-    <br><br>
-    Déposer votre dossier en ligne en suivant ce lien :
-    <%= link_to 'déposer en ligne', url_for(dossier_url(@dossier)) %>
+    <%# Check si l'intervenant a déjà eu un cours sur la période %>
+    <% if @dossier.intervenant.cours.where(etat: Cour.etats.values_at(:planifié, :confirmé, :réalisé)).where("debut < ? AND debut BETWEEN ? AND ?", DateTime.now, Dossier.dates_début_fin_année_scolaire(@dossier.période).first, Dossier.dates_début_fin_année_scolaire(@dossier.période).last).any? %>
+        Vous avez effectué des vacations à l’IAE Paris-Sorbonne au titre de la période <%= @dossier.période %>. 
+        <br><br>
+        Cependant, nous constatons qu'à ce jour, <b>votre dossier de recrutement est toujours manquant ou incomplet</b>. 
+        <br><br>
+        Nous vous informons que, sans validation préalable de votre dossier par le service des ressources humaines, aucun versement de rémunération ne peut intervenir. Pour rappel, le versement de la rémunération intervient dans un délai de deux mois à compter de la réception d’un dossier complet et validé.
+        <br><br>
+        Il est donc urgent de régulariser votre situation en suivant le lien ci-dessous :
+        <%= link_to 'accéder à mon dossier en ligne', url_for(dossier_url(@dossier)) %>
+    <% else %>
+        Nous vous remercions d’avoir accepté d’intervenir à l’IAE Paris-Sorbonne en qualité d’enseignant vacataire, 
+        pour l’année universitaire <%= @dossier.période %>.
+        <br><br>
+        Vous trouverez le lien permettant la transmission du dossier de recrutement nécessaire au paiement, 
+        ainsi que les pièces justificatives.
+        <br><br>
+        Conformément à la réglementation, vous devez le transmettre au service RH 
+        <b>avant votre première intervention à l’IAE Paris-Sorbonne</b>.
+        <br><br>
+        A cet effet, vous trouverez la liste des pièces à fournir selon 
+        votre situation et une note relative à la réglementation qui régit le 
+        recrutement d’enseignants vacataires dans l’enseignement supérieur public.
+        <br><br>
+        Pour rappel, le paiement se fait uniquement sous réserve de réception 
+        de votre dossier <%= @dossier.période %> complet et validé par le SRH et a lieu dans 
+        un délai de 2 mois après prestation. Le bulletin de paie sera accessible 
+        sur le site sécurisé <%= link_to 'ensap.gouv.fr', 'https://ensap.gouv.fr/web/accueilnonconnecte' %>.
+        <br><br>
+        Déposer votre dossier en ligne en suivant ce lien :
+        <%= link_to 'déposer en ligne', url_for(dossier_url(@dossier)) %>
+    <% end %>
 </p>
 
 <%= render partial: 'mailer_footer_rh' %>

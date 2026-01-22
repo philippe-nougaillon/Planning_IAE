@@ -1,7 +1,7 @@
 <div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
   <h1 class="text-3xl"><%= fa_icon 'users' %> Liste des utilisateurs</h1>
   <% if policy(User).new? %>
-    <%= link_to new_user_path, class: 'text-primary' do %>
+    <%= link_to new_user_path, class: 'btn btn-sm btn-primary btn-outline hover:!text-white' do %>
       <%= fa_icon 'plus-circle' %> Utilisateur
     <% end %>
   <% end %>
@@ -46,6 +46,7 @@
   <table class="table">
     <thead class="bg-slate-100 border">
       <tr>
+        <th></th>
         <th><%= sort_link 'users.nom', 'Nom' %></th>
         <th>Prénom</th>
         <th><%= sort_link 'users.email', 'Courriel' %></th>
@@ -65,20 +66,30 @@
     <tbody>
       <% @users.each do |user| %>
         <tr class="hover border">
-          <td><b><%= link_to user.nom, user, class: 'text-primary hover:underline' %></b></td>
+          <td>
+            <span class="material-symbols-outlined hover:cursor-help" title="Utilisateur avec double authentification activée">
+              <%= user.otp_required_for_login? ? 'person_shield' : '' %>
+            </span>
+          </td>
+          <td>
+            <b><%= link_to user.nom, user, class: 'text-primary hover:underline' %></b></td>
           <td><%= user.prénom %></td>
           <td>
-            <%= user.email %>
-            <% if user.unlinked? %>
-              <%= link_to user.étudiant? ? etudiants_path(search: user.nom) : intervenants_path(nom: user.nom) do %>
-                <%= fa_icon 'exclamation-circle', class: 'text-error' , title: "L'utilisateur n'a pas de profil étudiant/intervenant associé à cet email. Cliquez ici pour chercher avec le nom de famille." %>
-              <% end %>
-              <% if user.étudiant? && Etudiant.where("LOWER(nom) = ?", user.nom.try(:downcase)).any? %>
-                <%= link_to etudiants_path(search: user.nom) do %>
-                  <%= fa_icon 'graduation-cap', class: 'text-primary' , title: 'Un étudiant existe avec le même nom de famille' %>
+            <div class="flex items-center gap-1">
+              <%= user.email %>
+              <% if user.unlinked? %>
+                <%= link_to user.étudiant? ? etudiants_path(search: user.nom) : intervenants_path(nom: user.nom) do %>
+                  <%= fa_icon 'exclamation-circle', class: 'text-error' , title: "L'utilisateur n'a pas de profil étudiant/intervenant associé à cet email. Cliquez ici pour chercher avec le nom de famille." %>
+                <% end %>
+                <% if user.étudiant? && Etudiant.where("LOWER(nom) = ?", user.nom.try(:downcase)).any? %>
+                  <%= link_to etudiants_path(search: user.nom) do %>
+                    <span class="material-symbols-outlined text-xl text-primary" title="Un étudiant existe avec le même nom de famille">
+                      school
+                    </span>
+                  <% end %>
                 <% end %>
               <% end %>
-            <% end %>
+            </div>
           </td>
           <td><%= user.role.humanize %></td>
           <td><%= time_ago_in_words user.current_sign_in_at if user.current_sign_in_at %></td>

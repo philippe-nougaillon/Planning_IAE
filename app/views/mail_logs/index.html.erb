@@ -1,11 +1,10 @@
 <div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
   <h1 class="text-3xl"><%= fa_icon 'envelope' %> Mail Logs</h1>
+  <%= link_to refresh_mail_logs_path, class: 'btn btn-sm btn-primary btn-outline hover:!text-white', 'data-turbo': false do %>
+    Actualiser
+  <% end %>
 </div>
-<p class="mb-4">Historique des mails envoyés via MailGun, avec Statut et État consultables pendant 5 jours.</p>
-
-<% if @result_failed && @result_failed['items'].size.positive? %>
-  <p class="text-error mb-4">Il y a actuellement <%= @result_failed['items'].count %> envois en Statut 'KO'</p>
-<% end %>
+<p class="mb-4">Historique des mails envoyés via MailGun, avec Statut et État (OK = Acheminé, OUVERT = Vu).</p>
 
 <div class="bs-container p-4 shadow mb-4">
   <%= form_tag request.path, method: :get do %>
@@ -17,7 +16,7 @@
       </div>
 
       <div class="relative flex-grow max-w-full flex-1">
-        <%= label_tag :search_subject, "Sujet" %>
+        <%= label_tag :search_subject, "Objet" %>
         <%= select_tag :search_subject, options_for_select(MailLog.all.pluck(:subject).uniq.sort, params[:search_subject]), include_blank: true, onchange:'this.form.submit()', class:"select select-bordered select-sm w-full" %>
       </div>
 
@@ -37,23 +36,16 @@
       <tr>
         <th><%= sortable :user_id do %>De<% end %></th>
         <th><%= sortable :to do %>À<% end %></th>
-        <th><%= sortable :subject do %>Sujet<% end %></th>
+        <th><%= sortable :subject do %>Objet<% end %></th>
         <th><%= sortable :created_at, default: true do %>Il y a<% end %></th>
-        <th>Statut</th>
-        <th>État</th>
+        <th><%= sortable :statut do %>Statut<% end %></th>
+        <th><%= sortable :opened do %>État<% end %></th>
         <th colspan="2"></th>
       </tr>
     </thead>
 
     <tbody>
-      <% @mail_logs.each do |mail_log| %>
-        <% status_ko = @result_failed["items"].find{|item| item["message"]["headers"]["message-id"] == mail_log.message_id } %>
-
-        <% if params[:ko].blank? || (mail_log.created_at > 5.days.ago && status_ko) %>
-          <%= render partial: "mail_log", locals: {mail_log: mail_log, status_ko: status_ko} %>
-        <% end %>
-
-      <% end %>
+      <%= render @mail_logs %>
     </tbody>
 
     <tfoot>

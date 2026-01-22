@@ -1,9 +1,12 @@
 <div class="border-b mt-6 mb-2 pb-4">
-  <h1 class="text-3xl"><%= fa_icon 'signature' %> Création de contact ou de formation dans Edusign </h1>
+  <h1 class="text-3xl">
+    <%= image_tag 'edusign.png', size: 32, class: 'inline' %>
+    Synchronisation ponctuelle
+  </h1>
 </div>
 
 <h2 class="text-2xl mt-4 mb-16">
-  Permet la création d'un Intervenant <strong>ou</strong> d'une Formation <strong>ou</strong> d'un Étudiant manquant dans Edusign
+  Permet la création d'un Intervenant <strong>ou</strong> d'une Formation <strong>ou</strong> d'un Étudiant <strong><u>manquant dans Edusign</u></strong>
 </h2>
 
 <%= form_tag({action: "edusign_do", method: :post}) do %>

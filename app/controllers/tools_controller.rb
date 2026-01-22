@@ -99,9 +99,9 @@ class ToolsController < ApplicationController
 
         formation = nil
         if !params[:formation_id].blank?
-          formation = Formation.find(params[:formation_id])
+          formation = Formation.not_archived.find(params[:formation_id])
         elsif row[headers.index 'Formation']
-          formation = Formation.find_by(nom: row[headers.index 'Formation'].strip)
+          formation = Formation.not_archived.find_by(nom: row[headers.index 'Formation'].strip)
         end
 
         elearning = (row[headers.index 'Intervenant'] == 'E-LEARNING Hors_IAE') || 
@@ -158,7 +158,7 @@ class ToolsController < ApplicationController
       log.update(etat: _etat, nbr_lignes: @importes + @errors, lignes_importees: @importes)
       log.update(message: (params[:save] == 'true' ? "Importation" : "Simulation") )
 
-      # log.update(message: log.message + " | Formation: #{ formation ? formation.try(:nom) : 'INCONNUE' }" )
+      # log.update(message: log.message + " | Formation: #{ formation ? formation.nom : 'INCONNUE' }" )
 
       if @errors > 0
         log.update(message: log.message + " | #{@errors} lignes rejetées !")
@@ -400,7 +400,7 @@ class ToolsController < ApplicationController
         next unless row[0]
 
         etudiant = Etudiant
-                        .where("lower(nom) = ? AND lower(prénom) = ? AND lower(email) = ?", 
+                        .where("lower(trim(nom)) = ? AND lower(trim(prénom)) = ? AND lower(trim(email)) = ?", 
                           row[headers.index 'NOM'].try(:strip).try(:downcase), 
                           row[headers.index 'Prénom'].try(:strip).try(:downcase),
                           row[headers.index 'Mail'].try(:strip).try(:downcase))
@@ -437,14 +437,17 @@ class ToolsController < ApplicationController
         msg = "ETUDIANT #{etudiant.new_record? ? 'NEW' : 'UPDATE'} => id:#{etudiant.id} changes:#{etudiant.changes}"
 
         if etudiant.valid? 
-          if etudiant.new_record? && params[:notify] == '1' && params[:save] == 'true'
+          if params[:notify] == '1' && params[:save] == 'true'
             etudiant.save
             # Création du compte d'accès (user) et envoi du mail de bienvenue
-            user = User.new(nom: etudiant.nom, prénom: etudiant.prénom, email: etudiant.email, mobile: etudiant.mobile, password: SecureRandom.base64(12))
-            if user.valid?
-              user.save
-              mailer_response = EtudiantMailer.welcome_student(user).deliver_now
-              MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: etudiant.email, subject: "Nouvel accès étudiant")
+            if !etudiant.linked_user
+              user = User.new(nom: etudiant.nom, prénom: etudiant.prénom, email: etudiant.email, mobile: etudiant.mobile, password: SecureRandom.base64(12))
+              if user.valid?
+                user.save
+                title = "[PLANNING IAE Paris] Bienvenue !"
+                mailer_response = EtudiantMailer.welcome_student(user, title).deliver_now
+                MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: etudiant.email, subject: "Nouvel accès étudiant", title: title)
+              end
             end
           else
             # Mise à jour des étudiants existants
@@ -623,7 +626,7 @@ class ToolsController < ApplicationController
 	  	end
 	  	puts
 		  puts "=" * 120
-	  	puts "Création termninée | #{@cours_créés} cours #{'créé'.pluralize(@cours_créés)} | #{@erreurs} #{'erreur'.pluralize(@erreurs)}"
+	  	puts "Création terminée | #{@cours_créés} cours #{'créé'.pluralize(@cours_créés)} | #{@erreurs} #{'erreur'.pluralize(@erreurs)}"
 		  puts "=" * 120
 	  	puts
 	  	puts "--------!-!-! Les modifications n'ont pas été enregistrées !-!-!----------" unless params[:save] == 'true'
@@ -743,9 +746,7 @@ class ToolsController < ApplicationController
   end
 
   def export_formations_do
-    formations = Formation.all
-
-    formations = formations.where(archive: false) unless params[:archive]
+    formations = params[:archive] ? Formation.ordered : Formation.not_archived.ordered
 
     book = FormationsToXls.new(formations).call
     file_contents = StringIO.new
@@ -796,10 +797,10 @@ class ToolsController < ApplicationController
   end
 
   def etats_services
+    @intervenants_for_select = Intervenant.all
+    intervenants_ids = []
 
-    @intervenants ||= []
-
-    unless params[:start_date].blank? || params[:end_date].blank?
+    if params[:start_date].present? && params[:end_date].present?
       @start_date = params[:start_date]
       @end_date = params[:end_date]
     else
@@ -807,63 +808,75 @@ class ToolsController < ApplicationController
       params[:end_date]   ||= Date.today.last_month.at_end_of_month
     end
 
-    unless params[:status].blank?
-      # Peupler la liste des intervenants ayant eu des cours en principal ou binome
-      @cours = Cour
-                .where(etat: Cour.etats.values_at(:confirmé, :réalisé))
-                .where("debut between ? and ?", @start_date, @end_date)
+    if params[:commit].present? && params[:status].blank? && params[:intervenant_id].blank?
+      # Ne fait pas la suite s'il n'y a pas de filtre sur le status ou l'intervenant
+      redirect_to tools_etats_services_path(start_date: params[:start_date], end_date: params[:end_date], status: params[:status], intervenant_id: params[:intervenant_id], cours: params[:cours], vacations: params[:vacations], responsabilites: params[:responsabilites]), alert: "Il faut sélectionner au moins un status ou un intervenant"
+    else
 
-      ids = @cours.distinct(:intervenant_id).pluck(:intervenant_id)
-      ids << @cours.distinct(:intervenant_binome_id).pluck(:intervenant_binome_id)
+      if params[:cours] == '1'
+        @cours = Cour
+                  .where(etat: Cour.etats.values_at(:confirmé, :réalisé))
+                  .where("debut between ? and ?", @start_date, @end_date)
 
-      # Ajouter les vacataires
-      ids << Vacation
-                .where("date between ? and ?", @start_date, @end_date)
-                .distinct(:intervenant_id)
-                .pluck(:intervenant_id)
-
-      # Ajouter les responsables
-
-      ids << Responsabilite
-                .where("debut between ? and ?", @start_date, @end_date)
-                .distinct(:intervenant_id)
-                .pluck(:intervenant_id)
-
-      @intervenants = Intervenant.where(id: ids.flatten).where(status: params[:status])
-      @intervenants_for_select = @intervenants
-    end 
-
-    unless params[:intervenant_id].blank? 
-      @intervenants = Intervenant.where(id: params[:intervenant_id])
-    end
-
-    @cumul_hetd = @cumul_vacations = @cumul_resps = 0
-
-    respond_to do |format|
-      format.html
-
-      format.xls do
-        book = CoursEtatsServicesToXls.new(@cours, @intervenants, @start_date, @end_date).call
-        file_contents = StringIO.new
-        book.write file_contents # => Now file_contents contains the rendered file output
-        filename = "Export_Cours.xls"
-        send_data file_contents.string.force_encoding('binary'), filename: filename 
+        intervenants_ids << @cours.distinct(:intervenant_id).pluck(:intervenant_id)
+        intervenants_ids << @cours.distinct(:intervenant_binome_id).pluck(:intervenant_binome_id)
       end
 
-      format.pdf do
-        filename = "Etats_de_services_#{Date.today.to_s}"
-        pdf = ExportPdf.new
-        pdf.export_etats_de_services(@cours, @intervenants, @start_date, @end_date)
-
-        send_data pdf.render,
-            filename: filename.concat('.pdf'),
-            type: 'application/pdf',
-            disposition: 'inline'	
-
-        # response.headers['Content-Disposition'] = 'attachment; filename="' + filename + '.pdf"'
-        # render pdf: filename, :layout => 'pdf.html'
+      if params[:vacations] == '1'
+        # Ajouter les vacataires
+        intervenants_ids << Vacation
+                  .where("date between ? and ?", @start_date, @end_date)
+                  .distinct(:intervenant_id)
+                  .pluck(:intervenant_id)
       end
 
+      if params[:responsabilites] == '1'
+        # Ajouter les responsables
+        intervenants_ids << Responsabilite
+                  .where("debut between ? and ?", @start_date, @end_date)
+                  .distinct(:intervenant_id)
+                  .pluck(:intervenant_id)
+      end
+
+      @intervenants = Intervenant.where(id: intervenants_ids.flatten)
+
+      if params[:status].present?
+        @intervenants = @intervenants.where(status: params[:status])
+      end
+
+      if params[:intervenant_id].present?
+        @intervenants = Intervenant.where(id: params[:intervenant_id])
+      end
+
+
+      @cumul_hetd = @cumul_vacations = @cumul_resps = 0
+
+      respond_to do |format|
+        format.html
+
+        format.xls do
+          book = CoursEtatsServicesToXls.new(@cours, @intervenants, @start_date, @end_date, params[:cours], params[:vacations], params[:responsabilites]).call
+          file_contents = StringIO.new
+          book.write file_contents # => Now file_contents contains the rendered file output
+          filename = "Export_Cours.xls"
+          send_data file_contents.string.force_encoding('binary'), filename: filename 
+        end
+
+        format.pdf do
+          filename = "Etats_de_services_#{Date.today.to_s}"
+          pdf = ExportPdf.new
+          pdf.export_etats_de_services(@cours, @intervenants, @start_date, @end_date, params[:cours], params[:vacations], params[:responsabilites])
+
+          send_data pdf.render,
+              filename: filename.concat('.pdf'),
+              type: 'application/pdf',
+              disposition: 'inline'	
+
+          # response.headers['Content-Disposition'] = 'attachment; filename="' + filename + '.pdf"'
+          # render pdf: filename, :layout => 'pdf.html'
+        end
+
+      end
     end
   end
 
@@ -877,10 +890,10 @@ class ToolsController < ApplicationController
     end_date = params[:end_date]
 
     if params[:group_by] == 'intervenant'
-      book = EtatLiquidatifCollectifIntervenantToXls.new(start_date, end_date, params[:status], params[:cours], params[:vacations], params[:responsabilites]).call
+      book = EtatLiquidatifCollectifIntervenantToXls.new(start_date, end_date, params[:statuses], params[:cours], params[:vacations], params[:responsabilites], params[:dossiers]).call
       filename = "Export_Etat_liquidatif_collectif_intervenant.xls"
     else
-      book = EtatLiquidatifCollectifFormationToXls.new(start_date, end_date, params[:status], params[:cours], params[:vacations], params[:responsabilites]).call
+      book = EtatLiquidatifCollectifFormationToXls.new(start_date, end_date, params[:statuses], params[:cours], params[:vacations], params[:responsabilites]).call
       filename = "Export_Etat_liquidatif_collectif_formation.xls"
     end
 
@@ -888,6 +901,37 @@ class ToolsController < ApplicationController
     book.write file_contents # => Now file_contents contains the rendered file output
     send_data file_contents.string.force_encoding('binary'), filename: filename
   end
+
+  def export_codir
+    params[:start_date] ||= Date.today.at_beginning_of_month.last_month
+    params[:end_date]   ||= Date.today.last_month.at_end_of_month
+  end
+
+  def export_codir_do
+    start_date = params[:start_date]
+    end_date = params[:end_date]
+
+    book = ExportCodirToXls.new(start_date, end_date, params[:statuses], params[:cours], params[:vacations], params[:responsabilites]).call
+    filename = "Export_codir.xls"
+
+    file_contents = StringIO.new
+    book.write file_contents # => Now file_contents contains the rendered file output
+    send_data file_contents.string.force_encoding('binary'), filename: filename
+  end
+
+  def export_cac
+    params[:période] ||= AppConstants::PÉRIODE
+  end
+
+  def export_cac_do
+    book = ExportCacToXls.new(params[:période]).call
+    filename = "Export_cac.xls"
+
+    file_contents = StringIO.new
+    book.write file_contents # => Now file_contents contains the rendered file output
+    send_data file_contents.string.force_encoding('binary'), filename: filename
+  end
+
 
   def audits
     @audits = Audited::Audit.order("id DESC")
@@ -1048,8 +1092,8 @@ class ToolsController < ApplicationController
     @years ||= ['2021/2022','2022/2023','2023/2024','2024/2025', '2025/2026']
 
     unless params[:saison].blank?
-      @formations = Formation.where(hors_catalogue:false)
-                             .where("nom like ?", "%#{params[:saison]}%")
+      @formations = Formation.not_archived.where(hors_catalogue:false)
+                             .where("nom like ?", "%#{params[:saison]}%").ordered
       
       case params[:saison]
       when @years[0]
@@ -1080,11 +1124,11 @@ class ToolsController < ApplicationController
     # Créer des créneaux vides sur toutes une année pour une formation
     # Permet de faire des réservations au nom de l'intervenant 'A CONFIRMER'
 
-    if Intervenant.exists?(445)
-      _intervenant = Intervenant.find(445) # A CONFIRMER
+    if Intervenant.exists?(Intervenant.a_confirmer_id)
+      _intervenant = Intervenant.find(Intervenant.a_confirmer_id) # A CONFIRMER
       _date_debut = Date.parse(params[:date_debut])
       _date_fin = Date.parse(params[:date_fin])
-      _formation = Formation.find(params[:formation_id])
+      _formation = Formation.not_archived.find(params[:formation_id])
       _salle_id = params[:salle_id]
       _save = params[:save]
       _semaines = params[:semaine].try(:keys)
@@ -1135,7 +1179,7 @@ class ToolsController < ApplicationController
 
       flash[:notice] = "#{ @ids_ok.count } cours créés"
     else
-      flash[:alert] = "L'intervenant générique 'A CONFIRMER' (445) doit exister !"
+      flash[:alert] = "L'intervenant générique 'A CONFIRMER' (#{Intervenant.a_confirmer_id}) doit exister !"
     end
 
   end
@@ -1181,7 +1225,7 @@ class ToolsController < ApplicationController
   def audit_cours
     # Afficher les cours 'planifiés' 
     # entre deux dates
-    # créés par un utilisateur autre que Thierry.D (#41)
+    # créés par un utilisateur autre que par l'admin de l'accueil
     
     params[:start_date] ||= Date.today
     params[:end_date] ||= Date.today + 6.months
@@ -1193,8 +1237,8 @@ class ToolsController < ApplicationController
       @date_fin = params[:end_date]
     end
 
-    # ids des cours créés par utilisateur autre que Thierry.D (#41)
-    id_cours = Audited::Audit.where(auditable_type: 'Cour').where.not(user_id: 41).pluck(:auditable_id).uniq
+    # ids des cours créés par utilisateur autre que par l'admin de l'accueil
+    id_cours = Audited::Audit.where(auditable_type: 'Cour').where.not(user_id: ENV["USER_WITHOUT_AUDIT_IDS"].split(',').map(&:to_i)).pluck(:auditable_id).uniq
 
     # vérifie que la date de début de cours est dans la période observée
     @cours = Cour.where("id IN (?)", id_cours)
@@ -1224,7 +1268,7 @@ class ToolsController < ApplicationController
     surveillant = params[:surveillant]
     @cumuls = {}
     @examens = Cour
-                  .where("intervenant_id IN (:surveillants) OR intervenant_binome_id IN (:surveillants)", {surveillants: [169, 1166, 522, 1314]} )
+                  .where("intervenant_id IN (:surveillants) OR intervenant_binome_id IN (:surveillants)", {surveillants: Intervenant.surveillants} )
                   .where("commentaires like '%[%'")
                   .where("debut between ? and ?", @start_date, @end_date.to_date + 1.day)
                   .includes(:formation)
@@ -1243,6 +1287,14 @@ class ToolsController < ApplicationController
                   type: 'application/pdf',
                   disposition: 'inline'	
       end
+
+      format.xls do
+        book = VacationsAdministrativesToXls.new(@examens, @start_date, @end_date).call
+        file_contents = StringIO.new
+        book.write file_contents # => Now file_contents contains the rendered file output
+        filename = "Export_Vacations_Administratives_du_#{@start_date}_au_#{@end_date}.xls"
+        send_data file_contents.string.force_encoding('binary'), filename: filename
+      end
     end
 
   end
@@ -1259,7 +1311,7 @@ class ToolsController < ApplicationController
     surveillant = params[:surveillant]
     @cumuls = {}
     @examens = Cour
-                  .where("intervenant_id IN (:surveillants) OR intervenant_binome_id IN (:surveillants)", {surveillants: [169, 1166, 522, 1314]} )
+                  .where("intervenant_id IN (:surveillants) OR intervenant_binome_id IN (:surveillants)", {surveillants: Intervenant.surveillants} )
                   .joins(:options).where(options: {catégorie: :surveillance})
                   .where("options.description LIKE '%[%'")
                   .where("debut BETWEEN ? AND ?", @start_date, @end_date.to_date + 1.day)
@@ -1278,6 +1330,14 @@ class ToolsController < ApplicationController
                   filename: filename.concat('.pdf'),
                   type: 'application/pdf',
                   disposition: 'inline'	
+      end
+
+      format.xls do
+        book = VacationsAdministrativesV2ToXls.new(@examens, @start_date, @end_date).call
+        file_contents = StringIO.new
+        book.write file_contents # => Now file_contents contains the rendered file output
+        filename = "Export_Vacations_Administratives_V2_du_#{@start_date}_au_#{@end_date}.xls"
+        send_data file_contents.string.force_encoding('binary'), filename: filename
       end
     end
 
@@ -1323,7 +1383,7 @@ class ToolsController < ApplicationController
 
   def rappel_des_cours
     @intervenants = Intervenant.where(doublon: false)
-    @formations = Formation.all
+    @formations = Formation.not_archived.ordered
   end
 
   def rappel_des_cours_do
@@ -1354,8 +1414,8 @@ class ToolsController < ApplicationController
   end
 
   def rappel_des_examens
-    @examens = Intervenant.where(id: [169, 522, 1166])
-    @formations = Formation.all
+    @examens = Intervenant.where(id: Intervenant.examens_ids)
+    @formations = Formation.not_archived.ordered
   end
 
   def rappel_des_examens_do
@@ -1404,14 +1464,15 @@ class ToolsController < ApplicationController
 
     intervenants = Intervenant.where(id: params[:intervenants_id].keys)
     intervenants.each do |intervenant|
-      new_password = SecureRandom.hex(10)
+      new_password = SecureRandom.base64(12)
       # Création du compte d'accès (user) et envoi du mail de bienvenue
       user = User.new(role: "intervenant", nom: intervenant.nom, prénom: intervenant.prenom, email: intervenant.email, mobile: intervenant.téléphone_mobile, password: new_password)
       if user.valid?
         user.save
         valids += 1
-        mailer_response = IntervenantMailer.with(user: user, password: new_password).welcome_intervenant.deliver_now
-        MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: user.email, subject: "Nouvel accès intervenant")
+        title = "[PLANNING IAE Paris] Bienvenue !"
+        mailer_response = IntervenantMailer.with(user: user, password: new_password, title: title).welcome_intervenant.deliver_now
+        MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: user.email, subject: "Nouvel accès intervenant", title: title)
       else
         errors += 1
       end
@@ -1431,32 +1492,11 @@ class ToolsController < ApplicationController
     end
 
     if params[:search_cmd].present?
-      @commandes = @commandes.where("cours.commentaires ILIKE ?", "%#{params[:search_cmd]}%")
-    end
-  end
-
-  def commande_fait
-    commande = Cour.find(params[:commande_id])
-    commande.commentaires.concat("\r\n\r\n")
-    commande.commentaires.concat("Fait le #{l DateTime.now, format: :short}, #{current_user.nom_et_prénom}")
-    commande.save
-
-    redirect_to request.referrer, notice: "Commande traitée avec succès"
-  end
-
-  def commandes_v2
-    if params[:archive].present?
-      @commandes = Cour.commandes_archivées_v2
-    else
-      @commandes = Cour.commandes_v2
-    end
-
-    if params[:search_cmd].present?
       @commandes = @commandes.where("options.description ILIKE ?", "%#{params[:search_cmd]}%")
     end
   end
 
-  def commande_fait_v2
+  def commande_fait
     commande = Cour.find(params[:commande_id]).options.commande.first
     commande.fait = true
     commande.description.concat("\r\n\r\n")
@@ -1468,7 +1508,7 @@ class ToolsController < ApplicationController
 
   def edusign
     @intervenants = Intervenant.all
-    @formations = Formation.all
+    @formations = Formation.not_archived.ordered
     @étudiants = Etudiant.ordered
   end
 
@@ -1492,22 +1532,54 @@ class ToolsController < ApplicationController
 
   end
 
-  def synchronisation_edusign
+  # def synchronisation_edusign
+  # end
+
+  # def synchronisation_edusign_do
+  #   EdusignJob.perform_later("Sync log", current_user.id)
+
+  #   redirect_to tools_synchronisation_edusign_path, notice: "Lancement de la synchronisation effectuée."
+  # end
+
+  # def initialisation_edusign
+  # end
+
+  # def initialisation_edusign_do
+  #   EdusignJob.perform_later("Initialisation", current_user.id)
+
+  #   redirect_to tools_initialisation_edusign_path, notice: "Lancement de l'initialisation effectuée."
+  # end
+
+  def nouvelle_saison_rh
   end
 
-  def synchronisation_edusign_do
-    EdusignJob.perform_later("Sync log", current_user.id)
+  def nouvelle_saison_rh_do
+    @dossier_créées = 0
+    @erreurs = 0
 
-    redirect_to tools_synchronisation_edusign_path, notice: "Lancement de la synchronisation effectuée."
-  end
+    @période = params[:période]
 
-  def initialisation_edusign
-  end
+    @stream = capture_stdout do
+      Intervenant.sans_dossier(@période).each do |intervenant|
+        new_dossier = Dossier.new(intervenant_id: intervenant.id, période: @période)
+        msg = "#{intervenant.nom_prenom}"
+        if new_dossier.valid?
+          puts "[OK] #{msg}"
+          new_dossier.save if params[:save] == 'true'
+          @dossier_créées += 1
+        else
+          puts "[KO!] #{msg} => #{new_dossier.errors.full_messages.join(', ')}"
+          @erreurs += 1
+        end
+      end
 
-  def initialisation_edusign_do
-    EdusignJob.perform_later("Initialisation", current_user.id)
-
-    redirect_to tools_initialisation_edusign_path, notice: "Lancement de l'initialisation effectuée."
+      puts
+		  puts "=" * 114
+	  	puts "Création terminée | #{@dossier_créées} dossiers #{'créé'.pluralize(@dossier_créées)} | #{@erreurs} #{'erreur'.pluralize(@erreurs)}"
+		  puts "=" * 114
+	  	puts
+	  	puts "--------!-!-! Les modifications n'ont pas été enregistrées !-!-!----------" unless params[:save] == 'true'
+    end
   end
 
   private
@@ -1516,7 +1588,7 @@ class ToolsController < ApplicationController
 
   #   request = Edusign.new("https://ext.edusign.fr/v1/student", 'Post')
 
-  #   etudiants_added = request.get_all_element_created_today(Etudiant).where(edusign_id: nil)
+  #   etudiants_added = request.get_all_element_to_post(Etudiant).where(edusign_id: nil)
 
   #   etudiants_added.each do |etudiant|
   #     body =
@@ -1547,7 +1619,7 @@ class ToolsController < ApplicationController
 
   #   request = Edusign.new("https://ext.edusign.fr/v1/student", 'Patch')
 
-  #   etudiants_updated = request.get_all_element_updated_today(Etudiant).where("created_at != updated_at")
+  #   etudiants_updated = request.get_all_element_updated_since_last_sync(Etudiant).where("created_at != updated_at")
 
   #   etudiants_updated.each do |etudiant|
   #     body =
@@ -1556,7 +1628,7 @@ class ToolsController < ApplicationController
   #         "FIRSTNAME": etudiant.prénom,
   #         "LASTNAME": etudiant.nom,
   #         "EMAIL": etudiant.email,
-  #         "GROUPS": Formation.find(etudiant.formation_id).edusign_id
+  #         "GROUPS": Formation.not_archived.find(etudiant.formation_id).edusign_id
   #       }}
 
   #     response = request.prepare_body_request(body).get_response
@@ -1572,7 +1644,7 @@ class ToolsController < ApplicationController
 
   #   request = Edusign.new("https://ext.edusign.fr/v1/group", 'Post')
 
-  #   formations = Formation.where(id: etudiants.pluck(:formation_id).uniq).where(edusign_id: nil)
+  #   formations = Formation.not_archived.where(id: etudiants.pluck(:formation_id).uniq).where(edusign_id: nil)
 
   #   formations.each do |formation|
 
@@ -1598,7 +1670,7 @@ class ToolsController < ApplicationController
   # def modification_formations
   #   request = Edusign.new("https://ext.edusign.fr/v1/group/", 'Patch')
 
-  #   formations_updated = request.get_all_element_updated_today(Formation)
+  #   formations_updated = request.get_all_element_updated_since_last_sync(Formation)
 
   #   formations_updated.each do |formation|
   #     body =
@@ -1621,7 +1693,7 @@ class ToolsController < ApplicationController
 
   #   request = Edusign.new("https://ext.edusign.fr/v1/professor", 'Post')
 
-  #   intervenants_added = request.get_all_element_created_today(Intervenant)
+  #   intervenants_added = request.get_all_element_to_post(Intervenant)
 
   #   intervenants_added.each do |intervenant|
   #     body =
@@ -1650,7 +1722,7 @@ class ToolsController < ApplicationController
 
   #   request = Edusign.new("https://ext.edusign.fr/v1/professor", 'Patch')
 
-  #   intervenants_updated = request.get_all_element_updated_today(Intervenant)
+  #   intervenants_updated = request.get_all_element_updated_since_last_sync(Intervenant)
 
   #   intervenants_updated.each do |intervenant|
   #     body =
@@ -1674,7 +1746,7 @@ class ToolsController < ApplicationController
 
   #   request = Edusign.new("https://ext.edusign.fr/v1/course", 'Post')
 
-  #   cours_added = request.get_all_element_created_today(Cour)
+  #   cours_added = request.get_all_element_to_post(Cour)
 
   #   cours_added.each do |cours|
   #     body =
@@ -1704,7 +1776,7 @@ class ToolsController < ApplicationController
   # def modification_cours
   #   request = Edusign.new("https://ext.edusign.fr/v1/course", 'Patch')
 
-  #   cours_updated = request.get_all_element_updated_today(Cour)
+  #   cours_updated = request.get_all_element_updated_since_last_sync(Cour)
 
   #   cours_updated.each do |cours|
   #     body =

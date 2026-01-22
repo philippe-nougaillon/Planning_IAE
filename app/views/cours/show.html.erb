@@ -7,14 +7,8 @@
         <% end %>
       <% end %>
       <% if policy(@cour).destroy? %>
-        <% if @cour.attendances.any? %>
-          <div title="Le cours ne peut pas être supprimé car il a des signatures" class="btn btn-sm btn-secondary btn-outline join-item cursor-not-allowed">
-              <%= fa_icon 'trash-alt' %> Supprimer
-          </div>
-        <% else %>
-          <%= link_to(@cour,'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous la suppression définitive de ce cours ?', class: 'btn btn-sm btn-primary btn-outline join-item' ) do %>
-            <%= fa_icon 'trash-alt' %> Supprimer
-          <% end %>
+        <%= link_to(@cour,'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous la suppression définitive de ce cours ?', class: 'btn btn-sm btn-primary btn-outline join-item' ) do %>
+          <%= fa_icon 'trash' %> Supprimer
         <% end %>
       <% end %>
 
@@ -27,11 +21,9 @@
   <div class="flex flex-wrap items-center mt-4">
     <div class="relative flex-grow max-w-full flex-1 flex items-center">
       <div class="sm:w-1/6">
-        <h2 class="text-3xl">
-          <span style="opacity: 80%;">
-            <%= fa_icon 'calendar-day 2x' %>
-          </span>
-        </h2>
+        <span class="material-symbols-outlined text-6xl">
+          today
+        </span>
       </div>    
 
       <div class="flex-1">
@@ -43,8 +35,8 @@
   
     <div class="relative flex-grow max-w-full flex-1">
       <h3 class="text-2xl">
-        <span style="background-color:<%= @cour.formation.try(:color) %>;padding-left: 5px;margin-right: 5px;"></span>
-        <%= @cour.formation.try(:nom_promo) %>
+        <span style="background-color:<%= @cour.formation.color %>;padding-left: 5px;margin-right: 5px;"></span>
+        <%= @cour.formation.nom_promo %>
       </h3>
     </div>
   </div>
@@ -88,7 +80,7 @@
             <%= @cour.salle.nom %>
           </span>             
 
-          <% if @cour.formation.try(:nbr_etudiants) && (@cour.formation.try(:nbr_etudiants) > @cour.salle.places) %>
+          <% if @cour.manque_de_places? %>
             <i title="Manque <%= @cour.formation.nbr_etudiants - @cour.salle.places %> place.s">
               <%= fa_icon 'exclamation-circle' %>
             </i>

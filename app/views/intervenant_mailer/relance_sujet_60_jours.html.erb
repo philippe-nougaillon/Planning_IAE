@@ -1,0 +1,19 @@
+<p style="margin-bottom: 0.5rem">
+    Bonjour,
+    <br><br>
+    En vue de l'examen de votre UE#<%= @code_ue %> <b><%= @ue %> (<%= @formation %>)</b>, en date du <b><%= l(@debut.to_date, format: :long) %></b>, merci de bien vouloir nous faire parvenir <b>au plus tard le <%= l(@deadline.to_date, format: :long) %> </b> votre <b>sujet</b> avec <b>la page de garde</b> (en y indiquant les <b>consignes</b>) <b>en format pdf</b>, afin que le/la gestionnaire puisse envoyer les convocations aux étudiants. Tout sujet envoyé sans page de garde, sera imprimé tel quel. À toutes fins utiles, vous trouverez ci-joint la page de garde type (champs en jaune à personnaliser).
+    <br><br>
+    Merci de déposer votre sujet en <%= link_to 'cliquant ici', url_for(sujet_url(@sujet)) %> ou en copiant ce lien <%= url_for(sujet_url(@sujet)) %> dans votre navigateur.
+</p>
+
+<p style="margin-bottom: 0.5rem">
+    <b>Vous remerciant par avance du respect des délais et des consignes indiqués ci-dessus,</b>
+</p>
+
+<p style="margin-bottom: 0.5rem">
+    Bien cordialement,
+    <br>
+    Les gestionnaires en charge des examens (examens@iae.pantheonsorbonne.fr)
+    <br>
+    IAE Paris
+</p>

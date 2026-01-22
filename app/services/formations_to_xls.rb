@@ -43,7 +43,7 @@ class FormationsToXls < ApplicationService
           formation.nbr_etudiants,
           formation.nbr_heures, 
           formation.abrg,
-          formation.try(:user).try(:email),
+          formation.user.try(:email),
           formation.courriel,
           formation.code_analytique,
           formation.nomtauxtd,

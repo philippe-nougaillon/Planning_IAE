@@ -32,6 +32,23 @@
       </p>
     <% end %>
 
+    <% if @dossier.mail_log && user_signed_in? %>
+      <p class="mb-4">
+        <strong>Statut Mail :</strong> 
+        <% if @dossier.mail_log.statut %>
+          <span class="text-success">OK</span>
+        <% else %>
+          <span class="text-error">KO</span>
+        <% end %>
+      </p>
+      <p class="mb-4">
+        <strong>État Mail :</strong> 
+        <% if @dossier.mail_log.opened && @dossier.mail_log.statut %>
+          <span class="text-info">OUVERT</span>
+        <% end %>
+      </p>
+    <% end %>
+
     <% unless @dossier.mémo.blank? %>
       <p class="mb-4">
         <p class="flex flex-col items-start alert alert-error text-white mb-4">
@@ -109,11 +126,11 @@
 <% if current_user %>
   <br>
   <%= link_to 'Modifier', edit_dossier_path(@dossier), class: 'text-primary hover:underline' %> |
-  <%= link_to_if @dossier.can_envoyer?, 'Envoyer', envoyer_dossier_path(@dossier), title: "Envoyer un mail à l'intervenant contenant un lien unique vers son dossier", class: 'btn btn-sm btn-primary text-white' %> |
-  <%= link_to_if @dossier.can_valider?, 'Valider', valider_dossier_path(@dossier), class: 'btn btn-sm btn-success text-white' %> |
-  <%= link_to_if @dossier.can_rejeter?, 'Rejeter', rejeter_dossier_path(@dossier), class: 'btn btn-sm btn-error text-white' %> |
-  <%= link_to_if @dossier.can_relancer?, 'Relancer', relancer_dossier_path(@dossier), class: 'btn btn-sm btn-info text-white' %> |
-  <%= link_to_if @dossier.can_archiver?, 'Archiver', archiver_dossier_path(@dossier), class: 'btn btn-sm btn-secondary text-white' %> |
+  <%= link_to_if @dossier.can_envoyer?, 'Envoyer', envoyer_dossier_path(@dossier), title: "Envoyer un mail à l'intervenant contenant un lien unique vers son dossier", class: 'btn btn-sm btn-primary text-white', 'data-turbo': false %> |
+  <%= link_to_if @dossier.can_valider?, 'Valider', valider_dossier_path(@dossier), class: 'btn btn-sm btn-success text-white', 'data-turbo': false %> |
+  <%= link_to_if @dossier.can_rejeter?, 'Rejeter', rejeter_dossier_path(@dossier), class: 'btn btn-sm btn-error text-white', 'data-turbo': false %> |
+  <%= link_to_if @dossier.can_relancer?, 'Relancer', relancer_dossier_path(@dossier), class: 'btn btn-sm btn-info text-white', 'data-turbo': false %> |
+  <%= link_to_if @dossier.can_archiver?, 'Archiver', archiver_dossier_path(@dossier), class: 'btn btn-sm btn-secondary text-white', 'data-turbo': false %> |
   <%= link_to 'Retour', dossiers_path, class: 'text-primary hover:underline' %>
 <% end %>
 <br>

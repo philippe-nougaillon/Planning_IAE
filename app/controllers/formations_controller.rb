@@ -10,13 +10,13 @@ class FormationsController < ApplicationController
     params[:nom] ||= session[:nom]  # ???? 
     params[:catalogue] ||= 'yes'
     params[:paginate] ||= 'pages'
-    params[:column] ||= session[:column]
-    params[:direction_formations] ||= session[:direction_formations]
+    params[:column_formation] ||= session[:column_formation]
+    params[:direction_formation] ||= session[:direction_formation]
     
     unless params[:archive].blank?
-      @formations = Formation.unscoped.where(archive: true)
+      @formations = Formation.where(archive: true)
     else
-      @formations = Formation.all
+      @formations = Formation.not_archived
     end
 
     unless params[:nom].blank?
@@ -40,8 +40,8 @@ class FormationsController < ApplicationController
     end
 
     session[:nom] = params[:nom] # ???? 
-    session[:column] = params[:column]
-    session[:direction_formations] = params[:direction_formations]
+    session[:column_formation] = params[:column_formation]
+    session[:direction_formation] = params[:direction_formation]
 
     @formations = @formations.reorder(Arel.sql("#{sort_column} #{sort_direction}"))
     
@@ -49,14 +49,13 @@ class FormationsController < ApplicationController
     if params[:paginate] == 'pages'
        @formations = @formations.paginate(page: params[:page], per_page: 10)
     end
-
-    @diplomes = Formation.where.not(diplome: nil).select(:diplome).uniq.pluck(:diplome).sort
   end
 
   # GET /formations/1
   # GET /formations/1.json
   def show
-    @salles_habituelles = @formation.cours
+    # TODO : optimiser en scenic_view
+    @salles_habituelles_ids = @formation.cours
                                     .joins(:salle)
                                     .where("salles.bloc != 'Z'")
                                     .select('cours.id')
@@ -67,7 +66,7 @@ class FormationsController < ApplicationController
                                     .first(5)
 
     @average_count = 0
-    @salles_habituelles.map{|x| @average_count += x.last.to_i / 5}
+    @salles_habituelles_ids.map{|x| @average_count += x.last.to_i / 5}
   end
 
   # GET /formations/new
@@ -119,10 +118,73 @@ class FormationsController < ApplicationController
     end
   end
 
+  def action
+    unless params[:formations_id].blank? or params[:action_name].blank?
+      @formations = Formation.where(id: params[:formations_id].keys).ordered
+    else
+      redirect_to formations_path, alert:'Veuillez choisir des formations et une action à appliquer !'
+    end
+  end
+
+  def action_do
+    action_name = params[:action_name]
+
+    @formations = Formation.where(id: params[:formations_id]&.keys)
+    formations_modifiées_count = 0
+
+    case action_name
+    when "Archiver formation et désactiver les étudiants"
+      @formations.each do |formation|
+        formation.archive = true
+        if formation.save
+          formations_modifiées_count += 1
+        else
+          # Vérifie si la seule erreur est "User doit exister"
+          if formation.errors.details[:user].any? { |e| e[:error] == :blank } && formation.errors.size == 1
+            # Corrige le user_id par un gestionnaire par défaut
+            formation.user_id = ENV['GESTIONNAIRE_PLACEHOLDER']
+            if formation.save
+              formations_modifiées_count += 1
+            end
+          end
+        end
+
+        if formation.persisted? && formation.archive?
+          formation.etudiants.each do |etudiant|
+            if user = etudiant.linked_user
+              user.discard
+            end
+          end
+        end
+      end
+    when "Changer de gestionnaire"
+      @formations.each do |formation|
+        formation.user_id = params[:user_id].to_i
+        if formation.save
+          formations_modifiées_count += 1
+        end
+      end
+    when "Synchroniser sur Edusign"
+      @formations.each do |formation|
+        formation.send_to_edusign = true
+        if formation.save
+          formations_modifiées_count += 1
+        end
+      end
+    end
+    
+    if formations_modifiées_count < @formations.count
+      flash[:alert] = "#{@formations.count - formations_modifiées_count} modifications ont échouées et #{formations_modifiées_count} formations modifiées avec succès."
+    else
+      flash[:notice] = "Action '#{action_name}' appliquée à #{params.permit![:formations_id]&.keys&.size || 0} formation.s."
+    end
+    redirect_to formations_path
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_formation
-      @formation = Formation.unscoped.find(params[:id])
+      @formation = Formation.find(params[:id])
     end
 
     def sortable_columns
@@ -130,11 +192,11 @@ class FormationsController < ApplicationController
     end
 
     def sort_column
-        sortable_columns.include?(params[:column]) ? params[:column] : 'formations.nom'
+      sortable_columns.include?(params[:column_formation]) ? params[:column_formation] : 'formations.nom'
     end
 
     def sort_direction
-        %w[asc desc].include?(params[:direction_formations]) ? params[:direction_formations] : 'asc'
+      %w[asc desc].include?(params[:direction_formation]) ? params[:direction_formation] : 'asc'
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

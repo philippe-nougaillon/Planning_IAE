@@ -1,9 +1,17 @@
 <div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
   <h1 class="text-3xl"><%= fa_icon 'folder' %> Liste des dossiers de candidature </h1>
   <% if policy(Dossier).new? %>
-    <%= link_to new_dossier_path, class: 'text-primary' do %>
-      <%= fa_icon 'plus-circle' %> Dossier
-    <% end %>
+    <div>
+      <%= link_to new_dossier_path, class: 'btn btn-sm btn-primary btn-outline hover:!text-white', title: "Créer un dossier pour l'année en cours" do %>
+        <%= fa_icon 'plus-circle' %> Dossier
+      <% end %>
+      <%= link_to new_dossier_path(période: Dossier.périodes[ (Dossier.périodes.index(AppConstants::PÉRIODE)) - 1]), class: 'btn btn-sm btn-secondary btn-outline hover:!text-white', title: "Créer un dossier pour l'année -1" do %>
+        <%= fa_icon 'plus-circle' %> A -1
+      <% end %>
+      <%= link_to new_dossier_path(période: Dossier.périodes[ (Dossier.périodes.index(AppConstants::PÉRIODE)) - 2]), class: 'btn btn-sm btn-secondary btn-outline hover:!text-white', title: "Créer un dossier pour l'année -2" do %>
+        <%= fa_icon 'plus-circle' %> A -2
+      <% end %>
+    </div>
   <% end %>
 </div>
 
@@ -54,55 +62,47 @@
 </div>
 <br>
 
-<div class="overflow-x-auto">
-  <table class="table">
-    <thead class="bg-slate-100 border">
-      <tr>
-        <th>Période</th>
-        <th>Intervenant</th>
-        <th>Etat</th>
-        <th>Création</th>
-        <th>MàJ</th>
-        <th colspan="3"></th>
-      </tr>
-    </thead>
+<%= form_tag action_dossiers_path, name: 'action' do %>
+  <div data-controller="checkbox-select-all action">
+    <div class="overflow-x-auto">
+      <table class="table mb-4">
+        <thead class="bg-slate-100 border">
+          <tr>
+            <% if policy(Dossier).action? %>
+              <th>
+                <span class="flex" data-action="click->action#click">
+                  <input type="checkbox" data-checkbox-select-all-target="checkboxAll" data-action-target="source">
+                </span>
+              </th>
+            <% end %>
+            <th><%= sort_link 'dossiers.période', 'Période' %></th>
+            <th><%= sort_link 'intervenants.nom', 'Intervenant' %></th>
+            <th><%= sort_link 'dossiers.workflow_state', 'État' %></th>
+            <th>Statut Mail</th>
+            <th>État Mail</th>
+            <th><%= sort_link 'dossiers.created_at', 'Création' %></th>
+            <th><%= sort_link 'dossiers.updated_at', 'MÀJ' %></th>
+            <% if policy(Dossier).destroy? %>
+              <th colspan="3"></th>
+            <% end %>
+          </tr>
+        </thead>
 
-    <tbody>
-      <% @dossiers.each do |dossier| %>
-        <tr class="hover border">
-          <td><%= dossier.période %></td>
-          <td><%= dossier.intervenant.nom_prenom %></td>
-          <td>
-            <span class="badge <%= dossier.style %> text-white">
-              <%= dossier.workflow_state.humanize %>
-            </span>
-            <% if dossier.envoyé? && (dossier.updated_at.to_date..Date.today).to_a.size >= 60 %>
-              <%= fa_icon 'exclamation-circle' %>
-            <% end %>
-            <% if dossier.workflow_state == 'relancé 1 fois' && (dossier.updated_at.to_date..Date.today).to_a.size >= 15 %>
-              <%= fa_icon 'exclamation-circle' %>
-            <% end %>
-            <% if dossier.workflow_state == 'relancé 2 fois' && (dossier.updated_at.to_date..Date.today).to_a.size >= 7 %>
-              <%= fa_icon 'exclamation-circle' %>
-            <% end %>
-            <% if dossier.workflow_state == 'relancé 3 fois' && (dossier.updated_at.to_date..Date.today).to_a.size >= 3 %>
-              <%= fa_icon 'exclamation-circle' %>
-            <% end %>
-          </td>
-          <td><%= time_ago_in_words dossier.created_at %></td>
-          <td><%= time_ago_in_words dossier.updated_at %></td>
-          <td><%= link_to 'Voir', dossier, class: 'text-primary hover:underline' %></td>
-          <td><%= link_to 'Modifier', edit_dossier_path(dossier), class: 'text-primary hover:underline' %></td>
-          <td><%= link_to '[X]', dossier, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: 'text-primary hover:underline' %></td>
-        </tr>
-      <% end %>
-    </tbody>
+        <tbody>
+          <%= render @dossiers %>
+        </tbody>
+      </table>
+    </div>
 
-    <tfoot>
-      <tr><th colspan=8></th></tr>
-    </tfoot>
-  </table>
-</div>
+    <div data-action-target="selector" class="mb-4">
+      <span class="align-bottom">
+        Choisir une action à exécuter sur les dossiers sélectionnés
+      </span>
+      <br>
+      <%= select_tag "action_name", options_for_select(["Changer d'état"]), include_blank:true, class:"select select-bordered select-sm", onchange:'this.form.submit()' %>
+    </div>
+  </div>
+<% end %>
 
 <div class="page_info">
   <%= page_entries_info @dossiers %>

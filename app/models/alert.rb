@@ -1,7 +1,7 @@
 class Alert < ApplicationRecord
   audited
 
-  enum etat: [:error, :info, :warning, :success]
+  enum :etat, [:error, :info, :warning, :success]
 
   default_scope { order('updated_at DESC')}
 

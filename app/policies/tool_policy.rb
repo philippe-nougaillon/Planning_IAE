@@ -121,6 +121,22 @@ class ToolPolicy < ApplicationPolicy
     export_etat_liquidatif_collectif?
   end
 
+  def export_codir?
+    user.rh? || user.admin?
+  end
+
+  def export_codir_do?
+    export_codir?
+  end
+
+  def export_cac?
+    user.rh? || user.admin?
+  end
+
+  def export_cac_do?
+    export_cac?
+  end
+
   def audits?
     user.admin?
   end
@@ -162,8 +178,8 @@ class ToolPolicy < ApplicationPolicy
   end
 
   def audit_cours?
-    # Accès à la vue 'à booker' que pour Philippe, Barbara et Thierry.D
-    [1,6,41].include?(user.id)
+    # Accès à la vue 'à booker' que pour les utilisateurs autorisés
+    ENV["USER_A_BOOKER_AUTORIZATION_IDS"].split(',').map(&:to_i).include?(user.id)
   end
 
   def liste_surveillants_examens?
@@ -219,45 +235,45 @@ class ToolPolicy < ApplicationPolicy
   end
 
   def commandes?
-    # Accueil ou gestionnaire ou admin
-    user && ([3,5,6].include?(user.role_number))
+    # Admins et personnes autorisées
+    user && (user.admin? || ENV["USER_COMMAND_AUTHORIZATION_IDS"].split(',').map(&:to_i).include?(user.id))
   end
 
   def commande_fait?
-    # Accueil et Thierry.D ou Thémoline ou Romuald
-    user && (user.accueil? || [41,35,3132].include?(user.id))
-  end
-
-  def commandes_v2?
     commandes?
   end
 
-  def commande_fait_v2?
-    commande_fait?
-  end
   
   def edusign?
-    user && user.admin?
+    user && user.super_admin?
   end
 
   def edusign_do?
     edusign?
   end
 
-  def synchronisation_edusign?
-    user && user.admin?
+  # def synchronisation_edusign?
+  #   user && user.admin?
+  # end
+
+  # def synchronisation_edusign_do?
+  #   synchronisation_edusign?
+  # end
+
+  # def initialisation_edusign?
+  #   user && user.super_admin?
+  # end
+
+  # def initialisation_edusign_do?
+  #   initialisation_edusign?
+  # end
+
+  def nouvelle_saison_rh?
+    user && (user.rh? || user.admin?)
   end
 
-  def synchronisation_edusign_do?
-    synchronisation_edusign?
-  end
-
-  def initialisation_edusign?
-    user && user.admin?
-  end
-
-  def initialisation_edusign_do?
-    initialisation_edusign?
+  def nouvelle_saison_rh_do?
+    nouvelle_saison_rh?
   end
 
 end

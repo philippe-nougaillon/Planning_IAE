@@ -28,10 +28,17 @@
           <%= f.check_box :hors_catalogue %>
           <%= f.label :hors_catalogue, "Hors catalogue ?" %>
         </div>
-        <div class="relative flex-grow max-w-full flex-1 gap-4">
-          <%= f.check_box :archive %>
-          <%= f.label :archive, "Archivée ?" %>
-        </div>
+        <% if @formation.archive? || (!@formation.remaining_cours?) %>
+          <div class="relative flex-grow max-w-full flex-1 gap-4">
+            <%= f.check_box :archive %>
+            <%= f.label :archive, "Archivée ?" %>
+          </div>
+        <% else %>
+          <div class="relative flex-grow max-w-full flex-1 gap-4 cursor-help" title="Vous ne pouvez pas archiver cette formation car des cours à venir existent dans le planning !">
+            <%= f.check_box :archive, disabled: true, class: 'cursor-help' %>
+            <%= f.label :archive, "Archivée ?", class: 'text-gray-400 cursor-help' %>
+          </div>
+        <% end %>
       </div>
 
       <div class="flex flex-wrap gap-4">
@@ -154,8 +161,10 @@
   </div>
   
   <div id="Etudiants" data-reveal-target="pannel_etudiants" class="hidden shadow p-6">
-    <p class="text-xl text-secondary mb-8">
-      <%= fa_icon 'graduation-cap' %>
+    <p class="flex items-center gap-1 text-xl text-secondary mb-8">
+      <span class="material-symbols-outlined">
+        school
+      </span>
       Etudiants
     </p>
     <hr>

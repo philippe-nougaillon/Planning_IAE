@@ -43,7 +43,7 @@
           <td class="text-right"><%= salle.places %></td>
           <td>
             <% cours.order(:debut).pluck(:formation_id).uniq.each do |id| %> 
-              <% formation = Formation.unscoped.find(id) %> 
+              <% formation = Formation.find(id) %> 
               <div>
                 <span style="background-color:<%= formation.color %>;padding-left: 7px;"></span> 
                 <span style="padding-left:5px;"></span> 
@@ -73,7 +73,7 @@
                   <% nom_formation = [] %>
                   <% cours.each do |cour| %>
                     <% if (cour.debut.hour <= index + 8) && (cour.fin.hour >= index + 8) %>
-                      <% nom_formation << cour.formation.try(:nom) %>
+                      <% nom_formation << cour.formation.nom %>
                     <% end %>
                   <% end %>
                   <%= link_to edit_cour_path(cours.first, from: "occupation"), title: nom_formation.join(' -----> '), data: { turbo_method: :get, turbo_confirm: "Voulez-vous modifier ce cours ?" }  do %>
@@ -88,7 +88,7 @@
           <% else %>
             <td colspan=17></td>
           <% end %>
-          <td class="text-base"><b><%= salle.nom[0..2] %></b></td>
+          <td class="text-base"><b><%= salle.nom[0..3] %></b></td>
         </tr>
       <% end %>
     </tbody>

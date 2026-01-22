@@ -1,0 +1,55 @@
+<tr class="hover border">
+  <td>
+    il y a <%= time_ago_in_words sujet.updated_at %>
+  </td>
+  <td>
+    <% if sujet.cour.debut > DateTime.now %>
+      <small>(dans <%= time_ago_in_words(sujet.cour.debut) %>)</small>
+      <br>
+    <% end %>
+    <%= link_to l(sujet.cour.debut, format: :long), cours_path(start_date: sujet.cour.debut.to_date, intervenant_id: sujet.cour.intervenant_binome_id, formation_id: sujet.cour.formation_id), class: 'text-primary hover:underline' %>
+
+  </td>
+  <% if params[:action] == 'index' && params[:controller] == 'sujets' %>
+    <td>
+      <%= link_to sujet.cour.intervenant_binome&.nom_prenom, sujet.cour.intervenant_binome, class: 'text-primary hover:underline' %>
+    </td>
+  <% end %>
+  <td style="border-left: .3rem solid <%= sujet.cour.formation.positive_color %>">
+    <% if policy(Formation).show? %>
+      <%= link_to sujet.cour.formation.nom_nbr_etudiants, sujet.cour.formation, class: 'text-primary hover:underline' %>
+    <% else %>
+      <%= sujet.cour.formation.nom %>
+    <% end %>
+  </td>
+  <td>
+    <span class="badge badge-lg <%= sujet.style %> text-white">
+      <%= sujet.workflow_state.humanize %>
+    </span>
+  </td>
+  <% if params[:action] == 'index' && params[:controller] == 'sujets' %>
+    <% if sujet.mail_log %>
+      <% if sujet.mail_log.statut %>
+        <td style="text-align: center">
+          <span class="text-success">OK</span>
+        </td>
+        <td style="text-align: center">
+          <% if sujet.mail_log&.opened %>
+            <span class="text-info">Oui</span>
+          <% else %>
+            <span class="text-info">Non</span>
+          <% end %>
+        </td>
+      <% else %>
+        <td style="text-align: center">
+          <span class="text-error">KO</span>
+        </td>
+        <td></td>
+      <% end %>
+    <% else %>
+      <td></td>
+      <td></td>
+    <% end %>
+  <% end %>
+  <td><%= link_to 'Voir', sujet, class: 'text-primary hover:underline', 'data-turbo': false %></td>
+</tr>

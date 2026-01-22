@@ -1,15 +1,16 @@
 class EdusignLog < ApplicationRecord
   belongs_to :user, optional: true
 
-  enum etat: {success: 0, 
+  enum :etat, {success: 0, 
               warning: 1, 
               error: 2, 
+              crash: 3
               }
 
-  enum modele_type: {
+  enum :modele_type, {
     'initialisation': 0,
-    'sync auto': 1,
-    'sync manuelle': 2,
+    'synchronisation': 1,
+    'synchronisation ponctuelle': 2,
     'salle changée': 3
   }
 
@@ -33,10 +34,8 @@ class EdusignLog < ApplicationRecord
       'text-warning'
     when 'error' 
       'text-error'
+    when 'crash'
+      ''
     end
-  end
-
-  def self.get_types
-    ["Auto sync", "Manual sync", "Classroom changed"]
   end
 end

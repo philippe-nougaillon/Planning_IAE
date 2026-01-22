@@ -3,10 +3,10 @@ class EtatLiquidatifCollectifFormationToXls < ApplicationService
   include ActionView::Helpers::NumberHelper
   attr_reader :cours
 
-  def initialize(start_date, end_date, status, cours_showed, vacations_showed, responsabilites_showed)
+  def initialize(start_date, end_date, statuses, cours_showed, vacations_showed, responsabilites_showed)
     @start_date = start_date
     @end_date = end_date
-    @status = status
+    @statuses = statuses
     @cours_showed = cours_showed
     @vacations_showed = vacations_showed
     @responsabilites_showed = responsabilites_showed
@@ -21,7 +21,7 @@ class EtatLiquidatifCollectifFormationToXls < ApplicationService
 
     sheet.row(0).concat ['IAE PARIS']
     sheet.row(0).default_format = Spreadsheet::Format.new :weight => :bold, :size => 20
-    sheet.row(1).concat ["ÉTAT LIQUIDATIF DES VACATIONS D'ENSEIGNEMENTS. Du #{I18n.l @start_date.to_date} au #{I18n.l @end_date.to_date}. Statut : #{Intervenant.statuses.keys[@status.to_i]}"]
+    sheet.row(1).concat ["ÉTAT LIQUIDATIF DES VACATIONS D'ENSEIGNEMENTS. Du #{I18n.l @start_date.to_date} au #{I18n.l @end_date.to_date}. Statuts : #{Intervenant.statuses.keys.values_at(*Array(@statuses).map(&:to_i)).join(", ")}"]
     sheet.row(1).default_format = bold
     sheet.row(2).concat ["Décrets N°87-889 du 29/10/1987 et 88-994 du 18/10/1988 - CAr du 05/12/2023"]
 
@@ -37,7 +37,7 @@ class EtatLiquidatifCollectifFormationToXls < ApplicationService
       cours = Cour
                 .where(etat: Cour.etats.values_at(:réalisé))
                 .where("debut between ? and ?", @start_date, @end_date)
-                .where.not(intervenant_id: 445)
+                .where.not(intervenant_id: Intervenant.a_confirmer_id)
     else
       cours = Cour.none
     end
@@ -54,7 +54,7 @@ class EtatLiquidatifCollectifFormationToXls < ApplicationService
       responsabilites = Responsabilite.none
     end
 
-    formations = Formation.where(id: [cours.pluck(:formation_id).uniq, vacations.pluck(:formation_id).uniq, responsabilites.pluck(:formation_id).uniq].flatten.uniq)
+    formations = Formation.not_archived.where(id: [cours.pluck(:formation_id).uniq, vacations.pluck(:formation_id).uniq, responsabilites.pluck(:formation_id).uniq].flatten.uniq).ordered
     formations.each do | formation |
       any_cours = false
       
@@ -75,11 +75,11 @@ class EtatLiquidatifCollectifFormationToXls < ApplicationService
         intervenant_ids << responsabilites.where(formation_id: formation.id).distinct(:intervenant_id).pluck(:intervenant_id)
       end
       
-      intervenants = Intervenant.where(id: intervenant_ids.flatten.compact, status: @status)
+      intervenants = Intervenant.where(id: intervenant_ids.flatten.compact, status: @statuses)
 
       intervenants.each do |intervenant|
         # Passe au suivant si intervenant est 'A CONFIRMER'
-        next if intervenant.id == 445
+        next if intervenant.is_a_confirmer?
 
         # nbr_heures_statutaire = intervenant.nbr_heures_statutaire || 0
 
@@ -213,6 +213,7 @@ class EtatLiquidatifCollectifFormationToXls < ApplicationService
       index += 2
     end
 
+    # Todo: Mettre dans une variable la signature
     index += 5
     sheet.row(index).concat ["Fait à Paris le #{I18n.l(Date.today)}"]
     index += 5
