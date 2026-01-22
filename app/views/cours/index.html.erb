@@ -221,8 +221,8 @@
                   Choisir une action à exécuter sur les cours sélectionnés
                 </span>
                 <% actions = Cour.actions(current_user) %>
-                <% if current_user.id == 41 %>
-                  <!-- Raccourci vers chgt salle pour Thierry.D -->
+                <% if ENV["USER_CHANGE_CLASSROOMS_IDS"].split(',').map(&:to_i).include?(current_user.id) %>
+                  <!-- Raccourci vers chgt salle pour les utilisateurs autorisés -->
                   <%= select_tag "action_name", options_for_select(actions, 'Changer de salle'), include_blank:true, class:"select select-bordered select-sm w-full", onchange:'this.form.submit()' %>
                   <%= submit_tag 'Les changer tous de salle !', 'data-turbo': false, class: 'btn btn-sm btn-success btn-outline' %>
                 <% else %>

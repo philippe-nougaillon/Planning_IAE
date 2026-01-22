@@ -37,7 +37,7 @@ class EtatLiquidatifCollectifFormationToXls < ApplicationService
       cours = Cour
                 .where(etat: Cour.etats.values_at(:réalisé))
                 .where("debut between ? and ?", @start_date, @end_date)
-                .where.not(intervenant_id: 445)
+                .where.not(intervenant_id: Intervenant.a_confirmer_id)
     else
       cours = Cour.none
     end
@@ -79,7 +79,7 @@ class EtatLiquidatifCollectifFormationToXls < ApplicationService
 
       intervenants.each do |intervenant|
         # Passe au suivant si intervenant est 'A CONFIRMER'
-        next if intervenant.id == 445
+        next if intervenant.is_a_confirmer?
 
         # nbr_heures_statutaire = intervenant.nbr_heures_statutaire || 0
 
@@ -213,6 +213,7 @@ class EtatLiquidatifCollectifFormationToXls < ApplicationService
       index += 2
     end
 
+    # Todo: Mettre dans une variable la signature
     index += 5
     sheet.row(index).concat ["Fait à Paris le #{I18n.l(Date.today)}"]
     index += 5
