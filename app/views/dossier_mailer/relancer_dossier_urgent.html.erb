@@ -1,26 +1,15 @@
 <p style="margin-bottom: 0.5rem">
     Madame, Monsieur
     <br><br>
-    Nous vous remercions d’avoir accepté d’intervenir à l’IAE Paris-Sorbonne en qualité d’enseignant vacataire, 
-    pour l’année universitaire <%= @dossier.période %>.
+    Sauf erreur de notre part, votre intervention à l’IAE Paris-Sorbonne est prévue dans 15 jours.
     <br><br>
-    Vous trouverez le lien permettant la transmission du dossier de recrutement nécessaire au paiement, 
-    ainsi que les pièces justificatives.
+    À ce jour, <b>nous sommes toujours en attente de votre dossier de recrutement pour validation par le service RH</b>. 
     <br><br>
-    Conformément à la réglementation, vous devez le transmettre au service RH 
-    <b>avant votre première intervention à l’IAE Paris-Sorbonne</b>.
+    Nous vous rappelons que, conformément à la réglementation relative à la gestion des CEV, votre dossier doit impérativement être validé avant votre première intervention. À défaut, les heures réalisées ne pourront pas être prises en compte pour le paiement
     <br><br>
-    A cet effet, vous trouverez la liste des pièces à fournir selon 
-    votre situation et une note relative à la réglementation qui régit le 
-    recrutement d’enseignants vacataires dans l’enseignement supérieur public.
+    Vous pouvez déposer vos pièces justificatives en ligne en suivant ce lien :
+    <%= link_to 'déposer mon dossier en ligne', url_for(dossier_url(@dossier)) %>
     <br><br>
-    Pour rappel, le paiement se fait uniquement sous réserve de réception 
-    de votre dossier <%= @dossier.période %> complet et validé par le SRH et a lieu dans 
-    un délai de 2 mois après prestation. Le bulletin de paie sera accessible 
-    sur le site sécurisé <%= link_to 'ensap.gouv.fr', 'https://ensap.gouv.fr/web/accueilnonconnecte' %>.
-    <br><br>
-    Déposer votre dossier en ligne en suivant ce lien :
-    <%= link_to 'déposer en ligne', url_for(dossier_url(@dossier)) %>
 </p>
 
 <%= render partial: 'mailer_footer_rh' %>

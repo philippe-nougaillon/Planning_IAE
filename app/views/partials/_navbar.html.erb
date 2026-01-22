@@ -51,7 +51,7 @@
           </li>
         <% end %>
 
-        <% if current_user.accueil? || ENV["USER_COMMAND_AUTHORIZATION_IDS"].split(',').map(&:to_i).include?(current_user.id) %>
+        <% if ENV["USER_COMMAND_AUTHORIZATION_IDS"].split(',').map(&:to_i).include?(current_user.id) %>
           <li class="nav-item">
             <% is_active = params[:action] == 'commandes' %>
             <%= link_to tools_commandes_path, class: "flex items-center gap-1 py-0 text-#{ is_active ? 'primary' : 'base-content' }" do %>
@@ -59,22 +59,9 @@
                 local_cafe
               </span>
               Commandes
-              <% commandes = Cour.commandes.where.not("commentaires ILIKE ?", '%Fait le%').count %>
-              <% if commandes > 0 %>
-                <span class="badge badge-info text-white"><%= commandes %></span>
-              <% end %>
-            <% end %>
-          </li>
-          <li class="nav-item">
-            <% is_active = params[:action] == 'commandes_v2' %>
-            <%= link_to tools_commandes_v2_path, class: "flex items-center gap-1 py-0 text-#{ is_active ? 'primary' : 'base-content' }" do %>
-              <span class="material-symbols-outlined text-xl">
-                local_cafe
-              </span>
-              Commandes v2
-              <% commandes_v2 = Cour.joins(:options).where(options: {catégorie: :commande}).where.not("options.description ILIKE ?", '%Fait le%').count %>
-              <% if commandes_v2 > 0 %>
-                <span class="badge badge-info text-white"><%= commandes_v2 %></span>
+              <% commandes_count = Cour.joins(:options).where(options: {catégorie: :commande}).where.not("options.description ILIKE ?", '%Fait le%').count %>
+              <% if commandes_count > 0 %>
+                <span class="badge badge-info text-white"><%= commandes_count %></span>
               <% end %>
             <% end %>
           </li>

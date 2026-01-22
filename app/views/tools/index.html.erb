@@ -34,6 +34,13 @@
 				<%= link_to "Taux d'occupation salles", tools_taux_occupation_salles_path, class: 'text-primary hover:underline' %>
 			</li>
 
+			<% if policy(Dossier).index? %>
+				<li class="mb-6">
+					<%= fa_icon 'folder' %>
+					<%= link_to "Dossiers", dossiers_path, class: 'text-primary hover:underline' %>
+				</li>
+			<% end %>
+
 			<% if current_user.rh? || current_user.admin? %>
 				<li class="mb-6">
 					<%= fa_icon 'list-alt' %>
@@ -48,6 +55,11 @@
 				<li class="mb-6">
 					<%= fa_icon 'list-alt' %>
 					<%= link_to "Export CoDir", tools_export_codir_path, class: 'text-primary hover:underline' %>
+				</li>
+
+				<li class="mb-6">
+					<%= fa_icon 'list-alt' %>
+					<%= link_to "Export CAC", tools_export_cac_path, class: 'text-primary hover:underline' %>
 				</li>
 
 				<li class="mb-12">
@@ -87,15 +99,12 @@
 				<%= link_to 'MailLogs', mail_logs_path, class: 'text-primary hover:underline' %>
 			</li>
 
-			<li>
-				<%= fa_icon 'mug-hot' %>
-				<%= link_to 'Commandes', tools_commandes_path, class: 'text-primary hover:underline' %>
-			</li>
-
-			<li class="mb-6">
-				<%= fa_icon 'coffee' %>
-				<%= link_to 'Commandes v2', tools_commandes_v2_path, class: 'text-primary hover:underline' %>
-			</li>
+			<% if policy(:tool).commandes? %>
+				<li class="mb-6">
+					<%= fa_icon 'coffee' %>
+					<%= link_to 'Commandes', tools_commandes_path, class: 'text-primary hover:underline' %>
+				</li>
+			<% end %>
 
 			<% if policy(Sujet).index? %>
 				<li class="mb-6">

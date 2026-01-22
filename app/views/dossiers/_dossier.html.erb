@@ -14,7 +14,7 @@
     <span class="badge <%= dossier.style %> text-white">
       <%= dossier.workflow_state.humanize %>
     </span>
-    <% if dossier.envoyé? && (dossier.updated_at.to_date..Date.today).to_a.size >= 60 %>
+    <% if dossier.déposé? && (dossier.updated_at.to_date..Date.today).to_a.size >= 60 %>
       <%= fa_icon 'exclamation-circle', title: "L'intervenant a envoyé son dossier mais n'a pas été traité depuis plus de 60 jours", class: 'hover:cursor-help' %>
     <% end %>
     <% if !["nouveau", "déposé", "validé", "archivé"].include?(dossier.workflow_state) && (dossier.updated_at.to_date..Date.today).to_a.size > 30 %>
@@ -43,7 +43,8 @@
   <% end %>
   <td><%= time_ago_in_words dossier.created_at %></td>
   <td><%= time_ago_in_words dossier.updated_at %></td>
-  <% unless params[:action] == "action" %>
+
+  <% if policy(dossier).destroy? && params[:action] != "action" %>
     <td><%= link_to 'Voir', dossier, class: 'text-primary hover:underline' %></td>
     <td><%= link_to '[X]', dossier, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: 'text-primary hover:underline' %></td>
   <% end %>

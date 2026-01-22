@@ -919,6 +919,20 @@ class ToolsController < ApplicationController
     send_data file_contents.string.force_encoding('binary'), filename: filename
   end
 
+  def export_cac
+    params[:période] ||= AppConstants::PÉRIODE
+  end
+
+  def export_cac_do
+    book = ExportCacToXls.new(params[:période]).call
+    filename = "Export_cac.xls"
+
+    file_contents = StringIO.new
+    book.write file_contents # => Now file_contents contains the rendered file output
+    send_data file_contents.string.force_encoding('binary'), filename: filename
+  end
+
+
   def audits
     @audits = Audited::Audit.order("id DESC")
     @types  = Audited::Audit.pluck(:auditable_type).uniq.sort
@@ -1273,6 +1287,14 @@ class ToolsController < ApplicationController
                   type: 'application/pdf',
                   disposition: 'inline'	
       end
+
+      format.xls do
+        book = VacationsAdministrativesToXls.new(@examens, @start_date, @end_date).call
+        file_contents = StringIO.new
+        book.write file_contents # => Now file_contents contains the rendered file output
+        filename = "Export_Vacations_Administratives_du_#{@start_date}_au_#{@end_date}.xls"
+        send_data file_contents.string.force_encoding('binary'), filename: filename
+      end
     end
 
   end
@@ -1308,6 +1330,14 @@ class ToolsController < ApplicationController
                   filename: filename.concat('.pdf'),
                   type: 'application/pdf',
                   disposition: 'inline'	
+      end
+
+      format.xls do
+        book = VacationsAdministrativesV2ToXls.new(@examens, @start_date, @end_date).call
+        file_contents = StringIO.new
+        book.write file_contents # => Now file_contents contains the rendered file output
+        filename = "Export_Vacations_Administratives_V2_du_#{@start_date}_au_#{@end_date}.xls"
+        send_data file_contents.string.force_encoding('binary'), filename: filename
       end
     end
 
@@ -1462,32 +1492,11 @@ class ToolsController < ApplicationController
     end
 
     if params[:search_cmd].present?
-      @commandes = @commandes.where("cours.commentaires ILIKE ?", "%#{params[:search_cmd]}%")
-    end
-  end
-
-  def commande_fait
-    commande = Cour.find(params[:commande_id])
-    commande.commentaires.concat("\r\n\r\n")
-    commande.commentaires.concat("Fait le #{l DateTime.now, format: :short}, #{current_user.nom_et_prénom}")
-    commande.save
-
-    redirect_to request.referrer, notice: "Commande traitée avec succès"
-  end
-
-  def commandes_v2
-    if params[:archive].present?
-      @commandes = Cour.commandes_archivées_v2
-    else
-      @commandes = Cour.commandes_v2
-    end
-
-    if params[:search_cmd].present?
       @commandes = @commandes.where("options.description ILIKE ?", "%#{params[:search_cmd]}%")
     end
   end
 
-  def commande_fait_v2
+  def commande_fait
     commande = Cour.find(params[:commande_id]).options.commande.first
     commande.fait = true
     commande.description.concat("\r\n\r\n")
