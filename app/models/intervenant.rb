@@ -138,7 +138,7 @@ class Intervenant < ApplicationRecord
 		ENV["SURVEILLANTS_EXAMEN_IDS"].split(',').map(&:to_i)
 	end
 
-	def self.is_a_confirmer?
+	def is_a_confirmer?
 		self.id == Intervenant.a_confirmer_id
 	end
 
