@@ -556,6 +556,30 @@ class CoursController < ApplicationController
         else
           flash[:alert] = 'Il y a plusieurs cours sélectionnés ou le cours n\'est pas un examen'
         end
+      when "Regrouper sur une seule Feuille de présence Edusign"
+        # etat = 3
+        # edusign_log = EdusignLog.create(modele_type: 4, message: "", user_id: current_user.id, etat: etat)
+        request = Edusign.new
+        request.add_grouped_cours(@cours.pluck(:id))
+
+        # begin
+        #   # capture output
+        #   stream = capture_stdout do
+        #     etat = request.get_etat
+        #   end
+
+        #   edusign_log.update(message: stream, etat: etat)
+
+        #   # Pas de update_all pour éviter l'empêchement de sauvegare à cause du bypass
+        @cours.each do |cour|
+          cour.update_attribute('no_send_to_edusign', true)
+        end
+
+        # rescue => e
+        #   error_message = "Erreur: #{e.full_message}"
+        #   edusign_log.update(message: error_message, etat: 3)
+        #   flash[:alert] = error_message
+        # end
     end
 
     filename = "Export_Planning_#{Date.today.to_s}"
