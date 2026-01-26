@@ -50,7 +50,7 @@ class IntervenantMailer < ApplicationMailer
         @sujet = sujet
         @ue = examen.nom_ou_ue
         @code_ue = examen.code_ue
-        @formation = examen.formation.nom
+        @formations = Formation.where(id: sujet.cours.pluck(:formation_id)).pluck(:nom)
         @deadline = examen.debut - 1.month
         @examens_count = sujet.cours.count
 
@@ -76,18 +76,6 @@ class IntervenantMailer < ApplicationMailer
         mail(to: @intervenant.email, subject: title)
     end
 
-    def relance_sujet(sujet, title)
-        examen = sujet.cour
-        @debut = examen.debut
-        @intervenant = examen.intervenant_binome
-        @code_ue = examen.code_ue
-        @jours = examen.days_between_today_and_debut
-        @sujet = sujet
-        @examens_count = sujet.cours.count
-        attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
-        mail(to: @intervenant.email, subject: title)
-    end
-
     def relance_sujet_30_jours(sujet, title)
         examen = sujet.cour
         intervenant = examen.intervenant_binome
@@ -96,7 +84,7 @@ class IntervenantMailer < ApplicationMailer
         @sujet = sujet
         @ue = examen.nom_ou_ue
         @code_ue = examen.code_ue
-        @formation = examen.formation.nom
+        @formations = Formation.where(id: sujet.cours.pluck(:formation_id)).pluck(:nom)
         @examens_count = sujet.cours.count
 
         attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
@@ -111,7 +99,7 @@ class IntervenantMailer < ApplicationMailer
         @sujet = sujet
         @ue = examen.nom_ou_ue
         @code_ue = examen.code_ue
-        @formation = examen.formation.nom
+        @formations = Formation.where(id: sujet.cours.pluck(:formation_id)).pluck(:nom)
         @first_relance = sujet.created_at
         @examens_count = sujet.cours.count
 
@@ -127,7 +115,7 @@ class IntervenantMailer < ApplicationMailer
         @sujet = sujet
         @ue = examen.nom_ou_ue
         @code_ue = examen.code_ue
-        @formation = examen.formation.nom
+        @formations = Formation.where(id: sujet.cours.pluck(:formation_id)).pluck(:nom)
         @first_relance = sujet.created_at
         @examens_count = sujet.cours.count
 
@@ -143,7 +131,7 @@ class IntervenantMailer < ApplicationMailer
         @sujet = sujet
         @ue = examen.nom_ou_ue
         @code_ue = examen.code_ue
-        @formation = examen.formation.nom
+        @formations = Formation.where(id: sujet.cours.pluck(:formation_id)).pluck(:nom)
         @first_relance = sujet.created_at
         @examens_count = sujet.cours.count
 
@@ -159,7 +147,7 @@ class IntervenantMailer < ApplicationMailer
         @sujet = sujet
         @ue = examen.nom_ou_ue
         @code_ue = examen.code_ue
-        @formation = examen.formation.nom
+        @formations = Formation.where(id: sujet.cours.pluck(:formation_id)).pluck(:nom)
         @first_relance = sujet.created_at
         @examens_count = sujet.cours.count
 
@@ -175,7 +163,7 @@ class IntervenantMailer < ApplicationMailer
         @sujet = sujet
         @ue = examen.nom_ou_ue
         @code_ue = examen.code_ue
-        @formation = examen.formation.nom
+        @formations = Formation.where(id: sujet.cours.pluck(:formation_id)).pluck(:nom)
         @first_relance = sujet.created_at
         @jour_avant_debut = examen.debut.to_date - 1.day
         @examens_count = sujet.cours.count

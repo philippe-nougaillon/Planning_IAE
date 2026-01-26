@@ -1,13 +1,16 @@
 <p style="margin-bottom: 0.5rem">
     Bonjour,
     <br><br>
-    Depuis notre premier mail en date du <%= l(@first_relance.to_date, format: :long) %>, et malgré 4 relances, nous sommes toujours dans l'attente de votre sujet pour l'examen de votre UE#<%= @code_ue %> <b><%= @ue %> (<%= @formation %>)</b> en date du <b><%= l(@debut.to_date, format: :long) %></b>.
+    Depuis notre premier mail en date du <%= l(@first_relance.to_date, format: :long) %>, et malgré 4 relances, nous sommes toujours dans l'attente de votre sujet pour l'examen de votre UE#<%= @code_ue %> <b><%= @ue %> (<%= @formations.join(', ') %>)</b> en date du <b><%= l(@debut.to_date, format: :long) %></b>.
     <br><br>
     La bonne organisation et la tenue de l'examen dépendent de la réception de votre sujet. Il devient urgent de nous le faire parvenir en le déposant <%= link_to 'ici', url_for(sujet_url(@sujet)) %>, en <b>format pdf avec la page de garde</b>, ou en copiant ce lien <%= url_for(sujet_url(@sujet)) %> dans votre navigateur,
-    <br>
     <br><br>
+    Merci également de bien vouloir cocher les consignes et saisir le cas échéant un commentaire libre.
+    <br>
     <% if @examens_count > 1 %>
+        <br>
         <b>Attention : <%= @examens_count %> examens sont liés à ce sujet mais le sujet n'est à déposer qu'une fois.</b>
+        <br>
     <% end %>
 </p>
 
