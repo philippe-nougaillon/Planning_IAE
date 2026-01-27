@@ -773,6 +773,50 @@ class Edusign < ApplicationService
         @nb_recovered_elements - @nb_sended_elements
     end
 
+    def add_grouped_cours(cour_ids)
+        cours = Cour.where(id: cour_ids)
+        self.prepare_request_with_message("https://ext.edusign.fr/v1/course", "Post")
+        puts "Début du groupement des cours #{cours.pluck(:id, :nom)}"
+
+        formations_edusign_ids = Formation.where(id: cours.pluck(:formation_id)).pluck(:edusign_id)
+        
+        if !formations_edusign_ids.include?(nil)
+            cour_template = cours.first
+            intervenant = Intervenant.find_by(id: cour_template.intervenant_id)
+            intervenant_binome = Intervenant.find_by(id: cour_template.intervenant_binome_id)
+            
+            if intervenant&.edusign_id
+                if !intervenant_binome || intervenant_binome.edusign_id
+                    body =
+                    {"course":{
+                        "NAME": "#{cour_template.nom_ou_ue}" || 'Nom du cours à valider',
+                        "START": cour_template.debut - paris_observed_offset_seconds(cour_template.debut),
+                        "END": cour_template.fin - paris_observed_offset_seconds(cour_template.debut),
+                        "PROFESSOR": intervenant&.edusign_id,
+                        "PROFESSOR_2": intervenant_binome&.edusign_id,
+                        "API_ID": cour_template.id,
+                        "NEED_STUDENTS_SIGNATURE": true,
+                        "CLASSROOM": cour_template.salle&.nom,
+                        "SCHOOL_GROUP": formations_edusign_ids
+                        }
+                    }
+    
+                    response = self.prepare_body_request(body).get_response
+    
+                    puts response["status"] == 'error' ?  "<strong>Erreur d'exportation : #{response["message"]}</strong>" : "Exportation des cours réussie"
+                else
+                    puts "L'intervenant binome #{intervenant_binome&.prenom_nom} n'est pas encore relié à Edusign. Le groupement n'est pas fait"
+                end
+            else
+                puts "L'intervenant #{intervenant&.prenom_nom} n'est pas encore relié à Edusign. Le groupement n'est pas fait"
+            end
+        else
+            puts "Au moins une formation n'est pas encore reliée à Edusign. Le groupement n'est pas fait"
+        end
+
+        return response
+    end
+
     private
 
     def create_motif(justificatif_edusign_id, nom_motif)
