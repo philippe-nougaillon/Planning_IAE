@@ -11,8 +11,6 @@ class SujetsController < ApplicationController
       @sujets = Sujet.all.joins(:cours)
     end
 
-    @sujets = @sujets.distinct
-
     if current_user.partenaire_qse?
       @sujets = @sujets.joins(cours: :formation).merge(Formation.partenaire_qse)
       @formations = Formation.partenaire_qse.ordered
@@ -39,6 +37,10 @@ class SujetsController < ApplicationController
       @sujets = @sujets.where("workflow_state = ?", params[:workflow_state].to_s.downcase)
     end
 
+    # Permet de trier sur les cours en ayant ".joins(:cours)"
+    @sujets = @sujets.select('sujets.*, MIN(cours.debut) AS first_cours_debut').group('sujets.id')
+
+    @sujets = @sujets.reorder(sort_column == 'cours.debut' ? 'first_cours_debut ' + sort_direction : "#{sort_column} #{sort_direction}")
     @sujets = @sujets.paginate(page: params[:page], per_page: 20)
   end
 
@@ -190,11 +192,11 @@ class SujetsController < ApplicationController
     end
 
     def sortable_columns
-      ['sujets.workflow_state', 'sujets.created_at', 'sujets.updated_at']
+      ['cours.debut','sujets.workflow_state', 'sujets.created_at', 'sujets.updated_at']
     end
 
     def sort_column
-      sortable_columns.include?(params[:column_sujet]) ? params[:column_sujet] : "updated_at"
+      sortable_columns.include?(params[:column_sujet]) ? params[:column_sujet] : "cours.debut"
     end
 
     def sort_direction
