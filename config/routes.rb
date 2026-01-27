@@ -35,6 +35,9 @@ Rails.application.routes.draw do
       get :calendrier
       get :sujets
     end
+    collection do
+      get :examen
+    end
   end
 
   resources :users do
