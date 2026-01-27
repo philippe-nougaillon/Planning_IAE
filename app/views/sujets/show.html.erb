@@ -9,133 +9,127 @@
 
 
 <% if policy(@sujet).valider? %>
-  <div class="flex flex-wrap justify-between shadow-lg gap-8 p-6 mt-4">
-    <div class="flex-1">
-      <p class="mb-4">
-        <strong>Examen</strong>
-        <% if @sujet.cour.debut > DateTime.now %>
+  <%= form_with id:'sujet_form', url: deposer_admin_sujet_path, model: @sujet, data: { controller: 'nested-form', nested_form_wrapper_selector_value: '.nested-form-wrapper' } do |f| %>
+    <div class="flex flex-wrap justify-between shadow-lg gap-8 p-6 mt-4">
+      <div class="flex-1">
+        <p class="mb-4">
+          <strong>Examen</strong>
+          <% if @sujet.cour.debut > DateTime.now %>
+            <br>
+            <small>(dans <%= time_ago_in_words(@sujet.cour.debut) %>)</small>
+            <br>
+          <% end %>
+          Le <%= l(@sujet.cour.debut, format: :long) %>
+        </p>
+
+        <p class="mb-4">
+          <strong>Formation(s)</strong>
           <br>
-          <small>(dans <%= time_ago_in_words(@sujet.cour.debut) %>)</small>
+          <%= @sujet.formations.pluck(:nom).join(', ') %>
+        </p>
+
+        <p class="mb-4">
+          <strong>Nom de l'examen</strong>
           <br>
+          <%= @sujet.cour.nom_ou_ue %>
+        </p>
+        <p class="mb-4">
+          <strong>Intervenant</strong>
+          <br>
+          <%= @sujet.cour.intervenant_binome&.nom_prenom %>
+          <br>
+          <%= @sujet.cour.intervenant_binome&.email %>
+        </p>
+
+
+        <% if !@sujet.can_déposer? %>
+          <p class="mb-4">
+            <strong>Options</strong>
+            <br>
+            Papier : 
+            <% if @sujet.papier %>
+              <span class='text-success'>Oui</span>
+            <% else %>
+              <span class='text-error'>Non</span>
+            <% end %>
+            <br>
+            Calculatrice :
+            <% if @sujet.calculatrice %>
+              <span class='text-success'>Oui</span>
+            <% else %>
+              <span class='text-error'>Non</span>
+            <% end %>
+            <br>
+            Ordinateur et tablette :
+            <% if @sujet.ordi_tablette %>
+              <span class='text-success'>Oui</span>
+            <% else %>
+              <span class='text-error'>Non</span>
+            <% end %>
+            <br>
+            Téléphone :
+            <% if @sujet.téléphone %>
+              <span class='text-success'>Oui</span>
+            <% else %>
+              <span class='text-error'>Non</span>
+            <% end %>
+            <br>
+            Dictionnaire :
+            <% if @sujet.dictionnaire %>
+              <span class='text-success'>Oui</span>
+            <% else %>
+              <span class='text-error'>Non</span>
+            <% end %>
+          </p>
+        <% else %>
+          <div class="mt-8 mb-4">
+            <h3 class="text-xl mt-4">Sélectionnez les consignes d'examens</h3>
+            <i>Cochez les options autorisées</i>
+          </div>
+
+          <div class="relative flex-grow max-w-full flex-1 gap-4">
+            <%= f.check_box :papier, class: 'hover:cursor-pointer' %>
+            <%= f.label :papier, 'Papiers autorisés ?', class: 'hover:cursor-pointer' %>
+          </div>
+
+          <div class="relative flex-grow max-w-full flex-1 gap-4">
+            <%= f.check_box :calculatrice, class: 'hover:cursor-pointer' %>
+            <%= f.label :calculatrice, 'Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission autorisés ?', class: 'hover:cursor-pointer' %>
+          </div>
+          <div class="relative flex-grow max-w-full flex-1 gap-4">
+            <%= f.check_box :ordi_tablette, class: 'hover:cursor-pointer' %>
+            <%= f.label :ordi_tablette, 'Ordinateurs et tablettes autorisés ?', class: 'hover:cursor-pointer' %>
+          </div>
+
+          <div class="relative flex-grow max-w-full flex-1 gap-4">
+            <%= f.check_box :téléphone, class: 'hover:cursor-pointer' %>
+            <%= f.label :téléphone, 'Téléphones portables autorisés ?', class: 'hover:cursor-pointer' %>
+          </div>
+
+          <div class="relative flex-grow max-w-full flex-1 gap-4">
+            <%= f.check_box :dictionnaire, class: 'hover:cursor-pointer' %>
+            <%= f.label :dictionnaire, 'Dictionnaires autorisés ?', class: 'hover:cursor-pointer' %>
+          </div>
         <% end %>
-        Le <%= l(@sujet.cour.debut, format: :long) %>
-      </p>
+      </div>
 
-      <p class="mb-4">
-        <strong>Formation(s)</strong>
-        <br>
-        <%= @sujet.formations.pluck(:nom).join(', ') %>
-      </p>
+      <div class="flex-1">
+        <p class="font-bold mb-2">Document reçu</p>
 
-      <p class="mb-4">
-        <strong>Nom de l'examen</strong>
-        <br>
-        <%= @sujet.cour.nom_ou_ue %>
-      </p>
-      <p class="mb-4">
-        <strong>Intervenant</strong>
-        <br>
-        <%= @sujet.cour.intervenant_binome&.nom_prenom %>
-        <br>
-        <%= @sujet.cour.intervenant_binome&.email %>
-      </p>
-
-
-      <% if !@sujet.can_déposer? %>
-        <p class="mb-4">
-          <strong>Options</strong>
-          <br>
-          Papier : 
-          <% if @sujet.papier %>
-            <span class='text-success'>Oui</span>
-          <% else %>
-            <span class='text-error'>Non</span>
-          <% end %>
-          <br>
-          Calculatrice :
-          <% if @sujet.calculatrice %>
-            <span class='text-success'>Oui</span>
-          <% else %>
-            <span class='text-error'>Non</span>
-          <% end %>
-          <br>
-          Ordinateur et tablette :
-          <% if @sujet.ordi_tablette %>
-            <span class='text-success'>Oui</span>
-          <% else %>
-            <span class='text-error'>Non</span>
-          <% end %>
-          <br>
-          Téléphone :
-          <% if @sujet.téléphone %>
-            <span class='text-success'>Oui</span>
-          <% else %>
-            <span class='text-error'>Non</span>
-          <% end %>
-          <br>
-          Dictionnaire :
-          <% if @sujet.dictionnaire %>
-            <span class='text-success'>Oui</span>
-          <% else %>
-            <span class='text-error'>Non</span>
-          <% end %>
-        </p>
-
-        <p class="mb-4">
-          <strong>Commentaires</strong>
-          <br>
-          <%= @sujet.commentaires %>
-        </p>
-      <% end %>
-    </div>
-
-    <div class="flex-1">
-      <p class="font-bold mb-2">Document reçu</p>
-
-      <% if @sujet.archivé? %>
-        <p class="mb-4">
-          Document supprimé
-        </p>
-      <% else %>
-        <% if !@sujet.sujet.attached? %>
-          <% if policy(Sujet).index? %>
-            <div class="mb-4">
-              Aucun sujet pour l'instant.
-              <% if @sujet.can_déposer? %>
-                <p class="mt-8 mb-4">Vous pouvez ajouter vous-même le sujet si l'intervenant vous l'a transmi autrement</p>
-                <%= render "partials/script_accept_pdf" %>
-                <%= form_with id:'sujet_form', url: deposer_admin_sujet_path, model: @sujet, data: { controller: 'nested-form', nested_form_wrapper_selector_value: '.nested-form-wrapper' } do |f| %>
+        <% if @sujet.archivé? %>
+          <p class="mb-4">
+            Document supprimé
+          </p>
+        <% else %>
+          <% if !@sujet.sujet.attached? %>
+            <% if policy(Sujet).index? %>
+              <div class="mb-4">
+                Aucun sujet pour l'instant.
+                <% if @sujet.can_déposer? %>
+                  <p class="mt-8 mb-4">Vous pouvez ajouter vous-même le sujet si l'intervenant vous l'a transmi autrement</p>
+                  <%= render "partials/script_accept_pdf" %>
                   <%= f.file_field :sujet, required: true, label: 'Fichier PDF', accept: 'application/pdf', class: 'file-input file-input-bordered file-input-sm file-input-success flex-1' %>
                   <br>
-
-                <div class="mt-8 mb-4">
-                  <h3 class="text-xl mt-4">Sélectionnez les consignes d'examens</h3>
-                  <i>Cochez les options autorisées</i>
-                </div>
-
-                  <div class="relative flex-grow max-w-full flex-1 gap-4">
-                    <%= f.check_box :papier, class: 'hover:cursor-pointer' %>
-                    <%= f.label :papier, 'Papiers autorisés ?', class: 'hover:cursor-pointer' %>
-                  </div>
-
-                  <div class="relative flex-grow max-w-full flex-1 gap-4">
-                    <%= f.check_box :calculatrice, class: 'hover:cursor-pointer' %>
-                    <%= f.label :calculatrice, 'Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission autorisés ?', class: 'hover:cursor-pointer' %>
-                  </div>
-                  <div class="relative flex-grow max-w-full flex-1 gap-4">
-                    <%= f.check_box :ordi_tablette, class: 'hover:cursor-pointer' %>
-                    <%= f.label :ordi_tablette, 'Ordinateurs et tablettes autorisés ?', class: 'hover:cursor-pointer' %>
-                  </div>
-
-                  <div class="relative flex-grow max-w-full flex-1 gap-4">
-                    <%= f.check_box :téléphone, class: 'hover:cursor-pointer' %>
-                    <%= f.label :téléphone, 'Téléphones portables autorisés ?', class: 'hover:cursor-pointer' %>
-                  </div>
-
-                  <div class="relative flex-grow max-w-full flex-1 gap-4">
-                    <%= f.check_box :dictionnaire, class: 'hover:cursor-pointer' %>
-                    <%= f.label :dictionnaire, 'Dictionnaires autorisés ?', class: 'hover:cursor-pointer' %>
-                  </div>
 
                   <div class="mt-8 mb-4">
                     <h3 class="text-xl mt-4">Commentaire (optionnel)</h3>
@@ -149,88 +143,96 @@
                     Déposer
                   </button>
                 <% end %>
-              <% end %>
-            </div>
+              </div>
+            <% else %>
+              <p class="alert mb-4">
+                Veuillez ajouter le sujet
+              </p>
+            <% end %>
           <% else %>
-            <p class="alert mb-4">
-              Veuillez ajouter le sujet
-            </p>
-          <% end %>
-        <% else %>
-          <% if current_user.otp_required_for_login %>
-            <div class="text-center w-fit">
-              <% if @sujet.sujet.representable? %>
-                <div class="shadow w-fit p-4 mb-2">
-                  <%= link_to image_tag(@sujet.sujet.representation(resize_to_limit: [300, 300])), url_for(@sujet.sujet), title: @sujet.sujet.filename, target: '_blank' %>
-                </div>
-              <% end %>
-              <%= link_to @sujet.sujet.filename, url_for(@sujet.sujet), target: '_blank', class: 'text-primary hover:underline text-center' %>
-            </div>
-          <% else %>
-            <div class="text-center w-fit">
-              <% if @sujet.sujet.representable? %>
-                <div class="shadow w-fit p-4 mb-2">
-                  <%= image_tag(@sujet.sujet.representation(resize_to_limit: [300, 300])) %>
-                </div>
-              <% end %>
-            </div>
-            <p class="mb-4">
-              <%= link_to "Activer la double authentification", user_path(current_user), class: "text-primary hover:underline font-black" %>
-              pour ouvrir le document
-            </p>
+            <% if current_user.otp_required_for_login %>
+              <div class="text-center w-fit">
+                <% if @sujet.sujet.representable? %>
+                  <div class="shadow w-fit p-4 mb-2">
+                    <%= link_to image_tag(@sujet.sujet.representation(resize_to_limit: [300, 300])), url_for(@sujet.sujet), title: @sujet.sujet.filename, target: '_blank' %>
+                  </div>
+                <% end %>
+                <%= link_to @sujet.sujet.filename, url_for(@sujet.sujet), target: '_blank', class: 'text-primary hover:underline text-center' %>
+              </div>
+            <% else %>
+              <div class="text-center w-fit">
+                <% if @sujet.sujet.representable? %>
+                  <div class="shadow w-fit p-4 mb-2">
+                    <%= image_tag(@sujet.sujet.representation(resize_to_limit: [300, 300])) %>
+                  </div>
+                <% end %>
+              </div>
+              <p class="mb-4">
+                <%= link_to "Activer la double authentification", user_path(current_user), class: "text-primary hover:underline font-black" %>
+                pour ouvrir le document
+              </p>
+            <% end %>
           <% end %>
         <% end %>
-      <% end %>
-    </div>
+      </div>
 
-    <div class="flex-1">
-      <p class="mb-4">
-        <strong>Créé le</strong>
-        <br>
-        <%= l(@sujet.created_at, format: :long) %>
-      </p>
-      <p class="mb-4">
-        <strong>MÀJ</strong>
-        <br>
-        <%= l(@sujet.updated_at, format: :long) %>
-      </p>
-
-      <p class="mb-4">
-        <strong>État :</strong> 
-        <span class="badge badge-lg <%= @sujet.style %> text-white">
-          <%= @sujet.workflow_state.humanize %>
-        </span>
-        <% if @sujet.non_conforme? %>
+      <div class="flex-1">
+        <p class="mb-4">
+          <strong>Créé le</strong>
           <br>
-          <strong>Raison :</strong> 
-          <%= @sujet.message %>
+          <%= l(@sujet.created_at, format: :long) %>
+        </p>
+        <p class="mb-4">
+          <strong>MÀJ</strong>
+          <br>
+          <%= l(@sujet.updated_at, format: :long) %>
+        </p>
+
+        <p class="mb-4">
+          <strong>État :</strong> 
+          <span class="badge badge-lg <%= @sujet.style %> text-white">
+            <%= @sujet.workflow_state.humanize %>
+          </span>
+          <% if @sujet.non_conforme? %>
+            <br>
+            <strong>Raison :</strong> 
+            <%= @sujet.message %>
+          <% end %>
+        </p>
+
+        <% if @sujet.mail_log %>
+          <div class="flex flex-wrap gap-4">
+            <p class="mb-4">
+              <strong>Mail envoyé ? :</strong> 
+              <% if @sujet.mail_log.statut %>
+                <span class="text-success">OK</span>
+              <% else %>
+                <span class="text-error">KO</span>
+              <% end %>
+            </p>
+            <p class="mb-4">
+              <strong>Ouvert ? :</strong> 
+              <% if @sujet.mail_log.opened && @sujet.mail_log.statut %>
+                <span class="text-info">OUI</span>
+              <% else %>
+              <span>NON</span>
+              <% end %>
+            </p>
+          </div>
         <% end %>
-      </p>
 
-      <% if @sujet.mail_log %>
-        <div class="flex flex-wrap gap-4">
+        <% if !@sujet.can_déposer? %>
           <p class="mb-4">
-            <strong>Mail envoyé ? :</strong> 
-            <% if @sujet.mail_log.statut %>
-              <span class="text-success">OK</span>
-            <% else %>
-              <span class="text-error">KO</span>
-            <% end %>
+            <strong>Commentaires</strong>
+            <br>
+            <%= @sujet.commentaires %>
           </p>
-          <p class="mb-4">
-            <strong>Ouvert ? :</strong> 
-            <% if @sujet.mail_log.opened && @sujet.mail_log.statut %>
-              <span class="text-info">OUI</span>
-            <% else %>
-            <span>NON</span>
-            <% end %>
-          </p>
-        </div>
-      <% end %>
+        <% end %>
+      </div>
+
+      
     </div>
-
-    
-  </div>
+  <% end %>
 
   <div class="flex w-full mt-4">
     <div data-controller="rejet-sujet" class="flex-1">
