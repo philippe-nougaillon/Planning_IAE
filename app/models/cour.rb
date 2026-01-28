@@ -24,6 +24,7 @@ class Cour < ApplicationRecord
   has_one_attached :document
 
   validates :debut, :formation_id, :intervenant_id, :duree, presence: true
+  validate :debut_year_must_make_sense
   validate :check_chevauchement_intervenant, if: Proc.new {|cours| !(cours.bypass?)}
   validate :check_chevauchement, if: Proc.new { |cours| cours.salle_id && !(cours.bypass?) }
   validate :jour_fermeture, if: Proc.new {|cours| !(cours.bypass?)}
@@ -445,6 +446,12 @@ class Cour < ApplicationRecord
       #  UserMailer.cours_changed(self.id, "wachnick.iae@univ-paris1.fr").deliver_later
       #end 
     end  
+
+    def debut_year_must_make_sense
+      if debut.year > 2100
+        errors.add(:debut, "du cours doit avoir un sens !")
+      end
+    end
 
     def reservation_dates_must_make_sense
       unless fin 
