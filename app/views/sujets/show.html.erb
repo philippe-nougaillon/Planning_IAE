@@ -248,7 +248,7 @@
       <% end %>
 
       <% if @sujet.can_déposer? %>
-        <%= render "partials/script_accept_pdf" %>
+        <%= render "partials/script_accept_file_type", id_form: "sujet_form", id_file_input: "submit", file_type_accepted: 'application/pdf', file_type_for_alert: 'PDF' %>
         <%= form_with id:'sujet_form', url: deposer_sujet_path, model: @sujet, data: { controller: 'nested-form', nested_form_wrapper_selector_value: '.nested-form-wrapper' } do |f| %>
           <%= f.file_field :sujet, required: true, label: 'Fichier PDF', accept: 'application/pdf', class: 'file-input file-input-bordered file-input-sm file-input-success flex-1' %>
           <br>
