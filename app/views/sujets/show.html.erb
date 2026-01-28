@@ -80,9 +80,9 @@
               Aucun sujet pour l'instant.
               <% if @sujet.can_déposer? %>
                 <p class="mt-8 mb-4">Vous pouvez ajouter vous-même le sujet si l'intervenant vous l'a transmi autrement</p>
-                <%= render "partials/script_accept_pdf" %>
                 <%= form_with id:'sujet_form', url: deposer_admin_sujet_path, model: @sujet, data: { controller: 'nested-form', nested_form_wrapper_selector_value: '.nested-form-wrapper' } do |f| %>
                   <%= f.file_field :sujet, required: true, label: 'Fichier PDF', accept: 'application/pdf', class: 'file-input file-input-bordered file-input-sm file-input-success flex-1' %>
+                  <%= render "partials/script_accept_file_type", id_form: "sujet_form", id_file_input: "sujet_sujet", file_type_accepted: 'application/pdf', file_type_for_alert: 'PDF' %>
                   <br>
 
                   <button type="submit" name="commit" value="Déposer le sujet" class="btn btn-success w-full sm:w-48 btn-lg text-white mt-6" data-disable-with="Déposer le sujet" data-turbo-confirm="ATTENTION ! Une fois déposé, vous ne pourrez plus modifier le sujet. Confirmez-vous le dépôt de votre sujet">
@@ -248,9 +248,9 @@
       <% end %>
 
       <% if @sujet.can_déposer? %>
-        <%= render "partials/script_accept_file_type", id_form: "sujet_form", id_file_input: "submit", file_type_accepted: 'application/pdf', file_type_for_alert: 'PDF' %>
         <%= form_with id:'sujet_form', url: deposer_sujet_path, model: @sujet, data: { controller: 'nested-form', nested_form_wrapper_selector_value: '.nested-form-wrapper' } do |f| %>
           <%= f.file_field :sujet, required: true, label: 'Fichier PDF', accept: 'application/pdf', class: 'file-input file-input-bordered file-input-sm file-input-success flex-1' %>
+          <%= render "partials/script_accept_file_type", id_form: "sujet_form", id_file_input: "sujet_sujet", file_type_accepted: 'application/pdf', file_type_for_alert: 'PDF' %>
           <br>
 
           <button type="submit" name="commit" value="Déposer le sujet" class="btn btn-success w-full sm:w-48 btn-lg text-white mt-6" data-disable-with="Déposer le sujet" data-turbo-confirm="ATTENTION ! Une fois déposé, vous ne pourrez plus modifier le sujet. Confirmez-vous le dépôt de votre sujet">
