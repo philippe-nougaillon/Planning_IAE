@@ -395,7 +395,7 @@ class Edusign < ApplicationService
                     }}
 
                 if method == 'Patch'
-                    body[:group].merge!({"ID": formation.edusign_id})
+                    body[:group][:ID] = formation.edusign_id
                 end
 
                 response = self.prepare_body_request(body).get_response
@@ -453,7 +453,7 @@ class Edusign < ApplicationService
                     }}
 
                 if method == 'Patch'
-                    body[:student].merge!({"ID": etudiant.edusign_id})
+                    body[:student][:ID] = etudiant.edusign_id
                 end
 
                 response = self.prepare_body_request(body).get_response
@@ -510,9 +510,9 @@ class Edusign < ApplicationService
                 }}
 
                 if method == 'Post'
-                    body[:professor].merge!({"dontSendCredentials": true})
+                    body[:professor][:dontSendCredentials] = true
                 else
-                    body[:professor].merge!({"ID": intervenant.edusign_id})
+                    body[:professor][:ID] = intervenant.edusign_id
                 end
 
                 response = self.prepare_body_request(body).get_response
@@ -583,8 +583,8 @@ class Edusign < ApplicationService
                     }
 
                     if method == 'Patch'
-                        body[:course].merge!({"ID": cour.edusign_id})
-                        body.merge!({"editSurveys": false})
+                        body[:course][:ID] = cour.edusign_id
+                        body[:editSurveys] = false
                     end
 
                     response = self.prepare_body_request(body).get_response
