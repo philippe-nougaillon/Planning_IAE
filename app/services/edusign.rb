@@ -249,13 +249,16 @@ class Edusign < ApplicationService
 
                 response = self.prepare_body_request(body).get_response
 
-                puts response["status"] == 'error' ?  "<strong>Erreur d'exportation de la formation #{formation.id}, #{formation.nom} : #{response["message"]}</strong>" : "Exportation de la formation réussie : #{formation.id}, #{formation.nom}"
-
                 if response["status"] == 'success'
                     if method == 'Post'
                         formation.update_attribute('edusign_id', response["result"]["ID"])
                     end
+
+                    puts "Exportation de la formation réussie => id: #{formation.id}, nom_prenom: #{formation.nom_prénom}, edusign_id: #{formation.edusign_id}"
+
                     nb_audited += 1
+                else
+                    puts "<strong>Erreur d'exportation de la formation (#{formation.id}, #{formation.nom}) : #{response["message"]}</strong>"
                 end
             else
                 puts "La formation #{formation.id}, #{formation.nom} n'est pas valide, elle ne peut pas être envoyée dans Edusign : #{formation.errors.full_messages}"
@@ -307,13 +310,16 @@ class Edusign < ApplicationService
 
                 response = self.prepare_body_request(body).get_response
 
-                puts response["status"] == 'error' ?  "<strong>Erreur d'exportation de l'étudiant #{etudiant.id}, #{etudiant.nom_prénom} : #{response["message"]}</strong>" : "Exportation de l'étudiant réussie : #{etudiant.id}, #{etudiant.nom_prénom} "
-
                 if response["status"] == 'success'
                     if method == 'Post'
                         etudiant.update_attribute('edusign_id', response["result"]["ID"])
                     end
+
+                    puts "Exportation de l'étudiant réussie => id: #{etudiant.id}, nom_prenom: #{etudiant.nom_prénom}, edusign_id: #{etudiant.edusign_id}"
+
                     nb_audited += 1
+                else
+                    puts "<strong>Erreur d'exportation de l'étudiant (#{etudiant.id}, #{etudiant.nom_prénom}) : #{response["message"]}</strong>"
                 end
             else
                 puts "L'étudiant #{etudiant.id}, #{etudiant.nom} n'est pas valide, il ne peut pas être envoyé dans Edusign : #{etudiant.errors.full_messages}"
@@ -366,13 +372,16 @@ class Edusign < ApplicationService
 
                 response = self.prepare_body_request(body).get_response
 
-                puts response["status"] == 'error' ?  "<strong>Erreur d'exportation de l'intervenant #{intervenant.id}, #{intervenant.nom_prenom} : #{response["message"]}</strong>" : "Exportation de l'intervenant réussie : #{intervenant.id}, #{intervenant.nom_prenom}"
-
                 if response["status"] == 'success'
                     if method == 'Post'
                         intervenant.update_attribute('edusign_id', response["result"]["ID"])
                     end
+
+                    puts "Exportation de l'intervenant réussie => id: #{intervenant.id}, nom_prenom: #{intervenant.nom_prenom}, edusign_id: #{intervenant.edusign_id}"
+                    
                     nb_audited += 1
+                else
+                    puts "<strong>Erreur d'exportation de l'intervenant #{intervenant.id}, #{intervenant.nom_prenom} : #{response["message"]}</strong>"
                 end
             else
                 puts "L'intervenant #{intervenant.id}, #{intervenant.nom} n'est pas valide, il ne peut pas être envoyé dans Edusign : #{intervenant.errors.full_messages}"
@@ -437,14 +446,16 @@ class Edusign < ApplicationService
 
                     response = self.prepare_body_request(body).get_response
 
-                    puts response["status"] == 'error' ?  "<strong>Erreur d'exportation du cours #{cour.id}, #{cour.nom_ou_ue} : #{response["message"]}</strong>" : "Exportation du cours #{cour.id}, #{cour.nom_ou_ue} réussie"
-
                     if response["status"] == 'success'
                         if method == 'Post'
-                            # pas de vérification si le cour est valide, sinon le cour sera créé sur Edusign mais sans edusign_id. Ça créerait des doublons.
                             cour.update_attribute('edusign_id', response["result"]["ID"])
                         end
+
+                        puts "Exportation du cours réussie => id: #{cour.id}, nom: #{cour.nom_ou_ue}, edusign_id: #{cour.edusign_id}"
+
                         nb_audited += 1
+                    else
+                        puts "<strong>Erreur d'exportation du cours (#{cour.id}, #{cour.nom_ou_ue}) : #{response["message"]}</strong>"
                     end
                 else
                     puts "La formation #{cour.formation.nom} n'est pas encore reliée à Edusign. Le cours #{cour.id}, #{cour.nom_ou_ue} n'est pas envoyé"
@@ -466,10 +477,11 @@ class Edusign < ApplicationService
 
                     response = self.get_response
 
-                    puts response["status"] == 'error' ?  "<strong>Erreur d'exportation du cours #{cour.id}, #{cour.nom_ou_ue} : #{response["message"]}</strong>" : "Exportation du cours #{cour.id}, #{cour.nom_ou_ue} pour la suppression réussie"
-
                     if response["status"] == 'success'
+                        puts "Exportation du cours pour la suppression réussie => id: #{cour.id}, nom: #{cour.nom_ou_ue}"
                         nb_audited += 1
+                    else
+                        puts "<strong>Erreur d'exportation du cours (#{cour.id}, #{cour.nom_ou_ue}) : #{response["message"]}</strong>"
                     end
                 end
             end
@@ -505,10 +517,11 @@ class Edusign < ApplicationService
 
             response = self.prepare_body_request(body).get_response
 
-            puts response["status"] == 'error' ?  "<strong>Erreur d'exportation du cours #{cours.id}, #{cours.nom_ou_ue} : #{response["message"]}</strong>" : "Modification du cours #{cours.id}, #{cours.nom_ou_ue} (id Edusign : #{cours.edusign_id}) réussie"
-
             if response["status"] == 'success'
+                puts "Modification du cours réussie => id: #{cours.id}, nom: #{cours.nom_ou_ue}, edusign_id: #{cours.edusign_id}"
                 @nb_sended_elements += 1
+            else
+                puts "<strong>Erreur d'exportation du cours (#{cours.id}, #{cours.nom_ou_ue}) : #{response["message"]}</strong>"
             end
         # else
         #     response = {}
@@ -576,14 +589,18 @@ class Edusign < ApplicationService
 
             response = self.get_response
 
-            puts response["status"] == 'error' ?  "<strong>Erreur lors de la suppression du cours #{edusign_id} : #{response["message"]}</strong>" : "Exportation du cours #{edusign_id} pour la suppression réussie"
-
             if response["status"] == 'success'
                 # Suppression de l'edusign_id du cours supprimé sur Edusign
                 if cour = Cour.find_by(edusign_id: edusign_id)
                     cour.update_attribute('edusign_id', nil)
                 end
+
+                puts "Exportation du cours #{edusign_id} pour la suppression réussie"
+
                 nb_audited += 1
+
+            else
+                puts "<strong>Erreur lors de la suppression du cours #{edusign_id} : #{response["message"]}</strong>"
             end
         end
 
