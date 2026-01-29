@@ -9,8 +9,9 @@ class Edusign < ApplicationService
         @nb_recovered_elements = 0
         @nb_sended_elements = 0
 
-        # Déclaré ici pour éviter de synchroniser des éléments deux fois (à cause de la prochaine synchronisation qui se base sur le created_at de la synchronisation)
-        @interval_end = Time.zone.now
+        # Le Patch d'un record se base sur le dernier EdusignLog où il n'y a pas eu de crash. Le scheduler n'est plus à synchroniser avec cette fonction
+        @interval_of_time = EdusignLog.where(modele_type: 1).where.not(etat: 3).reorder(created_at: :desc).first.created_at..Time.zone.now
+        puts "INTERVAL = #{@interval_of_time}"
 
         # Par défaut, on considère qu'il n'y a pas de crash.
         @crash = false
@@ -119,12 +120,6 @@ class Edusign < ApplicationService
         self
     end
 
-    def get_interval_of_time
-        # Se base sur le dernier EdusignLog où il n'y a pas eu de crash. Le scheduler n'est plus à synchroniser avec cette fonction
-        puts "INTERVAL = #{EdusignLog.where(modele_type: 1).where.not(etat: 3).reorder(created_at: :desc).first.created_at..@interval_end}"
-        EdusignLog.where(modele_type: 1).where.not(etat: 3).reorder(created_at: :desc).first.created_at..@interval_end
-    end
-
     # Cette fonction prend les éléments qui sont considérés comme élément à ajouter sur edusign
     def get_all_elements_to_post(model_name)
         formations_sent_to_edusign_ids = Formation.not_archived.sent_to_edusign_ids
@@ -161,31 +156,29 @@ class Edusign < ApplicationService
 
     # Récupère tous les éléments déjà sur Edusign, qui ont été modifiés depuis la dernière synchronisation sur AIKKU Plann
     def get_all_elements_updated_since_last_sync(model_name)
-        interval = self.get_interval_of_time
-
         formations_sent_to_edusign_ids = Formation.not_archived.sent_to_edusign_ids
 
         case model_name
         when "Formation"
             Formation.where(
-              updated_at: interval,
+              updated_at: @interval_of_time,
               send_to_edusign: true
             ).where.not(edusign_id: nil)
         when "Etudiant"
             Etudiant.where(
               formation_id: formations_sent_to_edusign_ids,
-              updated_at: interval
+              updated_at: @interval_of_time
             ).where.not(edusign_id: nil)
         when "Cour"
             Cour.where(
               formation_id: formations_sent_to_edusign_ids,
-              updated_at: interval,
+              updated_at: @interval_of_time,
               no_send_to_edusign: [false, nil]
               ).where.not(edusign_id: nil)
               .where.not(intervenant_id: Intervenant.examens_ids + Intervenant.sans_intervenant)
         when "Intervenant"
             # Un intervenant peut ne plus avoir de cours avec des formations cobayes. Comme la requête permet de savoir qu'il est actif sur le planning, on l'update quand même sur Edusiugn.
-            Intervenant.where(updated_at: interval).where.not(edusign_id: nil)
+            Intervenant.where(updated_at: @interval_of_time).where.not(edusign_id: nil)
         end
     end
 
@@ -712,7 +705,7 @@ class Edusign < ApplicationService
         deleted_cours = Audited::Audit
             .where(auditable_type: "Cour")
             .where(action: "destroy")
-            .where(created_at: get_interval_of_time)
+            .where(created_at: @interval_of_time)
 
         # Pour les edusign ids des cours supprimés, on vérifie s'il existe encore sur Edusign
         deleted_cours.each do |deleted_cour|
