@@ -43,22 +43,17 @@ class Edusign < ApplicationService
     end
 
     def initialisation
-        # Récupérer toutes les formations cobayes
-        # Necessaire pour créer des formations sans étudiants et des formations avec que des étudiants déjà créés sur Edusign
-
-        # Faire un scope pour l'interval qui doit tout prendre
-        # Faire un scope pour les cours qui doivent comprendre ceux commancant ajd
-
         @setup = true
 
-        self.sync_formations("Post", nil)
+        self.sync_formations("Post")
 
-        self.sync_etudiants("Post", nil)
+        self.sync_etudiants("Post")
 
-        # Ajout des intervenants avant les cours, sinon les cours qui n'ont pas d'intervenant créé sur Edusign, ne seront pas créés
-        self.sync_intervenants("Post", nil)
+        # Ajout des intervenants avant les cours, 
+        # sinon les cours qui n'ont pas d'intervenant créé sur Edusign ne seront pas créés
+        self.sync_intervenants("Post")
 
-        self.sync_cours("Post", nil)
+        self.sync_cours("Post")
     end
 
     def prepare_request_with_message(url, method)
