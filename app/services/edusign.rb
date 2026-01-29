@@ -126,27 +126,27 @@ class Edusign < ApplicationService
     end
 
     # Cette fonction prend les éléments qui sont considérés comme élément à ajouter sur edusign
-    def get_all_element_to_post(model)
+    def get_all_elements_to_post(model_name)
         formations_sent_to_edusign_ids = Formation.not_archived.sent_to_edusign_ids
 
-        if model == Formation
-            model.where(
+        case model_name
+        when "Formation"
+            Formation.where(
               edusign_id: nil,
               send_to_edusign: true
             )
-        elsif model == Etudiant
-            model.where(
+        when "Etudiant"
+            Etudiant.where(
               formation_id: formations_sent_to_edusign_ids,
               edusign_id: nil
             )
-        elsif model == Cour
-            model.where(
+        when "Cour"
+            Cour.where(
               formation_id: formations_sent_to_edusign_ids,
               edusign_id: nil,
               no_send_to_edusign: [false, nil]
             ).where.not(intervenant_id: Intervenant.examens_ids + Intervenant.sans_intervenant)
-        elsif model == Intervenant
-
+        when "Intervenant"
             # On sélectionne que les intervenants qui sont liés à une formation qui doit être sur Edusign.
             # Pour cela, on va passer par les cours qui appartienent à ces formations.
 
@@ -155,59 +155,61 @@ class Edusign < ApplicationService
               no_send_to_edusign: [false, nil]
             ).pluck(:intervenant_id, :intervenant_binome_id).flatten.compact.uniq
 
-            model.where(id: intervenant_ids, edusign_id: nil).where.not(id: Intervenant.examens_ids + Intervenant.sans_intervenant)
+            Intervenant.where(id: intervenant_ids, edusign_id: nil).where.not(id: Intervenant.examens_ids + Intervenant.sans_intervenant)
         end
     end
 
     # Récupère tous les éléments déjà sur Edusign, qui ont été modifiés depuis la dernière synchronisation sur AIKKU Plann
-    def get_all_element_updated_since_last_sync(model)
+    def get_all_elements_updated_since_last_sync(model_name)
         interval = self.get_interval_of_time
 
         formations_sent_to_edusign_ids = Formation.not_archived.sent_to_edusign_ids
 
-        if model == Formation
-            model.where(
+        case model_name
+        when "Formation"
+            Formation.where(
               updated_at: interval,
               send_to_edusign: true
             ).where.not(edusign_id: nil)
-        elsif model == Etudiant
-            model.where(
+        when "Etudiant"
+            Etudiant.where(
               formation_id: formations_sent_to_edusign_ids,
               updated_at: interval
             ).where.not(edusign_id: nil)
-        elsif model == Cour
-            model.where(
+        when "Cour"
+            Cour.where(
               formation_id: formations_sent_to_edusign_ids,
               updated_at: interval,
               no_send_to_edusign: [false, nil]
               ).where.not(edusign_id: nil)
               .where.not(intervenant_id: Intervenant.examens_ids + Intervenant.sans_intervenant)
-        elsif model == Intervenant
+        when "Intervenant"
             # Un intervenant peut ne plus avoir de cours avec des formations cobayes. Comme la requête permet de savoir qu'il est actif sur le planning, on l'update quand même sur Edusiugn.
-            model.where(updated_at: interval).where.not(edusign_id: nil)
+            Intervenant.where(updated_at: interval).where.not(edusign_id: nil)
         end
     end
 
-    def get_all_elements_for_initialisation(model)
+    def get_all_elements_for_initialisation(model_name)
         formations_sent_to_edusign_ids = Formation.not_archived.sent_to_edusign_ids
-        if model == Formation
-            model.where(
+        case model_name
+        when "Formation"
+            Formation.where(
               edusign_id: nil,
               send_to_edusign: true
             )
-        elsif model == Cour
-            model.where(
+        when "Cour"
+            Cour.where(
               formation_id: formations_sent_to_edusign_ids,
               edusign_id: nil,
               no_send_to_edusign: [false, nil]
             ).where("debut >= ?", DateTime.now)
               .where.not(intervenant_id: Intervenant.examens_ids + Intervenant.sans_intervenant)
-        elsif model == Etudiant
-            model.where(
+        when "Etudiant"
+            Etudiant.where(
               formation_id: formations_sent_to_edusign_ids,
               edusign_id: nil
             )
-        elsif model == Intervenant
+        when "Intervenant"
 
             # On sélectionne que les intervenants qui sont liés à une formation cobaye.
             # Pour cela, on va passer par les cours qui appartienent aux formations cobayes et correspondent à l'intervalle.
@@ -218,7 +220,7 @@ class Edusign < ApplicationService
               no_send_to_edusign: [false, nil]
             ).where("debut >= ?", DateTime.now).pluck(:intervenant_id, :intervenant_binome_id).flatten.compact.uniq
 
-            model.where(id: intervenant_ids, edusign_id: nil).where.not(id: Intervenant.examens_ids + Intervenant.sans_intervenant)
+            Intervenant.where(id: intervenant_ids, edusign_id: nil).where.not(id: Intervenant.examens_ids + Intervenant.sans_intervenant)
         end
     end
 
@@ -377,14 +379,14 @@ class Edusign < ApplicationService
     def sync_formations(method)
         self.prepare_request_with_message("https://ext.edusign.fr/v1/group", method)
         if @setup
-            formations = self.get_all_elements_for_initialisation(Formation)
+            formations = self.get_all_elements_for_initialisation("Formation")
             puts "Début de l'ajout des formations (initialisation)"
         else
             if method == 'Post'
-                formations = self.get_all_element_to_post(Formation)
+                formations = self.get_all_elements_to_post("Formation")
                 puts "Début de l'ajout des formations"
             else
-                formations = self.get_all_element_updated_since_last_sync(Formation)
+                formations = self.get_all_elements_updated_since_last_sync("Formation")
                 puts "Début de la modification des formations"
             end
         end
@@ -433,14 +435,14 @@ class Edusign < ApplicationService
         self.prepare_request_with_message("https://ext.edusign.fr/v1/student", method)
 
         if @setup
-            etudiants = self.get_all_elements_for_initialisation(Etudiant)
+            etudiants = self.get_all_elements_for_initialisation("Etudiant")
             puts "Début de l'ajout des etudiants (initialisation)"
         else
             if method == 'Post'
-                etudiants = self.get_all_element_to_post(Etudiant)
+                etudiants = self.get_all_elements_to_post("Etudiant")
                 puts "Début de l'ajout des etudiants"
             else
-                etudiants = self.get_all_element_updated_since_last_sync(Etudiant)
+                etudiants = self.get_all_elements_updated_since_last_sync("Etudiant")
                 puts "Début de la modification des etudiants"
             end
         end
@@ -491,14 +493,14 @@ class Edusign < ApplicationService
         self.prepare_request_with_message("https://ext.edusign.fr/v1/professor", method)
 
         if @setup
-            intervenants = self.get_all_elements_for_initialisation(Intervenant)
+            intervenants = self.get_all_elements_for_initialisation("Intervenant")
             puts "Début de l'ajout des intervenants (initialisation)"
         else
             if method == 'Post'
-                intervenants = self.get_all_element_to_post(Intervenant)
+                intervenants = self.get_all_elements_to_post("Intervenant")
                 puts "Début de l'ajout des intervenants"
             else
-                intervenants = self.get_all_element_updated_since_last_sync(Intervenant)
+                intervenants = self.get_all_elements_updated_since_last_sync("Intervenant")
                 puts "Début de la modification des intervenants"
             end
         end
@@ -551,16 +553,16 @@ class Edusign < ApplicationService
         self.prepare_request_with_message("https://ext.edusign.fr/v1/course", method)
 
         if @setup
-            cours = self.get_all_elements_for_initialisation(Cour)
+            cours = self.get_all_elements_for_initialisation("Cour")
             puts "Début de l'ajout des cours (initialisation)"
             cours_a_supprimer = Cour.none
         else
             if method == 'Post'
-                cours = self.get_all_element_to_post(Cour).where.not(etat: ["annulé", "reporté"])
+                cours = self.get_all_elements_to_post("Cour").where.not(etat: ["annulé", "reporté"])
                 puts "Début de l'ajout des cours"
                 cours_a_supprimer = Cour.none
             else
-                cours = self.get_all_element_updated_since_last_sync(Cour)
+                cours = self.get_all_elements_updated_since_last_sync("Cour")
                 puts "Début de la modification des cours"
                 cours_a_supprimer = cours.where(etat: ["annulé", "reporté"])
             end
