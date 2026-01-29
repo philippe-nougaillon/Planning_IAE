@@ -18,7 +18,7 @@ class Edusign < ApplicationService
     end
 
     def call
-        # Necessaire pour créer des formations sans étudiants 
+        # Ordre des sync necessaire pour créer des formations sans étudiants 
         # et des formations avec que des étudiants déjà créés sur Edusign
 
         self.sync_formations("Post")
@@ -185,6 +185,11 @@ class Edusign < ApplicationService
               edusign_id: nil,
               send_to_edusign: true
             )
+        when "Etudiant"
+            Etudiant.where(
+              formation_id: formations_sent_to_edusign_ids,
+              edusign_id: nil
+            )
         when "Cour"
             Cour.where(
               formation_id: formations_sent_to_edusign_ids,
@@ -192,11 +197,6 @@ class Edusign < ApplicationService
               no_send_to_edusign: [false, nil]
             ).where("debut >= ?", DateTime.now)
               .where.not(intervenant_id: Intervenant.examens_ids + Intervenant.sans_intervenant)
-        when "Etudiant"
-            Etudiant.where(
-              formation_id: formations_sent_to_edusign_ids,
-              edusign_id: nil
-            )
         when "Intervenant"
 
             # On sélectionne que les intervenants qui sont liés à une formation cobaye.
@@ -212,160 +212,9 @@ class Edusign < ApplicationService
         end
     end
 
-    def import_justificatifs
-        self.prepare_request_with_message("https://ext.edusign.fr/v1/justified-absence?page=0", 'Get')
-
-        response = self.get_response
-
-        if response["status"] == 'error'
-            puts response['message']
-            return
-        end
-
-        puts "Début de la récupération des justificatifs"
-
-        justificatifs_edusign = response["result"]
-
-        puts "#{justificatifs_edusign.count} justificatifs ont été reçu"
-
-        justificatifs_edusign.each do |justificatif_edusign|
-
-            # Test justificatif_edusign["STUDENT_ID"] à retirer si ça ne peut jamais être vide côté Edusign
-            if justificatif_edusign["STUDENT_ID"] && etudiant_id = Etudiant.find_by(edusign_id: justificatif_edusign["STUDENT_ID"])&.id
-                justificatif = Justificatif.find_or_initialize_by(edusign_id: justificatif_edusign["ID"], etudiant_id: etudiant_id)
-                self.remplir_justificatif(justificatif, justificatif_edusign)
-            else
-                puts "Étudiant avec l'edusign_id n° #{justificatif_edusign["STUDENT_ID"]} pas trouvé. Le justificatif n'est pas récupéré."
-            end
-
-        end
-
-        puts "Importation des justificatifs terminée"
-    end
-
-    def remplir_justificatif(justificatif, justificatif_edusign)
-        justificatif.edusign_id = justificatif_edusign["ID"]
-        justificatif.commentaires = justificatif_edusign["COMMENT"]
-        justificatif.file_url = justificatif_edusign["FILE_URL"]
-        justificatif.edusign_created_at = justificatif_edusign["DATE_CREATION"].to_datetime + @time_zone_difference
-        justificatif.accepte_le = justificatif_edusign["REQUEST_DATE"].to_datetime + @time_zone_difference
-        justificatif.debut = justificatif_edusign["START"].to_datetime + @time_zone_difference
-        justificatif.fin = justificatif_edusign["END"].to_datetime + @time_zone_difference
-        justificatif.save
-
-        justificatif_edusign_id = justificatif_edusign["TYPE"]
-
-        # Correspond à une catégorie si elle existe chez nous, sinon nil
-        catégorie_name = Motif.catégories[justificatif_edusign_id]
-
-        if catégorie_name
-            # Pour la création des premiers motifs dans les catégories, si pas encore créé
-            create_motif(justificatif_edusign_id, catégorie_name)
-        else
-            # Pour la création d'un motif, si nouveau
-            create_motif(justificatif_edusign_id, get_motif_name_from_edusign_id(justificatif_edusign_id))
-        end
-
-        justificatif.motif_id = Motif.find_by(edusign_id: justificatif_edusign_id).id
-        justificatif.save
-    end
-
-    def get_motif_name_from_edusign_id(id)
-        self.get_motifs_from_edusign.each do |motif|
-            if motif["ID"] == id
-                return motif["NAME"]
-            end
-        end
-    end
-
-    def get_motifs_from_edusign
-        self.prepare_request_with_message("https://ext.edusign.fr/v1/justified-absence/absence-reason", 'Get')
-
-        response = self.get_response
-
-        if response["status"] == 'error'
-            puts response['message']
-            return
-        end
-
-        motifs_edusign = response["result"]
-
-        puts "#{motifs_edusign.count} motifs reçu"
-
-        motifs_edusign
-    end
-
-    def import_attendances
-        self.prepare_request_with_message("https://ext.edusign.fr/v1/course?start=#{(Date.today-90.days).iso8601}&end=#{Date.today.iso8601}", 'Get')
-
-        response = self.get_response
-
-        if response["status"] == 'error'
-            puts response["message"]
-            return
-        end
-
-        puts "Début de la récupération des présences"
-
-        cours_edusign = response["result"]
-
-        puts "#{cours_edusign.count} cours ont été reçu"
-
-        cours_edusign.each do |cour_edusign|
-
-            # Filtrer les cours avec un edusign_id
-            if cour = Cour.find_by(edusign_id: cour_edusign["ID"])
-
-                # STUDENTS dans les cours d'Edusign sont des attendances
-                cour_edusign["STUDENTS"].each do |attendance_edusign|
-
-                    # Cas où l'étudiant est créé côté Edusign ou l'étudiant recherché n'a pas d'edusign_id
-                    if etudiant = Etudiant.find_by(edusign_id: attendance_edusign["studentId"])
-                        attendance = Attendance.find_or_initialize_by(edusign_id: attendance_edusign["_id"], etudiant_id: etudiant.id, cour_id: cour.id)
-                        self.remplir_attendance(attendance, attendance_edusign)
-                    else
-                        puts "Étudiant avec l'edusign_id n° #{attendance_edusign["studentId"]} pas trouvé. L'attendance n'est pas récupérée."
-                    end
-                end
-            else
-                puts "Cour avec l'edusign_id n° #{cour_edusign["ID"]} pas trouvé. L'attendance n'est pas récupérée."
-            end
-        end
-
-        puts "Importation des présences terminée"
-    end
-
-    def remplir_attendance(attendance, attendance_edusign)
-        attendance.état = attendance_edusign["state"]
-        attendance.signée_le = attendance_edusign["timestamp"].to_datetime + @time_zone_difference if attendance_edusign["timestamp"]
-        attendance.justificatif_edusign_id = attendance_edusign["absenceId"]
-        attendance.retard = attendance_edusign["delay"]
-        attendance.exclu_le = attendance_edusign["excluded"].to_datetime + @time_zone_difference if attendance_edusign["excluded"]
-        attendance.signature = attendance_edusign["signature"]
-
-        if attendance_edusign["signatureEmail"] != nil
-            # Sauvegarde l'attendance pour pouvoir la retrouver si elle vient d'être créé
-            attendance.save
-
-            signature_email = SignatureEmail.find_by(attendance_id: attendance.id) || SignatureEmail.new(attendance_id: attendance.id)
-            signature_email.nb_envoyee = attendance_edusign["signatureEmail"]["nbSent"]
-            signature_email.requete_edusign_id = attendance_edusign["signatureEmail"]["requestId"]
-            signature_email.limite = attendance_edusign["signatureEmail"]["signUntil"].to_datetime + @time_zone_difference
-            signature_email.second_envoi = attendance_edusign["signatureEmail"]["secondSend"]
-            signature_email.envoi_email = attendance_edusign["signatureEmail"]["sendEmailDate"].to_datetime + @time_zone_difference
-            signature_email.save
-
-            attendance.signature_email_id = signature_email.id
-        else
-            SignatureEmail.find_by(id: attendance.signature_email_id)&.destroy
-            attendance.signature_email_id = nil
-        end
-
-        attendance.save
-    end
-
     def sync_formations(method)
         self.prepare_request_with_message("https://ext.edusign.fr/v1/group", method)
+        
         if @setup
             formations = self.get_all_elements_for_initialisation("Formation")
             puts "Début de l'ajout des formations (initialisation)"
@@ -517,7 +366,6 @@ class Edusign < ApplicationService
 
                 response = self.prepare_body_request(body).get_response
 
-                # TODO : Voir s'il n'y a pas d'autres status que "error" ou "success"
                 puts response["status"] == 'error' ?  "<strong>Erreur d'exportation de l'intervenant #{intervenant.id}, #{intervenant.nom_prenom} : #{response["message"]}</strong>" : "Exportation de l'intervenant réussie : #{intervenant.id}, #{intervenant.nom_prenom}"
 
                 if response["status"] == 'success'
@@ -788,6 +636,77 @@ class Edusign < ApplicationService
         return response
     end
 
+    def import_justificatifs
+        self.prepare_request_with_message("https://ext.edusign.fr/v1/justified-absence?page=0", 'Get')
+
+        response = self.get_response
+
+        if response["status"] == 'error'
+            puts response['message']
+            return
+        end
+
+        puts "Début de la récupération des justificatifs"
+
+        justificatifs_edusign = response["result"]
+
+        puts "#{justificatifs_edusign.count} justificatifs ont été reçu"
+
+        justificatifs_edusign.each do |justificatif_edusign|
+
+            # Test justificatif_edusign["STUDENT_ID"] à retirer si ça ne peut jamais être vide côté Edusign
+            if justificatif_edusign["STUDENT_ID"] && etudiant_id = Etudiant.find_by(edusign_id: justificatif_edusign["STUDENT_ID"])&.id
+                justificatif = Justificatif.find_or_initialize_by(edusign_id: justificatif_edusign["ID"], etudiant_id: etudiant_id)
+                self.remplir_justificatif(justificatif, justificatif_edusign)
+            else
+                puts "Étudiant avec l'edusign_id n° #{justificatif_edusign["STUDENT_ID"]} pas trouvé. Le justificatif n'est pas récupéré."
+            end
+
+        end
+
+        puts "Importation des justificatifs terminée"
+    end
+
+    def import_attendances
+        self.prepare_request_with_message("https://ext.edusign.fr/v1/course?start=#{(Date.today-90.days).iso8601}&end=#{Date.today.iso8601}", 'Get')
+
+        response = self.get_response
+
+        if response["status"] == 'error'
+            puts response["message"]
+            return
+        end
+
+        puts "Début de la récupération des présences"
+
+        cours_edusign = response["result"]
+
+        puts "#{cours_edusign.count} cours ont été reçu"
+
+        cours_edusign.each do |cour_edusign|
+
+            # Filtrer les cours avec un edusign_id
+            if cour = Cour.find_by(edusign_id: cour_edusign["ID"])
+
+                # STUDENTS dans les cours d'Edusign sont des attendances
+                cour_edusign["STUDENTS"].each do |attendance_edusign|
+
+                    # Cas où l'étudiant est créé côté Edusign ou l'étudiant recherché n'a pas d'edusign_id
+                    if etudiant = Etudiant.find_by(edusign_id: attendance_edusign["studentId"])
+                        attendance = Attendance.find_or_initialize_by(edusign_id: attendance_edusign["_id"], etudiant_id: etudiant.id, cour_id: cour.id)
+                        self.remplir_attendance(attendance, attendance_edusign)
+                    else
+                        puts "Étudiant avec l'edusign_id n° #{attendance_edusign["studentId"]} pas trouvé. L'attendance n'est pas récupérée."
+                    end
+                end
+            else
+                puts "Cour avec l'edusign_id n° #{cour_edusign["ID"]} pas trouvé. L'attendance n'est pas récupérée."
+            end
+        end
+
+        puts "Importation des présences terminée"
+    end
+
     def get_etat
         puts "=" * 100
         puts "===> Nombre d'éléments récupérés : #{@nb_recovered_elements}, nombre d'éléments envoyés : #{@nb_sended_elements}, nombre d'échecs : #{self.count_failure_elements}"
@@ -815,6 +734,33 @@ class Edusign < ApplicationService
 
     private
 
+    def remplir_justificatif(justificatif, justificatif_edusign)
+        justificatif.edusign_id = justificatif_edusign["ID"]
+        justificatif.commentaires = justificatif_edusign["COMMENT"]
+        justificatif.file_url = justificatif_edusign["FILE_URL"]
+        justificatif.edusign_created_at = justificatif_edusign["DATE_CREATION"].to_datetime + @time_zone_difference
+        justificatif.accepte_le = justificatif_edusign["REQUEST_DATE"].to_datetime + @time_zone_difference
+        justificatif.debut = justificatif_edusign["START"].to_datetime + @time_zone_difference
+        justificatif.fin = justificatif_edusign["END"].to_datetime + @time_zone_difference
+        justificatif.save
+
+        justificatif_edusign_id = justificatif_edusign["TYPE"]
+
+        # Correspond à une catégorie si elle existe chez nous, sinon nil
+        catégorie_name = Motif.catégories[justificatif_edusign_id]
+
+        if catégorie_name
+            # Pour la création des premiers motifs dans les catégories, si pas encore créé
+            create_motif(justificatif_edusign_id, catégorie_name)
+        else
+            # Pour la création d'un motif, si nouveau
+            create_motif(justificatif_edusign_id, get_motif_name_from_edusign_id(justificatif_edusign_id))
+        end
+
+        justificatif.motif_id = Motif.find_by(edusign_id: justificatif_edusign_id).id
+        justificatif.save
+    end
+
     def create_motif(justificatif_edusign_id, nom_motif)
         unless Motif.find_by(edusign_id: justificatif_edusign_id)
             motif = Motif.new
@@ -822,6 +768,60 @@ class Edusign < ApplicationService
             motif.edusign_id = justificatif_edusign_id
             motif.save
         end
+    end
+
+    def get_motif_name_from_edusign_id(id)
+        self.get_motifs_from_edusign.each do |motif|
+            if motif["ID"] == id
+                return motif["NAME"]
+            end
+        end
+    end
+
+    def get_motifs_from_edusign
+        self.prepare_request_with_message("https://ext.edusign.fr/v1/justified-absence/absence-reason", 'Get')
+
+        response = self.get_response
+
+        if response["status"] == 'error'
+            puts response['message']
+            return
+        end
+
+        motifs_edusign = response["result"]
+
+        puts "#{motifs_edusign.count} motifs reçu"
+
+        motifs_edusign
+    end
+
+    def remplir_attendance(attendance, attendance_edusign)
+        attendance.état = attendance_edusign["state"]
+        attendance.signée_le = attendance_edusign["timestamp"].to_datetime + @time_zone_difference if attendance_edusign["timestamp"]
+        attendance.justificatif_edusign_id = attendance_edusign["absenceId"]
+        attendance.retard = attendance_edusign["delay"]
+        attendance.exclu_le = attendance_edusign["excluded"].to_datetime + @time_zone_difference if attendance_edusign["excluded"]
+        attendance.signature = attendance_edusign["signature"]
+
+        if attendance_edusign["signatureEmail"] != nil
+            # Sauvegarde l'attendance pour pouvoir la retrouver si elle vient d'être créé
+            attendance.save
+
+            signature_email = SignatureEmail.find_by(attendance_id: attendance.id) || SignatureEmail.new(attendance_id: attendance.id)
+            signature_email.nb_envoyee = attendance_edusign["signatureEmail"]["nbSent"]
+            signature_email.requete_edusign_id = attendance_edusign["signatureEmail"]["requestId"]
+            signature_email.limite = attendance_edusign["signatureEmail"]["signUntil"].to_datetime + @time_zone_difference
+            signature_email.second_envoi = attendance_edusign["signatureEmail"]["secondSend"]
+            signature_email.envoi_email = attendance_edusign["signatureEmail"]["sendEmailDate"].to_datetime + @time_zone_difference
+            signature_email.save
+
+            attendance.signature_email_id = signature_email.id
+        else
+            SignatureEmail.find_by(id: attendance.signature_email_id)&.destroy
+            attendance.signature_email_id = nil
+        end
+
+        attendance.save
     end
 
     # Récupère le timezone de Paris sur un moment donné

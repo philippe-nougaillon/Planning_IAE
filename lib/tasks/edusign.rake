@@ -17,7 +17,7 @@ namespace :edusign do
       stream = capture_stdout do
         request = Edusign.new
 
-        puts "Lancement automatique de la synchronisatioin."
+        puts "Lancement automatique de la synchronisation."
 
         request.call
 
