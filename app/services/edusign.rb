@@ -11,19 +11,25 @@ class Edusign < ApplicationService
 
         # Déclaré ici pour éviter de synchroniser des éléments deux fois (à cause de la prochaine synchronisation qui se base sur le created_at de la synchronisation)
         @interval_end = Time.zone.now
+
+        # Par défaut, on considère qu'il n'y a pas de crash.
+        @crash = false
     end
 
     def call
-        # Necessaire pour créer des formations sans étudiants et des formations avec que des étudiants déjà créés sur Edusign
-        formations_ajoutés_ids = self.sync_formations("Post", nil)
+        # Necessaire pour créer des formations sans étudiants 
+        # et des formations avec que des étudiants déjà créés sur Edusign
+
+        formations_ajoutées_ids = self.sync_formations("Post", nil)
 
         etudiants_ajoutés_ids = self.sync_etudiants("Post", nil)
 
         self.sync_etudiants("Patch", etudiants_ajoutés_ids)
 
-        self.sync_formations("Patch", formations_ajoutés_ids)
+        self.sync_formations("Patch", formations_ajoutées_ids)
 
-        # Ajout des intervenants avant les cours, sinon les cours qui n'ont pas d'intervenant créé sur Edusign, ne seront pas créés
+        # Ajout des intervenants avant les cours, 
+        # sinon les cours qui n'ont pas d'intervenant créé sur Edusign, ne seront pas créés
         intervenants_ajoutés_ids = self.sync_intervenants("Post", nil)
 
         self.sync_intervenants("Patch", intervenants_ajoutés_ids)
@@ -82,12 +88,24 @@ class Edusign < ApplicationService
         @request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
     end
 
-    def get_response(without_message_response = false)
-        response = JSON.parse(@http.request(@request).read_body)
+    def get_response(debug_mode = true)
+        response = {}
 
-        if !without_message_response
-            puts "Lancement de la requête terminée : "
-            puts response
+        http_response = @http.request(@request)
+
+        # Si le code de réponse est un succes, on parse la réponse
+        if http_response.code.to_i == 200
+            response = JSON.parse(http_response.body)
+
+            if debug_mode
+                puts "Lancement de la requête terminée : "
+                puts response
+            end
+        else
+            # Si ce n'est pas un succes, on considère que c'est un crash, et qu'il faudra refaire une tentative
+            @crash = true
+            response["status"] = "error"
+            response["message"] = http_response.body
         end
 
         response
@@ -712,7 +730,7 @@ class Edusign < ApplicationService
         deleted_cours.each do |deleted_cour|
             edusign_id = deleted_cour.audited_changes["edusign_id"]
             self.prepare_request("https://ext.edusign.fr/v1/course/#{edusign_id}", "Get")
-            response = self.get_response(true)
+            response = self.get_response(false)
             if response["status"] == "success" && edusign_id != nil
                 edusign_ids << edusign_id
                 deleted_cours_to_sync_ids << deleted_cour.auditable_id
@@ -748,29 +766,6 @@ class Edusign < ApplicationService
         puts "Cours supprimés : #{nb_audited}"
 
         @nb_sended_elements += nb_audited
-    end
-
-    def get_etat
-        puts "=" * 100
-        puts "===> Nombre d'éléments récupérés : #{@nb_recovered_elements}, nombre d'éléments envoyés : #{@nb_sended_elements}, nombre d'échecs : #{self.count_failure_elements}"
-
-        # Modification de l'etat
-        if @nb_recovered_elements != 0
-            case self.count_failure_elements
-            when 0
-                0 # Success
-            when @nb_recovered_elements
-                2 # Echec
-            else
-                1 # Warning
-            end
-        else
-            0
-        end
-    end
-
-    def count_failure_elements
-        @nb_recovered_elements - @nb_sended_elements
     end
 
     def add_grouped_cours(cour_ids)
@@ -815,6 +810,31 @@ class Edusign < ApplicationService
         end
 
         return response
+    end
+
+    def get_etat
+        puts "=" * 100
+        puts "===> Nombre d'éléments récupérés : #{@nb_recovered_elements}, nombre d'éléments envoyés : #{@nb_sended_elements}, nombre d'échecs : #{self.count_failure_elements}"
+
+        # Modification de l'etat
+        if @crash
+            3 # Crash
+        elsif @nb_recovered_elements != 0
+            case self.count_failure_elements
+            when 0
+                0 # Success
+            when @nb_recovered_elements
+                2 # Echec
+            else
+                1 # Warning
+            end
+        else
+            0
+        end
+    end
+
+    def count_failure_elements
+        @nb_recovered_elements - @nb_sended_elements
     end
 
     private
