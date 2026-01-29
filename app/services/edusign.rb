@@ -20,23 +20,23 @@ class Edusign < ApplicationService
         # Necessaire pour créer des formations sans étudiants 
         # et des formations avec que des étudiants déjà créés sur Edusign
 
-        formations_ajoutées_ids = self.sync_formations("Post", nil)
+        self.sync_formations("Post")
 
-        etudiants_ajoutés_ids = self.sync_etudiants("Post", nil)
+        self.sync_etudiants("Post")
 
-        self.sync_etudiants("Patch", etudiants_ajoutés_ids)
+        self.sync_etudiants("Patch")
 
-        self.sync_formations("Patch", formations_ajoutées_ids)
+        self.sync_formations("Patch")
 
         # Ajout des intervenants avant les cours, 
         # sinon les cours qui n'ont pas d'intervenant créé sur Edusign, ne seront pas créés
-        intervenants_ajoutés_ids = self.sync_intervenants("Post", nil)
+        self.sync_intervenants("Post")
 
-        self.sync_intervenants("Patch", intervenants_ajoutés_ids)
+        self.sync_intervenants("Patch")
 
-        cours_ajoutés_ids = self.sync_cours("Post", nil)
+        self.sync_cours("Post")
 
-        self.sync_cours("Patch", cours_ajoutés_ids)
+        self.sync_cours("Patch")
 
         self.remove_deleted_and_unfollowed_cours_in_edusign
     end
@@ -160,7 +160,7 @@ class Edusign < ApplicationService
     end
 
     # Récupère tous les éléments déjà sur Edusign, qui ont été modifiés depuis la dernière synchronisation sur AIKKU Plann
-    def get_all_element_updated_since_last_sync(model, record_ids = nil)
+    def get_all_element_updated_since_last_sync(model)
         interval = self.get_interval_of_time
 
         formations_sent_to_edusign_ids = Formation.not_archived.sent_to_edusign_ids
@@ -169,22 +169,22 @@ class Edusign < ApplicationService
             model.where(
               updated_at: interval,
               send_to_edusign: true
-            ).where.not(edusign_id: nil).where.not(id: record_ids)
+            ).where.not(edusign_id: nil)
         elsif model == Etudiant
             model.where(
               formation_id: formations_sent_to_edusign_ids,
               updated_at: interval
-            ).where.not(edusign_id: nil).where.not(id: record_ids)
+            ).where.not(edusign_id: nil)
         elsif model == Cour
             model.where(
               formation_id: formations_sent_to_edusign_ids,
               updated_at: interval,
               no_send_to_edusign: [false, nil]
-              ).where.not(edusign_id: nil).where.not(id: record_ids)
+              ).where.not(edusign_id: nil)
               .where.not(intervenant_id: Intervenant.examens_ids + Intervenant.sans_intervenant)
         elsif model == Intervenant
             # Un intervenant peut ne plus avoir de cours avec des formations cobayes. Comme la requête permet de savoir qu'il est actif sur le planning, on l'update quand même sur Edusiugn.
-            model.where(updated_at: interval).where.not(edusign_id: nil).where.not(id: record_ids)
+            model.where(updated_at: interval).where.not(edusign_id: nil)
         end
     end
 
@@ -374,7 +374,7 @@ class Edusign < ApplicationService
         attendance.save
     end
 
-    def sync_formations(method, formations_ajoutés_ids = nil)
+    def sync_formations(method)
         self.prepare_request_with_message("https://ext.edusign.fr/v1/group", method)
         if @setup
             formations = self.get_all_elements_for_initialisation(Formation)
@@ -384,7 +384,7 @@ class Edusign < ApplicationService
                 formations = self.get_all_element_to_post(Formation)
                 puts "Début de l'ajout des formations"
             else
-                formations = self.get_all_element_updated_since_last_sync(Formation, formations_ajoutés_ids)
+                formations = self.get_all_element_updated_since_last_sync(Formation)
                 puts "Début de la modification des formations"
             end
         end
@@ -427,12 +427,9 @@ class Edusign < ApplicationService
         puts "Formations #{method == 'Post' ? 'ajoutées' : "modifiées"} : #{nb_audited}"
 
         @nb_sended_elements += nb_audited
-
-        # La liste des formations pour ne pas update celles qui ont été créées aujourd'hui
-        formations.pluck(:id) if method == "Post"
     end
 
-    def sync_etudiants(method, etudiants_ajoutés_ids = nil)
+    def sync_etudiants(method)
         self.prepare_request_with_message("https://ext.edusign.fr/v1/student", method)
 
         if @setup
@@ -443,7 +440,7 @@ class Edusign < ApplicationService
                 etudiants = self.get_all_element_to_post(Etudiant)
                 puts "Début de l'ajout des etudiants"
             else
-                etudiants = self.get_all_element_updated_since_last_sync(Etudiant, etudiants_ajoutés_ids)
+                etudiants = self.get_all_element_updated_since_last_sync(Etudiant)
                 puts "Début de la modification des etudiants"
             end
         end
@@ -486,14 +483,11 @@ class Edusign < ApplicationService
 
         puts "Exportation des étudiants terminée."
         puts "Etudiants #{method == 'Post' ? 'ajoutés' : "modifiés"} : #{nb_audited}"
-
+        
         @nb_sended_elements += nb_audited
-
-        # La liste des etudiants pour ne pas update ceux qui ont été créés aujourd'hui
-        etudiants.pluck(:id) if method == "Post"
     end
 
-    def sync_intervenants(method, intervenants_ajoutés_ids = nil)
+    def sync_intervenants(method)
         self.prepare_request_with_message("https://ext.edusign.fr/v1/professor", method)
 
         if @setup
@@ -504,7 +498,7 @@ class Edusign < ApplicationService
                 intervenants = self.get_all_element_to_post(Intervenant)
                 puts "Début de l'ajout des intervenants"
             else
-                intervenants = self.get_all_element_updated_since_last_sync(Intervenant, intervenants_ajoutés_ids)
+                intervenants = self.get_all_element_updated_since_last_sync(Intervenant)
                 puts "Début de la modification des intervenants"
             end
         end
@@ -551,14 +545,9 @@ class Edusign < ApplicationService
         puts "Intervenants #{method == 'Post' ? 'ajoutés' : "modifiés"} : #{nb_audited}"
 
         @nb_sended_elements += nb_audited
-
-        if method == "Post" && !@setup
-            # La liste des intervenants pour ne pas update ceux qui ont été créés aujourd'hui
-            return intervenants.pluck(:id)
-        end
     end
 
-    def sync_cours(method, cours_ajoutés_ids = nil)
+    def sync_cours(method)
         self.prepare_request_with_message("https://ext.edusign.fr/v1/course", method)
 
         if @setup
@@ -571,7 +560,7 @@ class Edusign < ApplicationService
                 puts "Début de l'ajout des cours"
                 cours_a_supprimer = Cour.none
             else
-                cours = self.get_all_element_updated_since_last_sync(Cour, cours_ajoutés_ids)
+                cours = self.get_all_element_updated_since_last_sync(Cour)
                 puts "Début de la modification des cours"
                 cours_a_supprimer = cours.where(etat: ["annulé", "reporté"])
             end
@@ -652,9 +641,6 @@ class Edusign < ApplicationService
         puts "Cours #{method == 'Post' ? 'ajoutés' : "modifiés"} #{cours_a_supprimer.any? ? '/ supprimés' : ''}: #{nb_audited}"
 
         @nb_sended_elements += nb_audited
-
-        # La liste des cours pour ne pas update ceux qui ont été créés aujourd'hui
-        cours_a_envoyer.pluck(:id) if method == "Post"
     end
 
     # Cet export est différent des autres exports, c'est une méthode Patch utilisé pour le changement de salle. Toutes les fonctions export ne sont plus utlisés, sauf export_cours
