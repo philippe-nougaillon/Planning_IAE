@@ -592,3 +592,6 @@ fr:
       title: "Sujet d'examen"
     deposer_done:
       title: "Sujet d'examen déposé"
+  responsabilites:
+    index:
+      title: "Responsabilités"

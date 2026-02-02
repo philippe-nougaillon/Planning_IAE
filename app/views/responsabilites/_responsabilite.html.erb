@@ -1,0 +1,14 @@
+<tr id="<%= dom_id responsabilite %>" class="hover border">
+  <td><%= time_ago_in_words responsabilite.updated_at %></td>
+  <td><%= l(responsabilite.debut) %></td>
+  <td><%= link_to "#{responsabilite.intervenant.nom_prenom} (#{responsabilite.intervenant.status})", intervenant_path(responsabilite.intervenant.slug || responsabilite.intervenant.id), class: 'hover:text-primary hover:underline' %></td>
+  <td>
+  <span><%= responsabilite.titre %></span>
+  </td>
+  <td style="border-left: .3rem solid <%= responsabilite.formation.positive_color %>">
+    <%= responsabilite.formation.abrg %>
+  </td>
+  <td class="text-right">
+    <%= responsabilite.heures %>
+  </td>
+</tr>
