@@ -41,9 +41,6 @@ class Cour < ApplicationRecord
   before_save :change_etat_si_salle
   before_save :annuler_salle_si_cours_est_annulé
 
-  around_update :check_send_commande_email
-  after_create :check_send_new_commande_email
-
   around_destroy :check_sujet_destroy, if: Proc.new { |cours| !cours.sujet_id.nil? }
 
   if ENV["SEND_EXAMEN_EMAILS"] == "true"
