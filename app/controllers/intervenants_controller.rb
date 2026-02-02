@@ -168,7 +168,7 @@ class IntervenantsController < ApplicationController
     respond_to do |format|
       format.json do
         render json:
-          Intervenant.intervenants_examens.include?(params[:intervenant_id].to_i)
+          Intervenant.examens_ids.include?(params[:intervenant_id].to_i)
       end
     end
   end
