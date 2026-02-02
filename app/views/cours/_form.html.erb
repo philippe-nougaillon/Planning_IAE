@@ -4,7 +4,7 @@
   <%= hidden_field_tag :from, params[:from] %>
 
   <div class="flex flex-col gap-4 mb-4">
-    <div data-controller="dispo" class="flex flex-col gap-4">
+    <div data-controller="dispo checkboxes-select-for-examen" class="flex flex-col gap-4">
       <%= hidden_field_tag :id, @cour.id, data: { "dispo-target": "id" } %>
 
       <div class="flex flex-wrap">
@@ -52,7 +52,11 @@
                                 class: "slim-select sm:w-1/2",
                                 data: {
                                   "dispo-target": "intervenant_id",
-                                  "action": (@cour.new_record? ? "change->dispo#show_dispo" : '') 
+                                  "checkboxes-select-for-examen-target": "intervenant_id",
+                                  "action": [
+                                    (@cour.new_record? ? "action-change->dispo#show_dispo" : ''),
+                                    " change->checkboxes-select-for-examen#select_checkboxes"
+                                  ].compact.join(" ")
                                 } %>
       </div>
 
@@ -79,7 +83,7 @@
       <div class="flex flex-wrap">
         <div class="sm:w-1/5"></div>
         <div class="sm:w-1/2 flex items-center gap-1">
-          <%= f.check_box :hors_service_statutaire %>
+          <%= f.check_box :hors_service_statutaire, data: {"checkboxes-select-for-examen-target": "hss"} %>
           <%= f.label :hors_service_statutaire, "Cours non rémunéré (Hors Service Statutaire)" %>
           <span class="hover:cursor-pointer" title="Cochez pour que les heures de cours ne soient pas imputées sur l'état de service de l'intervenant">
             <span class="material-symbols-outlined text-lg">
@@ -100,7 +104,7 @@
       <div class="flex flex-wrap">
         <div class="sm:w-1/5"></div>
         <div class="sm:w-1/2">
-          <%= f.check_box :no_send_to_edusign %>
+          <%= f.check_box :no_send_to_edusign, data: {"checkboxes-select-for-examen-target": "no_send_to_edusign"} %>
           <%= f.label :no_send_to_edusign, "Ne pas synchroniser le cours sur Edusign" %>
         </div>
       </div>

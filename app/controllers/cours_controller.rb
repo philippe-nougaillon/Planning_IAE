@@ -346,6 +346,10 @@ class CoursController < ApplicationController
                   .where(id: @action_ids)
                   .order(:debut)
 
+      if ["Générer Pochette Examen PDF", "Convocation étudiants PDF"].include?(params[:action_name])
+        @sujet = @cours.first.sujet
+      end
+
     else
       redirect_to cours_path, alert:'Veuillez choisir des cours et une action à appliquer !'
     end
@@ -541,11 +545,11 @@ class CoursController < ApplicationController
 
       when 'Convocation étudiants PDF'
         if @cours.count == 1 && @cours.first.examen?
-          étudiants = Etudiant.where(id: params[:etudiants_id].try(:keys))
+          étudiants = Etudiant.where(id: etudiants_selected_ids)
           if étudiants.any?
             étudiants.each do |étudiant|
               pdf = ExportPdf.new
-              pdf.convocation(@cours.first, étudiant, (params[:papier]=='1'), (params[:calculatrice]=='1'), (params[:ordi_tablette]=='1'), (params[:téléphone]=='1'), (params[:dictionnaire]=='1'))
+              pdf.convocation(@cours.first, étudiant, params[:papier], params[:calculatrice], params[:ordi_tablette], params[:téléphone], params[:dictionnaire], @cours.first.sujet&.commentaires)
               title = "Convocation #{@cours.first.type_examen} - #{@cours.first.nom_ou_ue}"
               mailer_response = EtudiantMailer.convocation(étudiant, pdf, @cours.first, title).deliver_now
               MailLog.create(subject: "Convocation UE##{@cours.first.code_ue}", user_id: current_user.id, message_id: mailer_response.message_id, to: étudiant.email, title: title)
@@ -610,10 +614,11 @@ class CoursController < ApplicationController
 
           send_data pdf.render, filename: filename, type: 'application/pdf'
         when "Générer Pochette Examen PDF"
-          if params[:etudiants_id]
+            etudiants_ids = etudiants_selected_ids
+          if etudiants_ids.any?
             filename = "Pochette_Examen_#{ Date.today }.pdf"
             pdf = ExportPdf.new
-            pdf.pochette_examen(@cours, params[:etudiants_id].try(:keys).count, params[:papier], params[:calculatrice], params[:ordi_tablette], params[:téléphone], params[:dictionnaire])
+            pdf.pochette_examen(@cours, etudiants_ids.count, params[:papier], params[:calculatrice], params[:ordi_tablette], params[:téléphone], params[:dictionnaire])
 
             send_data pdf.render, filename: filename, type: 'application/pdf'
           else 
@@ -886,6 +891,14 @@ class CoursController < ApplicationController
 
     def is_user_authorized
       authorize Cour
+    end
+
+    def etudiants_selected_ids
+      etudiants_ids = []
+      etudiants_ids += params[:etudiants_id].keys if params[:etudiants_id].present?
+      etudiants_ids += params[:etudiants_en_rattrapage_ids] if params[:etudiants_en_rattrapage_ids].present?
+      etudiants_ids.uniq!
+      etudiants_ids
     end
 
   end

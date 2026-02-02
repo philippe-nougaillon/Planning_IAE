@@ -826,7 +826,7 @@ class ExportPdf
         end
     end
 
-    def convocation(cour, étudiant, papier, calculatrice, ordi_tablette, téléphone, dictionnaire)
+    def convocation(cour, étudiant, papier, calculatrice, ordi_tablette, téléphone, dictionnaire, commentaires)
         is_examen_rattrapage = cour.intervenant_id == ENV["INTERVENANT_EXAMEN_RATTRAPRAGE_ID"].to_i
 
         font "OpenSans"
@@ -863,6 +863,14 @@ class ExportPdf
 
         move_down @margin_down * 2
         consignes(papier, calculatrice, ordi_tablette, téléphone, dictionnaire)
+
+        move_down @margin_down * 3
+
+        if commentaires
+            text "<color rgb='032E4D'><b>COMMENTAIRES</b></color>", inline_format: true
+            move_down @margin_down
+            text "<color rgb='032E4D'>#{commentaires}</color>", inline_format: true
+        end
 
     end
 

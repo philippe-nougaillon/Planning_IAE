@@ -164,6 +164,15 @@ class IntervenantsController < ApplicationController
     @sujets = @sujets.paginate(page: params[:page], per_page: 20)
   end
 
+  def examen
+    respond_to do |format|
+      format.json do
+        render json:
+          Intervenant.intervenants_examens.include?(params[:intervenant_id].to_i)
+      end
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_intervenant

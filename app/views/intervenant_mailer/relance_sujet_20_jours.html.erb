@@ -1,10 +1,17 @@
 <p style="margin-bottom: 0.5rem">
     Bonjour,
     <br><br>
-    Depuis notre premier mail en date du <%= l(@first_relance.to_date, format: :long) %>, nous sommes toujours dans l'attente de votre sujet pour l'examen de votre UE#<%= @code_ue %> <b><%= @ue %> (<%= @formation %>)</b> en date du <b><%= l(@debut.to_date, format: :long) %></b>.
+    Depuis notre premier mail en date du <%= l(@first_relance.to_date, format: :long) %>, nous sommes toujours dans l'attente de votre sujet pour l'examen de votre UE#<%= @code_ue %> <b><%= @ue %> (<%= @formations.join(', ') %>)</b> en date du <b><%= l(@debut.to_date, format: :long) %></b>.
     <br>
     Nous vous rappellons que le sujet doit être déposé <%= link_to 'ici', url_for(sujet_url(@sujet)) %>, en <b>format pdf avec la page de garde</b>, ou en copiant ce lien <%= url_for(sujet_url(@sujet)) %> dans votre navigateur,
+    <br><br>
+    Merci également de bien vouloir cocher les consignes et saisir le cas échéant un commentaire libre.
     <br>
+    <% if @examens_count > 1 %>
+        <br>
+        <b>Attention : <%= @examens_count %> examens sont liés à ce sujet mais le sujet n'est à déposer qu'une fois.</b>
+        <br>
+    <% end %>
 </p>
 
 <p style="margin-bottom: 0.5rem">

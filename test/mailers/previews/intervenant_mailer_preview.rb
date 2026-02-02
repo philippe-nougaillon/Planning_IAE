@@ -51,12 +51,6 @@ class IntervenantMailerPreview < ActionMailer::Preview
         IntervenantMailer.rejet_sujet(sujet, title).deliver_now
     end
 
-    def relance_sujet
-        sujet = Sujet.last
-        title = "[PLANNING] Relance de votre dépôt de sujet pour votre examen à l'IAE Paris du #{I18n.l sujet.cour.debut.to_date, format: :long} à #{I18n.l sujet.cour.debut, format: :heures_log}"
-        IntervenantMailer.relance_sujet(sujet, title).deliver_now
-    end
-
     def relance_sujet_30_jours
         sujet = Sujet.last
         title = "[PLANNING] RAPPEL 1 > demande SUJET pour EXAMEN du #{I18n.l sujet.cour.debut.to_date, format: :long}"
