@@ -156,7 +156,7 @@
                     <%= l r.debut %>
                   </td>
                   <td>
-                    <%= link_to(r.formation.nom, formations_path(r.formation_id), class: 'text-primary hover:underline') %>
+                    <%= link_to r.formation.nom, formation_path(r.formation_id), class: 'text-primary hover:underline' %>
                   </td>
                   <td>
                     <%= r.titre %>
