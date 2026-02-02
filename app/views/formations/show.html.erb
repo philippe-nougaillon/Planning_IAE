@@ -137,9 +137,10 @@
             <th>Code</th>
             <th>Intitulé</th>
             <th>Séances prévues</th>
-            <th>Séances réalisées</th>
+            <th>Séances planifiées</th>
+            <th>Examen planifié ?</th>
             <th>Heures prévues</th>
-            <th>Heures réalisées</th>
+            <th>Heures planifiées</th>
             <th></th>
           </tr>
         </thead>
@@ -149,11 +150,19 @@
           <% total_ue_réalisé = total_réalisé = 0.0 %>
           <% @formation.unites.each do | unite | %>
             <tr class="hover border">
-              <% cours = @formation.cours.where(code_ue: unite.code) %>
+              <% cours = @formation.cours.where(code_ue: unite.code).where.not(etat: ["reporté", "annulé"]) %>
               <td style="text-align: right;"><%= link_to_unless @formation.archive, unite.code, cours_path(formation_id: @formation, ue: unite.num), class: 'text-primary hover:underline' %></td>
               <td><%= unite.nom %></td>
               <td style="text-align: right;"><%= unite.séances %></td>
               <td style="text-align: right;"><%= link_to_unless @formation.archive, cours.count, cours_path(formation_id: @formation, ue: unite.num, filter: 'all'), class: 'text-primary hover:underline' %></td>
+              <td style="text-align: right;">
+                <% examens = cours.where(intervenant_id: ENV["INTERVENANT_EXAMEN_ID"]) %>
+                <% if examens.any? %>
+                  <span class="text-success cursor-help" title="<%= pluralize(examens.count, 'examen planifié', plural: 'examens planifiés') %>">OUI</span>
+                <% else %>
+                  <span class="text-error">NON</span>
+                <% end %>
+              </td>
               <td style="text-align: right;">
                 <%= total_prévu = unite.heures %> h
               </td>
@@ -173,7 +182,7 @@
 
         <tfoot>
           <tr>
-            <th colspan=4></th>
+            <th colspan=5></th>
             <th style="text-align: right;"><%= total_ue_prévu %> h</th>
             <th style="text-align: right;"><%= total_ue_réalisé %> h</th>
             <th></th>
