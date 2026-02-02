@@ -86,6 +86,6 @@ class ResponsabilitesController < ApplicationController
     end
 
     def sort_direction
-      %w[asc desc].include?(params[:direction_responsabilite]) ? params[:direction_responsabilite] : "asc"
+      %w[asc desc].include?(params[:direction_responsabilite]) ? params[:direction_responsabilite] : "desc"
     end
 end

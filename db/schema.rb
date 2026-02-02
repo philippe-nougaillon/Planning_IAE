@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_01_13_144318) do
+ActiveRecord::Schema[7.2].define(version: 2026_02_02_150857) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -470,6 +470,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_13_144318) do
     t.date "fin"
     t.integer "formation_id"
     t.string "commentaires"
+    t.bigint "activite_id"
+    t.index ["activite_id"], name: "index_responsabilites_on_activite_id"
     t.index ["formation_id"], name: "index_responsabilites_on_formation_id"
     t.index ["intervenant_id"], name: "index_responsabilites_on_intervenant_id"
   end
@@ -733,6 +735,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_01_13_144318) do
   add_foreign_key "presences", "cours"
   add_foreign_key "presences", "etudiants"
   add_foreign_key "presences", "intervenants"
+  add_foreign_key "responsabilites", "vacation_activites", column: "activite_id"
   add_foreign_key "signature_emails", "attendances", on_delete: :nullify
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade

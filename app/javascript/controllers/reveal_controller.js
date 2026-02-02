@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 // Connects to data-controller="reveal"
 export default class extends Controller {
-  static targets = ["pannel_ue", "pannel_etudiants", "pannel_vacations"]
+  static targets = ["pannel_ue", "pannel_etudiants", "pannel_vacations", "pannel_responsabilites"]
 
   connect() {
     // console.log("Hello, Stimulus reveal!", this.element)
@@ -18,5 +18,9 @@ export default class extends Controller {
 
   openPannelVacations() {
     this.pannel_vacationsTarget.classList.toggle("hidden")
+  }
+
+  openPannelResponsabilites() {
+    this.pannel_responsabilitesTarget.classList.toggle("hidden")
   }
 }

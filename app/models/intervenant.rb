@@ -23,6 +23,8 @@ class Intervenant < ApplicationRecord
 	has_many :dossiers
 	has_many :invits
 
+	PERMANENT_TYPES = %w[Permanent PR MCF MCF_HDR PRAG PAST].freeze
+
 	validates :nom, :prenom, :status, presence: true
 	validates :email, presence: true, format: Devise.email_regexp
 	#validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP } 
@@ -35,6 +37,7 @@ class Intervenant < ApplicationRecord
 	enum :status, [:CEV, :Permanent, :PR, :MCF, :MCF_HDR, :PAST, :PRAG, :Admin, :CEV_HSS, :CEV_ENS_C_CONTRACTUEL, :CEV_TIT_CONT_FP, :CEV_SAL_PRIV_IND]
 
 	default_scope { order(:nom, :prenom) } 
+	scope :permanents, -> { where(status: PERMANENT_TYPES) }
 
 	before_create :nom_with_underscore
 	after_create :create_user_access
@@ -118,7 +121,7 @@ class Intervenant < ApplicationRecord
 	end
 
 	def permanent?
-		['Permanent', 'PR','MCF','MCF_HDR','PRAG','PAST'].include?(self.status)
+		PERMANENT_TYPES.include?(self.status)
 	end
 
 	# Si c'est un examen IAE / examen rattrapage / Tiers-temps
