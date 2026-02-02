@@ -131,10 +131,10 @@
                 </span>
             </span>
         <% end %>
-        <% if current_user && current_user.role_number >= 5 && [169,1166].include?(cours.intervenant_id) %>
-            <% if sujet = Sujet.find_by(cour_id: cours.id) %>
-                <%= link_to sujet_path(sujet) do %>
-                    <span class="material-symbols-outlined text-xl text-<%= cours.color_sujet %> cursor-pointer" title="<%= ['déposé', 'validé', 'archivé'].include?(sujet.workflow_state)  ? "Sujet d'examen #{sujet.workflow_state}" :  sujet.sujet.attached? ? "Sujet d'examen non conforme" : "Sujet d'examen pas déposé !" %>">
+        <% if current_user && current_user.role_number >= 5 && ENV["INTERVENANT_EXAMENS_WITHOUT_TIERS_TEMPS_IDS"].split(',').map(&:to_i).include?(cours.intervenant_id) %>
+            <% if cours.sujet %>
+                <%= link_to sujet_path(cours.sujet) do %>
+                    <span class="material-symbols-outlined text-xl text-<%= cours.color_sujet %> cursor-pointer" title="<%= ['déposé', 'validé', 'archivé'].include?(cours.sujet.workflow_state)  ? "Sujet d'examen #{cours.sujet.workflow_state}" :  cours.sujet.sujet.attached? ? "Sujet d'examen non conforme" : "Sujet d'examen pas déposé !" %>">
                         docs
                     </span>
                 <% end %>

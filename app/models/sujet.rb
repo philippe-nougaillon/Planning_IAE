@@ -7,14 +7,16 @@ class Sujet < ApplicationRecord
   extend FriendlyId
   friendly_id :slug_candidates, use: :slugged
 
-  belongs_to :cour
   belongs_to :mail_log, optional: true
   
-  has_one :formation, through: :cour
+  has_many :cours
+  has_many :formations, through: :cours
 
   has_one_attached :sujet
 
   scope :ordered, -> {order(updated_at: :desc)}
+
+  before_destroy :delete_cours_association
 
   # WORKFLOW
 
@@ -128,6 +130,18 @@ class Sujet < ApplicationRecord
   def persist_workflow_state(new_value)
     self[:workflow_state] = new_value
     save!
+  end
+
+  def cour
+    self.cours.first
+  end
+
+  def delete_cours_association
+    # Pas de update_all pour gérer les cours non valides (c.f bypass)
+    self.cours.each do |cour|
+      cour.update(sujet_id: nil)
+      cour.save(validate: false)
+    end
   end
 
 private

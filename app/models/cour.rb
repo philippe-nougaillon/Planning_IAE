@@ -19,11 +19,12 @@ class Cour < ApplicationRecord
                                 reject_if: lambda{|attributes| attributes['catégorie'].blank? || attributes['description'].blank?},
                                 allow_destroy:true
   has_many :attendances, dependent: :destroy
-  has_one :sujet, dependent: :destroy
+  belongs_to :sujet, optional: true
 
   has_one_attached :document
 
   validates :debut, :formation_id, :intervenant_id, :duree, presence: true
+  validate :debut_year_must_make_sense
   validate :check_chevauchement_intervenant, if: Proc.new {|cours| !(cours.bypass?)}
   validate :check_chevauchement, if: Proc.new { |cours| cours.salle_id && !(cours.bypass?) }
   validate :jour_fermeture, if: Proc.new {|cours| !(cours.bypass?)}
@@ -39,6 +40,8 @@ class Cour < ApplicationRecord
 
   before_save :change_etat_si_salle
   before_save :annuler_salle_si_cours_est_annulé
+
+  around_destroy :check_sujet_destroy, if: Proc.new { |cours| !cours.sujet_id.nil? }
 
   if ENV["SEND_EXAMEN_EMAILS"] == "true"
     after_create   :send_new_examen_email, if: Proc.new { |cours| cours.examen? }
@@ -79,7 +82,7 @@ class Cour < ApplicationRecord
     end
 
     if user.role_number >= 5
-      actions << ["Changer d'état", "Changer de date", "Inviter", "Générer Feuille émargement PDF", "Générer Feuille émargement présences signées PDF", "Générer Pochette Examen PDF", "Convocation étudiants PDF"]
+      actions << ["Changer d'état", "Changer de date", "Inviter", "Générer Feuille émargement PDF", "Générer Feuille émargement présences signées PDF", "Générer Pochette Examen PDF", "Convocation étudiants PDF", "Regrouper sur une seule Feuille de présence Edusign"]
     end
     return actions.flatten.sort
   end
@@ -393,21 +396,12 @@ class Cour < ApplicationRecord
     end
   end
 
-  def sujet_manquant?
-    if [169, 1166].include?(self.intervenant_id)
-      sujet = Sujet.find_by(cour_id: self.id)
-      if !['déposé', 'validé', 'archivé'].include?(sujet&.workflow_state)
-        true
-      else
-        false
-      end
-    else
-      false
-    end
-  end
-
   def has_intervenant_vacataire?
     self.intervenant_id == ENV["SURVEILLANT_EXAMEN_VACATAIRE_ID"].to_i
+  end
+
+  def linked_edusign_cour
+    Cour.where(edusign_id: self.grouped_edusign_id).or(Cour.where(id: self.grouped_edusign_id)).first
   end
 
   private
@@ -445,6 +439,12 @@ class Cour < ApplicationRecord
       #  UserMailer.cours_changed(self.id, "wachnick.iae@univ-paris1.fr").deliver_later
       #end 
     end  
+
+    def debut_year_must_make_sense
+      if debut.year > 2100
+        errors.add(:debut, "du cours doit avoir un sens !")
+      end
+    end
 
     def reservation_dates_must_make_sense
       unless fin 
@@ -623,6 +623,14 @@ class Cour < ApplicationRecord
   def check_intervenant_not_also_appear_in_binome
     if self.intervenant == self.intervenant_binome
       errors.add(:cours, "ne peut pas avoir l'intervenant apparaitre aussi en tant que binôme !")
+    end
+  end
+
+  def check_sujet_destroy
+    sujet = self.sujet
+    yield
+    if sujet && sujet.cours.none?
+      sujet.destroy
     end
   end
 

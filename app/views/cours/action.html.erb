@@ -292,8 +292,8 @@
           <h4 class="text-xl font-bold"><%= c.formation.nom %></h4>
           <% c.formation.etudiants.order(:nom, :prénom).each do |etudiant| %>
             <span class="flex gap-1" data-action="click->action#click">
-              <%= check_box_tag "etudiants_id[#{etudiant.id}]", true, false, data: {"action-target": "source", "checkbox-select-all-target": "checkbox"} %>
-              <%= etudiant.nom_prénom %>
+              <%= check_box_tag "etudiants_id[#{etudiant.id}]", true, false, data: {"action-target": "source", "checkbox-select-all-target": "checkbox"}, class: 'hover:cursor-pointer' %>
+              <%= label_tag "etudiants_id[#{etudiant.id}]", etudiant.nom_prénom, class: 'hover:cursor-pointer' %>
             </span>
           <% end %>
           <br>
@@ -309,23 +309,28 @@
       </div>
     <% elsif ["Générer Pochette Examen PDF", "Convocation étudiants PDF"].include?(params[:action_name]) %>
       <% wrong_parameter = false %>
+
+      
       <% if @cours.count == 1 && @cours.first.examen? %>
-        <h3 class="text-2xl mt-4">Sélectionnez les options d'examens</h3>
+        Étudiants d'autres promotions :
+        <%= select_tag :etudiants_en_rattrapage_ids, options_from_collection_for_select(Etudiant.where.not(formation_id: @cours.first.formation_id), :id, :nom_prénom), multiple: true, class: 'slim-select' %>
+
+        <h3 class="text-2xl mt-4">Sélectionnez les consignes d'examens</h3>
         <i>Cochez les options autorisées.</i>
         <br><br>
-        <%= check_box_tag :papier %> 
+        <%= check_box_tag :papier, @sujet&.papier, @sujet&.papier %> 
         <%= label_tag :papier, "Papiers autorisés ?" %>
         <br>
-        <%= check_box_tag :calculatrice %>
+        <%= check_box_tag :calculatrice, @sujet&.calculatrice, @sujet&.calculatrice %>
         <%= label_tag :calculatrice, "Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission autorisés ?" %>
         <br>
-        <%= check_box_tag :ordi_tablette %>
+        <%= check_box_tag :ordi_tablette, @sujet&.ordi_tablette, @sujet&.ordi_tablette %>
         <%= label_tag :ordi_tablette, "Ordinateurs et tablettes autorisés ?" %>
         <br>
-        <%= check_box_tag :téléphone %>
+        <%= check_box_tag :téléphone, @sujet&.téléphone, @sujet&.téléphone %>
         <%= label_tag :téléphone, "Téléphones portables autorisés ?" %>
         <br>
-        <%= check_box_tag :dictionnaire %>
+        <%= check_box_tag :dictionnaire, @sujet&.dictionnaire, @sujet&.dictionnaire %>
         <%= label_tag :dictionnaire, "Dictionnaires autorisés ?" %>
         <br><br>
       <% else %>
@@ -338,6 +343,8 @@
         <% end %>
       <% end %>
     <% end %>
+  <% elsif params[:action_name] == "Regrouper sur une seule Feuille de présence Edusign" %>
+    <i>Attention : cette action va créer une seule feuille de présence pour tous les étudiants sur Edusign. La Synchronisation se fera dans la journée. Les modifications ultérieures ne seront pas prises en compte sur Edusign.</i>
   <% end %>
 
   <div class="flex flex-wrap mb-12 mt-4">

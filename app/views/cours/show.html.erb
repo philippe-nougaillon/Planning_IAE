@@ -52,6 +52,10 @@
       <h4 class="text-xl">
         <small class="text-secondary">Intervenant</small><br>
         <%= link_to @cour.intervenant.nom_prenom, @cour.intervenant, class: 'text-primary hover:underline' %>
+        <% if @cour.intervenant_binome %>
+          <br>
+          <%= link_to @cour.intervenant_binome.nom_prenom, @cour.intervenant_binome, class: 'text-primary hover:underline' %>
+        <% end %>
       </h4>
     </div>
   </div>

@@ -17,7 +17,9 @@
   <% end %>
   <td style="border-left: .3rem solid <%= sujet.cour.formation.positive_color %>">
     <% if policy(Formation).show? %>
-      <%= link_to sujet.cour.formation.nom_nbr_etudiants, sujet.cour.formation, class: 'text-primary hover:underline' %>
+      <% sujet.formations.each do |formation| %>
+        <%= link_to formation.nom_nbr_etudiants, formation, class: 'text-primary hover:underline' %>
+      <% end %>
     <% else %>
       <%= sujet.cour.formation.nom %>
     <% end %>
