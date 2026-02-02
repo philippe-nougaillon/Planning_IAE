@@ -5,7 +5,7 @@ namespace :examen do
 
     examens_groupe = Cour
                 .where("DATE(cours.debut) >= ?", Date.new(2025,12,01))
-                .where(intervenant_id: [169, 1166])
+                .where(intervenant_id: ENV["INTERVENANT_EXAMENS_WITHOUT_TIERS_TEMPS_IDS"].split(',').map(&:to_i))
                 .order(:debut)
                 .group_by { |cour| [cour.debut, cour.intervenant_binome_id, cour.nom] }
 
@@ -37,7 +37,7 @@ namespace :examen do
   end
 
   task archiver_sujet_passe: :environment do
-    examen_yesterday = Cour.where("DATE(cours.fin) < ?", Date.today).where(intervenant_id: [169, 1166])
+    examen_yesterday = Cour.where("DATE(cours.fin) < ?", Date.today).where(intervenant_id: ENV["INTERVENANT_EXAMENS_WITHOUT_TIERS_TEMPS_IDS"].split(',').map(&:to_i))
     examen_yesterday.each do |cour|
       if sujet = cour.sujet
         # Archive le sujet des examens passés

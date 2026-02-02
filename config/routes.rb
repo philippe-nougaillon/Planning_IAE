@@ -145,6 +145,7 @@ Rails.application.routes.draw do
     get :export_vacations
     get :export_etat_liquidatif_collectif
     get :export_codir
+    get :export_cac
 
     get :swap_intervenant
     get :etats_services
@@ -163,8 +164,6 @@ Rails.application.routes.draw do
     get :acces_intervenants
     get :commandes
     get :commande_fait
-    get :commandes_v2
-    get :commande_fait_v2
     get :edusign
     # get :synchronisation_edusign
     # get :initialisation_edusign
@@ -183,6 +182,7 @@ Rails.application.routes.draw do
     post :export_vacations_do
     post :export_etat_liquidatif_collectif_do
     post :export_codir_do
+    post :export_cac_do
     post :swap_intervenant_do
     post :taux_occupation_jours_do
     post :taux_occupation_salles_do

@@ -126,7 +126,7 @@ class Edusign < ApplicationService
               formation_id: formations_sent_to_edusign_ids,
               edusign_id: nil,
               no_send_to_edusign: [false, nil]
-            ).where.not(intervenant_id: Intervenant.intervenants_examens + Intervenant.sans_intervenant)
+            ).where.not(intervenant_id: Intervenant.examens_ids + Intervenant.sans_intervenant)
         elsif model == Intervenant
 
             # On sélectionne que les intervenants qui sont liés à une formation qui doit être sur Edusign.
@@ -137,7 +137,7 @@ class Edusign < ApplicationService
               no_send_to_edusign: [false, nil]
             ).pluck(:intervenant_id, :intervenant_binome_id).flatten.compact.uniq
 
-            model.where(id: intervenant_ids, edusign_id: nil).where.not(id: Intervenant.intervenants_examens + Intervenant.sans_intervenant)
+            model.where(id: intervenant_ids, edusign_id: nil).where.not(id: Intervenant.examens_ids + Intervenant.sans_intervenant)
         end
     end
 
@@ -163,7 +163,7 @@ class Edusign < ApplicationService
               updated_at: interval,
               no_send_to_edusign: [false, nil]
               ).where.not(edusign_id: nil).where.not(id: record_ids)
-              .where.not(intervenant_id: Intervenant.intervenants_examens + Intervenant.sans_intervenant)
+              .where.not(intervenant_id: Intervenant.examens_ids + Intervenant.sans_intervenant)
         elsif model == Intervenant
             # Un intervenant peut ne plus avoir de cours avec des formations cobayes. Comme la requête permet de savoir qu'il est actif sur le planning, on l'update quand même sur Edusiugn.
             model.where(updated_at: interval).where.not(edusign_id: nil).where.not(id: record_ids)
@@ -183,7 +183,7 @@ class Edusign < ApplicationService
               edusign_id: nil,
               no_send_to_edusign: [false, nil]
             ).where("debut >= ?", DateTime.now)
-              .where.not(intervenant_id: Intervenant.intervenants_examens + Intervenant.sans_intervenant)
+              .where.not(intervenant_id: Intervenant.examens_ids + Intervenant.sans_intervenant)
         elsif model == Etudiant
             model.where(
               formation_id: formations_sent_to_edusign_ids,
@@ -200,7 +200,7 @@ class Edusign < ApplicationService
               no_send_to_edusign: [false, nil]
             ).where("debut >= ?", DateTime.now).pluck(:intervenant_id, :intervenant_binome_id).flatten.compact.uniq
 
-            model.where(id: intervenant_ids, edusign_id: nil).where.not(id: Intervenant.intervenants_examens + Intervenant.sans_intervenant)
+            model.where(id: intervenant_ids, edusign_id: nil).where.not(id: Intervenant.examens_ids + Intervenant.sans_intervenant)
         end
     end
 
@@ -692,7 +692,7 @@ class Edusign < ApplicationService
         request_base = Cour.where.not(edusign_id: nil)
         condition_1 = request_base.where.not(formation_id: Formation.not_archived.sent_to_edusign_ids)
         condition_2 = request_base.where(no_send_to_edusign: true)
-        condition_3 = request_base.joins(:intervenant).where(intervenant: { id: Intervenant.intervenants_examens })
+        condition_3 = request_base.joins(:intervenant).where(intervenant: { id: Intervenant.examens_ids })
 
         # Récupération des ids des cours récupérés
         cours_to_remove_in_edusign_ids = condition_1.or(condition_2).pluck(:id) + condition_3.pluck(:id)

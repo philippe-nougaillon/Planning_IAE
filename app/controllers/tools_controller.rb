@@ -919,6 +919,20 @@ class ToolsController < ApplicationController
     send_data file_contents.string.force_encoding('binary'), filename: filename
   end
 
+  def export_cac
+    params[:période] ||= AppConstants::PÉRIODE
+  end
+
+  def export_cac_do
+    book = ExportCacToXls.new(params[:période]).call
+    filename = "Export_cac.xls"
+
+    file_contents = StringIO.new
+    book.write file_contents # => Now file_contents contains the rendered file output
+    send_data file_contents.string.force_encoding('binary'), filename: filename
+  end
+
+
   def audits
     @audits = Audited::Audit.order("id DESC")
     @types  = Audited::Audit.pluck(:auditable_type).uniq.sort
@@ -1110,8 +1124,8 @@ class ToolsController < ApplicationController
     # Créer des créneaux vides sur toutes une année pour une formation
     # Permet de faire des réservations au nom de l'intervenant 'A CONFIRMER'
 
-    if Intervenant.exists?(445)
-      _intervenant = Intervenant.find(445) # A CONFIRMER
+    if Intervenant.exists?(Intervenant.a_confirmer_id)
+      _intervenant = Intervenant.find(Intervenant.a_confirmer_id) # A CONFIRMER
       _date_debut = Date.parse(params[:date_debut])
       _date_fin = Date.parse(params[:date_fin])
       _formation = Formation.not_archived.find(params[:formation_id])
@@ -1165,7 +1179,7 @@ class ToolsController < ApplicationController
 
       flash[:notice] = "#{ @ids_ok.count } cours créés"
     else
-      flash[:alert] = "L'intervenant générique 'A CONFIRMER' (445) doit exister !"
+      flash[:alert] = "L'intervenant générique 'A CONFIRMER' (#{Intervenant.a_confirmer_id}) doit exister !"
     end
 
   end
@@ -1211,7 +1225,7 @@ class ToolsController < ApplicationController
   def audit_cours
     # Afficher les cours 'planifiés' 
     # entre deux dates
-    # créés par un utilisateur autre que Thierry.D (#41)
+    # créés par un utilisateur autre que par l'admin de l'accueil
     
     params[:start_date] ||= Date.today
     params[:end_date] ||= Date.today + 6.months
@@ -1223,8 +1237,8 @@ class ToolsController < ApplicationController
       @date_fin = params[:end_date]
     end
 
-    # ids des cours créés par utilisateur autre que Thierry.D (#41)
-    id_cours = Audited::Audit.where(auditable_type: 'Cour').where.not(user_id: 41).pluck(:auditable_id).uniq
+    # ids des cours créés par utilisateur autre que par l'admin de l'accueil
+    id_cours = Audited::Audit.where(auditable_type: 'Cour').where.not(user_id: ENV["USER_WITHOUT_AUDIT_IDS"].split(',').map(&:to_i)).pluck(:auditable_id).uniq
 
     # vérifie que la date de début de cours est dans la période observée
     @cours = Cour.where("id IN (?)", id_cours)
@@ -1254,7 +1268,7 @@ class ToolsController < ApplicationController
     surveillant = params[:surveillant]
     @cumuls = {}
     @examens = Cour
-                  .where("intervenant_id IN (:surveillants) OR intervenant_binome_id IN (:surveillants)", {surveillants: [169, 1166, 522, 1314]} )
+                  .where("intervenant_id IN (:surveillants) OR intervenant_binome_id IN (:surveillants)", {surveillants: Intervenant.surveillants} )
                   .where("commentaires like '%[%'")
                   .where("debut between ? and ?", @start_date, @end_date.to_date + 1.day)
                   .includes(:formation)
@@ -1273,6 +1287,14 @@ class ToolsController < ApplicationController
                   type: 'application/pdf',
                   disposition: 'inline'	
       end
+
+      format.xls do
+        book = VacationsAdministrativesToXls.new(@examens, @start_date, @end_date).call
+        file_contents = StringIO.new
+        book.write file_contents # => Now file_contents contains the rendered file output
+        filename = "Export_Vacations_Administratives_du_#{@start_date}_au_#{@end_date}.xls"
+        send_data file_contents.string.force_encoding('binary'), filename: filename
+      end
     end
 
   end
@@ -1289,7 +1311,7 @@ class ToolsController < ApplicationController
     surveillant = params[:surveillant]
     @cumuls = {}
     @examens = Cour
-                  .where("intervenant_id IN (:surveillants) OR intervenant_binome_id IN (:surveillants)", {surveillants: [169, 1166, 522, 1314]} )
+                  .where("intervenant_id IN (:surveillants) OR intervenant_binome_id IN (:surveillants)", {surveillants: Intervenant.surveillants} )
                   .joins(:options).where(options: {catégorie: :surveillance})
                   .where("options.description LIKE '%[%'")
                   .where("debut BETWEEN ? AND ?", @start_date, @end_date.to_date + 1.day)
@@ -1308,6 +1330,14 @@ class ToolsController < ApplicationController
                   filename: filename.concat('.pdf'),
                   type: 'application/pdf',
                   disposition: 'inline'	
+      end
+
+      format.xls do
+        book = VacationsAdministrativesV2ToXls.new(@examens, @start_date, @end_date).call
+        file_contents = StringIO.new
+        book.write file_contents # => Now file_contents contains the rendered file output
+        filename = "Export_Vacations_Administratives_V2_du_#{@start_date}_au_#{@end_date}.xls"
+        send_data file_contents.string.force_encoding('binary'), filename: filename
       end
     end
 
@@ -1384,7 +1414,7 @@ class ToolsController < ApplicationController
   end
 
   def rappel_des_examens
-    @examens = Intervenant.where(id: [169, 522, 1166])
+    @examens = Intervenant.where(id: Intervenant.examens_ids)
     @formations = Formation.not_archived.ordered
   end
 
@@ -1462,32 +1492,11 @@ class ToolsController < ApplicationController
     end
 
     if params[:search_cmd].present?
-      @commandes = @commandes.where("cours.commentaires ILIKE ?", "%#{params[:search_cmd]}%")
-    end
-  end
-
-  def commande_fait
-    commande = Cour.find(params[:commande_id])
-    commande.commentaires.concat("\r\n\r\n")
-    commande.commentaires.concat("Fait le #{l DateTime.now, format: :short}, #{current_user.nom_et_prénom}")
-    commande.save
-
-    redirect_to request.referrer, notice: "Commande traitée avec succès"
-  end
-
-  def commandes_v2
-    if params[:archive].present?
-      @commandes = Cour.commandes_archivées_v2
-    else
-      @commandes = Cour.commandes_v2
-    end
-
-    if params[:search_cmd].present?
       @commandes = @commandes.where("options.description ILIKE ?", "%#{params[:search_cmd]}%")
     end
   end
 
-  def commande_fait_v2
+  def commande_fait
     commande = Cour.find(params[:commande_id]).options.commande.first
     commande.fait = true
     commande.description.concat("\r\n\r\n")
@@ -1523,24 +1532,6 @@ class ToolsController < ApplicationController
 
   end
 
-  # def synchronisation_edusign
-  # end
-
-  # def synchronisation_edusign_do
-  #   EdusignJob.perform_later("Sync log", current_user.id)
-
-  #   redirect_to tools_synchronisation_edusign_path, notice: "Lancement de la synchronisation effectuée."
-  # end
-
-  # def initialisation_edusign
-  # end
-
-  # def initialisation_edusign_do
-  #   EdusignJob.perform_later("Initialisation", current_user.id)
-
-  #   redirect_to tools_initialisation_edusign_path, notice: "Lancement de l'initialisation effectuée."
-  # end
-
   def nouvelle_saison_rh
   end
 
@@ -1574,222 +1565,6 @@ class ToolsController < ApplicationController
   end
 
   private
-
-  # def ajout_etudiants
-
-  #   request = Edusign.new("https://ext.edusign.fr/v1/student", 'Post')
-
-  #   etudiants_added = request.get_all_element_to_post(Etudiant).where(edusign_id: nil)
-
-  #   etudiants_added.each do |etudiant|
-  #     body =
-  #       {"student":{
-  #         "FIRSTNAME": etudiant.prénom,
-  #         "LASTNAME": etudiant.nom,
-  #         "EMAIL": etudiant.email,
-  #         "API_ID": etudiant.id,
-  #       }}
-
-  #     response = request.prepare_body_request(body).get_response
-
-  #     if response["status"] == 'error'
-  #       flash[:alert] = response["message"]
-  #       break
-  #     end
-
-  #     etudiant.edusign_id = response["result"]["ID"]
-
-  #     etudiant.save
-  #   end
-
-  #   ajout_formations(etudiants)
-
-  # end
-
-  # def modification_etudiants
-
-  #   request = Edusign.new("https://ext.edusign.fr/v1/student", 'Patch')
-
-  #   etudiants_updated = request.get_all_element_updated_since_last_sync(Etudiant).where("created_at != updated_at")
-
-  #   etudiants_updated.each do |etudiant|
-  #     body =
-  #       {"student":{
-  #         "ID": etudiant.edusign_id,
-  #         "FIRSTNAME": etudiant.prénom,
-  #         "LASTNAME": etudiant.nom,
-  #         "EMAIL": etudiant.email,
-  #         "GROUPS": Formation.not_archived.find(etudiant.formation_id).edusign_id
-  #       }}
-
-  #     response = request.prepare_body_request(body).get_response
-
-  #     if response["status"] == 'error'
-  #       flash[:alert] = response["message"]
-  #       break
-  #     end
-  #   end
-  # end
-
-  # def ajout_formations(etudiants)
-
-  #   request = Edusign.new("https://ext.edusign.fr/v1/group", 'Post')
-
-  #   formations = Formation.not_archived.where(id: etudiants.pluck(:formation_id).uniq).where(edusign_id: nil)
-
-  #   formations.each do |formation|
-
-  #     body =
-  #       {"group":{
-  #         "NAME": formation.nom,
-  #         "STUDENTS": formation.etudiants.pluck(:edusign_id).compact
-  #       }}
-
-  #     response = request.prepare_body_request(body).get_response
-
-  #     if response["status"] == 'error'
-  #       flash[:alert] += response["message"]
-  #       break
-  #     end
-
-  #     formation.edusign_id = response["result"]["ID"]
-
-  #     formation.save
-  #   end
-  # end
-
-  # def modification_formations
-  #   request = Edusign.new("https://ext.edusign.fr/v1/group/", 'Patch')
-
-  #   formations_updated = request.get_all_element_updated_since_last_sync(Formation)
-
-  #   formations_updated.each do |formation|
-  #     body =
-  #       {"group":{
-  #         "ID": formation.edusign_id,
-  #         "NAME": formation.nom,
-  #         "STUDENTS": formation.etudiants.pluck(:edusign_id).compact
-  #       }}
-
-  #     response = request.prepare_body_request(body).get_response
-
-  #     if response["status"] == 'error'
-  #       flash[:alert] = response["message"]
-  #       break
-  #     end
-  #   end
-  # end
-
-  # def ajout_intervenants
-
-  #   request = Edusign.new("https://ext.edusign.fr/v1/professor", 'Post')
-
-  #   intervenants_added = request.get_all_element_to_post(Intervenant)
-
-  #   intervenants_added.each do |intervenant|
-  #     body =
-  #       {"professor":{
-  #         "FIRSTNAME": intervenant.prenom,
-  #         "LASTNAME": intervenant.nom,
-  #         "EMAIL": intervenant.email,
-  #         "API_ID": intervenant.id,
-  #         "dontSendCredentials": true
-  #       }}
-
-  #     response = request.prepare_body_request(body).get_response
-
-  #     if response["status"] == 'error'
-  #       flash[:alert] = response["message"]
-  #       break
-  #     end
-
-  #     intervenant.edusign_id = response["result"]["ID"]
-
-  #     intervenant.save
-  #   end
-  # end
-
-  # def modification_intervenants
-
-  #   request = Edusign.new("https://ext.edusign.fr/v1/professor", 'Patch')
-
-  #   intervenants_updated = request.get_all_element_updated_since_last_sync(Intervenant)
-
-  #   intervenants_updated.each do |intervenant|
-  #     body =
-  #       {"professor":{
-  #         "ID": intervenant.edusign_id,
-  #         "FIRSTNAME": intervenant.prenom,
-  #         "LASTNAME": intervenant.nom,
-  #         "EMAIL": intervenant.email
-  #       }}
-
-  #     response = request.prepare_body_request(body).get_response
-
-  #     if response["status"] == 'error'
-  #       flash[:alert] = response["message"]
-  #       break
-  #     end
-  #   end
-  # end
-
-  # def ajout_cours
-
-  #   request = Edusign.new("https://ext.edusign.fr/v1/course", 'Post')
-
-  #   cours_added = request.get_all_element_to_post(Cour)
-
-  #   cours_added.each do |cours|
-  #     body =
-  #       {"course":{
-  #         "NAME": cours.nom.presence || 'sans nom',
-  #         "START": cours.debut - 1.hour,
-  #         "END": cours.fin - 1.hour,
-  #         "PROFESSOR": Intervenant.find(cours.intervenant_id).edusign_id,
-  #         "API_ID": cours.id,
-  #         "NEED_STUDENTS_SIGNATURE": true,
-  #         "SCHOOL_GROUP": [cours.formation.edusign_id]
-  #       }}
-
-  #     response = request.prepare_body_request(body).get_response
-
-  #     if response["status"] == 'error'
-  #       flash[:alert] = response["message"]
-  #       break
-  #     end
-
-  #     cours.edusign_id = response["result"]["ID"]
-
-  #     cours.save
-  #   end
-  # end
-
-  # def modification_cours
-  #   request = Edusign.new("https://ext.edusign.fr/v1/course", 'Patch')
-
-  #   cours_updated = request.get_all_element_updated_since_last_sync(Cour)
-
-  #   cours_updated.each do |cours|
-  #     body =
-  #       {"course":{
-  #         "ID": cours.edusign_id,
-  #         "NAME": cours.nom,
-  #         "START": cours.debut - 1.hour,
-  #         "END": cours.fin - 1.hour,
-  #         "PROFESSOR": Intervenant.find(cours.intervenant_id).edusign_id,
-  #         "NEED_STUDENTS_SIGNATURE": true,
-  #         "editSurveys": false,
-  #         "SCHOOL_GROUP": [cours.formation.edusign_id]
-  #       }}
-
-  #     response = request.prepare_body_request(body).get_response
-
-  #     if response["status"] == 'error'
-  #       flash[:alert] = response["message"]
-  #       break
-  #     end
-  #   end
-  # end
 
     def is_user_authorized
       authorize :tool

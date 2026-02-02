@@ -21,7 +21,6 @@
           <% end %>
           Le <%= l(@sujet.cour.debut, format: :long) %>
         </p>
-
         <p class="mb-4">
           <strong>Formation(s)</strong>
           <br>
@@ -127,8 +126,9 @@
                 Aucun sujet pour l'instant.
                 <% if @sujet.can_déposer? %>
                   <p class="mt-8 mb-4">Vous pouvez ajouter vous-même le sujet si l'intervenant vous l'a transmi autrement</p>
-                  <%= render "partials/script_accept_pdf" %>
+                  <%= render "partials/script_accept_file_type", id_form: "sujet_form", id_file_input: "sujet_sujet", file_type_accepted: 'application/pdf', file_type_for_alert: 'PDF' %>
                   <%= f.file_field :sujet, required: true, label: 'Fichier PDF', accept: 'application/pdf', class: 'file-input file-input-bordered file-input-sm file-input-success flex-1' %>
+                  <%= render "partials/script_accept_file_type", id_form: "sujet_form", id_file_input: "sujet_sujet", file_type_accepted: 'application/pdf', file_type_for_alert: 'PDF' %>
                   <br>
 
                   <div class="mt-8 mb-4">
@@ -416,7 +416,7 @@
         <% end %>
 
         <% if @sujet.can_déposer? %>
-          <%= render "partials/script_accept_pdf" %>
+          <%= render "partials/script_accept_file_type", id_form: "sujet_form", id_file_input: "sujet_sujet", file_type_accepted: 'application/pdf', file_type_for_alert: 'PDF' %>
             <%= f.file_field :sujet, required: true, label: 'Fichier PDF', accept: 'application/pdf', class: 'file-input file-input-bordered file-input-sm file-input-success flex-1' %>
             <br>
 

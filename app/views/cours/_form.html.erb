@@ -13,6 +13,7 @@
                                 value: @cour.debut.strftime("%Y-%m-%dT%H:%M"), 
                                 type: "datetime-local", 
                                 class: 'input input-bordered input-sm w-full sm:w-1/2', 
+                                max: "9999-12-31T23:59",
                                 required: true,
                                 data: { "dispo-target": "date" } %>
       </div>

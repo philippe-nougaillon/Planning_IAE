@@ -24,6 +24,7 @@ class Cour < ApplicationRecord
   has_one_attached :document
 
   validates :debut, :formation_id, :intervenant_id, :duree, presence: true
+  validate :debut_year_must_make_sense
   validate :check_chevauchement_intervenant, if: Proc.new {|cours| !(cours.bypass?)}
   validate :check_chevauchement, if: Proc.new { |cours| cours.salle_id && !(cours.bypass?) }
   validate :jour_fermeture, if: Proc.new {|cours| !(cours.bypass?)}
@@ -32,6 +33,7 @@ class Cour < ApplicationRecord
   validate :check_invits_en_cours
   validate :check_hss
   validate :check_intervenant_not_also_appear_in_binome, if: Proc.new {|cours| cours.intervenant_binome.present?}
+  validate :check_no_old_commandes_method
 
   before_validation :update_date_fin
   before_validation :sunday_morning_praise_the_dawning
@@ -122,18 +124,10 @@ class Cour < ApplicationRecord
   end  
 
   def self.commandes
-    Cour.confirmé.where("DATE(cours.debut) >= ?", Date.today).where("cours.commentaires LIKE '+%'").order(:debut)
-  end
-
-  def self.commandes_archivées
-    Cour.réalisé.where("DATE(cours.debut) < ?", Date.today).where("cours.commentaires LIKE '+%'").order(debut: :desc)
-  end
-
-  def self.commandes_v2
     Cour.confirmé.where("DATE(cours.debut) >= ?", Date.today).joins(:options).where(options: {catégorie: :commande}).order(:debut)
   end
 
-  def self.commandes_archivées_v2
+  def self.commandes_archivées
     Cour.réalisé.where("DATE(cours.debut) < ?", Date.today).joins(:options).where(options: {catégorie: :commande}).order(debut: :desc)
   end
 
@@ -353,16 +347,16 @@ class Cour < ApplicationRecord
 
   # Si c'est un examen IAE / examen rattrapage / Tiers-temps
   def examen?
-    [169, 1166, 522].include?(self.intervenant.id)
+    Intervenant.examens_ids.include?(self.intervenant.id)
   end
 
   def type_examen
     case self.intervenant_id
-    when 169
+    when ENV["INTERVENANT_EXAMEN_ID"].to_i
       "Examen"
-    when 1166
+    when ENV["INTERVENANT_EXAMEN_RATTRAPRAGE_ID"].to_i
       "Examen Rattrapage"
-    when 522
+    when ENV["INTERVENANT_EXAMEN_TIERS_TEMPS_ID"].to_i
       "Examen Tiers-Temps"
     end
   end
@@ -405,6 +399,10 @@ class Cour < ApplicationRecord
     end
   end
 
+  def has_intervenant_vacataire?
+    self.intervenant_id == ENV["SURVEILLANT_EXAMEN_VACATAIRE_ID"].to_i
+  end
+
   private
     def update_date_fin
       if self.debut and self.duree
@@ -440,6 +438,12 @@ class Cour < ApplicationRecord
       #  UserMailer.cours_changed(self.id, "wachnick.iae@univ-paris1.fr").deliver_later
       #end 
     end  
+
+    def debut_year_must_make_sense
+      if debut.year > 2100
+        errors.add(:debut, "du cours doit avoir un sens !")
+      end
+    end
 
     def reservation_dates_must_make_sense
       unless fin 
@@ -540,42 +544,14 @@ class Cour < ApplicationRecord
     end
 
     def check_hss
-      if self.formation.hss && !self.hors_service_statutaire
+      if self.formation&.hss && !self.hors_service_statutaire
         errors.add(:hors_service_statutaire, 'ne correspond pas à celui de la formation')
       end
     end
 
-    def check_send_commande_email
-      old_commentaires = commentaires_was
-      yield
-      commande_status = determine_statut_commande(old_commentaires, commentaires)
-      send_email_commande(commande_status, old_commentaires)
-    end
-
-    def determine_statut_commande(old_commentaires, new_commentaires)
-      if old_commentaires && old_commentaires.include?('+')
-        new_commentaires.include?('+') ? 'modifiée' : 'supprimée'
-      elsif new_commentaires && new_commentaires.include?('+')
-        'ajoutée'
-      else
-        ''
-      end
-    end
-
-    def send_email_commande(commande_status, old_commentaires)
-      case commande_status
-      when 'modifiée'
-        ToolsMailer.with(cour: self, old_commentaires: old_commentaires).commande_modifiée.deliver_now
-      when 'supprimée'
-        ToolsMailer.with(cour: self, old_commentaires: old_commentaires).commande_supprimée.deliver_now
-      when 'ajoutée'
-        ToolsMailer.with(cour: self).nouvelle_commande.deliver_now
-      end
-    end
-
-    def check_send_new_commande_email
-      if self.commentaires && self.commentaires.include?('+')
-        ToolsMailer.with(cour: self).nouvelle_commande.deliver_now
+    def check_no_old_commandes_method
+      if self.commentaires&.include?('+') && self.debut > DateTime.now 
+        errors.add(:cours, ": Les commandes ne sont plus gérées via les commentaires mais dans les options du cours")
       end
     end
 

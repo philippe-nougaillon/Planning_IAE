@@ -385,6 +385,8 @@ fr:
       title: Chercher
     creation_cours:
       title: Réservation de créneaux horaires
+    creation_cours_do:
+      title: Réservation de créneaux horaires
     taux_occupation_jours:
       title: Taux d'occupation jours
     taux_occupation_salles:
@@ -395,6 +397,8 @@ fr:
       title: Export état liquidatif collectif
     export_codir:
       title: Export CoDir
+    export_cac:
+      title: Export CAC
     liste_surveillants_examens:
       title: Liste des surveillances d'examens
     liste_surveillants_examens_v2:
@@ -437,8 +441,6 @@ fr:
       title: Liste des cours "à booker"
     commandes:
       title: Commandes
-    commandes_v2:
-      title: Commandes_v2
     edusign:
       title: Edusign
     synchronisation_edusign:

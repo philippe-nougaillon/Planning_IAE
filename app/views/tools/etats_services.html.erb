@@ -56,7 +56,7 @@
 <% end %>
 
 <% @intervenants.each do | intervenant | %>
-    <% next if intervenant.id == 445 %>
+    <% next if intervenant.is_a_confirmer? %>
 
     <%= render partial: 'etats_services', locals: {intervenant: intervenant } %>
 

@@ -97,7 +97,7 @@
         <% if (policy(cours).edit? || (current_user && current_user.accueil_vacataire?)) %>
             <% if cours.options.commande.any? %>
                 <i title="<%= cours.options.commande.first.description %>" >
-                    <%= link_to tools_commandes_v2_path do %>
+                    <%= link_to tools_commandes_path do %>
                         <%= fa_icon 'coffee', class: 'text-error' %>
                     <% end %>
                 </i>
@@ -112,9 +112,7 @@
             <% if !cours.commentaires.blank? %>
                 <i title="<%= cours.commentaires %>" >
                     <% if cours.commentaires.start_with?("+")  %>
-                        <%= link_to tools_commandes_path do %>
-                            <%= fa_icon 'mug-hot', class: 'text-amber-800' %>
-                        <% end %>
+                        <%= fa_icon 'mug-hot', class: 'text-amber-800' %>
                     <% else %>
                         <%= fa_icon 'comment-dots' %>
                     <% end %>
@@ -136,7 +134,7 @@
         <% if current_user && current_user.role_number >= 5 && [169,1166].include?(cours.intervenant_id) %>
             <% if cours.sujet %>
                 <%= link_to sujet_path(cours.sujet) do %>
-                    <span class="material-symbols-outlined text-xl text-<%= cours.color_sujet %> cursor-pointer" title="<%= ['déposé', 'validé', 'archivé'].include?(cours.sujet.workflow_state) ? "Sujet d'examen #{cours.sujet.workflow_state}" : "Sujet d'examen pas déposé !" %>">
+                    <span class="material-symbols-outlined text-xl text-<%= cours.color_sujet %> cursor-pointer" title="<%= ['déposé', 'validé', 'archivé'].include?(cours.sujet.workflow_state)  ? "Sujet d'examen #{cours.sujet.workflow_state}" :  cours.sujet.sujet.attached? ? "Sujet d'examen non conforme" : "Sujet d'examen pas déposé !" %>">
                         docs
                     </span>
                 <% end %>

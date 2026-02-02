@@ -26,7 +26,7 @@ class IntervenantMailerPreview < ActionMailer::Preview
                          .notifier_examens(debut, 
                                         fin, 
                                         Intervenant.first, 
-                                        Cour.where(intervenant_id: [169, 522]).last(20) , 
+                                        Cour.where(intervenant_id: ENV["INTERVENANT_EXAMENS_WITHOUT_TIERS_TEMPS_IDS"].split(',')).last(20) ,
                                         [["la formation incroyable", "courriel@lkjlkjl.fr"]], 
                                         EnvoiLog.first.id,
                                         false,

@@ -123,15 +123,27 @@ class Intervenant < ApplicationRecord
 
 	# Si c'est un examen IAE / examen rattrapage / Tiers-temps
   def examen?
-    [169, 1166, 522].include?(self.id)
-	end
+		Intervenant.examens_ids.include?(self.id)
+  end
 
-	def self.intervenants_examens
-		ENV["INTERVENANTS_EXAMENS"].to_s.split(',').map(&:to_i)
+	def self.examens_ids
+		ENV["INTERVENANTS_EXAMENS"].split(',').map(&:to_i)
 	end
 
 	def self.sans_intervenant
-		ENV["INTERVENANTS_PLACEHOLDER"].to_s.split(',').map(&:to_i)
+		ENV["INTERVENANTS_PLACEHOLDER"].split(',').map(&:to_i)
+	end
+
+	def self.surveillants
+		ENV["SURVEILLANTS_EXAMEN_IDS"].split(',').map(&:to_i)
+	end
+
+	def is_a_confirmer?
+		self.id == Intervenant.a_confirmer_id
+	end
+
+	def self.a_confirmer_id
+		ENV["A_CONFIRMER_ID"].to_i
 	end
 
 	def self.sans_dossier(période = AppConstants::PÉRIODE, début_période = nil, fin_période = nil)

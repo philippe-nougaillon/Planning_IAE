@@ -11,7 +11,7 @@ class EtudiantMailerPreview < ActionMailer::Preview
 
   def convocation
     pdf = ExportPdf.new
-    cour = Cour.where(intervenant_id: [169, 522, 1166]).last
+    cour = Cour.where(intervenant_id: Intervenant.examens_ids).last
     etudiant = cour.etudiants.first
     pdf.convocation(cour, etudiant, true, false, false, true, false)
     EtudiantMailer.convocation(etudiant, pdf, cour, "Convocation #{cour.type_examen} - #{cour.nom_ou_ue}")

@@ -268,6 +268,7 @@ class ExportPdf
         text "Fait à Paris le #{I18n.l(Date.today)}", style: :italic
         move_down @margin_down
 
+        # Todo: Mettre dans une variable la signature
         y_position = cursor
         bounding_box([0, y_position], :width => 250, :height => 100) do
             text "Eric LAMARQUE"
@@ -320,7 +321,6 @@ class ExportPdf
         text "Du #{I18n.l(start_date.to_date)} au #{I18n.l(end_date.to_date)}"
 
         move_down @margin_down
-        #text "Affaire suivie par : Thémoline"
 
         # Tableau récap par code OTP
         data = [ ['N°', 'Date', 'Type', 'Formation', 'Centre de coût', 'Destination financière', 'EOTP', 'Total heures' ]]    
@@ -335,7 +335,7 @@ class ExportPdf
                 unless item.blank? 
                     surveillant_item = item.gsub(']', '').delete("\r\n\\")
                     if surveillant_item == surveillant
-                        is_vacataire = (exam.intervenant_id == 1314)
+                        is_vacataire = exam.has_intervenant_vacataire?
                         index += 1
                         durée = exam.duree + (is_vacataire ? 0 : 1)
                         cumul_durée += durée
@@ -344,7 +344,7 @@ class ExportPdf
                                     is_vacataire ? "Vacataire" : "Surveillance Examen",
                                     exam.formation.nom_promo,
                                     '7322GRH',
-                                    (exam.formation.diplome.upcase == 'LICENCE' ? '101PAIE' : exam.intervenant.id == 1314 ? '115PAIE' : '102PAIE'),
+                                    (exam.formation.diplome.upcase == 'LICENCE' ? '101PAIE' : exam.has_intervenant_vacataire? ? '115PAIE' : '102PAIE'),
                                     exam.formation.code_analytique_avec_indice(exam.debut).gsub('HCO','VAC'),
                                     durée 
                                 ]]
@@ -394,6 +394,7 @@ class ExportPdf
                 text "par la vacation, pour accord"
             end
         else
+            # Todo: Mettre dans une variable la signature
             bounding_box([0, y_position], :width => 250, :height => 100) do
                 text "Eric LAMARQUE"
                 text "Directeur de l'IAE Paris", size: 8
@@ -446,7 +447,6 @@ class ExportPdf
         text "Du #{I18n.l(start_date.to_date)} au #{I18n.l(end_date.to_date)}"
 
         move_down @margin_down
-        #text "Affaire suivie par : Thémoline"
 
         # Tableau récap par code OTP
         data = [ ['N°', 'Date', 'Type', 'Formation', 'Centre de coût', 'Destination financière', 'EOTP', 'Total heures' ]]    
@@ -461,7 +461,7 @@ class ExportPdf
                 unless item.blank? 
                     surveillant_item = item.gsub(']', '').delete("\r\n\\")
                     if surveillant_item == surveillant
-                        is_vacataire = (exam.intervenant_id == 1314)
+                        is_vacataire = exam.has_intervenant_vacataire?
                         index += 1
                         durée = exam.duree + (is_vacataire ? 0 : 1)
                         cumul_durée += durée
@@ -470,7 +470,7 @@ class ExportPdf
                                     is_vacataire ? "Vacataire" : "Surveillance Examen",
                                     exam.formation.nom_promo,
                                     '7322GRH',
-                                    (exam.formation.diplome.upcase == 'LICENCE' ? '101PAIE' : exam.intervenant.id == 1314 ? '115PAIE' : '102PAIE'),
+                                    (exam.formation.diplome.upcase == 'LICENCE' ? '101PAIE' : exam.has_intervenant_vacataire? ? '115PAIE' : '102PAIE'),
                                     exam.formation.code_analytique_avec_indice(exam.debut).gsub('HCO','VAC'),
                                     durée 
                                 ]]
@@ -520,6 +520,7 @@ class ExportPdf
                 text "par la vacation, pour accord"
             end
         else
+            # Todo: Mettre dans une variable la signature
             bounding_box([0, y_position], :width => 250, :height => 100) do
                 text "Eric LAMARQUE"
                 text "Directeur de l'IAE Paris", size: 8
@@ -826,7 +827,7 @@ class ExportPdf
     end
 
     def convocation(cour, étudiant, papier, calculatrice, ordi_tablette, téléphone, dictionnaire, commentaires)
-        is_examen_rattrapage = cour.intervenant_id == 1166
+        is_examen_rattrapage = cour.intervenant_id == ENV["INTERVENANT_EXAMEN_RATTRAPRAGE_ID"].to_i
 
         font "OpenSans"
 
