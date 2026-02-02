@@ -85,7 +85,7 @@ class Cour < ApplicationRecord
     end
 
     if user.role_number >= 5
-      actions << ["Changer d'état", "Changer de date", "Inviter", "Générer Feuille émargement PDF", "Générer Feuille émargement présences signées PDF", "Générer Pochette Examen PDF", "Convocation étudiants PDF"]
+      actions << ["Changer d'état", "Changer de date", "Inviter", "Générer Feuille émargement PDF", "Générer Feuille émargement présences signées PDF", "Générer Pochette Examen PDF", "Convocation étudiants PDF", "Regrouper sur une seule Feuille de présence Edusign"]
     end
     return actions.flatten.sort
   end
@@ -401,6 +401,10 @@ class Cour < ApplicationRecord
 
   def has_intervenant_vacataire?
     self.intervenant_id == ENV["SURVEILLANT_EXAMEN_VACATAIRE_ID"].to_i
+  end
+
+  def linked_edusign_cour
+    Cour.where(edusign_id: self.grouped_edusign_id).or(Cour.where(id: self.grouped_edusign_id)).first
   end
 
   private

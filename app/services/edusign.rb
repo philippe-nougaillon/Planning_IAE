@@ -11,19 +11,25 @@ class Edusign < ApplicationService
 
         # Déclaré ici pour éviter de synchroniser des éléments deux fois (à cause de la prochaine synchronisation qui se base sur le created_at de la synchronisation)
         @interval_end = Time.zone.now
+
+        # Par défaut, on considère qu'il n'y a pas de crash.
+        @crash = false
     end
 
     def call
-        # Necessaire pour créer des formations sans étudiants et des formations avec que des étudiants déjà créés sur Edusign
-        formations_ajoutés_ids = self.sync_formations("Post", nil)
+        # Necessaire pour créer des formations sans étudiants 
+        # et des formations avec que des étudiants déjà créés sur Edusign
+
+        formations_ajoutées_ids = self.sync_formations("Post", nil)
 
         etudiants_ajoutés_ids = self.sync_etudiants("Post", nil)
 
         self.sync_etudiants("Patch", etudiants_ajoutés_ids)
 
-        self.sync_formations("Patch", formations_ajoutés_ids)
+        self.sync_formations("Patch", formations_ajoutées_ids)
 
-        # Ajout des intervenants avant les cours, sinon les cours qui n'ont pas d'intervenant créé sur Edusign, ne seront pas créés
+        # Ajout des intervenants avant les cours, 
+        # sinon les cours qui n'ont pas d'intervenant créé sur Edusign, ne seront pas créés
         intervenants_ajoutés_ids = self.sync_intervenants("Post", nil)
 
         self.sync_intervenants("Patch", intervenants_ajoutés_ids)
@@ -82,12 +88,24 @@ class Edusign < ApplicationService
         @request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
     end
 
-    def get_response(without_message_response = false)
-        response = JSON.parse(@http.request(@request).read_body)
+    def get_response(debug_mode = true)
+        response = {}
 
-        if !without_message_response
-            puts "Lancement de la requête terminée : "
-            puts response
+        http_response = @http.request(@request)
+
+        # Si le code de réponse est un succes, on parse la réponse
+        if http_response.code.to_i == 200
+            response = JSON.parse(http_response.body)
+
+            if debug_mode
+                puts "Lancement de la requête terminée : "
+                puts response
+            end
+        else
+            # Si ce n'est pas un succes, on considère que c'est un crash, et qu'il faudra refaire une tentative
+            @crash = true
+            response["status"] = "error"
+            response["message"] = http_response.body
         end
 
         response
@@ -712,7 +730,7 @@ class Edusign < ApplicationService
         deleted_cours.each do |deleted_cour|
             edusign_id = deleted_cour.audited_changes["edusign_id"]
             self.prepare_request("https://ext.edusign.fr/v1/course/#{edusign_id}", "Get")
-            response = self.get_response(true)
+            response = self.get_response(false)
             if response["status"] == "success" && edusign_id != nil
                 edusign_ids << edusign_id
                 deleted_cours_to_sync_ids << deleted_cour.auditable_id
@@ -750,12 +768,58 @@ class Edusign < ApplicationService
         @nb_sended_elements += nb_audited
     end
 
+    def add_grouped_cours(cour_ids)
+        cours = Cour.where(id: cour_ids)
+        self.prepare_request_with_message("https://ext.edusign.fr/v1/course", "Post")
+        puts "Début du groupement des cours #{cours.pluck(:id, :nom)}"
+
+        formations_edusign_ids = Formation.where(id: cours.pluck(:formation_id)).pluck(:edusign_id)
+        
+        if !formations_edusign_ids.include?(nil)
+            cour_template = cours.first
+            intervenant = Intervenant.find_by(id: cour_template.intervenant_id)
+            intervenant_binome = Intervenant.find_by(id: cour_template.intervenant_binome_id)
+            
+            if intervenant&.edusign_id
+                if !intervenant_binome || intervenant_binome.edusign_id
+                    body =
+                    {"course":{
+                        "NAME": "#{cour_template.nom_ou_ue}" || 'Nom du cours à valider',
+                        "START": cour_template.debut - paris_observed_offset_seconds(cour_template.debut),
+                        "END": cour_template.fin - paris_observed_offset_seconds(cour_template.debut),
+                        "PROFESSOR": intervenant&.edusign_id,
+                        "PROFESSOR_2": intervenant_binome&.edusign_id,
+                        "API_ID": cour_template.id,
+                        "NEED_STUDENTS_SIGNATURE": true,
+                        "CLASSROOM": cour_template.salle&.nom,
+                        "SCHOOL_GROUP": formations_edusign_ids
+                        }
+                    }
+    
+                    response = self.prepare_body_request(body).get_response
+    
+                    puts response["status"] == 'error' ?  "<strong>Erreur d'exportation : #{response["message"]}</strong>" : "Exportation des cours réussie"
+                else
+                    puts "L'intervenant binome #{intervenant_binome&.prenom_nom} n'est pas encore relié à Edusign. Le groupement n'est pas fait"
+                end
+            else
+                puts "L'intervenant #{intervenant&.prenom_nom} n'est pas encore relié à Edusign. Le groupement n'est pas fait"
+            end
+        else
+            puts "Au moins une formation n'est pas encore reliée à Edusign. Le groupement n'est pas fait"
+        end
+
+        return response
+    end
+
     def get_etat
         puts "=" * 100
         puts "===> Nombre d'éléments récupérés : #{@nb_recovered_elements}, nombre d'éléments envoyés : #{@nb_sended_elements}, nombre d'échecs : #{self.count_failure_elements}"
 
         # Modification de l'etat
-        if @nb_recovered_elements != 0
+        if @crash
+            3 # Crash
+        elsif @nb_recovered_elements != 0
             case self.count_failure_elements
             when 0
                 0 # Success
