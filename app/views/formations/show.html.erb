@@ -169,9 +169,17 @@
               <td style="text-align: right;">
                 <%= total_réalisé = cours.sum(:duree) %> h
               </td>
-              <td>
+              <td style="text-align: center;">
                 <% if unite && (total_réalisé > 0 && unite.heures > 0) %>
-                  (<%= ((total_réalisé * 100) / unite.heures).round %>%)
+                  <% percentage = ((total_réalisé * 100) / unite.heures).round %>
+                  <progress data-debut="<%= total_réalisé %>"
+                  data-fin="<%= unite.heures %>"
+                  class="w-16 progress progress-<%= percentage == 100 ? "success" : percentage > 100 ? "warning" : "primary" %> !h-2"
+                  value="<%= percentage %>"
+                  max="100">
+                  </progress>
+                  <br>
+                  <%= percentage %>%
                 <% end %>
               </td>
               <% total_ue_prévu += total_prévu %>
