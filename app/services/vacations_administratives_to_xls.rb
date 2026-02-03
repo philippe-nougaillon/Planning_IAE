@@ -83,7 +83,7 @@ class VacationsAdministrativesToXls < ApplicationService
       fields_to_export = [
         nil,
         nil,
-        "Taux horaire en vigueur au 01/11/2024 :", 
+        "Taux horaire en vigueur au 01/01/2026 :", 
         "#{ @taux_horaire } €",
         nil,
         "Total brut :",

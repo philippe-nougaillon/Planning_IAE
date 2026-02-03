@@ -356,7 +356,7 @@ class ExportPdf
         data += [[nil, nil, nil, nil, nil, nil, "Total heures :", "<b>#{ cumul_durée }</b>" ]]
 
         data += [[nil, nil, nil,
-                    "Taux horaire en vigueur au 01/11/2024 :", 
+                    "Taux horaire en vigueur au 01/01/2026 :", 
                     "#{ taux_horaire } €",
                     nil,
                     "<b>Total brut :</b>",
@@ -482,7 +482,7 @@ class ExportPdf
         data += [[nil, nil, nil, nil, nil, nil, "Total heures :", "<b>#{ cumul_durée }</b>" ]]
 
         data += [[nil, nil, nil,
-                    "Taux horaire en vigueur au 01/11/2024 :", 
+                    "Taux horaire en vigueur au 01/01/2026 :", 
                     "#{ taux_horaire } €",
                     nil,
                     "<b>Total brut :</b>",
