@@ -174,7 +174,7 @@
                   <% percentage = ((total_réalisé * 100) / unite.heures) %>
                   <progress data-debut="<%= total_réalisé %>"
                   data-fin="<%= unite.heures %>"
-                  class="w-16 progress progress-<%= percentage == 100 ? "success" : percentage > 100 ? "warning" : "primary" %> !h-2"
+                  class="w-16 progress progress-<%= percentage == 100 ? "success" : percentage > 100 ? "warning" : "error" %> !h-2"
                   value="<%= percentage %>"
                   max="100">
                   </progress>
@@ -197,7 +197,7 @@
               <th class="whitespace-nowrap">
                 <progress data-debut="<%= total_ue_réalisé %>"
                 data-fin="<%= total_ue_prévu %>"
-                class="w-16 progress progress-<%= percentage_total == 100 ? "success" : percentage_total > 100 ? "warning" : "primary" %> !h-2"
+                class="w-16 progress progress-<%= percentage_total == 100 ? "success" : percentage_total > 100 ? "warning" : "error" %> !h-2"
                 value="<%= percentage_total %>"
                 max="100">
                 </progress>
