@@ -204,7 +204,7 @@ class FormationsController < ApplicationController
       params.require(:formation)
             .permit(:nom, :promo, :diplome, :domaine, :apprentissage, :memo, :nbr_etudiants, :nbr_heures, 
                     :abrg, :user_id, :color, :Forfait_HETD, :hors_catalogue, :nomtauxtd, :code_analytique, :catalogue, :archive, :hss, :courriel, :send_to_edusign,
-                    unites_attributes: [:id, :code, :nom, :séances, :heures, :destroy],
+                    unites_attributes: [:id, :code, :nom, :séances, :heures, :_destroy],
                     etudiants_attributes: [:id, :nom, :prénom, :civilité, :email, :mobile, :_destroy],
                     vacations_attributes: [:id, :date, :intervenant_id, :titre, :qte, :forfaithtd, :commentaires, :vacation_activite_id, :_destroy],
                     responsabilites_attributes: [:id, :debut, :intervenant_id, :titre, :heures, :commentaires, :activite_id, :_destroy])

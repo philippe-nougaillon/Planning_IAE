@@ -242,7 +242,7 @@ class Cour < ApplicationRecord
   end
 
   def self.taux_horaire_vacation
-    11.88
+    12.02
   end
 
   def taux_td
