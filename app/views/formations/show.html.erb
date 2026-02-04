@@ -150,13 +150,15 @@
           <% total_ue_réalisé = total_réalisé = 0.0 %>
           <% @formation.unites.order(:code).each do | unite | %>
             <tr class="hover border">
-              <% cours = @formation.cours.where(code_ue: unite.code).where.not(etat: ["reporté", "annulé"]) %>
-              <td style="text-align: right;"><%= link_to_unless @formation.archive, unite.code, cours_path(formation_id: @formation, ue: unite.num), class: 'text-primary hover:underline' %></td>
+              <% all_cours = @formation.cours.where(code_ue: unite.code).where.not(etat: ["reporté", "annulé"]) %>
+              <% cours = all_cours.not_examens %>
+              <% all_examens = all_cours.examens %>
+              <td style="text-align: right;"><%= link_to_unless @formation.archive, unite.code, cours_path(formation_id: @formation, ue: unite.code), class: 'text-primary hover:underline' %></td>
               <td><%= unite.nom %></td>
               <td style="text-align: right;"><%= unite.séances %></td>
-              <td style="text-align: right;"><%= link_to_unless @formation.archive, cours.count, cours_path(formation_id: @formation, ue: unite.num, filter: 'all'), class: 'text-primary hover:underline' %></td>
+              <td style="text-align: right;"><%= link_to_unless @formation.archive, cours.count, cours_path(formation_id: @formation, ue: unite.code, filter: 'all'), class: 'text-primary hover:underline' %></td>
               <td style="text-align: right;">
-                <% examens = cours.where(intervenant_id: ENV["INTERVENANT_EXAMEN_ID"]) %>
+                <% examens = all_examens.where(intervenant_id: ENV["INTERVENANT_EXAMEN_ID"]) %>
                 <% if examens.any? %>
                   <span class="text-success cursor-help" title="<%= pluralize(examens.count, 'examen planifié', plural: 'examens planifiés') %>">Oui</span>
                 <% else %>
