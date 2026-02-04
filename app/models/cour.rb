@@ -43,6 +43,9 @@ class Cour < ApplicationRecord
 
   around_destroy :check_sujet_destroy, if: Proc.new { |cours| !cours.sujet_id.nil? }
 
+  scope :not_examens, -> { where.not(intervenant_id: ENV["INTERVENANTS_EXAMENS"]) }
+  scope :examens, -> { where(intervenant_id: ENV["INTERVENANTS_EXAMENS"]) }
+
   if ENV["SEND_EXAMEN_EMAILS"] == "true"
     after_create   :send_new_examen_email, if: Proc.new { |cours| cours.examen? }
     around_update  :check_send_examen_email
