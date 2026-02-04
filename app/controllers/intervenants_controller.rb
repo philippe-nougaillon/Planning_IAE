@@ -143,8 +143,7 @@ class IntervenantsController < ApplicationController
   def sujets
     authorize @intervenant
 
-    @sujets = Sujet.joins(:cour).where('cour.intervenant_binome_id': @intervenant_user_id).ordered
-
+    @sujets = Sujet.where(id: Cour.where(intervenant_binome_id: @intervenant.id).pluck(:sujet_id)).joins(:cours).ordered
     # Si on a pas de workflow, on récupère tous les sujets, et on prend ceux archivés si la case "Inclure les archivés ?" est coché
     # Sinon, on prend en fonction du workflow choisi sans prendre en compte la case pour les archives
     if params[:workflow_state].blank?
@@ -157,10 +156,10 @@ class IntervenantsController < ApplicationController
 
     if params[:formation].present?
       formation_id = Formation.find_by(nom: params[:formation]).id
-      examens_from_formation = Cour.where(formation_id: formation_id).select{|cour| cour.examen?}
-      @sujets = @sujets.where(cour_id: examens_from_formation)
+      @sujets = @sujets.where(cours: {formation_id: formation_id})
     end
 
+    @sujets = @sujets.group('sujets.id')
     @sujets = @sujets.paginate(page: params[:page], per_page: 20)
   end
 

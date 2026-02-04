@@ -21,7 +21,9 @@
         <%= link_to formation.nom_nbr_etudiants, formation, class: 'text-primary hover:underline' %>
       <% end %>
     <% else %>
-      <%= sujet.cour.formation.nom %>
+      <% sujet.formations.each do |formation| %>
+        <%= formation.nom %>
+      <% end %>
     <% end %>
   </td>
   <td>
