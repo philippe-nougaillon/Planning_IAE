@@ -1,0 +1,39 @@
+<%= form_for(@responsabilite) do |f| %>
+  <%= render partial: 'partials/errors', locals: { record: @responsabilite } %>
+
+  <div class="flex flex-col w-full gap-4">
+      <div class="sm:w-2/12">
+        <%= f.label :debut, 'Date *' %>
+        <%= f.date_field :debut, class: 'input input-bordered input-sm w-full', required: true %>
+      </div>
+
+      <div class="sm:w-5/12">
+        <%= f.label :formation_id, 'Formation *' %>   
+        <%= f.collection_select :formation_id, Formation.all.ordered, :id, :nom, {include_blank: true}, class: "select select-bordered select-sm w-full", required: true %>
+      </div>
+
+      <div class="sm:w-3/12">
+        <%= f.label :intervenant_id, 'Intervenant *' %>
+        <%= f.collection_select :intervenant_id, 
+                                        Intervenant.permanents,
+                                        :id,
+                                        :nom_prenom_status,
+                                        {include_blank: true}, class: "select select-bordered select-sm w-full",
+                                        required: true %>
+      </div>
+
+      <div class="sm:w-5/12">
+        <%= f.label :activite_id, 'Activité *' %>
+        <%= f.select :activite_id, grouped_options_for_select(VacationActivite.for_select, f.object.activite_id), {include_blank: true}, class: "select select-bordered select-sm w-full", required: true %>
+      </div> 
+
+      <div class="sm:w-full">
+        <%= f.label :commentaires %>
+        <%= f.text_area :commentaires, class: 'textarea textarea-bordered textarea-sm w-full' %>
+      </div>
+    
+  </div>
+
+  <%= f.submit class: "btn btn-primary text-white mt-8", 'data-turbo': false %>
+
+<% end %>

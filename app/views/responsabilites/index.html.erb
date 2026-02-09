@@ -1,5 +1,10 @@
 <div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
   <h1 class="text-3xl"><%= fa_icon 'user-md' %> Liste des responsabilités </h1>
+  <% if policy(Responsabilite).new? %>
+    <%= link_to new_responsabilite_path, class: 'btn btn-sm btn-primary btn-outline hover:!text-white' do %>
+      <%= fa_icon 'plus-circle' %> Responsabilité
+    <% end %>
+  <% end %>
 </div>
 
 <div class="bs-container mx-auto sm:px-4 max-w-full p-4 shadow mb-4">

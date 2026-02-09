@@ -249,7 +249,7 @@ Rails.application.routes.draw do
   resources :vacations, only: %i[ index show edit update ]
   resources :vacation_activites
 
-  resources :responsabilites, only: %i[ index ]
+  resources :responsabilites, only: %i[ index new create ]
 
   resources :attendances
   resources :justificatifs, only: %i[ index show ]

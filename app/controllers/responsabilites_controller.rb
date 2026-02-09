@@ -62,6 +62,27 @@ class ResponsabilitesController < ApplicationController
     end
   end
 
+  # GET /responsabilites/new
+  def new
+    @responsabilite = Responsabilite.new
+  end
+
+  # POST /responsabilites
+  # POST /responsabilites.json
+  def create
+    @responsabilite = Responsabilite.new(responsabilite_params)
+
+    respond_to do |format|
+      if @responsabilite.save
+        format.html { redirect_to responsabilites_url, notice: 'Responsabilité ajoutée' }
+        format.json { render :show, status: :created, location: @responsabilite }
+      else
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @responsabilite.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_responsabilite
@@ -87,5 +108,9 @@ class ResponsabilitesController < ApplicationController
 
     def sort_direction
       %w[asc desc].include?(params[:direction_responsabilite]) ? params[:direction_responsabilite] : "desc"
+    end
+
+    def responsabilite_params
+      params.require(:responsabilite).permit(:debut, :formation_id, :intervenant_id, :activite_id, :commentaires)     
     end
 end

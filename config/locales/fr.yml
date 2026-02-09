@@ -595,3 +595,5 @@ fr:
   responsabilites:
     index:
       title: "Responsabilités"
+    new:
+      title: "Nouvelle responsabilité"
