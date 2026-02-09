@@ -5,24 +5,8 @@
   <td style="border-left: .3rem solid <%= responsabilite.formation.positive_color %>">
     <%= link_to responsabilite.formation.abrg, responsabilite.formation, class: 'text-primary hover:underline' %>
   </td>
-  <% if responsabilite.vacation_activite %>
-    <td>
-      <b><%= responsabilite.vacation_activite.nom %></b>
-    </td>
-    <td class="text-right">
-      <b><%# responsabilite
-      .vacation_activite
-      .vacation_activite_tarifs
-      .find_by(statut: VacationActiviteTarif.statuts[responsabilite.intervenant.permanent? ? "Permanent" : responsabilite.intervenant.status])
-      .forfait_hetd 
-      %></b>
-    </td>
-  <% else %>
-    <td>
-      <b><%= responsabilite.titre %></b>
-    </td>
-    <td class="text-right">
-      <b><%# responsabilite.heures %></b>
-    </td>
-  <% end %>
+
+  <td>
+    <b><%= responsabilite.intitulé %></b>
+  </td>
 </tr>
