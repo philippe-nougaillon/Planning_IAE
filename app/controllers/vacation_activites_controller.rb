@@ -1,4 +1,6 @@
 class VacationActivitesController < ApplicationController
+  include ActionView::Helpers::FormOptionsHelper
+
   before_action :set_vacation_activite, only: %i[ show edit update destroy ]
   before_action :is_user_authorized
 
@@ -70,6 +72,20 @@ class VacationActivitesController < ApplicationController
       format.html { redirect_to vacation_activites_url, notice: "Activité supprimée avec succès." }
       format.json { head :no_content }
     end
+  end
+
+  def activites_filtrees_par_statut_intervenant
+    intervenant_id = params[:responsabilite][:intervenant_id]
+
+    if intervenant_id != nil
+      intervenant = Intervenant.find(intervenant_id.to_i)
+      status_id = VacationActiviteTarif.statuts[intervenant.status]
+      activites = VacationActivite.joins(:vacation_activite_tarifs).where('vacation_activite_tarifs.statut = ?', status_id)
+      
+      render json: options_for_select(activites.pluck(:nom, :id))
+    end
+
+    
   end
 
   private

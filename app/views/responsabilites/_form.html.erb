@@ -18,8 +18,14 @@
                                         Intervenant.permanents,
                                         :id,
                                         :nom_prenom_status,
-                                        {include_blank: true}, class: "select select-bordered select-sm w-full",
-                                        required: true %>
+                                        {include_blank: true}, 
+                                        {
+                                          class: "select select-bordered select-sm w-full",
+                                          required: true,
+                                          "hx-get": "/vacation_activites/activites_filtrees_par_statut_intervenant",
+                                          "hx-target": "#responsabilite_activite_id",
+                                        } 
+                                        %>
       </div>
 
       <div class="sm:w-5/12">

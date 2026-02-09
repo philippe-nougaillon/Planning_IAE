@@ -32,4 +32,8 @@ class VacationActivitePolicy < ApplicationPolicy
   def destroy?
     index?
   end
+
+  def activites_filtrees_par_statut_intervenant?
+    true
+  end
 end
