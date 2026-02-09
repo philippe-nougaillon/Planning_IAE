@@ -118,7 +118,7 @@ class CoursEtatsServicesToXls < ApplicationService
         @responsabilites = intervenant.responsabilites.where("debut BETWEEN ? AND ?", @start_date, @end_date)
 
         @responsabilites.each do |resp|
-          montant_responsabilite = (resp.heures * Cour.Tarif).round(2)
+          montant_responsabilite = resp.montant
           cumul_hetd += resp.heures
           formation = Formation.find(resp.formation_id)
 
@@ -129,12 +129,14 @@ class CoursEtatsServicesToXls < ApplicationService
             nil,
             formation.nom,
             formation.code_analytique_avec_indice(resp.debut),
-            resp.titre,
+            resp.intitulé,
             nil,
             nil, 
             resp.heures, 
             nil, nil, nil,
-            'TD', 1, nil,
+            nil,
+            nil,
+            resp.forfait_hetd,
             montant_responsabilite,
             cumul_hetd,
             ((nbr_heures_statutaire > 0) && (cumul_hetd >= nbr_heures_statutaire) ? cumul_hetd - nbr_heures_statutaire : nil)
