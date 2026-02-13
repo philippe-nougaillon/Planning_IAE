@@ -9,10 +9,10 @@
 
       <div class="sm:w-5/12">
         <%= f.label :formation_id, 'Formation *' %>   
-        <%= f.collection_select :formation_id, Formation.all.ordered, :id, :nom, {include_blank: true}, class: "select select-bordered select-sm w-full", required: true %>
+        <%= f.collection_select :formation_id, Formation.all.ordered, :id, :nom, {include_blank: true}, class: "slim-select", required: true %>
       </div>
 
-      <div class="sm:w-3/12">
+      <div class="sm:w-5/12">
         <%= f.label :intervenant_id, 'Intervenant *' %>
         <%= f.collection_select :intervenant_id, 
                                         Intervenant.permanents,
@@ -20,7 +20,7 @@
                                         :nom_prenom_status,
                                         {include_blank: true}, 
                                         {
-                                          class: "select select-bordered select-sm w-full",
+                                          class: "slim-select",
                                           required: true,
                                           "hx-get": "/vacation_activites/activites_filtrees_par_statut_intervenant",
                                           "hx-target": "#responsabilite_activite_id",
@@ -28,10 +28,15 @@
                                         %>
       </div>
 
-      <div class="sm:w-5/12">
+      <div class="sm:w-10/12">
         <%= f.label :activite_id, 'Activité *' %>
         <%= f.select :activite_id, grouped_options_for_select(VacationActivite.for_select, f.object.activite_id), {include_blank: true}, class: "select select-bordered select-sm w-full", required: true %>
-      </div> 
+      </div>
+
+      <div class="sm:w-1/6">
+        <%= f.label :heures, "Forfait *" %>
+        <%= f.number_field :heures, class: 'input input-bordered input-sm w-full', required: true %>
+      </div>
 
       <div class="sm:w-full">
         <%= f.label :commentaires %>
