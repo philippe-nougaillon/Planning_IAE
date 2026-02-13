@@ -71,7 +71,18 @@ class FormationsController < ApplicationController
 
   # GET /formations/new
   def new
-    @formation = Formation.new
+    # Si une formation_id est en paramètre, alors on demande une duplication de cette formation
+    if formation_id = params[:formation_id]
+      original_formation = Formation.find(formation_id)
+      @formation = original_formation.dup
+      # Duplication des unités associées à la formation d'origine
+      original_formation.unites.each do |unite|
+        @formation.unites.build(unite.dup.attributes.except('formation_id'))
+      end
+    else
+      @formation = Formation.new
+    end
+
   end
 
   # GET /formations/1/edit
