@@ -1,5 +1,5 @@
 class ResponsabilitesController < ApplicationController
-  before_action :set_responsabilite, only: %i[ ]
+  before_action :set_responsabilite, only: %i[ edit update destroy ]
   before_action :is_user_authorized
 
   # GET /responsabilites or /responsabilites.json
@@ -67,6 +67,10 @@ class ResponsabilitesController < ApplicationController
     @responsabilite = Responsabilite.new
   end
 
+  # GET /responsabilites/1/edit
+  def edit
+  end
+
   # POST /responsabilites
   # POST /responsabilites.json
   def create
@@ -83,15 +87,33 @@ class ResponsabilitesController < ApplicationController
     end
   end
 
+  # PATCH/PUT /responsabilites/1 or /responsabilites/1.json
+  def update
+    respond_to do |format|
+      if @responsabilite.update(responsabilite_params)
+        format.html { redirect_to responsabilites_url, notice: "Responsabilité modifiée avec succès.", status: :see_other }
+        format.json { render :show, status: :ok, location: @responsabilite }
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @responsabilite.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # DELETE /responsabilites/1 or /responsabilites/1.json
+  def destroy
+    @responsabilite.destroy!
+
+    respond_to do |format|
+      format.html { redirect_to responsabilites_path, notice: "Responsabilité supprimée avec succès.", status: :see_other }
+      format.json { head :no_content }
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_responsabilite
       @responsabilite = Responsabilite.find(params[:id])
-    end
-
-    # Only allow a list of trusted parameters through.
-    def responsabilite_params
-      params.fetch(:responsabilite, {})
     end
 
     def is_user_authorized
@@ -111,6 +133,6 @@ class ResponsabilitesController < ApplicationController
     end
 
     def responsabilite_params
-      params.require(:responsabilite).permit(:debut, :formation_id, :intervenant_id, :activite_id, :commentaires)     
+      params.require(:responsabilite).permit(:debut, :formation_id, :intervenant_id, :activite_id, :commentaires, :heures)
     end
 end
