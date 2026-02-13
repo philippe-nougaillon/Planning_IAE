@@ -166,13 +166,13 @@
                 <% end %>
               </td>
               <td style="text-align: right;">
-                <%= total_prévu = unite.heures %> h
+                <%= total_prévu = unite.heures || 0 %> h
               </td>
               <td style="text-align: right;">
                 <%= total_réalisé = cours.sum(:duree) %> h
               </td>
               <td class="whitespace-nowrap">
-                <% if unite && unite.heures > 0 %>
+                <% if unite.heures && unite.heures > 0 %>
                   <% percentage = ((total_réalisé * 100) / unite.heures) %>
                   <progress data-debut="<%= total_réalisé %>"
                   data-fin="<%= unite.heures %>"
