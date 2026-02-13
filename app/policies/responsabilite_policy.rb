@@ -17,4 +17,15 @@ class ResponsabilitePolicy < ApplicationPolicy
     create?
   end
 
+  def edit?
+    index?
+  end
+
+  def update?
+    edit?
+  end
+
+  def destroy?
+    index?
+  end
 end

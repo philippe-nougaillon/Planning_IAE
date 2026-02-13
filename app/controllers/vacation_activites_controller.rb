@@ -81,15 +81,13 @@ class VacationActivitesController < ApplicationController
   def activites_filtrees_par_statut_intervenant
     intervenant_id = params[:responsabilite][:intervenant_id]
 
-    if intervenant_id != nil
+    if intervenant_id.present?
       intervenant = Intervenant.find(intervenant_id.to_i)
       status_id = VacationActiviteTarif.statuts[intervenant.status]
       activites = VacationActivite.joins(:vacation_activite_tarifs).where('vacation_activite_tarifs.statut = ?', status_id)
       
       render json: options_for_select(activites.pluck(:nom, :id))
     end
-
-    
   end
 
   private
