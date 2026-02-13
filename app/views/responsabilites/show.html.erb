@@ -1,0 +1,17 @@
+<div class="flex items-center border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'user-md' %> Responsabilité </h1>
+</div>
+
+<div class="flex flex-col gap-4">
+  <p><strong>Activité : </strong><%= link_to_if @responsabilite.vacation_activite, @responsabilite.intitulé, @responsabilite.vacation_activite, class: 'text-primary hover:underline' %></p>
+  <p><strong>Intervenant : </strong><%= link_to @responsabilite.intervenant.nom_prenom, @responsabilite.intervenant, class: 'text-primary hover:underline' %></p>
+  <p><strong>Formation : </strong><%= link_to @responsabilite.formation.nom, @responsabilite.formation, class: 'text-primary hover:underline' %></p>
+  <p><strong>Début : </strong><%= l(@responsabilite.debut, format: :long) %></p>
+  <p><strong>Forfait : </strong><%= @responsabilite.heures %></p>
+</div>
+
+<div class="mt-8">
+  <%= link_to "Modifier", edit_responsabilite_path(@responsabilite), class: "btn" %>
+  <%= link_to '[X]', @responsabilite, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: 'btn' %>
+  <%= link_to "Retour", responsabilites_path, class: "btn" %>
+</div>

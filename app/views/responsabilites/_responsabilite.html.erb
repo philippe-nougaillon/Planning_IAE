@@ -1,6 +1,6 @@
 <tr id="<%= dom_id responsabilite %>" class="hover border">
   <td><%= time_ago_in_words responsabilite.updated_at %></td>
-  <td><%= l(responsabilite.debut) %></td>
+  <td><%= link_to l(responsabilite.debut), responsabilite, class: 'text-primary hover:underline' %></td>
   <td><%= link_to "#{responsabilite.intervenant.nom_prenom} (#{responsabilite.intervenant.status})", intervenant_path(responsabilite.intervenant.slug || responsabilite.intervenant.id), class: 'text-primary hover:underline' %></td>
   <td style="border-left: .3rem solid <%= responsabilite.formation.positive_color %>">
     <%= link_to responsabilite.formation.abrg, responsabilite.formation, class: 'text-primary hover:underline' %>
@@ -9,15 +9,6 @@
     <b><%= responsabilite.intitulé %></b>
   </td>
   <td>
-    <% if policy(Responsabilite).edit? %>
-      <%= link_to edit_responsabilite_path(responsabilite), class:"btn btn-ghost btn-xs" do %>
-        <%= fa_icon 'edit '%>
-      <% end %>
-    <% end %>
-    <% if policy(Responsabilite).destroy? %>
-      <%= link_to(responsabilite, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: 'btn btn-ghost btn-xs') do %>
-        <%= fa_icon 'trash' %>
-      <% end %>
-    <% end %>
+    <b><%= responsabilite.heures %></b>
   </td>
 </tr>

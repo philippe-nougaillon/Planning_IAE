@@ -1,7 +1,7 @@
 <div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
   <h1 class="text-3xl"><%= fa_icon 'user-md' %> Liste des responsabilités </h1>
   <% if policy(Responsabilite).new? %>
-    <%= link_to new_responsabilite_path, class: 'btn btn-sm btn-primary btn-outline hover:!text-white' do %>
+    <%= link_to new_responsabilite_path, 'data-turbo': false, class: 'btn btn-sm btn-primary btn-outline hover:!text-white' do %>
       <%= fa_icon 'plus-circle' %> Responsabilité
     <% end %>
   <% end %>
@@ -67,7 +67,7 @@
         <th><%= sort_link 'intervenants.nom', 'Intervenant' %></th>
         <th><%= sort_link 'formations.abrg', 'Formation' %></th>
         <th><%= sort_link 'responsabilites.titre', 'Activité' %></th>
-        <th></th>
+        <th><%= sort_link 'responsabilites.heures', 'Forfait' %></th>
       </tr>
     </thead>
 

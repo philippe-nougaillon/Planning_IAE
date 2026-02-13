@@ -1,5 +1,5 @@
 class ResponsabilitesController < ApplicationController
-  before_action :set_responsabilite, only: %i[ edit update destroy ]
+  before_action :set_responsabilite, only: %i[ show edit update destroy ]
   before_action :is_user_authorized
 
   # GET /responsabilites or /responsabilites.json
@@ -60,6 +60,10 @@ class ResponsabilitesController < ApplicationController
         send_data file_contents.string.force_encoding('binary'), filename: filename
       end
     end
+  end
+
+  # GET /responsabilites/1 or /responsabilites/1.json
+  def show
   end
 
   # GET /responsabilites/new

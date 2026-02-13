@@ -9,6 +9,10 @@ class ResponsabilitePolicy < ApplicationPolicy
     user && (user.rh? || ENV["SUPER_ADMIN_IDS"].to_s.split(',').map(&:to_i).include?(user.id)) 
   end
 
+  def show?
+    index?
+  end
+
   def create?
     index?
   end
