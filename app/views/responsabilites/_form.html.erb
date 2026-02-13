@@ -34,8 +34,8 @@
       </div>
 
       <div class="sm:w-1/6">
-        <%= f.label :heures, "Forfait *" %>
-        <%= f.number_field :heures, class: 'input input-bordered input-sm w-full', required: true %>
+        <%= f.label :heures, "Forfait" %>
+        <%= f.number_field :heures, class: 'input input-bordered input-sm w-full', disabled: (!f.object.persisted?) %>
       </div>
 
       <div class="sm:w-full">
