@@ -1,0 +1,46 @@
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  setTimeout(() => {
+    const selects = document.querySelectorAll('select.slim-select[required]');
+
+    selects.forEach(select => {
+      // 1. SETUP
+      if (select.parentElement) {
+        select.parentElement.style.position = 'relative';
+      }
+      select.removeAttribute('aria-hidden');
+      
+      // IMPORTANT : On empêche le focus manuel (Tab) pour que le focus
+      // ne se produise QUE lors d'une erreur de validation navigateur.
+      select.setAttribute('tabindex', '-1');
+
+
+      // 2. FOCUS
+      
+      // On ajoute la classe d'erreur si le select reçoit le focus.
+      select.addEventListener('focus', function() {
+        const wrapper = this.nextElementSibling;
+        if (wrapper && wrapper.classList.contains('ss-main')) {
+          wrapper.classList.add('ss-error-native');
+        }
+      });
+
+      // 3. NETTOYAGE
+
+      // À commenter si on veut que ça reste rouge tant que ce n'est pas rempli
+      select.addEventListener('blur', function() {
+          const wrapper = this.nextElementSibling;
+          if (wrapper) wrapper.classList.remove('ss-error-native');
+      });
+
+      // Si l'utilisateur change la valeur (remplit le champ), on retire le rouge
+      select.addEventListener('change', function() {
+        const wrapper = this.nextElementSibling;
+        if (this.checkValidity() && wrapper) {
+          wrapper.classList.remove('ss-error-native');
+        }
+      });
+    });
+  }, 500);
+});
+</script>

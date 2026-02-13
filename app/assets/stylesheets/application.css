@@ -234,3 +234,36 @@ progress.progress {
 }
 
 /* Fin Pagination */
+
+
+select.slim-select[required] {
+  display: block !important;
+  position: absolute !important;
+
+  /* 2. On le rend invisible à l'œil, mais présent pour le navigateur */
+  opacity: 0;
+
+  /* 3. On le place au centre du conteneur parent */
+  /* Note : Assure-toi que le parent du select a bien 'position: relative' */
+  bottom: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+
+  /* 4. On le met en z-index bas pour ne pas bloquer le clic sur le SlimSelect */
+  /* ATTENTION : Si le clic ne passe pas, mets z-index: -1, 
+       mais la bulle risque d'être légèrement décalée selon les navigateurs */
+  z-index: 0;
+  pointer-events: none;
+  /* Laisse passer les clics vers le SlimSelect visuel */
+}
+
+/* Style qui s'applique quand le champ est invalide */
+.ss-main.ss-error-native{
+  box-shadow: none;
+  border-color: var(--fallback-bc, oklch(var(--bc) / .2)) !important;
+  outline-style: solid;
+  outline-width: 2px;
+  outline-offset: 2px;
+  outline-color: var(--fallback-bc, oklch(var(--bc) / .2));
+}
