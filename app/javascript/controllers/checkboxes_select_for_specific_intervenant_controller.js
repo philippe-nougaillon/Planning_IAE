@@ -9,11 +9,13 @@ export default class extends Controller {
   select_checkboxes(){
     Rails.ajax({
       type: "GET",
-      url:  "/intervenants/examen.json",
+      url:  "/intervenants/is_specific_intervenant.json",
       data: "intervenant_id=" + this.intervenant_idTarget.value,
       success: (data) => {
-        if(data === true){
+        if(data["examen"]){
           this.hssTarget.checked = true
+          this.no_send_to_edusignTarget.checked = true
+        }else if(data["a_confirmer"]) {
           this.no_send_to_edusignTarget.checked = true
         }else{
           this.hssTarget.checked = false

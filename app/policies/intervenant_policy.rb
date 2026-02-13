@@ -45,7 +45,7 @@ class IntervenantPolicy < ApplicationPolicy
     user && user.role_number == 1 && record.linked_user == user
   end
 
-  def examen?
+  def is_specific_intervenant?
     true
   end
 
