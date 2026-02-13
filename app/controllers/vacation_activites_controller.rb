@@ -10,6 +10,10 @@ class VacationActivitesController < ApplicationController
 
     @natures = VacationActivite.all.pluck(:nature).uniq.sort
 
+    if params[:search].present?
+      @vacation_activites = @vacation_activites.where("LOWER(nom) like :search", {search: "%#{params[:search]}%".downcase})
+    end
+
     if params[:nature].present?
       @vacation_activites = @vacation_activites.where(nature: params[:nature])
     end
