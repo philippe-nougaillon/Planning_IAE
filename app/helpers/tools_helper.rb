@@ -53,11 +53,15 @@ module ToolsHelper
                 else
                     pretty_changes << "Début initialisé à '#{I18n.l(c.last, format: :long)}'"
                 end
-            when 'Fin' 
+            when 'Fin'
                 if audit.audited_changes['fin'].class.name == 'Array'
-                    pretty_changes << "Horaire de fin modifié de '#{I18n.l(c.last.first, format: :long)}' à '#{I18n.l(c.last.last, format: :long)}'"
+                    if c.last.first.present?
+                        pretty_changes << "Horaire de fin modifié de '#{I18n.l(c.last.first, format: :long)}' à '#{I18n.l(c.last.last, format: :long)}'"
+                    end
                 else
-                    pretty_changes << "Fin initialisée à '#{I18n.l(c.last, format: :long)}'"
+                    if c.last.present?
+                        pretty_changes << "Fin initialisée à '#{I18n.l(c.last, format: :long)}'"
+                    end
                 end
             when 'Etat'
                 if audit.audited_changes['etat'].class.name == 'Array'
