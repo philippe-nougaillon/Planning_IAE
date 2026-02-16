@@ -633,13 +633,13 @@ class CoursController < ApplicationController
         when "Générer Feuille émargement PDF"
           filename = "Feuille_émargement_#{ Date.today }.pdf"
           pdf = ExportPdf.new
-          pdf.generate_feuille_emargement(@cours, params[:etudiants_id].try(:keys), params[:table])
+          pdf.generate_feuille_emargement(@cours, params[:etudiants_id].try(:keys), params[:etudiants_en_rattrapage_ids], params[:table])
 
           send_data pdf.render, filename: filename, type: 'application/pdf'
         when "Générer Feuille émargement présences signées PDF"
           filename = "Feuille_émargement_signée#{ Date.today }.pdf"
           pdf = ExportPdf.new
-          pdf.generate_feuille_emargement_signée(@cours, params[:etudiants_id].try(:keys))
+          pdf.generate_feuille_emargement_signée(@cours, params[:etudiants_id].try(:keys), params[:etudiants_en_rattrapage_ids])
 
           send_data pdf.render, filename: filename, type: 'application/pdf'
         when "Générer Pochette Examen PDF"

@@ -533,7 +533,7 @@ class ExportPdf
 
     end
 
-    def generate_feuille_emargement(cours, étudiants_id, table)
+    def generate_feuille_emargement(cours, étudiants_id, étudiants_en_rattrapage_ids, table)
         font "OpenSans"
 
         cours.each_with_index do |cour, index|
@@ -590,7 +590,7 @@ class ExportPdf
             else
                 data = [ ['<i>NOM PRÉNOM</i>', '<i>SIGNATURE</i>', '<i>NOM PRÉNOM</i>', '<i>SIGNATURE</i>'] ]
                 (0..examen_étudiants_ids.length - 1).step(2).each do |index|
-                    etudiant = Etudiant.find(aexamen_étudiants_idsrray[index])
+                    etudiant = Etudiant.find(examen_étudiants_ids[index])
                     if index < examen_étudiants_ids.length - 1
                         next_etudiant = Etudiant.find(examen_étudiants_ids[index + 1])
                     end
@@ -613,6 +613,33 @@ class ExportPdf
                 cell_style: { :inline_format => true, height: 35 }) do
                     column(1).style(:align => :center) if table
                 end
+
+            if étudiants_en_rattrapage_ids
+                # Code à modifier s'il faut prendre en compte les cours non-examen
+                start_new_page
+                text "AUTRES ÉTUDIANTS", size: 16, style: :bold, align: :center
+                move_down @margin_down
+
+                if table
+                    data = [ ['<i>NOM PRÉNOM</i>', 'Table n°', '<i>SIGNATURE DÉBUT ÉPREUVE</i>', '<i>SIGNATURE REMISE COPIE</i>'] ]
+                else
+                    data = [ ['<i>NOM PRÉNOM</i>', '<i>SIGNATURE DÉBUT ÉPREUVE</i>', '<i>SIGNATURE REMISE COPIE</i>'] ]
+                end
+                (0..étudiants_en_rattrapage_ids.length - 1).each do |index|
+                    etudiant = Etudiant.find(étudiants_en_rattrapage_ids[index])
+                    row = ["<b>#{etudiant.nom.upcase}</b> #{etudiant.prénom.humanize} <br>#{etudiant.formation.nom}"]
+                    row += ["#{etudiant.table.zero? ? '' : etudiant.table}"] if table
+                    row += [Array.new(2)]
+                    data += [row.flatten]
+                end
+
+                table(data, 
+                header: true,
+                column_widths: table ? [160, 60, 160, 160] : [180,180,180],
+                cell_style: { :inline_format => true, height: 40 }) do
+                    column(1).style(:align => :center) if table
+                end
+            end
 
             start_new_page unless index == cours.size - 1
         end
@@ -874,7 +901,7 @@ class ExportPdf
 
     end
 
-    def generate_feuille_emargement_signée(cours, étudiants_ids)
+    def generate_feuille_emargement_signée(cours, étudiants_ids, étudiants_en_rattrapage_ids)
 
         cours.each_with_index do |cour, index|
             font_size 14
@@ -918,60 +945,77 @@ class ExportPdf
 
             examen_étudiants_ids = cour.formation.etudiants.where(id: étudiants_ids).order(:nom, :prénom).pluck(:id)
 
-            (0..examen_étudiants_ids.length - 1).step(2).each do |index|
-                # Multiple de deux parce qu'il y a un step(2)
-                start_new_page if (index%10 == 6)
-                move_down @margin_down
-
-                etudiant = Etudiant.find(examen_étudiants_ids[index])
-                presence = Presence.find_by(cour_id: cour.id, etudiant_id: etudiant.id)
-
-                if index < examen_étudiants_ids.length - 1
-                    next_etudiant = Etudiant.find(examen_étudiants_ids[index + 1])
-                    presence_next_etudiant = Presence.find_by(cour_id: cour.id, etudiant_id: next_etudiant.id)
-                end
-
-                y_position = cursor
-                bounding_box([0, y_position], :width => 270) do
-                    text "<b>#{etudiant.nom.upcase}</b> #{etudiant.prénom.humanize}", inline_format: true
-                    if presence
-                        if presence.signature
-                            svg Base64.decode64(presence.signature.split(',')[1]), height: 50
-                        else
-                            move_down @margin_down * 3.4
-                        end
-                        move_down @margin_down
-                        text presence.workflow_state.humanize
-                    else
-                        move_down @margin_down * 6
-                    end
-                end
-
-                if next_etudiant
-                    bounding_box([270, y_position], :width => 270) do
-                        text "<b>#{next_etudiant.nom.upcase}</b> #{next_etudiant.prénom.humanize}", inline_format: true
-                        if presence_next_etudiant
-                            if presence_next_etudiant.signature
-                                svg Base64.decode64(presence_next_etudiant.signature.split(',')[1]), height: 50
-                            else
-                                move_down @margin_down * 3.4
-                            end
-                            move_down @margin_down
-                            text presence_next_etudiant.workflow_state.humanize
-                        else
-                            move_down @margin_down * 6
-                        end
-                    end
-                end
-
-                move_down @margin_down
-                stroke_horizontal_rule
-
+            
+            
+            affichage_etudiants_emargement(cour, examen_étudiants_ids)
+            if étudiants_en_rattrapage_ids
+                affichage_etudiants_emargement(cour, étudiants_en_rattrapage_ids, true)
             end
+
             start_new_page unless index == cours.size - 1
         end
     end
 
+    def affichage_etudiants_emargement(cour, étudiants_ids, autres_étudiants = false)
+        if autres_étudiants
+            start_new_page
+
+            text "AUTRES ÉTUDIANTS", size: 16, style: :bold, align: :center
+            move_down @margin_down
+        end
+        (0..étudiants_ids.length - 1).step(2).each do |index|
+            # Multiple de deux parce qu'il y a un step(2)
+            start_new_page if (index%10 == 6)
+            move_down @margin_down
+
+            etudiant = Etudiant.find(étudiants_ids[index])
+            presence = Presence.find_by(cour_id: cour.id, etudiant_id: etudiant.id)
+
+            if index < étudiants_ids.length - 1
+                next_etudiant = Etudiant.find(étudiants_ids[index + 1])
+                presence_next_etudiant = Presence.find_by(cour_id: cour.id, etudiant_id: next_etudiant.id)
+            end
+
+            y_position = cursor
+            bounding_box([0, y_position], :width => 270) do
+                text "<b>#{etudiant.nom.upcase}</b> #{etudiant.prénom.humanize}", inline_format: true
+                text "#{etudiant.formation.nom}", inline_format: true
+                if presence
+                    if presence.signature
+                        svg Base64.decode64(presence.signature.split(',')[1]), height: 50
+                    else
+                        move_down @margin_down * 3.4
+                    end
+                    move_down @margin_down
+                    text presence.workflow_state.humanize
+                else
+                    move_down @margin_down * 6
+                end
+            end
+
+            if next_etudiant
+                bounding_box([270, y_position], :width => 270) do
+                    text "<b>#{next_etudiant.nom.upcase}</b> #{next_etudiant.prénom.humanize}", inline_format: true
+                    text "#{next_etudiant.formation.nom}", inline_format: true
+                    if presence_next_etudiant
+                        if presence_next_etudiant.signature
+                            svg Base64.decode64(presence_next_etudiant.signature.split(',')[1]), height: 50
+                        else
+                            move_down @margin_down * 3.4
+                        end
+                        move_down @margin_down
+                        text presence_next_etudiant.workflow_state.humanize
+                    else
+                        move_down @margin_down * 6
+                    end
+                end
+            end
+
+            move_down @margin_down
+            stroke_horizontal_rule
+
+        end
+    end
 
     def consignes(papier, calculatrice, ordi_tablette, téléphone, dictionnaire)
         text "<color rgb='032E4D'><b>CONSIGNES :</b></color>", inline_format: true
