@@ -236,6 +236,7 @@ progress.progress {
 /* Fin Pagination */
 
 
+/* Slim-Select required */
 select.slim-select[required] {
   display: block !important;
   position: absolute !important;
@@ -267,3 +268,5 @@ select.slim-select[required] {
   outline-offset: 2px;
   outline-color: var(--fallback-bc, oklch(var(--bc) / .2));
 }
+
+/* Fin Slim-Select required */
