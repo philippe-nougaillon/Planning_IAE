@@ -280,7 +280,7 @@
 
     </div>
   <% elsif ["Générer Feuille émargement PDF", "Générer Feuille émargement présences signées PDF","Générer Pochette Examen PDF", "Convocation étudiants PDF"].include?(params[:action_name]) %>
-    <% if params[:action_name] == "Générer Feuille émargement PDF" || (@cours.count == 1 && @cours.first.examen?) %>
+    <% if ["Générer Feuille émargement PDF", "Générer Feuille émargement présences signées PDF"].include?(params[:action_name]) || (@cours.count == 1 && @cours.first.examen?) %>
       <h3 class="text-2xl">Sélectionnez les étudiants</h3>
       <br>
       <div data-controller="checkbox-select-all action">
@@ -288,16 +288,20 @@
           <input id="checkall" type="checkbox" data-checkbox-select-all-target="checkboxAll" data-action-target="source">
           <label for="checkall">Tous ?</label>
         </div>
-        <% @cours.each do |c| %>
-          <h4 class="text-xl font-bold"><%= c.formation.nom %></h4>
-          <% c.formation.etudiants.order(:nom, :prénom).each do |etudiant| %>
-            <span class="flex gap-1" data-action="click->action#click">
-              <%= check_box_tag "etudiants_id[#{etudiant.id}]", true, false, data: {"action-target": "source", "checkbox-select-all-target": "checkbox"}, class: 'hover:cursor-pointer' %>
-              <%= label_tag "etudiants_id[#{etudiant.id}]", etudiant.nom_prénom, class: 'hover:cursor-pointer' %>
-            </span>
+        <div class="flex flex-wrap gap-4">
+          <% @cours.each do |c| %>
+            <div class="flex-1">
+              <h4 class="text-xl font-bold"><%= c.formation.nom %></h4>
+              <% c.formation.etudiants.order(:nom, :prénom).each do |etudiant| %>
+                <span class="flex gap-1" data-action="click->action#click">
+                  <%= check_box_tag "etudiants_id[#{etudiant.id}]", true, false, data: {"action-target": "source", "checkbox-select-all-target": "checkbox"}, class: 'hover:cursor-pointer' %>
+                  <%= label_tag "etudiants_id[#{etudiant.id}]", etudiant.nom_prénom, class: 'hover:cursor-pointer' %>
+                </span>
+              <% end %>
+              <br>
+            </div>
           <% end %>
-          <br>
-        <% end %>
+        </div>
       </div>
     <% end %>
     <% if params[:action_name] == "Générer Feuille émargement PDF" %>

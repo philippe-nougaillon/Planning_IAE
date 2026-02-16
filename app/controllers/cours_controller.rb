@@ -639,7 +639,7 @@ class CoursController < ApplicationController
         when "Générer Feuille émargement présences signées PDF"
           filename = "Feuille_émargement_signée#{ Date.today }.pdf"
           pdf = ExportPdf.new
-          pdf.generate_feuille_emargement_signée(@cours)
+          pdf.generate_feuille_emargement_signée(@cours, params[:etudiants_id].try(:keys))
 
           send_data pdf.render, filename: filename, type: 'application/pdf'
         when "Générer Pochette Examen PDF"
