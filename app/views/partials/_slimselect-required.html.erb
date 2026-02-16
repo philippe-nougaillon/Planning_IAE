@@ -1,46 +1,63 @@
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-  setTimeout(() => {
-    const selects = document.querySelectorAll('select.slim-select[required]');
+// Fonction principale
+function initSlimSelectFix() {
+    
+    // On cible les selects requis non traités
+    const selects = document.querySelectorAll('select.slim-select[required]:not([data-ss-fix-applied])');
+
+    if (selects.length === 0) return;
 
     selects.forEach(select => {
-      // 1. SETUP
-      if (select.parentElement) {
-        select.parentElement.style.position = 'relative';
-      }
-      select.removeAttribute('aria-hidden');
-      
-      // IMPORTANT : On empêche le focus manuel (Tab) pour que le focus
-      // ne se produise QUE lors d'une erreur de validation navigateur.
-      select.setAttribute('tabindex', '-1');
+        // Marquer comme traité pour éviter les doublons
+        select.setAttribute('data-ss-fix-applied', 'true');
 
-
-      // 2. FOCUS
-      
-      // On ajoute la classe d'erreur si le select reçoit le focus.
-      select.addEventListener('focus', function() {
-        const wrapper = this.nextElementSibling;
-        if (wrapper && wrapper.classList.contains('ss-main')) {
-          wrapper.classList.add('ss-error-native');
+        // 1. Positionnement relatif du parent
+        if (select.parentElement) {
+            select.parentElement.style.position = 'relative';
         }
-      });
 
-      // 3. NETTOYAGE
+        // 2. MutationObserver (Le Vigile anti-erreur console)
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === "attributes" && mutation.attributeName === "aria-hidden") {
+                    if (select.hasAttribute('aria-hidden')) {
+                        select.removeAttribute('aria-hidden');
+                    }
+                }
+            });
+        });
+        
+        observer.observe(select, { attributes: true, attributeFilter: ['aria-hidden'] });
+        
+        // Nettoyage immédiat
+        select.removeAttribute('aria-hidden');
+        select.setAttribute('tabindex', '-1');
 
-      // À commenter si on veut que ça reste rouge tant que ce n'est pas rempli
-      select.addEventListener('blur', function() {
-          const wrapper = this.nextElementSibling;
-          if (wrapper) wrapper.classList.remove('ss-error-native');
-      });
+        // 3. Gestion du Rouge (uniquement au focus forcé par le navigateur)
+        select.addEventListener('focus', function() {
+            const wrapper = this.nextElementSibling;
+            if (wrapper && wrapper.classList.contains('ss-main')) {
+                wrapper.classList.add('ss-error-native');
+            }
+        });
 
-      // Si l'utilisateur change la valeur (remplit le champ), on retire le rouge
-      select.addEventListener('change', function() {
-        const wrapper = this.nextElementSibling;
-        if (this.checkValidity() && wrapper) {
-          wrapper.classList.remove('ss-error-native');
-        }
-      });
+        // 4. Nettoyage du Rouge (Blur ou Change)
+        const removeError = () => {
+            const wrapper = select.nextElementSibling;
+            if (wrapper) wrapper.classList.remove('ss-error-native');
+        };
+
+        select.addEventListener('blur', removeError);
+        select.addEventListener('change', removeError);
     });
-  }, 500);
-});
+}
+
+// --- ÉCOUTEURS RAILS 7 ---
+
+// Se déclenche au chargement initial ET à chaque navigation Turbo Drive
+document.addEventListener("turbo:load", initSlimSelectFix);
+
+// Se déclenche si ton formulaire est chargé dynamiquement dans une <turbo-frame>
+document.addEventListener("turbo:frame-load", initSlimSelectFix);
+
 </script>
