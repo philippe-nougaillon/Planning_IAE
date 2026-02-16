@@ -36,7 +36,7 @@ Rails.application.routes.draw do
       get :sujets
     end
     collection do
-      get :examen
+      get :is_specific_intervenant
     end
   end
 
