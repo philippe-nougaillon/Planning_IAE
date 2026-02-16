@@ -96,10 +96,10 @@
 
   <% elsif params[:action_name] == "Changer d'intervenant" %>
     <div class="sm:w-1/2">
-      <%= label_tag :intervenant_id, "Nouvel intervenant" %>    
+      <%= label_tag :intervenant_id, "Nouvel intervenant *" %>    
       <%= select_tag :intervenant_id, 
                       options_from_collection_for_select(Intervenant.all, :id, :nom_prenom, params[:intervenant_id]), 
-                      include_blank:true, class:"slim-select" %>
+                      include_blank:true, required: true, class:"slim-select" %>
     </div>
 
   <% elsif params[:action_name] == "Intervertir" %>

@@ -412,9 +412,16 @@ class CoursController < ApplicationController
         end
 
       when "Changer d'intervenant"
+        errors = []
         @cours.each do |c|
           c.intervenant_id = params[:intervenant_id].to_i
-          c.save
+          unless c.save
+            errors << "Cours ##{c.id} : #{c.errors.full_messages.join(', ')}"
+          end
+        end
+
+        if errors.any?
+          flash[:alert] = "Certains cours n'ont pas pu être mis à jour : #{errors.join(' | ')}"
         end
 
       when 'Inviter'
