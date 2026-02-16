@@ -66,10 +66,10 @@
       Changer de gestionnaire
     </h3>
     <div class="sm:w-1/2">
-      <%= label_tag :user_id, "Nouveau gestionnaire" %>    
+      <%= label_tag :user_id, "Nouveau gestionnaire *" %>    
       <%= select_tag :user_id, 
                       options_from_collection_for_select(User.where.not(nom: nil).where.not(role: "étudiant").order(:nom), :id, :nom_prénom_role, params[:user_id]), 
-                      include_blank:true, class:"slim-select" %>
+                      include_blank:true, required: true, class:"slim-select" %>
     </div>
   <% elsif params[:action_name] == "Archiver formation et désactiver les étudiants" %>
     <p class="text-lg font-black">

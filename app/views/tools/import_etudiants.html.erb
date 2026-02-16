@@ -22,11 +22,11 @@
       <%= label_tag :formation_id, "Formation *" %>    
       <%= select_tag :formation_id, 
             options_from_collection_for_select(Formation.not_archived.ordered, :id, :nom, params[:formation_id]), 
-              class:"slim-select", include_blank: true %>
+              class:"slim-select", include_blank: true, required: true %>
       <br>
       <div class="field">
         <%= label :filename, "Fichier source *" %>
-        <%= file_field_tag 'upload', accept: 'application/vnd.ms-excel', class: 'file-input file-input-bordered file-input-sm w-full' %>
+        <%= file_field_tag 'upload', accept: 'application/vnd.ms-excel', class: 'file-input file-input-bordered file-input-sm w-full', required: true %>
         <%= render "partials/script_accept_file_type", id_form: "import_etudiants_form", id_file_input: "upload", file_type_accepted: 'application/vnd.ms-excel', file_type_for_alert: 'XLS' %>
       </div>
     </div>

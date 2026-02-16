@@ -7,14 +7,14 @@
   <div class="flex flex-wrap">
     <div class="sm:w-2/5">
 
-      <%= label_tag :intervenant_from_id, "Intervenant à remplacer" %>
+      <%= label_tag :intervenant_from_id, "Intervenant à remplacer *" %>
       <%= select_tag :intervenant_from_id,
-            options_from_collection_for_select(Intervenant.all, :id, :nom_prenom, Intervenant.all), include_blank:true, class:"slim-select" %>
+            options_from_collection_for_select(Intervenant.all, :id, :nom_prenom, Intervenant.all), include_blank:true, class:"slim-select", required: true %>
       <br>
 
-      <%= label_tag :intervenant_to_id, "Remplacer par" %>
+      <%= label_tag :intervenant_to_id, "Remplacer par *" %>
       <%= select_tag :intervenant_to_id,
-            options_from_collection_for_select(Intervenant.all, :id, :nom_prenom, Intervenant.all), include_blank:true, class:"slim-select" %>
+            options_from_collection_for_select(Intervenant.all, :id, :nom_prenom, Intervenant.all), include_blank:true, class:"slim-select", required: true %>
       <br>
 
       <div class="field">

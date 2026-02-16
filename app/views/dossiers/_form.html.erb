@@ -24,10 +24,10 @@
         <%= form.hidden_field :période %>
 
         <div class="form-control">
-          <%= form.label :intervenant_id %>
+          <%= form.label :intervenant_id, "Intervenant *" %>
           <%= form.select :intervenant_id, 
                           options_from_collection_for_select(@intervenants, :id, :nom_prenom, @dossier.intervenant_id), 
-                          {},
+                          {required: true},
                           class: 'slim-select' %>
         </div>
       <% else %>

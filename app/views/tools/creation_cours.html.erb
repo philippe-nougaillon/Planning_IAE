@@ -82,12 +82,12 @@
 
         <%= label_tag :formation_id, "Formation", class:"font-bold"  %>
         <%= select_tag :formation_id, 
-              options_from_collection_for_select(Formation.not_archived.ordered, :id, :nom_promo_hss), class:"slim-select", include_blank:true %>
+              options_from_collection_for_select(Formation.not_archived.ordered, :id, :nom_promo_hss), class:"slim-select", include_blank:true, required: true %>
         <br>
 
         <%= label_tag :intervenant_id, "Intervenant", class:"font-bold"  %>
         <%= select_tag :intervenant_id,
-              options_from_collection_for_select(Intervenant.all, :id, :nom_prenom), class:"slim-select", include_blank:true %>
+              options_from_collection_for_select(Intervenant.all, :id, :nom_prenom), class:"slim-select", include_blank:true, required: true %>
         <br>
 
         <%= label_tag :nom, "Nom du cours *", class:"font-bold"  %>
