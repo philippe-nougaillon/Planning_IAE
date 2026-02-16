@@ -57,8 +57,7 @@ class Responsabilite < ApplicationRecord
   def add_forfait
     # Status (numeric) de l'intervenant est dépendant du status dans les tarifs de vacation (string)
     status = VacationActiviteTarif.statuts[self.intervenant.status]
-    forfait = VacationActiviteTarif.find_by(vacation_activite_id: self.vacation_activite, statut: status).forfait_hetd
-
+    forfait = VacationActiviteTarif.find_by(vacation_activite_id: self.vacation_activite, statut: status)&.forfait_hetd
     self.update!(heures: forfait)
   end
 
