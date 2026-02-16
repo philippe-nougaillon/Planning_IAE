@@ -444,7 +444,7 @@ class CoursController < ApplicationController
         if invits_créées > 0
           @message_complémentaire = "#{ invits_créées } invitation.s créée.s avec succès"
         else
-          flash[:alert] = "Action annulée"
+          flash[:alert] = "Aucune invitation n'a pu être créée. Action annulée."
         end
 
       when 'Intervertir'
