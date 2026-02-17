@@ -75,6 +75,8 @@ class FormationsController < ApplicationController
     if formation_id = params[:formation_id]
       original_formation = Formation.find(formation_id)
       @formation = original_formation.dup
+      @formation.promo = @formation.abrg = @formation.code_analytique = @formation.edusign_id = ""
+      @formation.archive = false
       # Duplication des unités associées à la formation d'origine
       original_formation.unites.each do |unite|
         @formation.unites.build(unite.dup.attributes.except('formation_id'))
