@@ -3,11 +3,11 @@
 </div>
 
 <div class="flex flex-col gap-4">
-  <p><strong>Activité : </strong><%= link_to_if @responsabilite.vacation_activite, @responsabilite.intitulé, @responsabilite.vacation_activite, class: 'text-primary hover:underline' %></p>
+  <p><strong>Date début : </strong><%= l(@responsabilite.debut, format: :long) %></p>
   <p><strong>Intervenant : </strong><%= link_to @responsabilite.intervenant.nom_prenom, @responsabilite.intervenant, class: 'text-primary hover:underline' %></p>
   <p><strong>Formation : </strong><%= link_to @responsabilite.formation.nom, @responsabilite.formation, class: 'text-primary hover:underline' %></p>
-  <p><strong>Début : </strong><%= l(@responsabilite.debut, format: :long) %></p>
-  <p><strong>Forfait : </strong><%= @responsabilite.heures %></p>
+  <p><strong>Activité : </strong><%= @responsabilite.intitulé %></p>
+  <p><strong>Forfait : </strong><%= @responsabilite.heures %> HETD</p>
 </div>
 
 <div class="mt-8">
@@ -15,3 +15,26 @@
   <%= link_to '[X]', @responsabilite, 'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous ?', class: 'btn' %>
   <%= link_to "Retour", responsabilites_path, class: "btn" %>
 </div>
+
+  <div tabindex="0" class="collapse collapse-arrow border border-base-300 bg-base-100 mt-8">
+    <div class="collapse-title text-lg">
+      Audit des modifications
+    </div>
+    <div class="overflow-x-auto collapse-content bg-base-100"> 
+      <% if @responsabilite.audits.any? %>
+        <table class="table table-xs">
+          <thead class="bg-slate-100 border">
+            <th>Date</th>
+            <th>Utilisateur</th>            
+            <th>Type</th>
+            <th>Record_id</th>
+            <th>Action</th>
+            <th>Modifications</th>
+          </thead>
+
+          <%= render partial: 'tools/audit', collection: @responsabilite.audits.reorder(id: :desc) %>
+
+        </table>
+      <% end %>
+    </div>
+  </div>

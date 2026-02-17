@@ -58,7 +58,7 @@
   <% end %>
 </div>
 
-<div class="overflow-x-auto">
+<div class="overflow-x-auto mb-4">
   <table class="table">
     <thead class="bg-slate-100 border">
       <tr>
@@ -67,17 +67,14 @@
         <th><%= sort_link 'intervenants.nom', 'Intervenant' %></th>
         <th><%= sort_link 'formations.abrg', 'Formation' %></th>
         <th><%= sort_link 'responsabilites.titre', 'Activité' %></th>
-        <th><%= sort_link 'responsabilites.heures', 'Forfait' %></th>
+        <th><%= sort_link 'responsabilites.heures', 'Forfait (hetd)' %></th>
+        <th></th>
       </tr>
     </thead>
 
     <tbody>
       <%= render @responsabilites.includes(:formation, :intervenant) %>
     </tbody>
-
-    <tfoot>
-      <tr><th colspan=8></th></tr>
-    </tfoot>
   </table>
 </div>
 

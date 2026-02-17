@@ -3,7 +3,7 @@
 
   <div class="flex flex-col w-full gap-4">
       <div class="sm:w-2/12">
-        <%= f.label :debut, 'Date *' %>
+        <%= f.label :debut, 'Date début *' %>
         <%= f.date_field :debut, class: 'input input-bordered input-sm w-full', required: true %>
       </div>
 
@@ -34,8 +34,8 @@
       </div>
 
       <div class="sm:w-1/6">
-        <%= f.label :heures, "Forfait" %>
-        <%= f.number_field :heures, class: 'input input-bordered input-sm w-full', disabled: (!f.object.persisted?) %>
+        <%= f.label :heures, "Forfait HETD" %>
+        <%= f.number_field :heures, class: 'input input-bordered input-sm w-full', disabled: true %>
       </div>
 
       <div class="sm:w-full">
