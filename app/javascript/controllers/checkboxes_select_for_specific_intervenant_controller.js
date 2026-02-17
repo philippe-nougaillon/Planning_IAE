@@ -17,9 +17,6 @@ export default class extends Controller {
           this.no_send_to_edusignTarget.checked = true
         }else if(data["a_confirmer"]) {
           this.no_send_to_edusignTarget.checked = true
-        }else{
-          this.hssTarget.checked = false
-          this.no_send_to_edusignTarget.checked = false
         }
       }
     })
