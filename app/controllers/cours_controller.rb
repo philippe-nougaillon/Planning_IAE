@@ -312,6 +312,9 @@ class CoursController < ApplicationController
     end
   end
 
+  def pre_action
+  end
+
   def action
     unless params[:cours_id].blank? or params[:action_name].blank?
       @action_ids = params[:cours_id].keys

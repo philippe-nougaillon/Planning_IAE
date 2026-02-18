@@ -6,7 +6,7 @@
 
   <br><br>
   Les liens pour créer la pochette d'examen et la feuille d'émargement :
-  <%= link_to "Pochette examen", action_cours_url(action_name: "Générer Pochette Examen PDF", cours_id: [@examen.id], etudiants_en_rattrapage_ids: @redoublants_ids), method: :post %>
-  <%= link_to "Feuille d'émargement", action_cours_url(action_name: "Générer Feuille émargement PDF", cours_id: [@examen.id], etudiants_en_rattrapage_ids: @redoublants_ids)%>
+  <%= link_to "Pochette examen", pre_action_cours_url(action_name: "Générer Pochette Examen PDF", cours_id: [@examen.id], etudiants_en_rattrapage_ids: @redoublants_ids) %>
+  <%= link_to "Feuille d'émargement", pre_action_cours_url(action_name: "Générer Feuille émargement PDF", cours_id: [@examen.id], etudiants_en_rattrapage_ids: @redoublants_ids)%>
 </p>
 
