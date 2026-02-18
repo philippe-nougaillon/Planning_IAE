@@ -40,7 +40,7 @@
       Changer d'état
     </h3>
     <div class="sm:w-1/2">
-      <%= label_tag :workflow_state, "Nouvel état" %>
+      <%= label_tag :workflow_state, "Nouvel état *" %>
       <%= select_tag :workflow_state,
                       options_for_select(@dossiers.first.available_states.map(&:to_s), params[:workflow_state]),
                       include_blank:true, class:"slim-select", required: true %>

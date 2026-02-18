@@ -1,0 +1,63 @@
+<script>
+// Fonction principale
+function initSlimSelectFix() {
+    
+    // On cible les selects requis non traités
+    const selects = document.querySelectorAll('select.slim-select[required]:not([data-ss-fix-applied])');
+
+    if (selects.length === 0) return;
+
+    selects.forEach(select => {
+        // Marquer comme traité pour éviter les doublons
+        select.setAttribute('data-ss-fix-applied', 'true');
+
+        // 1. Positionnement relatif du parent
+        if (select.parentElement) {
+            select.parentElement.style.position = 'relative';
+        }
+
+        // 2. MutationObserver (Le Vigile anti-erreur console)
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === "attributes" && mutation.attributeName === "aria-hidden") {
+                    if (select.hasAttribute('aria-hidden')) {
+                        select.removeAttribute('aria-hidden');
+                    }
+                }
+            });
+        });
+        
+        observer.observe(select, { attributes: true, attributeFilter: ['aria-hidden'] });
+        
+        // Nettoyage immédiat
+        select.removeAttribute('aria-hidden');
+        select.setAttribute('tabindex', '-1');
+
+        // 3. Gestion du Rouge (uniquement au focus forcé par le navigateur)
+        select.addEventListener('focus', function() {
+            const wrapper = this.nextElementSibling;
+            if (wrapper && wrapper.classList.contains('ss-main')) {
+                wrapper.classList.add('ss-error-native');
+            }
+        });
+
+        // 4. Nettoyage du Rouge (Blur ou Change)
+        const removeError = () => {
+            const wrapper = select.nextElementSibling;
+            if (wrapper) wrapper.classList.remove('ss-error-native');
+        };
+
+        select.addEventListener('blur', removeError);
+        select.addEventListener('change', removeError);
+    });
+}
+
+// --- ÉCOUTEURS RAILS 7 ---
+
+// Se déclenche au chargement initial ET à chaque navigation Turbo Drive
+document.addEventListener("turbo:load", initSlimSelectFix);
+
+// Se déclenche si ton formulaire est chargé dynamiquement dans une <turbo-frame>
+document.addEventListener("turbo:frame-load", initSlimSelectFix);
+
+</script>

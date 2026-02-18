@@ -412,9 +412,16 @@ class CoursController < ApplicationController
         end
 
       when "Changer d'intervenant"
+        errors = []
         @cours.each do |c|
           c.intervenant_id = params[:intervenant_id].to_i
-          c.save
+          unless c.save
+            errors << "Cours ##{c.id} : #{c.errors.full_messages.join(', ')}"
+          end
+        end
+
+        if errors.any?
+          flash[:alert] = "Certains cours n'ont pas pu être mis à jour : #{errors.join(' | ')}"
         end
 
       when 'Inviter'
@@ -444,7 +451,7 @@ class CoursController < ApplicationController
         if invits_créées > 0
           @message_complémentaire = "#{ invits_créées } invitation.s créée.s avec succès"
         else
-          flash[:alert] = "Action annulée"
+          flash[:alert] = "Aucune invitation n'a pu être créée. Action annulée."
         end
 
       when 'Intervertir'

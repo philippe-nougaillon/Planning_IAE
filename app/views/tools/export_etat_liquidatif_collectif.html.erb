@@ -24,7 +24,7 @@
       <%= select_tag :statuses, 
         options_for_select(Intervenant.statuses, 
         params[:statuses]), include_blank:true,
-        class: "slim-select ",
+        class: "slim-select",
         required: true, multiple: true %>
     </div>
 

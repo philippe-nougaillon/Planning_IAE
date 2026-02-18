@@ -1,15 +1,57 @@
 <script>
-  var selects = document.querySelectorAll('.slim-select')
-  selects.forEach((selectElement) => {
-    new SlimSelect({
-      select: selectElement,
-      settings: {
-        placeholderText: '',
-        searchPlaceholder: 'Rechercher',
-        searchText: 'Pas de résultat',
-        searchingText: 'Recherche...',
-        allowDeselect: true,
+  // Variable globale pour stocker les instances actives
+  window.ssInstances = window.ssInstances || [];
+
+  // --- 1. Fonction de nettoyage (Essentiel pour le retour arrière) ---
+  function destroySlimSelects() {
+    window.ssInstances.forEach((instance) => {
+      if (instance && typeof instance.destroy === 'function') {
+        instance.destroy();
       }
-    })
-  })
+    });
+    window.ssInstances = []; // On vide la liste
+  }
+
+  // --- 2. Fonction d'initialisation principale ---
+  function initAllSlimSelects() {
+    // Sécurité : on nettoie tout avant de commencer pour éviter les doublons
+    destroySlimSelects();
+
+    const commonSettings = {
+      placeholderText: '',
+      searchPlaceholder: 'Rechercher',
+      searchText: 'Pas de résultat', 
+      searchingText: 'Recherche...',
+      allowDeselect: true,
+    };
+
+    // --- B. Gestion Globale (.slim-select) ---
+    const genericSelects = document.querySelectorAll('.slim-select');
+    
+    genericSelects.forEach((selectElement) => {
+      const instance = new SlimSelect({
+        select: selectElement,
+        settings: commonSettings
+      });
+      window.ssInstances.push(instance);
+    });
+
+    // --- C. Appel de votre correctif "required" ---
+    // On l'appelle ici pour être sûr que SlimSelect est prêt avant de corriger le HTML
+    if (typeof initSlimSelectFix === 'function') {
+      initSlimSelectFix();
+    }
+  }
+
+  // --- 3. Écouteurs d'événements (Cycle de vie Rails Turbo) ---
+  
+  // Au chargement initial ET à chaque navigation Turbo
+  document.addEventListener("turbo:load", initAllSlimSelects);
+  
+  // Si vous utilisez des Turbo Frames (modales, parties de page)
+  document.addEventListener("turbo:frame-load", initAllSlimSelects);
+
+  // AVANT que Turbo ne mette la page en cache (C'est ça qui corrige le bug retour arrière)
+  document.addEventListener("turbo:before-cache", destroySlimSelects);
+
 </script>

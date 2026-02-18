@@ -16,15 +16,15 @@
 
     <% if @formations.present? %>  
       <div class="form-control">
-        <%= label_tag :formation %>    
+        <%= label_tag :formation, 'Formation *' %>    
         <%= select_tag :formation_id, 
-            options_from_collection_for_select(@formations, :id, :nom_promo_full, params[:formation_id]), class:"slim-select", include_blank:true, onchange:'this.form.submit()' %>
+            options_from_collection_for_select(@formations, :id, :nom_promo_full, params[:formation_id]), class:"slim-select", include_blank:true, required: true, onchange:'this.form.submit()' %>
       </div>
     <% elsif params[:saison].present? %>
       <div class="form-control">
-        <%= label_tag :formation %>    
+        <%= label_tag :formation, 'Formation *' %>    
         <%= select_tag :formation_id, 
-            options_for_select([["Aucune formation", nil]], params[:formation_id]), class:"slim-select", disabled:true %>
+            options_for_select([["Aucune formation", nil]], params[:formation_id]), class:"slim-select", disabled:true, required: true %>
       </div>
     <% end %>
     <div class="actions" style="display:none">
