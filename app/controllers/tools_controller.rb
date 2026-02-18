@@ -858,7 +858,7 @@ class ToolsController < ApplicationController
           book = CoursEtatsServicesToXls.new(@cours, @intervenants, @start_date, @end_date, params[:cours], params[:vacations], params[:responsabilites]).call
           file_contents = StringIO.new
           book.write file_contents # => Now file_contents contains the rendered file output
-          filename = "Export_Cours.xls"
+          filename = "Etats_de_services_#{Date.today.to_s}.xls"
           send_data file_contents.string.force_encoding('binary'), filename: filename 
         end
 

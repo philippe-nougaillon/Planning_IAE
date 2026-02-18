@@ -26,6 +26,7 @@
         <% if current_user.rh? %>
           <%= navbar_nav_item('Dossiers', 'folder', dossiers_path, 'dossiers') %>
           <%= navbar_nav_item('Vacations', 'co_present', vacations_path, 'vacations') %>
+          <%= navbar_nav_item('Responsabilités', 'contract', responsabilites_path, 'responsabilites') %>
         <% end %>
 
         <% if current_user.intervenant? && !current_user.partenaire_qse? %>

@@ -162,7 +162,7 @@
 
         <% if params[:responsabilites] == '1' %>
             <% @responsabilites.each_with_index do |resp, index| %>
-                <% montant_responsabilite = (resp.heures * Cour.Tarif).round(2) %>
+                <% montant_responsabilite = resp.montant %>
                 <% cumul_resps += montant_responsabilite %>
                 <% cumul_hetd += resp.heures %>
                 <% formation = Formation.find(resp.formation_id) %>
@@ -173,10 +173,12 @@
                     <td />
                     <td><%= link_to formation.nom, formation, target:"_new", class: 'text-primary hover:underline' %></td>
                     <td><%= formation.code_analytique_avec_indice(resp.debut) %></td>
-                    <td><%= resp.titre %></td>
+                    <td><%= resp.intitulé %></td>
                     <td />
                     <td class="text-right"><%= resp.heures %></td>
-                    <td colspan="3" />
+                    <td></td>
+                    <td><%= Cour.Tarif %></td>
+                    <td><%= resp.forfait_hetd %></td>
                     <td class="text-right"><%= number_to_currency(montant_responsabilite) %></td>
                     <td class="text-right">
                         <%= cumul_hetd %>

@@ -1,4 +1,4 @@
-class VacationActivitePolicy < ApplicationPolicy
+class ResponsabilitePolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
       scope
@@ -6,19 +6,19 @@ class VacationActivitePolicy < ApplicationPolicy
   end
 
   def index?
-    user && (user.rh? || user.administrateur?) 
+    user && (user.rh? || ENV["SUPER_ADMIN_IDS"].to_s.split(',').map(&:to_i).include?(user.id)) 
   end
 
   def show?
     index?
   end
 
-  def new?
+  def create?
     index?
   end
 
-  def create?
-    new?
+  def new?
+    create?
   end
 
   def edit?
@@ -31,9 +31,5 @@ class VacationActivitePolicy < ApplicationPolicy
 
   def destroy?
     index?
-  end
-
-  def activites_filtrees_par_statut_intervenant?
-    true
   end
 end

@@ -190,7 +190,7 @@ class ExportPdf
         if is_responsabilites_showed
             # Responsabilités
             responsabilites.each_with_index do |resp, index|
-                montant_responsabilite = (resp.heures * Cour.Tarif).round(2)
+                montant_responsabilite = resp.montant
                 cumul_resps += montant_responsabilite
                 cumul_hetd += resp.heures
 
@@ -200,11 +200,11 @@ class ExportPdf
                     I18n.l(resp.debut),
                     nil,
                     resp.formation.nom,
-                    resp.titre,
+                    resp.intitulé,
                     resp.heures,
                     'TD', 
                     Cour.Tarif,
-                    nil,
+                    resp.forfait_hetd,
                     number_to_currency(montant_responsabilite)
                     ] ]
 

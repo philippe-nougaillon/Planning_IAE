@@ -247,7 +247,14 @@ Rails.application.routes.draw do
   resources :notes
 
   resources :vacations, only: %i[ index show edit update ]
-  resources :vacation_activites
+
+  resources :vacation_activites do
+    collection do 
+      get :activites_filtrees_par_statut_intervenant
+    end
+  end
+  
+  resources :responsabilites
 
   resources :attendances
   resources :justificatifs, only: %i[ index show ]

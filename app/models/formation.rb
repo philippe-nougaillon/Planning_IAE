@@ -7,7 +7,6 @@ class Formation < ApplicationRecord
 	has_many :users
 	has_many :cours, dependent: :destroy
 	has_many :intervenants, through: :cours
-	has_many :responsabilites
 	has_many :unites
 	accepts_nested_attributes_for :unites, allow_destroy:true, 
 									reject_if: lambda {|attributes| attributes['code'].blank?}
@@ -22,6 +21,9 @@ class Formation < ApplicationRecord
 																	attributes['date'].blank? ||
 																	attributes['qte'].blank?
 																}
+
+	has_many :responsabilites
+	accepts_nested_attributes_for :responsabilites, allow_destroy:true
 	belongs_to :user
 
 	validates :nom, :nbr_etudiants, :nbr_heures, :abrg, presence: true

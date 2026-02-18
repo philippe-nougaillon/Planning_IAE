@@ -1,4 +1,6 @@
 class VacationActivitesController < ApplicationController
+  include ActionView::Helpers::FormOptionsHelper
+
   before_action :set_vacation_activite, only: %i[ show edit update destroy ]
   before_action :is_user_authorized
 
@@ -7,6 +9,10 @@ class VacationActivitesController < ApplicationController
     @vacation_activites = VacationActivite.ordered
 
     @natures = VacationActivite.all.pluck(:nature).uniq.sort
+
+    if params[:search].present?
+      @vacation_activites = @vacation_activites.where("LOWER(nom) like :search", {search: "%#{params[:search]}%".downcase})
+    end
 
     if params[:nature].present?
       @vacation_activites = @vacation_activites.where(nature: params[:nature])
@@ -69,6 +75,18 @@ class VacationActivitesController < ApplicationController
     respond_to do |format|
       format.html { redirect_to vacation_activites_url, notice: "Activité supprimée avec succès." }
       format.json { head :no_content }
+    end
+  end
+
+  def activites_filtrees_par_statut_intervenant
+    intervenant_id = params[:responsabilite][:intervenant_id]
+
+    if intervenant_id.present?
+      intervenant = Intervenant.find(intervenant_id.to_i)
+      status_id = VacationActiviteTarif.statuts[intervenant.status]
+      activites = VacationActivite.joins(:vacation_activite_tarifs).where('vacation_activite_tarifs.statut = ?', status_id)
+      
+      render json: options_for_select(activites.pluck(:nom, :id))
     end
   end
 

@@ -166,7 +166,7 @@ class EtatLiquidatifCollectifFormationToXls < ApplicationService
         end
 
         intervenant_responsabilites.each do |resp|
-          montant_responsabilite = (resp.heures * Cour.Tarif).round(2)
+          montant_responsabilite = resp.montant
           cumul_responsabilites += montant_responsabilite
           cumul_hetd += resp.heures
 
@@ -175,7 +175,7 @@ class EtatLiquidatifCollectifFormationToXls < ApplicationService
             intervenant.nom,
             intervenant.prenom,
             formation.nom_promo_full,
-            resp.titre,
+            resp.intitulé,
             formation.code_analytique_avec_indice(resp.debut),
             formation.code_analytique.include?('DISTR') ? "101PAIE" : "102PAIE",
             I18n.l(resp.debut),
@@ -185,7 +185,7 @@ class EtatLiquidatifCollectifFormationToXls < ApplicationService
             # Nbre d'Hres CM
             nil,
             # Nbre HTD
-            resp.heures,
+            resp.forfait_hetd,
             # Taux TD
             Cour.Tarif,
             # Mtnt total HTD
