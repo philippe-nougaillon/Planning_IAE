@@ -3,8 +3,12 @@
     <span class="material-symbols-outlined text-3xl">
       work
     </span>
-    Nouvelle formation
+  Nouvelle formation <%= "basée sur #{Formation.find(params[:formation_id]).nom}" if params[:formation_id] %>
   </h1>
 </div>
+
+<% if params[:formation_id].present? %>
+  <p class="text-warning font-black mb-4">Les UE seront dupliquées une fois la formation créée</p>
+<% end %>
 
 <%= render 'form' %>
