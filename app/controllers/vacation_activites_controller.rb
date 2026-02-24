@@ -10,6 +10,10 @@ class VacationActivitesController < ApplicationController
 
     @natures = VacationActivite.all.pluck(:nature).uniq.sort
 
+    if params[:search].present?
+      @vacation_activites = @vacation_activites.where("LOWER(nom) like :search", {search: "%#{params[:search]}%".downcase})
+    end
+
     if params[:nature].present?
       @vacation_activites = @vacation_activites.where(nature: params[:nature])
     end
@@ -77,15 +81,13 @@ class VacationActivitesController < ApplicationController
   def activites_filtrees_par_statut_intervenant
     intervenant_id = params[:responsabilite][:intervenant_id]
 
-    if intervenant_id != nil
+    if intervenant_id.present?
       intervenant = Intervenant.find(intervenant_id.to_i)
       status_id = VacationActiviteTarif.statuts[intervenant.status]
       activites = VacationActivite.joins(:vacation_activite_tarifs).where('vacation_activite_tarifs.statut = ?', status_id)
       
       render json: options_for_select(activites.pluck(:nom, :id))
     end
-
-    
   end
 
   private

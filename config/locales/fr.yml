@@ -595,5 +595,9 @@ fr:
   responsabilites:
     index:
       title: "Responsabilités"
+    show:
+      title: "Responsabilité"
     new:
       title: "Nouvelle responsabilité"
+    edit:
+      title: "Modification Responsabilité"

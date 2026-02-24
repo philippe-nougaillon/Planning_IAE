@@ -254,7 +254,7 @@ Rails.application.routes.draw do
     end
   end
   
-  resources :responsabilites, only: %i[ index new create ]
+  resources :responsabilites
 
   resources :attendances
   resources :justificatifs, only: %i[ index show ]
