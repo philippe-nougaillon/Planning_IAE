@@ -67,6 +67,13 @@
 					<%= link_to "Activités", vacation_activites_path, class: 'text-primary hover:underline' %>
 				</li>
 
+				<% if policy(Responsabilite).index? %>
+					<li class="-mt-6 mb-12">
+						<%= fa_icon 'user-md' %>
+						<%= link_to "Responsabilités", responsabilites_path, class: 'text-primary hover:underline' %>
+					</li>
+				<% end %>
+
 				<li>
 					<%= fa_icon 'list-alt' %>
 					<%= link_to "Liste des surveillances d'examens", tools_liste_surveillants_examens_path, class: 'text-primary hover:underline' %>
