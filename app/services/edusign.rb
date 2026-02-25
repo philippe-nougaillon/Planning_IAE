@@ -93,8 +93,12 @@ class Edusign < ApplicationService
 
         http_response = @http.request(@request)
 
+        status = http_response.code.to_i
+
+        puts "Statut de la requête : #{status}"
+
         # Si le code de réponse est un succes, on parse la réponse
-        if http_response.code.to_i == 200
+        if status == (200..299)
             response = JSON.parse(http_response.body)
 
             if debug_mode
