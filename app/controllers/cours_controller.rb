@@ -312,6 +312,9 @@ class CoursController < ApplicationController
     end
   end
 
+  def pre_action
+  end
+
   def action
     unless params[:cours_id].blank? or params[:action_name].blank?
       @action_ids = params[:cours_id].keys
@@ -560,6 +563,9 @@ class CoursController < ApplicationController
               title = "Convocation #{@cours.first.type_examen} - #{@cours.first.nom_ou_ue}"
               mailer_response = EtudiantMailer.convocation(étudiant, pdf, @cours.first, title).deliver_now
               MailLog.create(subject: "Convocation UE##{@cours.first.code_ue}", user_id: current_user.id, message_id: mailer_response.message_id, to: étudiant.email, title: title)
+            end
+            if params[:etudiants_en_rattrapage_ids].present?
+              RedoublantNotificationJob.perform_later(@cours.first, params[:etudiants_en_rattrapage_ids], current_user.id)
             end
           else
             flash[:alert] = "Aucun étudiant n'a été sélectionné, il ne s'est rien passé"

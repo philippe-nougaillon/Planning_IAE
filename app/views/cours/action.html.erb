@@ -310,7 +310,7 @@
 
       <% if (@cours.count == 1 && @cours.first.examen?) %>
         Étudiants d'autres promotions :
-        <%= select_tag :etudiants_en_rattrapage_ids, options_from_collection_for_select(Etudiant.where.not(formation_id: @cours.first.formation_id), :id, :nom_prénom), multiple: true, class: 'slim-select' %>
+        <%= select_tag :etudiants_en_rattrapage_ids, options_from_collection_for_select(Etudiant.where.not(formation_id: @cours.first.formation_id), :id, :nom_prénom, params[:etudiants_en_rattrapage_ids]), multiple: true, class: 'slim-select' %>
       <% end %>
 
       <% if params[:action_name] == "Générer Feuille émargement PDF" %>

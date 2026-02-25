@@ -66,6 +66,7 @@ Rails.application.routes.draw do
   resources :cours do
     collection do
       get :planning, to: 'cours#index_slide'
+      get :pre_action
       post :action
       post :action_do
       get :signature_etudiant
