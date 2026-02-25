@@ -83,8 +83,8 @@ class VacationActivitesController < ApplicationController
 
     if intervenant_id.present?
       intervenant = Intervenant.find(intervenant_id.to_i)
-      status_id = VacationActiviteTarif.statuts[intervenant.status]
-      activites = VacationActivite.joins(:vacation_activite_tarifs).where('vacation_activite_tarifs.statut = ?', status_id)
+      status = intervenant.permanent? ? 'Permanent' : intervenant.status
+      activites = VacationActivite.joins(:vacation_activite_tarifs).where(vacation_activite_tarifs: {statut: status})
       
       render json: options_for_select(activites.pluck(:nom, :id))
     end
