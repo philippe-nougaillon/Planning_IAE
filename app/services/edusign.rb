@@ -98,7 +98,7 @@ class Edusign < ApplicationService
         puts "Statut de la requête : #{status}"
 
         # Si le code de réponse est un succes, on parse la réponse
-        if status == (200..299)
+        if status.between?(200,299)
             response = JSON.parse(http_response.body)
 
             if debug_mode
