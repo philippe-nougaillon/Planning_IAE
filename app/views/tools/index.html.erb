@@ -67,6 +67,13 @@
 					<%= link_to "Activités", vacation_activites_path, class: 'text-primary hover:underline' %>
 				</li>
 
+				<% if policy(Vacation).index? %>
+					<li class="-mt-6 mb-12">
+						<%= fa_icon 'user-md' %>
+						<%= link_to "Vacations", vacations_path, class: 'text-primary hover:underline' %>
+					</li>
+				<% end %>
+
 				<% if policy(Responsabilite).index? %>
 					<li class="-mt-6 mb-12">
 						<%= fa_icon 'user-md' %>
