@@ -15,7 +15,7 @@ class Responsabilite < ApplicationRecord
   validate :check_if_activite_belongs_to_intervenant_status
   validate :check_if_maximum_is_not_exceeded
 
-  after_create :add_forfait
+  before_save :add_forfait
 
   def forfait_hetd
     self.vacation_activite&.vacation_activite_tarifs&.find_by(statut: 'Permanent')&.forfait_hetd || 1.0
@@ -56,9 +56,9 @@ class Responsabilite < ApplicationRecord
 
   def add_forfait
     # Status (numeric) de l'intervenant est dépendant du status dans les tarifs de vacation (string)
-    status = VacationActiviteTarif.statuts[self.intervenant.status]
+    status = intervenant.permanent? ? 'Permanent' : intervenant.status
     forfait = VacationActiviteTarif.find_by(vacation_activite_id: self.vacation_activite, statut: status)&.forfait_hetd
-    self.update!(heures: forfait)
+    self.heures = forfait
   end
 
 end
