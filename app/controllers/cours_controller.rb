@@ -312,6 +312,9 @@ class CoursController < ApplicationController
     end
   end
 
+  def pre_action
+  end
+
   def action
     unless params[:cours_id].blank? or params[:action_name].blank?
       @action_ids = params[:cours_id].keys
@@ -554,6 +557,9 @@ class CoursController < ApplicationController
               mailer_response = EtudiantMailer.convocation(étudiant, pdf, @cours.first, title).deliver_now
               MailLog.create(subject: "Convocation UE##{@cours.first.code_ue}", user_id: current_user.id, message_id: mailer_response.message_id, to: étudiant.email, title: title)
             end
+            if params[:etudiants_en_rattrapage_ids].present?
+              RedoublantNotificationJob.perform_later(@cours.first, params[:etudiants_en_rattrapage_ids], current_user.id)
+            end
           else
             flash[:alert] = "Aucun étudiant n'a été sélectionné, il ne s'est rien passé"
           end
@@ -633,13 +639,13 @@ class CoursController < ApplicationController
         when "Générer Feuille émargement PDF"
           filename = "Feuille_émargement_#{ Date.today }.pdf"
           pdf = ExportPdf.new
-          pdf.generate_feuille_emargement(@cours, params[:etudiants_id].try(:keys), params[:table])
+          pdf.generate_feuille_emargement(@cours, params[:etudiants_id].try(:keys), params[:etudiants_en_rattrapage_ids], params[:table])
 
           send_data pdf.render, filename: filename, type: 'application/pdf'
         when "Générer Feuille émargement présences signées PDF"
           filename = "Feuille_émargement_signée#{ Date.today }.pdf"
           pdf = ExportPdf.new
-          pdf.generate_feuille_emargement_signée(@cours)
+          pdf.generate_feuille_emargement_signée(@cours, params[:etudiants_id].try(:keys), params[:etudiants_en_rattrapage_ids])
 
           send_data pdf.render, filename: filename, type: 'application/pdf'
         when "Générer Pochette Examen PDF"

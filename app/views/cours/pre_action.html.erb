@@ -1,0 +1,27 @@
+<div class="border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'exclamation-triangle' %> <%= params[:action_name] %></h1>
+</div>
+<br>
+
+<%= form_tag action_cours_path do %>
+
+	<%= hidden_field_tag :action_name, params[:action_name] %>
+  <% if params[:cours_id].present? %>
+    <% params[:cours_id].each do |id, value| %>
+      <%= hidden_field_tag "cours_id[#{id}]", value %>
+    <% end %>
+  <% end %>
+  <% if params[:etudiants_en_rattrapage_ids].present? %>
+    <% params[:etudiants_en_rattrapage_ids].each do |etudiant_id| %>
+      <%= hidden_field_tag "etudiants_en_rattrapage_ids[]", etudiant_id %>
+    <% end %>
+  <% end %>
+
+  <div class="flex flex-wrap mb-12 mt-4">
+    <div class="sm:w-full">
+      <%= submit_tag 'Aller sur la page des actions', class:"btn btn-primary text-white", 'data-turbo': false %>
+      <%= link_to 'Annuler', root_url, class:"btn btn-light" %>
+    </div>
+  </div>
+
+<% end %>
