@@ -317,6 +317,8 @@ fr:
       title: Nouveau cours
     edit:
       title: Modification d'un cours
+    pre_action:
+      title: "Pré Action"
     action:
       title: Action groupée cours
     mes_sessions_etudiant:
