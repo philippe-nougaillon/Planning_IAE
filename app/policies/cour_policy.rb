@@ -21,6 +21,10 @@ class CourPolicy < ApplicationPolicy
     true
   end
 
+  def pre_action?
+    user && ((user.role_number >= 3 && !user.accueil_vacataire?) || user.partenaire_qse?) 
+  end
+
   def action?
     user && ((user.role_number >= 3 && !user.accueil_vacataire?) || user.partenaire_qse?) 
   end

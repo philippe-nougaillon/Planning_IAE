@@ -5,6 +5,9 @@
         <%= link_to edit_formation_path(@formation), class: 'btn btn-sm btn-primary btn-outline join-item' do %>
           <%= fa_icon 'edit' %> Modifier
         <% end %>
+        <%= link_to new_formation_path(formation_id: @formation.id), class: 'btn btn-sm btn-primary btn-outline join-item', title: "Dupliquer la formation avec sa maquette (UE)" do %>
+          <%= fa_icon 'copy' %> Dupliquer
+        <% end %>
       <% end %>
 
       <%= link_to formations_path, class: 'btn btn-sm btn-primary btn-outline join-item' do %>

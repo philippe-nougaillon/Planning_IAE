@@ -163,11 +163,11 @@ class IntervenantsController < ApplicationController
     @sujets = @sujets.paginate(page: params[:page], per_page: 20)
   end
 
-  def examen
+  def is_specific_intervenant
     respond_to do |format|
       format.json do
         render json:
-          Intervenant.examens_ids.include?(params[:intervenant_id].to_i)
+           {examen: Intervenant.examens_ids.include?(params[:intervenant_id].to_i), a_confirmer: Intervenant.a_confirmer_id == params[:intervenant_id].to_i}
       end
     end
   end
