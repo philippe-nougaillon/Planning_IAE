@@ -102,6 +102,32 @@ class User < ApplicationRecord
       .include?(id)
   end
 
+  def self.generate_random_password
+    # Définition des bases en retirant les caractères prêtant à confusion
+    minuscules = ('a'..'z').to_a - ['l']
+    majuscules = ('A'..'Z').to_a - ['O', 'I']
+    chiffres = ('1'..'9').to_a
+    symboles = "!@#$%&*-+=?".chars
+
+    tous_les_caracteres = minuscules + majuscules + chiffres + symboles
+
+    # Garantie d'avoir au moins un caractère de chaque type
+    mot_de_passe = [
+      minuscules.sample(random: SecureRandom),
+      majuscules.sample(random: SecureRandom),
+      chiffres.sample(random: SecureRandom),
+      symboles.sample(random: SecureRandom)
+    ]
+
+    # Remplissage pour atteindre 12 caractères
+    8.times do
+      mot_de_passe << tous_les_caracteres.sample(random: SecureRandom)
+    end
+
+    # Mélange sécurisé et conversion en chaîne (String)
+    mot_de_passe.shuffle(random: SecureRandom).join
+  end
+
   private
 
     def timeout_in
