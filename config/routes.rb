@@ -272,6 +272,11 @@ Rails.application.routes.draw do
     get 'mentions_légales', to: 'pages#mentions_légales', as: :mentions_legales
   end
 
+  namespace :admin do
+    get :create_new_user
+    post :create_new_user_do
+  end
+
   root 'cours#index'
 
 end
