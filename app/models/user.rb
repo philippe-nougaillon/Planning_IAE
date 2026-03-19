@@ -10,8 +10,8 @@ class User < ApplicationRecord
   
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :rememberable and :omniauthable,
-  devise :database_authenticatable,
-         :recoverable, :trackable, :validatable, :registerable, :timeoutable
+  devise :two_factor_authenticatable,
+         :recoverable, :trackable, :validatable, :registerable, :timeoutable, :session_limitable
 
   belongs_to :formation, optional: true   
   has_many :notes
@@ -25,6 +25,8 @@ class User < ApplicationRecord
               rh: 4, 
               gestionnaire: 5,
               administrateur: 6 }
+  
+  enum :otp_method, {email: 0, app: 1}
 
   default_scope { order(:nom) } 
 
@@ -75,7 +77,7 @@ class User < ApplicationRecord
   # Pour donner le role 'gestionnaire' à un partenaire
   # qui pourra modifier que les cours de ses formations
   def partenaire_qse?
-    ["d.gbedemah@icp.fr","m.danet@icp.fr"].include?(self.email)
+    ["d.gbedemah@icp.fr","m.danet@icp.fr","c.bouteloup@icp.fr","c.demazieres@icp.fr"].include?(self.email)
   end
 
   def unlinked?
@@ -98,6 +100,32 @@ class User < ApplicationRecord
       .split(',')
       .map(&:to_i)
       .include?(id)
+  end
+
+  def self.generate_random_password
+    # Définition des bases en retirant les caractères prêtant à confusion
+    minuscules = ('a'..'z').to_a - ['l']
+    majuscules = ('A'..'Z').to_a - ['O', 'I']
+    chiffres = ('1'..'9').to_a
+    symboles = "!@#$%&*-+=?".chars
+
+    tous_les_caracteres = minuscules + majuscules + chiffres + symboles
+
+    # Garantie d'avoir au moins un caractère de chaque type
+    mot_de_passe = [
+      minuscules.sample(random: SecureRandom),
+      majuscules.sample(random: SecureRandom),
+      chiffres.sample(random: SecureRandom),
+      symboles.sample(random: SecureRandom)
+    ]
+
+    # Remplissage pour atteindre 12 caractères
+    8.times do
+      mot_de_passe << tous_les_caracteres.sample(random: SecureRandom)
+    end
+
+    # Mélange sécurisé et conversion en chaîne (String)
+    mot_de_passe.shuffle(random: SecureRandom).join
   end
 
   private

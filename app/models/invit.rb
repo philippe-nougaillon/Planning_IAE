@@ -12,6 +12,7 @@ class Invit < ApplicationRecord
 
   has_one :formation, through: :cour
   
+  # ATTENTION : l'envoi des invitations se base sur le default_scope (Invit.first)
   default_scope { order('invits.updated_at DESC') }                              
                               
   # WORKFLOW

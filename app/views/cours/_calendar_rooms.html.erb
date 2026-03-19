@@ -79,7 +79,7 @@
             <% if (policy(meeting).edit? || (current_user && current_user.accueil_vacataire?)) %>
               <% if meeting.options.commande.any? %>
                   <i title="<%= meeting.options.commande.first.description %>" >
-                      <%= link_to tools_commandes_v2_path do %>
+                      <%= link_to tools_commandes_path do %>
                           <%= fa_icon 'coffee', class: 'text-error' %>
                       <% end %>
                   </i>
@@ -87,9 +87,7 @@
               <% if !meeting.commentaires.blank? %>
                 <i title="<%= meeting.commentaires %>" >
                   <% if meeting.commentaires.include?('+') %>
-                    <%= link_to tools_commandes_path do %>
-                      <%= fa_icon 'mug-hot', class: 'text-amber-800' %>
-                    <% end %>
+                    <%= fa_icon 'mug-hot', class: 'text-amber-800' %>
                   <% else %>
                     <%= fa_icon 'comment-dots' %>
                   <% end %>

@@ -1,0 +1,13 @@
+<p style="margin-bottom: 0.5rem">
+    Bonjour,
+    <br><br>
+    <b>Liste des intervenants CEV qui n'ont pas de dossier RH alors qu'ils donneront cours prochainement :</b>
+    <br><br>
+    <% @intervenants.each do |intervenant| %>
+        - <%= link_to intervenant.nom_prenom.humanize, intervenant_url(intervenant) %>
+        <br>
+    <% end %>
+    <br><br>
+
+    <%= link_to "Créer les dossiers RH manquants", new_dossier_url %>
+</p>

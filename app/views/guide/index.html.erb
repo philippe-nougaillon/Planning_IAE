@@ -286,6 +286,7 @@
     <li>Admin (peut administrer les cours et les utilisateurs)</li>
   </ul>
 </ul>
+<p>Les utilisateurs ayant accès aux sujets d'examens doivent obligatoirement activer <b>la double authentification</b></p>
 
 <div class="border-b mt-12 mb-2 pb-4">
   <h2 class="text-3xl"><%= fa_icon 'user-secret' %> Agents</h2>
@@ -334,10 +335,15 @@
 </div>
 <ul class="list-disc">
   <li>Gestion des jours de fermeture</li>
-  <li>Réservation de créneaux horaires</li>
-  <li>Etats de services</li>
+  <li>Réservation en masse de créneaux horaires</li>
+  <li>Gestion des dossiers de candidature CEV</li>
+  <li>Etats de services (Récapitule et valorise les cours réalisés sur une période donnée, par intervenant)</li>
   <li>Taux d'occupation jours ou salles</li>
   <li>Import/Export de cours, intervenants, étudiants</li>
+  <li>Liste des surveillances d'examens</li>
+  <li>Gestion du workflow des Sujets d'Examens</li>
+  <li>Gestion des invitations (Worflow de Propositions de créneaux horaires à la Doodle)</li>
+  <li>Mail Logs : Historique des mails envoyés avec Statut et État</li>
   <li>Outils pour le rôle admin :</li>
   <ul class="list-inside" style="list-style-type: circle">
     <li>Gestion des Utilisateurs</li>
@@ -346,8 +352,28 @@
     <li>Audit des modifications</li>
     <li>Gestion des Salles</li>
     <li>Gestion des Agents</li>
-    <li>Nouvelle saison (Réservation de cours sur une année)</li>
+    <li>Nouvelle saison (Réservation simplifiée de cours sur une année)</li>
+    <li>Gestion du rappel automatique mensuel des cours/examens</li>
+    <li>Liste des cours "à booker". Permet de voir les cours qui n'ont pas encore de salle attribuée, à faire d'urgence !</li>
   </ul>
+  <br>
+  <li>Actions exécutables sur une série de cours préalablement cochés dans la liste des cours) :</li>
+  <ul class="list-inside" style="list-style-type: circle">
+    <li>Changer d'intervenant</li>
+    <li>Changer d'état</li>
+    <li>Changer de date</li>
+    <li>Changer de salle</li>
+    <li>Convocation étudiants PDF</li>
+    <li>Exporter en PDF</li>
+    <li>Exporter vers Excel</li>
+    <li>Exporter vers iCalendar</li>
+    <li>Générer Feuille émargement PDF</li>
+    <li>Générer Feuille émargement présences signées PDF</li>
+    <li>Générer Pochette Examen PDF</li>
+    <li>Intervertir (Intervenants, Binômes, Intitulé cours, UE, Salles</li>
+    <li>Inviter (Proposer un créneau horaire à plusieurs Intervenants (Doodle like)</li>
+    <li>Regrouper sur une seule Feuille de présence Edusign</li>
+  </ul>  
 </ul>
 
 <div class="border-b mt-12 mb-2 pb-4">
@@ -544,6 +570,27 @@
 <div class="border-b mt-12 mb-2 pb-4">
   <h2 class="text-3xl"><%= fa_icon 'bullhorn' %> Journal des mises à jours</h2>
 </div>
+<h3 class="text-2xl mb-2 mt-4">5.17</h3>
+<ul class="list-disc">
+  <li>Examens : possibilité d'ajouter des étudiants d'autres promotions</li>
+  <li>Formation : possibilité de dupliquer une formation pour l'année suivante</li>
+  <li>Cours : automatisation de la rémunération et de la synchronisation sur Edusign en fonction de l'intervenant</li>
+</ul>
+<h3 class="text-2xl mb-2 mt-4">5.16</h3>
+<ul class="list-disc">
+  <li>Dossiers : Détection des anomalies (Intervention CEV sans dossier RH), et envoie la liste des anomalies aux services RH. Cette détection sera lancée une fois par mois (le 5 du mois).</li>
+  <li>Automatisation de la gestion des relances des dossiers CEV qui sont en attente. Tous les jours, on relance les dossier qui sont en état :
+  <ul class="list-inside" style="list-style-type: circle">
+    <li>“envoyé” depuis plus de 60 jours</li>
+    <li>“relancé 1 fois” depuis plus de 15 jours</li>
+    <li>“relancé 2 fois” depuis plus de 7 jours</li>
+    <li>“relancé 3 fois” depuis plus de 3 jours</li>
+  </ul>
+  Après le statut “relancé 4 fois” jusqu’à “relancé 10 fois”, le dossier est relancé tous les 10 jours.
+  <li>Sur la page “Liste des dossiers de candidature”, ajout des boutons pour créer des dossiers RH sur des périodes antérieures à l’année scolaire en cours.</li>
+  <li>Sur la page “nouvelle saison RH”, ajout d’un sélecteur de périodes. Ex: 2021/2022, 2022/2023, ….</li>
+</li>
+</ul>
 <h3 class="text-2xl mb-2 mt-4">5.15</h3>
 <ul class="list-disc">
   <li>Sujets : gestion des sujets d'examens</li>

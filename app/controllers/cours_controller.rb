@@ -312,6 +312,9 @@ class CoursController < ApplicationController
     end
   end
 
+  def pre_action
+  end
+
   def action
     unless params[:cours_id].blank? or params[:action_name].blank?
       @action_ids = params[:cours_id].keys
@@ -345,6 +348,10 @@ class CoursController < ApplicationController
                   .includes(:intervenant, :formation, :salle, :audits)
                   .where(id: @action_ids)
                   .order(:debut)
+
+      if ["Générer Pochette Examen PDF", "Convocation étudiants PDF"].include?(params[:action_name])
+        @sujet = @cours.first.sujet
+      end
 
     else
       redirect_to cours_path, alert:'Veuillez choisir des cours et une action à appliquer !'
@@ -428,8 +435,11 @@ class CoursController < ApplicationController
                                     nom: invit[:nom].values.to_a[i])
                 invits_créées += 1
               end
-              # mailer_response = InvitMailer.with(invit: Invit.first).envoyer_invitation.deliver_now
-              # MailLog.create(user_id: current_user.id, message_id:mailer_response.message_id, to:Invit.first.intervenant.email, subject: "Invitation")
+              # ATTENTION : Invit.first ne sera plus correct si le default_scope est modifié. Peut-être que ce n'a sera plus correct en mettant ce code dans un job
+              # title = "[PLANNING] Proposition de créneaux pour placer vos cours #{ Invit.first.cour.formation.nom } à l’IAE Paris-Sorbonne"
+              # mailer_response = InvitMailer.with(invit: Invit.first, title: title).envoyer_invitation.deliver_now
+              # Pareil ici, Invit.first ne sera plus correct si le default_scope change
+              # MailLog.create(user_id: current_user.id, message_id:mailer_response.message_id, to:Invit.first.intervenant.email, subject: "Invitation", title: title)
             end
           end
         end
@@ -446,39 +456,64 @@ class CoursController < ApplicationController
           cours_A = Cour.find(params[:cours_id].keys.first)
           cours_B = Cour.find(params[:cours_id].keys.last)
           if params[:intervertir_intervenants]
+            # Intervertit les sujets si les cours sont des examens
+            # sujet_A = Sujet.find_by(cour_id: cours_A.id)
+            # sujet_B = Sujet.find_by(cour_id: cours_B.id)
+
+            # if cours_A.examen? && sujet_A && cours_B.examen? && sujet_B
+            #   sujet_A.update_columns(cour_id: cours_B.id)
+            #   sujet_B.update_columns(cour_id: cours_A.id)
+
+            # elsif cours_A.examen? && sujet_A
+            #   sujet_A.update_columns(cour_id: cours_B.id)
+
+            # elsif cours_B.examen? && sujet_B
+            #   sujet_B.update_columns(cour_id: cours_A.id)
+            # end
+
+            # Intervertit les deux intervenants
             intervenant_A = cours_A.intervenant_id
             intervenant_B = cours_B.intervenant_id
-            cours_A.update_columns(intervenant_id: intervenant_B)
-            cours_B.update_columns(intervenant_id: intervenant_A)
+
+            cours_A.intervenant_id = intervenant_B
+            cours_B.intervenant_id = intervenant_A
           end
 
           if params[:intervertir_binomes]
             intervenant_A = cours_A.intervenant_binome_id
             intervenant_B = cours_B.intervenant_binome_id
-            cours_A.update_columns(intervenant_binome_id: intervenant_B)
-            cours_B.update_columns(intervenant_binome_id: intervenant_A)
+
+            cours_A.intervenant_binome_id = intervenant_B
+            cours_B.intervenant_binome_id = intervenant_A
           end
 
           if params[:intervertir_intitulé]
             intitulé_A = cours_A.nom
             intitulé_B = cours_B.nom
-            cours_A.update_columns(nom: intitulé_B)
-            cours_B.update_columns(nom: intitulé_A)
+
+            cours_A.nom = intitulé_B
+            cours_B.nom = intitulé_A
           end
 
           if params[:intervertir_ue]
             code_ue_A = cours_A.code_ue
             code_ue_B = cours_B.code_ue
-            cours_A.update_columns(code_ue: code_ue_B)
-            cours_B.update_columns(code_ue: code_ue_A)
+
+            cours_A.code_ue = code_ue_B
+            cours_B.code_ue = code_ue_A
           end
 
           if params[:intervertir_salles]
             salle_A = cours_A.salle_id
             salle_B = cours_B.salle_id
-            cours_A.update_columns(salle_id: salle_B)
-            cours_B.update_columns(salle_id: salle_A)
+
+            cours_A.salle_id = salle_B
+            cours_B.salle_id = salle_A
           end
+
+          # "validate: false" pour éviter de faire les vérifications de chevauchements et autres problèmes entre cours A et B.
+          cours_A.save(validate: false)
+          cours_B.save(validate: false)
         else
           flash[:alert] = "Il faut deux cours à intervertir ! Opération annulée"
         end
@@ -487,8 +522,7 @@ class CoursController < ApplicationController
         if (params[:invits_en_cours].present? && params[:confirmation] == 'yes') || !params[:invits_en_cours].present?
           if !params[:delete].blank?
             @cours.each do |c|
-              if policy(c).destroy? && c.attendances.empty?
-                c.invits.destroy_all
+              if policy(c).destroy?
                 c.destroy
               else
                 flash[:alert] = "Vous ne pouvez pas supprimer ce cours (##{c.id}) ! Opération annulée"
@@ -513,19 +547,52 @@ class CoursController < ApplicationController
 
       when 'Convocation étudiants PDF'
         if @cours.count == 1 && @cours.first.examen?
-          étudiants = Etudiant.where(id: params[:etudiants_id].try(:keys))
+          étudiants = Etudiant.where(id: etudiants_selected_ids)
           if étudiants.any?
             étudiants.each do |étudiant|
               pdf = ExportPdf.new
-              pdf.convocation(@cours.first, étudiant, (params[:papier]=='1'), (params[:calculatrice]=='1'), (params[:ordi_tablette]=='1'), (params[:téléphone]=='1'), (params[:dictionnaire]=='1'))
+              pdf.convocation(@cours.first, étudiant, params[:papier], params[:calculatrice], params[:ordi_tablette], params[:téléphone], params[:dictionnaire], @cours.first.sujet&.commentaires)
+              # title = "Convocation #{@cours.first.type_examen} - #{@cours.first.nom_ou_ue}"
               # mailer_response = EtudiantMailer.convocation(étudiant, pdf, @cours.first).deliver_now
-              # MailLog.create(subject: "Convocation UE##{@cours.first.code_ue}", user_id: current_user.id, message_id: mailer_response.message_id, to: étudiant.email)
+              # MailLog.create(subject: "Convocation UE##{@cours.first.code_ue}", user_id: current_user.id, message_id: mailer_response.message_id, to: étudiant.email, title: title)
             end
+            # if params[:etudiants_en_rattrapage_ids].present?
+            #   RedoublantNotificationJob.perform_later(@cours.first, params[:etudiants_en_rattrapage_ids], current_user.id)
+            # end
           else
             flash[:alert] = "Aucun étudiant n'a été sélectionné, il ne s'est rien passé"
           end
         else
           flash[:alert] = 'Il y a plusieurs cours sélectionnés ou le cours n\'est pas un examen'
+        end
+      when "Regrouper sur une seule Feuille de présence Edusign"
+        etat = 3
+        edusign_log = EdusignLog.create(modele_type: 4, message: "", user_id: current_user.id, etat: etat)
+        
+        begin
+          response = nil
+          # capture output
+          stream = capture_stdout do
+            request = Edusign.new
+            response = request.add_grouped_cours(@cours.pluck(:id))
+            etat = request.get_etat
+          end
+
+          edusign_log.update(message: stream, etat: etat)
+
+          if response && response["status"] == 'success'
+            # Pas de update_all pour éviter l'empêchement de sauvegare à cause du bypass
+            @cours.each do |cour|
+              cour.update_attribute('no_send_to_edusign', true)
+            end
+          else
+            flash[:alert] = "Le groupement n'a pas pu s'effectuer, veuillez réessayer"
+          end
+
+        rescue => e
+          error_message = "Erreur: #{e.full_message}"
+          edusign_log.update(message: error_message, etat: 3)
+          flash[:alert] = error_message
         end
     end
 
@@ -571,20 +638,21 @@ class CoursController < ApplicationController
         when "Générer Feuille émargement PDF"
           filename = "Feuille_émargement_#{ Date.today }.pdf"
           pdf = ExportPdf.new
-          pdf.generate_feuille_emargement(@cours, params[:etudiants_id].try(:keys), params[:table])
+          pdf.generate_feuille_emargement(@cours, params[:etudiants_id].try(:keys), params[:etudiants_en_rattrapage_ids], params[:table])
 
           send_data pdf.render, filename: filename, type: 'application/pdf'
         when "Générer Feuille émargement présences signées PDF"
           filename = "Feuille_émargement_signée#{ Date.today }.pdf"
           pdf = ExportPdf.new
-          pdf.generate_feuille_emargement_signée(@cours)
+          pdf.generate_feuille_emargement_signée(@cours, params[:etudiants_id].try(:keys), params[:etudiants_en_rattrapage_ids])
 
           send_data pdf.render, filename: filename, type: 'application/pdf'
         when "Générer Pochette Examen PDF"
-          if params[:etudiants_id]
+            etudiants_ids = etudiants_selected_ids
+          if etudiants_ids.any?
             filename = "Pochette_Examen_#{ Date.today }.pdf"
             pdf = ExportPdf.new
-            pdf.pochette_examen(@cours, params[:etudiants_id].try(:keys).count, params[:papier], params[:calculatrice], params[:ordi_tablette], params[:téléphone], params[:dictionnaire])
+            pdf.pochette_examen(@cours, etudiants_ids.count, params[:papier], params[:calculatrice], params[:ordi_tablette], params[:téléphone], params[:dictionnaire])
 
             send_data pdf.render, filename: filename, type: 'application/pdf'
           else 
@@ -609,7 +677,7 @@ class CoursController < ApplicationController
     @salles = Salle.all
 
     if current_user.partenaire_qse?
-      @formations = @formations.select{ |f| f.partenaire_qse? }
+      @formations = @formations.partenaire_qse
       @salles = @salles.where(nom: ["ICP 1", "ICP 2"])
     end
 
@@ -642,7 +710,7 @@ class CoursController < ApplicationController
     @salles = Salle.all
 
     if current_user.partenaire_qse?
-      @formations = @formations.select{ |f| f.partenaire_qse? }
+      @formations = @formations.partenaire_qse
       @salles = @salles.where(nom: ["ICP 1", "ICP 2"])
     end
   end
@@ -674,7 +742,7 @@ class CoursController < ApplicationController
           @salles = Salle.all
 
           if current_user.partenaire_qse?
-            @formations = @formations.select{ |f| f.partenaire_qse? }
+            @formations = @formations.partenaire_qse
             @salles = @salles.where(nom: ["ICP 1", "ICP 2"])
           end
           render :new
@@ -700,8 +768,9 @@ class CoursController < ApplicationController
 
           # notifier l'accueil s'il y a un bypass
           if @cour.commentaires.include?("BYPASS=#{@cour.id}")
-            mailer_response = AccueilMailer.notifier_cours_bypass(@cour, current_user.email).deliver_now
-            MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: "accueil@iae.pantheonsorbonne.fr", subject: "BYPASS")
+            title = "[PLANNING IAE Paris] BYPASS utilisé !"
+            mailer_response = AccueilMailer.notifier_cours_bypass(@cour, current_user.email, title).deliver_now
+            MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: "accueil@iae.pantheonsorbonne.fr", subject: "BYPASS", title: title)
           end
 
           # repartir à la page où a eu lieu la demande de modification
@@ -722,7 +791,7 @@ class CoursController < ApplicationController
           @salles = Salle.all
 
           if current_user.partenaire_qse?
-            @formations = @formations.select{ |f| f.partenaire_qse? }
+            @formations = @formations.partenaire_qse
             @salles = @salles.where(nom: ["ICP 1", "ICP 2"])
           end
           render :edit, params
@@ -856,6 +925,14 @@ class CoursController < ApplicationController
 
     def is_user_authorized
       authorize Cour
+    end
+
+    def etudiants_selected_ids
+      etudiants_ids = []
+      etudiants_ids += params[:etudiants_id].keys if params[:etudiants_id].present?
+      etudiants_ids += params[:etudiants_en_rattrapage_ids] if params[:etudiants_en_rattrapage_ids].present?
+      etudiants_ids.uniq!
+      etudiants_ids
     end
 
   end

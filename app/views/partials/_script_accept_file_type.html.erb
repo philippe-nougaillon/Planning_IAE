@@ -1,0 +1,16 @@
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('<%= id_form %>');
+    const fileInput = document.getElementById('<%= id_file_input %>');
+    form.addEventListener('submit', function(event) {
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+
+        if (file.type !== '<%= file_type_accepted %>') {
+          event.preventDefault();
+          alert('Seuls les fichiers <%= file_type_for_alert %> sont autorisés.');
+        }
+      }
+    });
+  });
+</script>

@@ -8,7 +8,7 @@ class InvitsController < ApplicationController
     params[:sort_by] ||= 'MàJ'
 
     @invits = Invit.all
-    unless current_user.id == 1
+    unless current_user.id == ENV["SUPER_ADMIN_ID"].to_i
       @invits = Invit
                   .where(user_id: current_user.id)
                   .where.not("invits.workflow_state = 'non_retenue'") 

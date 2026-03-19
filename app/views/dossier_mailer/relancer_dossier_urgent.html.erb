@@ -1,0 +1,15 @@
+<p style="margin-bottom: 0.5rem">
+    Madame, Monsieur
+    <br><br>
+    Sauf erreur de notre part, votre intervention à l’IAE Paris-Sorbonne est prévue dans 15 jours.
+    <br><br>
+    À ce jour, <b>nous sommes toujours en attente de votre dossier de recrutement pour validation par le service RH</b>. 
+    <br><br>
+    Nous vous rappelons que, conformément à la réglementation relative à la gestion des CEV, votre dossier doit impérativement être validé avant votre première intervention. À défaut, les heures réalisées ne pourront pas être prises en compte pour le paiement
+    <br><br>
+    Vous pouvez déposer vos pièces justificatives en ligne en suivant ce lien :
+    <%= link_to 'déposer mon dossier en ligne', url_for(dossier_url(@dossier)) %>
+    <br><br>
+</p>
+
+<%= render partial: 'mailer_footer_rh' %>

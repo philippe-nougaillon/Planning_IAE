@@ -4,18 +4,21 @@ class DossierMailer < ApplicationMailer
     def dossier_email
         @dossier = params[:dossier]
 
-        attachments['Dossier de recrutement.pdf']   = File.read('app/assets/attachments/Dossier CEV 2025-2026.pdf')
+        attachments['Dossier de recrutement.pdf']   = File.read('app/assets/attachments/Dossier Recrutement CEV.pdf')
         attachments['Pièces à fournir.pdf']         = File.read('app/assets/attachments/Pièces à fournir_dossier de recrutement.pdf')
         attachments['Note réglementaire.pdf']       = File.read('app/assets/attachments/Note sur les conditions de recrutement.pdf')
         attachments['Etat prévisionnel.pdf']        = File.read('app/assets/attachments/Formulaire_V02-1.pdf')
 
+        #TODO : mettre l'objet du mail dans la variable title
         mail(to: @dossier.intervenant.email, 
              subject: "[Enseignement Business School #{ @dossier.période }] Dossier de recrutement")
+
     end
 
     def valider_email
         @dossier = params[:dossier]
 
+        #TODO : mettre l'objet du mail dans la variable title
         mail(to: @dossier.intervenant.email, 
              subject: "[Enseignement Business School #{ @dossier.période }] Dossier de recrutement")
     end
@@ -23,6 +26,7 @@ class DossierMailer < ApplicationMailer
     def rejeter_email
         @dossier = params[:dossier]
 
+        #TODO : mettre l'objet du mail dans la variable title
         mail(to: @dossier.intervenant.email, 
              subject: "[Enseignement Business School #{ @dossier.période }] Dossier de recrutement")
     end
@@ -34,4 +38,22 @@ class DossierMailer < ApplicationMailer
              subject: "[IAE-PARIS MAUVAIS DOSSIER] ID : #{@dossier_id}")
     end
 
+    def notif_dossiers_rh_manquants
+        @intervenants = params[:intervenants]
+
+        mail(to: "cev.iae@univ-paris1.fr, srh.iae@univ-paris1.fr",
+             subject: params[:title])
+    end
+
+    def relancer_dossier_urgent
+        @dossier = params[:dossier]
+
+        attachments['Dossier de recrutement.pdf']   = File.read('app/assets/attachments/Dossier Recrutement CEV.pdf')
+        attachments['Pièces à fournir.pdf']         = File.read('app/assets/attachments/Pièces à fournir_dossier de recrutement.pdf')
+        attachments['Note réglementaire.pdf']       = File.read('app/assets/attachments/Note sur les conditions de recrutement.pdf')
+        attachments['Etat prévisionnel.pdf']        = File.read('app/assets/attachments/Formulaire_V02-1.pdf')
+
+        mail(to: @dossier.intervenant.email, 
+             subject: params[:title])
+    end
 end

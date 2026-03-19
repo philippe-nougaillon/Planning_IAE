@@ -58,28 +58,37 @@ class ExportPdf
         ] 
     end
   
-    def export_etats_de_services(cours, intervenants, start_date, end_date)
+    def export_etats_de_services(cours, intervenants, start_date, end_date, is_cours_showed, is_vacations_showed, is_responsabilites_showed)
         intervenant = intervenants.first
 
-        cours_ids = cours.where(intervenant: intervenant)
-                         .where("hors_service_statutaire IS NOT TRUE")
-                         .joins(:formation)
-                         .pluck(:id)
-                         .flatten
+        if is_cours_showed
+            cours_ids = cours.where(intervenant: intervenant)
+                            .where("hors_service_statutaire IS NOT TRUE")
+                            .joins(:formation)
+                            .pluck(:id)
+                            .flatten
 
-        cours_ids << cours
-                        .where(intervenant_binome: intervenant)
-                        .where("hors_service_statutaire IS NOT TRUE")
-                        .joins(:formation)
-                        .pluck(:id)
-                        .flatten
+            cours_ids << cours
+                            .where(intervenant_binome: intervenant)
+                            .where("hors_service_statutaire IS NOT TRUE")
+                            .joins(:formation)
+                            .pluck(:id)
+                            .flatten
+            
+            cumul_eotp, cumul_eotp_durée = {}, {}
+        end
         
-        vacations = intervenant.vacations.where("date BETWEEN ? AND ?", start_date, end_date)
-        responsabilites = intervenant.responsabilites.where("debut BETWEEN ? AND ?", start_date, end_date)
+        if is_vacations_showed
+            vacations = intervenant.vacations.where("date BETWEEN ? AND ?", start_date, end_date)
+        end
+
+        if is_responsabilites_showed
+            responsabilites = intervenant.responsabilites.where("debut BETWEEN ? AND ?", start_date, end_date)
+        end
         
         cumul_hetd = cumul_vacations = cumul_resps = cumul_tarif = cumul_duree = 0 
         nbr_heures_statutaire = intervenant.nbr_heures_statutaire || 0
-        cumul_eotp, cumul_eotp_durée = {}, {}
+
 
         image "#{@image_path}/Aikku_logo.png", :height => 40, :position => :center
         move_down @margin_down
@@ -97,112 +106,117 @@ class ExportPdf
 
         data = [ ['Code','Dest. fi.','Date','Heure','Formation','Intitulé','Durée','CM/TD','Taux','HETD','Montant'] ]
 
-        # Cours 
-        cours_ids.flatten.each do |id|
-            c = Cour.find(id)
-            cumul_duree += c.duree 
-    
-            if c.imputable?
-                cumul_hetd += c.duree.to_f * c.HETD
-                montant_service = c.montant_service.round(2)
-                cumul_tarif += montant_service
-                formation = Formation.find(c.formation_id)
-                eotp = formation.code_analytique_avec_indice(c.debut)
-                cumul_eotp.keys.include?(eotp) ? cumul_eotp[eotp] += montant_service : cumul_eotp[eotp] = montant_service
-                cumul_eotp_durée.keys.include?(eotp) ? cumul_eotp_durée[eotp] += c.duree : cumul_eotp_durée[eotp] = c.duree
-            end
-    
-            formation = Formation.find(c.formation_id)
-
-            data += [ [
-                formation.code_analytique_avec_indice(c.debut),
-                formation.code_analytique.include?('DISTR') ? "101PAIE" : "102PAIE",
-                I18n.l(c.debut.to_date),
-                c.debut.strftime("%k:%M"),
-                formation.abrg,
-                "#{c.ue} #{c.nom_ou_ue}",
-                c.duree.to_f,
-                formation.nomtauxtd,
-                c.taux_td,
-                c.HETD,
-                number_to_currency(montant_service)
-            ] ]
-        end    
-
-        # Sous-total des Cours
-        data += [ [   
-            "<i><b>#{ cours_ids.flatten.count } cours au total</i></b>",
-            nil, nil, nil, nil, nil,
-            cumul_duree,
-            nil, nil,
-            cumul_hetd,
-            "<b>#{number_to_currency(cumul_tarif)}</b>"
-        ] ]
-
-
-        # Vacations
-        vacations.each_with_index do | vacation, index |
-            if vacation.vacation_activite
-                intitulé = vacation.vacation_activite.nom
-                tarif = vacation.vacation_activite.vacation_activite_tarifs.find_by(statut: VacationActiviteTarif.statuts[vacation.intervenant.status])
-                if tarif && tarif.forfait_hetd
-                    cumul_hetd += tarif.forfait_hetd
+        if is_cours_showed
+            # Cours 
+            cours_ids.flatten.each do |id|
+                c = Cour.find(id)
+                cumul_duree += c.duree 
+        
+                if c.imputable?
+                    cumul_hetd += c.duree.to_f * c.HETD
+                    montant_service = c.montant_service.round(2)
+                    cumul_tarif += montant_service
+                    formation = Formation.find(c.formation_id)
+                    eotp = formation.code_analytique_avec_indice(c.debut)
+                    cumul_eotp.keys.include?(eotp) ? cumul_eotp[eotp] += montant_service : cumul_eotp[eotp] = montant_service
+                    cumul_eotp_durée.keys.include?(eotp) ? cumul_eotp_durée[eotp] += c.duree : cumul_eotp_durée[eotp] = c.duree
                 end
-            end
-            cumul_vacations += vacation.montant || 0
+        
+                formation = Formation.find(c.formation_id)
 
-            formation = Formation.find(vacation.formation_id) 
-            
-            data += [ [
-                formation.code_analytique_avec_indice(vacation.date),
-                formation.code_analytique.include?('DISTR') ? "101PAIE" : "102PAIE",
-                I18n.l(vacation.date),
-                nil,
-                formation.nom,
-                intitulé || vacation.titre,
-                vacation.qte,
-                nil, nil,
-                vacation.forfaithtd,
-                number_to_currency(vacation.montant)
-            ] ] 
-    
-            if index == vacations.size - 1
                 data += [ [
-                    "<b><i>#{vacations.size} vacation.s au total</i></b>",
-                    nil, nil, nil, nil, nil, nil, nil, nil, nil,  
-                    "<b>#{number_to_currency(cumul_vacations)}</b>"
+                    formation.code_analytique_avec_indice(c.debut),
+                    formation.code_analytique.include?('DISTR') ? "101PAIE" : "102PAIE",
+                    I18n.l(c.debut.to_date),
+                    c.debut.strftime("%k:%M"),
+                    formation.abrg,
+                    "#{c.ue} #{c.nom_ou_ue}",
+                    c.duree.to_f,
+                    formation.nomtauxtd,
+                    c.taux_td,
+                    c.HETD,
+                    number_to_currency(montant_service)
                 ] ]
+            end    
+
+            # Sous-total des Cours
+            data += [ [   
+                "<i><b>#{ cours_ids.flatten.count } cours au total</i></b>",
+                nil, nil, nil, nil, nil,
+                cumul_duree,
+                nil, nil,
+                cumul_hetd,
+                "<b>#{number_to_currency(cumul_tarif)}</b>"
+            ] ]
+        end
+
+        if is_vacations_showed
+            # Vacations
+            vacations.each_with_index do | vacation, index |
+                if vacation.vacation_activite
+                    intitulé = vacation.vacation_activite.nom
+                    tarif = vacation.vacation_activite.vacation_activite_tarifs.find_by(statut: VacationActiviteTarif.statuts[vacation.intervenant.status])
+                    if tarif && tarif.forfait_hetd
+                        cumul_hetd += tarif.forfait_hetd
+                    end
+                end
+                cumul_vacations += vacation.montant || 0
+
+                formation = Formation.find(vacation.formation_id) 
+                
+                data += [ [
+                    formation.code_analytique_avec_indice(vacation.date),
+                    formation.code_analytique.include?('DISTR') ? "101PAIE" : "102PAIE",
+                    I18n.l(vacation.date),
+                    nil,
+                    formation.nom,
+                    intitulé || vacation.titre,
+                    vacation.qte,
+                    nil, nil,
+                    vacation.forfaithtd,
+                    number_to_currency(vacation.montant)
+                ] ] 
+        
+                if index == vacations.size - 1
+                    data += [ [
+                        "<b><i>#{vacations.size} vacation.s au total</i></b>",
+                        nil, nil, nil, nil, nil, nil, nil, nil, nil,  
+                        "<b>#{number_to_currency(cumul_vacations)}</b>"
+                    ] ]
+                end
             end
         end
 
-        # Responsabilités
-        responsabilites.each_with_index do |resp, index|
-            montant_responsabilite = (resp.heures * Cour.Tarif).round(2)
-            cumul_resps += montant_responsabilite
-            cumul_hetd += resp.heures
+        if is_responsabilites_showed
+            # Responsabilités
+            responsabilites.each_with_index do |resp, index|
+                montant_responsabilite = (resp.heures * Cour.Tarif).round(2)
+                cumul_resps += montant_responsabilite
+                cumul_hetd += resp.heures
 
-            data += [ [
-                resp.formation.code_analytique_avec_indice(resp.debut),
-                resp.formation.code_analytique.include?('DISTR') ? "101PAIE" : "102PAIE",
-                I18n.l(resp.debut),
-                nil,
-                resp.formation.nom,
-                resp.titre,
-                resp.heures,
-                'TD', 
-                Cour.Tarif,
-                nil,
-                number_to_currency(montant_responsabilite)
-                ] ]
-
-            if index == responsabilites.size - 1
                 data += [ [
-                    "<i><b>#{ responsabilites.count } #{ responsabilites.count > 1 ? 'responsabilités' : 'responsabilité' } au total</i></b>",
-                    nil, nil, nil, nil, nil,
+                    resp.formation.code_analytique_avec_indice(resp.debut),
+                    resp.formation.code_analytique.include?('DISTR') ? "101PAIE" : "102PAIE",
+                    I18n.l(resp.debut),
                     nil,
-                    nil, nil, nil,
-                    "<b>#{ number_to_currency(cumul_resps) }</b>"
+                    resp.formation.nom,
+                    resp.titre,
+                    resp.heures,
+                    'TD', 
+                    Cour.Tarif,
+                    nil,
+                    number_to_currency(montant_responsabilite)
                     ] ]
+
+                if index == responsabilites.size - 1
+                    data += [ [
+                        "<i><b>#{ responsabilites.count } #{ responsabilites.count > 1 ? 'responsabilités' : 'responsabilité' } au total</i></b>",
+                        nil, nil, nil, nil, nil,
+                        nil,
+                        nil, nil, nil,
+                        "<b>#{ number_to_currency(cumul_resps) }</b>"
+                        ] ]
+                end
             end
         end
 
@@ -226,25 +240,27 @@ class ExportPdf
                     table.column(6..10).style(:align => :right)
                 end
 
-        move_down @margin_down
+                move_down @margin_down
+                
+        if is_cours_showed
+            # Tableau récap par code OTP
+            data = [ ['Code EOTP', 'Total services', 'Nbr heures de cours' ]]    
 
-        # Tableau récap par code OTP
-        data = [ ['Code EOTP', 'Total services', 'Nbr heures de cours' ]]    
+            cumul_eotp.each do |eotp|
+                data += [ [
+                    eotp.first,
+                    eotp.last,
+                    cumul_eotp_durée[eotp.first].to_f,
+                ] ]
+            end
 
-        cumul_eotp.each do |eotp|
-            data += [ [
-                eotp.first,
-                eotp.last,
-                cumul_eotp_durée[eotp.first].to_f,
-            ] ]
+            table data, header: true, row_colors: ["F0F0F0", "FFFFFF"] do 
+                column(1..2).style(:align => :right)
+                cells.style(inline_format: true, border_width: 1, border_color: 'C0C0C0')
+            end
+
+            move_down @margin_down
         end
-
-        table data, header: true, row_colors: ["F0F0F0", "FFFFFF"] do 
-            column(1..2).style(:align => :right)
-            cells.style(inline_format: true, border_width: 1, border_color: 'C0C0C0')
-        end
-
-        move_down @margin_down
 
         font "Helvetica"
         font_size 10
@@ -294,7 +310,6 @@ class ExportPdf
         text "Du #{I18n.l(start_date.to_date)} au #{I18n.l(end_date.to_date)}"
 
         move_down @margin_down
-        #text "Affaire suivie par : Thémoline"
 
         # Tableau récap par code OTP
         data = [ ['N°', 'Date', 'Type', 'Formation', 'Centre de coût', 'Destination financière', 'EOTP', 'Total heures' ]]    
@@ -309,7 +324,7 @@ class ExportPdf
                 unless item.blank? 
                     surveillant_item = item.gsub(']', '').delete("\r\n\\")
                     if surveillant_item == surveillant
-                        is_vacataire = (exam.intervenant_id == 1314)
+                        is_vacataire = exam.has_intervenant_vacataire?
                         index += 1
                         durée = exam.duree + (is_vacataire ? 0 : 1)
                         cumul_durée += durée
@@ -318,7 +333,7 @@ class ExportPdf
                                     is_vacataire ? "Vacataire" : "Surveillance Examen",
                                     exam.formation.nom_promo,
                                     '7322GRH',
-                                    (exam.formation.diplome.upcase == 'LICENCE' ? '101PAIE' : exam.intervenant.id == 1314 ? '115PAIE' : '102PAIE'),
+                                    (exam.formation.diplome.upcase == 'LICENCE' ? '101PAIE' : exam.has_intervenant_vacataire? ? '115PAIE' : '102PAIE'),
                                     exam.formation.code_analytique_avec_indice(exam.debut).gsub('HCO','VAC'),
                                     durée 
                                 ]]
@@ -330,7 +345,7 @@ class ExportPdf
         data += [[nil, nil, nil, nil, nil, nil, "Total heures :", "<b>#{ cumul_durée }</b>" ]]
 
         data += [[nil, nil, nil,
-                    "Taux horaire en vigueur au 01/11/2024 :", 
+                    "Taux horaire en vigueur au 01/01/2026 :", 
                     "#{ taux_horaire } €",
                     nil,
                     "<b>Total brut :</b>",
@@ -368,6 +383,7 @@ class ExportPdf
                 text "par la vacation, pour accord"
             end
         else
+            # Todo: Mettre dans une variable la signature
             bounding_box([0, y_position], :width => 250, :height => 100) do
                 text "Eric LAMARQUE"
                 text "Directeur de l'IAE Paris", size: 8
@@ -420,7 +436,6 @@ class ExportPdf
         text "Du #{I18n.l(start_date.to_date)} au #{I18n.l(end_date.to_date)}"
 
         move_down @margin_down
-        #text "Affaire suivie par : Thémoline"
 
         # Tableau récap par code OTP
         data = [ ['N°', 'Date', 'Type', 'Formation', 'Centre de coût', 'Destination financière', 'EOTP', 'Total heures' ]]    
@@ -435,7 +450,7 @@ class ExportPdf
                 unless item.blank? 
                     surveillant_item = item.gsub(']', '').delete("\r\n\\")
                     if surveillant_item == surveillant
-                        is_vacataire = (exam.intervenant_id == 1314)
+                        is_vacataire = exam.has_intervenant_vacataire?
                         index += 1
                         durée = exam.duree + (is_vacataire ? 0 : 1)
                         cumul_durée += durée
@@ -444,7 +459,7 @@ class ExportPdf
                                     is_vacataire ? "Vacataire" : "Surveillance Examen",
                                     exam.formation.nom_promo,
                                     '7322GRH',
-                                    (exam.formation.diplome.upcase == 'LICENCE' ? '101PAIE' : exam.intervenant.id == 1314 ? '115PAIE' : '102PAIE'),
+                                    (exam.formation.diplome.upcase == 'LICENCE' ? '101PAIE' : exam.has_intervenant_vacataire? ? '115PAIE' : '102PAIE'),
                                     exam.formation.code_analytique_avec_indice(exam.debut).gsub('HCO','VAC'),
                                     durée 
                                 ]]
@@ -456,7 +471,7 @@ class ExportPdf
         data += [[nil, nil, nil, nil, nil, nil, "Total heures :", "<b>#{ cumul_durée }</b>" ]]
 
         data += [[nil, nil, nil,
-                    "Taux horaire en vigueur au 01/11/2024 :", 
+                    "Taux horaire en vigueur au 01/01/2026 :", 
                     "#{ taux_horaire } €",
                     nil,
                     "<b>Total brut :</b>",
@@ -497,7 +512,7 @@ class ExportPdf
 
     end
 
-    def generate_feuille_emargement(cours, étudiants_id, table)
+    def generate_feuille_emargement(cours, étudiants_id, étudiants_en_rattrapage_ids, table)
         font "OpenSans"
 
         cours.each_with_index do |cour, index|
@@ -536,7 +551,7 @@ class ExportPdf
             move_down @margin_down
             text "IMPORTANT : les données collectées par cette feuille d’émargement sont de nature à permettre la justification des heures effectuées dans le cadre de la formation.", size: 10, align: :center
 
-            array = étudiants_id || cour.formation.etudiants.order(:nom, :prénom).pluck(:id)
+            examen_étudiants_ids = cour.formation.etudiants.where(id: étudiants_id).order(:nom, :prénom).pluck(:id)
 
             if examen = cour.examen?
                 if table
@@ -544,8 +559,8 @@ class ExportPdf
                 else
                     data = [ ['<i>NOM PRÉNOM</i>', '<i>SIGNATURE DÉBUT ÉPREUVE</i>', '<i>SIGNATURE REMISE COPIE</i>'] ]
                 end
-                (0..array.length - 1).each do |index|
-                    etudiant = Etudiant.find(array[index])
+                (0..examen_étudiants_ids.length - 1).each do |index|
+                    etudiant = Etudiant.find(examen_étudiants_ids[index])
                     row = ["<b>#{etudiant.nom.upcase}</b> #{etudiant.prénom.humanize}"]
                     row += ["#{etudiant.table.zero? ? '' : etudiant.table}"] if table
                     row += [Array.new(2)]
@@ -553,10 +568,10 @@ class ExportPdf
                 end
             else
                 data = [ ['<i>NOM PRÉNOM</i>', '<i>SIGNATURE</i>', '<i>NOM PRÉNOM</i>', '<i>SIGNATURE</i>'] ]
-                (0..array.length - 1).step(2).each do |index|
-                    etudiant = Etudiant.find(array[index])
-                    if index < array.length - 1
-                        next_etudiant = Etudiant.find(array[index + 1])
+                (0..examen_étudiants_ids.length - 1).step(2).each do |index|
+                    etudiant = Etudiant.find(examen_étudiants_ids[index])
+                    if index < examen_étudiants_ids.length - 1
+                        next_etudiant = Etudiant.find(examen_étudiants_ids[index + 1])
                     end
                     data += [ [
                         "<b>#{etudiant.nom.upcase}</b> #{etudiant.prénom.humanize}",
@@ -577,6 +592,33 @@ class ExportPdf
                 cell_style: { :inline_format => true, height: 35 }) do
                     column(1).style(:align => :center) if table
                 end
+
+            if étudiants_en_rattrapage_ids
+                # Code à modifier s'il faut prendre en compte les cours non-examen
+                start_new_page
+                text "AUTRES ÉTUDIANTS", size: 16, style: :bold, align: :center
+                move_down @margin_down
+
+                if table
+                    data = [ ['<i>NOM PRÉNOM</i>', 'Table n°', '<i>SIGNATURE DÉBUT ÉPREUVE</i>', '<i>SIGNATURE REMISE COPIE</i>'] ]
+                else
+                    data = [ ['<i>NOM PRÉNOM</i>', '<i>SIGNATURE DÉBUT ÉPREUVE</i>', '<i>SIGNATURE REMISE COPIE</i>'] ]
+                end
+                (0..étudiants_en_rattrapage_ids.length - 1).each do |index|
+                    etudiant = Etudiant.find(étudiants_en_rattrapage_ids[index])
+                    row = ["<b>#{etudiant.nom.upcase}</b> #{etudiant.prénom.humanize} <br>#{etudiant.formation.nom}"]
+                    row += ["#{etudiant.table.zero? ? '' : etudiant.table}"] if table
+                    row += [Array.new(2)]
+                    data += [row.flatten]
+                end
+
+                table(data, 
+                header: true,
+                column_widths: table ? [160, 60, 160, 160] : [180,180,180],
+                cell_style: { :inline_format => true, height: 40 }) do
+                    column(1).style(:align => :center) if table
+                end
+            end
 
             start_new_page unless index == cours.size - 1
         end
@@ -788,8 +830,8 @@ class ExportPdf
         end
     end
 
-    def convocation(cour, étudiant, papier, calculatrice, ordi_tablette, téléphone, dictionnaire)
-        is_examen_rattrapage = cour.intervenant_id == 1166
+    def convocation(cour, étudiant, papier, calculatrice, ordi_tablette, téléphone, dictionnaire, commentaires)
+        is_examen_rattrapage = cour.intervenant_id == ENV["INTERVENANT_EXAMEN_RATTRAPRAGE_ID"].to_i
 
         font "OpenSans"
 
@@ -826,68 +868,95 @@ class ExportPdf
         move_down @margin_down * 2
         consignes(papier, calculatrice, ordi_tablette, téléphone, dictionnaire)
 
+        move_down @margin_down * 3
+
+        if commentaires
+            text "<color rgb='032E4D'><b>COMMENTAIRES</b></color>", inline_format: true
+            move_down @margin_down
+            text "<color rgb='032E4D'>#{commentaires}</color>", inline_format: true
+        end
+
     end
 
-    def generate_feuille_emargement_signée(cours)
-        cour = cours.first
+    def generate_feuille_emargement_signée(cours, étudiants_ids, étudiants_en_rattrapage_ids)
 
-        font_size 14
+        cours.each_with_index do |cour, index|
+            font_size 14
 
-        y_position = cursor
-        bounding_box([0, y_position], :width => 270) do
-            image "#{@image_path}/logo@100.png", :width => 200
-        end
-        bounding_box([270, y_position], :width => 270) do
+            y_position = cursor
+            bounding_box([0, y_position], :width => 270) do
+                image "#{@image_path}/logo@100.png", :width => 200
+            end
+            bounding_box([270, y_position], :width => 270) do
+                move_down @margin_down
+                text cour.formation.nom, style: :bold, align: :right
+            end
+
+            move_down @margin_down * 4
+            text "ÉMARGEMENT PRÉSENCE", size: 16, style: :bold, align: :center
             move_down @margin_down
-            text cour.formation.nom, style: :bold, align: :right
-        end
 
-        move_down @margin_down * 4
-        text "ÉMARGEMENT PRÉSENCE", size: 16, style: :bold, align: :center
-        move_down @margin_down
+            font_size 12
 
-        font_size 12
+            move_down @margin_down
+            y_position = cursor
+            bounding_box([0, y_position], :width => 250, :height => 100) do
+                text "Date : #{I18n.l(cour.debut.to_date)}", style: :bold
+            end
+            bounding_box([250, y_position], :width => 250) do
+                
+                text "Horaire : #{I18n.l(cour.debut, format: :heures_min)} - #{I18n.l(cour.fin, format: :heures_min)}", style: :bold
 
-        move_down @margin_down
-        y_position = cursor
-        bounding_box([0, y_position], :width => 250, :height => 100) do
-            text "Date : #{I18n.l(cour.debut.to_date)}", style: :bold
-        end
-        bounding_box([250, y_position], :width => 250) do
+            end
+            move_down @margin_down
+            text "Enseignant : #{cour.intervenant.nom_prenom}", style: :bold
+            move_down @margin_down
+            text "UE : #{cour.code_ue} - #{cour.nom_ou_ue}", style: :bold
+            move_down @margin_down
+            text "Signature :", style: :bold
+            move_down @margin_down
+
+            stroke_horizontal_rule
+
+            font_size 14
+
+            examen_étudiants_ids = cour.formation.etudiants.where(id: étudiants_ids).order(:nom, :prénom).pluck(:id)
+
             
-            text "Horaire : #{I18n.l(cour.debut, format: :heures_min)} - #{I18n.l(cour.fin, format: :heures_min)}", style: :bold
+            
+            affichage_etudiants_emargement(cour, examen_étudiants_ids)
+            if étudiants_en_rattrapage_ids
+                affichage_etudiants_emargement(cour, étudiants_en_rattrapage_ids, true)
+            end
 
+            start_new_page unless index == cours.size - 1
         end
-        move_down @margin_down
-        text "Enseignant : #{cour.intervenant.nom_prenom}", style: :bold
-        move_down @margin_down
-        text "UE : #{cour.code_ue} - #{cour.nom_ou_ue}", style: :bold
-        move_down @margin_down
-        text "Signature :", style: :bold
-        move_down @margin_down
+    end
 
-        stroke_horizontal_rule
+    def affichage_etudiants_emargement(cour, étudiants_ids, autres_étudiants = false)
+        if autres_étudiants
+            start_new_page
 
-        font_size 14
-
-        array = cour.formation.etudiants.order(:nom, :prénom).pluck(:id)
-
-        (0..array.length - 1).step(2).each do |index|
+            text "AUTRES ÉTUDIANTS", size: 16, style: :bold, align: :center
+            move_down @margin_down
+        end
+        (0..étudiants_ids.length - 1).step(2).each do |index|
             # Multiple de deux parce qu'il y a un step(2)
             start_new_page if (index%10 == 6)
             move_down @margin_down
 
-            etudiant = Etudiant.find(array[index])
+            etudiant = Etudiant.find(étudiants_ids[index])
             presence = Presence.find_by(cour_id: cour.id, etudiant_id: etudiant.id)
 
-            if index < array.length - 1
-                next_etudiant = Etudiant.find(array[index + 1])
+            if index < étudiants_ids.length - 1
+                next_etudiant = Etudiant.find(étudiants_ids[index + 1])
                 presence_next_etudiant = Presence.find_by(cour_id: cour.id, etudiant_id: next_etudiant.id)
             end
 
             y_position = cursor
             bounding_box([0, y_position], :width => 270) do
                 text "<b>#{etudiant.nom.upcase}</b> #{etudiant.prénom.humanize}", inline_format: true
+                text "#{etudiant.formation.nom}", inline_format: true
                 if presence
                     if presence.signature
                         svg Base64.decode64(presence.signature.split(',')[1]), height: 50
@@ -904,6 +973,7 @@ class ExportPdf
             if next_etudiant
                 bounding_box([270, y_position], :width => 270) do
                     text "<b>#{next_etudiant.nom.upcase}</b> #{next_etudiant.prénom.humanize}", inline_format: true
+                    text "#{next_etudiant.formation.nom}", inline_format: true
                     if presence_next_etudiant
                         if presence_next_etudiant.signature
                             svg Base64.decode64(presence_next_etudiant.signature.split(',')[1]), height: 50
@@ -920,9 +990,9 @@ class ExportPdf
 
             move_down @margin_down
             stroke_horizontal_rule
+
         end
     end
-
 
     def consignes(papier, calculatrice, ordi_tablette, téléphone, dictionnaire)
         text "<color rgb='032E4D'><b>CONSIGNES :</b></color>", inline_format: true

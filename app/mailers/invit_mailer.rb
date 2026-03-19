@@ -2,6 +2,7 @@ class InvitMailer < ApplicationMailer
 
   def envoyer_invitation
     @invit = params[:invit]
+    #TODO : mettre l'objet du mail dans la variable title
     mail(to: @invit.intervenant.email, 
          subject:"[PLANNING] Proposition de créneaux pour placer vos cours #{ @invit.cour.formation.nom } à la Business School").tap do |message|
           message.mailgun_options = {

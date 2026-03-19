@@ -24,9 +24,6 @@ class MailLogsController < ApplicationController
 
   # GET /mail_logs/1 or /mail_logs/1.json
   def show
-    mg_client = Mailgun::Client.new ENV["MAILGUN_API_KEY"], 'api.eu.mailgun.net'
-    domain = ENV["MAILGUN_DOMAIN"]
-    @result = mg_client.get("#{domain}/events", {:event => 'failed'}).to_h
   end
 
   def refresh

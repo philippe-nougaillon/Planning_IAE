@@ -72,7 +72,20 @@ class FormationsController < ApplicationController
 
   # GET /formations/new
   def new
-    @formation = Formation.new
+    # Si une formation_id est en paramètre, alors on demande une duplication de cette formation
+    if formation_id = params[:formation_id]
+      original_formation = Formation.find(formation_id)
+      @formation = original_formation.dup
+      @formation.promo = @formation.abrg = @formation.edusign_id = ""
+      @formation.archive = false
+      # Duplication des unités associées à la formation d'origine
+      original_formation.unites.each do |unite|
+        @formation.unites.build(unite.dup.attributes.except('formation_id'))
+      end
+    else
+      @formation = Formation.new
+    end
+
   end
 
   # GET /formations/1/edit
@@ -205,7 +218,7 @@ class FormationsController < ApplicationController
       params.require(:formation)
             .permit(:nom, :promo, :diplome, :domaine, :apprentissage, :memo, :nbr_etudiants, :nbr_heures, 
                     :abrg, :user_id, :color, :Forfait_HETD, :hors_catalogue, :nomtauxtd, :code_analytique, :catalogue, :archive, :hss, :courriel, :send_to_edusign,
-                    unites_attributes: [:id, :code, :nom, :séances, :heures, :destroy],
+                    unites_attributes: [:id, :code, :nom, :séances, :heures, :_destroy],
                     etudiants_attributes: [:id, :nom, :prénom, :civilité, :email, :mobile, :_destroy],
                     vacations_attributes: [:id, :date, :intervenant_id, :titre, :qte, :forfaithtd, :commentaires, :vacation_activite_id, :_destroy])
     end

@@ -121,6 +121,22 @@ class ToolPolicy < ApplicationPolicy
     export_etat_liquidatif_collectif?
   end
 
+  def export_codir?
+    user.rh? || user.admin?
+  end
+
+  def export_codir_do?
+    export_codir?
+  end
+
+  def export_cac?
+    user.rh? || user.admin?
+  end
+
+  def export_cac_do?
+    export_cac?
+  end
+
   def audits?
     user.admin?
   end
@@ -162,8 +178,8 @@ class ToolPolicy < ApplicationPolicy
   end
 
   def audit_cours?
-    # Accès à la vue 'à booker' que pour ces personnes
-    [1,6,41].include?(user.id)
+    # Accès à la vue 'à booker' que pour les utilisateurs autorisés
+    ENV["USER_A_BOOKER_AUTORIZATION_IDS"].split(',').map(&:to_i).include?(user.id)
   end
 
   def liste_surveillants_examens?
@@ -219,22 +235,14 @@ class ToolPolicy < ApplicationPolicy
   end
 
   def commandes?
-    # Accueil ou gestionnaire ou admin
-    user && ([3,5,6].include?(user.role_number))
+    # Admins et personnes autorisées
+    user && (user.admin? || ENV["USER_COMMAND_AUTHORIZATION_IDS"].split(',').map(&:to_i).include?(user.id))
   end
 
   def commande_fait?
-    # Accueil et user 41
-    user && (user.accueil? || user.id == 41)
-  end
-
-  def commandes_v2?
     commandes?
   end
 
-  def commande_fait_v2?
-    commande_fait?
-  end
   
   def edusign?
     user && user.super_admin?

@@ -1,7 +1,7 @@
 <div class="flex items-center justify-between border-b mt-6 mb-2 pb-4">
   <h1 class="text-3xl"><%= fa_icon 'users' %> Liste des utilisateurs</h1>
-  <% if policy(User).new? %>
-    <%= link_to new_user_path, class: 'btn btn-sm btn-primary btn-outline hover:!text-white' do %>
+  <% if policy(:admin).create_new_user? %>
+    <%= link_to admin_create_new_user_path, class: 'btn btn-sm btn-primary btn-outline hover:!text-white' do %>
       <%= fa_icon 'plus-circle' %> Utilisateur
     <% end %>
   <% end %>
@@ -46,6 +46,7 @@
   <table class="table">
     <thead class="bg-slate-100 border">
       <tr>
+        <th></th>
         <th><%= sort_link 'users.nom', 'Nom' %></th>
         <th>Prénom</th>
         <th><%= sort_link 'users.email', 'Courriel' %></th>
@@ -65,7 +66,13 @@
     <tbody>
       <% @users.each do |user| %>
         <tr class="hover border">
-          <td><b><%= link_to user.nom, user, class: 'text-primary hover:underline' %></b></td>
+          <td>
+            <span class="material-symbols-outlined hover:cursor-help" title="Utilisateur avec double authentification activée">
+              <%= user.otp_required_for_login? ? 'person_shield' : '' %>
+            </span>
+          </td>
+          <td>
+            <b><%= link_to user.nom, user, class: 'text-primary hover:underline' %></b></td>
           <td><%= user.prénom %></td>
           <td>
             <div class="flex items-center gap-1">

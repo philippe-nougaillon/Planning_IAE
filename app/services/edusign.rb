@@ -11,19 +11,25 @@ class Edusign < ApplicationService
 
         # Déclaré ici pour éviter de synchroniser des éléments deux fois (à cause de la prochaine synchronisation qui se base sur le created_at de la synchronisation)
         @interval_end = Time.zone.now
+
+        # Par défaut, on considère qu'il n'y a pas de crash.
+        @crash = false
     end
 
     def call
-        # Necessaire pour créer des formations sans étudiants et des formations avec que des étudiants déjà créés sur Edusign
-        formations_ajoutés_ids = self.sync_formations("Post", nil)
+        # Necessaire pour créer des formations sans étudiants 
+        # et des formations avec que des étudiants déjà créés sur Edusign
+
+        formations_ajoutées_ids = self.sync_formations("Post", nil)
 
         etudiants_ajoutés_ids = self.sync_etudiants("Post", nil)
 
         self.sync_etudiants("Patch", etudiants_ajoutés_ids)
 
-        self.sync_formations("Patch", formations_ajoutés_ids)
+        self.sync_formations("Patch", formations_ajoutées_ids)
 
-        # Ajout des intervenants avant les cours, sinon les cours qui n'ont pas d'intervenant créé sur Edusign, ne seront pas créés
+        # Ajout des intervenants avant les cours, 
+        # sinon les cours qui n'ont pas d'intervenant créé sur Edusign, ne seront pas créés
         intervenants_ajoutés_ids = self.sync_intervenants("Post", nil)
 
         self.sync_intervenants("Patch", intervenants_ajoutés_ids)
@@ -82,12 +88,28 @@ class Edusign < ApplicationService
         @request["authorization"] = "Bearer #{ENV['EDUSIGN_API_KEY']}"
     end
 
-    def get_response(without_message_response = false)
-        response = JSON.parse(@http.request(@request).read_body)
+    def get_response(debug_mode = true)
+        response = {}
 
-        if !without_message_response
-            puts "Lancement de la requête terminée : "
-            puts response
+        http_response = @http.request(@request)
+
+        status = http_response.code.to_i
+
+        puts "Statut de la requête : #{status}"
+
+        # Si le code de réponse est un succes, on parse la réponse
+        if status.between?(200,299)
+            response = JSON.parse(http_response.body)
+
+            if debug_mode
+                puts "Lancement de la requête terminée : "
+                puts response
+            end
+        else
+            # Si ce n'est pas un succes, on considère que c'est un crash, et qu'il faudra refaire une tentative
+            @crash = true
+            response["status"] = "error"
+            response["message"] = http_response.body
         end
 
         response
@@ -107,7 +129,7 @@ class Edusign < ApplicationService
         EdusignLog.where(modele_type: 1).where.not(etat: 3).reorder(created_at: :desc).first.created_at..@interval_end
     end
 
-    # Cette fonction les éléments qui sont considérés comme élément à ajouter sur edusign
+    # Cette fonction prend les éléments qui sont considérés comme élément à ajouter sur edusign
     def get_all_element_to_post(model)
         formations_sent_to_edusign_ids = Formation.not_archived.sent_to_edusign_ids
 
@@ -125,8 +147,8 @@ class Edusign < ApplicationService
             model.where(
               formation_id: formations_sent_to_edusign_ids,
               edusign_id: nil,
-              no_send_to_edusign: false
-            ).where.not(intervenant_id: Intervenant.intervenants_examens + Intervenant.sans_intervenant)
+              no_send_to_edusign: [false, nil]
+            ).where.not(intervenant_id: Intervenant.examens_ids + Intervenant.sans_intervenant)
         elsif model == Intervenant
 
             # On sélectionne que les intervenants qui sont liés à une formation qui doit être sur Edusign.
@@ -134,10 +156,10 @@ class Edusign < ApplicationService
 
             intervenant_ids = Cour.where(
               formation_id: formations_sent_to_edusign_ids,
-              no_send_to_edusign: false
+              no_send_to_edusign: [false, nil]
             ).pluck(:intervenant_id, :intervenant_binome_id).flatten.compact.uniq
 
-            model.where(id: intervenant_ids, edusign_id: nil).where.not(id: Intervenant.intervenants_examens + Intervenant.sans_intervenant)
+            model.where(id: intervenant_ids, edusign_id: nil).where.not(id: Intervenant.examens_ids + Intervenant.sans_intervenant)
         end
     end
 
@@ -161,9 +183,9 @@ class Edusign < ApplicationService
             model.where(
               formation_id: formations_sent_to_edusign_ids,
               updated_at: interval,
-              no_send_to_edusign: false
+              no_send_to_edusign: [false, nil]
               ).where.not(edusign_id: nil).where.not(id: record_ids)
-              .where.not(intervenant_id: Intervenant.intervenants_examens + Intervenant.sans_intervenant)
+              .where.not(intervenant_id: Intervenant.examens_ids + Intervenant.sans_intervenant)
         elsif model == Intervenant
             # Un intervenant peut ne plus avoir de cours avec des formations cobayes. Comme la requête permet de savoir qu'il est actif sur le planning, on l'update quand même sur Edusiugn.
             model.where(updated_at: interval).where.not(edusign_id: nil).where.not(id: record_ids)
@@ -181,9 +203,9 @@ class Edusign < ApplicationService
             model.where(
               formation_id: formations_sent_to_edusign_ids,
               edusign_id: nil,
-              no_send_to_edusign: false
+              no_send_to_edusign: [false, nil]
             ).where("debut >= ?", DateTime.now)
-              .where.not(intervenant_id: Intervenant.intervenants_examens + Intervenant.sans_intervenant)
+              .where.not(intervenant_id: Intervenant.examens_ids + Intervenant.sans_intervenant)
         elsif model == Etudiant
             model.where(
               formation_id: formations_sent_to_edusign_ids,
@@ -197,10 +219,10 @@ class Edusign < ApplicationService
 
             intervenant_ids = Cour.where(
               formation_id: formations_sent_to_edusign_ids,
-              no_send_to_edusign: false
+              no_send_to_edusign: [false, nil]
             ).where("debut >= ?", DateTime.now).pluck(:intervenant_id, :intervenant_binome_id).flatten.compact.uniq
 
-            model.where(id: intervenant_ids, edusign_id: nil).where.not(id: Intervenant.intervenants_examens + Intervenant.sans_intervenant)
+            model.where(id: intervenant_ids, edusign_id: nil).where.not(id: Intervenant.examens_ids + Intervenant.sans_intervenant)
         end
     end
 
@@ -692,7 +714,7 @@ class Edusign < ApplicationService
         request_base = Cour.where.not(edusign_id: nil)
         condition_1 = request_base.where.not(formation_id: Formation.not_archived.sent_to_edusign_ids)
         condition_2 = request_base.where(no_send_to_edusign: true)
-        condition_3 = request_base.joins(:intervenant).where(intervenant: { id: Intervenant.intervenants_examens })
+        condition_3 = request_base.joins(:intervenant).where(intervenant: { id: Intervenant.examens_ids })
 
         # Récupération des ids des cours récupérés
         cours_to_remove_in_edusign_ids = condition_1.or(condition_2).pluck(:id) + condition_3.pluck(:id)
@@ -712,7 +734,7 @@ class Edusign < ApplicationService
         deleted_cours.each do |deleted_cour|
             edusign_id = deleted_cour.audited_changes["edusign_id"]
             self.prepare_request("https://ext.edusign.fr/v1/course/#{edusign_id}", "Get")
-            response = self.get_response(true)
+            response = self.get_response(false)
             if response["status"] == "success" && edusign_id != nil
                 edusign_ids << edusign_id
                 deleted_cours_to_sync_ids << deleted_cour.auditable_id
@@ -750,12 +772,58 @@ class Edusign < ApplicationService
         @nb_sended_elements += nb_audited
     end
 
+    def add_grouped_cours(cour_ids)
+        cours = Cour.where(id: cour_ids)
+        self.prepare_request_with_message("https://ext.edusign.fr/v1/course", "Post")
+        puts "Début du groupement des cours #{cours.pluck(:id, :nom)}"
+
+        formations_edusign_ids = Formation.where(id: cours.pluck(:formation_id)).pluck(:edusign_id)
+        
+        if !formations_edusign_ids.include?(nil)
+            cour_template = cours.first
+            intervenant = Intervenant.find_by(id: cour_template.intervenant_id)
+            intervenant_binome = Intervenant.find_by(id: cour_template.intervenant_binome_id)
+            
+            if intervenant&.edusign_id
+                if !intervenant_binome || intervenant_binome.edusign_id
+                    body =
+                    {"course":{
+                        "NAME": "#{cour_template.nom_ou_ue}" || 'Nom du cours à valider',
+                        "START": cour_template.debut - paris_observed_offset_seconds(cour_template.debut),
+                        "END": cour_template.fin - paris_observed_offset_seconds(cour_template.debut),
+                        "PROFESSOR": intervenant&.edusign_id,
+                        "PROFESSOR_2": intervenant_binome&.edusign_id,
+                        "API_ID": cour_template.id,
+                        "NEED_STUDENTS_SIGNATURE": true,
+                        "CLASSROOM": cour_template.salle&.nom,
+                        "SCHOOL_GROUP": formations_edusign_ids
+                        }
+                    }
+    
+                    response = self.prepare_body_request(body).get_response
+    
+                    puts response["status"] == 'error' ?  "<strong>Erreur d'exportation : #{response["message"]}</strong>" : "Exportation des cours réussie"
+                else
+                    puts "L'intervenant binome #{intervenant_binome&.prenom_nom} n'est pas encore relié à Edusign. Le groupement n'est pas fait"
+                end
+            else
+                puts "L'intervenant #{intervenant&.prenom_nom} n'est pas encore relié à Edusign. Le groupement n'est pas fait"
+            end
+        else
+            puts "Au moins une formation n'est pas encore reliée à Edusign. Le groupement n'est pas fait"
+        end
+
+        return response
+    end
+
     def get_etat
         puts "=" * 100
         puts "===> Nombre d'éléments récupérés : #{@nb_recovered_elements}, nombre d'éléments envoyés : #{@nb_sended_elements}, nombre d'échecs : #{self.count_failure_elements}"
 
         # Modification de l'etat
-        if @nb_recovered_elements != 0
+        if @crash
+            3 # Crash
+        elsif @nb_recovered_elements != 0
             case self.count_failure_elements
             when 0
                 0 # Success

@@ -9,23 +9,23 @@
   <div class="flex flex-wrap items-start gap-4">
 
     <div class="w-full sm:w-1/6">
-      <%= label_tag :start_date, "Du" %>
+      <%= label_tag :start_date, "Du *" %>
       <%= text_field_tag :start_date, params[:start_date], type: 'date', class: "input input-bordered input-sm w-full", required: true %>
     </div>
 
     <div class="w-full sm:w-1/6">
-      <%= label_tag :end_date, "Au" %>
+      <%= label_tag :end_date, "Au *" %>
       <%= text_field_tag :end_date, params[:end_date], type: 'date', class: "input input-bordered input-sm w-full", required: true %>
     </div>
 
-    <div class="w-full sm:w-fit">
-      <%= label_tag :status, "Statut" %>
+    <div class="w-full sm:w-1/4">
+      <%= label_tag :statuses, "Statuts *" %>
       <br>
-      <%= select_tag :status, 
+      <%= select_tag :statuses, 
         options_for_select(Intervenant.statuses, 
-        params[:status]), include_blank:true,
-        class: "select select-bordered select-sm",
-        required: true %>
+        params[:statuses]), include_blank:true,
+        class: "slim-select ",
+        required: true, multiple: true %>
     </div>
 
     <div class="w-full sm:w-fit">
@@ -43,6 +43,11 @@
       <div class="relative flex-grow max-w-full flex-1 flex gap-1 items-center">
         <%= check_box_tag :responsabilites, 1, false, class: 'checkbox checkbox-xs checkbox-primary' %>
         <%= label_tag :responsabilites, "Responsabilités", class: 'whitespace-nowrap' %>
+      </div>
+
+      <div class="relative flex-grow max-w-full flex-1 flex gap-1 items-center">
+        <%= check_box_tag :dossiers, 1, false, class: 'checkbox checkbox-xs checkbox-primary' %>
+        <%= label_tag :dossiers, "Dossiers", class: 'whitespace-nowrap' %>
       </div>
     </div>
 

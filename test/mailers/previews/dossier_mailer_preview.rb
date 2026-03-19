@@ -13,4 +13,13 @@ class DossierMailerPreview < ActionMailer::Preview
         DossierMailer.with(dossier: Dossier.first).rejeter_email
     end
 
+    def notif_dossiers_rh_manquants
+        DossierMailer.with(intervenants: Intervenant.last(5)).notif_dossiers_rh_manquants
+    end
+
+    def relancer_dossier_urgent
+        DossierMailer.with(dossier: Dossier.first).relancer_dossier_urgent
+    end
+
+
 end

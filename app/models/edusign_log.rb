@@ -11,7 +11,8 @@ class EdusignLog < ApplicationRecord
     'initialisation': 0,
     'synchronisation': 1,
     'synchronisation ponctuelle': 2,
-    'salle changée': 3
+    'salle changée': 3,
+    'groupement cours': 4
   }
 
   def username

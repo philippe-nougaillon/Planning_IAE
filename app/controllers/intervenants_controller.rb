@@ -2,8 +2,8 @@
 
 class IntervenantsController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[ invitations calendrier ]
-  before_action :set_intervenant, only: [:show, :invitations, :edit, :update, :destroy, :calendrier]
-  before_action :is_user_authorized
+  before_action :set_intervenant, only: [:show, :invitations, :edit, :update, :destroy, :calendrier, :sujets]
+  before_action :is_user_authorized, except: [:sujets]
   skip_before_action :authenticate_user!, only: %i[index show]
 
   # check if logged and admin  
@@ -137,6 +137,38 @@ class IntervenantsController < ApplicationController
         response.headers['Content-Disposition'] = 'attachment; filename="' + filename + '.ics"'
         headers['Content-Type'] = "text/calendar; charset=UTF-8"
         render plain: @calendar.to_ical
+      end
+    end
+  end
+
+  def sujets
+    authorize @intervenant
+
+    @sujets = Sujet.where(id: Cour.where(intervenant_binome_id: @intervenant.id).pluck(:sujet_id)).joins(:cours).ordered
+    # Si on a pas de workflow, on récupère tous les sujets, et on prend ceux archivés si la case "Inclure les archivés ?" est coché
+    # Sinon, on prend en fonction du workflow choisi sans prendre en compte la case pour les archives
+    if params[:workflow_state].blank?
+      if params[:archive].blank?
+        @sujets = @sujets.where.not(workflow_state: "archivé")
+      end
+    else
+      @sujets = @sujets.where("workflow_state = ?", params[:workflow_state].to_s.downcase)
+    end
+
+    if params[:formation].present?
+      formation_id = Formation.find_by(nom: params[:formation]).id
+      @sujets = @sujets.where(cours: {formation_id: formation_id})
+    end
+
+    @sujets = @sujets.group('sujets.id')
+    @sujets = @sujets.paginate(page: params[:page], per_page: 20)
+  end
+
+  def is_specific_intervenant
+    respond_to do |format|
+      format.json do
+        render json:
+           {examen: Intervenant.examens_ids.include?(params[:intervenant_id].to_i), a_confirmer: Intervenant.a_confirmer_id == params[:intervenant_id].to_i}
       end
     end
   end

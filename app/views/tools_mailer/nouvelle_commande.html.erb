@@ -1,10 +1,10 @@
 <p style="margin-bottom: 0.5rem">
   Bonjour,
   <br><br>
-  <%= "Une nouvelle commande vient d'arriver pour le <b>#{l @cour.debut, format: :long}</b>".html_safe %>
+  <%= "Une nouvelle commande vient d'arriver pour le <b>#{l @cour.debut, format: :long}</b>, demandé par #{@cour.own_and_associated_audits.first.user.try(:nom_et_prénom)}.".html_safe %>
   <br><br>
 
-  <%= simple_format @cour.commentaires %>
+  <%= simple_format @cour.options.commande.first.description %>
   <% if @cour.salle %>
     Salle : <%= @cour.salle.nom %>
     <br><br>
@@ -14,7 +14,7 @@
   <%= @cour.intervenant.nom_prenom %>
 
   <br><br>
-  Commande faite par : <%= @cour.audits.last.user.try(:email) %>
+  Commande faite par : <%= @cour.audits.last.user.try(:nom_et_prénom) %>
 
   <br><br>
   <%= link_to "Voir toutes les commandes", tools_commandes_url %>

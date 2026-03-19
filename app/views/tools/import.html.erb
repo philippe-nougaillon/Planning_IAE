@@ -3,7 +3,7 @@
 </div>
 <br>
 
-<%= form_tag({action: "import_do", method: :post}, multipart: true) do %>
+<%= form_tag({action: "import_do", method: :post}, multipart: true, id: "import_form") do %>
   <div>
     <h3 class="text-2xl">Importation des cours à partir d'une feuille au format Excel 97-2003 (.xls)</h3>
     <ul class="list-disc ml-4">
@@ -36,6 +36,7 @@
     <div>
       <%= label :filename, "Fichier source", class: 'mt-6' %>
       <%= file_field_tag 'upload', accept: 'application/vnd.ms-excel', class: 'file-input file-input-bordered file-input-sm w-full mb-4' %>
+      <%= render "partials/script_accept_file_type", id_form: "import_form", id_file_input: "upload", file_type_accepted: 'application/vnd.ms-excel', file_type_for_alert: 'XLS' %>
     </div>
 
     <div>

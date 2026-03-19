@@ -45,5 +45,10 @@ module Planning
     # Solid queue : pour utiliser à sa manière le contrôle d'accès
     config.mission_control.jobs.http_basic_auth_enabled = false
     config.mission_control.jobs.base_controller_class = "MissionControlAdminController"
+
+    config.active_record.encryption.primary_key = ENV['ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY']
+  config.active_record.encryption.deterministic_key = ENV['ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY']
+  config.active_record.encryption.key_derivation_salt = ENV['ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT']
+
   end
 end

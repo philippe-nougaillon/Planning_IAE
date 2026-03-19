@@ -1,0 +1,50 @@
+<div class="border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl"><%= fa_icon 'list-alt' %>Export CoDir</h1>
+</div>
+<br>
+
+<h3 class="text-2xl mb-4">Exporte vers Excel le montant total par EOTP</h3>
+
+<%= form_tag({action: "export_codir_do", method: :post}, class: 'mt-12') do %>
+  <div class="flex flex-wrap items-start gap-4">
+    <div class="w-full sm:w-1/6">
+      <%= label_tag :start_date, "Du *" %>
+      <%= text_field_tag :start_date, params[:start_date], type: 'date', class: "input input-bordered input-sm w-full", required: true %>
+    </div>
+
+    <div class="w-full sm:w-1/6">
+      <%= label_tag :end_date, "Au *" %>
+      <%= text_field_tag :end_date, params[:end_date], type: 'date', class: "input input-bordered input-sm w-full", required: true %>
+    </div>
+
+    <div class="w-full sm:w-1/4">
+      <%= label_tag :statuses, "Statuts *" %>
+      <br>
+      <%= select_tag :statuses, 
+        options_for_select(Intervenant.statuses, 
+        params[:statuses]), include_blank:true,
+        class: "slim-select ",
+        required: true, multiple: true %>
+    </div>
+
+    <div class="w-full sm:w-fit">
+      <%= label_tag "Inclure ?" %>
+      <div class="relative flex-grow max-w-full flex-1 flex gap-1 items-center">
+        <%= check_box_tag :cours, 1, true, class: 'checkbox checkbox-xs checkbox-primary' %>
+        <%= label_tag :cours, "Cours", class: 'whitespace-nowrap' %>
+      </div>
+
+      <div class="relative flex-grow max-w-full flex-1 flex gap-1 items-center">
+        <%= check_box_tag :vacations, 1, false, class: 'checkbox checkbox-xs checkbox-primary' %>
+        <%= label_tag :vacations, "Vacations", class: 'whitespace-nowrap' %>
+      </div>
+
+      <div class="relative flex-grow max-w-full flex-1 flex gap-1 items-center">
+        <%= check_box_tag :responsabilites, 1, false, class: 'checkbox checkbox-xs checkbox-primary' %>
+        <%= label_tag :responsabilites, "Responsabilités", class: 'whitespace-nowrap' %>
+      </div>
+    </div>
+  </div>
+
+  <%= submit_tag "Exporter", class: 'btn btn-sm btn-success btn-outline mt-8', 'data-turbo': false %>
+<% end %>

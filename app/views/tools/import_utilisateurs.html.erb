@@ -3,7 +3,7 @@
 </div>
 <br>
 
-<%= form_tag({action: "import_utilisateurs_do", method: :post}, multipart: true) do %>
+<%= form_tag({action: "import_utilisateurs_do", method: :post}, multipart: true, id: "import_utilisateurs_form") do %>
   <div>
     <h3 class="text-2xl">Cette fonction permet l'importation des utilisateurs à partir d'un fichier Excel</h3>
     <ul class="list-disc ml-4 mb-4">
@@ -26,6 +26,7 @@
       <div class="field mt-4">
         <%= label :filename, "Fichier.xls *" %>
         <%= file_field_tag 'upload', accept: 'application/vnd.ms-excel', class: 'file-input file-input-bordered file-input-sm w-full' %>
+        <%= render "partials/script_accept_file_type", id_form: "import_utilisateurs_form", id_file_input: "upload", file_type_accepted: 'application/vnd.ms-excel', file_type_for_alert: 'XLS' %>
       </div>
     </div>
   </div>

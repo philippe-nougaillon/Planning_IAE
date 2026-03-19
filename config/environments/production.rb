@@ -114,9 +114,8 @@ Rails.application.configure do
   }
 
 
-  config.action_mailer.default_url_options = { host: 'business-school-planning-demo-248ac1f2d92e.herokuapp.com', protocol: 'https' }
-  config.action_mailer.asset_host = 'https://business-school-planning-demo-248ac1f2d92e.herokuapp.com/'
-
+  config.action_mailer.default_url_options = { host: ENV['HOST_URL'], protocol: 'https' }
+  config.action_mailer.asset_host = "https://#{ENV['HOST_URL']}"
   # set the session cookie to expire automatically 12.hours after creation
   config.session_store :cookie_store, expire_after: 12.hours
 

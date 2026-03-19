@@ -9,13 +9,14 @@ class IntervenantMailer < ApplicationMailer
         mail(to: @intervenant.email, subject:"[PLANNING] Etat de services")
     end
 
-    def notifier_cours(debut, fin, intervenant, cours, gestionnaires, envoi_log_id, test)
+    def notifier_cours(debut, fin, intervenant, cours, gestionnaires, envoi_log_id, test, title)
         @debut = debut
         @fin = fin - 1.day
         @cours = cours
         @gestionnaires = gestionnaires
         @intervenant = intervenant
         @message = EnvoiLog.find(envoi_log_id).message
+        #TODO : mettre l'objet du mail dans la variable title
         if test
             mail(to: "philippe.nougaillon@gmail.com, pierreemmanuel.dacquet@gmail.com",
                 subject:"[PLANNING] TEST / Rappel des cours de #{@intervenant.nom_prenom} du #{l @debut} au #{l @fin}")
@@ -24,7 +25,7 @@ class IntervenantMailer < ApplicationMailer
         end
     end
 
-    def notifier_examens(debut, fin, intervenant, cours, gestionnaires, envoi_log_id, test)
+    def notifier_examens(debut, fin, intervenant, cours, gestionnaires, envoi_log_id, test, title)
         @debut = debut
         @fin = fin - 1.day
         @cours = cours
@@ -32,14 +33,149 @@ class IntervenantMailer < ApplicationMailer
         @intervenant = intervenant
         @message = EnvoiLog.find(envoi_log_id).message
 
-        attachments['PDG_Examen.docx']   = File.read('app/assets/attachments/PDG_Examen.docx')
+        attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
 
         if test
-            mail(to: "fitsch-mouras.iae@univ-paris1.fr", cc: "philippe.nougaillon@gmail.com, pierreemmanuel.dacquet@gmail.com",
-                subject:"[PLANNING] TEST / Rappel des examens de #{@intervenant.nom_prenom} du #{l @debut} au #{l @fin}")
+            mail(to: "fitsch-mouras.iae@univ-paris1.fr", cc: "philippe.nougaillon@gmail.com, pierreemmanuel.dacquet@aikku.eu",
+                subject: title)
         else
-            mail(to: @intervenant.email, subject:"[PLANNING] Rappel de vos examens à l'IAE Paris du #{l @debut} au #{l @fin}")
+            mail(to: @intervenant.email, subject: title)
         end
+    end
+
+    def demande_sujet(sujet, title)
+        examen = sujet.cour
+        intervenant = examen.intervenant_binome
+
+        @debut = examen.debut
+        @sujet = sujet
+        @ue = examen.nom_ou_ue
+        @code_ue = examen.code_ue
+        @formations = Formation.where(id: sujet.cours.pluck(:formation_id)).pluck(:nom)
+        @deadline = examen.debut - 1.month
+        @examens_count = sujet.cours.count
+
+        attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
+        mail(to: intervenant.email, subject: title)
+    end
+
+    def validation_sujet(examen, jours, title)
+        @debut = examen.debut
+        @intervenant = examen.intervenant_binome
+        @jours = jours
+        mail(to: @intervenant.email, subject: title)
+    end
+
+    def rejet_sujet(sujet, title)
+        examen = sujet.cour
+        @debut = examen.debut
+        @intervenant = examen.intervenant_binome
+        @jours = examen.days_between_today_and_debut
+        @raisons = sujet.message
+        @sujet = sujet
+        attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
+        mail(to: @intervenant.email, subject: title)
+    end
+
+    def relance_sujet_30_jours(sujet, title)
+        examen = sujet.cour
+        intervenant = examen.intervenant_binome
+
+        @debut = examen.debut
+        @sujet = sujet
+        @ue = examen.nom_ou_ue
+        @code_ue = examen.code_ue
+        @formations = Formation.where(id: sujet.cours.pluck(:formation_id)).pluck(:nom)
+        @examens_count = sujet.cours.count
+
+        attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
+        mail(to: intervenant.email, subject: title)
+    end
+
+    def relance_sujet_20_jours(sujet, title)
+        examen = sujet.cour
+        intervenant = examen.intervenant_binome
+
+        @debut = examen.debut
+        @sujet = sujet
+        @ue = examen.nom_ou_ue
+        @code_ue = examen.code_ue
+        @formations = Formation.where(id: sujet.cours.pluck(:formation_id)).pluck(:nom)
+        @first_relance = sujet.created_at
+        @examens_count = sujet.cours.count
+
+        attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
+        mail(to: intervenant.email, subject: title)
+    end
+
+    def relance_sujet_10_jours(sujet, title)
+        examen = sujet.cour
+        intervenant = examen.intervenant_binome
+
+        @debut = examen.debut
+        @sujet = sujet
+        @ue = examen.nom_ou_ue
+        @code_ue = examen.code_ue
+        @formations = Formation.where(id: sujet.cours.pluck(:formation_id)).pluck(:nom)
+        @first_relance = sujet.created_at
+        @examens_count = sujet.cours.count
+
+        attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
+        mail(to: intervenant.email, subject: title)
+    end
+
+    def relance_sujet_7_jours(sujet, title)
+        examen = sujet.cour
+        intervenant = examen.intervenant_binome
+
+        @debut = examen.debut
+        @sujet = sujet
+        @ue = examen.nom_ou_ue
+        @code_ue = examen.code_ue
+        @formations = Formation.where(id: sujet.cours.pluck(:formation_id)).pluck(:nom)
+        @first_relance = sujet.created_at
+        @examens_count = sujet.cours.count
+
+        attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
+        mail(to: intervenant.email, subject: title)
+    end
+
+    def relance_sujet_5_jours(sujet, title)
+        examen = sujet.cour
+        intervenant = examen.intervenant_binome
+
+        @debut = examen.debut
+        @sujet = sujet
+        @ue = examen.nom_ou_ue
+        @code_ue = examen.code_ue
+        @formations = Formation.where(id: sujet.cours.pluck(:formation_id)).pluck(:nom)
+        @first_relance = sujet.created_at
+        @examens_count = sujet.cours.count
+
+        attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
+        mail(to: intervenant.email, subject: title)
+    end
+
+    def relance_sujet_3_jours(sujet, title)
+        examen = sujet.cour
+        intervenant = examen.intervenant_binome
+
+        @debut = examen.debut
+        @sujet = sujet
+        @ue = examen.nom_ou_ue
+        @code_ue = examen.code_ue
+        @formations = Formation.where(id: sujet.cours.pluck(:formation_id)).pluck(:nom)
+        @first_relance = sujet.created_at
+        @jour_avant_debut = examen.debut.to_date - 1.day
+        @examens_count = sujet.cours.count
+
+        attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
+        mail(to: intervenant.email, subject: title)
+    end
+
+    def deposer_sujet(sujet, title)
+        @sujet = sujet
+        mail(to: ["#{sujet.cour.formation.courriel.present? ? sujet.cour.formation.courriel : sujet.cour.formation.user&.email}, examens@iae.pantheonsorbonne.fr"], subject: title)
     end
 
     def welcome_intervenant
@@ -53,11 +189,11 @@ class IntervenantMailer < ApplicationMailer
         end
     end
 
-    def mes_sessions(intervenant, presence_slug, gestionnaire_email)
+    def mes_sessions(intervenant, presence_slug, gestionnaire_email, title)
         @intervenant = intervenant
         @presence_slug = presence_slug
         mail(to: @intervenant.email, cc: gestionnaire_email,
-            subject:"[PLANNING] Validation des émargements pour la session en cours").tap do |message|
+            subject: title).tap do |message|
                 message.mailgun_options = {
                     "tag" => [@intervenant.nom, @intervenant.prenom, "émargements"]
                 }

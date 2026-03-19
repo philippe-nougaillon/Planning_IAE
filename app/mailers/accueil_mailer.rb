@@ -1,9 +1,9 @@
 class AccueilMailer < ApplicationMailer
-    def notifier_cours_bypass(cours, user_email)
+    def notifier_cours_bypass(cours, user_email, title)
         @cours = cours
         mail(
             to: "accueil@iae.pantheonsorbonne.fr", cc: user_email,
-            subject:"[PLANNING IAE Paris] BYPASS utilisé !").tap do |message|
+            subject: title).tap do |message|
                 message.mailgun_options = {
                     "tag" => ["cours bypass"]
                 }
