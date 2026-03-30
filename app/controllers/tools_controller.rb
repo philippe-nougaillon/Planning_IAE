@@ -663,8 +663,10 @@ class ToolsController < ApplicationController
       cours = cours.where(etat:params[:etat])
     end
 
-    unless params[:academ].blank?
+    if params[:academ].present?
       book = CoursAcademToXls.new(cours.réalisé).call
+    elsif params[:autre_format].present?
+      book = NouvelExportCoursToXls.new(cours, params[:binome].present?).call
     else
       book = CoursToXls.new(cours, params[:binome].present?, true).call
     end
