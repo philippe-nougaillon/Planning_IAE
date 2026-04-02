@@ -44,6 +44,11 @@
       <%= label_tag :academ, "Format Academ" %>
     </div>
 
+    <div class="flex items-center gap-1">
+      <%= check_box_tag :autre_format, true %>
+      <%= label_tag :autre_format %>
+    </div>
+
     <%= submit_tag "Exporter", { class: "btn btn-primary text-white", 'data-turbo': false } %>
   </div>
 <% end %>
