@@ -11,12 +11,12 @@
 # EnvoiLog.create(date_prochain: Date.parse('2021-09-24')) unless EnvoiLog.any?
 
 Ouverture.create([
-  { bloc: "P", jour: "lundi", début: "2000-01-01 08:00:00.000000000 +0000", fin: "2000-01-01 22:00:00.000000000 +0000"},
-  { bloc: "P", jour: "mardi", début: "2000-01-01 08:00:00.000000000 +0000", fin: "2000-01-01 22:00:00.000000000 +0000"},
-  { bloc: "P", jour: "mercredi", début: "2000-01-01 08:00:00.000000000 +0000", fin: "2000-01-01 22:00:00.000000000 +0000"},
-  { bloc: "P", jour: "jeudi", début: "2000-01-01 08:00:00.000000000 +0000", fin: "2000-01-01 22:00:00.000000000 +0000"},
-  { bloc: "P", jour: "vendredi", début: "2000-01-01 08:00:00.000000000 +0000", fin: "2000-01-01 22:00:00.000000000 +0000"},
-  { bloc: "P", jour: "samedi", début: "2000-01-01 08:00:00.000000000 +0000", fin: "2000-01-01 22:00:00.000000000 +0000"},
+  { bloc: "P", jour: "lundi", début: "2000-01-01 08:00:00.000000000 +0000", fin: "2000-01-01 23:00:00.000000000 +0000"},
+  { bloc: "P", jour: "mardi", début: "2000-01-01 08:00:00.000000000 +0000", fin: "2000-01-01 23:00:00.000000000 +0000"},
+  { bloc: "P", jour: "mercredi", début: "2000-01-01 08:00:00.000000000 +0000", fin: "2000-01-01 23:00:00.000000000 +0000"},
+  { bloc: "P", jour: "jeudi", début: "2000-01-01 08:00:00.000000000 +0000", fin: "2000-01-01 23:00:00.000000000 +0000"},
+  { bloc: "P", jour: "vendredi", début: "2000-01-01 08:00:00.000000000 +0000", fin: "2000-01-01 23:00:00.000000000 +0000"},
+  { bloc: "P", jour: "samedi", début: "2000-01-01 08:00:00.000000000 +0000", fin: "2000-01-01 23:00:00.000000000 +0000"},
 ])
 
 amphithéâtre = Salle.create(nom: "Amphithéâtre", bloc: "P", places: 96)
@@ -52,7 +52,7 @@ salle_3_2 = Salle.create(nom: "3.2", bloc: "P", places: 25)
 
 
 date_limite = Date.new(2026,5,4)
-cours = Cour.where("DATE(debut) >= ?", date_limite)
+cours = Cour.where("DATE(debut) >= ?", date_limite).where.not(salle_id: nil)
 cours.where(salle_id: Salle.find_by(nom: "B1").id).update_all(salle_id: amphithéâtre.id)
 cours.where(salle_id: Salle.find_by(nom: "D5").id).update_all(salle_id: rdj_1.id)
 cours.where(salle_id: Salle.find_by(nom: "B2").id).update_all(salle_id: auditorium.id)
