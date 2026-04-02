@@ -69,6 +69,11 @@ class CoursController < ApplicationController
 
     @cours = Cour.order(:debut)
 
+    if (!user_signed_in? || !(current_user.role_number >= 1))
+      salles_privées_ids = Salle.where(privée: true).pluck(:id)
+      @cours = @cours.where.not(salle_id: salles_privées_ids).or(@cours.where(salle_id: nil))
+    end
+
     # Si N° de semaine, afficher le premier jour de la semaine choisie, sinon date du jour
     unless params[:week_number].blank?
       raw = params[:week_number].to_s.strip
@@ -272,6 +277,8 @@ class CoursController < ApplicationController
 
     @tous_les_cours = Cour.where(etat: Cour.etats.values_at(:planifié, :confirmé))
                           .where("DATE(fin) = ? AND fin > ?", @planning_date.to_date, @planning_date.to_formatted_s(:db))
+                          .left_outer_joins(:salle)
+                          .where("salles.privée = ? OR salles.id IS NULL", false)
                           .reorder(:debut, :fin)
                           .pluck(:id)
 
