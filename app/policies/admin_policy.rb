@@ -6,7 +6,7 @@ class AdminPolicy < ApplicationPolicy
   end
 
   def create_new_user?
-    user && ENV['USER_CREATION_AUTHORIZATION_IDS'].split(',').map(&:to_i).include?(user.id)
+    user && ENV["USER_CREATION_AUTHORIZATION_IDS"]&.split(',')&.map(&:to_i)&.include?(user.id)
   end
 
   def create_new_user_do?
