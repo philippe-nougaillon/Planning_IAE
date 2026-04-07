@@ -54,6 +54,7 @@ class IntervenantMailer < ApplicationMailer
         @formations = Formation.where(id: sujet.cours.pluck(:formation_id)).pluck(:nom)
         @deadline = examen.debut - 1.month
         @examens_count = sujet.cours.count
+        @nom_examen = examen.type_examen.downcase
 
         attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
         mail(to: intervenant.email, subject: title)
@@ -87,6 +88,7 @@ class IntervenantMailer < ApplicationMailer
         @code_ue = examen.code_ue
         @formations = Formation.where(id: sujet.cours.pluck(:formation_id)).pluck(:nom)
         @examens_count = sujet.cours.count
+        @nom_examen = examen.type_examen.downcase
 
         attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
         mail(to: intervenant.email, subject: title)
@@ -103,6 +105,7 @@ class IntervenantMailer < ApplicationMailer
         @formations = Formation.where(id: sujet.cours.pluck(:formation_id)).pluck(:nom)
         @first_relance = sujet.created_at
         @examens_count = sujet.cours.count
+        @nom_examen = examen.type_examen.downcase
 
         attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
         mail(to: intervenant.email, subject: title)
@@ -119,6 +122,7 @@ class IntervenantMailer < ApplicationMailer
         @formations = Formation.where(id: sujet.cours.pluck(:formation_id)).pluck(:nom)
         @first_relance = sujet.created_at
         @examens_count = sujet.cours.count
+        @nom_examen = examen.type_examen.downcase
 
         attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
         mail(to: intervenant.email, subject: title)
@@ -135,6 +139,7 @@ class IntervenantMailer < ApplicationMailer
         @formations = Formation.where(id: sujet.cours.pluck(:formation_id)).pluck(:nom)
         @first_relance = sujet.created_at
         @examens_count = sujet.cours.count
+        @nom_examen = examen.type_examen.downcase
 
         attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
         mail(to: intervenant.email, subject: title)
@@ -151,6 +156,7 @@ class IntervenantMailer < ApplicationMailer
         @formations = Formation.where(id: sujet.cours.pluck(:formation_id)).pluck(:nom)
         @first_relance = sujet.created_at
         @examens_count = sujet.cours.count
+        @nom_examen = examen.type_examen.downcase
 
         attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
         mail(to: intervenant.email, subject: title)
@@ -168,6 +174,7 @@ class IntervenantMailer < ApplicationMailer
         @first_relance = sujet.created_at
         @jour_avant_debut = examen.debut.to_date - 1.day
         @examens_count = sujet.cours.count
+        @nom_examen = examen.type_examen.downcase
 
         attachments['PDG_Examen.docx'] = File.read('app/assets/attachments/PDG_Examen.docx')
         mail(to: intervenant.email, subject: title)

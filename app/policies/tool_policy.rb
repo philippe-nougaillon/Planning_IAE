@@ -179,7 +179,7 @@ class ToolPolicy < ApplicationPolicy
 
   def audit_cours?
     # Accès à la vue 'à booker' que pour les utilisateurs autorisés
-    ENV["USER_A_BOOKER_AUTORIZATION_IDS"].split(',').map(&:to_i).include?(user.id)
+    ENV["USER_A_BOOKER_AUTORIZATION_IDS"]&.split(',')&.map(&:to_i)&.include?(user.id)
   end
 
   def liste_surveillants_examens?
@@ -236,7 +236,7 @@ class ToolPolicy < ApplicationPolicy
 
   def commandes?
     # Admins et personnes autorisées
-    user && (user.admin? || ENV["USER_COMMAND_AUTHORIZATION_IDS"].split(',').map(&:to_i).include?(user.id))
+    user && (user.admin? || ENV["USER_COMMAND_AUTHORIZATION_IDS"]&.split(',')&.map(&:to_i)&.include?(user.id))
   end
 
   def commande_fait?
