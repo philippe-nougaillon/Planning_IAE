@@ -347,7 +347,7 @@ class Cour < ApplicationRecord
 
   # Si c'est un examen IAE / examen rattrapage / Tiers-temps
   def examen?
-    Intervenant.examens_ids.include?(self.intervenant.id)
+    Intervenant.examens_ids&.include?(self.intervenant.id)
   end
 
   def type_examen
