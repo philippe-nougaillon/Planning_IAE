@@ -1240,8 +1240,7 @@ class ToolsController < ApplicationController
     end
 
     # ids des cours créés par utilisateur autre que par l'admin de l'accueil
-    id_cours = Audited::Audit.where(auditable_type: 'Cour').where.not(user_id: ENV["USER_WITHOUT_AUDIT_IDS"].split(',').map(&:to_i)).pluck(:auditable_id).uniq
-
+    id_cours = Audited::Audit.where(auditable_type: 'Cour').where.not(user_id: ENV["USER_WITHOUT_AUDIT_IDS"]&.split(',')&.map(&:to_i)).pluck(:auditable_id).uniq
     # vérifie que la date de début de cours est dans la période observée
     @cours = Cour.where("id IN (?)", id_cours)
                  .planifié

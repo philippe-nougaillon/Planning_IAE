@@ -51,7 +51,7 @@
           </li>
         <% end %>
 
-        <% if ENV["USER_COMMAND_AUTHORIZATION_IDS"].split(',').map(&:to_i).include?(current_user.id) %>
+        <% if ENV["USER_COMMAND_AUTHORIZATION_IDS"]&.split(',')&.map(&:to_i)&.include?(current_user.id) %>
           <li class="nav-item">
             <% is_active = params[:action] == 'commandes' %>
             <%= link_to tools_commandes_path, class: "flex items-center gap-1 py-0 text-#{ is_active ? 'primary' : 'base-content' }" do %>
