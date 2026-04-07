@@ -168,7 +168,7 @@ class IntervenantsController < ApplicationController
     respond_to do |format|
       format.json do
         render json:
-           {examen: Intervenant.examens_ids.include?(params[:intervenant_id].to_i), a_confirmer: Intervenant.a_confirmer_id == params[:intervenant_id].to_i}
+           {examen: Intervenant.examens_ids&.include?(params[:intervenant_id].to_i), a_confirmer: Intervenant.a_confirmer_id == params[:intervenant_id].to_i}
       end
     end
   end
