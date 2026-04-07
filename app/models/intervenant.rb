@@ -127,15 +127,15 @@ class Intervenant < ApplicationRecord
   end
 
 	def self.examens_ids
-		ENV["INTERVENANTS_EXAMENS"].split(',').map(&:to_i)
+		ENV["INTERVENANTS_EXAMENS"]&.split(',')&.map(&:to_i)
 	end
 
 	def self.sans_intervenant
-		ENV["INTERVENANTS_PLACEHOLDER"].split(',').map(&:to_i)
+		ENV["INTERVENANTS_PLACEHOLDER"]&.split(',')&.map(&:to_i)
 	end
 
 	def self.surveillants
-		ENV["SURVEILLANTS_EXAMEN_IDS"].split(',').map(&:to_i)
+		ENV["SURVEILLANTS_EXAMEN_IDS"]&.split(',')&.map(&:to_i)
 	end
 
 	def is_a_confirmer?
