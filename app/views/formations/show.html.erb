@@ -235,7 +235,7 @@
         </thead>
 
         <tbody>
-          <% @formation.etudiants.each do | etudiant | %>
+          <% @formation.etudiants.ordered.each do | etudiant | %>
             <tr class="hover border">
               <td><%= etudiant.nom %></td>
               <td><%= etudiant.prénom %></td>
