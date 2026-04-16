@@ -27,7 +27,7 @@ class Salle < ApplicationRecord
 	end
 
 	def nom_places_block_desc
-		"#{nom_places} - Bat #{self.bloc} #{"-> #{description_ponscarme}" if self.bloc == "P"}"
+		"#{nom_places} - Bat #{self.bloc} #{"-> #{description_ponscarme}" if self.bloc == "P" && description_ponscarme}"
 	end
 
 	def description_ponscarme
