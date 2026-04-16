@@ -26,6 +26,21 @@ class Salle < ApplicationRecord
 		self.places.blank? ? self.nom : "#{self.nom} (#{self.places}P)" 
 	end
 
+	def nom_places_block_desc
+		"#{nom_places} - Bat #{self.bloc} #{"-> #{description_ponscarme}" if self.bloc == "P"}"
+	end
+
+	def description_ponscarme
+		case self.nom
+		when /^\d\.\d$/
+			"Salle de cours"
+		when /^\d\.\w$/
+			"Salle de réunion"
+		when /^\d{3}$/
+			"Bureau"
+		end
+	end
+
 	def self.nb_heures_journée
 		return 6
 	end
