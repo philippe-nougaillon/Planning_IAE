@@ -123,7 +123,7 @@ Rails.application.configure do
   # Permet de diffuser le planning sous forme de frame sur les afficheurs
   config.action_dispatch.default_headers = {
     # Sites autorisés à utiliser une frame
-    'Content-Security-Policy' => "frame-ancestors 'self' https://iaeparis.ec-video.fr/",
+    'Content-Security-Policy' => "frame-ancestors 'self' https://iaeparis.ec-video.fr/ http://localhost https://localhost",
     
     # On désactive X-Frame-Options pour laisser la main à la CSP
     'X-Frame-Options' => '' 
