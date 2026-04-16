@@ -36,7 +36,7 @@ class Salle < ApplicationRecord
 			"Salle de cours mobile"
 		when "2.2"
 			"Salle de cours serpentine"
-		when /^\d|\w{3}\.\d$/
+		when /^(\d|\w{3}\.\d)$/
 			"Salle de cours"
 		when /^\d\.\w$/
 			"Salle de réunion"
