@@ -135,6 +135,8 @@ GEM
     crass (1.0.6)
     css_parser (1.21.1)
       addressable
+    dalli (5.0.2)
+      logger
     date (3.5.0)
     devise (4.9.4)
       bcrypt (~> 3.0)
@@ -500,6 +502,7 @@ DEPENDENCIES
   byebug
   capture_stdout
   capybara (>= 3.40)
+  dalli (~> 5.0)
   devise (>= 4.9)
   devise-i18n (~> 1.12)
   devise-security (~> 0.18.0)
