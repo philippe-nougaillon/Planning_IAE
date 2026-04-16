@@ -32,7 +32,11 @@ class Salle < ApplicationRecord
 
 	def description_ponscarme
 		case self.nom
-		when /^\d\.\d$/
+		when "2.1"
+			"Salle de cours mobile"
+		when "2.2"
+			"Salle de cours serpentine"
+		when /^\d|\w{3}\.\d$/
 			"Salle de cours"
 		when /^\d\.\w$/
 			"Salle de réunion"
