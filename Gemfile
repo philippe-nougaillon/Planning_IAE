@@ -156,5 +156,3 @@ gem "mission_control-jobs", "~> 1.1"
 gem "devise-two-factor", "~> 6.1"
 
 gem "devise-security", "~> 0.18.0"
-
-gem "dalli", "~> 5.0"

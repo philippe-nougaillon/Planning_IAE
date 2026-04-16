@@ -256,6 +256,9 @@ class CoursController < ApplicationController
   end
 
   def index_slide
+    # page courante
+    session[:page_slide] ||= 0
+
     @now = ApplicationController.helpers.time_in_paris_selon_la_saison
 
     if params[:planning_date]
@@ -288,12 +291,12 @@ class CoursController < ApplicationController
       @max_page_slide = (@cours_count / per_page) - 1
       @max_page_slide += 1 unless @cours_count.%(per_page).zero?
 
-      @current_page_slide = Rails.cache.read("current_page_slide") || 0
+      @current_page_slide = session[:page_slide].to_i
 
       if @current_page_slide < @max_page_slide
-        Rails.cache.write("current_page_slide",  @current_page_slide + 1)
+        session[:page_slide] = @current_page_slide + 1
       else
-        Rails.cache.write("current_page_slide",  0)
+        session[:page_slide] = 0
       end
 
       @cours_ids = @tous_les_cours.slice(per_page * @current_page_slide, per_page)
