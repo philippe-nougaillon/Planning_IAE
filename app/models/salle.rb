@@ -27,7 +27,7 @@ class Salle < ApplicationRecord
 	end
 
 	def nom_places_block_desc
-		"#{nom_places} - Bat #{self.bloc} #{"-> #{description_ponscarme}" if self.bloc == "P" && description_ponscarme}"
+		"#{self.nom} - Bat #{self.bloc} #{"-> #{description_ponscarme}" if self.bloc == "P" && description_ponscarme} (#{self.places}P)"
 	end
 
 	def description_ponscarme
@@ -36,7 +36,7 @@ class Salle < ApplicationRecord
 			"Salle de cours mobile"
 		when "2.2"
 			"Salle de cours serpentine"
-		when /^\d|\w{3}\.\d$/
+		when /^(\d|\w{3}\.\d)$/
 			"Salle de cours"
 		when /^\d\.\w$/
 			"Salle de réunion"
