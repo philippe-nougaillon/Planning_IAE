@@ -120,5 +120,12 @@ Rails.application.configure do
   # set the session cookie to expire automatically 12.hours after creation
   config.session_store :cookie_store, expire_after: 12.hours
 
-
+  # Permet de diffuser le planning sous forme de frame sur les afficheurs
+  config.action_dispatch.default_headers = {
+    # Sites autorisés à utiliser une frame
+    'Content-Security-Policy' => "frame-ancestors 'self' https://iaeparis.ec-video.fr/",
+    
+    # On désactive X-Frame-Options pour laisser la main à la CSP
+    'X-Frame-Options' => '' 
+  }
 end

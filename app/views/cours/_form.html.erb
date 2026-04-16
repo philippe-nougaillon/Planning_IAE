@@ -123,7 +123,7 @@
             <%= f.collection_select :salle_id, 
                                               @salles, 
                                               :id, 
-                                              :nom_places, 
+                                              :nom_places_block_desc, 
                                               { include_blank: true },
                                               class: "select select-bordered select-sm w-full",
                                               data: { "dispo-target": "salles" } %>

@@ -123,7 +123,7 @@ class Intervenant < ApplicationRecord
 
 	# Si c'est un examen IAE / examen rattrapage / Tiers-temps
   def examen?
-		Intervenant.examens_ids.include?(self.id)
+		Intervenant.examens_ids&.include?(self.id)
   end
 
 	def self.examens_ids

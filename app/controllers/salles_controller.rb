@@ -207,7 +207,7 @@ class SallesController < ApplicationController
 
     respond_to do |format|
       format.json do
-        render json: Salle.where(id: salles_dispos_ids).to_json
+        render json: Salle.where(id: salles_dispos_ids).map{|s| {id: s.id, text_for_option: s.nom_places_block_desc}}.to_json
       end
     end
   end
