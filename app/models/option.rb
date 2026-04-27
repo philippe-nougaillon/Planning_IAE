@@ -6,7 +6,8 @@ class Option < ApplicationRecord
 
   enum :catégorie, {
     commande: 0,
-    surveillance: 1
+    surveillance: 1,
+    fusion: 2
   }
 
   validates :catégorie, uniqueness: {scope: [:cour_id]}
@@ -14,6 +15,8 @@ class Option < ApplicationRecord
   around_update   :check_send_commande_email, if: Proc.new { |option| option.commande? }
   after_create    :check_send_new_commande_email, if: Proc.new { |option| option.commande? }
   around_destroy  :send_delete_commande_email, if: Proc.new { |option| option.commande? }
+
+  after_create    :send_fusion_notification, if: Proc.new { |option| option.fusion? }
 
   def check_send_commande_email
     old_commentaires = description_was
@@ -62,5 +65,12 @@ class Option < ApplicationRecord
     title = "[PLANNING] Commande supprimée pour le #{I18n.l self.cour.debut, format: :long}"
     mailer_response = ToolsMailer.with(cour: self.cour, old_commentaires: description, title: title).commande_supprimée.deliver_now
     MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: "logistique@iae.pantheonsorbonne.fr", subject: "Commande supprimée", title: title)
+  end
+
+  def send_fusion_notification
+    title = "[PLANNING] Nouvelle fusion pour le #{I18n.l self.cour.debut, format: :long}"
+    to = "logistique@iae.pantheonsorbonne.fr"
+    mailer_response = ToolsMailer.with(cour: self.cour, title: title, to: to).nouvelle_fusion.deliver_now
+    MailLog.create(user_id: self.audits.first.user_id, message_id: mailer_response.message_id, to: to, subject: "Fusion ajoutée", title: title)
   end
 end
