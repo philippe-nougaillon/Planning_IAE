@@ -682,7 +682,7 @@ class CoursController < ApplicationController
   def new
     @cour = Cour.new
     @formations = Formation.not_archived.ordered
-    @salles = Salle.all
+    @salles = Salle.ponscarme_et_blocZ
 
     if current_user.partenaire_qse?
       @formations = @formations.partenaire_qse
@@ -747,7 +747,7 @@ class CoursController < ApplicationController
       else
         format.html do
           @formations = Formation.ordered
-          @salles = Salle.all
+          @salles = Salle.ponscarme_et_blocZ
 
           if current_user.partenaire_qse?
             @formations = @formations.partenaire_qse

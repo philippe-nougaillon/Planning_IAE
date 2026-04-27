@@ -175,7 +175,7 @@ class SallesController < ApplicationController
   def libres
     salles_dispos_ids = []
     cours = nil
-    @salles = Salle.all
+    @salles = Salle.ponscarme_et_blocZ
 
     if current_user && current_user.partenaire_qse?
       @salles = @salles.where(nom: ["ICP 1", "ICP 2"])

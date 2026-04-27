@@ -10,6 +10,8 @@ class Salle < ApplicationRecord
 	default_scope { kept }	
 	default_scope { order(:bloc, :nom) } 
 
+	scope :ponscarme_et_blocZ , -> { where(bloc: ['P','Z']) }
+
 	validates :nom, :bloc, :places, presence: true
 	validates :nom, uniqueness: true
 	
