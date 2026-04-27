@@ -11,6 +11,7 @@ class Salle < ApplicationRecord
 	default_scope { order(:bloc, :nom) } 
 
 	scope :ponscarme_et_blocZ , -> { where(bloc: ['P','Z']) }
+	scope :bureaux_profs, -> { where(nom: ['300','301','302','303','304','305'])}
 
 	validates :nom, :bloc, :places, presence: true
 	validates :nom, uniqueness: true
