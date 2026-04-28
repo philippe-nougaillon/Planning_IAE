@@ -175,10 +175,17 @@ class SallesController < ApplicationController
   def libres
     salles_dispos_ids = []
     cours = nil
-    @salles = Salle.all
+    @salles = Salle.ponscarme_et_blocZ
+
+    # Filtrer la visibilité des bureaux des profs
+    if current_user.intervenant_bureaux_authorized?
+      @salles = @salles.bureaux_profs
+    elsif current_user.gestionnaire?
+      @salles = @salles - @salles.bureaux_profs
+    end
 
     if current_user && current_user.partenaire_qse?
-      @salles = @salles.where(nom: ["ICP 1", "ICP 2"])
+      @salles = Salle.where(nom: ["ICP 1", "ICP 2"])
     end
 
     if !(params[:id].blank?)

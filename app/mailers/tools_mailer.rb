@@ -42,4 +42,13 @@ class ToolsMailer < ApplicationMailer
     end
   end
 
+  def nouvelle_fusion
+    @cour = params[:cour]
+    mail(to: params[:to], subject: params[:title]).tap do |message|
+          message.mailgun_options = {
+            "tag" => ["logistique@iae.pantheonsorbonne.fr", "nouvelle_commande"]
+          }
+    end
+  end
+
 end

@@ -7,6 +7,7 @@ class CoursController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[ index index_slide mes_sessions_intervenant signature_intervenant signature_intervenant_do ]
   before_action :set_cour, only: [:show, :edit, :update, :destroy, :delete_attachment]
   before_action :is_user_authorized, except: [:show, :edit, :update, :destroy, :signature_etudiant, :signature_etudiant_do]
+  before_action :set_salles, only: [:new, :create, :edit, :update]
 
   layout :define_layout
 
@@ -682,11 +683,9 @@ class CoursController < ApplicationController
   def new
     @cour = Cour.new
     @formations = Formation.not_archived.ordered
-    @salles = Salle.all
 
     if current_user.partenaire_qse?
       @formations = @formations.partenaire_qse
-      @salles = @salles.where(nom: ["ICP 1", "ICP 2"])
     end
 
     unless params[:formation].blank?
@@ -715,11 +714,9 @@ class CoursController < ApplicationController
   def edit
     authorize @cour
     @formations = Formation.ordered
-    @salles = Salle.all
 
     if current_user.partenaire_qse?
       @formations = @formations.partenaire_qse
-      @salles = @salles.where(nom: ["ICP 1", "ICP 2"])
     end
   end
 
@@ -747,11 +744,9 @@ class CoursController < ApplicationController
       else
         format.html do
           @formations = Formation.ordered
-          @salles = Salle.all
 
           if current_user.partenaire_qse?
             @formations = @formations.partenaire_qse
-            @salles = @salles.where(nom: ["ICP 1", "ICP 2"])
           end
           render :new
         end
@@ -796,11 +791,9 @@ class CoursController < ApplicationController
       else
         format.html do
           @formations = Formation.ordered
-          @salles = Salle.all
 
           if current_user.partenaire_qse?
             @formations = @formations.partenaire_qse
-            @salles = @salles.where(nom: ["ICP 1", "ICP 2"])
           end
           render :edit, params
         end
@@ -941,6 +934,22 @@ class CoursController < ApplicationController
       etudiants_ids += params[:etudiants_en_rattrapage_ids] if params[:etudiants_en_rattrapage_ids].present?
       etudiants_ids.uniq!
       etudiants_ids
+    end
+
+    def set_salles
+      @salles = Salle.ponscarme_et_blocZ
+
+      # Filtrer la visibilité des bureaux des profs
+      if current_user.intervenant_bureaux_authorized?
+        @salles = @salles.bureaux_profs
+      elsif current_user.gestionnaire?
+        @salles = @salles - @salles.bureaux_profs
+      end
+
+      # Surchage pour l'ICP sinon ils ne verront rien
+      if current_user.partenaire_qse?
+        @salles = Salle.where(nom: ["ICP 1", "ICP 2"])
+      end
     end
 
   end
