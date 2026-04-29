@@ -51,7 +51,11 @@
                       .where.not(fin:meeting.debut)
                       .any? %>
               <% unless meeting.intervenant.try(:doublon) || meeting.intervenant_binome.try(:boublon) %>
-                <span style="background-color: red; color: white;">CONFLIT INTERVENANT !</span>
+                <% if meeting.bypass? %>
+                  <span style="background-color: orange; color: white;">BYPASS</span>
+                <% else %>
+                  <span style="background-color: red; color: white;">CONFLIT INTERVENANT !</span>
+                <% end %>
               <% end %>
             <% end %>
           <% end %>  
