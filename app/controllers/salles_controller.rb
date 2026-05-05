@@ -18,7 +18,8 @@ class SallesController < ApplicationController
   def occupation
     params[:vue] ||= 'jour'
     
-    @salles = Salle.all
+    @salles = Salle.where(bloc: ["P", "Z"])
+    @blocs = @salles.blocs
 
     unless session[:start_date].blank?
       params[:start_date] ||= session[:start_date]

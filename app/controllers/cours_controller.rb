@@ -118,7 +118,10 @@ class CoursController < ApplicationController
     case params[:view]
       when 'calendar_rooms'
         _date = Date.parse(params[:start_date]).beginning_of_week(start_day = :monday)
-        @cours = @cours.where(debut: (_date .. _date + 7.day))
+        @cours = @cours
+                  .where(debut: (_date .. _date + 7.day))
+                  .left_joins(:salle)
+                  .where("salles.bloc IN (:blocs) OR salles.id IS NULL", blocs: ["P", "Z"])
         params[:calendar_rooms_starts_at] = _date
       when 'calendar_week'
         _date = Date.parse(params[:start_date]).beginning_of_week(start_day = :monday)

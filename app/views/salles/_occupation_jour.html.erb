@@ -19,7 +19,7 @@
     </tfoot>
 
     <tbody>
-      <% bloc = 'A' %>
+      <% bloc = 'P' %>
       <% @salles.each do | salle | %>
         <% cours = @cours.where(salle_id: salle.id) %>
         <% cours_count = cours.length %>

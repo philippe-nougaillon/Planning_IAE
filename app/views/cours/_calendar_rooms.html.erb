@@ -30,7 +30,7 @@
     <% else %>
       <% salles = Salle.all %>
     <% end %>
-    <% salles.reorder(:bloc, :nom).each do |salle| %>
+    <% salles.where(bloc: ["P","Z"]).reorder(:bloc, :nom).each do |salle| %>
       <% @salle = salle %>
       <% if bloc != salle.nom[0] %>
         <% bloc = salle.nom[0] %>
@@ -43,22 +43,26 @@
                     number_of_days: 6 do |date, meetings| %>
 
         <% meetings.each do |meeting| %>
-          <% if current_user && meeting.salle.bloc != 'Z' %>
-            <!--- chercher si conflit d'intervenant ! -->
-            <% if Cour.where("cours.id <> ? AND (intervenant_id = ? OR intervenant_binome_id = ?) AND (((debut BETWEEN ? AND ?) OR (fin BETWEEN ? AND ?)) OR (debut < ? AND fin > ?))", 
-                      meeting.id, meeting.intervenant_id, meeting.intervenant_id, meeting.debut, meeting.fin, meeting.debut, meeting.fin, meeting.fin, meeting.debut)
-                      .where.not(debut:meeting.fin)
-                      .where.not(fin:meeting.debut)
-                      .any? %>
-              <% unless meeting.intervenant.try(:doublon) || meeting.intervenant_binome.try(:boublon) %>
-                <% if meeting.bypass? %>
-                  <span style="background-color: orange; color: white;">BYPASS</span>
-                <% else %>
-                  <span style="background-color: red; color: white;">CONFLIT INTERVENANT !</span>
+          <% if false %>
+            <% if current_user && meeting.salle.bloc != 'Z' %>
+              <!--- chercher si conflit d'intervenant ! -->
+              <!--
+              <% if Cour.where("cours.id <> ? AND (intervenant_id = ? OR intervenant_binome_id = ?) AND (((debut BETWEEN ? AND ?) OR (fin BETWEEN ? AND ?)) OR (debut < ? AND fin > ?))", 
+                        meeting.id, meeting.intervenant_id, meeting.intervenant_id, meeting.debut, meeting.fin, meeting.debut, meeting.fin, meeting.fin, meeting.debut)
+                        .where.not(debut:meeting.fin)
+                        .where.not(fin:meeting.debut)
+                        .any? %>
+                <% unless meeting.intervenant.try(:doublon) || meeting.intervenant_binome.try(:boublon) %>
+                  <% if meeting.bypass? %>
+                    <span style="background-color: orange; color: white;">BYPASS</span>
+                  <% else %>
+                    <span style="background-color: red; color: white;">CONFLIT INTERVENANT !</span>
+                  <% end %>
                 <% end %>
               <% end %>
-            <% end %>
-          <% end %>  
+              -->
+            <% end %>  
+          <% end %>
 
           <% formation = Formation.find(meeting.formation_id) %>
           <div class="shadow-xl p-2 mb-2 bg-base-100 leading-6" style="min-height:<%= 120 + (10 * meeting.duree) %>px; border-left:6px; border-left-style:solid; border-left-color:<%= formation.color %>; padding-left:5px;">
