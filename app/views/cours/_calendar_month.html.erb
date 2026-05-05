@@ -1,38 +1,39 @@
 <div class="flex flex-wrap">
-    <div class="md:w-full px-4">
-      <%= month_calendar events: @cours do |date, meetings| %>
-        <span class="calendar_day">
-          <%= date.day %>
-        </span>
+  <div class="md:w-full px-4">
+    <%= month_calendar events: @cours do |date, meetings| %>
+      <span class="calendar_day">
+        <%= date.day %>
+      </span>
 
-        <% meetings.each do |meeting| %>
-          <div class="meeting">
-            <b>
-              <%= l(meeting.debut, format: :heures_min) %>
-            </b>
-            -
-            <%= l(meeting.fin, format: :heures_min) %>
-            /
-            <%= meeting.try(:salle).try(:nom) %>  
+      <% meetings.each do |meeting| %>
+        <% formation = meeting.try(:formation) %>
+        <div class="shadow-xl p-2 mb-2 bg-base-100 leading-6"
+             style="border-left:6px solid <%= formation.color %>; padding-left:5px;">
+          <%= link_to meeting, class: 'text-primary hover:underline' do %>
+            <b><%= l(meeting.debut, format: :heures_min) %></b>
+            - <%= l(meeting.fin, format: :heures_min) %>
+          <% end %>
+          <% if meeting.try(:salle).try(:nom) %>
+            <span class="text-base-content/60"> / <%= meeting.salle.nom %></span>
+          <% end %>
+          <br>
+
+          <% if params[:formation].blank? && formation %>
+            <%= link_to_if user_signed_in?, formation.nom, meeting, class: 'text-base-content font-bold hover:underline' %>
             <br>
+          <% end %>
 
-            <% if params[:formation].blank? %>
-              <span style="background-color:<%= meeting.try(:formation).try(:color) %>;padding-left: 5px;margin-right: 3px;"></span>
+          <% if user_signed_in? %>
+            <%= link_to_if user_signed_in?, meeting.intervenant.nom_prenom,
+                        url_for(params
+                                  .permit(:formation, :ue, :intervenant, :semaine, :start_date, :etat, :filter, :view)
+                                  .merge(intervenant_id:meeting.intervenant_id)), class: 'text-primary hover:underline' %>
+            <br>
+          <% end %>
 
-              <b><%= link_to_if user_signed_in?, meeting.try(:formation).try(:nom), meeting, class: 'text-primary hover:underline' %></b>
-              <br>
-            <% end %> 
-            <% if user_signed_in? %>
-              <%= link_to_if user_signed_in?, meeting.intervenant.nom_prenom, 
-                          url_for(params
-                                    .permit(:formation, :ue, :intervenant, :semaine, :start_date, :etat, :filter, :view)
-                                    .merge(intervenant_id:meeting.intervenant_id)), class: 'text-primary hover:underline' %>
-              <br>
-            <% end %>
-            <%= meeting.nom_ou_ue %>
-            <hr>
-          </div>
-        <% end %>
+          <span class="text-sm"><%= meeting.nom_ou_ue %></span>
+        </div>
       <% end %>
-    </div>
+    <% end %>
   </div>
+</div>

@@ -1,5 +1,5 @@
 <div class="simple-calendar">
-  <div class="calendar-heading">
+  <div class="calendar-heading flex justify-center items-center gap-4">
     <%= link_to url_for(params
                           .permit(:formation, :ue, :intervenant, :semaine, :start_date, :etat, :filter, :view)
                           .merge(semaine:nil, start_date:params[:start_date].to_date - 1.month)), class: "btn btn-ghost" do %>
@@ -32,7 +32,7 @@
           <tr class="hover border">
             <% week.each do |day| %>
               <% unless day.sunday? %>
-                <%= content_tag :td, class: calendar.td_classes_for(day) do %>
+                <%= content_tag :td, class: "align-top #{calendar.td_classes_for(day)}" do %>
                   <div class="shadow p-2 mb-6 bg-base-100" >
                     <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
                       <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
