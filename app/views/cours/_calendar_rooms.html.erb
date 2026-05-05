@@ -30,7 +30,7 @@
     <% else %>
       <% salles = Salle.all %>
     <% end %>
-    <% salles.reorder(:bloc, :nom).each do |salle| %>
+    <% salles.where(bloc: ["P","Z"]).reorder(:bloc, :nom).each do |salle| %>
       <% @salle = salle %>
       <% if bloc != salle.nom[0] %>
         <% bloc = salle.nom[0] %>
