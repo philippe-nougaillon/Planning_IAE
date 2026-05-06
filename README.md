@@ -1,4 +1,4 @@
-![logo](public/logo_iae.png "Logo IAE de Paris")
+![logo](public/Images/1200px-Logo_iae.png "Logo IAE de Paris")
 
 # Outil Planning de l'IAE de Paris
 *Application web de planification de cours. Collaborative, flexible et simple d'utilisation*
