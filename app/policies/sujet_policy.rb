@@ -17,15 +17,15 @@ class SujetPolicy < ApplicationPolicy
     index?
   end
 
-  def update?
+  def create?
     new?
   end
 
   def edit?
-    index?
+    user && user.intervenant? && (record.can_déposer? || record.déposé?)
   end
 
-  def create?
+  def update?
     edit?
   end
 

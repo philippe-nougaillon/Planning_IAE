@@ -56,4 +56,11 @@
     <% end %>
   <% end %>
   <td><%= link_to 'Voir', sujet, class: 'text-primary hover:underline', 'data-turbo': false %></td>
+  <% if current_user.intervenant? %>
+    <td>
+      <% if policy(sujet).edit? %>
+        <%= link_to 'Modifier', edit_sujet_path(sujet), class: 'text-primary hover:underline', 'data-turbo': false %>
+      <% end %>
+    </td>
+  <% end %>
 </tr>

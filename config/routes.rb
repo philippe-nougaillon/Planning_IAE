@@ -254,7 +254,7 @@ Rails.application.routes.draw do
 
   resources :edusign_logs, only: %i[ index show ]
 
-  resources :sujets, except: %i[ edit update ] do
+  resources :sujets do
     member do
       get :deposer_done
       get :envoyer
