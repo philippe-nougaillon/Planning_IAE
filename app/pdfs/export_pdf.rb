@@ -274,7 +274,7 @@ class ExportPdf
             text "Eric LAMARQUE"
             text "Directeur de l'IAE de Paris", size: 8
         end
-        bounding_box([250, y_position], :width => 250) do
+        bounding_box([250, y_position], :width => 250, :height => 100) do
             text "Barbara FITSCH-MOURAS"
             text "Responsable du service Formation et développement", size: 8 
         end    
@@ -385,11 +385,11 @@ class ExportPdf
             bounding_box([0, y_position], :width => 166, :height => 100) do
                 text "L'agent"
             end
-            bounding_box([166, y_position], :width => 166) do
+            bounding_box([166, y_position], :width => 166, :height => 100) do
                 text "Le supérieur hiérarchique,"
                 text "pour accord"
             end
-            bounding_box([333, y_position], :width => 166) do
+            bounding_box([333, y_position], :width => 166, :height => 100) do
                 text "Le responsable du service concerné"
                 text "par la vacation, pour accord"
             end
@@ -399,7 +399,7 @@ class ExportPdf
                 text "Eric LAMARQUE"
                 text "Directeur de l'IAE Paris", size: 8
             end
-            bounding_box([250, y_position], :width => 250) do
+            bounding_box([250, y_position], :width => 250, :height => 100) do
                 text is_vacataire ? "" : "Barbara FITSCH-MOURAS"
                 text "Responsable de service", size: 8 
             end
@@ -511,11 +511,11 @@ class ExportPdf
             bounding_box([0, y_position], :width => 166, :height => 100) do
                 text "L'agent"
             end
-            bounding_box([166, y_position], :width => 166) do
+            bounding_box([166, y_position], :width => 166, :height => 100) do
                 text "Le supérieur hiérarchique,"
                 text "pour accord"
             end
-            bounding_box([333, y_position], :width => 166) do
+            bounding_box([333, y_position], :width => 166, :height => 100) do
                 text "Le responsable du service concerné"
                 text "par la vacation, pour accord"
             end
@@ -525,7 +525,7 @@ class ExportPdf
                 text "Eric LAMARQUE"
                 text "Directeur de l'IAE Paris", size: 8
             end
-            bounding_box([250, y_position], :width => 250) do
+            bounding_box([250, y_position], :width => 250, :height => 100) do
                 text is_vacataire ? "" : "Barbara FITSCH-MOURAS"
                 text "Responsable de service", size: 8 
             end
@@ -558,7 +558,7 @@ class ExportPdf
             bounding_box([0, y_position], :width => 250, :height => 100) do
                 text "Date : #{I18n.l(cour.debut.to_date)}", style: :bold
             end
-            bounding_box([250, y_position], :width => 250) do
+            bounding_box([250, y_position], :width => 250, :height => 100) do
                 
                 text "Horaire : #{I18n.l(cour.debut, format: :heures_min)} - #{I18n.l(cour.fin, format: :heures_min)}", style: :bold
 
@@ -869,7 +869,7 @@ class ExportPdf
         bounding_box([100, y_position], :width => 190, :height => 100) do
             text "<color rgb='032E4D'><b>Nom : #{étudiant.nom}</b></color>", inline_format: true, size: 16
         end
-        bounding_box([350, y_position], :width => 190) do
+        bounding_box([350, y_position], :width => 190, :height => 100) do
             text "<color rgb='032E4D'><b>Prénom : #{étudiant.prénom}</b></color>", inline_format: true, size: 16
         end
         if étudiant.table && !étudiant.table.zero?
@@ -926,7 +926,7 @@ class ExportPdf
             bounding_box([0, y_position], :width => 250, :height => 100) do
                 text "Date : #{I18n.l(cour.debut.to_date)}", style: :bold
             end
-            bounding_box([250, y_position], :width => 250) do
+            bounding_box([250, y_position], :width => 250, :height => 100) do
                 
                 text "Horaire : #{I18n.l(cour.debut, format: :heures_min)} - #{I18n.l(cour.fin, format: :heures_min)}", style: :bold
 
