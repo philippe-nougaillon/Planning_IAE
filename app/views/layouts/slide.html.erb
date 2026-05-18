@@ -14,12 +14,12 @@
 
     <link rel="manifest" href="/manifest.json">
 
-    <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "application", "inter-font", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "daisyui", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
 
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.2/dist/full.min.css" rel="stylesheet" type="text/css" />
-    <script src="https://cdn.tailwindcss.com"></script>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+
     <style>
       ::-webkit-progress-value {
         background-color: #6666ff;
