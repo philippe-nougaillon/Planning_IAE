@@ -686,6 +686,15 @@ class CoursController < ApplicationController
   def new
     @cour = Cour.new
     @formations = Formation.not_archived.ordered
+    if current_user.intervenant_bureaux_authorized?
+      @intervenants = Intervenant.where(id: @intervenant_user_id)
+      @cour.intervenant_id = @intervenant_user_id
+      @cour.formation_id = ENV["FORMATION_ID_RESERVATION_INTERVENANTS"].to_i
+      @cour.hors_service_statutaire = true
+      @cour.no_send_to_edusign = true
+    else
+      @intervenants = Intervenant.all
+    end
 
     if current_user.partenaire_qse?
       @formations = @formations.partenaire_qse
@@ -747,6 +756,7 @@ class CoursController < ApplicationController
       else
         format.html do
           @formations = Formation.ordered
+          @intervenants = current_user.intervenant_bureaux_authorized? ? Intervenant.where(id: @intervenant_user_id) : Intervenant.all
 
           if current_user.partenaire_qse?
             @formations = @formations.partenaire_qse
@@ -794,6 +804,7 @@ class CoursController < ApplicationController
       else
         format.html do
           @formations = Formation.ordered
+          @intervenants = current_user.intervenant_bureaux_authorized? ? Intervenant.where(id: @intervenant_user_id) : Intervenant.all
 
           if current_user.partenaire_qse?
             @formations = @formations.partenaire_qse

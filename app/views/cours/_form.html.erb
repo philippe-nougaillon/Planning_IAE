@@ -28,22 +28,26 @@
                                 data: { "dispo-target": "duree" } %>
       </div>
       
-      <div class="flex flex-wrap">
-        <%= f.label :formation_id, "Formation *", class: 'sm:w-1/5' %>
-        <%= f.collection_select :formation_id, 
-                                @formations, 
-                                :id, 
-                                :nom_promo_hss, 
-                                {include_blank: true},
-                                required: true, 
-                                class: "slim-select sm:w-1/2",
-                                data: { "dispo-target": "formation_id"} %>
-      </div>
-      
+      <% if !current_user.intervenant_bureaux_authorized? %>
+        <div class="flex flex-wrap">
+          <%= f.label :formation_id, "Formation *", class: 'sm:w-1/5' %>
+          <%= f.collection_select :formation_id, 
+                                  @formations, 
+                                  :id, 
+                                  :nom_promo_hss, 
+                                  {include_blank: true},
+                                  required: true, 
+                                  class: "slim-select sm:w-1/2",
+                                  data: { "dispo-target": "formation_id"} %>
+        </div>
+      <% else %>
+        <%= f.hidden_field :formation_id %>
+      <% end %>
+
       <div class="flex flex-wrap">
         <%= f.label :intervenant_id, "Intervenant *", class: 'sm:w-1/5' %>
         <%= f.collection_select :intervenant_id, 
-                                Intervenant.all, 
+                                @intervenants, 
                                 :id, 
                                 :nom_prenom, 
                                 {include_blank: true}, 
@@ -60,38 +64,44 @@
                                 } %>
       </div>
 
-      <div class="flex flex-wrap">
-        <%= f.label :intervenant_binome_id, "Intervenant en binôme", class: 'sm:w-1/5' %>
-        <%= f.collection_select :intervenant_binome_id, 
-                                Intervenant.all, 
-                                :id, 
-                                :nom_prenom, 
-                                { include_blank: true }, 
-                                class: "slim-select sm:w-1/2" %>
-      </div>
-      
-      <div class="flex flex-wrap">
-        <%= f.label :code_ue, "Code UE", class: 'sm:w-1/5' %>
-        <%= f.number_field :code_ue, placeholder: "UE#", class: "input input-bordered input-sm w-full sm:w-1/2" %>
-      </div>
+      <% unless current_user.intervenant_bureaux_authorized? %>
+        <div class="flex flex-wrap">
+          <%= f.label :intervenant_binome_id, "Intervenant en binôme", class: 'sm:w-1/5' %>
+          <%= f.collection_select :intervenant_binome_id, 
+                                  @intervenants, 
+                                  :id, 
+                                  :nom_prenom, 
+                                  { include_blank: true }, 
+                                  class: "slim-select sm:w-1/2" %>
+        </div>
+        
+        <div class="flex flex-wrap">
+          <%= f.label :code_ue, "Code UE", class: 'sm:w-1/5' %>
+          <%= f.number_field :code_ue, placeholder: "UE#", class: "input input-bordered input-sm w-full sm:w-1/2" %>
+        </div>
+      <% end %>
 
       <div class="flex flex-wrap">
         <%= f.label :nom, class: 'sm:w-1/5' %>
         <%= f.text_field :nom, placeholder: "Nom du cours (si vide; sera remplacé par le nom de l'UE)", class: "input input-bordered input-sm w-full sm:w-1/2" %>
       </div>
 
-      <div class="flex flex-wrap">
-        <div class="sm:w-1/5"></div>
-        <div class="sm:w-1/2 flex items-center gap-1">
-          <%= f.check_box :hors_service_statutaire, data: {"checkboxes-select-for-specific-intervenant-target": "hss"} %>
-          <%= f.label :hors_service_statutaire, "Cours non rémunéré (Hors Service Statutaire)" %>
-          <span class="hover:cursor-pointer" title="Cochez pour que les heures de cours ne soient pas imputées sur l'état de service de l'intervenant">
-            <span class="material-symbols-outlined text-lg">
-              info
+      <% if !current_user.intervenant_bureaux_authorized? %>
+        <div class="flex flex-wrap">
+          <div class="sm:w-1/5"></div>
+          <div class="sm:w-1/2 flex items-center gap-1">
+            <%= f.check_box :hors_service_statutaire, data: {"checkboxes-select-for-specific-intervenant-target": "hss"} %>
+            <%= f.label :hors_service_statutaire, "Cours non rémunéré (Hors Service Statutaire)" %>
+            <span class="hover:cursor-pointer" title="Cochez pour que les heures de cours ne soient pas imputées sur l'état de service de l'intervenant">
+              <span class="material-symbols-outlined text-lg">
+                info
+              </span>
             </span>
-          </span>
+          </div>
         </div>
-      </div>
+      <% else %>
+        <%= f.hidden_field :hors_service_statutaire %>
+      <% end %>
 
       <div class="flex flex-wrap">
         <div class="sm:w-1/5"></div>
@@ -101,13 +111,17 @@
         </div>
       </div>
 
-      <div class="flex flex-wrap">
-        <div class="sm:w-1/5"></div>
-        <div class="sm:w-1/2">
-          <%= f.check_box :no_send_to_edusign, data: {"checkboxes-select-for-specific-intervenant-target": "no_send_to_edusign"} %>
-          <%= f.label :no_send_to_edusign, "Ne pas synchroniser le cours sur Edusign" %>
+      <% if !current_user.intervenant_bureaux_authorized? %>
+        <div class="flex flex-wrap">
+          <div class="sm:w-1/5"></div>
+          <div class="sm:w-1/2">
+            <%= f.check_box :no_send_to_edusign, data: {"checkboxes-select-for-specific-intervenant-target": "no_send_to_edusign"} %>
+            <%= f.label :no_send_to_edusign, "Ne pas synchroniser le cours sur Edusign" %>
+          </div>
         </div>
-      </div>
+      <% else %>
+        <%= f.hidden_field :no_send_to_edusign %>
+      <% end %>
 
       <% if policy(current_user).peut_réserver? %>
         <% unless @cour.new_record? %>
