@@ -131,7 +131,7 @@ class User < ApplicationRecord
   def intervenant_bureaux_authorized?
     if self.intervenant?
       intervenant = Intervenant.where("LOWER(intervenants.email) = ?", self.email.downcase).first
-      return true if ['CEV', 'CEV_HSS', 'CEV_ENS_C_CONTRACTUEL', 'CEV_TIT_CONT_FP', 'CEV_SAL_PRIV_IND'].include?(intervenant.status)
+      return true if ['Permanent', 'PR', 'MCF', 'MCF_HDR', 'PAST', 'PRAG'].include?(intervenant.status)
     else
       false
     end
