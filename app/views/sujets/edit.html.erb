@@ -7,6 +7,10 @@
   </h1>
 </div>
 
+<h2 class="text-lg">
+  Merci de <b>déposer votre sujet</b> (avec la page de garde et en y indiquant les consignes) en <b>format PDF</b>.
+</h2>
+
 <%= form_with(model: @sujet, class: "contents") do |f| %>
   <% if @sujet.errors.any? %>
     <div id="error_explanation">
@@ -72,9 +76,6 @@
     </div>
 
     <div class="flex-1">
-      <p class="mb-4">
-        <strong>Fichier PDF</strong>
-      </p>
       <div class="w-fit">
         <b>Fichier actuel :</b>
         <% if @sujet.sujet.representable? %>
@@ -96,19 +97,17 @@
       <br>
 
       <div class="mt-8 mb-4">
-        <h3 class="text-xl mt-4">Commentaire (optionnel)</h3>
-        <i>Affiché sur la convocation étudiant</i>
+        <h3 class="text-xl mt-4">Commentaires</h3>
       </div>
 
-      <%= f.text_area :commentaires, rows: 3, class: 'textarea textarea-bordered w-full' %>
+      <%= f.text_area :commentaires, rows: 3, class: 'textarea textarea-bordered w-full', placeholder: "Visible sur la convocation étudiant" %>
 
       <button type="submit" name="commit" value="Déposer le sujet" class="btn btn-success w-full sm:w-48 btn-lg text-white mt-6" data-disable-with="Déposer le sujet" data-turbo-confirm="ATTENTION ! Une fois validé par le/la gestionnaire, vous ne pourrez plus modifier le sujet. Confirmez-vous le dépôt de votre sujet ?">
         <i class="far fa-arrow-alt-circle-down"></i>
         Déposer
       </button>
+      <%= link_to "Annuler", sujet_path, class: "btn" %>
 
     </div>
   </div>
 <% end %>
-
-<%= link_to "Annuler", sujet_path, class: "btn mb-4" %>
