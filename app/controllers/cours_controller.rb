@@ -953,9 +953,10 @@ class CoursController < ApplicationController
     def set_salles
       @salles = Salle.ponscarme_et_blocZ
 
-      # Filtrer la visibilité des bureaux des profs
+      # Les intervenants autorisés ne peuvent réserver que les salles privées,
+      # sauf celles du 6e étage. Les autres intervenants sont déjà bloqués par cour_policy.
       if current_user.intervenant_bureaux_authorized?
-        @salles = @salles.bureaux_profs
+        @salles = @salles.where(privée: true) - Salle.salles_non_reservables_intervenants
       elsif current_user.gestionnaire?
         @salles = @salles - @salles.bureaux_profs
       end
