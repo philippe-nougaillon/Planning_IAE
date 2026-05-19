@@ -800,6 +800,7 @@ class ExportPdf
             text "<color rgb='032E4D'>Le <b>#{I18n.l(cour.debut.to_date)}</b></color>", inline_format: true, size: 24
             text "<color rgb='032E4D'>De <b>#{cour.debut.strftime('%Hh%M')} à #{cour.fin.strftime('%Hh%M')}</b></color>", inline_format: true, size: 24
             text "<color rgb='032E4D'>Salle <b>#{cour.salle.try(:nom)}</b></color>", inline_format: true, size: 24
+            text "<color rgb='032E4D'>Nombre étudiants <b>#{étudiants_count}</b></color>", inline_format: true, size: 24
 
             move_down @margin_down * 2
             text "<color rgb='FF0000'>=>   <b><u>En fin d’épreuve</u>, merci de remettre l’enveloppe contenant les copies à l’accueil.</b></color>", inline_format: true, size: 24
