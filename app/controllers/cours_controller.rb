@@ -332,11 +332,11 @@ class CoursController < ApplicationController
 
       if params[:action_name] == 'Changer de salle'
         # Afficher les salles disponibles
-        @salles_dispos = Salle.pluck(:nom)
+        @salles_dispos = Salle.ponscarme_et_blocZ.pluck(:nom)
         @action_ids.each do |id|
           cours = Cour.find(id)
           salles = []
-          Salle.all.each do |s|
+          Salle.ponscarme_et_blocZ.each do |s|
             cours.salle = s
             salles << s.nom if cours.valid?
           end
