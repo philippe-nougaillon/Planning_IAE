@@ -162,7 +162,7 @@
               <div class="text-center w-fit">
                 <% if @sujet.sujet.representable? %>
                   <div class="shadow w-fit p-4 mb-2">
-                    <%= image_tag(@sujet.sujet.representation(resize_to_limit: [300, 300])) %>
+                    <%= image_tag(@sujet.sujet.representation(resize_to_limit: [300, 300]), title: @sujet.sujet.filename) %>
                   </div>
                 <% end %>
               </div>
@@ -408,7 +408,7 @@
           <div class="text-center w-fit">
             <% if @sujet.sujet.representable? %>
               <div class="shadow w-fit p-4 mb-2">
-                <%= image_tag(@sujet.sujet.representation(resize_to_limit: [300, 300])) %>
+                <%= image_tag(@sujet.sujet.representation(resize_to_limit: [300, 300]), title: @sujet.sujet.filename) %>
               </div>
             <% end %>
           </div>

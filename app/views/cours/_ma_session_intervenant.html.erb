@@ -15,7 +15,9 @@
   <div class="mb-2">
     <p class="mb-0 font-bold"><%= cour.formation.nom.humanize %></p>
     <p class="mb-0"><%= cour.nom_ou_ue %></p>
-    <p class="mb-0">(<%= cour.etudiants.count %> étudiants prévus)</p>
+    <% if cour.etudiants.any? %>
+      <p class="mb-0">(<%= cour.etudiants.count %> étudiants prévus)</p>
+    <% end %>
   </div>
 
   <% if cour.debut.to_date == Date.today %>

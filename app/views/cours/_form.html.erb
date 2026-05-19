@@ -99,19 +99,15 @@
             </span>
           </div>
         </div>
-      <% else %>
-        <%= f.hidden_field :hors_service_statutaire %>
-      <% end %>
 
-      <div class="flex flex-wrap">
-        <div class="sm:w-1/5"></div>
-        <div class="sm:w-1/2">
-          <%= f.check_box :elearning %>
-          <%= f.label :elearning, "Cours en eLearning" %>
+        <div class="flex flex-wrap">
+          <div class="sm:w-1/5"></div>
+          <div class="sm:w-1/2">
+            <%= f.check_box :elearning %>
+            <%= f.label :elearning, "Cours en eLearning" %>
+          </div>
         </div>
-      </div>
 
-      <% if !current_user.intervenant_bureaux_authorized? %>
         <div class="flex flex-wrap">
           <div class="sm:w-1/5"></div>
           <div class="sm:w-1/2">
@@ -120,6 +116,7 @@
           </div>
         </div>
       <% else %>
+        <%= f.hidden_field :hors_service_statutaire %>
         <%= f.hidden_field :no_send_to_edusign %>
       <% end %>
 
@@ -132,13 +129,13 @@
         <% end %>
 
         <div class="flex flex-wrap">
-          <%= f.label :salle_id, "Salle", class: 'sm:w-1/5' %>
+          <%= f.label :salle_id, current_user.intervenant_bureaux_authorized? ? "Salle *": "Salle" , class: 'sm:w-1/5' %>
           <div class="sm:w-1/2">
             <%= f.collection_select :salle_id, 
                                               @salles, 
                                               :id, 
                                               :nom_places_block_desc, 
-                                              { include_blank: true },
+                                              { include_blank: true, required: current_user.intervenant_bureaux_authorized? },
                                               class: "select select-bordered select-sm w-full",
                                               data: { "dispo-target": "salles" } %>
 
@@ -190,7 +187,7 @@
       </div>
     </div>
 
-    <% unless @cour.new_record? %>
+    <% unless @cour.new_record? || current_user.intervenant_bureaux_authorized? %>
       <div class="flex flex-wrap">
         <div class="sm:w-1/5"></div>
         <div class="sm:w-1/2">
