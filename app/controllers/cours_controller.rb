@@ -725,6 +725,7 @@ class CoursController < ApplicationController
   # GET /cours/1/edit
   def edit
     authorize @cour
+    @intervenants = current_user.intervenant_bureaux_authorized? ? Intervenant.where(id: @intervenant_user_id) : Intervenant.all
     @formations = Formation.ordered
 
     if current_user.partenaire_qse?
