@@ -686,7 +686,7 @@ class CoursController < ApplicationController
   def new
     @cour = Cour.new
     @formations = Formation.not_archived.ordered
-    if current_user.intervenant_bureaux_authorized?
+    if current_user.intervenant_permanent?
       @intervenants = Intervenant.where(id: @intervenant_user_id)
       @cour.intervenant_id = @intervenant_user_id
       @cour.formation_id = ENV["FORMATION_ID_RESERVATION_INTERVENANTS"].to_i
@@ -725,7 +725,7 @@ class CoursController < ApplicationController
   # GET /cours/1/edit
   def edit
     authorize @cour
-    @intervenants = current_user.intervenant_bureaux_authorized? ? Intervenant.where(id: @intervenant_user_id) : Intervenant.all
+    @intervenants = current_user.intervenant_permanent? ? Intervenant.where(id: @intervenant_user_id) : Intervenant.all
     @formations = Formation.ordered
 
     if current_user.partenaire_qse?
@@ -757,7 +757,7 @@ class CoursController < ApplicationController
       else
         format.html do
           @formations = Formation.ordered
-          @intervenants = current_user.intervenant_bureaux_authorized? ? Intervenant.where(id: @intervenant_user_id) : Intervenant.all
+          @intervenants = current_user.intervenant_permanent? ? Intervenant.where(id: @intervenant_user_id) : Intervenant.all
 
           if current_user.partenaire_qse?
             @formations = @formations.partenaire_qse
@@ -805,7 +805,7 @@ class CoursController < ApplicationController
       else
         format.html do
           @formations = Formation.ordered
-          @intervenants = current_user.intervenant_bureaux_authorized? ? Intervenant.where(id: @intervenant_user_id) : Intervenant.all
+          @intervenants = current_user.intervenant_permanent? ? Intervenant.where(id: @intervenant_user_id) : Intervenant.all
 
           if current_user.partenaire_qse?
             @formations = @formations.partenaire_qse
@@ -956,7 +956,7 @@ class CoursController < ApplicationController
 
       # Les intervenants autorisés ne peuvent réserver que les salles privées,
       # sauf celles du 6e étage. Les autres intervenants sont déjà bloqués par cour_policy.
-      if current_user.intervenant_bureaux_authorized?
+      if current_user.intervenant_permanent?
         @salles = @salles.where(privée: true) - Salle.salles_non_reservables_intervenants
       elsif current_user.gestionnaire?
         @salles = @salles - @salles.bureaux_profs

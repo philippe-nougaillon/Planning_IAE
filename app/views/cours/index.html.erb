@@ -161,7 +161,7 @@
                 <th colspan="2"><%= user_signed_in? ? "UE/Intitulé du cours" : "UE" %></th>
                 <th>Salle</th>
                 <%# il n'est pas possible de mettre la policy de l'edit puisqu'on se base sur un cours. Seul certains intervenants ne peuvent pas faire d'action mais peuvent modifier %>
-                <% if policy(Cour).action? || (user_signed_in? && current_user.intervenant_bureaux_authorized?) %>
+                <% if policy(Cour).action? || (user_signed_in? && current_user.intervenant_permanent?) %>
                   <th></th>
                 <% end %>
               </tr>

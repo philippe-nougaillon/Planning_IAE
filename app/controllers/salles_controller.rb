@@ -180,7 +180,7 @@ class SallesController < ApplicationController
 
     # Les intervenants autorisés ne peuvent réserver que les salles privées,
     # sauf celles du 6e étage. Les autres intervenants sont déjà bloqués par cour_policy.
-    if current_user.intervenant_bureaux_authorized?
+    if current_user.intervenant_permanent?
       @salles = @salles.where(privée: true) - Salle.salles_non_reservables_intervenants
     elsif current_user.gestionnaire?
       @salles = @salles - @salles.bureaux_profs

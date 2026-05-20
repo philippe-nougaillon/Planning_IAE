@@ -28,7 +28,7 @@
                                 data: { "dispo-target": "duree" } %>
       </div>
       
-      <% if !current_user.intervenant_bureaux_authorized? %>
+      <% if !current_user.intervenant_permanent? %>
         <div class="flex flex-wrap">
           <%= f.label :formation_id, "Formation *", class: 'sm:w-1/5' %>
           <%= f.collection_select :formation_id, 
@@ -64,7 +64,7 @@
                                 } %>
       </div>
 
-      <% unless current_user.intervenant_bureaux_authorized? %>
+      <% unless current_user.intervenant_permanent? %>
         <div class="flex flex-wrap">
           <%= f.label :intervenant_binome_id, "Intervenant en binôme", class: 'sm:w-1/5' %>
           <%= f.collection_select :intervenant_binome_id, 
@@ -86,7 +86,7 @@
         <%= f.text_field :nom, placeholder: "Nom du cours (si vide; sera remplacé par le nom de l'UE)", class: "input input-bordered input-sm w-full sm:w-1/2" %>
       </div>
 
-      <% if !current_user.intervenant_bureaux_authorized? %>
+      <% if !current_user.intervenant_permanent? %>
         <div class="flex flex-wrap">
           <div class="sm:w-1/5"></div>
           <div class="sm:w-1/2 flex items-center gap-1">
@@ -129,13 +129,13 @@
         <% end %>
 
         <div class="flex flex-wrap">
-          <%= f.label :salle_id, current_user.intervenant_bureaux_authorized? ? "Salle *": "Salle" , class: 'sm:w-1/5' %>
+          <%= f.label :salle_id, current_user.intervenant_permanent? ? "Salle *": "Salle" , class: 'sm:w-1/5' %>
           <div class="sm:w-1/2">
             <%= f.collection_select :salle_id, 
                                               @salles, 
                                               :id, 
                                               :nom_places_block_desc, 
-                                              { include_blank: true, required: current_user.intervenant_bureaux_authorized? },
+                                              { include_blank: true, required: current_user.intervenant_permanent? },
                                               class: "select select-bordered select-sm w-full",
                                               data: { "dispo-target": "salles" } %>
 
@@ -187,7 +187,7 @@
       </div>
     </div>
 
-    <% unless @cour.new_record? || current_user.intervenant_bureaux_authorized? %>
+    <% unless @cour.new_record? || current_user.intervenant_permanent? %>
       <div class="flex flex-wrap">
         <div class="sm:w-1/5"></div>
         <div class="sm:w-1/2">

@@ -128,7 +128,7 @@ class User < ApplicationRecord
     mot_de_passe.shuffle(random: SecureRandom).join
   end
 
-  def intervenant_bureaux_authorized?
+  def intervenant_permanent?
     if self.intervenant?
       intervenant = Intervenant.where("LOWER(intervenants.email) = ?", self.email.downcase).first
       return true if ['Permanent', 'PR', 'MCF', 'MCF_HDR', 'PAST', 'PRAG'].include?(intervenant.status)
