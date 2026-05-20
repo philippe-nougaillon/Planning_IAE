@@ -129,12 +129,10 @@ class User < ApplicationRecord
   end
 
   def intervenant_permanent?
-    if self.intervenant?
-      intervenant = Intervenant.where("LOWER(intervenants.email) = ?", self.email.downcase).first
-      return true if ['Permanent', 'PR', 'MCF', 'MCF_HDR', 'PAST', 'PRAG'].include?(intervenant.status)
-    else
-      false
-    end
+    return false unless self.intervenant?
+    intervenant = Intervenant.where("LOWER(intervenants.email) = ?", self.email.downcase).first
+    return false if intervenant.nil?
+    ['Permanent', 'PR', 'MCF', 'MCF_HDR', 'PAST', 'PRAG'].include?(intervenant.status)
   end
 
   private
