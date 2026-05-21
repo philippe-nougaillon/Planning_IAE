@@ -566,7 +566,7 @@ class CoursController < ApplicationController
               pdf.convocation(@cours.first, étudiant, params[:papier], params[:calculatrice], params[:ordi_tablette], params[:téléphone], params[:dictionnaire], @cours.first.sujet&.commentaires)
               title = "Convocation #{@cours.first.type_examen} - #{@cours.first.nom_ou_ue}"
               mailer_response = EtudiantMailer.convocation(étudiant, pdf, @cours.first, title).deliver_now
-              MailLog.create(subject: "Convocation UE##{@cours.first.code_ue}", user_id: current_user.id, message_id: mailer_response.message_id, to: étudiant.email, title: title)
+              MailLog.create(subject: "Convocation UE##{@cours.first.code_ue}", user_id: current_user.id, message_id: mailer_response.message_id, to: étudiant.email, cc: étudiant.formation.courriel, title: title)
             end
             if params[:etudiants_en_rattrapage_ids].present?
               RedoublantNotificationJob.perform_later(@cours.first, params[:etudiants_en_rattrapage_ids], current_user.id)
