@@ -12,7 +12,7 @@ class Edusign < ApplicationService
         # Déclaré ici pour éviter de synchroniser des éléments deux fois (à cause de la prochaine synchronisation qui se base sur le created_at de la synchronisation)
         @interval_end = Time.zone.now
 
-        # Par défaut, on considère qu'il n'y a pas de crash.
+        # Par défaut, on considère qu'il n'y a pas de crash (ou timeout).
         @crash = false
     end
 
@@ -106,7 +106,7 @@ class Edusign < ApplicationService
                 puts response
             end
         else
-            # Si ce n'est pas un succes, on considère que c'est un crash, et qu'il faudra refaire une tentative
+            # Si ce n'est pas un succes, on considère que c'est un crash (ou timeout), et qu'il faudra refaire une tentative
             @crash = true
             response["status"] = "error"
             response["message"] = http_response.body
@@ -124,7 +124,7 @@ class Edusign < ApplicationService
     end
 
     def get_interval_of_time
-        # Se base sur le dernier EdusignLog où il n'y a pas eu de crash. Le scheduler n'est plus à synchroniser avec cette fonction
+        # Se base sur le dernier EdusignLog où il n'y a pas eu de crash (ou timeout). Le scheduler n'est plus à synchroniser avec cette fonction
         puts "INTERVAL = #{EdusignLog.where(modele_type: 1).where.not(etat: 3).reorder(created_at: :desc).first.created_at..@interval_end}"
         EdusignLog.where(modele_type: 1).where.not(etat: 3).reorder(created_at: :desc).first.created_at..@interval_end
     end
@@ -822,7 +822,7 @@ class Edusign < ApplicationService
 
         # Modification de l'etat
         if @crash
-            3 # Crash
+            3 # Crash (ou Timeout)
         elsif @nb_recovered_elements != 0
             case self.count_failure_elements
             when 0

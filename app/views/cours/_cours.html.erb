@@ -152,5 +152,7 @@
                 <%= fa_icon 'edit '%>
             <% end %>
         </td>
+    <% elsif user_signed_in? && current_user.intervenant_permanent? %>
+        <td></td>
     <% end %>
 </tr>

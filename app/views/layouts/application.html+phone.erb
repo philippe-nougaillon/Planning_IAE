@@ -30,12 +30,9 @@
         <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
 
-        <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
-        <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+        <%= stylesheet_link_tag "application", "inter-font", "data-turbo-track": "reload" %>
+        <%= stylesheet_link_tag "daisyui", "data-turbo-track": "reload" %>
         <%= javascript_importmap_tags %>
-
-        <link href="https://cdn.jsdelivr.net/npm/daisyui@4.5.0/dist/full.min.css" rel="stylesheet" type="text/css" />
-        <script src="https://cdn.tailwindcss.com"></script>
 
         <!-- sinon l'écran flappote !  -->
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
@@ -55,6 +52,8 @@
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+        <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     </head>
 
     <body class="bg-base-100">

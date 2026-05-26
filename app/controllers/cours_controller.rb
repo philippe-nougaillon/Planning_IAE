@@ -332,11 +332,11 @@ class CoursController < ApplicationController
 
       if params[:action_name] == 'Changer de salle'
         # Afficher les salles disponibles
-        @salles_dispos = Salle.pluck(:nom)
+        @salles_dispos = Salle.ponscarme_et_blocZ.pluck(:nom)
         @action_ids.each do |id|
           cours = Cour.find(id)
           salles = []
-          Salle.all.each do |s|
+          Salle.ponscarme_et_blocZ.each do |s|
             cours.salle = s
             salles << s.nom if cours.valid?
           end
@@ -566,7 +566,7 @@ class CoursController < ApplicationController
               pdf.convocation(@cours.first, étudiant, params[:papier], params[:calculatrice], params[:ordi_tablette], params[:téléphone], params[:dictionnaire], @cours.first.sujet&.commentaires)
               title = "Convocation #{@cours.first.type_examen} - #{@cours.first.nom_ou_ue}"
               mailer_response = EtudiantMailer.convocation(étudiant, pdf, @cours.first, title).deliver_now
-              MailLog.create(subject: "Convocation UE##{@cours.first.code_ue}", user_id: current_user.id, message_id: mailer_response.message_id, to: étudiant.email, title: title)
+              MailLog.create(subject: "Convocation UE##{@cours.first.code_ue}", user_id: current_user.id, message_id: mailer_response.message_id, to: étudiant.email, cc: étudiant.formation.courriel, title: title)
             end
             if params[:etudiants_en_rattrapage_ids].present?
               RedoublantNotificationJob.perform_later(@cours.first, params[:etudiants_en_rattrapage_ids], current_user.id)
@@ -686,6 +686,15 @@ class CoursController < ApplicationController
   def new
     @cour = Cour.new
     @formations = Formation.not_archived.ordered
+    if current_user.intervenant_permanent?
+      @intervenants = Intervenant.where(id: @intervenant_user_id)
+      @cour.intervenant_id = @intervenant_user_id
+      @cour.formation_id = ENV["FORMATION_ID_RESERVATION_INTERVENANTS"].to_i
+      @cour.hors_service_statutaire = true
+      @cour.no_send_to_edusign = true
+    else
+      @intervenants = Intervenant.all
+    end
 
     if current_user.partenaire_qse?
       @formations = @formations.partenaire_qse
@@ -716,6 +725,7 @@ class CoursController < ApplicationController
   # GET /cours/1/edit
   def edit
     authorize @cour
+    @intervenants = current_user.intervenant_permanent? ? Intervenant.where(id: @intervenant_user_id) : Intervenant.all
     @formations = Formation.ordered
 
     if current_user.partenaire_qse?
@@ -747,6 +757,7 @@ class CoursController < ApplicationController
       else
         format.html do
           @formations = Formation.ordered
+          @intervenants = current_user.intervenant_permanent? ? Intervenant.where(id: @intervenant_user_id) : Intervenant.all
 
           if current_user.partenaire_qse?
             @formations = @formations.partenaire_qse
@@ -794,6 +805,7 @@ class CoursController < ApplicationController
       else
         format.html do
           @formations = Formation.ordered
+          @intervenants = current_user.intervenant_permanent? ? Intervenant.where(id: @intervenant_user_id) : Intervenant.all
 
           if current_user.partenaire_qse?
             @formations = @formations.partenaire_qse
@@ -942,9 +954,10 @@ class CoursController < ApplicationController
     def set_salles
       @salles = Salle.ponscarme_et_blocZ
 
-      # Filtrer la visibilité des bureaux des profs
-      if current_user.intervenant_bureaux_authorized?
-        @salles = @salles.bureaux_profs
+      # Les intervenants autorisés ne peuvent réserver que les salles privées,
+      # sauf celles du 6e étage. Les autres intervenants sont déjà bloqués par cour_policy.
+      if current_user.intervenant_permanent?
+        @salles = @salles.where(privée: true) - Salle.salles_non_reservables_intervenants
       elsif current_user.gestionnaire?
         @salles = @salles - @salles.bureaux_profs
       end

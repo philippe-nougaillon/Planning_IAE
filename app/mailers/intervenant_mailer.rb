@@ -16,6 +16,7 @@ class IntervenantMailer < ApplicationMailer
         @gestionnaires = gestionnaires
         @intervenant = intervenant
         @message = EnvoiLog.find(envoi_log_id).message
+
         if test
             mail(to: "fitsch-mouras.iae@univ-paris1.fr", cc: "philippe.nougaillon@gmail.com, pierreemmanuel.dacquet@gmail.com",
                 subject: title)

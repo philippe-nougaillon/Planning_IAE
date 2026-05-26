@@ -11,7 +11,9 @@ class Salle < ApplicationRecord
 	default_scope { order(:bloc, :nom) } 
 
 	scope :ponscarme_et_blocZ , -> { where(bloc: ['P','Z']) }
+	# TODO : modifier ou remplacer le scope bureaux_profs en utilisant la fonction "description_ponscarme"
 	scope :bureaux_profs, -> { where(nom: ['300','301','302','303','304','305'])}
+	scope :salles_non_reservables_intervenants, -> { where(id: ENV.fetch('SALLES_NON_RESERVABLES_INTERVENANTS_IDS', '').split(',').map(&:strip)) }
 
 	validates :nom, :bloc, :places, presence: true
 	validates :nom, uniqueness: true

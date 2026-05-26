@@ -758,7 +758,7 @@ class ExportPdf
                 ["<color rgb='032E4D'>•</color>", "<color rgb='032E4D'><b>Salle : #{cour.salle.try(:nom) }</b></color>"] ],
                 cell_style: { borders: [], inline_format: true })
             move_down @margin_down / 2
-            table([ ["<color rgb='032E4D'>•</color>", "<color rgb='032E4D'><b>Nombre d’étudiants inscrits : #{étudiants_count}</b></color>"],
+            table([ ["<color rgb='032E4D'>•</color>", "<color rgb='032E4D'><b>Nombre d’étudiants convoqués : #{étudiants_count}</b></color>"],
                     ["<color rgb='032E4D'>•</color>", "<color rgb='032E4D'>Nombre de copies rendues : ....................................</color>"] ],
                     cell_style: { borders: [], inline_format: true })
             move_down @margin_down / 2
@@ -800,6 +800,8 @@ class ExportPdf
             text "<color rgb='032E4D'>Le <b>#{I18n.l(cour.debut.to_date)}</b></color>", inline_format: true, size: 24
             text "<color rgb='032E4D'>De <b>#{cour.debut.strftime('%Hh%M')} à #{cour.fin.strftime('%Hh%M')}</b></color>", inline_format: true, size: 24
             text "<color rgb='032E4D'>Salle <b>#{cour.salle.try(:nom)}</b></color>", inline_format: true, size: 24
+            text "<color rgb='032E4D'>Nombre étudiants convoqués <b>#{étudiants_count}</b></color>", inline_format: true, size: 24
+            text "<color rgb='032E4D'>Nombre copies : </color>", inline_format: true, size: 24
 
             move_down @margin_down * 2
             text "<color rgb='FF0000'>=>   <b><u>En fin d’épreuve</u>, merci de remettre l’enveloppe contenant les copies à l’accueil.</b></color>", inline_format: true, size: 24

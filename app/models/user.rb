@@ -128,13 +128,11 @@ class User < ApplicationRecord
     mot_de_passe.shuffle(random: SecureRandom).join
   end
 
-  def intervenant_bureaux_authorized?
-    if self.intervenant?
-      intervenant = Intervenant.where("LOWER(intervenants.email) = ?", self.email.downcase).first
-      return true if ['CEV', 'CEV_HSS', 'CEV_ENS_C_CONTRACTUEL', 'CEV_TIT_CONT_FP', 'CEV_SAL_PRIV_IND'].include?(intervenant.status)
-    else
-      false
-    end
+  def intervenant_permanent?
+    return false unless self.intervenant?
+    intervenant = Intervenant.where("LOWER(intervenants.email) = ?", self.email.downcase).first
+    return false if intervenant.nil?
+    ['Permanent', 'PR', 'MCF', 'MCF_HDR', 'PAST', 'PRAG'].include?(intervenant.status)
   end
 
   private

@@ -338,7 +338,7 @@ class Cour < ApplicationRecord
       event.dtend = c.fin.strftime("%Y%m%dT%H%M%S")
       event.summary = c.try(:formation).try(:nom)
       event.description = c.nom
-      event.location = "BioPark #{c.salle.nom if c.salle}"
+      event.location = "IAE Paris #{c.salle.nom if c.salle}"
       event.url = "https://planning.iae-paris.com/"
       calendar.add_event(event)
     end  

@@ -18,7 +18,7 @@ class DossierPolicy < ApplicationPolicy
     user && (user.rh? || ENV["SUPER_ADMIN_IDS"].to_s.split(',').map(&:to_i).include?(user.id))
   end
 
-  def update?
+  def create?
     new?
   end
 
@@ -26,7 +26,7 @@ class DossierPolicy < ApplicationPolicy
     user && (user.rh? || ENV["SUPER_ADMIN_IDS"].to_s.split(',').map(&:to_i).include?(user.id))
   end
 
-  def create?
+  def update?
     edit?
   end
 

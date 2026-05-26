@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_02_02_150857) do
+ActiveRecord::Schema[7.2].define(version: 2026_05_21_134951) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -393,6 +393,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_02_02_150857) do
     t.boolean "opened", default: false
     t.json "error_message"
     t.string "title"
+    t.string "cc"
   end
 
   create_table "motifs", force: :cascade do |t|

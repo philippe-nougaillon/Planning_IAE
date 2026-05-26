@@ -4,7 +4,11 @@
     Actualiser
   <% end %>
 </div>
-<p class="mb-4">Historique des mails envoyés via MailGun, avec Statut et État (OK = Acheminé, OUVERT = Vu).</p>
+<p class="mb-4">
+  Historique des mails envoyés via <%= link_to "MailGun", "https://status.mailgun.com/", target: "_blank", class: "text-primary hover:underline" %>, avec Statut et État (OK = Acheminé, OUVERT = Vu).
+  <br>
+  Réactualisation auto toutes les 10min. Cliquez sur Actualiser pour récupérer les derniers états plus rapidement
+</p>
 
 <div class="bs-container p-4 shadow mb-4">
   <%= form_tag request.path, method: :get do %>

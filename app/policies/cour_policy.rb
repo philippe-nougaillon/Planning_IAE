@@ -34,7 +34,7 @@ class CourPolicy < ApplicationPolicy
   end
 
   def new?
-    user && ((user.role_number >= 2 && !user.accueil_vacataire?) || user.partenaire_qse? || user.intervenant_bureaux_authorized?)
+    user && ((user.role_number >= 2 && !user.accueil_vacataire?) || user.partenaire_qse? || user.intervenant_permanent?)
   end
 
   def create?
@@ -42,7 +42,12 @@ class CourPolicy < ApplicationPolicy
   end
 
   def edit?
-    user && ((user.role_number >= 2 && !user.accueil_vacataire?) || (user.partenaire_qse? && (Formation.partenaire_qse.include?(record.formation))))
+    user && 
+    (
+      (user.role_number >= 2 && !user.accueil_vacataire?) || 
+      (user.partenaire_qse? && (Formation.partenaire_qse.include?(record.formation))) || 
+      (user.intervenant_permanent? && (record.formation_id == ENV["FORMATION_ID_RESERVATION_INTERVENANTS"]&.to_i && record.intervenant_id == Intervenant.where("LOWER(intervenants.email) = ?", user.email.downcase).first.id))
+    )
   end
 
   def update?
