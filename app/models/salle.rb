@@ -12,7 +12,7 @@ class Salle < ApplicationRecord
 
 	scope :ponscarme_et_blocZ , -> { where(bloc: ['P','Z']) }
 	# TODO : modifier ou remplacer le scope bureaux_profs en utilisant la fonction "description_ponscarme"
-	scope :bureaux_profs, -> { where(nom: ['300','301','302','303','304','305'])}
+	scope :bureaux_profs, -> { where(nom: ['300','300.A','300.B','301','301.A','301.B','302','302.A','302.B','303','303.A','303.B','304','304.A','304.B','305','305.A','305.B'])}
 	scope :salles_non_reservables_intervenants, -> { where(id: ENV.fetch('SALLES_NON_RESERVABLES_INTERVENANTS_IDS', '').split(',').map(&:strip)) }
 
 	validates :nom, :bloc, :places, presence: true
@@ -47,7 +47,7 @@ class Salle < ApplicationRecord
 			"Salle de cours"
 		when /^\d\.\w$/ # Ex: 2.A
 			"Salle de réunion"
-		when /^\d{3}$/ # Ex: 300 
+		when /^\d{3}\.?\w*$/ # Ex: 300, 300.A, 302B
 			"Bureau enseignant"
 		end
 	end
