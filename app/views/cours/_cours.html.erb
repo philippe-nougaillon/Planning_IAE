@@ -151,6 +151,11 @@
             <%= link_to edit_cour_path(cours, from: params[:from]), class: "btn btn-sm btn-ghost text-base-content" do %>
                 <%= fa_icon 'edit '%>
             <% end %>
+            <% if policy(cours).destroy? && current_user.intervenant_permanent? %>
+                <%= link_to(cour_path(cours),'data-turbo-method': :delete, 'data-turbo-confirm': 'Confirmez-vous la suppression définitive de cette réservation ?', class: 'btn btn-sm btn-ghost text-base-content' ) do %>
+                    <%= fa_icon 'trash' %>
+                <% end %>
+            <% end %>
         </td>
     <% elsif user_signed_in? && current_user.intervenant_permanent? %>
         <td></td>
