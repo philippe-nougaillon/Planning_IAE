@@ -1,5 +1,5 @@
 <div class="calendar overflow-x-auto">
-  <table class="table">
+  <table class="table table-fixed">
     <thead>
       <tr>
         <th></th>
@@ -25,7 +25,7 @@
         <tr>
           <td class="align-top">
             <% if @salle %>
-              <p id=<%= @salle.nom %> class="text-xl" style="text-align: center">
+              <p id=<%= @salle.nom %> class="text-xl text-center break-words">
                 <b><%= @salle.nom %></b>
                 <br>
                 <small>(<%= @salle.places %>)</small>
