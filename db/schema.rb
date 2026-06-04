@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_05_21_134951) do
+ActiveRecord::Schema[7.2].define(version: 2026_06_04_154341) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -421,7 +421,9 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_21_134951) do
     t.boolean "fait"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "intervenant_id"
     t.index ["cour_id"], name: "index_options_on_cour_id"
+    t.index ["intervenant_id"], name: "index_options_on_intervenant_id"
     t.index ["user_id"], name: "index_options_on_user_id"
   end
 
@@ -733,6 +735,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_05_21_134951) do
   add_foreign_key "justificatifs", "motifs"
   add_foreign_key "notes", "users"
   add_foreign_key "options", "cours"
+  add_foreign_key "options", "intervenants"
   add_foreign_key "options", "users"
   add_foreign_key "presences", "cours"
   add_foreign_key "presences", "etudiants"

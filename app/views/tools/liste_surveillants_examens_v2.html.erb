@@ -3,7 +3,8 @@
         <%= fa_icon 'list-alt' %> 
         Liste des surveillances d'examens v2
     </h2>
-    Affiche les cours 'EXAMEN IAE', 'EXAMEN RATTRAPAGE', ou 'VACATAIRE ADM' qui contiennent les noms des surveillants, entre crochets, dans une option.
+    Affiche les cours 'EXAMEN IAE', 'EXAMEN RATTRAPAGE', ou 'VACATAIRE ADM' qui contiennent les noms des surveillants, entre crochets, dans une option <i>surveillance</i>,
+    ou un intervenant au statut "Surveillant" sélectionné dans une option <i>surveillance_2</i>.
     <br>
     <i>e.g. '[NOM-SURVEILLANT Prénom]'</i>
     <br><br>
@@ -51,20 +52,17 @@
 
         <tbody>
             <% @examens.each do | exam | %>
-                <% exam.options.surveillance.first.description.split('[').each do |item| %>
-                    <% unless item.blank? %>
-                        <% surveillant = item.gsub(']', '').delete("\r\n\\") %>
-                        <% durée = exam.duree + (exam.has_intervenant_vacataire? ? 0 : 1) %>
-                        <% @cumuls[surveillant] ? @cumuls[surveillant] += durée : @cumuls[surveillant] = durée %>
-                        <tr class="hover border">
-                            <td><%= link_to l(exam.debut, format: :long), cour_path(exam.id), class: 'text-primary hover:underline' %></td>
-                            <td><%= exam.formation&.nom %></td>
-                            <td><b><%= surveillant %></b></td>
-                            <td><%= exam.duree %> h</td>
-                            <td><%= durée %> h</td>
-                            <td><b><%= @cumuls[surveillant] %> h</b></td>
-                        </tr>
-                    <% end %>
+                <% exam.noms_surveillants.each do |surveillant| %>
+                    <% durée = exam.duree + (exam.has_intervenant_vacataire? ? 0 : 1) %>
+                    <% @cumuls[surveillant] ? @cumuls[surveillant] += durée : @cumuls[surveillant] = durée %>
+                    <tr class="hover border">
+                        <td><%= link_to l(exam.debut, format: :long), cour_path(exam.id), class: 'text-primary hover:underline' %></td>
+                        <td><%= exam.formation&.nom %></td>
+                        <td><b><%= surveillant %></b></td>
+                        <td><%= exam.duree %> h</td>
+                        <td><%= durée %> h</td>
+                        <td><b><%= @cumuls[surveillant] %> h</b></td>
+                    </tr>
                 <% end %>
             <% end %>
         </tbody>

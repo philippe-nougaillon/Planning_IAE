@@ -1,10 +1,12 @@
-<div class="nested-form-wrapper flex flex-wrap shadow-lg py-4 mb-4" data-new-record="<%= f.object.new_record? %>">
+<div class="nested-form-wrapper flex flex-wrap shadow-lg py-4 mb-4" data-new-record="<%= f.object.new_record? %>" data-controller="option-fields">
   <%= f.hidden_field :user_id, value: f.object.user_id || current_user.id %>
   <div class="flex w-full justify-between mb-2">
     <div class="sm:w-fit px-4">
       <div class="form-control">
         <%= f.label :catégorie %>
-        <%= f.select :catégorie, option_category_choices(current_user), {include_blank: true, required: true}, class: 'select select-bordered select-sm w-full' %>
+        <%= f.select :catégorie, option_category_choices(current_user), {include_blank: true, required: true},
+              class: 'select select-bordered select-sm w-full',
+              data: { option_fields_target: 'categorie', action: 'change->option-fields#toggle' } %>
       </div>
     </div>
     <div class="px-4 self-end">
@@ -14,10 +16,19 @@
       <%= f.hidden_field :_destroy %>
     </div>
   </div>
-  <div class="sm:w-full px-4">
+  <div class="sm:w-full px-4" data-option-fields-target="descriptionField">
     <div class="form-control">
       <%= f.label :description %>
-      <%= f.text_area :description, class: 'textarea textarea-bordered textarea-sm w-full', required: true %>
+      <%= f.text_area :description, class: 'textarea textarea-bordered textarea-sm w-full', required: true,
+            data: { option_fields_target: 'description' } %>
+    </div>
+  </div>
+  <div class="sm:w-full px-4 hidden" data-option-fields-target="intervenantField">
+    <div class="form-control">
+      <%= f.label :intervenant_id, 'Surveillant' %>
+      <%= f.collection_select :intervenant_id, Intervenant.statut_surveillant, :id, :nom_prenom,
+            { include_blank: true }, class: 'select select-bordered select-sm w-full',
+            data: { option_fields_target: 'intervenant' } %>
     </div>
   </div>
 </div>

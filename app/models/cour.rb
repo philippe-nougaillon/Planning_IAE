@@ -16,7 +16,10 @@ class Cour < ApplicationRecord
   has_many :etudiants, through: :formation
   has_many :options, dependent: :destroy
   accepts_nested_attributes_for :options,
-                                reject_if: lambda{|attributes| attributes['catégorie'].blank? || attributes['description'].blank?},
+                                reject_if: lambda{|attributes|
+                                  attributes['catégorie'].blank? ||
+                                  (attributes['catégorie'].to_s == 'surveillance_2' ? attributes['intervenant_id'].blank? : attributes['description'].blank?)
+                                },
                                 allow_destroy:true
   has_many :attendances, dependent: :destroy
   belongs_to :sujet, optional: true
@@ -401,6 +404,24 @@ class Cour < ApplicationRecord
 
   def has_intervenant_vacataire?
     self.intervenant_id == ENV["SURVEILLANT_EXAMEN_VACATAIRE_ID"].to_i
+  end
+
+  # Liste unifiée des noms de surveillants d'un cours, combinant :
+  #  - les options "surveillance" (noms saisis entre crochets dans la description)
+  #  - les options "surveillance_2" (intervenant sélectionné, statut Surveillant)
+  def noms_surveillants
+    noms = []
+
+    options.surveillance.each do |option|
+      next if option.description.blank?
+      noms += option.description.split('[').map { |item| item.gsub(']', '').delete("\r\n\\") }.reject(&:blank?)
+    end
+
+    options.surveillance_2.each do |option|
+      noms << option.intervenant.nom_prenom.gsub('_', ' ') if option.intervenant
+    end
+
+    noms
   end
 
   def linked_edusign_cour

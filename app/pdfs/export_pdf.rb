@@ -457,24 +457,21 @@ class ExportPdf
         index = 0
  
         examens.each do | exam |
-            exam.options.surveillance.first.description.split('[').each do |item|
-                unless item.blank? 
-                    surveillant_item = item.gsub(']', '').delete("\r\n\\")
-                    if surveillant_item == surveillant
-                        is_vacataire = exam.has_intervenant_vacataire?
-                        index += 1
-                        durée = exam.duree + (is_vacataire ? 0 : 1)
-                        cumul_durée += durée
-                        data += [[ index,
-                                    I18n.l(exam.debut.to_date, format: :long) + ' ' + I18n.l(exam.debut, format: :heures_min) + '-' + I18n.l(exam.fin, format: :heures_min),
-                                    is_vacataire ? "Vacataire" : "Surveillance Examen",
-                                    exam.formation.nom_promo,
-                                    '7322GRH',
-                                    (exam.formation.diplome.upcase == 'LICENCE' ? '101PAIE' : exam.has_intervenant_vacataire? ? '115PAIE' : '102PAIE'),
-                                    exam.formation.code_analytique_avec_indice(exam.debut).gsub('HCO','VAC'),
-                                    durée 
-                                ]]
-                    end
+            exam.noms_surveillants.each do |surveillant_item|
+                if surveillant_item == surveillant
+                    is_vacataire = exam.has_intervenant_vacataire?
+                    index += 1
+                    durée = exam.duree + (is_vacataire ? 0 : 1)
+                    cumul_durée += durée
+                    data += [[ index,
+                                I18n.l(exam.debut.to_date, format: :long) + ' ' + I18n.l(exam.debut, format: :heures_min) + '-' + I18n.l(exam.fin, format: :heures_min),
+                                is_vacataire ? "Vacataire" : "Surveillance Examen",
+                                exam.formation.nom_promo,
+                                '7322GRH',
+                                (exam.formation.diplome.upcase == 'LICENCE' ? '101PAIE' : exam.has_intervenant_vacataire? ? '115PAIE' : '102PAIE'),
+                                exam.formation.code_analytique_avec_indice(exam.debut).gsub('HCO','VAC'),
+                                durée
+                            ]]
                 end
             end
         end
@@ -649,8 +646,8 @@ class ExportPdf
         font "OpenSans"
         
         cours.each_with_index do |cour, index|
-            if cour.options.surveillance.any? && !cour.options.surveillance.first.description.empty?
-                surveillants = cour.options.surveillance.first.description.scan(/\[([^\]]+)\]/).flatten.join(', ').gsub(/[-]/, ' ')
+            if cour.noms_surveillants.any?
+                surveillants = cour.noms_surveillants.join(', ').gsub(/[-]/, ' ')
             elsif !cour.commentaires.blank?
                 surveillants = cour.commentaires.scan(/\[([^\]]+)\]/).flatten.join(', ').gsub(/[-]/, ' ')
             else

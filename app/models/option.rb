@@ -3,15 +3,21 @@ class Option < ApplicationRecord
 
   belongs_to :cour
   belongs_to :user
+  belongs_to :intervenant, optional: true
 
   enum :catégorie, {
     commande: 0,
     surveillance: 1,
     fusion: 2,
-    suivi_copies: 3
+    suivi_copies: 3,
+    surveillance_2: 4
   }
 
-  validates :catégorie, uniqueness: {scope: [:cour_id]}
+  # Une seule option par catégorie et par cours, SAUF pour surveillance_2 :
+  # on peut ajouter plusieurs options surveillance_2 (un intervenant chacune).
+  validates :catégorie, uniqueness: {scope: [:cour_id]}, unless: :surveillance_2?
+  # Pour surveillance_2, on impose un intervenant et on évite les doublons sur le cours.
+  validates :intervenant_id, presence: true, uniqueness: {scope: [:cour_id]}, if: :surveillance_2?
 
   around_update   :check_send_commande_email, if: Proc.new { |option| option.commande? }
   after_create    :check_send_new_commande_email, if: Proc.new { |option| option.commande? }

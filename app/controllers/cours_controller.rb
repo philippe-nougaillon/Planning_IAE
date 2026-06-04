@@ -936,7 +936,7 @@ class CoursController < ApplicationController
                                     :salle_id, :code_ue, :nom, :etat, :duree,
                                     :intervenant_binome_id, :hors_service_statutaire,
                                     :commentaires, :elearning, :document, :no_send_to_edusign,
-                                    options_attributes: [:id, :user_id, :catégorie, :description, :_destroy])
+                                    options_attributes: [:id, :user_id, :catégorie, :description, :intervenant_id, :_destroy])
     end
 
     def is_user_authorized
