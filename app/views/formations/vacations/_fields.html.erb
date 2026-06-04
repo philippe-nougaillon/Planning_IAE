@@ -1,0 +1,39 @@
+<div class="sm:w-2/12 px-4">
+  <div class="form-control">
+    <%= f.label :date, 'Date *' %>
+    <%= f.date_field :date, class: 'input input-bordered input-sm w-full', required: true %>
+  </div>
+</div>
+
+<div class="sm:w-3/12 px-4">
+  <div class="form-control">
+    <%= f.label :intervenant_id, 'Intervenant *' %>
+    <%= f.collection_select :intervenant_id,
+                            Intervenant.where.not(doublon: true),
+                            :id,
+                            :nom_prenom_status,
+                            { include_blank: true }, class: "select select-bordered select-sm w-full",
+                            required: true %>
+  </div>
+</div>
+
+<div class="sm:w-4/12 px-4">
+  <div class="form-control">
+    <%= f.label :vacation_activite_id, 'Activité *' %>
+    <%= f.select :vacation_activite_id, grouped_options_for_select(VacationActivite.for_select, f.object.vacation_activite_id), { include_blank: true }, class: "select select-bordered select-sm w-full", required: true %>
+  </div>
+</div>
+
+<div class="sm:w-1/12 px-4">
+  <div class="form-control">
+    <%= f.label :qte, "Qté *" %>
+    <%= f.number_field :qte, class: 'input input-bordered input-sm w-full', required: true %>
+  </div>
+</div>
+
+<div class="sm:w-full px-4 mt-2">
+  <div class="form-control">
+    <%= f.label :commentaires %>
+    <%= f.text_area :commentaires, class: 'textarea textarea-bordered textarea-sm w-full', rows: 1 %>
+  </div>
+</div>

@@ -23,6 +23,7 @@ Rails.application.routes.draw do
   end
 
   resources :formations do
+    resources :vacations, only: [:create, :update, :destroy], module: :formations
     collection do
       post :action
       post :action_do
