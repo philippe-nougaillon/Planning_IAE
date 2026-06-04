@@ -26,7 +26,7 @@
       <%= select_tag :formation_id, 
             options_from_collection_for_select(Formation.not_archived.ordered.joins(:vacations).uniq, :id, :nom, params[:formation_id]), 
               class:"slim-select", include_blank: true %>
-      <small class="label">Seul les formations ayant des vacations sont visible</small>
+      <small class="label">Seul les formations ayant des vacations sont visibles</small>
     </div>
 
     <div class="sm:w-1/3">
