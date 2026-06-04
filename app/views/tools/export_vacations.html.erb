@@ -3,8 +3,8 @@
 </div>
 <br>
 
-<div>
-  <h3 class="text-2xl mb-6">Cette fonction génère une feuille Excel des vacations d'une ou de toutes les formations</h3>
+<div class="mb-6">
+  <h3 class="text-2xl">Cette fonction génère une feuille Excel des vacations d'une ou de toutes les formations</h3>
 </div>
 <%= form_tag({action: "export_vacations_do", method: :post}) do %>
 
@@ -26,6 +26,7 @@
       <%= select_tag :formation_id, 
             options_from_collection_for_select(Formation.not_archived.ordered.joins(:vacations).uniq, :id, :nom, params[:formation_id]), 
               class:"slim-select", include_blank: true %>
+      <small class="label">Seul les formations ayant des vacations sont visible</small>
     </div>
 
     <div class="sm:w-1/3">
