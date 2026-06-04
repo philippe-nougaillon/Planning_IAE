@@ -1,0 +1,19 @@
+<% if @vacation.persisted? %>
+  <%# Succès : on ajoute la ligne enregistrée à la liste et on réinitialise le formulaire d'ajout %>
+  <%= turbo_stream.append "vacations_list" do %>
+    <%= render "formations/vacations/vacation", vacation: @vacation, saved: true %>
+  <% end %>
+
+  <%= turbo_stream.replace "new_vacation" do %>
+    <%= turbo_frame_tag "new_vacation" do %>
+      <%= render "formations/vacations/new_form", vacation: @formation.vacations.build %>
+    <% end %>
+  <% end %>
+<% else %>
+  <%# Erreur : on réaffiche le formulaire d'ajout avec les messages, sans toucher au reste %>
+  <%= turbo_stream.replace "new_vacation" do %>
+    <%= turbo_frame_tag "new_vacation" do %>
+      <%= render "formations/vacations/new_form", vacation: @vacation %>
+    <% end %>
+  <% end %>
+<% end %>

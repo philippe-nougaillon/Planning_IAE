@@ -1,0 +1,20 @@
+<div id="Vacations" data-reveal-target="pannel_vacations" class="hidden shadow p-6 mt-8">
+  <p class="text-xl text-secondary mb-2">
+    <%= fa_icon 'user-md' %>
+    Vacations ou autres activités
+  </p>
+  <p class="text-sm text-gray-500 mb-6">
+    Chaque vacation s'enregistre indépendamment : en cas d'erreur sur l'une, les autres restent enregistrées.
+  </p>
+  <hr class="mb-6">
+
+  <div id="vacations_list">
+    <%= render partial: "formations/vacations/vacation",
+               collection: @formation.vacations.order(:date),
+               as: :vacation %>
+  </div>
+
+  <%= turbo_frame_tag "new_vacation" do %>
+    <%= render "formations/vacations/new_form", vacation: @formation.vacations.build %>
+  <% end %>
+</div>
