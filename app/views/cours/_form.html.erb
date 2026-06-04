@@ -175,7 +175,7 @@
             <% end %>
           </template>
 
-          <%= f.fields_for :options do |option_fields| %>
+          <%= f.fields_for :options, options_visibles(@cour, current_user) do |option_fields| %>
             <%= render "option_form", f: option_fields %>
           <% end %>
 

@@ -7,7 +7,8 @@ class Option < ApplicationRecord
   enum :catégorie, {
     commande: 0,
     surveillance: 1,
-    fusion: 2
+    fusion: 2,
+    suivi_copies: 3
   }
 
   validates :catégorie, uniqueness: {scope: [:cour_id]}

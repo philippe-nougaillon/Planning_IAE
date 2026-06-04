@@ -4,7 +4,7 @@
     <div class="sm:w-fit px-4">
       <div class="form-control">
         <%= f.label :catégorie %>
-        <%= f.select :catégorie, Option.catégories.keys.to_a, {include_blank: true, required: true}, class: 'select select-bordered select-sm w-full' %>
+        <%= f.select :catégorie, option_category_choices(current_user), {include_blank: true, required: true}, class: 'select select-bordered select-sm w-full' %>
       </div>
     </div>
     <div class="px-4 self-end">
