@@ -45,7 +45,7 @@ class CoursEtatsServicesToXls < ApplicationService
           c = Cour.find(id)
 
           if c.imputable?
-            cumul_hetd += c.HETD
+            cumul_hetd += c.HETD * c.duree
             montant_service = c.montant_service.round(2)
           end
 
