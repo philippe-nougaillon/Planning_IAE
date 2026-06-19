@@ -18,25 +18,25 @@ class Edusign < ApplicationService
 
     def call
         # Necessaire pour créer des formations sans étudiants 
-        # et des formations avec que des étudiants déjà créés sur Edusign
+        # et des formations avec que des étudiants déjà créés sur Edusign
 
-        # formations_ajoutées_ids = self.sync_formations("Post", nil)
+        formations_ajoutées_ids = self.sync_formations("Post", nil)
 
-        # etudiants_ajoutés_ids = self.sync_etudiants("Post", nil)
+        etudiants_ajoutés_ids = self.sync_etudiants("Post", nil)
 
-        # self.sync_etudiants("Patch", etudiants_ajoutés_ids)
+        self.sync_etudiants("Patch", etudiants_ajoutés_ids)
 
-        # self.sync_formations("Patch", formations_ajoutées_ids)
+        self.sync_formations("Patch", formations_ajoutées_ids)
 
-        # # Ajout des intervenants avant les cours, 
-        # # sinon les cours qui n'ont pas d'intervenant créé sur Edusign, ne seront pas créés
-        # intervenants_ajoutés_ids = self.sync_intervenants("Post", nil)
+        # Ajout des intervenants avant les cours, 
+        # sinon les cours qui n'ont pas d'intervenant créé sur Edusign, ne seront pas créés
+        intervenants_ajoutés_ids = self.sync_intervenants("Post", nil)
 
-        # self.sync_intervenants("Patch", intervenants_ajoutés_ids)
+        self.sync_intervenants("Patch", intervenants_ajoutés_ids)
 
-        # cours_ajoutés_ids = self.sync_cours("Post", nil)
+        cours_ajoutés_ids = self.sync_cours("Post", nil)
 
-        # self.sync_cours("Patch", cours_ajoutés_ids)
+        self.sync_cours("Patch", cours_ajoutés_ids)
 
         self.remove_deleted_and_unfollowed_cours_in_edusign
     end
@@ -61,6 +61,9 @@ class Edusign < ApplicationService
     end
 
     def prepare_request_with_message(url, method)
+        puts "=" * 100
+        puts "Préparation de la communication de l'API Edusign"
+
         prepare_request(url, method)
     end
 
@@ -92,9 +95,16 @@ class Edusign < ApplicationService
 
         status = http_response.code.to_i
 
+        puts "Statut de la requête : #{status}"
+
         # Si le code de réponse est un succes, on parse la réponse
         if status.between?(200,299)
             response = JSON.parse(http_response.body)
+
+            if debug_mode
+                puts "Lancement de la requête terminée : "
+                puts response
+            end
         else
             # Si ce n'est pas un succes, on considère que c'est un crash (ou timeout), et qu'il faudra refaire une tentative
             @crash = true
@@ -115,6 +125,7 @@ class Edusign < ApplicationService
 
     def get_interval_of_time
         # Se base sur le dernier EdusignLog où il n'y a pas eu de crash (ou timeout). Le scheduler n'est plus à synchroniser avec cette fonction
+        puts "INTERVAL = #{EdusignLog.where(modele_type: 1).where.not(etat: 3).reorder(created_at: :desc).first.created_at..@interval_end}"
         EdusignLog.where(modele_type: 1).where.not(etat: 3).reorder(created_at: :desc).first.created_at..@interval_end
     end
 
@@ -137,7 +148,7 @@ class Edusign < ApplicationService
               formation_id: formations_sent_to_edusign_ids,
               edusign_id: nil,
               no_send_to_edusign: [false, nil]
-            ).where.not(intervenant_id: Intervenant.examens_ids + Intervenant.sans_intervenant).reorder(:debut)
+            ).where.not(intervenant_id: Intervenant.examens_ids + Intervenant.sans_intervenant)
         elsif model == Intervenant
 
             # On sélectionne que les intervenants qui sont liés à une formation qui doit être sur Edusign.
@@ -174,7 +185,7 @@ class Edusign < ApplicationService
               updated_at: interval,
               no_send_to_edusign: [false, nil]
               ).where.not(edusign_id: nil).where.not(id: record_ids)
-              .where.not(intervenant_id: Intervenant.examens_ids + Intervenant.sans_intervenant).reorder(:debut)
+              .where.not(intervenant_id: Intervenant.examens_ids + Intervenant.sans_intervenant)
         elsif model == Intervenant
             # Un intervenant peut ne plus avoir de cours avec des formations cobayes. Comme la requête permet de savoir qu'il est actif sur le planning, on l'update quand même sur Edusiugn.
             model.where(updated_at: interval).where.not(edusign_id: nil).where.not(id: record_ids)
@@ -371,13 +382,18 @@ class Edusign < ApplicationService
         self.prepare_request_with_message("https://ext.edusign.fr/v1/group", method)
         if @setup
             formations = self.get_all_elements_for_initialisation(Formation)
+            puts "Début de l'ajout des formations (initialisation)"
         else
             if method == 'Post'
                 formations = self.get_all_element_to_post(Formation)
+                puts "Début de l'ajout des formations"
             else
                 formations = self.get_all_element_updated_since_last_sync(Formation, formations_ajoutés_ids)
+                puts "Début de la modification des formations"
             end
         end
+
+        puts "#{formations.count} formations ont été récupérés : #{formations.pluck(:id, :nom)}"
 
         @nb_recovered_elements += formations.count
 
@@ -411,6 +427,9 @@ class Edusign < ApplicationService
             end
         end
 
+        puts "Exportation des formations terminée."
+        puts "Formations #{method == 'Post' ? 'ajoutées' : "modifiées"} : #{nb_audited}"
+
         @nb_sended_elements += nb_audited
 
         # La liste des formations pour ne pas update celles qui ont été créées aujourd'hui
@@ -422,13 +441,18 @@ class Edusign < ApplicationService
 
         if @setup
             etudiants = self.get_all_elements_for_initialisation(Etudiant)
+            puts "Début de l'ajout des etudiants (initialisation)"
         else
             if method == 'Post'
                 etudiants = self.get_all_element_to_post(Etudiant)
+                puts "Début de l'ajout des etudiants"
             else
                 etudiants = self.get_all_element_updated_since_last_sync(Etudiant, etudiants_ajoutés_ids)
+                puts "Début de la modification des etudiants"
             end
         end
+
+        puts "#{etudiants.count} etudiants ont été récupérés : #{etudiants.pluck(:id, :nom)}"
 
         @nb_recovered_elements += etudiants.count
 
@@ -464,6 +488,9 @@ class Edusign < ApplicationService
             end
         end
 
+        puts "Exportation des étudiants terminée."
+        puts "Etudiants #{method == 'Post' ? 'ajoutés' : "modifiés"} : #{nb_audited}"
+
         @nb_sended_elements += nb_audited
 
         # La liste des etudiants pour ne pas update ceux qui ont été créés aujourd'hui
@@ -475,13 +502,18 @@ class Edusign < ApplicationService
 
         if @setup
             intervenants = self.get_all_elements_for_initialisation(Intervenant)
+            puts "Début de l'ajout des intervenants (initialisation)"
         else
             if method == 'Post'
                 intervenants = self.get_all_element_to_post(Intervenant)
+                puts "Début de l'ajout des intervenants"
             else
                 intervenants = self.get_all_element_updated_since_last_sync(Intervenant, intervenants_ajoutés_ids)
+                puts "Début de la modification des intervenants"
             end
         end
+
+        puts "#{intervenants.count} intervenants ont été récupérés : #{intervenants.pluck(:id, :nom)}"
 
         @nb_recovered_elements += intervenants.count
 
@@ -519,6 +551,9 @@ class Edusign < ApplicationService
             end
         end
 
+        puts "Exportation des intervenants terminée."
+        puts "Intervenants #{method == 'Post' ? 'ajoutés' : "modifiés"} : #{nb_audited}"
+
         @nb_sended_elements += nb_audited
 
         if method == "Post" && !@setup
@@ -532,19 +567,24 @@ class Edusign < ApplicationService
 
         if @setup
             cours = self.get_all_elements_for_initialisation(Cour)
+            puts "Début de l'ajout des cours (initialisation)"
             cours_a_supprimer = Cour.none
         else
             if method == 'Post'
                 cours = self.get_all_element_to_post(Cour).where.not(etat: ["annulé", "reporté"])
+                puts "Début de l'ajout des cours"
                 cours_a_supprimer = Cour.none
             else
                 cours = self.get_all_element_updated_since_last_sync(Cour, cours_ajoutés_ids)
+                puts "Début de la modification des cours"
                 cours_a_supprimer = cours.where(etat: ["annulé", "reporté"])
             end
         end
 
         # Cours à créer / modifier du côté d'Edusign
         cours_a_envoyer = cours.where(etat: ["planifié", "confirmé", "à_réserver"])
+
+        puts "#{cours_a_envoyer.count} cours ont été récupérés : #{cours_a_envoyer.pluck(:id, :nom)}"
 
         @nb_recovered_elements += cours_a_envoyer.count + cours_a_supprimer.count
 
@@ -574,8 +614,7 @@ class Edusign < ApplicationService
 
                     response = self.prepare_body_request(body).get_response
 
-                    action_label = method == 'Post' ? 'Ajout' : 'Modification'
-                    puts response["status"] == 'error' ?  "<strong>Erreur d'#{method == 'Post' ? 'ajout' : 'modification'} du cours #{cour.id}, #{cour.nom_ou_ue} sur Edusign : #{response["message"]}</strong>" : "#{action_label} du cours #{cour.id}, #{cour.nom_ou_ue} sur Edusign réussi"
+                    puts response["status"] == 'error' ?  "<strong>Erreur d'exportation du cours #{cour.id}, #{cour.nom_ou_ue} : #{response["message"]}</strong>" : "Exportation du cours #{cour.id}, #{cour.nom_ou_ue} réussie"
 
                     if response["status"] == 'success'
                         if method == 'Post'
@@ -592,6 +631,9 @@ class Edusign < ApplicationService
 
         # Supprime les cours reportés ou annulés
         if cours_a_supprimer.any?
+            puts "Début de la suppression des cours annulés ou reportés"
+            puts "#{cours_a_supprimer.count} cours ont été récupérés : #{cours_a_supprimer.pluck(:id, :nom)}"
+
             cours_a_supprimer.each do |cour|
 
                 if cour.edusign_id != nil
@@ -609,6 +651,9 @@ class Edusign < ApplicationService
                 end
             end
         end
+
+        puts "Exportation des cours terminée."
+        puts "Cours #{method == 'Post' ? 'ajoutés' : "modifiés"} #{cours_a_supprimer.any? ? '/ supprimés' : ''}: #{nb_audited}"
 
         @nb_sended_elements += nb_audited
 
@@ -655,6 +700,9 @@ class Edusign < ApplicationService
     end
 
     def remove_deleted_and_unfollowed_cours_in_edusign
+        puts "=" * 100
+        puts "Préparation de la communication de l'API Edusign"
+
         edusign_ids = []
         deleted_cours_to_sync_ids = []
 
@@ -681,7 +729,6 @@ class Edusign < ApplicationService
             .where(auditable_type: "Cour")
             .where(action: "destroy")
             .where(created_at: get_interval_of_time)
-            .reorder(:id)
 
         # Pour les edusign ids des cours supprimés, on vérifie s'il existe encore sur Edusign
         deleted_cours.each do |deleted_cour|
@@ -701,6 +748,9 @@ class Edusign < ApplicationService
         end
 
         edusign_ids = edusign_ids.flatten
+
+        puts "Début de la suppression des cours"
+        puts "#{edusign_ids.count} cours ont été récupérés : #{deleted_cours_to_sync_ids}, #{cours_unfollowed.pluck(:id)}"
 
         @nb_recovered_elements += edusign_ids.count
 
@@ -722,6 +772,8 @@ class Edusign < ApplicationService
                 nb_audited += 1
             end
         end
+
+        puts "Cours supprimés : #{nb_audited}"
 
         @nb_sended_elements += nb_audited
     end
@@ -771,6 +823,7 @@ class Edusign < ApplicationService
     end
 
     def get_etat
+        puts "=" * 100
         puts "===> Nombre d'éléments récupérés : #{@nb_recovered_elements}, nombre d'éléments envoyés : #{@nb_sended_elements}, nombre d'échecs : #{self.count_failure_elements}"
 
         # Modification de l'etat
