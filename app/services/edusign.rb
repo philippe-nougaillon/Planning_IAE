@@ -174,7 +174,7 @@ class Edusign < ApplicationService
               updated_at: interval,
               no_send_to_edusign: [false, nil]
               ).where.not(edusign_id: nil).where.not(id: record_ids)
-              .where.not(intervenant_id: Intervenant.examens_ids + Intervenant.sans_intervenant)
+              .where.not(intervenant_id: Intervenant.examens_ids + Intervenant.sans_intervenant).reorder(:debut).limit(50)
         elsif model == Intervenant
             # Un intervenant peut ne plus avoir de cours avec des formations cobayes. Comme la requête permet de savoir qu'il est actif sur le planning, on l'update quand même sur Edusiugn.
             model.where(updated_at: interval).where.not(edusign_id: nil).where.not(id: record_ids)
