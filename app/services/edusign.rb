@@ -34,11 +34,11 @@ class Edusign < ApplicationService
 
         # self.sync_intervenants("Patch", intervenants_ajoutés_ids)
 
-        # cours_ajoutés_ids = self.sync_cours("Post", nil)
+        cours_ajoutés_ids = self.sync_cours("Post", nil)
 
-        # self.sync_cours("Patch", cours_ajoutés_ids)
+        self.sync_cours("Patch", cours_ajoutés_ids)
 
-        self.remove_deleted_and_unfollowed_cours_in_edusign
+        # self.remove_deleted_and_unfollowed_cours_in_edusign
     end
 
     def initialisation
@@ -137,7 +137,7 @@ class Edusign < ApplicationService
               formation_id: formations_sent_to_edusign_ids,
               edusign_id: nil,
               no_send_to_edusign: [false, nil]
-            ).where.not(intervenant_id: Intervenant.examens_ids + Intervenant.sans_intervenant)
+            ).where.not(intervenant_id: Intervenant.examens_ids + Intervenant.sans_intervenant).reorder(:debut).limit(50)
         elsif model == Intervenant
 
             # On sélectionne que les intervenants qui sont liés à une formation qui doit être sur Edusign.
