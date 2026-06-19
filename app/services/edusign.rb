@@ -20,25 +20,25 @@ class Edusign < ApplicationService
         # Necessaire pour créer des formations sans étudiants 
         # et des formations avec que des étudiants déjà créés sur Edusign
 
-        formations_ajoutées_ids = self.sync_formations("Post", nil)
+        # formations_ajoutées_ids = self.sync_formations("Post", nil)
 
-        etudiants_ajoutés_ids = self.sync_etudiants("Post", nil)
+        # etudiants_ajoutés_ids = self.sync_etudiants("Post", nil)
 
-        self.sync_etudiants("Patch", etudiants_ajoutés_ids)
+        # self.sync_etudiants("Patch", etudiants_ajoutés_ids)
 
-        self.sync_formations("Patch", formations_ajoutées_ids)
+        # self.sync_formations("Patch", formations_ajoutées_ids)
 
-        # Ajout des intervenants avant les cours, 
-        # sinon les cours qui n'ont pas d'intervenant créé sur Edusign, ne seront pas créés
+        # # Ajout des intervenants avant les cours, 
+        # # sinon les cours qui n'ont pas d'intervenant créé sur Edusign, ne seront pas créés
         intervenants_ajoutés_ids = self.sync_intervenants("Post", nil)
 
         self.sync_intervenants("Patch", intervenants_ajoutés_ids)
 
-        cours_ajoutés_ids = self.sync_cours("Post", nil)
+        # cours_ajoutés_ids = self.sync_cours("Post", nil)
 
-        self.sync_cours("Patch", cours_ajoutés_ids)
+        # self.sync_cours("Patch", cours_ajoutés_ids)
 
-        self.remove_deleted_and_unfollowed_cours_in_edusign
+        # self.remove_deleted_and_unfollowed_cours_in_edusign
     end
 
     def initialisation
