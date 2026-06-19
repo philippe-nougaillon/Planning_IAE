@@ -671,26 +671,27 @@ class Edusign < ApplicationService
         # Récupération des ids des cours récupérés
         cours_to_remove_in_edusign_ids = condition_1.or(condition_2).pluck(:id) + condition_3.pluck(:id)
 
-        cours_unfollowed = Cour.where(id: cours_to_remove_in_edusign_ids.uniq).reorder(:id).limit(200)
+        # Récupération des cours à supprimer
+        cours_unfollowed = Cour.where(id: cours_to_remove_in_edusign_ids.uniq)
 
         edusign_ids << cours_unfollowed.pluck(:edusign_id)
 
         # Récupération des cours supprimés
-        # deleted_cours = Audited::Audit
-        #     .where(auditable_type: "Cour")
-        #     .where(action: "destroy")
-        #     .where(created_at: get_interval_of_time)
+        deleted_cours = Audited::Audit
+            .where(auditable_type: "Cour")
+            .where(action: "destroy")
+            .where(created_at: get_interval_of_time)
 
-        # # Pour les edusign ids des cours supprimés, on vérifie s'il existe encore sur Edusign
-        # deleted_cours.each do |deleted_cour|
-        #     edusign_id = deleted_cour.audited_changes["edusign_id"]
-        #     self.prepare_request("https://ext.edusign.fr/v1/course/#{edusign_id}", "Get")
-        #     response = self.get_response(false)
-        #     if response["status"] == "success" && edusign_id != nil
-        #         edusign_ids << edusign_id
-        #         deleted_cours_to_sync_ids << deleted_cour.auditable_id
-        #     end
-        # end
+        # Pour les edusign ids des cours supprimés, on vérifie s'il existe encore sur Edusign
+        deleted_cours.each do |deleted_cour|
+            edusign_id = deleted_cour.audited_changes["edusign_id"]
+            self.prepare_request("https://ext.edusign.fr/v1/course/#{edusign_id}", "Get")
+            response = self.get_response(false)
+            if response["status"] == "success" && edusign_id != nil
+                edusign_ids << edusign_id
+                deleted_cours_to_sync_ids << deleted_cour.auditable_id
+            end
+        end
 
         edusign_ids = edusign_ids.flatten
 
