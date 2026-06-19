@@ -676,11 +676,13 @@ class Edusign < ApplicationService
 
         edusign_ids << cours_unfollowed.pluck(:edusign_id)
 
-        # Récupération des cours supprimés
+        # Récupération des cours supprimés, par lot de 50 pour ne pas saturer la mémoire.
+        # Augmenter l'offset (0, puis 50, puis 100, ...) à chaque exécution pour traiter le lot suivant.
         deleted_cours = Audited::Audit
             .where(auditable_type: "Cour")
             .where(action: "destroy")
             .where(created_at: get_interval_of_time)
+            .reorder(:id).limit(50).offset(0)
 
         # Pour les edusign ids des cours supprimés, on vérifie s'il existe encore sur Edusign
         deleted_cours.each do |deleted_cour|
