@@ -682,7 +682,7 @@ class Edusign < ApplicationService
             .where(auditable_type: "Cour")
             .where(action: "destroy")
             .where(created_at: get_interval_of_time)
-            .reorder(:id).limit(50).offset(0)
+            .reorder(:id).limit(10).offset(0)
 
         # Pour les edusign ids des cours supprimés, on vérifie s'il existe encore sur Edusign
         deleted_cours.each do |deleted_cour|
