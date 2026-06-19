@@ -137,7 +137,7 @@ class Edusign < ApplicationService
               formation_id: formations_sent_to_edusign_ids,
               edusign_id: nil,
               no_send_to_edusign: [false, nil]
-            ).where.not(intervenant_id: Intervenant.examens_ids + Intervenant.sans_intervenant).reorder(:debut).limit(400).offset(250)
+            ).where.not(intervenant_id: Intervenant.examens_ids + Intervenant.sans_intervenant).reorder(:debut).limit(400).offset(650)
         elsif model == Intervenant
 
             # On sélectionne que les intervenants qui sont liés à une formation qui doit être sur Edusign.
@@ -174,7 +174,7 @@ class Edusign < ApplicationService
               updated_at: interval,
               no_send_to_edusign: [false, nil]
               ).where.not(edusign_id: nil).where.not(id: record_ids)
-              .where.not(intervenant_id: Intervenant.examens_ids + Intervenant.sans_intervenant).reorder(:debut).limit(400).offset(250)
+              .where.not(intervenant_id: Intervenant.examens_ids + Intervenant.sans_intervenant).reorder(:debut).limit(400).offset(650)
         elsif model == Intervenant
             # Un intervenant peut ne plus avoir de cours avec des formations cobayes. Comme la requête permet de savoir qu'il est actif sur le planning, on l'update quand même sur Edusiugn.
             model.where(updated_at: interval).where.not(edusign_id: nil).where.not(id: record_ids)
@@ -574,7 +574,8 @@ class Edusign < ApplicationService
 
                     response = self.prepare_body_request(body).get_response
 
-                    puts response["status"] == 'error' ?  "<strong>Erreur d'exportation du cours #{cour.id}, #{cour.nom_ou_ue} : #{response["message"]}</strong>" : "Exportation du cours #{cour.id}, #{cour.nom_ou_ue} réussie"
+                    action_label = method == 'Post' ? 'Ajout' : 'Modification'
+                    puts response["status"] == 'error' ?  "<strong>Erreur d'#{method == 'Post' ? 'ajout' : 'modification'} du cours #{cour.id}, #{cour.nom_ou_ue} sur Edusign : #{response["message"]}</strong>" : "#{action_label} du cours #{cour.id}, #{cour.nom_ou_ue} sur Edusign réussi"
 
                     if response["status"] == 'success'
                         if method == 'Post'
