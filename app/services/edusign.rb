@@ -34,11 +34,11 @@ class Edusign < ApplicationService
 
         # self.sync_intervenants("Patch", intervenants_ajoutés_ids)
 
-        cours_ajoutés_ids = self.sync_cours("Post", nil)
+        # cours_ajoutés_ids = self.sync_cours("Post", nil)
 
-        self.sync_cours("Patch", cours_ajoutés_ids)
+        # self.sync_cours("Patch", cours_ajoutés_ids)
 
-        # self.remove_deleted_and_unfollowed_cours_in_edusign
+        self.remove_deleted_and_unfollowed_cours_in_edusign
     end
 
     def initialisation
@@ -137,7 +137,7 @@ class Edusign < ApplicationService
               formation_id: formations_sent_to_edusign_ids,
               edusign_id: nil,
               no_send_to_edusign: [false, nil]
-            ).where.not(intervenant_id: Intervenant.examens_ids + Intervenant.sans_intervenant).reorder(:debut).limit(400).offset(1450)
+            ).where.not(intervenant_id: Intervenant.examens_ids + Intervenant.sans_intervenant).reorder(:debut)
         elsif model == Intervenant
 
             # On sélectionne que les intervenants qui sont liés à une formation qui doit être sur Edusign.
@@ -174,7 +174,7 @@ class Edusign < ApplicationService
               updated_at: interval,
               no_send_to_edusign: [false, nil]
               ).where.not(edusign_id: nil).where.not(id: record_ids)
-              .where.not(intervenant_id: Intervenant.examens_ids + Intervenant.sans_intervenant).reorder(:debut).limit(400).offset(1450)
+              .where.not(intervenant_id: Intervenant.examens_ids + Intervenant.sans_intervenant).reorder(:debut)
         elsif model == Intervenant
             # Un intervenant peut ne plus avoir de cours avec des formations cobayes. Comme la requête permet de savoir qu'il est actif sur le planning, on l'update quand même sur Edusiugn.
             model.where(updated_at: interval).where.not(edusign_id: nil).where.not(id: record_ids)
@@ -671,27 +671,26 @@ class Edusign < ApplicationService
         # Récupération des ids des cours récupérés
         cours_to_remove_in_edusign_ids = condition_1.or(condition_2).pluck(:id) + condition_3.pluck(:id)
 
-        # Récupération des cours à supprimer
-        cours_unfollowed = Cour.where(id: cours_to_remove_in_edusign_ids.uniq)
+        cours_unfollowed = Cour.where(id: cours_to_remove_in_edusign_ids.uniq).reorder(:id).limit(200)
 
         edusign_ids << cours_unfollowed.pluck(:edusign_id)
 
         # Récupération des cours supprimés
-        deleted_cours = Audited::Audit
-            .where(auditable_type: "Cour")
-            .where(action: "destroy")
-            .where(created_at: get_interval_of_time)
+        # deleted_cours = Audited::Audit
+        #     .where(auditable_type: "Cour")
+        #     .where(action: "destroy")
+        #     .where(created_at: get_interval_of_time)
 
-        # Pour les edusign ids des cours supprimés, on vérifie s'il existe encore sur Edusign
-        deleted_cours.each do |deleted_cour|
-            edusign_id = deleted_cour.audited_changes["edusign_id"]
-            self.prepare_request("https://ext.edusign.fr/v1/course/#{edusign_id}", "Get")
-            response = self.get_response(false)
-            if response["status"] == "success" && edusign_id != nil
-                edusign_ids << edusign_id
-                deleted_cours_to_sync_ids << deleted_cour.auditable_id
-            end
-        end
+        # # Pour les edusign ids des cours supprimés, on vérifie s'il existe encore sur Edusign
+        # deleted_cours.each do |deleted_cour|
+        #     edusign_id = deleted_cour.audited_changes["edusign_id"]
+        #     self.prepare_request("https://ext.edusign.fr/v1/course/#{edusign_id}", "Get")
+        #     response = self.get_response(false)
+        #     if response["status"] == "success" && edusign_id != nil
+        #         edusign_ids << edusign_id
+        #         deleted_cours_to_sync_ids << deleted_cour.auditable_id
+        #     end
+        # end
 
         edusign_ids = edusign_ids.flatten
 
