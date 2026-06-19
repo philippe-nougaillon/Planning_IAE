@@ -77,6 +77,13 @@ class SujetsController < ApplicationController
   def update
     respond_to do |format|
       if @sujet.update(sujet_params)
+        # Lorsqu'un intervenant modifie son sujet, celui-ci doit passer à l'état
+        # "déposé". S'il est déjà déposé (et pas encore validé par un
+        # gestionnaire), il reste modifiable et conserve cet état.
+        if @sujet.can_déposer?
+          @sujet.déposer!
+          DeposerSujetJob.perform_later(@sujet, current_user&.id || 0)
+        end
         format.html { redirect_to @sujet, notice: "Sujet modifié avec succès.", status: :see_other }
         format.json { render :show, status: :ok, location: @sujet }
       else
