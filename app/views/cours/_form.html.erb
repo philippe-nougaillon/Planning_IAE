@@ -131,13 +131,11 @@
         <div class="flex flex-wrap">
           <%= f.label :salle_id, current_user.intervenant_permanent? ? "Salle *": "Salle" , class: 'sm:w-1/5' %>
           <div class="sm:w-1/2">
-            <%= f.collection_select :salle_id, 
-                                              @salles, 
-                                              :id, 
-                                              :nom_places_block_desc, 
-                                              { include_blank: true, required: current_user.intervenant_permanent? },
-                                              class: "select select-bordered select-sm w-full",
-                                              data: { "dispo-target": "salles" } %>
+            <%= f.select :salle_id, 
+                          grouped_options_for_select(@salles.for_select),
+                          { include_blank: true, required: current_user.intervenant_permanent? },
+                          class: "select select-bordered select-sm w-full",
+                          data: { "dispo-target": "salles" } %>
 
             <span data-action="click->dispo#show_dispo" 
                   class="btn btn-sm btn-success btn-outline hover:!text-white mt-4">

@@ -64,4 +64,30 @@ class Salle < ApplicationRecord
 		self.all.pluck(:bloc).uniq.sort
 	end
 
+	# Retourne le nom des salles zoom
+	def self.liste_salles_zoom
+		["ZOOM 1", "ZOOM 2"]
+	end
+
+	def self.for_select
+		self.all
+				.group_by{|s| s.description_formated_for_group_by }
+				# Transform_values permet de modifier la valeur de chaque clé (valeur représentant une liste de salles) en map [nom_places_block_desc, id]
+				.transform_values { |salles| 
+					salles.map { |salle| 
+						[salle.nom_places_block_desc, salle.id] 
+					} 
+				}
+	end
+
+	# Retourne la description appropriée pour le group_by
+	def description_formated_for_group_by
+		description = self.description_ponscarme
+
+		if /^Salle de cours.*$/.match(description)
+			"Salle de cours"
+		else
+			description || "Accueil"
+		end
+	end
 end

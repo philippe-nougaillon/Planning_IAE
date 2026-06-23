@@ -954,12 +954,15 @@ class CoursController < ApplicationController
     def set_salles
       @salles = Salle.ponscarme_et_blocZ
 
+      # Enlever les salles zoom
+      @salles = @salles.where.not(nom: Salle.liste_salles_zoom)
+
       # Les intervenants autorisés ne peuvent réserver que les salles privées,
       # sauf celles du 6e étage. Les autres intervenants sont déjà bloqués par cour_policy.
       if current_user.intervenant_permanent?
-        @salles = @salles.where(privée: true) - Salle.salles_non_reservables_intervenants
+        @salles = @salles.where(privée: true).where.not(id: Salle.salles_non_reservables_intervenants)
       elsif current_user.gestionnaire?
-        @salles = @salles - @salles.bureaux_profs
+        @salles = @salles.where.not(id: @salles.bureaux_profs)
       end
 
       # Surchage pour l'ICP sinon ils ne verront rien
