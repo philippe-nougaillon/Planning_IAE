@@ -32,7 +32,7 @@ class Intervenant < ApplicationRecord
 	normalizes :nom, with: -> nom { nom.strip }
 	normalizes :prenom, with: -> prenom { prenom.strip }
 	
-	enum :status, [:CEV, :Permanent, :PR, :MCF, :MCF_HDR, :PAST, :PRAG, :Admin, :CEV_HSS, :CEV_ENS_C_CONTRACTUEL, :CEV_TIT_CONT_FP, :CEV_SAL_PRIV_IND]
+	enum :status, [:CEV, :Permanent, :PR, :MCF, :MCF_HDR, :PAST, :PRAG, :Admin, :CEV_HSS, :CEV_ENS_C_CONTRACTUEL, :CEV_TIT_CONT_FP, :CEV_SAL_PRIV_IND, :Surveillant]
 
 	default_scope { order(:nom, :prenom) } 
 
@@ -136,6 +136,11 @@ class Intervenant < ApplicationRecord
 
 	def self.surveillants
 		ENV["SURVEILLANTS_EXAMEN_IDS"]&.split(',')&.map(&:to_i)
+	end
+
+	# Intervenants ayant le statut "Surveillant" (utilisés par l'option surveillance_2)
+	def self.statut_surveillant
+		where(status: :Surveillant)
 	end
 
 	def is_a_confirmer?

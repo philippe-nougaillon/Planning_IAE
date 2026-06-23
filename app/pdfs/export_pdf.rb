@@ -457,24 +457,21 @@ class ExportPdf
         index = 0
  
         examens.each do | exam |
-            exam.options.surveillance.first.description.split('[').each do |item|
-                unless item.blank? 
-                    surveillant_item = item.gsub(']', '').delete("\r\n\\")
-                    if surveillant_item == surveillant
-                        is_vacataire = exam.has_intervenant_vacataire?
-                        index += 1
-                        durée = exam.duree + (is_vacataire ? 0 : 1)
-                        cumul_durée += durée
-                        data += [[ index,
-                                    I18n.l(exam.debut.to_date, format: :long) + ' ' + I18n.l(exam.debut, format: :heures_min) + '-' + I18n.l(exam.fin, format: :heures_min),
-                                    is_vacataire ? "Vacataire" : "Surveillance Examen",
-                                    exam.formation.nom_promo,
-                                    '7322GRH',
-                                    (exam.formation.diplome.upcase == 'LICENCE' ? '101PAIE' : exam.has_intervenant_vacataire? ? '115PAIE' : '102PAIE'),
-                                    exam.formation.code_analytique_avec_indice(exam.debut).gsub('HCO','VAC'),
-                                    durée 
-                                ]]
-                    end
+            exam.noms_surveillants.each do |surveillant_item|
+                if surveillant_item == surveillant
+                    is_vacataire = exam.has_intervenant_vacataire?
+                    index += 1
+                    durée = exam.duree + (is_vacataire ? 0 : 1)
+                    cumul_durée += durée
+                    data += [[ index,
+                                I18n.l(exam.debut.to_date, format: :long) + ' ' + I18n.l(exam.debut, format: :heures_min) + '-' + I18n.l(exam.fin, format: :heures_min),
+                                is_vacataire ? "Vacataire" : "Surveillance Examen",
+                                exam.formation.nom_promo,
+                                '7322GRH',
+                                (exam.formation.diplome.upcase == 'LICENCE' ? '101PAIE' : exam.has_intervenant_vacataire? ? '115PAIE' : '102PAIE'),
+                                exam.formation.code_analytique_avec_indice(exam.debut).gsub('HCO','VAC'),
+                                durée
+                            ]]
                 end
             end
         end
@@ -649,8 +646,8 @@ class ExportPdf
         font "OpenSans"
         
         cours.each_with_index do |cour, index|
-            if cour.options.surveillance.any? && !cour.options.surveillance.first.description.empty?
-                surveillants = cour.options.surveillance.first.description.scan(/\[([^\]]+)\]/).flatten.join(', ').gsub(/[-]/, ' ')
+            if cour.noms_surveillants.any?
+                surveillants = cour.noms_surveillants.join(', ').gsub(/[-]/, ' ')
             elsif !cour.commentaires.blank?
                 surveillants = cour.commentaires.scan(/\[([^\]]+)\]/).flatten.join(', ').gsub(/[-]/, ' ')
             else
@@ -900,6 +897,23 @@ class ExportPdf
             move_down @margin_down
             text "<color rgb='032E4D'>#{commentaires}</color>", inline_format: true
         end
+
+        move_down @margin_down * 2
+
+        text "<color rgb='032E4D'>À votre arrivée dans la salle d'examen, il vous sera demandé :</color>", inline_format: true
+        move_down @margin_down
+        unless téléphone
+            text "<color rgb='032E4D'>- d'éteindre vos téléphones portables,</color>", inline_format: true
+            move_down @margin_down
+            text "<color rgb='032E4D'>- de déposer vos sacs contenant tous les objets connectés (téléphones, montres, lunettes, oreillettes, ...) à l'entrée de la salle,</color>", inline_format: true
+            move_down @margin_down
+        end
+        text "<color rgb='032E4D'>- de disposer sur votre table uniquement le matériel qui est autorisé (stylos, correcteurs, marqueurs, etc ...) en fonction des consignes indiquées par les responsables d'UE,</color>", inline_format: true
+        move_down @margin_down
+        text "<color rgb='032E4D'>- de vous installer un par table lorsque la capacité d'accueil de la salle le permet. Les surveillants sont habilités à vous demander de vous déplacer s'ils le jugent nécessaire.</color>", inline_format: true
+        move_down @margin_down
+        text "<color rgb='032E4D'>- Les copies, brouillons, sujets ne seront distribués qu'une fois que ces consignes auront été respectées et appliquées.</color>", inline_format: true
+
 
     end
 

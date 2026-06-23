@@ -936,7 +936,7 @@ class CoursController < ApplicationController
                                     :salle_id, :code_ue, :nom, :etat, :duree,
                                     :intervenant_binome_id, :hors_service_statutaire,
                                     :commentaires, :elearning, :document, :no_send_to_edusign,
-                                    options_attributes: [:id, :user_id, :catégorie, :description, :_destroy])
+                                    options_attributes: [:id, :user_id, :catégorie, :description, :intervenant_id, :_destroy])
     end
 
     def is_user_authorized
@@ -954,12 +954,15 @@ class CoursController < ApplicationController
     def set_salles
       @salles = Salle.ponscarme_et_blocZ
 
+      # Enlever les salles zoom
+      @salles = @salles.where.not(nom: Salle.liste_salles_zoom)
+
       # Les intervenants autorisés ne peuvent réserver que les salles privées,
       # sauf celles du 6e étage. Les autres intervenants sont déjà bloqués par cour_policy.
       if current_user.intervenant_permanent?
-        @salles = @salles.where(privée: true) - Salle.salles_non_reservables_intervenants
+        @salles = @salles.where(privée: true).where.not(id: Salle.salles_non_reservables_intervenants)
       elsif current_user.gestionnaire?
-        @salles = @salles - @salles.bureaux_profs
+        @salles = @salles.where.not(id: @salles.bureaux_profs)
       end
 
       # Surchage pour l'ICP sinon ils ne verront rien

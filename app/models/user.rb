@@ -34,6 +34,11 @@ class User < ApplicationRecord
     self.role == 'administrateur'
   end
 
+  # Rôles autorisés à voir et modifier l'option "Suivi des copies" d'un cours
+  def peut_gerer_suivi_copies?
+    accueil? || gestionnaire? || administrateur?
+  end
+
   def reserver?
     false
   end
