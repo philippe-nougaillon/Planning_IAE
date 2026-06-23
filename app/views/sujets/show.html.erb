@@ -43,16 +43,16 @@
 
         <% if !@sujet.can_déposer? %>
           <p class="mb-4">
-            <strong>Options</strong>
+            <strong>Consignes</strong>
             <br>
-            Papier : 
+            Documents papiers : 
             <% if @sujet.papier %>
               <span class='text-success'>Oui</span>
             <% else %>
               <span class='text-error'>Non</span>
             <% end %>
             <br>
-            Calculatrice :
+            Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission :
             <% if @sujet.calculatrice %>
               <span class='text-success'>Oui</span>
             <% else %>
@@ -66,7 +66,7 @@
               <span class='text-error'>Non</span>
             <% end %>
             <br>
-            Téléphone :
+            Téléphones portables, montres connectées et plus généralement tous les objets connectés :
             <% if @sujet.téléphone %>
               <span class='text-success'>Oui</span>
             <% else %>
