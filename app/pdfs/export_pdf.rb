@@ -898,6 +898,23 @@ class ExportPdf
             text "<color rgb='032E4D'>#{commentaires}</color>", inline_format: true
         end
 
+        move_down @margin_down * 2
+
+        text "<color rgb='032E4D'>À votre arrivée dans la salle d'examen, il vous sera demandé :</color>", inline_format: true
+        move_down @margin_down
+        unless téléphone
+            text "<color rgb='032E4D'>- d'éteindre vos téléphones portables,</color>", inline_format: true
+            move_down @margin_down
+            text "<color rgb='032E4D'>- de déposer vos sacs contenant tous les objets connectés (téléphones, montres, lunettes, oreillettes, ...) à l'entrée de la salle,</color>", inline_format: true
+            move_down @margin_down
+        end
+        text "<color rgb='032E4D'>- de disposer sur votre table uniquement le matériel qui est autorisé (stylos, correcteurs, marqueurs, etc ...) en fonction des consignes indiquées par les responsables d'UE,</color>", inline_format: true
+        move_down @margin_down
+        text "<color rgb='032E4D'>- de vous installer un par table lorsque la capacité d'accueil de la salle le permet. Les surveillants sont habilités à vous demander de vous déplacer s'ils le jugent nécessaire.</color>", inline_format: true
+        move_down @margin_down
+        text "<color rgb='032E4D'>- Les copies, brouillons, sujets ne seront distribués qu'une fois que ces consignes auront été respectées et appliquées.</color>", inline_format: true
+
+
     end
 
     def generate_feuille_emargement_signée(cours, étudiants_ids, étudiants_en_rattrapage_ids)
