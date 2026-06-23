@@ -5,6 +5,10 @@ class Salle < ApplicationRecord
 
 	audited
 	
+	belongs_to :salle_fusion, class_name: 'Salle', optional: true
+
+  has_many :salles_fusionnées, class_name: 'Salle', foreign_key: :salle_fusion_id
+
 	has_many :cours
 
 	default_scope { kept }	
@@ -43,7 +47,7 @@ class Salle < ApplicationRecord
 			"Salle de cours serpentine"
 		when "2.4"
 			"Salle de cours tables hautes"
-		when /^(\d\.\d)$/, /^(\w{3}\.\d)$/ # Ex: 1.1 ou RDJ.1
+		when /^(\d\.\d+)$/, /^(\w{3}\.\d)$/ # Ex: 1.1, 3.12 ou RDJ.1
 			"Salle de cours"
 		when /^\d\.\w$/ # Ex: 2.A
 			"Salle de réunion"
@@ -89,5 +93,9 @@ class Salle < ApplicationRecord
 		else
 			description || "Accueil"
 		end
+	end
+
+	def self.salles_fusions_ids
+		self.where.not(salle_fusion: nil).pluck(:salle_fusion_id).uniq
 	end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_06_04_154341) do
+ActiveRecord::Schema[7.2].define(version: 2026_06_23_154817) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -487,7 +487,9 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_04_154341) do
     t.string "bloc"
     t.datetime "discarded_at", precision: nil
     t.boolean "privée", default: false
+    t.bigint "salle_fusion_id"
     t.index ["discarded_at"], name: "index_salles_on_discarded_at"
+    t.index ["salle_fusion_id"], name: "index_salles_on_salle_fusion_id"
   end
 
   create_table "signature_emails", force: :cascade do |t|
@@ -741,6 +743,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_04_154341) do
   add_foreign_key "presences", "etudiants"
   add_foreign_key "presences", "intervenants"
   add_foreign_key "responsabilites", "vacation_activites", column: "activite_id"
+  add_foreign_key "salles", "salles", column: "salle_fusion_id"
   add_foreign_key "signature_emails", "attendances", on_delete: :nullify
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade

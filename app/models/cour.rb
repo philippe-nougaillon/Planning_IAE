@@ -37,6 +37,8 @@ class Cour < ApplicationRecord
   validate :check_hss
   validate :check_intervenant_not_also_appear_in_binome, if: Proc.new {|cours| cours.intervenant_binome.present?}
   validate :check_no_old_commandes_method
+  validate :check_chevauchement_salle_fusion, if: Proc.new {|cours| cours.salle.present? && cours.salle.salle_fusion.present?}
+  validate :check_chevauchement_salles_fusionnées, if: Proc.new {|cours| cours.salle.present?}
 
   before_validation :update_date_fin
   before_validation :sunday_morning_praise_the_dawning
@@ -658,4 +660,37 @@ class Cour < ApplicationRecord
     end
   end
 
+  # Vérifie si la salle fusion des salles est occupée
+  def check_chevauchement_salle_fusion
+    return unless self.salle&.salle_fusion
+
+    # On cherche uniquement les cours en conflit sur la salle fusion
+    cours = Cour.where("salle_id = ? AND (((debut BETWEEN ? AND ?) OR (fin BETWEEN ? AND ?)) OR (debut < ? AND fin > ?))", 
+                        self.salle.salle_fusion.id, self.debut, self.fin, self.debut, self.fin, self.fin, self.debut)
+                .where.not(id: self.id).where.not(fin: self.debut).where.not(debut: self.fin)
+
+    if cours.any?
+      cours_links = cours.map { |c| "<a href='/cours/#{c.id}'>#{c.id}</a>" }.join(',')
+      errors.add(:cours, "en chevauchement avec la salle fusionnée (cours #{cours_links})")
+    end
+  end
+
+  # Vérifie si la salle, correspondant à une salle fusion, 
+  # a des salles fusionnées occupées (donc ses enfants)
+  def check_chevauchement_salles_fusionnées
+    est_salle_fusion = Salle.salles_fusions_ids.include?(self.salle.id)
+    return unless est_salle_fusion
+    
+    self.salle.salles_fusionnées.each do |salle|
+      # On cherche uniquement les cours en conflit sur la salle fusionnée
+      cours = Cour.where("salle_id = ? AND (((debut BETWEEN ? AND ?) OR (fin BETWEEN ? AND ?)) OR (debut < ? AND fin > ?))", 
+                          salle.id, self.debut, self.fin, self.debut, self.fin, self.fin, self.debut)
+                  .where.not(id: self.id).where.not(fin: self.debut).where.not(debut: self.fin)
+
+      if cours.any?
+        cours_links = cours.map { |c| "<a href='/cours/#{c.id}'>#{c.id}</a>" }.join(',')
+        errors.add(:cours, "en chevauchement avec la salle fusionnée (cours #{cours_links})")
+      end
+    end
+  end
 end
