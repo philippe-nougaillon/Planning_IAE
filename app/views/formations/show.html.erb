@@ -144,13 +144,16 @@
             <th>Examen planifié</th>
             <th>Heures prévues</th>
             <th>Planifiées</th>
+            <th>Réalisées</th>
+            <th class="hover:cursor-help" title="Pourcentage par rapport aux heures planifiées">% Réalisées</th>
+            <th>Décomptés</th>
             <th></th>
           </tr>
         </thead>
 
         <tbody>
           <% total_ue_prévu = total_prévu = 0.0 %>
-          <% total_ue_réalisé = total_réalisé = 0.0 %>
+          <% total_ue_planifié = total_ue_réalisé = total_ue_annulé = total_réalisé = total_planifié = total_annulé = 0.0 %>
           <% @formation.unites.order(:code).each do | unite | %>
             <tr class="hover border">
               <% all_cours = @formation.cours.where(code_ue: unite.code).where.not(etat: ["reporté", "annulé"]) %>
@@ -172,12 +175,21 @@
                 <%= total_prévu = unite.heures || 0 %> h
               </td>
               <td style="text-align: right;">
-                <%= total_réalisé = cours.sum(:duree) %> h
+                <%= total_planifié = cours.sum(:duree) %> h
+              </td>
+              <td style="text-align: right;">
+                <%= total_réalisé = cours.where(etat: "réalisé").sum(:duree) %> h
+              </td>
+              <td style="text-align: right;">
+                <%= ((total_planifié * 100) / total_réalisé) %> %
+              </td>
+              <td style="text-align: right;">
+                <%= total_annulé = @formation.cours.where(code_ue: unite.code).where(etat: ["reporté", "annulé"]).sum(:duree) %> h
               </td>
               <td class="whitespace-nowrap">
                 <% if unite.heures && unite.heures > 0 %>
-                  <% percentage = ((total_réalisé * 100) / unite.heures) %>
-                  <progress data-debut="<%= total_réalisé %>"
+                  <% percentage = ((total_planifié * 100) / unite.heures) %>
+                  <progress data-debut="<%= total_planifié %>"
                   data-fin="<%= unite.heures %>"
                   class="w-16 progress progress-<%= percentage == 100 ? "success" : percentage > 100 ? "warning" : "error" %> !h-2"
                   value="<%= percentage %>"
@@ -188,6 +200,8 @@
               </td>
               <% total_ue_prévu += total_prévu %>
               <% total_ue_réalisé += total_réalisé %>
+              <% total_ue_planifié += total_planifié %>
+              <% total_ue_annulé += total_annulé %>
             </tr>
           <% end %>
         </tbody>
@@ -196,11 +210,14 @@
           <tr>
             <th colspan=5></th>
             <th style="text-align: right;"><%= total_ue_prévu %> h</th>
+            <th style="text-align: right;"><%= total_ue_planifié %> h</th>
             <th style="text-align: right;"><%= total_ue_réalisé %> h</th>
+            <th style="text-align: right;"><%= ((total_ue_planifié * 100) / total_ue_réalisé) %> %</th>
+            <th style="text-align: right;"><%= total_ue_annulé %> h</th>
             <% if total_ue_prévu > 0 %>
-              <% percentage_total = ((total_ue_réalisé * 100) / total_ue_prévu) %>
+              <% percentage_total = ((total_ue_planifié * 100) / total_ue_prévu) %>
               <th class="whitespace-nowrap">
-                <progress data-debut="<%= total_ue_réalisé %>"
+                <progress data-debut="<%= total_ue_planifié %>"
                 data-fin="<%= total_ue_prévu %>"
                 class="w-16 progress progress-<%= percentage_total == 100 ? "success" : percentage_total > 100 ? "warning" : "error" %> !h-2"
                 value="<%= percentage_total %>"
