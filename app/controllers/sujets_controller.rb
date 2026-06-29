@@ -104,10 +104,9 @@ class SujetsController < ApplicationController
   end
 
   def deposer
-    if params[:sujet]
+    if @sujet.update(sujet_params) && @sujet.sujet.attached?
       if @sujet.valid?
         if @sujet.can_déposer?
-          @sujet.update(sujet_params)
           @sujet.déposer!
           DeposerSujetJob.perform_later(@sujet, current_user&.id || 0)
           redirect_to deposer_done_sujet_path(@sujet)
