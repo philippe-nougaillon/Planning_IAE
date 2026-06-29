@@ -132,7 +132,7 @@
           <%= f.label :salle_id, current_user.intervenant_permanent? ? "Salle *": "Salle" , class: 'sm:w-1/5' %>
           <div class="sm:w-1/2">
             <%= f.select :salle_id, 
-                          grouped_options_for_select(@salles.for_select),
+                          grouped_options_for_select(@salles.for_select, f.object.salle_id),
                           { include_blank: true, required: current_user.intervenant_permanent? },
                           class: "select select-bordered select-sm w-full",
                           data: { "dispo-target": "salles" } %>
