@@ -21,6 +21,11 @@ class Salle < ApplicationRecord
 
 	validates :nom, :bloc, :places, presence: true
 	validates :nom, uniqueness: true
+
+	PAIRES_FUSION = [
+  ['3.1', '3.2'],
+  ['2.5', '2.6']
+].freeze
 	
 
 	def self.salles_de_cours
@@ -97,5 +102,10 @@ class Salle < ApplicationRecord
 
 	def self.salles_fusions_ids
 		self.where.not(salle_fusion: nil).pluck(:salle_fusion_id).uniq
+	end
+
+	def nom_salle_fusionnée
+		paire = PAIRES_FUSION.find { |p| p.include?(self.nom) }
+		paire && (paire - [self.nom]).first
 	end
 end

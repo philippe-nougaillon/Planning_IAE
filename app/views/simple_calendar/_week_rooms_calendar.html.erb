@@ -35,15 +35,26 @@
             <% end %>
           </td>
           
+          <% nom_jumelle = @salle&.nom_salle_fusionnée %>
+
           <% week.each do |day| %>
             <% unless day.sunday? %>
               <% day_style_class = 'shadow bg-amber-100' if day == Date.today %>
               <% day_style_class = 'shadow bg-red-100' if Fermeture.find_by(date: day) %>
-              
+
+              <%# Fusion : cette salle a un cours fusion ce jour, OU sa salle jumelée en a un %>
+              <% fusion_ce_jour = sorted_events.fetch(day, []).any? { |cour| cour.options.any?(&:fusion?) } %>
+              <% fusion_ce_jour ||= nom_jumelle.present? &&
+                  Cour.joins(:salle, :options)
+                      .where(salles: { nom: nom_jumelle })
+                      .where(options: { catégorie: :fusion })
+                      .where("DATE(cours.debut) = ?", day).exists? %>
+              <% day_style_class = 'shadow bg-[repeating-linear-gradient(-45deg,transparent_0_20px,rgb(251_146_60/0.4)_20px_40px)]' if fusion_ce_jour %>
+
               <%= content_tag :td, class: "align-top p-3 #{day_style_class}" do %>
                 <% passed_block.call day, sorted_events.fetch(day, []) %>
               <% end %>
-            <% end %>  
+            <% end %>
           <% end %>
         </tr>
       <% end %>
