@@ -885,7 +885,7 @@ class ExportPdf
         move_down @margin_down
         text "<color rgb='032E4D'><b>-    vous munir de votre carte d'étudiant</b></color>", inline_format: true
         move_down @margin_down
-        text "<color rgb='032E4D'><b>-    vous présenter dans la salle d'examen 15 minutes avant le début de l'épreuve</b></color>", inline_format: true
+        text "<color rgb='032E4D'><b>-    vous présenter dans la salle d'examen 15 minutes avant le début de l'épreuve et attendre devant la salle que le(s) surveillant(s) soi(en)t présents. L’accès à la salle d’examen n’est autorisé qu’en présence de(s) surveillant(s)</b></color>", inline_format: true
 
         move_down @margin_down * 2
         consignes(papier, calculatrice, ordi_tablette, téléphone, dictionnaire)
@@ -914,6 +914,12 @@ class ExportPdf
         move_down @margin_down
         text "<color rgb='032E4D'>- Les copies, brouillons, sujets ne seront distribués qu'une fois que ces consignes auront été respectées et appliquées.</color>", inline_format: true
 
+        move_down @margin_down * 2
+        text "<color rgb='032E4D'>En cas de fraude, et après la tenue d’une commission de discipline, <b>les sanctions administratives</b> encourues par les fraudeurs sont les suivantes : </color>", inline_format: true
+        text "<color rgb='032E4D'>- le blâme,</color>", inline_format: true
+        text "<color rgb='032E4D'>- la privation de toute mention portée sur le diplôme délivré au candidat admis,</color>", inline_format: true
+        text "<color rgb='032E4D'>- l’interdiction de passer tout examen conduisant à l’obtention du baccalauréat pour une durée maximum de 5 ans ou d’un titre ou diplôme délivré par un établissement public dispensant des formations post-baccalauréat pour une durée maximum de 5 ans. Cette sanction peut être prononcée avec sursis si l’interdiction n’excède pas deux ans,</color>", inline_format: true
+        text "<color rgb='032E4D'>- l’interdiction de prendre toute inscription dans un établissement public dispensant des formations post-baccalauréat pour une durée maximum de 5 ans.</color>", inline_format: true
 
     end
 
