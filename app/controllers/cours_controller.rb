@@ -448,7 +448,11 @@ class CoursController < ApplicationController
               end
 
               # ATTENTION : Invit.first ne sera plus correct si le default_scope est modifié. Peut-être que ce n'a sera plus correct en mettant ce code dans un job
-              title = "[PLANNING] Proposition de créneaux pour placer vos cours #{ Invit.first.cour.formation.nom } à l’IAE Paris-Sorbonne"
+              title = if Invit.first.cour.examen?
+                        "[PLANNING] Proposition de surveillance d’examen(s) #{ Invit.first.cour.formation.nom } à l’IAE Paris-Sorbonne"
+                      else
+                        "[PLANNING] Proposition de créneaux pour placer vos cours #{ Invit.first.cour.formation.nom } à l’IAE Paris-Sorbonne"
+                      end
               mailer_response = InvitMailer.with(invit: Invit.first, title: title).envoyer_invitation.deliver_now
               # Pareil ici, Invit.first ne sera plus correct si le default_scope change
               MailLog.create(user_id: current_user.id, message_id:mailer_response.message_id, to:Invit.first.intervenant.email, subject: "Invitation", title: title)

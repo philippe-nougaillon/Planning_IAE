@@ -20,6 +20,17 @@ class InvitMailer < ApplicationMailer
     mail(to: @gestionnaire.email, subject: "[PLANNING] Vous avez de nouvelles réponses à traiter")
   end
 
+  # Notifie le service des examens (ENV["EXAMEN_MAIL"]) de la réponse d'un surveillant
+  # à une invitation de surveillance d'examen.
+  def informer_examens
+    @invit = params[:invit]
+    mail(to: ENV["EXAMEN_MAIL"], subject: params[:title]).tap do |message|
+      message.mailgun_options = {
+        "tag" => [ENV["EXAMEN_MAIL"], "reponse_surveillant"]
+      }
+    end
+  end
+
   # def validation_invitation
   #   @invit = params[:invit]
   #   mail(to: @invit.intervenant.email, subject:"[PLANNING] Validation du cours")

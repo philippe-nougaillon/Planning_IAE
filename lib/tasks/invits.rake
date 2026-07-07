@@ -14,14 +14,50 @@ namespace :invits do
                         .or(Invit.with_relance2_state)
                         .or(Invit.with_relance3_state)
                         .where("DATE(updated_at) <= ?", Date.today - délai)
-        
+                        # Les invitations de surveillance d'examen ont leur propre relance datée
+                        # (tâche invits:relancer_surveillance_examens : J-15 et J-4 avant l'examen)
+                        .where.not(cour_id: Cour.examens.select(:id))
+
         # Envoyer à nouveau (relancer) toutes les invitations
         invitations.each do | invit |
+            #TODO : check à faire : la relance ne se fait probablement pas, et la mettre dans un mail_log (c.f. invits_controller.rb)
             invit.relancer!
         end
 
         puts "-- Traitement terminé --"
         puts "#{invitations.size} invitations(s) traitée(s)"
+    end
+
+    desc "Rappeler les surveillances d'examen (J-15 et J-4 avant la date de l'examen)"
+    task :relancer_surveillance_examens, [:enregistrer] => :environment do |task, args|
+
+        examens_ids = Intervenant.examens_ids
+        next if examens_ids.blank?
+
+        # Jalons de rappel : nombre de jours avant la date de l'examen (cour.debut)
+        jalons = [15, 4]
+        # États encore en attente d'une réponse du surveillant
+        états_en_attente = [Invit::ENVOYE, Invit::RELANCE1, Invit::RELANCE2, Invit::RELANCE3]
+
+        dates_cibles = jalons.map { |jours| Date.today + jours.days }
+
+        invitations = Invit
+                        .where(workflow_state: états_en_attente)
+                        .joins(:cour)
+                        .where(cours: { intervenant_id: examens_ids })
+                        .where("DATE(cours.debut) IN (?)", dates_cibles)
+
+        invitations.find_each do | invit |
+            jours_restants = (invit.cour.debut.to_date - Date.today).to_i
+            title = "[PLANNING] Rappel : proposition de surveillance d’examen(s) #{ invit.cour.formation.nom } à l’IAE Paris-Sorbonne (J-#{ jours_restants })"
+
+            invit.relancer! if invit.can_relancer?
+            mailer_response = InvitMailer.with(invit: invit, title: title).envoyer_invitation.deliver_now
+            MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: invit.intervenant.email, subject: "Rappel surveillance (J-#{ jours_restants })", title: title)
+        end
+
+        puts "-- Traitement terminé --"
+        puts "#{invitations.size} rappel(s) de surveillance envoyé(s)"
     end
 
     desc "Informer les intervenants des cours confirmés"

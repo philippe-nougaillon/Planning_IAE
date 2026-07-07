@@ -1,23 +1,46 @@
-<p style="margin-bottom: 0.5rem">
-  Bonjour <%= @invit.intervenant.prenom_nom %>,
-  <br>
-  <br>
-  Nous avons le plaisir de vous proposer des dates et créneaux horaires pour placer vos cours à l’IAE Paris-Sorbonne.
-  Merci de renseigner vos disponibilités et indisponibilités sur le lien suivant : 
-</p>
-<p style="margin-bottom: 0.5rem">
-  <%= link_to 'Proposition de créneaux pour placer mes cours', invitations_intervenant_url(@invit.intervenant) %>
-</p>
-<p style="margin-bottom: 0.5rem">
-  Dans un souci d’efficacité, les créneaux sont proposés parallèlement à plusieurs intervenants et seront attribués selon les disponibilités de chacun. Nous vous confirmerons par retour de mail les créneaux retenus pour vos cours. Nous vous remercions donc par avance de votre réactivité, essentielle pour garantir la fluidité du processus. 
-</p>
-<p style="margin-bottom: 0.5rem">
-  En cas de questions, vous pouvez contacter votre gestionnaire de formation
-  <% if @invit.formation %>
-    à l’adresse suivante : 
-    <%= mail_to @invit.formation.user.email %>
-  <% end %>
-</p>
-<p style="margin-bottom: 0.5rem">
-  L’IAE Paris-Sorbonne vous remercie de votre implication. 
-</p>
+<% if @invit.cour.examen? %>
+  <p style="margin-bottom: 0.5rem">
+    Bonjour <%= @invit.intervenant.prenom_nom %>,
+    <br>
+    <br>
+    Nous organisons prochainement des examens à l’IAE Paris-Sorbonne et souhaiterions vous proposer d’en assurer la surveillance.
+    Merci d’indiquer vos disponibilités et indisponibilités pour les créneaux proposés sur le lien suivant :
+  </p>
+  <p style="margin-bottom: 0.5rem">
+    <%= link_to 'Répondre à la proposition de surveillance', invitations_intervenant_url(@invit.intervenant) %>
+  </p>
+  <p style="margin-bottom: 0.5rem">
+    Dans un souci d’efficacité, les créneaux sont proposés parallèlement à plusieurs intervenants et seront attribués selon les disponibilités de chacun. Nous vous confirmerons par retour de mail les créneaux retenus pour vos cours. Nous vous remercions donc par avance de votre réactivité, essentielle pour garantir la fluidité du processus.
+  </p>
+  <p style="margin-bottom: 0.5rem">
+    En cas de questions, vous pouvez nous contacter l’adresse suivante :
+    <%= mail_to ENV["EXAMEN_MAIL"] %>
+  </p>
+  <p style="margin-bottom: 0.5rem">
+    L’IAE Paris-Sorbonne vous remercie de votre implication.
+  </p>
+<% else %>
+  <p style="margin-bottom: 0.5rem">
+    Bonjour <%= @invit.intervenant.prenom_nom %>,
+    <br>
+    <br>
+    Nous avons le plaisir de vous proposer des dates et créneaux horaires pour placer vos cours à l’IAE Paris-Sorbonne.
+    Merci de renseigner vos disponibilités et indisponibilités sur le lien suivant :
+  </p>
+  <p style="margin-bottom: 0.5rem">
+    <%= link_to 'Proposition de créneaux pour placer mes cours', invitations_intervenant_url(@invit.intervenant) %>
+  </p>
+  <p style="margin-bottom: 0.5rem">
+    Dans un souci d’efficacité, les créneaux sont proposés parallèlement à plusieurs intervenants et seront attribués selon les disponibilités de chacun. Nous vous confirmerons par retour de mail les créneaux retenus pour vos cours. Nous vous remercions donc par avance de votre réactivité, essentielle pour garantir la fluidité du processus.
+  </p>
+  <p style="margin-bottom: 0.5rem">
+    En cas de questions, vous pouvez contacter votre gestionnaire de formation
+    <% if @invit.formation %>
+      à l’adresse suivante :
+      <%= mail_to @invit.formation.user.email %>
+    <% end %>
+  </p>
+  <p style="margin-bottom: 0.5rem">
+    L’IAE Paris-Sorbonne vous remercie de votre implication.
+  </p>
+<% end %>
