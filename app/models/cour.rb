@@ -430,6 +430,11 @@ class Cour < ApplicationRecord
     Cour.where(edusign_id: self.grouped_edusign_id).or(Cour.where(id: self.grouped_edusign_id)).first
   end
 
+  # Vérifie si le cours a une salle fusionnée
+  def fusion?
+    self.options.where(catégorie: "fusion").exists?
+  end
+
   private
     def update_date_fin
       if self.debut and self.duree
