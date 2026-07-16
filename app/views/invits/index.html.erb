@@ -87,6 +87,7 @@
             <th>U.E.</th>
             <th>Intervenant</th>
             <th>État</th>
+            <th>Catégorie</th>
             <th></th>
             <th>MàJ</th>
             <th colspan="2"></th>
@@ -98,7 +99,7 @@
           <% @invits.each do | invit | %>
             <% if invit.cour.debut.to_date != current_date %>
               <tr class="hover shadow-sm bg-slate-100">
-                <th colspan=9>
+                <th colspan=10>
                   <div class="flex items-center gap-1">
                     <span class="material-symbols-outlined text-lg">
                       calendar_check
