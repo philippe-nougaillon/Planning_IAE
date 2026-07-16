@@ -5,10 +5,6 @@ class Salle < ApplicationRecord
 
 	audited
 	
-	belongs_to :salle_fusion, class_name: 'Salle', optional: true
-
-  has_many :salles_fusionnées, class_name: 'Salle', foreign_key: :salle_fusion_id
-
 	has_many :cours
 
 	default_scope { kept }	
