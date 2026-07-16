@@ -26,7 +26,7 @@
   <div class="sm:w-full px-4 hidden" data-option-fields-target="intervenantField">
     <div class="form-control">
       <%= f.label :intervenant_id, 'Surveillant' %>
-      <%= f.collection_select :intervenant_id, Intervenant.statut_surveillant, :id, :nom_prenom,
+      <%= f.collection_select :intervenant_id, Intervenant.surveillants, :id, :nom_prenom,
             { include_blank: true }, class: 'select select-bordered select-sm w-full',
             data: { option_fields_target: 'intervenant' } %>
     </div>

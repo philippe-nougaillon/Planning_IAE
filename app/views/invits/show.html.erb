@@ -1,8 +1,9 @@
-<h3 class="flex items-center gap-1 text-2xl my-6">
+<h3 class="flex items-start gap-1 text-2xl my-6">
   <span class="material-symbols-outlined text-2xl">
     calendar_check
   </span>
-  Proposition de créneau horaire
+  Proposition de 
+  <%= @invit.surveillance? ? "surveillance d'examen" : "créneau horaire" %>
 </h3>
 <div class="bs-container card shadow p-4 my-4">
   <div class="flex flex-wrap">
@@ -14,14 +15,14 @@
       </p>
 
       <p class="mb-4">
-        <span style="background-color:<%= @invit.cour.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
-          <%= @invit.cour.formation.nom %>
-        </span>
+        <strong>Durée :</strong>
+        <%= number_with_precision(@invit.cour.duree, precision: 1, strip_insignificant_zeros: true) %>h
       </p>
 
       <p class="mb-4">
-        <strong>Durée :</strong>
-        <%= number_with_precision(@invit.cour.duree, precision: 1, strip_insignificant_zeros: true) %>h
+        <span style="background-color:<%= @invit.cour.formation.color %>;padding-left: 7px;margin-right: 5px;"></span>
+          <%= @invit.cour.formation.nom %>
+        </span>
       </p>
 
       <% if user_signed_in? %>
@@ -30,91 +31,102 @@
           <%= @invit.intervenant.nom_prenom %>
         </p>
       <% end %>
-      <p class="mb-4">
-        <strong>U.E. :</strong>
-        <%= Unite.find(@invit.ue).num_nom unless @invit.ue.blank? %>
-      </p>
-      <p class="mb-4">
-        <strong>Intitulé :</strong>
-        <%= @invit.nom %>
-      </p>
-    </div>
-    <div class="relative flex-grow max-w-full flex-1">
-      <h5 class="text-lg">
-        Vos autres cours à L’IAE le <%= l(@jour, format: :long) %>
-      </h5>
-      <% if @cours.any? %>
-        <div class="overflow-x-auto">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Heure</th>
-                <th>Formation</th>
-                <th>Cours</th>
-                <th>Salle</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% @cours.each do |c| %>
-                <tr>
-                  <td>
-                    <%= link_to c, class: 'text-primary hover:underline' do %>
-                      <%= l(c.debut, format: :heures_min) %>
-                      -
-                      <%= l(c.fin, format: :heures_min) %>
-                    <% end %>
-                  </td>
-                  <td>
-                    <span style="background-color:<%= c.formation.color %>;padding-left: 5px;margin-right: 5px;"></span>
-                    <%= c.formation.nom_promo %>
-                  </td>
-                  <td>
-                    <%= c.nom_ou_ue %>
-                  </td>
-                  <td>
-                    <% if c.salle %>
-                      <span class="badge badge-<%= c.style %> text-white">
-                        <%= c.salle.nom %>
-                      </span>
-                    <% end %>
-                  </td>
-                </tr>
-              <% end %>
-            </tbody>
-            <tfoot>
-              <tr><th colspan=4></th></tr>
-            </tfoot>
-          </table>
-        </div>
-      <% else %>
+
+      <% if @invit.cours? %>
         <p class="mb-4">
-          Vous n'avez pas encore de cours programmés ce jour là... 
+          <strong>U.E. :</strong>
+          <%= Unite.find(@invit.ue).num_nom unless @invit.ue.blank? %>
+        </p>
+        <p class="mb-4">
+          <strong>Intitulé :</strong>
+          <%= @invit.nom %>
         </p>
       <% end %>
     </div>
+    <% if @invit.cours? %>
+      <div class="relative flex-grow max-w-full flex-1">
+        <h5 class="text-lg">
+          Vos autres cours à L’IAE le <%= l(@jour, format: :long) %>
+        </h5>
+        <% if @cours.any? %>
+          <div class="overflow-x-auto">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Heure</th>
+                  <th>Formation</th>
+                  <th>Cours</th>
+                  <th>Salle</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @cours.each do |c| %>
+                  <tr>
+                    <td>
+                      <%= link_to c, class: 'text-primary hover:underline' do %>
+                        <%= l(c.debut, format: :heures_min) %>
+                        -
+                        <%= l(c.fin, format: :heures_min) %>
+                      <% end %>
+                    </td>
+                    <td>
+                      <span style="background-color:<%= c.formation.color %>;padding-left: 5px;margin-right: 5px;"></span>
+                      <%= c.formation.nom_promo %>
+                    </td>
+                    <td>
+                      <%= c.nom_ou_ue %>
+                    </td>
+                    <td>
+                      <% if c.salle %>
+                        <span class="badge badge-<%= c.style %> text-white">
+                          <%= c.salle.nom %>
+                        </span>
+                      <% end %>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+              <tfoot>
+                <tr><th colspan=4></th></tr>
+              </tfoot>
+            </table>
+          </div>
+        <% else %>
+          <p class="mb-4">
+            Vous n'avez pas encore de cours programmés ce jour là... 
+          </p>
+        <% end %>
+      </div>
+    <% end %>
   </div>
 
   <div class="flex flex-wrap gap-8">
-    <div class="relative flex-grow max-w-full flex-1">
-      <p class="mb-4">
-        <strong>Message du gestionnaire de formation</strong>
-        <br>
-        <div class="py-8 px-4 md:py-16 md:px-8 mb-8 rounded bg-slate-100">
-          <%= simple_format @invit.msg %>
-        </div>
-      </p>
-    </div>
+    <% if @invit.cours? %>
+      <div class="relative flex-grow max-w-full flex-1">
+        <p class="mb-4">
+          <strong>Message du gestionnaire de formation</strong>
+          <br>
+          <div class="py-8 px-4 md:py-16 md:px-8 mb-8 rounded bg-slate-100">
+            <%= simple_format @invit.msg %>
+          </div>
+        </p>
+      </div>
+    <% end %>
 
     <div class="relative flex-grow max-w-full flex-1">
       <p class="mb-4">
         <% if @invit.can_valider? || @invit.can_rejeter? %>
-          <strong>Votre réponse</strong>
+          <strong>Votre réponse :</strong>
           <br>
           <%= form_tag validation_invit_path(@invit), method: :post do %>
-            <%= text_area_tag :reponse, @invit.reponse, rows: 5, cols: 55, disabled: user_signed_in?, class: 'textarea textarea-bordered' %>
-            <br>
-            <%= submit_tag "Disponible", disabled: user_signed_in?, class: "btn btn-success btn-outline" %>
-            <%= submit_tag "Pas disponible", disabled: user_signed_in?, class: "btn btn-error btn-outline" %>
+            <% if @invit.cours? %>
+              <%= text_area_tag :reponse, @invit.reponse, rows: 5, cols: 55, disabled: user_signed_in?, class: 'textarea textarea-bordered' %>
+              <br>
+            <% end %>
+            <div class="flex gap-2 w-full">
+              <%= submit_tag "Disponible", disabled: user_signed_in?, class: "btn btn-success btn-outline w-1/2", title: "Je suis disponible #{@invit.cours? ? "pour ce cours" : "pour cette surveillance"}" %>
+              <%= submit_tag "Pas disponible", disabled: user_signed_in?, class: "btn btn-error btn-outline w-1/2", title: "Je ne suis pas disponible #{@invit.cours? ? "pour ce cours" : "pour cette surveillance"}" %>
+            </div>
           <% end %>
         <% else %>
           <strong>Réponse de l'enseignant</strong>
@@ -200,7 +212,3 @@
   </div> 
 
 <% end %>
-
-<%= link_to 'Retour', invitations_intervenant_path(@invit.intervenant), class: 'text-primary hover:underline' unless user_signed_in? %>
-<br>
-<br>

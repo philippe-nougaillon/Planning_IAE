@@ -73,6 +73,11 @@ class Invit < ApplicationRecord
     end
   end
 
+  enum categorie: {
+    cours: 0,
+    surveillance: 1
+  }
+
   # pour que le changement se voit dans l'audit trail
   def persist_workflow_state(new_value)
     self[:workflow_state] = new_value
