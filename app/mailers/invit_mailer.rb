@@ -31,6 +31,16 @@ class InvitMailer < ApplicationMailer
     end
   end
 
+  def proposition_de_surveillance
+    @invit = params[:invit]
+    mail(to: @invit.intervenant.email, 
+         subject: params[:title]).tap do |message|
+          message.mailgun_options = {
+            "tag" => [@invit.intervenant.email, "proposition_de_surveillance"]
+          }
+      end
+  end
+
   # def validation_invitation
   #   @invit = params[:invit]
   #   mail(to: @invit.intervenant.email, subject:"[PLANNING] Validation du cours")

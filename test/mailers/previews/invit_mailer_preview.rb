@@ -44,7 +44,7 @@ class InvitMailerPreview < ActionMailer::Preview
   def invit_examen
     Invit.joins(:cour).where(cours: { intervenant_id: Intervenant.examens_ids }).first ||
       Invit.new(cour: Cour.examens.first,
-                intervenant: Intervenant.statut_surveillant.first,
+                intervenant: Intervenant.surveillants.first,
                 nom: "Examen final")
   end
 

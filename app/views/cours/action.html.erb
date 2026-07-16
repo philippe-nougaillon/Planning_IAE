@@ -148,7 +148,7 @@
     <% end %>
   <% elsif params[:action_name] == "Inviter" %>
     <% invitation_examen = @cours.any? && @cours.all?(&:examen?) %>
-    <% intervenants_invitables = invitation_examen ? Intervenant.statut_surveillant : Intervenant.where.not(doublon: true) %>
+    <% intervenants_invitables = invitation_examen ? Intervenant.surveillants : Intervenant.where.not(doublon: true) %>
     <p class="mb-4">
       <b><%= invitation_examen ? "Surveillant(s) à inviter" : "Intervenant(s) à inviter" %></b>
       <br>
@@ -359,6 +359,9 @@
     <% end %>
   <% elsif params[:action_name] == "Regrouper sur une seule Feuille de présence Edusign" %>
     <i>Attention : cette action va créer une seule feuille de présence pour tous les étudiants sur Edusign. La Synchronisation se fera dans la journée. Les modifications ultérieures ne seront pas prises en compte sur Edusign.</i>
+  <% elsif params[:action_name] == "Proposition de surveillance" %>
+    <h3 class="text-2xl">Attention : Un mail va être envoyé à tous les surveillants pour leur proposer de faire cette surveillance</h3>
+    <p>Il y a actuellement <%= Intervenant.surveillants.count %> surveillants disponibles</p>
   <% end %>
 
   <div class="flex flex-wrap mb-12 mt-4">

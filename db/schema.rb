@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_06_23_154817) do
+ActiveRecord::Schema[7.2].define(version: 2026_07_16_121430) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -360,6 +360,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_23_154817) do
     t.string "nom"
     t.integer "ue"
     t.bigint "user_id", null: false
+    t.integer "categorie", default: 0
     t.index ["cour_id"], name: "index_invits_on_cour_id"
     t.index ["intervenant_id"], name: "index_invits_on_intervenant_id"
     t.index ["slug"], name: "index_invits_on_slug", unique: true
@@ -470,7 +471,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_23_154817) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.date "debut"
-    t.date "fin"
     t.integer "formation_id"
     t.string "commentaires"
     t.bigint "activite_id"
@@ -638,6 +638,8 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_23_154817) do
     t.boolean "téléphone", default: false
     t.boolean "dictionnaire", default: false
     t.string "commentaires"
+    t.bigint "cour_id"
+    t.index ["cour_id"], name: "index_sujets_on_cour_id"
     t.index ["mail_log_id"], name: "index_sujets_on_mail_log_id"
   end
 
@@ -751,15 +753,16 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_23_154817) do
   add_foreign_key "solid_queue_ready_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "sujets", "cours"
   add_foreign_key "sujets", "mail_logs"
   add_foreign_key "vacation_activite_tarifs", "vacation_activites"
   add_foreign_key "vacations", "vacation_activites"
 
   create_view "cours_non_planifies", materialized: true, sql_definition: <<-SQL
-      SELECT cours.id
+      SELECT id
      FROM cours
-    WHERE ((cours.id IN ( SELECT audits.auditable_id
+    WHERE ((id IN ( SELECT audits.auditable_id
              FROM audits
-            WHERE (((audits.auditable_type)::text = 'Cour'::text) AND (audits.user_id <> 41)))) AND (cours.etat = 0) AND ((cours.debut >= now()) AND (cours.debut <= (now() + 'P30D'::interval))));
+            WHERE (((audits.auditable_type)::text = 'Cour'::text) AND (audits.user_id <> 41)))) AND (etat = 0) AND ((debut >= now()) AND (debut <= (now() + 'P30D'::interval))));
   SQL
 end

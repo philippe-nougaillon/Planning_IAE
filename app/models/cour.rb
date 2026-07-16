@@ -90,7 +90,7 @@ class Cour < ApplicationRecord
     end
 
     if user.role_number >= 5
-      actions << ["Changer d'état", "Changer de date", "Inviter", "Générer Feuille émargement PDF", "Générer Feuille émargement présences signées PDF", "Générer Pochette Examen PDF", "Convocation étudiants PDF", "Regrouper sur une seule Feuille de présence Edusign"]
+      actions << ["Changer d'état", "Changer de date", "Inviter", "Générer Feuille émargement PDF", "Générer Feuille émargement présences signées PDF", "Générer Pochette Examen PDF", "Convocation étudiants PDF", "Regrouper sur une seule Feuille de présence Edusign", "Proposition de surveillance"]
     end
     return actions.flatten.sort
   end

@@ -447,14 +447,9 @@ class CoursController < ApplicationController
                 invits_créées += 1
               end
 
-              # ATTENTION : Invit.first ne sera plus correct si le default_scope est modifié. Peut-être que ce n'a sera plus correct en mettant ce code dans un job
-              title = if Invit.first.cour.examen?
-                        "[PLANNING] Proposition de surveillance d’examen(s) #{ Invit.first.cour.formation.nom } à l’IAE Paris-Sorbonne"
-                      else
-                        "[PLANNING] Proposition de créneaux pour placer vos cours #{ Invit.first.cour.formation.nom } à l’IAE Paris-Sorbonne"
-                      end
+              title = "[PLANNING] Proposition de créneaux pour placer vos cours #{ Invit.first.cour.formation.nom } à l’IAE Paris-Sorbonne"
               mailer_response = InvitMailer.with(invit: Invit.first, title: title).envoyer_invitation.deliver_now
-              # Pareil ici, Invit.first ne sera plus correct si le default_scope change
+
               MailLog.create(user_id: current_user.id, message_id:mailer_response.message_id, to:Invit.first.intervenant.email, subject: "Invitation", title: title)
             end
           end
@@ -465,6 +460,27 @@ class CoursController < ApplicationController
           flash[:alert] = "Action annulée"
         end
 
+      when 'Proposition de surveillance'
+      invits_créées = 0
+      Intervenant.surveillants.each do |surveillant|
+        @cours.each do |cour|
+          invit = cour.invits.create!(user_id: current_user.id,
+                              intervenant_id: surveillant.id,
+                              categorie: "surveillance")
+
+          title = "[PLANNING] Proposition de surveillance d’examen(s) #{ cour.formation.nom } à l’IAE Paris-Sorbonne"
+          mailer_response = InvitMailer.with(invit:, title:).proposition_de_surveillance.deliver_now
+
+          MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: invit.intervenant.email, subject: "Proposition de surveillance", title: title)
+          
+          invits_créées += 1
+        end
+      end
+      if invits_créées > 0
+        @message_complémentaire = "#{ invits_créées } invitation.s créée.s avec succès"
+      else
+        flash[:alert] = "Action annulée"
+      end
       when 'Intervertir'
         # il faut 2 cours
         if params[:cours_id].keys.count == 2

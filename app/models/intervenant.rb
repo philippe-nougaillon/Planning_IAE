@@ -36,6 +36,8 @@ class Intervenant < ApplicationRecord
 
 	default_scope { order(:nom, :prenom) } 
 
+	scope :surveillants, -> { where(status: "Surveillant") }
+
 	before_create :nom_with_underscore
 	after_create :create_user_access
 
@@ -134,13 +136,8 @@ class Intervenant < ApplicationRecord
 		ENV["INTERVENANTS_PLACEHOLDER"]&.split(',')&.map(&:to_i)
 	end
 
-	def self.surveillants
+	def self.surveillants_examen
 		ENV["SURVEILLANTS_EXAMEN_IDS"]&.split(',')&.map(&:to_i)
-	end
-
-	# Intervenants ayant le statut "Surveillant" (utilisés par l'option surveillance_2)
-	def self.statut_surveillant
-		where(status: :Surveillant)
 	end
 
 	def is_a_confirmer?
