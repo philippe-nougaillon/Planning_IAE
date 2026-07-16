@@ -42,7 +42,7 @@ class Salle < ApplicationRecord
 			"Salle de cours serpentine"
 		when "2.4"
 			"Salle de cours tables hautes"
-		when /^(\d\.\d+)$/, /^(\w{3}\.\d)$/ # Ex: 1.1, 3.12 ou RDJ.1
+		when /^(\d\.\d+)$/, /^(\w{3}\.\d)$/, "AMPHITHEATRE", "AUDITORIUM", "ARCUEIL", "DIFCAM", "ICP 1", "ICP 2" # Ex: 1.1, 3.12 ou RDJ.1
 			"Salle de cours"
 		when /^\d\.\w$/ # Ex: 2.A
 			"Salle de réunion"
