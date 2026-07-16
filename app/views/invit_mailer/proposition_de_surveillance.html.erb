@@ -6,13 +6,13 @@
   Merci d’indiquer vos disponibilités et indisponibilités pour les créneaux proposés sur le lien suivant :
 </p>
 <p style="margin-bottom: 0.5rem">
-  <%= link_to 'Répondre à la proposition de surveillance', invitations_intervenant_url(@invit.intervenant) %>
+  <%= link_to 'Répondre à la proposition de surveillance', invit_url(@invit) %>
 </p>
 <p style="margin-bottom: 0.5rem">
   Dans un souci d’efficacité, les créneaux sont proposés parallèlement à plusieurs intervenants et seront attribués selon les disponibilités de chacun. Nous vous confirmerons par retour de mail les créneaux retenus pour vos cours. Nous vous remercions donc par avance de votre réactivité, essentielle pour garantir la fluidité du processus.
 </p>
 <p style="margin-bottom: 0.5rem">
-  En cas de questions, vous pouvez nous contacter l’adresse suivante :
+  En cas de questions, vous pouvez nous contacter à l’adresse suivante :
   <%= mail_to ENV["EXAMEN_MAIL"] %>
 </p>
 <p style="margin-bottom: 0.5rem">
