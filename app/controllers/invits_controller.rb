@@ -43,6 +43,15 @@ class InvitsController < ApplicationController
       @invits = @invits.where(cour_id: params[:cours_id].to_i)
     end
 
+    unless params[:categorie].blank?
+      @invits = @invits.where(categorie: params[:categorie].to_i)
+
+      # Filtre par les workflows pour la catégorie surveillance
+      if !params[:tout] && params[:categorie] == "1" # Surveillance
+        @invits = @invits.where(workflow_state: ["disponible", "pas_disponible", "confirmée", "non_retenue"])
+      end
+    end
+
     @formations = Formation.not_archived.where(id: @invits.joins(:formation).pluck("formations.id").uniq).ordered
     @intervenants = Intervenant.where(id: @invits.pluck(:intervenant_id).uniq)
     @invits = @invits.paginate(page: params[:page], per_page: 20)
