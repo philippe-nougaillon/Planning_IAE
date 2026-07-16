@@ -18,7 +18,7 @@ class Edusign < ApplicationService
 
     def call
         # Necessaire pour créer des formations sans étudiants 
-        # et des formations avec que des étudiants déjà créés sur Edusign
+        # et des formations avec que des étudiants déjà créés sur Edusign
 
         formations_ajoutées_ids = self.sync_formations("Post", nil)
 
@@ -733,9 +733,15 @@ class Edusign < ApplicationService
         # Pour les edusign ids des cours supprimés, on vérifie s'il existe encore sur Edusign
         deleted_cours.each do |deleted_cour|
             edusign_id = deleted_cour.audited_changes["edusign_id"]
+
+            # Un cours supprimé sans edusign_id n'a jamais été envoyé sur Edusign : il n'y a rien à supprimer.
+            # Surtout, sans id l'URL devient ".../v1/course/" et Edusign renvoie TOUS les cours,
+            # une réponse énorme parsée en mémoire, potentiellement plusieurs fois -> RAM qui déborde et qui stope la synchronisation
+            next if edusign_id.blank?
+
             self.prepare_request("https://ext.edusign.fr/v1/course/#{edusign_id}", "Get")
             response = self.get_response(false)
-            if response["status"] == "success" && edusign_id != nil
+            if response["status"] == "success"
                 edusign_ids << edusign_id
                 deleted_cours_to_sync_ids << deleted_cour.auditable_id
             end

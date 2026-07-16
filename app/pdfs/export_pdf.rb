@@ -865,10 +865,10 @@ class ExportPdf
 
         move_down @margin_down * 2
         y_position = cursor
-        bounding_box([100, y_position], :width => 190, :height => 100) do
+        bounding_box([100, y_position], :width => 190, :height => 25) do
             text "<color rgb='032E4D'><b>Nom : #{étudiant.nom}</b></color>", inline_format: true, size: 16
         end
-        bounding_box([350, y_position], :width => 190, :height => 100) do
+        bounding_box([350, y_position], :width => 190, :height => 25) do
             text "<color rgb='032E4D'><b>Prénom : #{étudiant.prénom}</b></color>", inline_format: true, size: 16
         end
         if étudiant.table && !étudiant.table.zero?
@@ -882,9 +882,7 @@ class ExportPdf
 
         move_down @margin_down * 2
         text "<color rgb='032E4D'><b>Vous devez :</b></color>", inline_format: true
-        move_down @margin_down
         text "<color rgb='032E4D'><b>-    vous munir de votre carte d'étudiant</b></color>", inline_format: true
-        move_down @margin_down
         text "<color rgb='032E4D'><b>-    vous présenter dans la salle d'examen 15 minutes avant le début de l'épreuve et attendre devant la salle que le(s) surveillant(s) soi(en)t présents. L’accès à la salle d’examen n’est autorisé qu’en présence de(s) surveillant(s)</b></color>", inline_format: true
 
         move_down @margin_down * 2
@@ -900,22 +898,17 @@ class ExportPdf
 
         move_down @margin_down * 2
 
-        text "<color rgb='032E4D'>À votre arrivée dans la salle d'examen, il vous sera demandé :</color>", inline_format: true
-        move_down @margin_down
+        text "<color rgb='032E4D'><b>À votre arrivée dans la salle d'examen, il vous sera demandé :</b></color>", inline_format: true
         unless téléphone
             text "<color rgb='032E4D'>- d'éteindre vos téléphones portables,</color>", inline_format: true
-            move_down @margin_down
             text "<color rgb='032E4D'>- de déposer vos sacs contenant tous les objets connectés (téléphones, montres, lunettes, oreillettes, ...) à l'entrée de la salle,</color>", inline_format: true
-            move_down @margin_down
         end
         text "<color rgb='032E4D'>- de disposer sur votre table uniquement le matériel qui est autorisé (stylos, correcteurs, marqueurs, etc ...) en fonction des consignes indiquées par les responsables d'UE,</color>", inline_format: true
-        move_down @margin_down
         text "<color rgb='032E4D'>- de vous installer un par table lorsque la capacité d'accueil de la salle le permet. Les surveillants sont habilités à vous demander de vous déplacer s'ils le jugent nécessaire.</color>", inline_format: true
-        move_down @margin_down
         text "<color rgb='032E4D'>- Les copies, brouillons, sujets ne seront distribués qu'une fois que ces consignes auront été respectées et appliquées.</color>", inline_format: true
 
         move_down @margin_down * 2
-        text "<color rgb='032E4D'>En cas de fraude, et après la tenue d’une commission de discipline, <b>les sanctions administratives</b> encourues par les fraudeurs sont les suivantes : </color>", inline_format: true
+        text "<color rgb='032E4D'><b>En cas de fraude</b>, et après la tenue d’une commission de discipline, <b>les sanctions administratives</b> encourues par les fraudeurs sont les suivantes : </color>", inline_format: true
         text "<color rgb='032E4D'>- le blâme,</color>", inline_format: true
         text "<color rgb='032E4D'>- la privation de toute mention portée sur le diplôme délivré au candidat admis,</color>", inline_format: true
         text "<color rgb='032E4D'>- l’interdiction de passer tout examen conduisant à l’obtention du baccalauréat pour une durée maximum de 5 ans ou d’un titre ou diplôme délivré par un établissement public dispensant des formations post-baccalauréat pour une durée maximum de 5 ans. Cette sanction peut être prononcée avec sursis si l’interdiction n’excède pas deux ans,</color>", inline_format: true
@@ -1041,30 +1034,30 @@ class ExportPdf
 
     def consignes(papier, calculatrice, ordi_tablette, téléphone, dictionnaire)
         text "<color rgb='032E4D'><b>CONSIGNES :</b></color>", inline_format: true
-        move_down @margin_down 
 
-        text "<color rgb='032E4D'><i>Sont autorisés :</i></color>", inline_format: true
-        move_down @margin_down
+        if papier || calculatrice || ordi_tablette || téléphone || dictionnaire
+            move_down @margin_down 
+            text "<color rgb='032E4D'><i>Sont autorisés :</i></color>", inline_format: true
 
-        if papier
-            text "<color rgb='032E4D'> - Documents papier</color>", inline_format: true, style: :bold
-        end
-        if calculatrice
-            text "<color rgb='032E4D'> - Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission</color>", inline_format: true, style: :bold
-        end
-        if ordi_tablette
-            text "<color rgb='032E4D'> - Les ordinateurs et tablettes</color>", inline_format: true, style: :bold
-        end
-        if téléphone
-            text "<color rgb='032E4D'> - Les téléphones portables</color>", inline_format: true, style: :bold
-        end
-        if dictionnaire
-            text "<color rgb='032E4D'> - Les dictionnaires</color>", inline_format: true, style: :bold
+            if papier
+                text "<color rgb='032E4D'> - Documents papier</color>", inline_format: true, style: :bold
+            end
+            if calculatrice
+                text "<color rgb='032E4D'> - Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission</color>", inline_format: true, style: :bold
+            end
+            if ordi_tablette
+                text "<color rgb='032E4D'> - Les ordinateurs et tablettes</color>", inline_format: true, style: :bold
+            end
+            if téléphone
+                text "<color rgb='032E4D'> - Les téléphones portables</color>", inline_format: true, style: :bold
+            end
+            if dictionnaire
+                text "<color rgb='032E4D'> - Les dictionnaires</color>", inline_format: true, style: :bold
+            end
         end
         move_down @margin_down
 
         text "<color rgb='032E4D'><i>Sont interdits :</i></color>", inline_format: true
-        move_down @margin_down
 
         if !papier
             text "<color rgb='032E4D'> - Documents papier</color>", inline_format: true, style: :bold
