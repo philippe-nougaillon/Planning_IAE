@@ -1269,7 +1269,7 @@ class ToolsController < ApplicationController
     surveillant = params[:surveillant]
     @cumuls = {}
     @examens = Cour
-                  .where("intervenant_id IN (:surveillants) OR intervenant_binome_id IN (:surveillants)", {surveillants: Intervenant.surveillants} )
+                  .where("intervenant_id IN (:surveillants) OR intervenant_binome_id IN (:surveillants)", {surveillants: Intervenant.surveillants_examen} )
                   .where("commentaires like '%[%'")
                   .where("debut between ? and ?", @start_date, @end_date.to_date + 1.day)
                   .includes(:formation)
@@ -1312,7 +1312,7 @@ class ToolsController < ApplicationController
     surveillant = params[:surveillant]
     @cumuls = {}
     @examens = Cour
-                  .where("cours.intervenant_id IN (:surveillants) OR cours.intervenant_binome_id IN (:surveillants)", {surveillants: Intervenant.surveillants} )
+                  .where("cours.intervenant_id IN (:surveillants) OR cours.intervenant_binome_id IN (:surveillants)", {surveillants: Intervenant.surveillants_examen} )
                   .joins(:options)
                   .where("(options.catégorie = :surveillance AND options.description LIKE '%[%') OR (options.catégorie = :surveillance_2 AND options.intervenant_id IS NOT NULL)",
                          {surveillance: Option.catégories[:surveillance], surveillance_2: Option.catégories[:surveillance_2]})

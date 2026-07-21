@@ -43,6 +43,15 @@ class InvitsController < ApplicationController
       @invits = @invits.where(cour_id: params[:cours_id].to_i)
     end
 
+    unless params[:categorie].blank?
+      @invits = @invits.where(categorie: params[:categorie].to_i)
+
+      # Filtre par les workflows pour la catégorie surveillance
+      if !params[:tout] && params[:categorie] == "1" # Surveillance
+        @invits = @invits.where(workflow_state: ["disponible", "pas_disponible", "confirmée", "non_retenue"])
+      end
+    end
+
     @formations = Formation.not_archived.where(id: @invits.joins(:formation).pluck("formations.id").uniq).ordered
     @intervenants = Intervenant.where(id: @invits.pluck(:intervenant_id).uniq)
     @invits = @invits.paginate(page: params[:page], per_page: 20)
@@ -110,6 +119,7 @@ class InvitsController < ApplicationController
     when "Relancer"
       invits.each do |invit|
         if invit.can_relancer? 
+          #TODO : check à faire : la relance ne se fait probablement pas, et la mettre dans un mail_log (c.f. invits.rake)
           invit.relancer! 
           count += 1
         end
@@ -145,6 +155,7 @@ class InvitsController < ApplicationController
 
   def relancer
     @invit.relancer!
+    # TODO : mettre l'état dans un mail_log
     InvitMailer.with(invit: @invit).envoyer_invitation.deliver_now
     redirect_to invits_path, notice: "Invitation relancée avec succès."
   end
@@ -153,6 +164,7 @@ class InvitsController < ApplicationController
     if @invit.valid?
       if @invit.can_valider?
         @invit.valider!
+        notifier_examens_si_besoin(@invit)
         flash[:notice] = "Invitation mise à jour avec succès."
       elsif @invit.disponible?
         flash[:alert] = "L'invitation est déjà validée"
@@ -170,6 +182,7 @@ class InvitsController < ApplicationController
     if @invit.valid?
       if @invit.can_rejeter?
         @invit.rejeter!
+        notifier_examens_si_besoin(@invit)
         flash[:notice] = "Invitation mise à jour avec succès."
       elsif @invit.pas_disponible?
         flash[:alert] = "L'invitation est déjà rejetée"
@@ -185,8 +198,25 @@ class InvitsController < ApplicationController
 
   def confirmer
 
-    # attribuer le cours
     cours = @invit.cour
+
+    # Cas des examens : on n'affecte pas le surveillant comme intervenant du cours,
+    # on l'ajoute comme option "surveillance" au cours. Plusieurs surveillants peuvent
+    # être confirmés, on ne ferme donc pas les autres invitations en cours.
+    if cours.examen?
+      option = cours.options.build(catégorie: :surveillance_2,
+                                   intervenant: @invit.intervenant,
+                                   user_id: current_user.id)
+      if option.save
+        @invit.confirmer!
+        flash[:notice] = "Invitation confirmée. Surveillant ajouté au cours."
+      else
+        flash[:alert] = "Le surveillant n'a pas pu être ajouté. #{ option.errors.full_messages.to_sentence }"
+      end
+      return redirect_to invits_path
+    end
+
+    # attribuer le cours
     cours.intervenant = @invit.intervenant
     cours.code_ue = (@invit.ue ? Unite.find(@invit.ue).code : nil)
     cours.nom = @invit.nom
@@ -217,9 +247,11 @@ class InvitsController < ApplicationController
     case params[:commit]
     when 'Disponible'
       @invit.valider!
+      notifier_examens_si_besoin(@invit)
       flash[:notice] = "Invitation mise à jour avec succès."
     when 'Pas disponible'
       @invit.rejeter!
+      notifier_examens_si_besoin(@invit)
       flash[:notice] = "Invitation mise à jour avec succès."
     end
     redirect_to invitations_intervenant_path(@invit.intervenant)
@@ -243,5 +275,15 @@ class InvitsController < ApplicationController
 
     def is_user_authorized
       authorize Invit
+    end
+
+    # Pour les invitations de surveillance d'examen, notifie le service des examens
+    # (ENV["EXAMEN_MAIL"]) de la réponse du surveillant (disponible / pas disponible).
+    def notifier_examens_si_besoin(invit)
+      return unless invit.cour.examen? && ENV["EXAMEN_MAIL"].present?
+
+      title = "[PLANNING] Réponse de surveillance : #{ invit.intervenant.nom_prenom } - #{ I18n.l invit.cour.debut, format: :long }"
+      mailer_response = InvitMailer.with(invit: invit, title: title).informer_examens.deliver_now
+      MailLog.create(user_id: current_user&.id || 0, message_id: mailer_response.message_id, to: ENV["EXAMEN_MAIL"], subject: "Réponse surveillant", title: title)
     end
 end
