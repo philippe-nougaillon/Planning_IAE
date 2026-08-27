@@ -105,7 +105,7 @@ class SallesController < ApplicationController
     @taux_occupation = {}
     # 11 heures par jour * 5.5j (soit une semaine) * 52 semaines - 8 semaines de fermeture </i>
     sum_occupation_max = (11 * 5.5) * (52 - 8)
-    (2017..2025).each do |year|
+    (2017..2026).each do |year|
       sum_occupation = @salle.cours.where("DATE(cours.debut) BETWEEN ? AND ?", "#{year}-09-01", "#{year+1}-07-01").réalisé.sum(:duree).to_i
       @taux_occupation[year] =  (sum_occupation / sum_occupation_max * 100).to_i
     end
