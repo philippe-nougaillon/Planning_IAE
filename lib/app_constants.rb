@@ -1,3 +1,3 @@
 module AppConstants
-  PÉRIODE = '2025/2026'
+  PÉRIODE = '2026/2027'
 end

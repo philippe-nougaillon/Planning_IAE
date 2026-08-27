@@ -4,10 +4,10 @@ class DossierMailer < ApplicationMailer
     def dossier_email
         @dossier = params[:dossier]
 
-        attachments['Dossier de recrutement.pdf']   = File.read('app/assets/attachments/Dossier Recrutement CEV.pdf')
-        attachments['Pièces à fournir.pdf']         = File.read('app/assets/attachments/Pièces à fournir_dossier de recrutement.pdf')
-        attachments['Note réglementaire.pdf']       = File.read('app/assets/attachments/Note sur les conditions de recrutement.pdf')
-        attachments['Etat prévisionnel.pdf']        = File.read('app/assets/attachments/Formulaire_V02-1.pdf')
+        attachments['Dossier recrutement CEV 2026-2027.pdf']   = File.read('app/assets/attachments/Dossier recrutement CEV 2026-2027.pdf')
+        attachments['Attestation activité salariée.pdf']         = File.read('app/assets/attachments/Attestation activité salariée.pdf')
+        attachments['Note_RH_Recrutement CEV.pdf']       = File.read('app/assets/attachments/Note_RH_Recrutement CEV.pdf')
+        attachments['Etat prévisionnel de services - CEV.pdf']        = File.read('app/assets/attachments/Etat prévisionnel de services - CEV.pdf')
 
         mail(to: @dossier.intervenant.email, 
              subject: params[:title])
@@ -44,10 +44,10 @@ class DossierMailer < ApplicationMailer
     def relancer_dossier_urgent
         @dossier = params[:dossier]
 
-        attachments['Dossier de recrutement.pdf']   = File.read('app/assets/attachments/Dossier Recrutement CEV.pdf')
-        attachments['Pièces à fournir.pdf']         = File.read('app/assets/attachments/Pièces à fournir_dossier de recrutement.pdf')
-        attachments['Note réglementaire.pdf']       = File.read('app/assets/attachments/Note sur les conditions de recrutement.pdf')
-        attachments['Etat prévisionnel.pdf']        = File.read('app/assets/attachments/Formulaire_V02-1.pdf')
+        attachments['Dossier recrutement CEV 2026-2027.pdf']   = File.read('app/assets/attachments/Dossier recrutement CEV 2026-2027.pdf')
+        attachments['Attestation activité salariée.pdf']         = File.read('app/assets/attachments/Attestation activité salariée.pdf')
+        attachments['Note_RH_Recrutement CEV.pdf']       = File.read('app/assets/attachments/Note_RH_Recrutement CEV.pdf')
+        attachments['Etat prévisionnel de services - CEV.pdf']        = File.read('app/assets/attachments/Etat prévisionnel de services - CEV.pdf')
 
         mail(to: @dossier.intervenant.email, 
              subject: params[:title])

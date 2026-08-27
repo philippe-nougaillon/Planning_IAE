@@ -1091,7 +1091,7 @@ class ToolsController < ApplicationController
 
   def nouvelle_saison
 
-    @years ||= ['2021/2022','2022/2023','2023/2024','2024/2025', '2025/2026']
+    @years ||= ['2021/2022','2022/2023','2023/2024','2024/2025', '2025/2026', '2026/2027', '2027/2028']
 
     unless params[:saison].blank?
       @formations = Formation.not_archived.where(hors_catalogue:false)
