@@ -8,6 +8,7 @@ class DossierMailer < ApplicationMailer
         attachments['Attestation activité salariée.pdf']         = File.read('app/assets/attachments/Attestation activité salariée.pdf')
         attachments['Note_RH_Recrutement CEV.pdf']       = File.read('app/assets/attachments/Note_RH_Recrutement CEV.pdf')
         attachments['Etat prévisionnel de services - CEV.pdf']        = File.read('app/assets/attachments/Etat prévisionnel de services - CEV.pdf')
+        attachments['CV_IAE_Paris_Complet.html']        = File.read('app/assets/attachments/CV_IAE_Paris_Complet.html')
 
         mail(to: @dossier.intervenant.email, 
              subject: params[:title])
@@ -48,6 +49,7 @@ class DossierMailer < ApplicationMailer
         attachments['Attestation activité salariée.pdf']         = File.read('app/assets/attachments/Attestation activité salariée.pdf')
         attachments['Note_RH_Recrutement CEV.pdf']       = File.read('app/assets/attachments/Note_RH_Recrutement CEV.pdf')
         attachments['Etat prévisionnel de services - CEV.pdf']        = File.read('app/assets/attachments/Etat prévisionnel de services - CEV.pdf')
+        attachments['CV_IAE_Paris_Complet.html']        = File.read('app/assets/attachments/CV_IAE_Paris_Complet.html')
 
         mail(to: @dossier.intervenant.email, 
              subject: params[:title])
