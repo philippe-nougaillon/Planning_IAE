@@ -33,6 +33,7 @@ namespace :dossiers do
     date_debut_p, date_fin_p = Dossier.dates_début_fin_année_scolaire(AppConstants::PÉRIODE)
     cible = Date.today + 15.days
 
+    # Sera relancé tout intervenant qui a un cours dans 15j et qui n'a pas son dossier complété, il sera relancé à chaque cours
     dossiers_à_relancer = Dossier.joins(intervenant: :cours)
       .where(période: AppConstants::PÉRIODE)
       .where.not(workflow_state: ["nouveau", "déposé", "validé", "archivé"])
