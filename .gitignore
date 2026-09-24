@@ -55,3 +55,6 @@ yarn-debug.log*
 /.idea/Planning_IAE.iml
 /.idea/inspectionProfiles/Project_Default.xml
 /.idea/vcs.xml
+
+/suivi/
+/CLAUDE.md
