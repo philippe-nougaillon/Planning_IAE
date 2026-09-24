@@ -1,0 +1,22 @@
+<p style="margin-bottom: 0.5rem">
+  Bonjour <%= @invit.intervenant.prenom_nom %>,
+  <br>
+  <br>
+  Nous vous remercions pour votre disponibilité et nous vous confirmons que vous êtes retenu(e) pour la surveillance d’examen
+  <%= @invit.cour.formation.nom %>
+  le <%= l(@invit.cour.debut.to_date, format: :long) %>, de <%= l(@invit.cour.debut, format: :heures_min) %> à <%= l(@invit.cour.fin, format: :heures_min) %>.
+</p>
+<p style="margin-bottom: 0.5rem">
+  La surveillance se tiendra à l’IAE Paris-Sorbonne, 11-15 rue Ponscarme, 75013 Paris
+  (<%= link_to "plan d’accès", image_path("Plan_acces_Ponscarme_mai2026.png") %>).
+</p>
+<p style="margin-bottom: 0.5rem">
+  Nous vous remercions par avance de bien vouloir accuser réception de ce mail.
+</p>
+<p style="margin-bottom: 0.5rem">
+  En cas de questions, vous pouvez nous contacter à l’adresse suivante :
+  <%= mail_to ENV["EXAMEN_MAIL"] %>
+</p>
+<p style="margin-bottom: 0.5rem">
+  L’IAE Paris-Sorbonne vous remercie de votre implication.
+</p>

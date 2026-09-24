@@ -47,7 +47,7 @@
         <th>État</th>
         <th>Message</th>
         <th>MàJ</th>
-        <th colspan="4"></th>
+        <th colspan="3"></th>
       </tr>
     </thead>
 
@@ -103,7 +103,6 @@
               <%= link_to "Indisponible", rejeter_invit_path(invit), class: 'btn btn-sm btn-error btn-outline', 'data-turbo': false, title: "Je ne suis pas disponible #{invit.cours? ? "pour ce cours" : "pour cette surveillance"}" %>
             <% end %>
           </td>
-          <td><%= link_to 'Commentaires', invit, class: 'text-primary hover:underline' %></td>
         </tr>
       <% end %>
     </tbody>

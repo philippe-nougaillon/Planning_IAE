@@ -1,0 +1,44 @@
+<p style="margin-bottom: 0.5rem">
+  Bonjour <%= @intervenant.prenom_nom %>,
+  <br>
+  <br>
+  Nous vous rappelons que vous êtes retenu(e) pour la surveillance d’examen à l’IAE Paris-Sorbonne
+  le <b><%= l(@cours.first.debut.to_date, format: :long) %></b>, soit dans <%= @jours %> jours :
+</p>
+<div style="overflow-x: auto;">
+  <table style="border: 1px solid lightgrey;" cellpadding=5 cellspacing=5>
+    <thead>
+      <tr>
+        <th>Horaire</th>
+        <th>Formation</th>
+        <th>Examen</th>
+        <th>Salle</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @cours.each_with_index do |c, index| %>
+        <tr style="<%= index.even? ? 'background-color: #f2f2f2;' : nil %>">
+          <td>
+            <b><%= l(c.debut, format: :heures_min) %></b>
+            - <%= l(c.fin, format: :heures_min) %>
+          </td>
+          <td><%= c.try(:formation).try(:nom) %></td>
+          <td><%= c.type_examen %> <%= c.nom_ou_ue %></td>
+          <td><%= c.try(:salle).try(:nom) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+<br>
+<p style="margin-bottom: 0.5rem">
+  La surveillance se tiendra au 11-15 rue Ponscarme, 75013 Paris, Métro : Olympiades (L14)
+  (<%= link_to "plan d’accès", image_path("Plan_acces_Ponscarme_mai2026.png") %>).
+</p>
+<p style="margin-bottom: 0.5rem">
+  En cas d’empêchement, merci de nous prévenir au plus vite à l’adresse suivante :
+  <%= mail_to ENV["EXAMEN_MAIL"] %>
+</p>
+<p style="margin-bottom: 0.5rem">
+  L’IAE Paris-Sorbonne vous remercie de votre implication.
+</p>

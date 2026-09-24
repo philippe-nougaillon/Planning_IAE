@@ -17,6 +17,15 @@ class InvitMailerPreview < ActionMailer::Preview
     InvitMailer.with(invit: invit, title: "[PLANNING] Réponse de surveillance").informer_examens
   end
 
+  def confirmation_surveillance
+    InvitMailer.with(invit: invit_examen, title: "[PLANNING] Confirmation de votre surveillance d’examen").confirmation_surveillance
+  end
+
+  def rappel_surveillance
+    cours = Cour.where(intervenant_id: Intervenant.examens_ids).order(:debut).last(2)
+    InvitMailer.with(intervenant: Intervenant.surveillants.first, cours: cours, jours: 10, title: "[PLANNING] Rappel : surveillance d’examen (J-10)").rappel_surveillance
+  end
+
   # def validation_invitation
   #   InvitMailer.with(invit: Invit.first).validation_invitation
   # end
