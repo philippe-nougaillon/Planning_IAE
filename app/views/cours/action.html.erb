@@ -60,7 +60,7 @@
       <% formations = @cours.map(&:formation).uniq %>
       <% nbr_etudiants = formations.first.nbr_etudiants if formations.one? %>
       <% if nbr_etudiants.nil? %>
-        <p class="mb-2"><i>Plusieurs formations sélectionnées : la capacité des salles n'est pas comparée au nombre d'étudiants.</i></p>
+        <p class="text-error mb-2"><i>Plusieurs formations sélectionnées : la capacité des salles n'est pas comparée au nombre d'étudiants !</i></p>
       <% end %>
       <% @salles_dispos.each do |nom| %>
         <% salle = Salle.find_by(nom: nom) %>
