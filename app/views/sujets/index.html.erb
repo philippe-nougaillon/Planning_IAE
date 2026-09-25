@@ -35,7 +35,7 @@
       <div class="sm:w-1/6 px-4">
         <%= label_tag :workflow_state, "État" %>
         <%= select_tag :workflow_state, 
-                            options_for_select(Sujet.workflow_spec.states.keys.to_a, params[:workflow_state]), 
+                            options_for_select(@imprimeur ? [Sujet::VALIDE, Sujet::IMPRIME] : Sujet.workflow_spec.states.keys.to_a, params[:workflow_state]),
                             include_blank: true,
                             class: 'select select-bordered select-sm w-full', 
                             onchange: 'this.form.submit()' %>
@@ -47,15 +47,21 @@
           <%= label_tag :gestionnaire, "Que mes formations ?", class: "whitespace-nowrap" %>
         </div>
 
-        <div class="flex gap-1">
-          <%= check_box_tag :archive, nil, params[:archive], onchange: 'this.form.submit()' %>
-          <%= label_tag :archive, "Inclure les archivés ?", class: "whitespace-nowrap" %>
-        </div>
+        <% unless @imprimeur %>
+          <div class="flex gap-1">
+            <%= check_box_tag :archive, nil, params[:archive], onchange: 'this.form.submit()' %>
+            <%= label_tag :archive, "Inclure les archivés ?", class: "whitespace-nowrap" %>
+          </div>
+        <% end %>
       </div>
 
     </div>
   <% end %>
 </div>
+
+<% if flash[:telechargement].present? %>
+  <iframe src="<%= flash[:telechargement] %>" class="hidden"></iframe>
+<% end %>
 
 <div class="overflow-x-auto">
   <table class="table mb-4">
@@ -63,12 +69,20 @@
       <tr>
         <th><%= sort_link 'sujets.updated_at', 'MÀJ' %></th>
         <th><%= sort_link 'cours.debut', 'Date examen' %></th>
-        <th>Intervenant</th>
+        <% unless @imprimeur %>
+          <th>Intervenant</th>
+        <% end %>
         <th>Formation</th>
         <th><%= sort_link 'sujets.workflow_state', 'État' %></th>
-        <th>Statut Mail</th>
-        <th>Ouvert ?</th>
-        <th></th>
+        <% if @imprimeur %>
+          <th>Copies</th>
+          <th>Document</th>
+          <th></th>
+        <% else %>
+          <th>Statut Mail</th>
+          <th>Ouvert ?</th>
+          <th></th>
+        <% end %>
       </tr>
     </thead>
 

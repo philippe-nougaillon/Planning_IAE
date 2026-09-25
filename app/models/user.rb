@@ -107,6 +107,14 @@ class User < ApplicationRecord
       .include?(id)
   end
 
+  def imprimeur_sujets?
+    ENV['USER_IMPRESSION_SUJETS_IDS']
+      .to_s
+      .split(',')
+      .map(&:to_i)
+      .include?(id)
+  end
+
   def self.generate_random_password
     # Définition des bases en retirant les caractères prêtant à confusion
     minuscules = ('a'..'z').to_a - ['l']

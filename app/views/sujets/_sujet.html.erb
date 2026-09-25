@@ -10,7 +10,7 @@
     <%= link_to l(sujet.cour.debut, format: :long), cours_path(start_date: sujet.cour.debut.to_date, intervenant_id: sujet.cour.intervenant_binome_id, formation_id: sujet.cour.formation_id), class: 'text-primary hover:underline' %>
 
   </td>
-  <% if params[:action] == 'index' && params[:controller] == 'sujets' %>
+  <% if params[:action] == 'index' && params[:controller] == 'sujets' && !@imprimeur %>
     <td>
       <%= link_to sujet.cour.intervenant_binome&.nom_prenom, sujet.cour.intervenant_binome, class: 'text-primary hover:underline' %>
     </td>
@@ -31,7 +31,33 @@
       <%= sujet.workflow_state.humanize %>
     </span>
   </td>
-  <% if params[:action] == 'index' && params[:controller] == 'sujets' %>
+  <% if @imprimeur %>
+    <td style="text-align: center">
+      <%= sujet.nbr_copies_avec_ajout %>
+    </td>
+    <td>
+      <% if sujet.sujet.attached? %>
+        <% if current_user.otp_required_for_login %>
+          <% if sujet.sujet.representable? %>
+            <%= image_tag(sujet.sujet.representation(resize_to_limit: [150, 150]), title: sujet.sujet.filename, class: 'shadow') %>
+          <% end %>
+        <% else %>
+          <%= link_to "Activer la double authentification", user_path(current_user), class: "text-primary hover:underline font-black" %>
+          pour voir l'aperçu du document
+        <% end %>
+      <% end %>
+    </td>
+    <td>
+      <% if sujet.sujet.attached? && current_user.otp_required_for_login %>
+        <%= link_to imprimer_sujet_path(sujet), title: "Télécharger le sujet", 'data-turbo': false do %>
+          <span class="material-symbols-outlined text-3xl text-error">picture_as_pdf</span>
+        <% end %>
+      <% else %>
+        <%= link_to "Activer la double authentification", user_path(current_user), class: "text-primary hover:underline font-black" %>
+        pour télécharger le document
+      <% end %>
+    </td>
+  <% elsif params[:action] == 'index' && params[:controller] == 'sujets' %>
     <% if sujet.mail_log %>
       <% if sujet.mail_log.statut %>
         <td style="text-align: center">
@@ -55,7 +81,9 @@
       <td></td>
     <% end %>
   <% end %>
-  <td><%= link_to 'Voir', sujet, class: 'text-primary hover:underline', 'data-turbo': false %></td>
+  <% unless @imprimeur %>
+    <td><%= link_to 'Voir', sujet, class: 'text-primary hover:underline', 'data-turbo': false %></td>
+  <% end %>
   <% if current_user.intervenant? %>
     <td>
       <% if policy(sujet).edit? %>

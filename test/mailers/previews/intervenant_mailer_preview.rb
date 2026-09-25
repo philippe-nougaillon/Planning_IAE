@@ -51,6 +51,13 @@ class IntervenantMailerPreview < ActionMailer::Preview
         IntervenantMailer.rejet_sujet(sujet, title).deliver_now
     end
 
+    def impression_sujet
+        sujet = Sujet.last
+        sujet.nbr_copies ||= sujet.nbr_etudiants
+        title = "[PLANNING] Impression de #{sujet.nbr_copies_avec_ajout} copies du sujet d'examen du #{I18n.l sujet.cour.debut.to_date, format: :long} à #{I18n.l sujet.cour.debut, format: :heures_log}"
+        IntervenantMailer.impression_sujet(sujet, title).deliver_now
+    end
+
     def relance_sujet_30_jours
         sujet = Sujet.last
         title = "[PLANNING] RAPPEL 1 > demande SUJET pour #{sujet.cour.type_examen.upcase} du #{I18n.l sujet.cour.debut.to_date, format: :long}"

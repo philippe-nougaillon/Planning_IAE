@@ -17,8 +17,8 @@
           <% if @sujet.cour.debut > DateTime.now %>
             <br>
             <small>(dans <%= time_ago_in_words(@sujet.cour.debut) %>)</small>
-            <br>
           <% end %>
+          <br>
           Le <%= l(@sujet.cour.debut, format: :long) %>
         </p>
         <p class="mb-4">
@@ -194,10 +194,22 @@
           </span>
           <% if @sujet.non_conforme? %>
             <br>
-            <strong>Raison :</strong> 
+            <strong>Raison :</strong>
             <%= @sujet.message %>
           <% end %>
         </p>
+
+        <% if current_user.imprimeur_sujets? && (@sujet.validé? || @sujet.imprimé?) %>
+          <p class="mb-4">
+            <strong>Copies à imprimer :</strong>
+            <% if @sujet.nbr_copies %>
+              <%= @sujet.nbr_copies_avec_ajout %>
+              <small>(<%= @sujet.nbr_copies %> saisies + 15 %)</small>
+            <% else %>
+              non renseigné
+            <% end %>
+          </p>
+        <% end %>
 
         <% if @sujet.mail_log %>
           <div class="flex flex-wrap gap-4">
@@ -234,21 +246,41 @@
   <% end %>
 
   <div class="flex w-full mt-4">
-    <div data-controller="rejet-sujet" class="flex-1">
-      <%= link_to_if @sujet.can_valider?, 'Valider', valider_sujet_path(@sujet), class: 'btn btn-sm btn-success text-white', 'data-turbo': false %> |
+    <div data-controller="decision-sujet" class="flex-1">
+      <% if @sujet.can_valider? %>
+        <button id='valider-btn' class='btn btn-sm btn-success text-white' data-action="click->decision-sujet#showForm" data-decision-sujet-form-param="valider-form" data-decision-sujet-target="btnOuvrir">Valider</button>
+      <% else %>
+        Valider
+      <% end %>
+      |
       <% if @sujet.can_rejeter? %>
-        <button id='rejeter-btn' class='btn btn-sm btn-error text-white' data-action="click->rejet-sujet#showForm" data-rejet-sujet-target="btnRejeter">Rejeter</button>
+        <button id='rejeter-btn' class='btn btn-sm btn-error text-white' data-action="click->decision-sujet#showForm" data-decision-sujet-form-param="rejeter-form" data-decision-sujet-target="btnOuvrir">Rejeter</button>
       <% else %>
         Rejeter
       <% end %>
       |
       <%= link_to 'Retour', sujets_path, class: 'text-primary hover:underline' %>
 
+      <% if @sujet.can_valider? %>
+        <% nbr_etudiants = @sujet.nbr_etudiants %>
+        <%= form_with url: valider_sujet_path(@sujet), method: :get do |f| %>
+          <div id='valider-form' style="display: none;" data-decision-sujet-target="form" data-message="Vous avez un formulaire de validation du sujet ouvert. Êtes-vous sûr de vouloir quitter sans valider ?">
+            <p class="mt-6 text-sm">
+              Veuillez saisir le nombre d'étudiants concernés par cet examen :
+            </p>
+            <div class="flex flex-wrap gap-4 mt-4">
+              <%= f.number_field :nombre_copies, value: nbr_etudiants, min: 0, required: true, class: 'input input-bordered input-sm', placeholder: 'Nombre de copies à imprimer' %>
+              <%= f.submit 'Confirmer', class: 'btn btn-sm btn-success text-white' %>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+
       <%= form_with url: rejeter_sujet_path(@sujet), method: :get do |f| %>
-        <div id='rejeter-form' style="display: none;" data-rejet-sujet-target="rejeterForm">
+        <div id='rejeter-form' style="display: none;" data-decision-sujet-target="form" data-message="Vous avez un formulaire de rejet du sujet ouvert. Êtes-vous sûr de vouloir quitter sans valider ?">
           <div class="flex flex-wrap gap-4 mt-4">
             <%= f.text_field :raisons, class: 'input input-bordered input-sm', placeholder: 'Pour quelle raison ?' %>
-            <%= f.submit 'Notifier l\'intervenant', class: 'btn btn-sm btn-error text-white', 'data-rejet-sujet-target': 'btnSubmit' %>
+            <%= f.submit 'Notifier l\'intervenant', class: 'btn btn-sm btn-error text-white' %>
           </div>
         </div>
       <% end %>
@@ -318,6 +350,14 @@
               <%= @sujet.workflow_state.humanize %>
             </span>
           </p>
+
+          <% if current_user&.imprimeur_sujets? && (@sujet.validé? || @sujet.imprimé?) %>
+            <p class="mb-4">
+              <strong>Copies à imprimer</strong>
+              <br>
+              <%= @sujet.nbr_copies ? @sujet.nbr_copies_avec_ajout : 'non renseigné' %>
+            </p>
+          <% end %>
 
           <p class="mb-4">
             <strong>Options</strong>

@@ -6,7 +6,7 @@ class SujetPolicy < ApplicationPolicy
   end
 
   def index?
-    user && (user.role_number >= 5 || user.partenaire_qse?)
+    user && (user.role_number >= 5 || user.partenaire_qse? || user.imprimeur_sujets?)
   end
 
   def show?
@@ -14,7 +14,7 @@ class SujetPolicy < ApplicationPolicy
   end
 
   def new?
-    index?
+    valider?
   end
 
   def create?
@@ -30,7 +30,7 @@ class SujetPolicy < ApplicationPolicy
   end
 
   def destroy?
-    index?
+    valider?
   end
 
   def audits?
@@ -63,5 +63,9 @@ class SujetPolicy < ApplicationPolicy
 
   def archiver?
     valider?
+  end
+
+  def imprimer?
+    user && user.imprimeur_sujets?
   end
 end

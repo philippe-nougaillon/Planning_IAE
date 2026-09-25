@@ -26,7 +26,7 @@
           <% if current_user.intervenant? && !current_user.partenaire_qse? %>
             <%= navbar_nav_item('Sujets d\'examens', 'docs', sujets_intervenant_path(Intervenant.find_by(id: @intervenant_user_id)), 'intervenants', 'sujets', nil, 'py-2') %>
           <% end %>
-          <% if current_user.partenaire_qse? %>
+          <% if current_user.partenaire_qse? || current_user.imprimeur_sujets? %>
             <%= navbar_nav_item('Sujets d\'examens', 'docs', sujets_path(), 'sujets', nil, nil, 'py-2') %>
           <% end %>
           <li>
