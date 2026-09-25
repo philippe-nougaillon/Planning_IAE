@@ -35,4 +35,15 @@ class EtudiantMailer < ApplicationMailer
 
     end
 
+    def convocation_soutenance(étudiant, cours, title)
+        @étudiant = étudiant
+        @cours = cours
+
+        mail(to: @étudiant.email, cc: @étudiant.formation.courriel, subject: title).tap do |message|
+            message.mailgun_options = {
+              "tag" => [étudiant.email, "convocation soutenance"]
+            }
+        end
+    end
+
 end

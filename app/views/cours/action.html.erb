@@ -336,24 +336,41 @@
 
       
       <% if @cours.count == 1 && @cours.first.examen? %>
-        <h3 class="text-2xl mt-4">Sélectionnez les consignes d'examens</h3>
-        <i>Cochez les options autorisées.</i>
-        <br><br>
-        <%= check_box_tag :papier, @sujet&.papier, @sujet&.papier %> 
-        <%= label_tag :papier, "Papiers autorisés ?" %>
-        <br>
-        <%= check_box_tag :calculatrice, @sujet&.calculatrice, @sujet&.calculatrice %>
-        <%= label_tag :calculatrice, "Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission autorisés ?" %>
-        <br>
-        <%= check_box_tag :ordi_tablette, @sujet&.ordi_tablette, @sujet&.ordi_tablette %>
-        <%= label_tag :ordi_tablette, "Ordinateurs et tablettes autorisés ?" %>
-        <br>
-        <%= check_box_tag :téléphone, @sujet&.téléphone, @sujet&.téléphone %>
-        <%= label_tag :téléphone, "Téléphones portables autorisés ?" %>
-        <br>
-        <%= check_box_tag :dictionnaire, @sujet&.dictionnaire, @sujet&.dictionnaire %>
-        <%= label_tag :dictionnaire, "Dictionnaires autorisés ?" %>
-        <br><br>
+        <% if params[:action_name] == "Convocation étudiants PDF" %>
+          <h3 class="text-2xl mt-4">Sélectionnez le type de convocation</h3>
+          <i>Examen : mail avec la convocation PDF jointe, selon les consignes ci-dessous. Soutenance : mail de convocation seul, sans PDF.</i>
+          <br><br>
+          <div class="flex flex-wrap gap-2 mb-4">
+            <label class="flex items-center gap-1 cursor-pointer mr-5">
+              <%= radio_button_tag :type_convocation, "Examen", true, onchange: "document.getElementById('consignes').classList.remove('hidden')", class: 'radio radio-xs' %>
+              <span class="label-text">Examen</span>
+            </label>
+            <label class="flex items-center gap-1 cursor-pointer">
+              <%= radio_button_tag :type_convocation, "Soutenance", false, onchange: "document.getElementById('consignes').classList.add('hidden')", class: 'radio radio-xs' %>
+              <span class="label-text">Soutenance</span>
+            </label>
+          </div>
+        <% end %>
+        <div id="consignes">
+          <h3 class="text-2xl mt-4">Sélectionnez les consignes d'examens</h3>
+          <i>Cochez les options autorisées.</i>
+          <br><br>
+          <%= check_box_tag :papier, @sujet&.papier, @sujet&.papier %>
+          <%= label_tag :papier, "Papiers autorisés ?" %>
+          <br>
+          <%= check_box_tag :calculatrice, @sujet&.calculatrice, @sujet&.calculatrice %>
+          <%= label_tag :calculatrice, "Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission autorisés ?" %>
+          <br>
+          <%= check_box_tag :ordi_tablette, @sujet&.ordi_tablette, @sujet&.ordi_tablette %>
+          <%= label_tag :ordi_tablette, "Ordinateurs et tablettes autorisés ?" %>
+          <br>
+          <%= check_box_tag :téléphone, @sujet&.téléphone, @sujet&.téléphone %>
+          <%= label_tag :téléphone, "Téléphones portables autorisés ?" %>
+          <br>
+          <%= check_box_tag :dictionnaire, @sujet&.dictionnaire, @sujet&.dictionnaire %>
+          <%= label_tag :dictionnaire, "Dictionnaires autorisés ?" %>
+          <br><br>
+        </div>
       <% else %>
         <% wrong_parameter = true %>
         <% if @cours.count > 1 %>

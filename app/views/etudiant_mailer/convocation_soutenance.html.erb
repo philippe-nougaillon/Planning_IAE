@@ -1,0 +1,33 @@
+<h1 style="font-size: 2.25rem; line-height: 2.5rem;">Convocation Soutenance UE<%= @cours.code_ue %> - <%= @cours.nom_ou_ue %></h1>
+<p style="margin-bottom: 0.5rem">
+  Bonjour <%= @étudiant.prénom.humanize %>,
+  <br><br>
+  Vous êtes convoqué(e) à la soutenance de l'UE<%= @cours.code_ue %> <b><%= @cours.nom_ou_ue %></b>
+  (<%= @cours.formation.nom %>)
+  le <b><%= l(@cours.debut.to_date, format: :long) %></b>,
+  de <b><%= l(@cours.debut, format: :heures_min) %></b> à <b><%= l(@cours.fin, format: :heures_min) %></b><% if @cours.salle %>,
+  en salle <b><%= @cours.salle.nom %></b><% end %>.
+</p>
+<p style="margin-bottom: 0.5rem">
+  <% if @cours.salle&.bloc == "P" %>
+    La soutenance se tiendra à l'IAE Paris-Sorbonne, 11-15 rue Ponscarme, 75013 Paris
+    (<%= link_to "plan d'accès", image_path("Plan_acces_Ponscarme_mai2026.png") %>).
+  <% end %>
+  Merci de vous présenter devant la salle 15 minutes avant l'heure de votre passage, muni(e) de votre carte d'étudiant
+  et de votre support de présentation.
+</p>
+<% if @cours.sujet&.commentaires.present? %>
+  <p style="margin-bottom: 0.5rem"><b>Informations complémentaires :</b></p>
+  <%= simple_format(@cours.sujet.commentaires, style: "margin-bottom: 0.5rem") %>
+<% end %>
+<% if @étudiant.formation.courriel.present? %>
+  <p style="margin-bottom: 0.5rem">
+    En cas de question, vous pouvez contacter votre gestionnaire de formation à l'adresse suivante :
+    <%= mail_to @étudiant.formation.courriel %>
+  </p>
+<% end %>
+<p style="margin-bottom: 0.5rem">
+  Bien cordialement,
+  <br>
+  IAE Paris-Sorbonne
+</p>
