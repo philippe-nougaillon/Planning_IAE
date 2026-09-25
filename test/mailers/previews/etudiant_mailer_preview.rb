@@ -17,4 +17,10 @@ class EtudiantMailerPreview < ActionMailer::Preview
     EtudiantMailer.convocation(etudiant, pdf, cour, "Convocation #{cour.type_examen} - #{cour.nom_ou_ue}")
   end
 
+  def convocation_soutenance
+    cour = Cour.where(intervenant_id: Intervenant.examens_ids).joins(:etudiants).last
+    etudiant = cour.etudiants.first
+    EtudiantMailer.convocation_soutenance(etudiant, cour, "Convocation Soutenance - #{cour.nom_ou_ue}")
+  end
+
 end
