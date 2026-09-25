@@ -57,13 +57,26 @@
       <h3 class="text-2xl">
         Salles disponibles
       </h3>
-      <% @salles_dispos.each do |salle| %>
-        <%= link_to salle, 
-                    action_do_cours_path(params
-                                          .permit!
-                                          .merge(salle_id: Salle.find_by(nom: salle))),
-                    data: { turbo_method: :post }, 
-                    class: "btn btn-success btn-outline btn-sm mb-1" %>
+      <% formations = @cours.map(&:formation).uniq %>
+      <% nbr_etudiants = formations.first.nbr_etudiants if formations.one? %>
+      <% if nbr_etudiants.nil? %>
+        <p class="text-error mb-2"><i>Plusieurs formations sélectionnées : la capacité des salles n'est pas comparée au nombre d'étudiants !</i></p>
+      <% end %>
+      <% @salles_dispos.each do |nom| %>
+        <% salle = Salle.find_by(nom: nom) %>
+        <% if nbr_etudiants.nil? %>
+          <% couleur = "text-gray-500 hover:bg-gray-500 hover:border-gray-500" %>
+        <% elsif salle.places.to_i.zero? || salle.places >= nbr_etudiants %>
+          <% couleur = "btn-success" %>
+        <% else %>
+          <% couleur = "btn-error" %>
+          <% manque = nbr_etudiants - salle.places %>
+        <% end %>
+        <%= link_to nom,
+                    action_do_cours_path(params.permit!.merge(salle_id: salle)),
+                    data: { turbo_method: :post },
+                    title: ("Manque #{manque} place.s" if manque),
+                    class: "btn #{couleur} btn-outline btn-sm mb-1" %>
       <% end %>
       <br><br>
     <% end %>
