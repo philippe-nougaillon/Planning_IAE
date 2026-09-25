@@ -32,11 +32,12 @@ class InvitMailer < ApplicationMailer
   end
 
   def proposition_de_surveillance
-    @invit = params[:invit]
-    mail(to: @invit.intervenant.email,
+    @intervenant = params[:intervenant]
+    @invits = params[:invits]
+    mail(to: @intervenant.email,
          subject: params[:title]).tap do |message|
           message.mailgun_options = {
-            "tag" => [@invit.intervenant.email, "proposition_de_surveillance"]
+            "tag" => [@intervenant.email, "proposition_de_surveillance"]
           }
       end
   end

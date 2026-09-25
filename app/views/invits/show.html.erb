@@ -124,8 +124,8 @@
               <br>
             <% end %>
             <div class="flex gap-2 w-full">
-              <%= submit_tag "Disponible", disabled: user_signed_in?, class: "btn btn-success btn-outline w-1/2", title: "Je suis disponible #{@invit.cours? ? "pour ce cours" : "pour cette surveillance"}" %>
-              <%= submit_tag "Pas disponible", disabled: user_signed_in?, class: "btn btn-error btn-outline w-1/2", title: "Je ne suis pas disponible #{@invit.cours? ? "pour ce cours" : "pour cette surveillance"}" %>
+              <%= submit_tag "Disponible", disabled: user_signed_in?, class: "btn btn-success btn-outline w-1/2", title: "Je suis disponible #{@invit.cours? ? "pour ce cours" : "pour cette surveillance"}", data: { turbo_confirm: "Confirmez-vous être disponible #{@invit.cours? ? "pour ce cours" : "pour cette surveillance"} ?" } %>
+              <%= submit_tag "Pas disponible", disabled: user_signed_in?, class: "btn btn-error btn-outline w-1/2", title: "Je ne suis pas disponible #{@invit.cours? ? "pour ce cours" : "pour cette surveillance"}", data: { turbo_confirm: "Confirmez-vous ne pas être disponible #{@invit.cours? ? "pour ce cours" : "pour cette surveillance"} ?" } %>
             </div>
           <% end %>
         <% else %>

@@ -467,23 +467,25 @@ class CoursController < ApplicationController
           invits_créées = 0
           invits_existantes = 0
           Intervenant.surveillants.where(id: params[:surveillants_id].keys).each do |surveillant|
+            invits = []
             @cours.each do |cour|
               if cour.invits.exists?(intervenant_id: surveillant.id)
                 invits_existantes += 1
                 next
               end
 
-              invit = cour.invits.create!(user_id: current_user.id,
-                                          intervenant_id: surveillant.id,
-                                          categorie: "surveillance")
-
-              title = "[PLANNING] Proposition de surveillance d’examen(s) #{ cour.formation.nom } à l’IAE Paris-Sorbonne"
-              mailer_response = InvitMailer.with(invit:, title:).proposition_de_surveillance.deliver_now
-
-              MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: invit.intervenant.email, subject: "Proposition de surveillance", title: title)
-
-              invits_créées += 1
+              invits << cour.invits.create!(user_id: current_user.id,
+                                            intervenant_id: surveillant.id,
+                                            categorie: "surveillance")
             end
+            next if invits.empty?
+
+            title = "[PLANNING] Proposition de surveillance d’examen(s) à l’IAE Paris-Sorbonne"
+            mailer_response = InvitMailer.with(intervenant: surveillant, invits: invits, title: title).proposition_de_surveillance.deliver_now
+
+            MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: surveillant.email, subject: "Proposition de surveillance", title: title)
+
+            invits_créées += invits.size
           end
           if invits_créées > 0
             @message_complémentaire = "#{ invits_créées } invitation.s créée.s avec succès"
