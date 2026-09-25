@@ -461,26 +461,40 @@ class CoursController < ApplicationController
         end
 
       when 'Proposition de surveillance'
-      invits_créées = 0
-      Intervenant.surveillants.each do |surveillant|
-        @cours.each do |cour|
-          invit = cour.invits.create!(user_id: current_user.id,
-                              intervenant_id: surveillant.id,
-                              categorie: "surveillance")
+        if params[:surveillants_id].blank?
+          flash[:alert] = "Aucun surveillant n'a été sélectionné, il ne s'est rien passé"
+        else
+          invits_créées = 0
+          invits_existantes = 0
+          Intervenant.surveillants.where(id: params[:surveillants_id].keys).each do |surveillant|
+            invits = []
+            @cours.each do |cour|
+              if cour.invits.exists?(intervenant_id: surveillant.id)
+                invits_existantes += 1
+                next
+              end
 
-          title = "[PLANNING] Proposition de surveillance d’examen(s) #{ cour.formation.nom } à l’IAE Paris-Sorbonne"
-          mailer_response = InvitMailer.with(invit:, title:).proposition_de_surveillance.deliver_now
+              invits << cour.invits.create!(user_id: current_user.id,
+                                            intervenant_id: surveillant.id,
+                                            categorie: "surveillance")
+            end
+            next if invits.empty?
 
-          MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: invit.intervenant.email, subject: "Proposition de surveillance", title: title)
-          
-          invits_créées += 1
+            title = "[PLANNING] Proposition de surveillance d’examen(s) à l’IAE Paris-Sorbonne"
+            mailer_response = InvitMailer.with(intervenant: surveillant, invits: invits, title: title).proposition_de_surveillance.deliver_now
+
+            MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: surveillant.email, subject: "Proposition de surveillance", title: title)
+
+            invits_créées += invits.size
+          end
+          if invits_créées > 0
+            @message_complémentaire = "#{ invits_créées } invitation.s créée.s avec succès"
+            @message_complémentaire += ", #{ invits_existantes } déjà envoyée.s ignorée.s" if invits_existantes > 0
+          else
+            flash[:alert] = "Aucune invitation créée : le.s surveillant.s sélectionné.s avaient déjà été invité.s pour ce.s cours"
+          end
         end
-      end
-      if invits_créées > 0
-        @message_complémentaire = "#{ invits_créées } invitation.s créée.s avec succès"
-      else
-        flash[:alert] = "Action annulée"
-      end
+
       when 'Intervertir'
         # il faut 2 cours
         if params[:cours_id].keys.count == 2

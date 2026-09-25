@@ -5,7 +5,7 @@ class InvitsController < ApplicationController
 
   # GET /invits or /invits.json
   def index
-    params[:sort_by] ||= 'MàJ'
+    params[:sort_by] ||= 'Date'
 
     @invits = Invit.all
     unless current_user.id == ENV["SUPER_ADMIN_ID"].to_i
@@ -32,7 +32,7 @@ class InvitsController < ApplicationController
 
     unless params[:sort_by].blank?
       @invits = @invits.order(:updated_at) if params[:sort_by] == 'MàJ'
-      @invits = @invits.joins(:cour).reorder('cours.debut') if params[:sort_by] == 'Date'
+      @invits = @invits.joins(:cour).reorder('cours.debut, invits.cour_id') if params[:sort_by] == 'Date'
     end
 
     unless params[:archive].blank?
@@ -110,10 +110,13 @@ class InvitsController < ApplicationController
   end
   
   def action
-    return unless params[:invits_id]
+    if params[:invits_id].blank?
+      return redirect_to invits_path, alert: "Aucune invitation sélectionnée, il ne s'est rien passé"
+    end
 
     invits = Invit.where(id: params[:invits_id].keys)
     count = 0
+    erreurs = []
 
     case params[:action_name]
     when "Relancer"
@@ -125,6 +128,16 @@ class InvitsController < ApplicationController
         end
       end
     when "Confirmer"
+      invits.each do |invit|
+        if invit.can_confirmer?
+          ok, message = confirmer_invit(invit)
+          if ok
+            count += 1
+          else
+            erreurs << message
+          end
+        end
+      end
     when "Archiver"
       invits.each do |invit| 
         if invit.can_archiver?
@@ -138,7 +151,8 @@ class InvitsController < ApplicationController
         count += 1
       end
     end
-    flash[:notice] = "#{count} invitation.s modifiée.s"  
+    flash[:notice] = "#{count} invitation.s modifiée.s"
+    flash[:alert] = erreurs.join(" ") if erreurs.any?
 
     redirect_to invits_path
   end
@@ -197,48 +211,8 @@ class InvitsController < ApplicationController
   end
 
   def confirmer
-
-    cours = @invit.cour
-
-    # Cas des examens : on n'affecte pas le surveillant comme intervenant du cours,
-    # on l'ajoute comme option "surveillance" au cours. Plusieurs surveillants peuvent
-    # être confirmés, on ne ferme donc pas les autres invitations en cours.
-    if cours.examen?
-      option = cours.options.build(catégorie: :surveillance_2,
-                                   intervenant: @invit.intervenant,
-                                   user_id: current_user.id)
-      if option.save
-        @invit.confirmer!
-        flash[:notice] = "Invitation confirmée. Surveillant ajouté au cours."
-      else
-        flash[:alert] = "Le surveillant n'a pas pu être ajouté. #{ option.errors.full_messages.to_sentence }"
-      end
-      return redirect_to invits_path
-    end
-
-    # attribuer le cours
-    cours.intervenant = @invit.intervenant
-    cours.code_ue = (@invit.ue ? Unite.find(@invit.ue).code : nil)
-    cours.nom = @invit.nom
-    cours.valid?
-    if cours.errors.full_messages == ["Cours a des invitations en cours !"]
-      @invit.confirmer!
-      puts '[DEBUG] Confirmé'
-  
-      # fermer les invitations en cours avant d'attribuer le cours
-      Invit.where(cour_id: @invit.cour_id).where.not(id: @invit.id).each do |invit|
-        invit.archiver!
-      end
-      puts '[DEBUG] Archivés'
-
-      # Force l'enregistrement du nouvel intervenant
-      cours.save(validate: false)
-      puts "{DEBUG] Intervenant enregistré"
-  
-      flash[:notice] = "Invitation confirmée. Intervenant affecté."
-    else
-      flash[:alert] = "L'intervenant n'a pas pu être modifié. #{ cours.errors.full_messages }"
-    end
+    ok, message = confirmer_invit(@invit)
+    flash[ok ? :notice : :alert] = message
     redirect_to invits_path
   end
 
@@ -285,5 +259,42 @@ class InvitsController < ApplicationController
       title = "[PLANNING] Réponse de surveillance : #{ invit.intervenant.nom_prenom } - #{ I18n.l invit.cour.debut, format: :long }"
       mailer_response = InvitMailer.with(invit: invit, title: title).informer_examens.deliver_now
       MailLog.create(user_id: current_user&.id || 0, message_id: mailer_response.message_id, to: ENV["EXAMEN_MAIL"], subject: "Réponse surveillant", title: title)
+    end
+
+    def confirmer_invit(invit)
+      cours = invit.cour
+
+      # Cas des examens : on n'affecte pas le surveillant comme intervenant du cours,
+      # on l'ajoute comme option "surveillance" au cours. Plusieurs surveillants peuvent
+      # être confirmés, on ne ferme donc pas les autres invitations en cours.
+      if cours.examen?
+        option = cours.options.build(catégorie: :surveillance_2,
+                                     intervenant: invit.intervenant,
+                                     user_id: current_user.id)
+        if option.save
+          invit.confirmer!
+          title = "[PLANNING] Confirmation de votre surveillance d’examen du #{ I18n.l cours.debut, format: :long }"
+          mailer_response = InvitMailer.with(invit: invit, title: title).confirmation_surveillance.deliver_now
+          MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: invit.intervenant.email, subject: "Confirmation surveillance", title: title)
+          [true, "Invitation confirmée. Surveillant ajouté au cours et mail de confirmation envoyé."]
+        else
+          [false, "Le surveillant #{ invit.intervenant.nom_prenom } n'a pas pu être ajouté. #{ option.errors.full_messages.to_sentence }"]
+        end
+      else
+        cours.intervenant = invit.intervenant
+        cours.code_ue = (invit.ue ? Unite.find(invit.ue).code : nil)
+        cours.nom = invit.nom
+        cours.valid?
+        if cours.errors.full_messages == ["Cours a des invitations en cours !"]
+          invit.confirmer!
+          Invit.where(cour_id: invit.cour_id).where.not(id: invit.id).each do |autre_invit|
+            autre_invit.archiver!
+          end
+          cours.save(validate: false)
+          [true, "Invitation confirmée. Intervenant affecté."]
+        else
+          [false, "L'intervenant n'a pas pu être modifié. #{ cours.errors.full_messages }"]
+        end
+      end
     end
 end

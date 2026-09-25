@@ -60,6 +60,44 @@ namespace :invits do
         puts "#{invitations.size} rappel(s) de surveillance envoyé(s)"
     end
 
+    desc "Rappeler aux surveillants confirmés leurs surveillances d'examen (J-10 et J-5 avant la date de l'examen)"
+    task :rappel_surveillants_examens, [:enregistrer] => :environment do |task, args|
+
+        examens_ids = Intervenant.examens_ids
+        next if examens_ids.blank?
+
+        jalons = [10, 5]
+        nb_rappels = 0
+
+        jalons.each do |jours|
+            date_cible = Date.today + jours.days
+
+            options = Option.surveillance_2
+                            .where.not(intervenant_id: nil)
+                            .joins(:cour)
+                            .where(cours: { intervenant_id: examens_ids })
+                            .where("DATE(cours.debut) = ?", date_cible)
+                            .where.not(cours: { etat: Cour.etats.values_at(:annulé, :reporté) })
+                            .includes(:intervenant, cour: [:formation, :salle])
+
+            options.group_by(&:intervenant).each do |surveillant, options_du_jour|
+                if surveillant.email.blank?
+                    puts "!KO => Manque l'adresse email de '#{surveillant.nom_prenom}'"
+                    next
+                end
+
+                cours = options_du_jour.map(&:cour).uniq.sort_by(&:debut)
+                title = "[PLANNING] Rappel : surveillance d’examen le #{ I18n.l date_cible, format: :long } (J-#{ jours })"
+                mailer_response = InvitMailer.with(intervenant: surveillant, cours: cours, jours: jours, title: title).rappel_surveillance.deliver_now
+                MailLog.create(user_id: 0, message_id: mailer_response.message_id, to: surveillant.email, subject: "Rappel surveillance (J-#{ jours })", title: title)
+                nb_rappels += 1
+            end
+        end
+
+        puts "-- Traitement terminé --"
+        puts "#{nb_rappels} rappel(s) envoyé(s) aux surveillants"
+    end
+
     desc "Informer les intervenants des cours confirmés"
     task :informer_intervenants, [:enregistrer] => :environment do |task, args|
         # s'il y a eu des confirmations ce jour
