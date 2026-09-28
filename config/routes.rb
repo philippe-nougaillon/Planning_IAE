@@ -263,6 +263,7 @@ Rails.application.routes.draw do
       get :rejeter
       get :relancer
       get :archiver
+      get :imprimer
       patch :deposer
       patch :deposer_admin
     end

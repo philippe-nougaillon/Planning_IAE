@@ -33,6 +33,7 @@ class Sujet < ApplicationRecord
   RELANCE10 = 'relancé 10 fois'
   DEPOSE  = 'déposé'
   VALIDE  = 'validé'
+  IMPRIME = 'imprimé'
   REJETE  = 'non_conforme'
   ARCHIVE = 'archivé'
 
@@ -110,6 +111,11 @@ class Sujet < ApplicationRecord
     end
 
     state VALIDE, meta: {style: 'badge-success'} do
+      event :imprimer, transitions_to: IMPRIME
+      event :archiver, transitions_to: ARCHIVE
+    end
+
+    state IMPRIME, meta: {style: 'badge-accent'} do
       event :archiver, transitions_to: ARCHIVE
     end
 
@@ -134,6 +140,14 @@ class Sujet < ApplicationRecord
 
   def cour
     self.cours.first
+  end
+
+  def nbr_etudiants
+    self.formations.distinct.sum(&:calc_nbr_etudiants)
+  end
+
+  def nbr_copies_avec_ajout
+    (nbr_copies * 1.15).ceil if nbr_copies
   end
 
   def delete_cours_association

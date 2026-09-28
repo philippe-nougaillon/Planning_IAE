@@ -78,6 +78,11 @@ class IntervenantMailer < ApplicationMailer
         mail(to: @intervenant.email, subject: title)
     end
 
+    def impression_sujet(sujet, title)
+        @sujet = sujet
+        mail(to: ENV["IMPRESSION_SUJETS_MAIL"], subject: title)
+    end
+
     def relance_sujet_30_jours(sujet, title)
         examen = sujet.cour
         intervenant = examen.intervenant_binome

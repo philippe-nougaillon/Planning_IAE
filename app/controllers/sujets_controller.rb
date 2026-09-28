@@ -1,11 +1,15 @@
 class SujetsController < ApplicationController
-  before_action :set_sujet, only: %i[ show edit update destroy deposer deposer_done deposer_admin valider rejeter ]
+  before_action :set_sujet, only: %i[ show edit update destroy deposer deposer_done deposer_admin valider rejeter imprimer ]
   before_action :is_user_authorized
   skip_before_action :authenticate_user!, only: %i[ show deposer deposer_done]
 
   # GET /sujets or /sujets.json
   def index
-    if params[:archive].blank?
+    @imprimeur = current_user.imprimeur_sujets?
+
+    if @imprimeur
+      @sujets = Sujet.where(workflow_state: [Sujet::VALIDE, Sujet::IMPRIME]).joins(:cours)
+    elsif params[:archive].blank?
       @sujets = Sujet.where.not(workflow_state: "archivé").joins(:cours)
     else
       @sujets = Sujet.all.joins(:cours)
@@ -144,12 +148,19 @@ class SujetsController < ApplicationController
 
   def valider
     if @sujet.valid?
-      if @sujet.can_valider?
+      if @sujet.can_valider? && params[:nombre_copies].blank?
+        redirect_to @sujet, alert: "Indiquez le nombre de copies à imprimer pour valider le sujet."
+      elsif @sujet.can_valider?
+        @sujet.nbr_copies = params[:nombre_copies].to_i
         @sujet.valider!
 
         ValidationSujetJob.perform_later(@sujet, current_user&.id)
 
-        redirect_to @sujet, notice: "Sujet validé avec succès."
+        if demander_impression
+          redirect_to @sujet, notice: "Sujet validé avec succès. Demande d'impression envoyée."
+        else
+          redirect_to @sujet, alert: "Sujet validé, mais la demande d'impression n'a pas été envoyée : IMPRESSION_SUJETS_MAIL n'est pas défini."
+        end
       elsif @sujet.validé?
         redirect_to @sujet, alert: "Le sujet est déjà validé."
       else
@@ -183,7 +194,26 @@ class SujetsController < ApplicationController
     end
   end
 
+  def imprimer
+    if (@sujet.can_imprimer? || @sujet.imprimé?) && @sujet.sujet.attached?
+      @sujet.imprimer! if @sujet.can_imprimer?
+      flash[:telechargement] = rails_blob_path(@sujet.sujet, disposition: "attachment")
+      redirect_back fallback_location: sujets_path, notice: "Téléchargement du sujet en cours."
+    else
+      redirect_back fallback_location: sujets_path, alert: "Le sujet ne peut pas être téléchargé."
+    end
+  end
+
   private
+    def demander_impression
+      return false if ENV["IMPRESSION_SUJETS_MAIL"].blank?
+
+      examen = @sujet.cour
+      title = "[PLANNING] Impression de #{@sujet.nbr_copies_avec_ajout} copies du sujet d'examen du #{I18n.l examen.debut.to_date, format: :long} à #{I18n.l examen.debut, format: :heures_log}"
+      mailer_response = IntervenantMailer.impression_sujet(@sujet, title).deliver_now
+      MailLog.create(user_id: current_user&.id || 0, message_id: mailer_response.message_id, to: ENV["IMPRESSION_SUJETS_MAIL"], subject: "Impression Sujet Examen", title: title)
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_sujet
       @sujet = Sujet.find_by(slug: params[:id])

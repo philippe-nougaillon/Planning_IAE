@@ -393,7 +393,7 @@ class Cour < ApplicationRecord
 
   def color_sujet
     case self.sujet&.workflow_state
-    when 'validé', 'archivé'
+    when 'validé', 'imprimé', 'archivé'
       "success"
     when 'déposé'
       "warning"
