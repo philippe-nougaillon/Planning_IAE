@@ -1007,7 +1007,7 @@ class CoursController < ApplicationController
 
       # Surchage pour l'ICP sinon ils ne verront rien
       if current_user.partenaire_qse?
-        @salles = Salle.where(nom: ["ICP 1", "ICP 2"])
+        @salles = Salle.where(nom: ["ICP 1", "ICP 2"]).or(Salle.where(id: @cour&.salle_id))
       end
     end
 
