@@ -48,13 +48,15 @@
       <% end %>
     </td>
     <td>
-      <% if sujet.sujet.attached? && current_user.otp_required_for_login %>
-        <%= link_to imprimer_sujet_path(sujet), title: "Télécharger le sujet", 'data-turbo': false do %>
-          <span class="material-symbols-outlined text-3xl text-error">picture_as_pdf</span>
+      <% if sujet.sujet.attached? %>
+        <% if current_user.otp_required_for_login %>
+          <%= link_to imprimer_sujet_path(sujet), title: "Télécharger le sujet", 'data-turbo': false do %>
+            <span class="material-symbols-outlined text-3xl text-error">picture_as_pdf</span>
+          <% end %>
+        <% else %>
+          <%= link_to "Activer la double authentification", user_path(current_user), class: "text-primary hover:underline font-black" %>
+          pour télécharger le document
         <% end %>
-      <% else %>
-        <%= link_to "Activer la double authentification", user_path(current_user), class: "text-primary hover:underline font-black" %>
-        pour télécharger le document
       <% end %>
     </td>
   <% elsif params[:action] == 'index' && params[:controller] == 'sujets' %>
