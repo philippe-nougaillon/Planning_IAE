@@ -592,21 +592,21 @@ class CoursController < ApplicationController
         request.format = 'pdf'
 
       when 'Convocation étudiants PDF'
-        if @cours.count == 1 && @cours.first.examen?
+        if @cours.count == 1
           étudiants = Etudiant.where(id: etudiants_selected_ids)
           if étudiants.any?
-            soutenance = params[:type_convocation] == "Soutenance"
             étudiants.each do |étudiant|
-              if soutenance
-                title = "Convocation Soutenance - #{@cours.first.nom_ou_ue}"
-                mailer_response = EtudiantMailer.convocation_soutenance(étudiant, @cours.first, title).deliver_now
-              else
+              if @cours.first.examen?
                 pdf = ExportPdf.new
                 pdf.convocation(@cours.first, étudiant, params[:papier], params[:calculatrice], params[:ordi_tablette], params[:téléphone], params[:dictionnaire], @cours.first.sujet&.commentaires)
                 title = "Convocation #{@cours.first.type_examen} - #{@cours.first.nom_ou_ue}"
                 mailer_response = EtudiantMailer.convocation(étudiant, pdf, @cours.first, title).deliver_now
+                MailLog.create(subject: "Convocation UE##{@cours.first.code_ue}", user_id: current_user.id, message_id: mailer_response.message_id, to: étudiant.email, cc: étudiant.formation.courriel, title: title)
+              else
+                title = "Convocation - #{@cours.first.nom_ou_ue}"
+                mailer_response = EtudiantMailer.convocation_soutenance(étudiant, @cours.first, title).deliver_now
+                MailLog.create(subject: "Convocation Soutenance", user_id: current_user.id, message_id: mailer_response.message_id, to: étudiant.email, cc: étudiant.formation.courriel, title: title)
               end
-              MailLog.create(subject: "Convocation #{'Soutenance ' if soutenance}UE##{@cours.first.code_ue}", user_id: current_user.id, message_id: mailer_response.message_id, to: étudiant.email, cc: étudiant.formation.courriel, title: title)
             end
             if params[:etudiants_en_rattrapage_ids].present?
               RedoublantNotificationJob.perform_later(@cours.first, params[:etudiants_en_rattrapage_ids], current_user.id)
@@ -615,7 +615,7 @@ class CoursController < ApplicationController
             flash[:alert] = "Aucun étudiant n'a été sélectionné, il ne s'est rien passé"
           end
         else
-          flash[:alert] = 'Il y a plusieurs cours sélectionnés ou le cours n\'est pas un examen'
+          flash[:alert] = 'Il y a plusieurs cours sélectionnés'
         end
       when "Regrouper sur une seule Feuille de présence Edusign"
         etat = 3
