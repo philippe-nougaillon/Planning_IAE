@@ -115,7 +115,7 @@ class Sujet < ApplicationRecord
       event :archiver, transitions_to: ARCHIVE
     end
 
-    state IMPRIME, meta: {style: 'badge-accent'} do
+    state IMPRIME, meta: {style: 'bg-teal-600 border-teal-600'} do
       event :archiver, transitions_to: ARCHIVE
     end
 
