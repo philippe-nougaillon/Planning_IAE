@@ -118,14 +118,15 @@
         <% if @invit.can_valider? || @invit.can_rejeter? %>
           <strong>Votre réponse :</strong>
           <br>
+          <% peut_repondre = !user_signed_in? || current_user.intervenant? || current_user.enseignant? %>
           <%= form_tag validation_invit_path(@invit), method: :post do %>
             <% if @invit.cours? %>
-              <%= text_area_tag :reponse, @invit.reponse, rows: 5, cols: 55, disabled: user_signed_in?, class: 'textarea textarea-bordered' %>
+              <%= text_area_tag :reponse, @invit.reponse, rows: 5, cols: 55, disabled: !peut_repondre, class: 'textarea textarea-bordered w-full' %>
               <br>
             <% end %>
             <div class="flex gap-2 w-full">
-              <%= submit_tag "Disponible", disabled: user_signed_in?, class: "btn btn-success btn-outline w-1/2", title: "Je suis disponible #{@invit.cours? ? "pour ce cours" : "pour cette surveillance"}", data: { turbo_confirm: "Confirmez-vous être disponible #{@invit.cours? ? "pour ce cours" : "pour cette surveillance"} ?" } %>
-              <%= submit_tag "Pas disponible", disabled: user_signed_in?, class: "btn btn-error btn-outline w-1/2", title: "Je ne suis pas disponible #{@invit.cours? ? "pour ce cours" : "pour cette surveillance"}", data: { turbo_confirm: "Confirmez-vous ne pas être disponible #{@invit.cours? ? "pour ce cours" : "pour cette surveillance"} ?" } %>
+              <%= submit_tag "Disponible", disabled: !peut_repondre, class: "btn btn-success btn-outline flex-1", title: "Je suis disponible #{@invit.cours? ? "pour ce cours" : "pour cette surveillance"}", data: { turbo_confirm: "Confirmez-vous être disponible #{@invit.cours? ? "pour ce cours" : "pour cette surveillance"} ?" } %>
+              <%= submit_tag "Pas disponible", disabled: !peut_repondre, class: "btn btn-error btn-outline flex-1", title: "Je ne suis pas disponible #{@invit.cours? ? "pour ce cours" : "pour cette surveillance"}", data: { turbo_confirm: "Confirmez-vous ne pas être disponible #{@invit.cours? ? "pour ce cours" : "pour cette surveillance"} ?" } %>
             </div>
           <% end %>
         <% else %>
@@ -141,7 +142,7 @@
   </div>
 </div>
 
-<% if user_signed_in? %>
+<% if user_signed_in? && !(current_user.intervenant? || current_user.enseignant?) %>
   Etat :
   <span class="badge <%= @invit.style %> text-white">
     <%= @invit.workflow_state.humanize %>
