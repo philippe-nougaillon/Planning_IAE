@@ -33,7 +33,7 @@
   </td>
   <% if @imprimeur %>
     <td style="text-align: center">
-      <%= sujet.nbr_copies_avec_ajout %>
+      <%= sujet.nbr_copies_avec_ajout || 'non renseigné' %>
     </td>
     <td>
       <% if sujet.sujet.attached? %>

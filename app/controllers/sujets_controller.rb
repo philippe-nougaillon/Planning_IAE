@@ -133,8 +133,13 @@ class SujetsController < ApplicationController
       if @sujet.valid?
         if @sujet.can_déposer?
           @sujet.update(sujet_params)
-          @sujet.update(workflow_state: "validé")
-          redirect_to sujet_path(@sujet), notice: "Sujet enregistré avec succès."
+          @sujet.update(workflow_state: "validé", nbr_copies: params[:nombre_copies])
+
+          if demander_impression
+            redirect_to sujet_path(@sujet), notice: "Sujet enregistré avec succès. Demande d'impression envoyée."
+          else
+            redirect_to sujet_path(@sujet), alert: "Sujet enregistré, mais la demande d'impression n'a pas été envoyée : IMPRESSION_SUJETS_MAIL n'est pas défini."
+          end
         else
           redirect_to request.referrer, alert: "Le sujet ne peut pas être déposé."
         end
@@ -197,8 +202,7 @@ class SujetsController < ApplicationController
   def imprimer
     if (@sujet.can_imprimer? || @sujet.imprimé?) && @sujet.sujet.attached?
       @sujet.imprimer! if @sujet.can_imprimer?
-      flash[:telechargement] = rails_blob_path(@sujet.sujet, disposition: "attachment")
-      redirect_back fallback_location: sujets_path, notice: "Téléchargement du sujet en cours."
+      redirect_to rails_blob_path(@sujet.sujet, disposition: "attachment")
     else
       redirect_back fallback_location: sujets_path, alert: "Le sujet ne peut pas être téléchargé."
     end

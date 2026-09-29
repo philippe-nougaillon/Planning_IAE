@@ -1,18 +1,14 @@
 import { Controller } from "@hotwired/stimulus"
 
 // Connects to data-controller="decision-sujet"
-// Un bouton (Valider, Rejeter) ouvre son formulaire ; tant qu'il est ouvert et non envoyé,
+// Tant qu'un modal (Valider, Rejeter) est ouvert et son formulaire non envoyé,
 // quitter la page demande confirmation.
 export default class extends Controller {
-  static targets = ["form", "btnOuvrir"]
-
   // beforeunload pour fermeture d’onglet, rafraîchissement, ou navigations hors du domaine
   // turbo:before-visit pour le changement de page
   // popstate pour revenir en arrière ou revenir en avant
 
   connect() {
-    this.formOuvert = null
-
     this.element.addEventListener("submit", this.formEnvoye)
     window.addEventListener("beforeunload", this.confirmQuitter)
     document.addEventListener("turbo:before-visit", this.confirmQuitter)
@@ -27,25 +23,17 @@ export default class extends Controller {
     window.removeEventListener("popstate", this.confirmQuitter)
   }
 
-  // data-decision-sujet-form-param donne l'id du formulaire à ouvrir
-  showForm(event) {
-    this.formOuvert = this.formTargets.find(form => form.id === event.params.form)
-    this.formOuvert.style.display = "block"
-    this.btnOuvrirTargets.forEach(btn => btn.disabled = true)
-  }
-
-  formEnvoye = () => {
-    this.formOuvert = null
+  formEnvoye = (event) => {
+    event.target.closest("dialog").close()
   }
 
   confirmQuitter = (event) => {
-    if (!this.formOuvert) return
-
-    const message = this.formOuvert.dataset.message
+    const modal = this.element.querySelector("dialog[open]")
+    if (!modal) return
 
     // Cas 1 : navigation Turbo (liens internes)
     if (event.type === "turbo:before-visit") {
-      if (!confirm(message)) {
+      if (!confirm(modal.dataset.message)) {
         event.preventDefault() // bloque la navigation Turbo
       }
     }
@@ -58,8 +46,7 @@ export default class extends Controller {
 
     // Cas 3 : flèches navigateur (popstate)
     if (event.type === "popstate") {
-      const confirmed = confirm(message)
-      if (confirmed) {
+      if (confirm(modal.dataset.message)) {
         // On empêche le retour en repoussant l’état actuel
         history.pushState(null, "", window.location.href)
         history.back()

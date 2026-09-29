@@ -137,6 +137,13 @@
 
                   <%= f.text_area :commentaires, rows: 3, class: 'textarea textarea-bordered w-full', placeholder: "Visible sur la convocation étudiant" %>
 
+                  <div class="mt-8 mb-4">
+                    <h3 class="text-xl mt-4">Nombre de copies à imprimer</h3>
+                    <i>Nombre d'étudiants concernés par cet examen : <%= @sujet.nbr_etudiants %></i>
+                  </div>
+
+                  <%= number_field_tag :nombre_copies, nil, min: 0, required: true, class: 'input input-bordered w-full' %>
+
                   <button type="submit" name="commit" value="Déposer le sujet" class="btn btn-success w-full sm:w-48 btn-lg text-white mt-6" data-disable-with="Déposer le sujet" data-turbo-confirm="ATTENTION ! Une fois déposé, vous ne pourrez plus modifier le sujet. Confirmez-vous le dépôt du sujet">
                     <i class="far fa-arrow-alt-circle-down"></i>
                     Déposer
@@ -199,7 +206,7 @@
           <% end %>
         </p>
 
-        <% if current_user.imprimeur_sujets? && (@sujet.validé? || @sujet.imprimé?) %>
+        <% if @sujet.validé? || @sujet.imprimé? %>
           <p class="mb-4">
             <strong>Copies à imprimer :</strong>
             <% if @sujet.nbr_copies %>
@@ -248,13 +255,13 @@
   <div class="flex w-full mt-4">
     <div data-controller="decision-sujet" class="flex-1">
       <% if @sujet.can_valider? %>
-        <button id='valider-btn' class='btn btn-sm btn-success text-white' data-action="click->decision-sujet#showForm" data-decision-sujet-form-param="valider-form" data-decision-sujet-target="btnOuvrir">Valider</button>
+        <button id='valider-btn' class='btn btn-sm btn-success text-white' onclick="modal_valider.showModal()">Valider</button>
       <% else %>
         Valider
       <% end %>
       |
       <% if @sujet.can_rejeter? %>
-        <button id='rejeter-btn' class='btn btn-sm btn-error text-white' data-action="click->decision-sujet#showForm" data-decision-sujet-form-param="rejeter-form" data-decision-sujet-target="btnOuvrir">Rejeter</button>
+        <button id='rejeter-btn' class='btn btn-sm btn-error text-white' onclick="modal_rejeter.showModal()">Rejeter</button>
       <% else %>
         Rejeter
       <% end %>
@@ -262,29 +269,33 @@
       <%= link_to 'Retour', sujets_path, class: 'text-primary hover:underline' %>
 
       <% if @sujet.can_valider? %>
-        <% nbr_etudiants = @sujet.nbr_etudiants %>
-        <%= form_with url: valider_sujet_path(@sujet), method: :get do |f| %>
-          <div id='valider-form' style="display: none;" data-decision-sujet-target="form" data-message="Vous avez un formulaire de validation du sujet ouvert. Êtes-vous sûr de vouloir quitter sans valider ?">
+        <dialog id="modal_valider" class="modal bg-white w-96 max-w-full mx-auto h-fit my-auto p-4 shadow-2xl" data-message="Vous avez un formulaire de validation du sujet ouvert. Êtes-vous sûr de vouloir quitter sans valider ?">
+          <form method="dialog">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+          </form>
+          <%= form_with url: valider_sujet_path(@sujet), method: :get do |f| %>
             <p class="mt-6 text-sm">
               Veuillez saisir le nombre d'étudiants concernés par cet examen :
             </p>
             <div class="flex flex-wrap gap-4 mt-4">
-              <%= f.number_field :nombre_copies, value: nbr_etudiants, min: 0, required: true, class: 'input input-bordered input-sm', placeholder: 'Nombre de copies à imprimer' %>
+              <%= f.number_field :nombre_copies, value: @sujet.nbr_etudiants, min: 0, required: true, class: 'input input-bordered input-sm', placeholder: 'Nombre de copies à imprimer' %>
               <%= f.submit 'Confirmer', class: 'btn btn-sm btn-success text-white' %>
             </div>
-          </div>
-        <% end %>
+          <% end %>
+        </dialog>
       <% end %>
 
-      <%= form_with url: rejeter_sujet_path(@sujet), method: :get do |f| %>
-        <div id='rejeter-form' style="display: none;" data-decision-sujet-target="form" data-message="Vous avez un formulaire de rejet du sujet ouvert. Êtes-vous sûr de vouloir quitter sans valider ?">
-          <div class="flex flex-wrap gap-4 mt-4">
-            <%= f.text_field :raisons, class: 'input input-bordered input-sm', placeholder: 'Pour quelle raison ?' %>
+      <dialog id="modal_rejeter" class="modal bg-white w-96 max-w-full mx-auto h-fit my-auto p-4 shadow-2xl" data-message="Vous avez un formulaire de rejet du sujet ouvert. Êtes-vous sûr de vouloir quitter sans valider ?">
+        <form method="dialog">
+          <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+        </form>
+        <%= form_with url: rejeter_sujet_path(@sujet), method: :get do |f| %>
+          <div class="flex flex-wrap gap-4 mt-6">
+            <%= f.text_field :raisons, class: 'input input-bordered input-sm w-full', placeholder: 'Pour quelle raison ?' %>
             <%= f.submit 'Notifier l\'intervenant', class: 'btn btn-sm btn-error text-white' %>
           </div>
-        </div>
-      <% end %>
-
+        <% end %>
+      </dialog>
     </div>
     <%= link_to "Supprimer le sujet", sujet_path(@sujet), 'data-turbo-method': :delete, 'data-turbo-confirm': 'ATTENTION : Avez-vous bien téléchargé le sujet d\'examen avant de le supprimer ? Il ne sera plus possible de le faire après la suppression !', class: "btn btn-error btn-outline btn-sm" %>
   </div>
@@ -351,7 +362,7 @@
             </span>
           </p>
 
-          <% if current_user&.imprimeur_sujets? && (@sujet.validé? || @sujet.imprimé?) %>
+          <% if @sujet.validé? || @sujet.imprimé? %>
             <p class="mb-4">
               <strong>Copies à imprimer</strong>
               <br>
