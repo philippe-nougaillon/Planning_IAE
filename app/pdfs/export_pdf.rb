@@ -271,12 +271,10 @@ class ExportPdf
         # Todo: Mettre dans une variable la signature
         y_position = cursor
         bounding_box([0, y_position], :width => 250, :height => 100) do
-            text "Eric LAMARQUE"
-            text "Directeur de l'IAE de Paris", size: 8
+            text "Directeur/Directrice de l'IAE Paris-Sorbonne", size: 8
         end
         bounding_box([250, y_position], :width => 250, :height => 100) do
-            text "Barbara FITSCH-MOURAS"
-            text "Responsable du service Formation et développement", size: 8 
+            text "Chef/ Cheffe de service", size: 8 
         end    
         
     end
@@ -396,12 +394,10 @@ class ExportPdf
         else
             # Todo: Mettre dans une variable la signature
             bounding_box([0, y_position], :width => 250, :height => 100) do
-                text "Eric LAMARQUE"
-                text "Directeur de l'IAE Paris", size: 8
+                text "Directeur/Directrice de l'IAE Paris-Sorbonne", size: 8
             end
             bounding_box([250, y_position], :width => 250, :height => 100) do
-                text is_vacataire ? "" : "Barbara FITSCH-MOURAS"
-                text "Responsable de service", size: 8 
+                text is_vacataire ? "" : "Chef/ Cheffe de service", size: 8 
             end
         end
 
@@ -519,12 +515,10 @@ class ExportPdf
         else
             # Todo: Mettre dans une variable la signature
             bounding_box([0, y_position], :width => 250, :height => 100) do
-                text "Eric LAMARQUE"
-                text "Directeur de l'IAE Paris", size: 8
+                text "Directeur/Directrice de l'IAE Paris-Sorbonne", size: 8
             end
             bounding_box([250, y_position], :width => 250, :height => 100) do
-                text is_vacataire ? "" : "Barbara FITSCH-MOURAS"
-                text "Responsable de service", size: 8 
+                text is_vacataire ? "" : "Chef/ Cheffe de service", size: 8 
             end
         end
 

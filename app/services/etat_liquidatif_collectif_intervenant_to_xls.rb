@@ -296,13 +296,9 @@ class EtatLiquidatifCollectifIntervenantToXls < ApplicationService
     index += 3
     sheet.row(index).concat ["Fait à Paris le #{I18n.l(Date.today)}"]
     index += 3
-    sheet.row(index).concat ['Eric LAMARQUE']
-    index += 1
-    sheet.row(index).concat ["Directeur de l'IAE Paris"]
+    sheet.row(index).concat ["Directeur/Directrice de l'IAE Paris-Sorbonne"]
     index += 3
-    sheet.row(index).concat ['Barbara FITSCH-MOURAS']
-    index += 1
-    sheet.row(index).concat ['Responsable du service Formation et Développement']
+    sheet.row(index).concat ["Chef/ Cheffe de service"]
 
     return book 
   end
