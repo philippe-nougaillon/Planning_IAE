@@ -608,7 +608,7 @@ class CoursController < ApplicationController
                 MailLog.create(subject: "Convocation Soutenance", user_id: current_user.id, message_id: mailer_response.message_id, to: étudiant.email, cc: étudiant.formation.courriel, title: title)
               end
             end
-            if params[:etudiants_en_rattrapage_ids].present?
+            if params[:etudiants_en_rattrapage_ids].present? && @cours.first.examen?
               RedoublantNotificationJob.perform_later(@cours.first, params[:etudiants_en_rattrapage_ids], current_user.id)
             end
           else
