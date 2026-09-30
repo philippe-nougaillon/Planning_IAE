@@ -34,6 +34,10 @@ class Salle < ApplicationRecord
 		"#{self.nom}#{" -> #{description_ponscarme}" if self.bloc == "P" && description_ponscarme} (#{self.places}P)"
 	end
 
+	def places_manquantes(nbr_etudiants)
+		nbr_etudiants - self.places
+	end
+
 	def description_ponscarme
 		case self.nom
 		when "2.1"
