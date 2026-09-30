@@ -152,8 +152,12 @@ class Cour < ApplicationRecord
     I18n.l(self.debut, format: :short) 
   end
 
-  def manque_de_places? 
-    self.formation.nbr_etudiants > self.salle.places && self.salle.bloc != 'Z'
+  def places_manquantes
+    self.salle.places_manquantes(self.formation.calc_nbr_etudiants)
+  end
+
+  def manque_de_places?
+    self.places_manquantes > 0 && self.salle.bloc != 'Z'
   end
 
   def nom_ou_ue
