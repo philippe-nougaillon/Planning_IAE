@@ -173,7 +173,7 @@
       <div class="w-1/4">
         <%= label_tag 'Intervenant *' %>
         <%= select_tag 'invit[intervenant][1]', 
-                        options_from_collection_for_select(Intervenant.where.not(doublon:true), :id, :nom_prenom, params[:intervenant_ids]),
+                        options_from_collection_for_select(Intervenant.where.not(doublon:true).where.not(status:"Surveillant"), :id, :nom_prenom, params[:intervenant_ids]),
                         include_blank: true,
                         class: "slim-select" %>
       </div>
@@ -195,7 +195,7 @@
       <div class="w-1/4">
         <%= label_tag 'Intervenant *' %>
         <%= select_tag 'invit[intervenant][2]', 
-                        options_from_collection_for_select(Intervenant.where.not(doublon:true), :id, :nom_prenom, params[:intervenant_ids]),
+                        options_from_collection_for_select(Intervenant.where.not(doublon:true).where.not(status:"Surveillant"), :id, :nom_prenom, params[:intervenant_ids]),
                         include_blank: true,
                         class: "slim-select" %>
       </div>
@@ -217,7 +217,7 @@
       <div class="w-1/4">
         <%= label_tag 'Intervenant *' %>
         <%= select_tag 'invit[intervenant][3]', 
-                        options_from_collection_for_select(Intervenant.where.not(doublon:true), :id, :nom_prenom, params[:intervenant_ids]),
+                        options_from_collection_for_select(Intervenant.where.not(doublon:true).where.not(status:"Surveillant"), :id, :nom_prenom, params[:intervenant_ids]),
                         include_blank: true,
                         class: "slim-select" %>
       </div>
@@ -239,7 +239,7 @@
       <div class="w-1/4">
         <%= label_tag 'Intervenant *' %>
         <%= select_tag 'invit[intervenant][4]', 
-                        options_from_collection_for_select(Intervenant.where.not(doublon:true), :id, :nom_prenom, params[:intervenant_ids]),
+                        options_from_collection_for_select(Intervenant.where.not(doublon:true).where.not(status:"Surveillant"), :id, :nom_prenom, params[:intervenant_ids]),
                         include_blank: true,
                         class: "slim-select" %>
       </div>
