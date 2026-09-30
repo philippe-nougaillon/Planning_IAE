@@ -23,8 +23,9 @@
           <% unless current_user.étudiant? %>
             <%= navbar_nav_item('Salles', 'meeting_room', occupation_salles_path, 'salles', nil, nil, 'py-2') %>
           <% end %>
-          <% if current_user.intervenant? && !current_user.partenaire_qse? %>
+          <% if (current_user.intervenant? || current_user.enseignant?) && !current_user.partenaire_qse? %>
             <%= navbar_nav_item('Sujets d\'examens', 'docs', sujets_intervenant_path(Intervenant.find_by(id: @intervenant_user_id)), 'intervenants', 'sujets', nil, 'py-2') %>
+            <%= navbar_nav_item('Invitations', 'calendar_check', invitations_intervenant_path(Intervenant.find_by(id: @intervenant_user_id)), 'intervenants', 'invitations', nil, 'py-2') %>
           <% end %>
           <% if current_user.partenaire_qse? || current_user.imprimeur_sujets? %>
             <%= navbar_nav_item('Sujets d\'examens', 'docs', sujets_path(), 'sujets', nil, nil, 'py-2') %>
