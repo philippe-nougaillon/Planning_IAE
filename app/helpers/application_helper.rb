@@ -4,11 +4,11 @@ module ApplicationHelper
         is_active = if controller && action
                         controller_name == controller && action_name == action
                     elsif controller
-                        controller_name == controller && exclude_action != action_name
+                        controller_name == controller && Array(exclude_action).exclude?(action_name)
                     elsif action
                         action_name == action
                     else
-                        controller_name == label && exclude_action != action_name
+                        controller_name == label && Array(exclude_action).exclude?(action_name)
                     end
         render(inline: %{
             <li>

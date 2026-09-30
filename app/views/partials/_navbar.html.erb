@@ -19,7 +19,7 @@
         <% end %>
         <% if policy(current_user).left_navbar? %>
           <%= navbar_nav_item('Formations', 'work', formations_path, 'formations', nil, [], "py-0") %>
-          <%= navbar_nav_item('Intervenants', 'co_present', intervenants_path, 'intervenants', nil) %>
+          <%= navbar_nav_item('Intervenants', 'co_present', intervenants_path, 'intervenants', nil, %w[invitations sujets]) %>
           <%= navbar_nav_item('Étudiants', 'school', etudiants_path, 'etudiants') %>
         <% end %>
         
@@ -28,9 +28,11 @@
           <%= navbar_nav_item('Vacations', 'co_present', vacations_path, 'vacations') %>
         <% end %>
 
-        <% if current_user.intervenant? && !current_user.partenaire_qse? %>
+        <% if (current_user.intervenant? || current_user.enseignant?) && !current_user.partenaire_qse? %>
           <%= navbar_nav_item('Sujets d\'examens', 'docs', sujets_intervenant_path(Intervenant.find_by(id: @intervenant_user_id)), 'intervenants', 'sujets') %>
+          <%= navbar_nav_item('Invitations', 'calendar_check', invitations_intervenant_path(Intervenant.find_by(id: @intervenant_user_id)), 'intervenants', 'invitations') %>
         <% end %>
+
         <% if current_user.partenaire_qse? || current_user.imprimeur_sujets? %>
           <%= navbar_nav_item('Sujets d\'examens', 'docs', sujets_path(), 'sujets') %>
         <% end %>

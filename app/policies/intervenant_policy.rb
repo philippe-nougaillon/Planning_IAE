@@ -42,7 +42,7 @@ class IntervenantPolicy < ApplicationPolicy
   end
 
   def sujets?
-    user && user.role_number == 1 && record.linked_user == user
+    user && (user.intervenant? || user.enseignant?) && record.linked_user == user
   end
 
   def is_specific_intervenant?
