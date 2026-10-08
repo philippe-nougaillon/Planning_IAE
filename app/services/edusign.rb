@@ -3,7 +3,7 @@ class Edusign < ApplicationService
     def initialize
         # Pour le décalage horaire des cours entre Planning et Edusign
         # N'est plus utilisé pour les cours, mais seulement pour les attendances/justificatifs
-        @time_zone_difference = 1.hour
+        @time_zone_difference = 2.hour
 
         # Utilisés pour calculer le nombre d'éléments en erreur
         @nb_recovered_elements = 0
@@ -12,13 +12,13 @@ class Edusign < ApplicationService
         # Déclaré ici pour éviter de synchroniser des éléments deux fois (à cause de la prochaine synchronisation qui se base sur le created_at de la synchronisation)
         @interval_end = Time.zone.now
 
-        # Par défaut, on considère qu'il n'y a pas de crash.
+        # Par défaut, on considère qu'il n'y a pas de crash (ou timeout).
         @crash = false
     end
 
     def call
         # Necessaire pour créer des formations sans étudiants 
-        # et des formations avec que des étudiants déjà créés sur Edusign
+        # et des formations avec que des étudiants déjà créés sur Edusign
 
         formations_ajoutées_ids = self.sync_formations("Post", nil)
 
@@ -106,7 +106,7 @@ class Edusign < ApplicationService
                 puts response
             end
         else
-            # Si ce n'est pas un succes, on considère que c'est un crash, et qu'il faudra refaire une tentative
+            # Si ce n'est pas un succes, on considère que c'est un crash (ou timeout), et qu'il faudra refaire une tentative
             @crash = true
             response["status"] = "error"
             response["message"] = http_response.body
@@ -124,7 +124,7 @@ class Edusign < ApplicationService
     end
 
     def get_interval_of_time
-        # Se base sur le dernier EdusignLog où il n'y a pas eu de crash. Le scheduler n'est plus à synchroniser avec cette fonction
+        # Se base sur le dernier EdusignLog où il n'y a pas eu de crash (ou timeout). Le scheduler n'est plus à synchroniser avec cette fonction
         puts "INTERVAL = #{EdusignLog.where(modele_type: 1).where.not(etat: 3).reorder(created_at: :desc).first.created_at..@interval_end}"
         EdusignLog.where(modele_type: 1).where.not(etat: 3).reorder(created_at: :desc).first.created_at..@interval_end
     end
@@ -733,9 +733,15 @@ class Edusign < ApplicationService
         # Pour les edusign ids des cours supprimés, on vérifie s'il existe encore sur Edusign
         deleted_cours.each do |deleted_cour|
             edusign_id = deleted_cour.audited_changes["edusign_id"]
+
+            # Un cours supprimé sans edusign_id n'a jamais été envoyé sur Edusign : il n'y a rien à supprimer.
+            # Surtout, sans id l'URL devient ".../v1/course/" et Edusign renvoie TOUS les cours,
+            # une réponse énorme parsée en mémoire, potentiellement plusieurs fois -> RAM qui déborde et qui stope la synchronisation
+            next if edusign_id.blank?
+
             self.prepare_request("https://ext.edusign.fr/v1/course/#{edusign_id}", "Get")
             response = self.get_response(false)
-            if response["status"] == "success" && edusign_id != nil
+            if response["status"] == "success"
                 edusign_ids << edusign_id
                 deleted_cours_to_sync_ids << deleted_cour.auditable_id
             end
@@ -822,7 +828,7 @@ class Edusign < ApplicationService
 
         # Modification de l'etat
         if @crash
-            3 # Crash
+            3 # Crash (ou Timeout)
         elsif @nb_recovered_elements != 0
             case self.count_failure_elements
             when 0

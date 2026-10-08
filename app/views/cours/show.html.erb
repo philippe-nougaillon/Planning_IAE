@@ -114,6 +114,23 @@
     <%= link_to @cour.document.filename, url_for(@cour.document), class: 'text-primary hover:underline', target: "_blank" %>
   <% end %>
 
+  <% if current_user.peut_gerer_suivi_copies? && (suivi_copies = @cour.options.detect(&:suivi_copies?)) && suivi_copies.description.present? %>
+    <h4 class="text-xl mt-4">
+      <small class="text-secondary">Suivi des copies</small><br>
+    </h4>
+    <div class="rounded-lg border-l-4 border-secondary bg-base-200 p-4 mb-4">
+      <div class="text-lg">
+        <%= simple_format(suivi_copies.description) %>
+      </div>
+      <% maj_description = suivi_copies.audits.reorder(id: :desc).detect { |a| a.audited_changes.key?('description') } %>
+      <% if maj_description&.user %>
+        <p class="text-sm text-secondary mt-2">
+          Renseigné par <%= maj_description.user.nom_et_prénom %> le <%= l(maj_description.created_at.in_time_zone('Paris'), format: :perso) %>
+        </p>
+      <% end %>
+    </div>
+  <% end %>
+
   <hr>
 
   <% if @cour.audits.any? %>

@@ -32,9 +32,11 @@ class Intervenant < ApplicationRecord
 	normalizes :nom, with: -> nom { nom.strip }
 	normalizes :prenom, with: -> prenom { prenom.strip }
 	
-	enum :status, [:CEV, :Permanent, :PR, :MCF, :MCF_HDR, :PAST, :PRAG, :Admin, :CEV_HSS, :CEV_ENS_C_CONTRACTUEL, :CEV_TIT_CONT_FP, :CEV_SAL_PRIV_IND]
+	enum :status, [:CEV, :Permanent, :PR, :MCF, :MCF_HDR, :PAST, :PRAG, :Admin, :CEV_HSS, :CEV_ENS_C_CONTRACTUEL, :CEV_TIT_CONT_FP, :CEV_SAL_PRIV_IND, :Surveillant]
 
 	default_scope { order(:nom, :prenom) } 
+
+	scope :surveillants, -> { where(status: "Surveillant") }
 
 	before_create :nom_with_underscore
 	after_create :create_user_access
@@ -134,7 +136,7 @@ class Intervenant < ApplicationRecord
 		ENV["INTERVENANTS_PLACEHOLDER"]&.split(',')&.map(&:to_i)
 	end
 
-	def self.surveillants
+	def self.surveillants_examen
 		ENV["SURVEILLANTS_EXAMEN_IDS"]&.split(',')&.map(&:to_i)
 	end
 

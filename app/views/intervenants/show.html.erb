@@ -52,6 +52,24 @@
       </h3>
       <%= @intervenant.status %>
 
+      <div>
+        <h3 class="text-2xl mt-2">
+          <small class="text-secondary">Edusign</small><br>
+        </h3>
+        <% if @intervenant.edusign_id? %>
+          <%= fa_icon 'check' %><small> Sychronisé</small>
+        <% end %>
+      </div>
+
+      <div>
+        <h3 class="text-2xl mt-2">
+          <small class="text-secondary">Doublons aurotisés ?</small><br>
+        </h3>
+        <% if @intervenant.doublon? %>
+          <%= fa_icon 'check' %><small> Oui</small>
+        <% end %>
+      </div>
+
       <% if @intervenant.année_entrée %>
         <h3 class="text-2xl mt-2">
           <small class="text-secondary">Ancienneté</small><br>

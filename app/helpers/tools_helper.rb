@@ -71,6 +71,26 @@ module ToolsHelper
                 else
                     pretty_changes << "État initialisé à '#{ c.last.humanize }'"
                 end
+            when 'Catégorie'
+                if audit.auditable_type == 'Option'
+                    # L'enum catégorie d'une Option est audité sous forme d'entier
+                    keys = Option.catégories.keys
+                    if audit.audited_changes['catégorie'].class.name == 'Array'
+                        pretty_changes << "Catégorie modifiée de '#{keys[c.last.first] if c.last.first}' à '#{keys[c.last.last] if c.last.last}'"
+                    elsif audit.audited_changes['catégorie'].class.name == 'Integer'
+                        pretty_changes << "Catégorie initialisée à '#{keys[c.last]}'"
+                    else
+                        pretty_changes << "Catégorie initialisée à '#{c.last}'"
+                    end
+                elsif audit.action == 'update'
+                    unless c.last.first.blank? && c.last.last.blank?
+                        pretty_changes << "#{key} modifié de '#{c.last.first}' à '#{c.last.last}'"
+                    end
+                else
+                    unless c.last.blank?
+                        pretty_changes << "#{key} #{audit.action == 'create' ? 'initialisé à' : 'était'} '#{c.last}'"
+                    end
+                end
             when 'Discarded at'
                 if audit.action == 'update'
                     pretty_changes << "Utilisateur #{c.last.first.nil? ? 'désactivé' : 'activé'}"

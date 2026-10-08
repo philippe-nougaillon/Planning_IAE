@@ -1,0 +1,4 @@
+<%# Remplace la ligne par elle-même : succès (avec accusé) ou erreurs affichées dans la ligne %>
+<%= turbo_stream.replace dom_id(@vacation) do %>
+  <%= render "formations/vacations/vacation", vacation: @vacation, saved: @vacation.errors.empty? %>
+<% end %>

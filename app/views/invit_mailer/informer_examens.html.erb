@@ -1,0 +1,26 @@
+<p style="margin-bottom: 0.5rem">
+  Bonjour,
+  <br>
+  <br>
+  Un surveillant vient de répondre à une invitation de surveillance d'examen.
+</p>
+<ul style="margin-bottom: 0.5rem">
+  <li><b>Surveillant :</b> <%= @invit.intervenant.nom_prenom %> (<%= @invit.intervenant.email %>)</li>
+  <li><b>Réponse :</b>
+    <% if @invit.disponible? %>
+      <span style="color:#16a34a">Disponible</span>
+    <% elsif @invit.pas_disponible? %>
+      <span style="color:#dc2626">Pas disponible</span>
+    <% else %>
+      <%= @invit.workflow_state.humanize %>
+    <% end %>
+  </li>
+  <li><b>Examen :</b> <%= @invit.cour.formation.nom %><%= " – #{@invit.nom}" unless @invit.nom.blank? %></li>
+  <li><b>Date :</b> <%= l(@invit.cour.debut, format: :long) %></li>
+  <% unless @invit.reponse.blank? %>
+    <li><b>Commentaire du surveillant :</b> <%= @invit.reponse %></li>
+  <% end %>
+</ul>
+<p style="margin-bottom: 0.5rem">
+  <%= link_to 'Voir les réponses à traiter', invits_url %>
+</p>

@@ -7,6 +7,7 @@ class CoursController < ApplicationController
   skip_before_action :authenticate_user!, only: %i[ index index_slide mes_sessions_intervenant signature_intervenant signature_intervenant_do ]
   before_action :set_cour, only: [:show, :edit, :update, :destroy, :delete_attachment]
   before_action :is_user_authorized, except: [:show, :edit, :update, :destroy, :signature_etudiant, :signature_etudiant_do]
+  before_action :set_salles, only: [:new, :create, :edit, :update]
 
   layout :define_layout
 
@@ -117,7 +118,10 @@ class CoursController < ApplicationController
     case params[:view]
       when 'calendar_rooms'
         _date = Date.parse(params[:start_date]).beginning_of_week(start_day = :monday)
-        @cours = @cours.where(debut: (_date .. _date + 7.day))
+        @cours = @cours
+                  .where(debut: (_date .. _date + 7.day))
+                  .left_joins(:salle)
+                  .where("salles.bloc IN (:blocs) OR salles.id IS NULL", blocs: ["P", "Z"])
         params[:calendar_rooms_starts_at] = _date
       when 'calendar_week'
         _date = Date.parse(params[:start_date]).beginning_of_week(start_day = :monday)
@@ -328,11 +332,11 @@ class CoursController < ApplicationController
 
       if params[:action_name] == 'Changer de salle'
         # Afficher les salles disponibles
-        @salles_dispos = Salle.pluck(:nom)
+        @salles_dispos = Salle.ponscarme_et_blocZ.pluck(:nom)
         @action_ids.each do |id|
           cours = Cour.find(id)
           salles = []
-          Salle.all.each do |s|
+          Salle.ponscarme_et_blocZ.each do |s|
             cours.salle = s
             salles << s.nom if cours.valid?
           end
@@ -442,10 +446,9 @@ class CoursController < ApplicationController
                                     nom: invit[:nom].values.to_a[i])
                 invits_créées += 1
               end
-              # ATTENTION : Invit.first ne sera plus correct si le default_scope est modifié. Peut-être que ce n'a sera plus correct en mettant ce code dans un job
-              # title = "[PLANNING] Proposition de créneaux pour placer vos cours #{ Invit.first.cour.formation.nom } à l’IAE Paris-Sorbonne"
+              # title = "[PLANNING] Proposition de créneaux pour placer vos cours #{ Invit.first.cour.formation.nom }"
               # mailer_response = InvitMailer.with(invit: Invit.first, title: title).envoyer_invitation.deliver_now
-              # Pareil ici, Invit.first ne sera plus correct si le default_scope change
+
               # MailLog.create(user_id: current_user.id, message_id:mailer_response.message_id, to:Invit.first.intervenant.email, subject: "Invitation", title: title)
             end
           end
@@ -456,6 +459,27 @@ class CoursController < ApplicationController
           flash[:alert] = "Action annulée"
         end
 
+      when 'Proposition de surveillance'
+      invits_créées = 0
+      Intervenant.surveillants.each do |surveillant|
+        @cours.each do |cour|
+          invit = cour.invits.create!(user_id: current_user.id,
+                              intervenant_id: surveillant.id,
+                              categorie: "surveillance")
+
+          title = "[PLANNING] Proposition de surveillance d’examen(s) #{ cour.formation.nom } à l’IAE Paris-Sorbonne"
+          mailer_response = InvitMailer.with(invit:, title:).proposition_de_surveillance.deliver_now
+
+          MailLog.create(user_id: current_user.id, message_id: mailer_response.message_id, to: invit.intervenant.email, subject: "Proposition de surveillance", title: title)
+          
+          invits_créées += 1
+        end
+      end
+      if invits_créées > 0
+        @message_complémentaire = "#{ invits_créées } invitation.s créée.s avec succès"
+      else
+        flash[:alert] = "Action annulée"
+      end
       when 'Intervertir'
         # il faut 2 cours
         if params[:cours_id].keys.count == 2
@@ -560,8 +584,8 @@ class CoursController < ApplicationController
               pdf = ExportPdf.new
               pdf.convocation(@cours.first, étudiant, params[:papier], params[:calculatrice], params[:ordi_tablette], params[:téléphone], params[:dictionnaire], @cours.first.sujet&.commentaires)
               # title = "Convocation #{@cours.first.type_examen} - #{@cours.first.nom_ou_ue}"
-              # mailer_response = EtudiantMailer.convocation(étudiant, pdf, @cours.first).deliver_now
-              # MailLog.create(subject: "Convocation UE##{@cours.first.code_ue}", user_id: current_user.id, message_id: mailer_response.message_id, to: étudiant.email, title: title)
+              # mailer_response = EtudiantMailer.convocation(étudiant, pdf, @cours.first, title).deliver_now
+              # MailLog.create(subject: "Convocation UE##{@cours.first.code_ue}", user_id: current_user.id, message_id: mailer_response.message_id, to: étudiant.email, cc: étudiant.formation.courriel, title: title)
             end
             # if params[:etudiants_en_rattrapage_ids].present?
             #   RedoublantNotificationJob.perform_later(@cours.first, params[:etudiants_en_rattrapage_ids], current_user.id)
@@ -681,11 +705,18 @@ class CoursController < ApplicationController
   def new
     @cour = Cour.new
     @formations = Formation.not_archived.ordered
-    @salles = Salle.all
+    if current_user.intervenant_permanent?
+      @intervenants = Intervenant.where(id: @intervenant_user_id)
+      @cour.intervenant_id = @intervenant_user_id
+      @cour.formation_id = ENV["FORMATION_ID_RESERVATION_INTERVENANTS"].to_i
+      @cour.hors_service_statutaire = true
+      @cour.no_send_to_edusign = true
+    else
+      @intervenants = Intervenant.all
+    end
 
     if current_user.partenaire_qse?
       @formations = @formations.partenaire_qse
-      @salles = @salles.where(nom: ["ICP 1", "ICP 2"])
     end
 
     unless params[:formation].blank?
@@ -713,12 +744,11 @@ class CoursController < ApplicationController
   # GET /cours/1/edit
   def edit
     authorize @cour
+    @intervenants = current_user.intervenant_permanent? ? Intervenant.where(id: @intervenant_user_id) : Intervenant.all
     @formations = Formation.ordered
-    @salles = Salle.all
 
     if current_user.partenaire_qse?
       @formations = @formations.partenaire_qse
-      @salles = @salles.where(nom: ["ICP 1", "ICP 2"])
     end
   end
 
@@ -746,11 +776,10 @@ class CoursController < ApplicationController
       else
         format.html do
           @formations = Formation.ordered
-          @salles = Salle.all
+          @intervenants = current_user.intervenant_permanent? ? Intervenant.where(id: @intervenant_user_id) : Intervenant.all
 
           if current_user.partenaire_qse?
             @formations = @formations.partenaire_qse
-            @salles = @salles.where(nom: ["ICP 1", "ICP 2"])
           end
           render :new
         end
@@ -795,11 +824,10 @@ class CoursController < ApplicationController
       else
         format.html do
           @formations = Formation.ordered
-          @salles = Salle.all
+          @intervenants = current_user.intervenant_permanent? ? Intervenant.where(id: @intervenant_user_id) : Intervenant.all
 
           if current_user.partenaire_qse?
             @formations = @formations.partenaire_qse
-            @salles = @salles.where(nom: ["ICP 1", "ICP 2"])
           end
           render :edit, params
         end
@@ -927,7 +955,7 @@ class CoursController < ApplicationController
                                     :salle_id, :code_ue, :nom, :etat, :duree,
                                     :intervenant_binome_id, :hors_service_statutaire,
                                     :commentaires, :elearning, :document, :no_send_to_edusign,
-                                    options_attributes: [:id, :user_id, :catégorie, :description, :_destroy])
+                                    options_attributes: [:id, :user_id, :catégorie, :description, :intervenant_id, :_destroy])
     end
 
     def is_user_authorized
@@ -940,6 +968,26 @@ class CoursController < ApplicationController
       etudiants_ids += params[:etudiants_en_rattrapage_ids] if params[:etudiants_en_rattrapage_ids].present?
       etudiants_ids.uniq!
       etudiants_ids
+    end
+
+    def set_salles
+      @salles = Salle.ponscarme_et_blocZ
+
+      # Enlever les salles zoom
+      @salles = @salles.where.not(nom: Salle.liste_salles_zoom)
+
+      # Les intervenants autorisés ne peuvent réserver que les salles privées,
+      # sauf celles du 6e étage. Les autres intervenants sont déjà bloqués par cour_policy.
+      if current_user.intervenant_permanent?
+        @salles = @salles.where(privée: true).where.not(id: Salle.salles_non_reservables_intervenants)
+      elsif current_user.gestionnaire?
+        @salles = @salles.where.not(id: @salles.bureaux_profs)
+      end
+
+      # Surchage pour l'ICP sinon ils ne verront rien
+      if current_user.partenaire_qse?
+        @salles = Salle.where(nom: ["ICP 1", "ICP 2"]).or(Salle.where(id: @cour&.salle_id))
+      end
     end
 
   end

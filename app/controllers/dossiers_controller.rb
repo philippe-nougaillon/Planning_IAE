@@ -121,6 +121,7 @@ class DossiersController < ApplicationController
   end
 
   def deposer
+    # TODO : "if params[:dossier]" n'est pas correct. Si le "required" dans le formulaire est retiré, on peut envoyer un dossier sans aucun document (c.f. les sujets d'examens sans sujet)
     if params[:dossier]
       @dossier.update(dossier_params)
       @dossier.déposer!

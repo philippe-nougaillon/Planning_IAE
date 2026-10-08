@@ -25,14 +25,14 @@
         stroke-width="2"
         d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
     </svg>
-    <span>Vous n'avez pas de cours planifiés pour aujourd'hui...</span>
+    <span>Vous n'avez pas de cours/réservations confirmés pour aujourd'hui...</span>
   </div>
 
   <h2 class="text-2xl flex items-center gap-3 mt-6 border-b pb-4">
     <span class="material-symbols-outlined text-3xl">
       event
     </span>
-    Prochains cours
+    Prochains cours/réservations
   </h2>
   <div class="sm:flex sm:flex-wrap w-full gap-6">
     <% @next_cours.each do |next_cour| %>
@@ -42,5 +42,5 @@
 <% end %>
 
 <% if user_signed_in?  %>
-  <%= link_to 'Voir tous mes cours...', cours_path(start_date: Date.today, intervenant_id: @intervenant.id, intervenant: @intervenant.nom + " " + @intervenant.prenom), class: 'btn rounded-lg btn-primary btn-outline hover:!text-white my-4 w-full sm:w-fit' %>
+  <%= link_to 'Voir tous mes cours/réservations...', cours_path(start_date: Date.today, intervenant_id: @intervenant.id, intervenant: @intervenant.nom + " " + @intervenant.prenom), class: 'btn rounded-lg btn-primary btn-outline hover:!text-white my-4 w-full sm:w-fit' %>
 <% end %>

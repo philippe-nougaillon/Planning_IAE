@@ -16,7 +16,10 @@ class Cour < ApplicationRecord
   has_many :etudiants, through: :formation
   has_many :options, dependent: :destroy
   accepts_nested_attributes_for :options,
-                                reject_if: lambda{|attributes| attributes['catégorie'].blank? || attributes['description'].blank?},
+                                reject_if: lambda{|attributes|
+                                  attributes['catégorie'].blank? ||
+                                  (attributes['catégorie'].to_s == 'surveillance_2' ? attributes['intervenant_id'].blank? : attributes['description'].blank?)
+                                },
                                 allow_destroy:true
   has_many :attendances, dependent: :destroy
   belongs_to :sujet, optional: true
@@ -85,7 +88,7 @@ class Cour < ApplicationRecord
     end
 
     if user.role_number >= 5
-      actions << ["Changer d'état", "Changer de date", "Inviter", "Générer Feuille émargement PDF", "Générer Feuille émargement présences signées PDF", "Générer Pochette Examen PDF", "Convocation étudiants PDF", "Regrouper sur une seule Feuille de présence Edusign"]
+      actions << ["Changer d'état", "Changer de date", "Inviter", "Générer Feuille émargement PDF", "Générer Feuille émargement présences signées PDF", "Générer Pochette Examen PDF", "Convocation étudiants PDF", "Regrouper sur une seule Feuille de présence Edusign", "Proposition de surveillance"]
     end
     return actions.flatten.sort
   end
@@ -338,7 +341,7 @@ class Cour < ApplicationRecord
       event.dtend = c.fin.strftime("%Y%m%dT%H%M%S")
       event.summary = c.try(:formation).try(:nom)
       event.description = c.nom
-      event.location = "BioPark #{c.salle.nom if c.salle}"
+      event.location = "#{c.salle.nom if c.salle}"
       event.url = "https://business-school-planning-demo-248ac1f2d92e.herokuapp.com/"
       calendar.add_event(event)
     end  
@@ -403,8 +406,31 @@ class Cour < ApplicationRecord
     self.intervenant_id == ENV["SURVEILLANT_EXAMEN_VACATAIRE_ID"].to_i
   end
 
+  # Liste unifiée des noms de surveillants d'un cours, combinant :
+  #  - les options "surveillance" (noms saisis entre crochets dans la description)
+  #  - les options "surveillance_2" (intervenant sélectionné, statut Surveillant)
+  def noms_surveillants
+    noms = []
+
+    options.surveillance.each do |option|
+      next if option.description.blank?
+      noms += option.description.split('[').map { |item| item.gsub(']', '').delete("\r\n\\") }.reject(&:blank?)
+    end
+
+    options.surveillance_2.each do |option|
+      noms << option.intervenant.nom_prenom.gsub('_', ' ') if option.intervenant
+    end
+
+    noms
+  end
+
   def linked_edusign_cour
     Cour.where(edusign_id: self.grouped_edusign_id).or(Cour.where(id: self.grouped_edusign_id)).first
+  end
+
+  # Vérifie si le cours a une salle fusionnée
+  def fusion?
+    self.options.where(catégorie: "fusion").exists?
   end
 
   private
@@ -631,5 +657,4 @@ class Cour < ApplicationRecord
       sujet.destroy
     end
   end
-
 end

@@ -23,6 +23,7 @@ Rails.application.routes.draw do
   end
 
   resources :formations do
+    resources :vacations, only: [:create, :update, :destroy], module: :formations
     collection do
       post :action
       post :action_do
@@ -203,33 +204,32 @@ Rails.application.routes.draw do
     get :edusign
   end
 
-  # namespace :api, defaults: {format: 'json'} do 
-  #   namespace :v1 do 
-  #       resources :cours
-  #   end 
-
-  #   namespace :v2 do 
-  #       resources :cours do
-  #         collection do
-  #           get :in_progress
-  #         end
-  #       end
-  #       resources :etudiants
-  #   end 
+  namespace :api, defaults: {format: 'json'} do 
+    #   namespace :v1 do 
+    #       resources :cours
+    #   end 
   
-  #   namespace :v3 do 
-  #     resources :cours do
-  #       collection do
-  #         get :in_progress
-  #       end
-  #     end
-  #   end 
+    #   namespace :v2 do 
+    #       resources :cours do
+    #         collection do
+    #           get :in_progress
+    #         end
+    #       end
+    #       resources :etudiants
+    #   end 
+    
+    #   namespace :v3 do 
+    #     resources :cours do
+    #       collection do
+    #         get :in_progress
+    #       end
+    #     end
+    #   end 
 
-  #   namespace :v4 do 
-  #     resources :cours
-  #   end 
-
-  # end 
+    namespace :v4 do 
+      resources :cours
+    end 
+  end 
 
   resources :alerts
   resources :ouvertures
@@ -255,7 +255,7 @@ Rails.application.routes.draw do
 
   resources :edusign_logs, only: %i[ index show ]
 
-  resources :sujets, except: %i[ edit update ] do
+  resources :sujets do
     member do
       get :deposer_done
       get :envoyer

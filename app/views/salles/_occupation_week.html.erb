@@ -21,11 +21,11 @@
     </tfoot>
 
     <tbody>
-      <% bloc = 'A' %>
+      <% bloc = 'P' %>
       <% @salles.each do | salle | %>
         <% @cours = @cours_semaine.where(salle_id: salle.id) %>
 
-        <% if salle.bloc != bloc %>
+        <% if params[:bloc].blank? && salle.bloc != bloc %>
           <% bloc = salle.bloc %>
           <thead>
             <tr class="bg-slate-100 border">

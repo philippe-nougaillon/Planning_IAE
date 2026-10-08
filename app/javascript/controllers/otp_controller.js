@@ -25,6 +25,7 @@ export default class extends Controller {
       success: (data) => {
         if(data.otp_required == true){
           this.otpTarget.style.display = "block"
+          this.otpTarget.querySelector("input").focus()
           this.btnConnexionTarget.onclick = null
         } else {
           this.formCredentialsTarget.submit()

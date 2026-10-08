@@ -1,5 +1,5 @@
 <div class="calendar overflow-x-auto">
-  <table class="table">
+  <table class="table table-fixed">
     <thead>
       <tr>
         <th></th>
@@ -25,7 +25,7 @@
         <tr>
           <td class="align-top">
             <% if @salle %>
-              <p id=<%= @salle.nom %> class="text-xl" style="text-align: center">
+              <p id=<%= @salle.nom %> class="text-xl text-center break-words">
                 <b><%= @salle.nom %></b>
                 <br>
                 <small>(<%= @salle.places %>)</small>
@@ -39,11 +39,11 @@
             <% unless day.sunday? %>
               <% day_style_class = 'shadow bg-amber-100' if day == Date.today %>
               <% day_style_class = 'shadow bg-red-100' if Fermeture.find_by(date: day) %>
-              
+
               <%= content_tag :td, class: "align-top p-3 #{day_style_class}" do %>
                 <% passed_block.call day, sorted_events.fetch(day, []) %>
               <% end %>
-            <% end %>  
+            <% end %>
           <% end %>
         </tr>
       <% end %>

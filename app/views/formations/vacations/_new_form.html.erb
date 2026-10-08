@@ -1,0 +1,25 @@
+<div class="shadow rounded p-4 bg-base-200">
+  <p class="font-semibold text-secondary mb-4">
+    <%= fa_icon 'plus-circle' %>
+    Ajouter une vacation
+  </p>
+
+  <div class="flex flex-wrap items-end <%= 'border-2 border-error rounded pb-3' if vacation.errors.any? %>">
+    <% if vacation.errors.any? %>
+      <div class="sm:w-full px-4 pt-3 text-error text-sm">
+        <ul class="list-disc list-inside">
+          <% vacation.errors.each do |error| %>
+            <li><%= error.full_message.html_safe %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <%= form_with model: vacation, url: formation_vacations_path(@formation), method: :post, class: "contents" do |f| %>
+      <%= render "formations/vacations/fields", f: f %>
+      <div class="sm:w-2/12 px-4 self-end mt-4">
+        <%= f.submit "Ajouter", class: "btn btn-sm btn-primary text-white w-full" %>
+      </div>
+    <% end %>
+  </div>
+</div>

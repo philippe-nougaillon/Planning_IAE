@@ -1091,7 +1091,7 @@ class ToolsController < ApplicationController
 
   def nouvelle_saison
 
-    @years ||= ['2021/2022','2022/2023','2023/2024','2024/2025', '2025/2026']
+    @years ||= ['2021/2022','2022/2023','2023/2024','2024/2025', '2025/2026', '2026/2027', '2027/2028']
 
     unless params[:saison].blank?
       @formations = Formation.not_archived.where(hors_catalogue:false)
@@ -1269,7 +1269,7 @@ class ToolsController < ApplicationController
     surveillant = params[:surveillant]
     @cumuls = {}
     @examens = Cour
-                  .where("intervenant_id IN (:surveillants) OR intervenant_binome_id IN (:surveillants)", {surveillants: Intervenant.surveillants} )
+                  .where("intervenant_id IN (:surveillants) OR intervenant_binome_id IN (:surveillants)", {surveillants: Intervenant.surveillants_examen} )
                   .where("commentaires like '%[%'")
                   .where("debut between ? and ?", @start_date, @end_date.to_date + 1.day)
                   .includes(:formation)
@@ -1312,11 +1312,13 @@ class ToolsController < ApplicationController
     surveillant = params[:surveillant]
     @cumuls = {}
     @examens = Cour
-                  .where("intervenant_id IN (:surveillants) OR intervenant_binome_id IN (:surveillants)", {surveillants: Intervenant.surveillants} )
-                  .joins(:options).where(options: {catégorie: :surveillance})
-                  .where("options.description LIKE '%[%'")
+                  .where("cours.intervenant_id IN (:surveillants) OR cours.intervenant_binome_id IN (:surveillants)", {surveillants: Intervenant.surveillants_examen} )
+                  .joins(:options)
+                  .where("(options.catégorie = :surveillance AND options.description LIKE '%[%') OR (options.catégorie = :surveillance_2 AND options.intervenant_id IS NOT NULL)",
+                         {surveillance: Option.catégories[:surveillance], surveillance_2: Option.catégories[:surveillance_2]})
                   .where("debut BETWEEN ? AND ?", @start_date, @end_date.to_date + 1.day)
-                  .includes(:formation)
+                  .includes(:formation, options: :intervenant)
+                  .distinct
                   .order(:debut)
 
     respond_to do |format|

@@ -18,7 +18,8 @@ class SallesController < ApplicationController
   def occupation
     params[:vue] ||= 'jour'
     
-    @salles = Salle.all
+    @salles = Salle.where(bloc: ["P", "Z"])
+    @blocs = @salles.blocs
 
     unless session[:start_date].blank?
       params[:start_date] ||= session[:start_date]
@@ -104,7 +105,7 @@ class SallesController < ApplicationController
     @taux_occupation = {}
     # 11 heures par jour * 5.5j (soit une semaine) * 52 semaines - 8 semaines de fermeture </i>
     sum_occupation_max = (11 * 5.5) * (52 - 8)
-    (2017..2025).each do |year|
+    (2017..2026).each do |year|
       sum_occupation = @salle.cours.where("DATE(cours.debut) BETWEEN ? AND ?", "#{year}-09-01", "#{year+1}-07-01").réalisé.sum(:duree).to_i
       @taux_occupation[year] =  (sum_occupation / sum_occupation_max * 100).to_i
     end
@@ -175,10 +176,18 @@ class SallesController < ApplicationController
   def libres
     salles_dispos_ids = []
     cours = nil
-    @salles = Salle.all
+    @salles = Salle.ponscarme_et_blocZ
+
+    # Les intervenants autorisés ne peuvent réserver que les salles privées,
+    # sauf celles du 6e étage. Les autres intervenants sont déjà bloqués par cour_policy.
+    if current_user.intervenant_permanent?
+      @salles = @salles.where(privée: true) - Salle.salles_non_reservables_intervenants
+    elsif current_user.gestionnaire?
+      @salles = @salles - @salles.bureaux_profs
+    end
 
     if current_user && current_user.partenaire_qse?
-      @salles = @salles.where(nom: ["ICP 1", "ICP 2"])
+      @salles = Salle.where(nom: ["ICP 1", "ICP 2"])
     end
 
     if !(params[:id].blank?)
@@ -207,7 +216,7 @@ class SallesController < ApplicationController
 
     respond_to do |format|
       format.json do
-        render json: Salle.where(id: salles_dispos_ids).to_json
+        render json: Salle.where(id: salles_dispos_ids).map{|s| {id: s.id, text_for_option: s.nom_places_block_desc}}.to_json
       end
     end
   end

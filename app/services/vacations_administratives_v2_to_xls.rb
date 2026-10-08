@@ -27,11 +27,8 @@ class VacationsAdministrativesV2ToXls < ApplicationService
     surveillants_name = []
 
     @examens.each do | exam |
-      exam.options.surveillance.first.description.split('[').each do |item|
-        if !item.blank?
-          surveillant_item = item.gsub(']', '').delete("\r\n\\")
-          surveillants_name << surveillant_item if !surveillants_name.include?(surveillant_item)
-        end
+      exam.noms_surveillants.each do |surveillant_item|
+        surveillants_name << surveillant_item if !surveillants_name.include?(surveillant_item)
       end
     end
 
@@ -43,27 +40,24 @@ class VacationsAdministrativesV2ToXls < ApplicationService
       index += 1
 
       @examens.each do | exam |
-        exam.options.surveillance.first.description.split('[').each do |item|
-          unless item.blank?
-            surveillant_item = item.gsub(']', '').delete("\r\n\\")
-            if surveillant_item == surveillant_name
-              durée = exam.duree + ((exam.intervenant_id == 1314) ? 0 : 1)
-              is_vacataire = (exam.intervenant_id == 1314)
-              cumul_durée += durée
+        exam.noms_surveillants.each do |surveillant_item|
+          if surveillant_item == surveillant_name
+            durée = exam.duree + ((exam.intervenant_id == 1314) ? 0 : 1)
+            is_vacataire = (exam.intervenant_id == 1314)
+            cumul_durée += durée
 
-              # ['Date', 'Type', 'Formation', 'Centre de coût', 'Destination financière', 'EOTP', 'Total heures']
-              fields_to_export = [
-                I18n.l(exam.debut, format: :long),
-                is_vacataire ? "Vacataire" : "Surveillance Examen",
-                exam.formation.nom_promo,
-                '7322GRH',
-                (exam.formation.diplome.upcase == 'LICENCE' ? '101PAIE' : exam.intervenant.id == 1314 ? '115PAIE' : '102PAIE'),
-                exam.formation.code_analytique_avec_indice(exam.debut).gsub('HCO','VAC'),
-                durée
-              ]
-              sheet.row(index).replace fields_to_export
-              index += 1
-            end
+            # ['Date', 'Type', 'Formation', 'Centre de coût', 'Destination financière', 'EOTP', 'Total heures']
+            fields_to_export = [
+              I18n.l(exam.debut, format: :long),
+              is_vacataire ? "Vacataire" : "Surveillance Examen",
+              exam.formation.nom_promo,
+              '7322GRH',
+              (exam.formation.diplome.upcase == 'LICENCE' ? '101PAIE' : exam.intervenant.id == 1314 ? '115PAIE' : '102PAIE'),
+              exam.formation.code_analytique_avec_indice(exam.debut).gsub('HCO','VAC'),
+              durée
+            ]
+            sheet.row(index).replace fields_to_export
+            index += 1
           end
         end
       end

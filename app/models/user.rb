@@ -34,6 +34,11 @@ class User < ApplicationRecord
     self.role == 'administrateur'
   end
 
+  # Rôles autorisés à voir et modifier l'option "Suivi des copies" d'un cours
+  def peut_gerer_suivi_copies?
+    accueil? || gestionnaire? || administrateur?
+  end
+
   def reserver?
     false
   end
@@ -126,6 +131,13 @@ class User < ApplicationRecord
 
     # Mélange sécurisé et conversion en chaîne (String)
     mot_de_passe.shuffle(random: SecureRandom).join
+  end
+
+  def intervenant_permanent?
+    return false unless self.intervenant?
+    intervenant = Intervenant.where("LOWER(intervenants.email) = ?", self.email.downcase).first
+    return false if intervenant.nil?
+    ['Permanent', 'PR', 'MCF', 'MCF_HDR', 'PAST', 'PRAG'].include?(intervenant.status)
   end
 
   private

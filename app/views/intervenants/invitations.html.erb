@@ -95,12 +95,12 @@
           <td>il y a <%= time_ago_in_words invit.updated_at %></td>
           <td>
             <% if invit.can_valider? %>
-              <%= link_to "Je suis disponible", valider_invit_path(invit), class: 'btn btn-sm btn-success text-white btn-outline', 'data-turbo': false %>
+              <%= link_to "Disponible", valider_invit_path(invit), class: 'btn btn-sm btn-success text-white btn-outline', 'data-turbo': false, title: "Je suis disponible #{invit.cours? ? "pour ce cours" : "pour cette surveillance"}" %>
             <% end %>
           </td>
           <td style="white-space: nowrap;">
             <% if invit.can_rejeter? %>
-              <%= link_to "Je ne suis pas disponible", rejeter_invit_path(invit), class: 'btn btn-sm btn-error btn-outline', 'data-turbo': false %>
+              <%= link_to "Indisponible", rejeter_invit_path(invit), class: 'btn btn-sm btn-error btn-outline', 'data-turbo': false, title: "Je ne suis pas disponible #{invit.cours? ? "pour ce cours" : "pour cette surveillance"}" %>
             <% end %>
           </td>
           <td><%= link_to 'Commentaires', invit, class: 'text-primary hover:underline' %></td>

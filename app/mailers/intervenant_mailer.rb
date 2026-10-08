@@ -16,7 +16,6 @@ class IntervenantMailer < ApplicationMailer
         @gestionnaires = gestionnaires
         @intervenant = intervenant
         @message = EnvoiLog.find(envoi_log_id).message
-        #TODO : mettre l'objet du mail dans la variable title
         if test
             mail(to: "philippe.nougaillon@gmail.com, pierreemmanuel.dacquet@gmail.com",
                 subject:"[PLANNING] TEST / Rappel des cours de #{@intervenant.nom_prenom} du #{l @debut} au #{l @fin}")

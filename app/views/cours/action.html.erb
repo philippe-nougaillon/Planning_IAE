@@ -147,16 +147,22 @@
       <% end %>
     <% end %>
   <% elsif params[:action_name] == "Inviter" %>
+    <% invitation_examen = @cours.any? && @cours.all?(&:examen?) %>
+    <% intervenants_invitables = invitation_examen ? Intervenant.surveillants : Intervenant.where.not(doublon: true) %>
     <p class="mb-4">
-      <b>Intervenant(s) à inviter</b> 
+      <b><%= invitation_examen ? "Surveillant(s) à inviter" : "Intervenant(s) à inviter" %></b>
       <br>
-      Une proposition par cours et par intervenant sera créée et envoyée.
+      Une proposition par cours et par <%= invitation_examen ? "surveillant" : "intervenant" %> sera créée et envoyée.
+      <% if invitation_examen %>
+        <br>
+        <i>Ce.s cours étant un examen, une invitation confirmée ajoutera le surveillant en option du cours (et non comme intervenant).</i>
+      <% end %>
     </p>
     <div class="flex flex-wrap">
       <div class="w-1/4">
-        <%= label_tag 'Intervenant *' %>
+        <%= label_tag (invitation_examen ? 'Surveillant *' : 'Intervenant *') %>
         <%= select_tag 'invit[intervenant][1]', 
-                        options_from_collection_for_select(Intervenant.where.not(doublon:true), :id, :nom_prenom, params[:intervenant_ids]), 
+                        options_from_collection_for_select(intervenants_invitables, :id, :nom_prenom, params[:intervenant_ids]),
                         include_blank: true,
                         class: "slim-select" %>
       </div>
@@ -176,9 +182,9 @@
     </div>
     <div class="flex flex-wrap">
       <div class="w-1/4">
-        <%= label_tag 'Intervenant *' %>
+        <%= label_tag (invitation_examen ? 'Surveillant *' : 'Intervenant *') %>
         <%= select_tag 'invit[intervenant][2]', 
-                        options_from_collection_for_select(Intervenant.where.not(doublon:true), :id, :nom_prenom, params[:intervenant_ids]), 
+                        options_from_collection_for_select(intervenants_invitables, :id, :nom_prenom, params[:intervenant_ids]),
                         include_blank: true,
                         class: "slim-select" %>
       </div>
@@ -198,9 +204,9 @@
     </div>
     <div class="flex flex-wrap">
       <div class="w-1/4">
-        <%= label_tag 'Intervenant *' %>
+        <%= label_tag (invitation_examen ? 'Surveillant *' : 'Intervenant *') %>
         <%= select_tag 'invit[intervenant][3]', 
-                        options_from_collection_for_select(Intervenant.where.not(doublon:true), :id, :nom_prenom, params[:intervenant_ids]), 
+                        options_from_collection_for_select(intervenants_invitables, :id, :nom_prenom, params[:intervenant_ids]),
                         include_blank: true,
                         class: "slim-select" %>
       </div>
@@ -220,9 +226,9 @@
     </div>
     <div class="flex flex-wrap">
       <div class="w-1/4">
-        <%= label_tag 'Intervenant *' %>
+        <%= label_tag (invitation_examen ? 'Surveillant *' : 'Intervenant *') %>
         <%= select_tag 'invit[intervenant][4]', 
-                        options_from_collection_for_select(Intervenant.where.not(doublon:true), :id, :nom_prenom, params[:intervenant_ids]), 
+                        options_from_collection_for_select(intervenants_invitables, :id, :nom_prenom, params[:intervenant_ids]),
                         include_blank: true,
                         class: "slim-select" %>
       </div>
@@ -353,6 +359,9 @@
     <% end %>
   <% elsif params[:action_name] == "Regrouper sur une seule Feuille de présence Edusign" %>
     <i>Attention : cette action va créer une seule feuille de présence pour tous les étudiants sur Edusign. La Synchronisation se fera dans la journée. Les modifications ultérieures ne seront pas prises en compte sur Edusign.</i>
+  <% elsif params[:action_name] == "Proposition de surveillance" %>
+    <h3 class="text-2xl">Attention : Un mail va être envoyé à tous les surveillants pour leur proposer de faire cette surveillance</h3>
+    <p>Il y a actuellement <%= Intervenant.surveillants.count %> surveillants disponibles</p>
   <% end %>
 
   <div class="flex flex-wrap mb-12 mt-4">

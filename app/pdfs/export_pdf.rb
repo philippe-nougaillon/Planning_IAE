@@ -267,6 +267,15 @@ class ExportPdf
 
         text "Fait le #{I18n.l(Date.today)}", style: :italic
         move_down @margin_down
+
+        # Todo: Mettre dans une variable la signature
+        y_position = cursor
+        bounding_box([0, y_position], :width => 250, :height => 100) do
+            text "Directeur/Directrice", size: 8
+        end
+        bounding_box([250, y_position], :width => 250, :height => 100) do
+            text "Chef/ Cheffe de service", size: 8 
+        end
         
     end
 
@@ -374,23 +383,21 @@ class ExportPdf
             bounding_box([0, y_position], :width => 166, :height => 100) do
                 text "L'agent"
             end
-            bounding_box([166, y_position], :width => 166) do
+            bounding_box([166, y_position], :width => 166, :height => 100) do
                 text "Le supérieur hiérarchique,"
                 text "pour accord"
             end
-            bounding_box([333, y_position], :width => 166) do
+            bounding_box([333, y_position], :width => 166, :height => 100) do
                 text "Le responsable du service concerné"
                 text "par la vacation, pour accord"
             end
         else
             # Todo: Mettre dans une variable la signature
             bounding_box([0, y_position], :width => 250, :height => 100) do
-                text "Eric LAMARQUE"
-                text "Directeur de l'IAE Paris", size: 8
+                text "Directeur/Directrice de l'IAE Paris-Sorbonne", size: 8
             end
-            bounding_box([250, y_position], :width => 250) do
-                text is_vacataire ? "" : "Barbara FITSCH-MOURAS"
-                text "Responsable de service", size: 8 
+            bounding_box([250, y_position], :width => 250, :height => 100) do
+                text is_vacataire ? "" : "Chef/ Cheffe de service", size: 8 
             end
         end
 
@@ -446,24 +453,21 @@ class ExportPdf
         index = 0
  
         examens.each do | exam |
-            exam.options.surveillance.first.description.split('[').each do |item|
-                unless item.blank? 
-                    surveillant_item = item.gsub(']', '').delete("\r\n\\")
-                    if surveillant_item == surveillant
-                        is_vacataire = exam.has_intervenant_vacataire?
-                        index += 1
-                        durée = exam.duree + (is_vacataire ? 0 : 1)
-                        cumul_durée += durée
-                        data += [[ index,
-                                    I18n.l(exam.debut.to_date, format: :long) + ' ' + I18n.l(exam.debut, format: :heures_min) + '-' + I18n.l(exam.fin, format: :heures_min),
-                                    is_vacataire ? "Vacataire" : "Surveillance Examen",
-                                    exam.formation.nom_promo,
-                                    '7322GRH',
-                                    (exam.formation.diplome.upcase == 'LICENCE' ? '101PAIE' : exam.has_intervenant_vacataire? ? '115PAIE' : '102PAIE'),
-                                    exam.formation.code_analytique_avec_indice(exam.debut).gsub('HCO','VAC'),
-                                    durée 
-                                ]]
-                    end
+            exam.noms_surveillants.each do |surveillant_item|
+                if surveillant_item == surveillant
+                    is_vacataire = exam.has_intervenant_vacataire?
+                    index += 1
+                    durée = exam.duree + (is_vacataire ? 0 : 1)
+                    cumul_durée += durée
+                    data += [[ index,
+                                I18n.l(exam.debut.to_date, format: :long) + ' ' + I18n.l(exam.debut, format: :heures_min) + '-' + I18n.l(exam.fin, format: :heures_min),
+                                is_vacataire ? "Vacataire" : "Surveillance Examen",
+                                exam.formation.nom_promo,
+                                '7322GRH',
+                                (exam.formation.diplome.upcase == 'LICENCE' ? '101PAIE' : exam.has_intervenant_vacataire? ? '115PAIE' : '102PAIE'),
+                                exam.formation.code_analytique_avec_indice(exam.debut).gsub('HCO','VAC'),
+                                durée
+                            ]]
                 end
             end
         end
@@ -500,13 +504,21 @@ class ExportPdf
             bounding_box([0, y_position], :width => 166, :height => 100) do
                 text "L'agent"
             end
-            bounding_box([166, y_position], :width => 166) do
+            bounding_box([166, y_position], :width => 166, :height => 100) do
                 text "Le supérieur hiérarchique,"
                 text "pour accord"
             end
-            bounding_box([333, y_position], :width => 166) do
+            bounding_box([333, y_position], :width => 166, :height => 100) do
                 text "Le responsable du service concerné"
                 text "par la vacation, pour accord"
+            end
+        else
+            # Todo: Mettre dans une variable la signature
+            bounding_box([0, y_position], :width => 250, :height => 100) do
+                text "Directeur/Directrice", size: 8
+            end
+            bounding_box([250, y_position], :width => 250, :height => 100) do
+                text is_vacataire ? "" : "Chef/ Cheffe de service", size: 8 
             end
         end
 
@@ -537,7 +549,7 @@ class ExportPdf
             bounding_box([0, y_position], :width => 250, :height => 100) do
                 text "Date : #{I18n.l(cour.debut.to_date)}", style: :bold
             end
-            bounding_box([250, y_position], :width => 250) do
+            bounding_box([250, y_position], :width => 250, :height => 100) do
                 
                 text "Horaire : #{I18n.l(cour.debut, format: :heures_min)} - #{I18n.l(cour.fin, format: :heures_min)}", style: :bold
 
@@ -628,8 +640,8 @@ class ExportPdf
         font "OpenSans"
         
         cours.each_with_index do |cour, index|
-            if cour.options.surveillance.any? && !cour.options.surveillance.first.description.empty?
-                surveillants = cour.options.surveillance.first.description.scan(/\[([^\]]+)\]/).flatten.join(', ').gsub(/[-]/, ' ')
+            if cour.noms_surveillants.any?
+                surveillants = cour.noms_surveillants.join(', ').gsub(/[-]/, ' ')
             elsif !cour.commentaires.blank?
                 surveillants = cour.commentaires.scan(/\[([^\]]+)\]/).flatten.join(', ').gsub(/[-]/, ' ')
             else
@@ -735,7 +747,7 @@ class ExportPdf
                 ["<color rgb='032E4D'>•</color>", "<color rgb='032E4D'><b>Salle : #{cour.salle.try(:nom) }</b></color>"] ],
                 cell_style: { borders: [], inline_format: true })
             move_down @margin_down / 2
-            table([ ["<color rgb='032E4D'>•</color>", "<color rgb='032E4D'><b>Nombre d’étudiants inscrits : #{étudiants_count}</b></color>"],
+            table([ ["<color rgb='032E4D'>•</color>", "<color rgb='032E4D'><b>Nombre d’étudiants convoqués : #{étudiants_count}</b></color>"],
                     ["<color rgb='032E4D'>•</color>", "<color rgb='032E4D'>Nombre de copies rendues : ....................................</color>"] ],
                     cell_style: { borders: [], inline_format: true })
             move_down @margin_down / 2
@@ -777,6 +789,8 @@ class ExportPdf
             text "<color rgb='032E4D'>Le <b>#{I18n.l(cour.debut.to_date)}</b></color>", inline_format: true, size: 24
             text "<color rgb='032E4D'>De <b>#{cour.debut.strftime('%Hh%M')} à #{cour.fin.strftime('%Hh%M')}</b></color>", inline_format: true, size: 24
             text "<color rgb='032E4D'>Salle <b>#{cour.salle.try(:nom)}</b></color>", inline_format: true, size: 24
+            text "<color rgb='032E4D'>Nombre étudiants convoqués <b>#{étudiants_count}</b></color>", inline_format: true, size: 24
+            text "<color rgb='032E4D'>Nombre copies : </color>", inline_format: true, size: 24
 
             move_down @margin_down * 2
             text "<color rgb='FF0000'>=>   <b><u>En fin d’épreuve</u>, merci de remettre l’enveloppe contenant les copies à l’accueil.</b></color>", inline_format: true, size: 24
@@ -843,10 +857,10 @@ class ExportPdf
 
         move_down @margin_down * 2
         y_position = cursor
-        bounding_box([100, y_position], :width => 190, :height => 100) do
+        bounding_box([100, y_position], :width => 190, :height => 25) do
             text "<color rgb='032E4D'><b>Nom : #{étudiant.nom}</b></color>", inline_format: true, size: 16
         end
-        bounding_box([350, y_position], :width => 190) do
+        bounding_box([350, y_position], :width => 190, :height => 25) do
             text "<color rgb='032E4D'><b>Prénom : #{étudiant.prénom}</b></color>", inline_format: true, size: 16
         end
         if étudiant.table && !étudiant.table.zero?
@@ -860,10 +874,8 @@ class ExportPdf
 
         move_down @margin_down * 2
         text "<color rgb='032E4D'><b>Vous devez :</b></color>", inline_format: true
-        move_down @margin_down
         text "<color rgb='032E4D'><b>-    vous munir de votre carte d'étudiant</b></color>", inline_format: true
-        move_down @margin_down
-        text "<color rgb='032E4D'><b>-    vous présenter dans la salle d'examen 15 minutes avant le début de l'épreuve</b></color>", inline_format: true
+        text "<color rgb='032E4D'><b>-    vous présenter dans la salle d'examen 15 minutes avant le début de l'épreuve et attendre devant la salle que le(s) surveillant(s) soi(en)t présents. L’accès à la salle d’examen n’est autorisé qu’en présence de(s) surveillant(s)</b></color>", inline_format: true
 
         move_down @margin_down * 2
         consignes(papier, calculatrice, ordi_tablette, téléphone, dictionnaire)
@@ -875,6 +887,24 @@ class ExportPdf
             move_down @margin_down
             text "<color rgb='032E4D'>#{commentaires}</color>", inline_format: true
         end
+
+        move_down @margin_down * 2
+
+        text "<color rgb='032E4D'><b>À votre arrivée dans la salle d'examen, il vous sera demandé :</b></color>", inline_format: true
+        unless téléphone
+            text "<color rgb='032E4D'>- d'éteindre vos téléphones portables,</color>", inline_format: true
+            text "<color rgb='032E4D'>- de déposer vos sacs contenant tous les objets connectés (téléphones, montres, lunettes, oreillettes, ...) à l'entrée de la salle,</color>", inline_format: true
+        end
+        text "<color rgb='032E4D'>- de disposer sur votre table uniquement le matériel qui est autorisé (stylos, correcteurs, marqueurs, etc ...) en fonction des consignes indiquées par les responsables d'UE,</color>", inline_format: true
+        text "<color rgb='032E4D'>- de vous installer un par table lorsque la capacité d'accueil de la salle le permet. Les surveillants sont habilités à vous demander de vous déplacer s'ils le jugent nécessaire.</color>", inline_format: true
+        text "<color rgb='032E4D'>- Les copies, brouillons, sujets ne seront distribués qu'une fois que ces consignes auront été respectées et appliquées.</color>", inline_format: true
+
+        move_down @margin_down * 2
+        text "<color rgb='032E4D'><b>En cas de fraude</b>, et après la tenue d’une commission de discipline, <b>les sanctions administratives</b> encourues par les fraudeurs sont les suivantes : </color>", inline_format: true
+        text "<color rgb='032E4D'>- le blâme,</color>", inline_format: true
+        text "<color rgb='032E4D'>- la privation de toute mention portée sur le diplôme délivré au candidat admis,</color>", inline_format: true
+        text "<color rgb='032E4D'>- l’interdiction de passer tout examen conduisant à l’obtention du baccalauréat pour une durée maximum de 5 ans ou d’un titre ou diplôme délivré par un établissement public dispensant des formations post-baccalauréat pour une durée maximum de 5 ans. Cette sanction peut être prononcée avec sursis si l’interdiction n’excède pas deux ans,</color>", inline_format: true
+        text "<color rgb='032E4D'>- l’interdiction de prendre toute inscription dans un établissement public dispensant des formations post-baccalauréat pour une durée maximum de 5 ans.</color>", inline_format: true
 
     end
 
@@ -903,7 +933,7 @@ class ExportPdf
             bounding_box([0, y_position], :width => 250, :height => 100) do
                 text "Date : #{I18n.l(cour.debut.to_date)}", style: :bold
             end
-            bounding_box([250, y_position], :width => 250) do
+            bounding_box([250, y_position], :width => 250, :height => 100) do
                 
                 text "Horaire : #{I18n.l(cour.debut, format: :heures_min)} - #{I18n.l(cour.fin, format: :heures_min)}", style: :bold
 
@@ -996,30 +1026,30 @@ class ExportPdf
 
     def consignes(papier, calculatrice, ordi_tablette, téléphone, dictionnaire)
         text "<color rgb='032E4D'><b>CONSIGNES :</b></color>", inline_format: true
-        move_down @margin_down 
 
-        text "<color rgb='032E4D'><i>Sont autorisés :</i></color>", inline_format: true
-        move_down @margin_down
+        if papier || calculatrice || ordi_tablette || téléphone || dictionnaire
+            move_down @margin_down 
+            text "<color rgb='032E4D'><i>Sont autorisés :</i></color>", inline_format: true
 
-        if papier
-            text "<color rgb='032E4D'> - Documents papier</color>", inline_format: true, style: :bold
-        end
-        if calculatrice
-            text "<color rgb='032E4D'> - Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission</color>", inline_format: true, style: :bold
-        end
-        if ordi_tablette
-            text "<color rgb='032E4D'> - Les ordinateurs et tablettes</color>", inline_format: true, style: :bold
-        end
-        if téléphone
-            text "<color rgb='032E4D'> - Les téléphones portables</color>", inline_format: true, style: :bold
-        end
-        if dictionnaire
-            text "<color rgb='032E4D'> - Les dictionnaires</color>", inline_format: true, style: :bold
+            if papier
+                text "<color rgb='032E4D'> - Documents papier</color>", inline_format: true, style: :bold
+            end
+            if calculatrice
+                text "<color rgb='032E4D'> - Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission</color>", inline_format: true, style: :bold
+            end
+            if ordi_tablette
+                text "<color rgb='032E4D'> - Les ordinateurs et tablettes</color>", inline_format: true, style: :bold
+            end
+            if téléphone
+                text "<color rgb='032E4D'> - Les téléphones portables</color>", inline_format: true, style: :bold
+            end
+            if dictionnaire
+                text "<color rgb='032E4D'> - Les dictionnaires</color>", inline_format: true, style: :bold
+            end
         end
         move_down @margin_down
 
         text "<color rgb='032E4D'><i>Sont interdits :</i></color>", inline_format: true
-        move_down @margin_down
 
         if !papier
             text "<color rgb='032E4D'> - Documents papier</color>", inline_format: true, style: :bold

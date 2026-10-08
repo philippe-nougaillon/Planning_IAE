@@ -1,10 +1,113 @@
-<% content_for :title, "Editing sujet" %>
-
-<div class="md:w-2/3 w-full">
-  <h1 class="font-bold text-4xl">Editing sujet</h1>
-
-  <%= render "form", sujet: @sujet %>
-
-  <%= link_to "Show this sujet", @sujet, class: "ml-2 rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-  <%= link_to "Back to sujets", sujets_path, class: "ml-2 rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
+<div class="border-b mt-6 mb-2 pb-4">
+  <h1 class="text-3xl flex items-center gap-3">
+    <span class="material-symbols-outlined text-3xl">
+      docs
+    </span>
+    Sujet d'examen
+  </h1>
 </div>
+
+<h2 class="text-lg">
+  Merci de <b>déposer votre sujet</b> (avec la page de garde et en y indiquant les consignes) en <b>format PDF</b>.
+</h2>
+
+<%= form_with(model: @sujet, class: "contents") do |f| %>
+  <% if @sujet.errors.any? %>
+    <div id="error_explanation">
+      <h2 class="text-3xl"><%= pluralize(@sujet.errors.count, "error") %> empêche ce sujet d'être enregistré :</h2>
+
+      <ul class="list-disc ml-6">
+        <% @sujet.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="flex flex-wrap shadow-lg gap-8 lg:gap-24 p-6 my-4">
+    <div class="flex-1">
+      <p class="mb-4">
+        <strong>Examen</strong>
+        <% if @sujet.cour.debut > DateTime.now %>
+          <br>
+          <small>(dans <%= time_ago_in_words(@sujet.cour.debut) %>)</small>
+          <br>
+        <% end %>
+        <br>
+        Le <%= l(@sujet.cour.debut, format: :long) %>
+        <br>
+        <%= @sujet.cour.nom_ou_ue %>
+      </p>
+
+      <p class="mb-4">
+        <strong>Formation(s)</strong>
+        <br>
+        <%= @sujet.formations.pluck(:nom).join(', ') %>
+      </p>
+
+      <div class="mt-8 mb-4">
+        <h3 class="text-xl mt-4">Sélectionnez les consignes d'examens</h3>
+        <i>Cochez les options autorisées</i>
+      </div>
+
+      <div class="relative flex-grow max-w-full flex-1 gap-4">
+        <%= f.check_box :papier, class: 'hover:cursor-pointer', value: @sujet.papier %>
+        <%= f.label :papier, 'Papiers autorisés ?', class: 'hover:cursor-pointer' %>
+      </div>
+
+      <div class="relative flex-grow max-w-full flex-1 gap-4">
+        <%= f.check_box :calculatrice, class: 'hover:cursor-pointer', value: @sujet.calculatrice %>
+        <%= f.label :calculatrice, 'Calculatrice de poche à fonctionnement autonome, sans imprimante et sans aucun moyen de transmission autorisés ?', class: 'hover:cursor-pointer' %>
+      </div>
+      <div class="relative flex-grow max-w-full flex-1 gap-4">
+        <%= f.check_box :ordi_tablette, class: 'hover:cursor-pointer', value: @sujet.ordi_tablette %>
+        <%= f.label :ordi_tablette, 'Ordinateurs et tablettes autorisés ?', class: 'hover:cursor-pointer' %>
+      </div>
+
+      <div class="relative flex-grow max-w-full flex-1 gap-4">
+        <%= f.check_box :téléphone, class: 'hover:cursor-pointer', value: @sujet.téléphone %>
+        <%= f.label :téléphone, 'Téléphones portables autorisés ?', class: 'hover:cursor-pointer' %>
+      </div>
+
+      <div class="relative flex-grow max-w-full flex-1 gap-4">
+        <%= f.check_box :dictionnaire, class: 'hover:cursor-pointer', value: @sujet.dictionnaire %>
+        <%= f.label :dictionnaire, 'Dictionnaires autorisés ?', class: 'hover:cursor-pointer' %>
+      </div>
+    </div>
+
+    <div class="flex-1">
+      <div class="w-fit">
+        <b>Fichier actuel :</b>
+        <% if @sujet.sujet.representable? %>
+          <div class="shadow w-fit p-4 mb-4">
+            <%= image_tag(@sujet.sujet.representation(resize_to_limit: [300, 300]), title: @sujet.sujet.filename)  %>
+          </div>
+        <% else %>
+          <p class="mb-4">
+            <%= @sujet.sujet.filename.to_s %>
+          </p>
+        <% end %>
+      </div>
+
+      <%= render "partials/script_accept_file_type", id_form: "sujet_form", id_file_input: "sujet_sujet", file_type_accepted: 'application/pdf', file_type_for_alert: 'PDF' %>
+      <fieldset class="fieldset">
+        <%= f.file_field :sujet, label: 'Fichier PDF', accept: 'application/pdf', class: 'file-input file-input-bordered file-input-sm file-input-success flex-1' %>
+        <label class="label text-secondary">Laisser vide si le sujet n'est pas à modifier</label>
+      </fieldset>
+      <br>
+
+      <div class="mt-8 mb-4">
+        <h3 class="text-xl mt-4">Commentaires</h3>
+      </div>
+
+      <%= f.text_area :commentaires, rows: 3, class: 'textarea textarea-bordered w-full', placeholder: "Visible sur la convocation étudiant" %>
+
+      <button type="submit" name="commit" value="Déposer le sujet" class="btn btn-success w-full sm:w-48 btn-lg text-white mt-6" data-disable-with="Déposer le sujet" data-turbo-confirm="ATTENTION ! Une fois validé par le/la gestionnaire, vous ne pourrez plus modifier le sujet. Confirmez-vous le dépôt de votre sujet ?">
+        <i class="far fa-arrow-alt-circle-down"></i>
+        Déposer
+      </button>
+      <%= link_to "Annuler", sujet_path, class: "btn" %>
+
+    </div>
+  </div>
+<% end %>

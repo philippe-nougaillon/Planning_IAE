@@ -32,7 +32,7 @@ class Formation < ApplicationRecord
 	normalizes :code_analytique, with: -> code { code.strip }
 	
 	scope :not_archived, -> { where("archive is null OR archive is false") }
-	scope :ordered, -> {order(:nom, :promo)}
+	scope :ordered, -> { order(:nom, :promo) }
 	scope :partenaire_qse, -> { where("LEFT(abrg, 5) IN ('M1QSE', 'M2QSE')") }
 	
 	def nom_promo
