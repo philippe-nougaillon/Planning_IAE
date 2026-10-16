@@ -393,6 +393,10 @@ fr:
       title: Taux d'occupation jours
     taux_occupation_salles:
       title: Taux d'occupation salles
+    taux_occupation_jours_do:
+      title: Taux d'occupation jours
+    taux_occupation_salles_do:
+      title: Taux d'occupation salles
     etats_services:
       title: États de services
     export_etat_liquidatif_collectif:

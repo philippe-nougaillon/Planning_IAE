@@ -57,8 +57,12 @@ class SallesController < ApplicationController
       #
 
       # salles concernées
-      @salles_dispo = Salle.salles_de_cours.count
-      @salles_dispo_samedi = Salle.salles_de_cours_du_samedi.count
+      if @date < Salle.date_déménagement
+        @salles_dispo = Salle.salles_de_cours_biopark.count
+        @salles_dispo_samedi = Salle.salles_de_cours_du_samedi_biopark.count
+      else
+        @salles_dispo = @salles_dispo_samedi = Salle.salles_de_cours.count
+      end
 
       # cumul les heures de cours du jour et du soir
       @nombre_heures_cours = [Cour.cumul_heures(@date).first, 
