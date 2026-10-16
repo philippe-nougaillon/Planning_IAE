@@ -19,11 +19,19 @@ class Salle < ApplicationRecord
 	validates :nom, uniqueness: true
 
 	def self.salles_de_cours
+		salles_ids = []
+		Salle.where(bloc: 'P').each do |salle|
+			salles_ids << salle.id if salle.description_formated_for_group_by == "Salle de cours"
+		end
+		return Salle.where(id: salles_ids)
+	end
+
+	def self.salles_de_cours_biopark
 		Salle.where("LENGTH(nom) = 2").where.not(nom: %w{A8 A20 D7 D8 D9})
 	end
 
-	def self.salles_de_cours_du_samedi
-		self.salles_de_cours.where("nom like 'D%'")
+	def self.salles_de_cours_du_samedi_biopark
+		self.salles_de_cours_biopark.where("nom like 'D%'")
 	end
 
 	def nom_places
@@ -57,6 +65,10 @@ class Salle < ApplicationRecord
 
 	def self.nb_heures_soirée
 		return 3
+	end
+
+	def self.date_déménagement
+		return Date.new(2026, 5, 4)
 	end
 
 	def self.blocs

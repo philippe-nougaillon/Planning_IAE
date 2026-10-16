@@ -979,7 +979,7 @@ class ToolsController < ApplicationController
   end
 
   def taux_occupation_jours_do
-    unless params[:start_date].blank? and params[:end_date].blank?
+    unless params[:start_date].blank? or params[:end_date].blank?
       @start_date = params[:start_date]
       @end_date = params[:end_date]
     else
@@ -988,12 +988,28 @@ class ToolsController < ApplicationController
       return
     end
 
+    if @end_date.to_date < @start_date.to_date
+      flash[:alert] = "La date de fin est antérieure à la date de début..."
+      redirect_to tools_taux_occupation_jours_path(start_date: @start_date, end_date: @end_date)
+      return
+    end
+
+    if @start_date.to_date < Salle.date_déménagement and @end_date.to_date >= Salle.date_déménagement
+      flash[:alert] = "La période chevauche le déménagement du #{l(Salle.date_déménagement, format: :long)} : refaites l'action en deux fois, jusqu'au #{l(Salle.date_déménagement - 1, format: :long)}, puis à partir du #{l(Salle.date_déménagement, format: :long)}..."
+      redirect_to tools_taux_occupation_jours_path(start_date: @start_date, end_date: @end_date)
+      return
+    end
+
     # Calcul du taux d'occupation
     #
 
     # salles concernées
-    salles_dispo = Salle.salles_de_cours.count
-    salles_dispo_samedi = Salle.salles_de_cours_du_samedi.count
+    if @end_date.to_date < Salle.date_déménagement
+      salles_dispo = Salle.salles_de_cours_biopark.count
+      salles_dispo_samedi = Salle.salles_de_cours_du_samedi_biopark.count
+    else
+      salles_dispo = salles_dispo_samedi = Salle.salles_de_cours.count
+    end
     
     # amplitude 
     @nb_heures_journée = Salle.nb_heures_journée
@@ -1020,7 +1036,7 @@ class ToolsController < ApplicationController
         nombre_heures_cours = [Cour.cumul_heures(d).first, Cour.cumul_heures(d).last]
 
         # calcul du taux d'occupation  
-        if d.to_date.wday == 6 # le samedi, on ne comtpe que le batiment D
+        if d.to_date.wday == 6 # le samedi, on ne compte que les salles du samedi (bâtiment D avant le déménagement)
           taux_occupation = [(nombre_heures_cours.first * 100 / heures_dispo_salles_samedi.first),
                               (nombre_heures_cours.last * 100 / heures_dispo_salles_samedi.last)]
           @total_jour += taux_occupation.first
@@ -1041,12 +1057,24 @@ class ToolsController < ApplicationController
   end
 
   def taux_occupation_salles_do
-    unless params[:start_date].blank? and params[:end_date].blank?
+    unless params[:start_date].blank? or params[:end_date].blank?
       @start_date = params[:start_date]
       @end_date = params[:end_date]
     else
       flash[:alert] = "Il manque les dates..."
       redirect_to tools_taux_occupation_salles_path
+      return
+    end
+
+    if @end_date.to_date < @start_date.to_date
+      flash[:alert] = "La date de fin est antérieure à la date de début..."
+      redirect_to tools_taux_occupation_salles_path(start_date: @start_date, end_date: @end_date)
+      return
+    end
+
+    if @start_date.to_date < Salle.date_déménagement and @end_date.to_date >= Salle.date_déménagement
+      flash[:alert] = "La période chevauche le déménagement du #{l(Salle.date_déménagement, format: :long)} : refaites l'action en deux fois, jusqu'au #{l(Salle.date_déménagement - 1, format: :long)}, puis à partir du #{l(Salle.date_déménagement, format: :long)}..."
+      redirect_to tools_taux_occupation_salles_path(start_date: @start_date, end_date: @end_date)
       return
     end
 
@@ -1077,8 +1105,13 @@ class ToolsController < ApplicationController
     end 
 
     @results = {}
+    if @end_date.to_date < Salle.date_déménagement
+      salles_de_cours_ids = Salle.salles_de_cours_biopark.ids
+    else
+      salles_de_cours_ids = Salle.salles_de_cours.ids
+    end
     Cour.where("debut between DATE(?) AND DATE(?) AND salle_id IS NOT NULL", @start_date, @end_date).each do | c |
-      if Salle.salles_de_cours.include?(c.salle)
+      if salles_de_cours_ids.include?(c.salle_id)
         salle = c.salle.nom
         if @results[salle]
           @results[salle] += c.duree.to_f
