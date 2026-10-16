@@ -247,8 +247,9 @@ class Cour < ApplicationRecord
     43.50
   end
 
+  # SMIC horaire brut
   def self.taux_horaire_vacation
-    12.02
+    12.31
   end
 
   def taux_td
