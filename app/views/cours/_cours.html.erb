@@ -65,7 +65,7 @@
             </h5>
             <% if user_signed_in? && !(current_user.étudiant?) %>
                 <% if cours.manque_de_places? %>
-                    <i title="Manque <%= cours.formation.nbr_etudiants - cours.salle.places %> place.s">
+                    <i title="Manque <%= cours.places_manquantes %> place.s">
                         <%= fa_icon 'exclamation-circle', class: 'mt-2' %>
                     </i>
                 <% end %>
