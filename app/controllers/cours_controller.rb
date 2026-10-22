@@ -341,6 +341,7 @@ class CoursController < ApplicationController
             salles << s.nom if cours.valid?
           end
           @salles_dispos = @salles_dispos & salles
+          flash.now[:alert] = cours.errors.full_messages.to_sentence if salles.empty?
         end
       elsif params[:action_name] == 'Intervertir'
         # Tester si la durée de deux cours n'est pas égale
