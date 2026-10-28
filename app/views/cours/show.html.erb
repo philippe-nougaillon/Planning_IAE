@@ -86,7 +86,7 @@
 
           <% if @cour.manque_de_places? %>
             <i title="Manque <%= @cour.places_manquantes %> place.s">
-              <%= fa_icon 'exclamation-circle' %>
+              <%= fa_icon 'exclamation-circle', class: 'text-error' %>
             </i>
           <% end %>
         <% end %>

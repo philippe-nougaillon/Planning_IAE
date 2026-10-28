@@ -1,4 +1,4 @@
-<%= form_for(@cour) do |f| %>
+<%= form_for(@cour, html: { data: { controller: "capacite", action: "submit->capacite#confirmer" } }) do |f| %>
   <%= render partial: 'partials/errors', locals: { record: @cour } %>
 
   <%= hidden_field_tag :from, params[:from] %>
@@ -31,14 +31,12 @@
       <% if !current_user.intervenant_permanent? %>
         <div class="flex flex-wrap">
           <%= f.label :formation_id, "Formation *", class: 'sm:w-1/5' %>
-          <%= f.collection_select :formation_id, 
-                                  @formations, 
-                                  :id, 
-                                  :nom_promo_hss, 
-                                  {include_blank: true},
-                                  required: true, 
-                                  class: "slim-select sm:w-1/2",
-                                  data: { "dispo-target": "formation_id"} %>
+          <%= f.select :formation_id, 
+                       options_for_select(Formation.options_avec_effectif(@formations), @cour.formation_id), 
+                       {include_blank: true},
+                       required: true, 
+                       class: "slim-select sm:w-1/2",
+                       data: { "dispo-target": "formation_id", "capacite-target": "formation", action: "change->capacite#verifier" } %>
         </div>
       <% else %>
         <%= f.hidden_field :formation_id %>
@@ -135,7 +133,8 @@
                           grouped_options_for_select(@salles.for_select, f.object.salle_id),
                           { include_blank: true, required: current_user.intervenant_permanent? },
                           class: "select select-bordered select-sm w-full",
-                          data: { "dispo-target": "salles" } %>
+                          data: { "dispo-target": "salles", "capacite-target": "salle", action: "change->capacite#verifier" } %>
+            <p class="text-error hidden" data-capacite-target="message"></p>
 
             <span data-action="click->dispo#show_dispo" 
                   class="btn btn-sm btn-success btn-outline hover:!text-white mt-4">

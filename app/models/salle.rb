@@ -87,10 +87,10 @@ class Salle < ApplicationRecord
 	def self.for_select
 		self.all
 				.group_by{|s| s.description_formated_for_group_by }
-				# Transform_values permet de modifier la valeur de chaque clé (valeur représentant une liste de salles) en map [nom_places_block_desc, id]
+				# Transform_values permet de modifier la valeur de chaque clé (valeur représentant une liste de salles) en map [nom_places_block_desc, id, data]
 				.transform_values { |salles| 
 					salles.map { |salle| 
-						[salle.nom_places_block_desc, salle.id] 
+						[salle.nom_places_block_desc, salle.id, { data: { places: salle.places, bloc: salle.bloc } }] 
 					} 
 				}
 	end

@@ -56,8 +56,8 @@ class Formation < ApplicationRecord
 		"#{ self.abrg } (#{ self.calc_nbr_etudiants } ET.)" 
 	end
 
-	def calc_nbr_etudiants
-		self.etudiants.count > 0 ? self.etudiants.count : self.nbr_etudiants
+	def calc_nbr_etudiants(inscrits = self.etudiants.count)
+		inscrits > 0 ? inscrits : self.nbr_etudiants
 	end
 
 	def nom_eotp
@@ -88,6 +88,11 @@ class Formation < ApplicationRecord
 		  'Formations catalogue' => where(hors_catalogue:false).not_archived.ordered.map { |i| i.nom },
 		  'Formations hors catalogue' => where(hors_catalogue:true).not_archived.ordered.map { |i| i.nom }
 		}
+	end
+
+	def self.options_avec_effectif(formations)
+		inscrits = Etudiant.where(formation_id: formations).group(:formation_id).count
+		formations.map { |formation| [formation.nom_promo_hss, formation.id, { data: { effectif: formation.calc_nbr_etudiants(inscrits[formation.id].to_i) } }] }
 	end
 
 	def positive_color

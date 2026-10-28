@@ -8,7 +8,7 @@
 </div>
 <br>
 
-<%= form_tag({action: "creation_cours_do", method: :post}, multipart: true) do %>
+<%= form_tag({action: "creation_cours_do", method: :post}, multipart: true, data: { controller: "capacite", "capacite-question-value": "Lancer la création quand même ?", action: "submit->capacite#confirmer" }) do %>
   <div class="flex flex-wrap">
     <div class="sm:w-3/5 pr-4">
       <%= label_tag :debut, "A partir du", class:"font-bold"  %><br>
@@ -82,7 +82,7 @@
 
         <%= label_tag :formation_id, "Formation", class:"font-bold"  %>
         <%= select_tag :formation_id, 
-              options_from_collection_for_select(Formation.not_archived.ordered, :id, :nom_promo_hss), class:"slim-select", include_blank:true %>
+              options_for_select(Formation.options_avec_effectif(Formation.not_archived.ordered)), class:"slim-select", include_blank:true, data: { "capacite-target": "formation", action: "change->capacite#verifier" } %>
         <br>
 
         <%= label_tag :intervenant_id, "Intervenant", class:"font-bold"  %>
@@ -99,7 +99,8 @@
         <br>
 
         <%= label_tag :salle_id, "Salle *", class:"font-bold"  %>
-        <%= select_tag :salle_id, options_from_collection_for_select(Salle.all, :id, :nom_places, params[:salle_id]), include_blank: true, class:"slim-select" %>
+        <%= select_tag :salle_id, options_for_select(Salle.all.map { |salle| [salle.nom_places, salle.id, { data: { places: salle.places, bloc: salle.bloc } }] }, params[:salle_id]), include_blank: true, class:"slim-select", data: { "capacite-target": "salle", action: "change->capacite#verifier" } %>
+        <p class="text-error hidden w-full" data-capacite-target="message"></p>
         <br>
 
         <div class="flex flex-wrap items-center">

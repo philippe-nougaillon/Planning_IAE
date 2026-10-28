@@ -75,10 +75,11 @@
         <% else %>
           <% couleur = "btn-error" %>
           <% title = "Manque #{salle.places_manquantes(nbr_etudiants)} place.s" %>
+          <% confirmation = "Salle trop petite : #{title.downcase}. Appliquer quand même ?" %>
         <% end %>
         <%= link_to nom,
                     action_do_cours_path(params.permit!.merge(salle_id: salle)),
-                    data: { turbo_method: :post },
+                    data: { turbo_method: :post, turbo_confirm: confirmation },
                     title: title,
                     class: "btn #{couleur} btn-outline btn-sm mb-1" %>
       <% end %>

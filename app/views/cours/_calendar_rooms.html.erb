@@ -85,7 +85,7 @@
 
             <% if meeting.manque_de_places? && user_signed_in? %>
               <i title="Manque <%= meeting.places_manquantes %> place.s">
-                <%= fa_icon 'exclamation-circle' %>
+                <%= fa_icon 'exclamation-circle', class: 'text-error hover:cursor-help' %>
               </i>
             <% end %>
 

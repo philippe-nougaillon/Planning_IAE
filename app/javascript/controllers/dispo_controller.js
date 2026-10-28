@@ -37,11 +37,12 @@ export default class extends Controller {
     if (data.length > 0) {
       for(var i = 0; i < data.length; i++) {
         var opt = data[i]
-        this.sallesTarget.innerHTML += "<option value=\"" + opt.id + "\">" + opt.text_for_option + "</option>"
+        this.sallesTarget.innerHTML += "<option value=\"" + opt.id + "\" data-places=\"" + opt.places + "\" data-bloc=\"" + opt.bloc + "\">" + opt.text_for_option + "</option>"
       }
     } else {
       this.sallesTarget.innerHTML += "<option disabled>Oups ! Aucune salle disponible... Vérifiez vos paramètres. </option>"
     }
+    this.sallesTarget.dispatchEvent(new Event("change"))
   }
 }
 
